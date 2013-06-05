@@ -5652,5 +5652,20 @@ public:
         unit->StopMoving();
         return 0;
     }
+
+    // SendQuestTemplate(entry, activeAccept)
+    static int SendQuestTemplate(lua_State* L, Unit* unit)
+    {
+        TO_PLAYER();
+
+        int questId = luaL_checkinteger(L, 1);
+
+        bool activeAccept = luaL_optbool(L, 2, true);
+
+        Quest const* quest = sObjectMgr->GetQuestTemplate(questId);
+
+        player->PlayerTalkClass->SendQuestGiverQuestDetails(quest, player->GetGUIDLow(), activeAccept);
+        return 0;
+    }
 };
 #endif

@@ -1150,9 +1150,9 @@ public:
             sEluna->ExecuteCall(5, 0);
         }
 
-        void OnSpellClick(Unit* clicker)
+        void OnSpellClick(Unit* clicker, bool& result)
         {
-            ScriptedAI::OnSpellClick(clicker);
+            ScriptedAI::OnSpellClick(clicker, result);
             int bind = sEluna->CreatureEventBindings->GetBind(me->GetEntry(), CREATURE_EVENT_ON_SPELL_CLICK);
             if (!bind)
                 return;
