@@ -413,6 +413,7 @@ ElunaRegister<Unit> UnitMethods[] =
     {"RemoveBindSightAuras", &LuaUnit::RemoveBindSightAuras},       // :RemoveBindSightAuras()
     {"RemoveCharmAuras", &LuaUnit::RemoveCharmAuras},               // :RemoveCharmAuras()
     {"StopMoving", &LuaUnit::StopMoving},                           // :StopMoving()
+    {"SendQuestTemplate", &LuaUnit::SendQuestTemplate},             // :SendQuestTemplate(questId, activeAccept) -- Sends quest template to player
 
     // Boolean
     {"IsAlive", &LuaUnit::IsAlive},                                 // :IsAlive()
