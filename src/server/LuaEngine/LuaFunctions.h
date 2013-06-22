@@ -378,6 +378,7 @@ ElunaRegister<Unit> UnitMethods[] =
     {"GetOwnerGUID", &LuaUnit::GetOwnerGUID},                                                               // :GetOwnerGUID() - Returns the GUID of the owner
     {"GetOwner", &LuaUnit::GetOwner},                                                                       // :GetOwner() - Returns the owner
     {"GetOwnerGUID", &LuaUnit::GetOwnerGUID},                                                               // :GetOwnerGUID() - Returns the GUID of the owner
+    {"GetUnitsInRange", &LuaUnit::GetUnitsInRange},                                                         // :GetUnitsInRange(radius) - Returns a list of nearby creatures.
 
     // Setters
     {"SetFaction", &LuaUnit::SetFaction},                                                                   // :SetFaction(factionId) - Sets the unit's faction

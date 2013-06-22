@@ -5244,3 +5244,39 @@ int LuaUnit::DisableMelee(lua_State* L, Unit* unit)
         unit->ClearUnitState(UNIT_STATE_CANNOT_AUTOATTACK);
     return 0;
 }
+
+int LuaUnit::GetUnitsInRange(lua_State* L, Unit* unit)
+{
+    float radius = luaL_checknumber(L, 1);
+    WorldObject* object = unit;
+
+    CellCoord pair(Trinity::ComputeCellCoord(object->GetPositionX(), object->GetPositionY()));
+    Cell cell(pair);
+    cell.SetNoCreate();
+
+    std::list<Unit*> unitList;
+
+    Trinity::AnyUnitInObjectRangeCheck go_check(object, radius);
+    Trinity::UnitListSearcher<Trinity::AnyUnitInObjectRangeCheck> go_search(object, unitList, go_check);
+    TypeContainerVisitor<Trinity::UnitListSearcher<Trinity::AnyUnitInObjectRangeCheck>, GridTypeMapContainer> go_visit(go_search);
+
+    cell.Visit(pair, go_visit, *(object->GetMap()), *object, radius);
+
+    lua_newtable(L);
+    int tbl = lua_gettop(L);
+    uint32 i = 0;
+
+    if(!unitList.empty())
+    {
+        for(std::list<Unit*>::iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
+        {
+            ++i;
+            sEluna->PushUnsigned(L, i);
+            sEluna->PushUnit(L, (*itr));
+            lua_settable(L, tbl);
+        }
+    }
+
+    lua_settop(L, tbl);
+    return 1;
+}

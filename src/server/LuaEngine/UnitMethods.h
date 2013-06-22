@@ -485,5 +485,6 @@ namespace LuaUnit
     int ClearUnitState(lua_State*, Unit*);
     int HasUnitState(lua_State*, Unit*);
     int DisableMelee(lua_State*, Unit*);
+    int GetUnitsInRange(lua_State*, Unit*);
 };
 #endif
