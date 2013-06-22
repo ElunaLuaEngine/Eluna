@@ -544,6 +544,8 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     {"GetNearestCreature", &LuaGameObject::GetNearestCreature},                                             // :GetNearestCreatureEntry([entry, radius]) - Returns nearest creature with given entry in sight or given radius.
     {"GetRelativePoint", &LuaGameObject::GetRelativePoint},                                                 // :GetRelativePoint(dist, radians) - Returns the X, Y and orientation of a point dist away from gob. Radian 0 point is the direction the unit is facing.
     {"GetHeight", &LuaGameObject::GetHeight},                                                               // :GetHeight(X, Y) - Returns returns the Z coord of the given location. If no valid position found, returns gob Z coordinate.
+    {"GetUnitsInRange", &LuaGameObject::GetUnitsInRange},                                                   // :GetUnitsInRange(radius) - Returns a list of nearby Creatures
+    {"GetPlayersInRange", &LuaGameObject::GetPlayersInRange},                                               // :GetPlayersInRange(radius) - Returns a list of nearby Players
 
     // Setters
     {"SetScale", &LuaGameObject::SetScale},                                                                 // :SetScale(scale)

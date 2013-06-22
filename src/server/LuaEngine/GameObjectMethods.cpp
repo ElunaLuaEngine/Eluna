@@ -535,3 +535,65 @@ int LuaGameObject::GetNearestCreature(lua_State* L, GameObject* go)
     sEluna->PushUnit(L, target);
     return 1;
 }
+
+int LuaGameObject::GetUnitsInRange(lua_State* L, GameObject* go)
+{
+    float radius = luaL_checknumber(L, 1);
+    WorldObject* object = go;
+
+    CellCoord pair(Trinity::ComputeCellCoord(object->GetPositionX(), object->GetPositionY()));
+    Cell cell(pair);
+    cell.SetNoCreate();
+
+    std::list<Unit*> unitList;
+
+    Trinity::AnyUnitInObjectRangeCheck go_check(object, radius);
+    Trinity::UnitListSearcher<Trinity::AnyUnitInObjectRangeCheck> go_search(object, unitList, go_check);
+    TypeContainerVisitor<Trinity::UnitListSearcher<Trinity::AnyUnitInObjectRangeCheck>, GridTypeMapContainer> go_visit(go_search);
+
+    cell.Visit(pair, go_visit, *(object->GetMap()), *object, radius);
+
+    lua_newtable(L);
+    int tbl = lua_gettop(L);
+    uint32 i = 0;
+
+    if(!unitList.empty())
+    {
+        for(std::list<Unit*>::iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
+        {
+            ++i;
+            sEluna->PushUnsigned(L, i);
+            sEluna->PushUnit(L, (*itr));
+            lua_settable(L, tbl);
+        }
+    }
+
+    lua_settop(L, tbl);
+    return 1;
+}
+
+int LuaGameObject::GetPlayersInRange(lua_State* L, GameObject* go)
+{
+    float radius = luaL_checknumber(L, 1);
+    WorldObject* object = go;
+
+    std::list<Player*> playerList;
+    Trinity::AnyPlayerInObjectRangeCheck checker(object, radius);
+    Trinity::PlayerListSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(object, playerList, checker);
+    object->VisitNearbyWorldObject(radius, searcher);
+
+    lua_newtable(L);
+    int tbl = lua_gettop(L);
+    uint32 i = 0;
+
+    for(std::list<Player*>::iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
+    {
+        ++i;
+        sEluna->PushUnsigned(L, i);
+        sEluna->PushUnit(L, (*itr));
+        lua_settable(L, tbl);
+    }
+
+    lua_settop(L, tbl);
+    return 1;
+}
