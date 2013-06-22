@@ -5280,3 +5280,32 @@ int LuaUnit::GetUnitsInRange(lua_State* L, Unit* unit)
     lua_settop(L, tbl);
     return 1;
 }
+
+int LuaUnit::GetPlayersInRange(lua_State* L, Unit* unit)
+{
+    float radius = luaL_checknumber(L, 1);
+    WorldObject* object = unit;
+
+    std::list<Player*> playerList;
+    Trinity::AnyPlayerInObjectRangeCheck checker(object, radius);
+    Trinity::PlayerListSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(object, playerList, checker);
+    object->VisitNearbyWorldObject(radius, searcher);
+
+    lua_newtable(L);
+    int tbl = lua_gettop(L);
+    uint32 i = 0;
+
+    for(std::list<Player*>::iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
+    {
+        if(unit->GetGUID() == (*itr)->GetGUID())
+            continue;
+
+        ++i;
+        sEluna->PushUnsigned(L, i);
+        sEluna->PushUnit(L, (*itr));
+        lua_settable(L, tbl);
+    }
+
+    lua_settop(L, tbl);
+    return 1;
+}
