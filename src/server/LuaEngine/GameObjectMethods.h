@@ -50,5 +50,7 @@ namespace LuaGameObject
     int GetNearestPlayer(lua_State*, GameObject*);
     int GetNearestGameObject(lua_State*, GameObject*);
     int GetNearestCreature(lua_State*, GameObject*);
+    int GetUnitsInRange(lua_State*, GameObject*);
+    int GetPlayersInRange(lua_State*, GameObject*);
 };
 #endif
