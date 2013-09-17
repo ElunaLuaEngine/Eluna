@@ -161,6 +161,7 @@ public:
             { "waypoint_data",                 RBAC_PERM_COMMANDS_RELOAD_WAYPOINT_DATA, true,  &HandleReloadWpCommand,                         "", NULL },
             { "vehicle_accessory",             RBAC_PERM_COMMANDS_RELOAD_VEHICLE_ACCESORY, true,  &HandleReloadVehicleAccessoryCommand,           "", NULL },
             { "vehicle_template_accessory",    RBAC_PERM_COMMANDS_RELOAD_VEHICLE_TEMPLATE_ACCESSORY, true,  &HandleReloadVehicleTemplateAccessoryCommand,   "", NULL },
+            { "eluna",                         RBAC_PERM_COMMAND_RELOAD_ELUNA, true, &HandleReloadElunaLuaEngine, "", NULL },                         
             { NULL,                            0,                          false, NULL,                                           "", NULL }
         };
         static ChatCommand commandTable[] =
