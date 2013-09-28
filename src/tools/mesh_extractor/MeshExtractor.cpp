@@ -18,18 +18,26 @@ CacheClass* Cache;
 void ExtractMMaps(std::set<uint32>& mapIds, uint32 threads, bool debug)
 {
     DBC* dbc = MPQHandler->GetDBC("Map");
+    printf("Map.dbc contains %u rows.\n", dbc->Records.size());
     for (std::vector<Record*>::iterator itr = dbc->Records.begin(); itr != dbc->Records.end(); ++itr)
     {
         uint32 mapId = (*itr)->Values[0];
 
         // Skip this map if a list of specific maps was provided and this one is not contained in it.
         if (!mapIds.empty() && mapIds.find(mapId) == mapIds.end())
+        {
+            if (debug)
+                printf("Map %u will not be built.\n", mapId);
             continue;
+        }
 
         std::string name = (*itr)->GetString(1);
         WDT wdt("World\\maps\\" + name + "\\" + name + ".wdt");
         if (!wdt.IsValid || wdt.IsGlobalModel)
+        {
+            printf("Could not find WDT data for map %u (%s)\n", mapId, name.c_str());
             continue;
+        }
         printf("Building %s MapId %u\n", name.c_str(), mapId);
         ContinentBuilder builder(name, mapId, &wdt, threads);
         builder.Build(debug);
@@ -326,12 +334,6 @@ void LoadTile(dtNavMesh*& navMesh, const char* tile)
 
 int main(int argc, char* argv[])
 {
-    if (!system("pause"))
-    {
-        printf("main: Error in system call to pause\n");
-        return -1;
-    }
-
     uint32 threads = 4, extractFlags = 0;
     std::set<uint32> mapIds;
     bool debug = false;
