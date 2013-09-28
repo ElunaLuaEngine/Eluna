@@ -1252,8 +1252,10 @@ public:
     {
 #ifdef ELUNA
         sEluna->StartEluna(true);
-#endif
         handler->SendSysMessage("Reloaded Eluna Lua Engine");
+#else
+        handler->PSendSysMessage("Eluna Lua Engine is not enabled");
+#endif
         return true;
     }
 
