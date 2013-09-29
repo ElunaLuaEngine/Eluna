@@ -11,6 +11,7 @@
 #include "SpellMethods.h"
 #include "QuestMethods.h"
 #include "MapMethods.h"
+#include "CorpseMethods.h"
 
 void RegisterGlobals(lua_State* L)
 {
@@ -81,6 +82,10 @@ void RegisterGlobals(lua_State* L)
     lua_register(L, "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers);                                 // SaveAllPlayers() - Saves all players
     lua_register(L, "SendMail", &LuaGlobalFunctions::SendMail);                                             // SendMail(subject, text, receiverLowGUID[, sender, stationary, delay, itemEntry, itemAmount, itemEntry2, itemAmount2...]) - Sends a mail to player with lowguid. use nil to use default values on optional arguments. Sender is an optional player object. UNDOCUMENTED
     lua_register(L, "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath);                                       // AddTaxiPath(pathTable, mountA, mountH[, price, pathId]) - Adds a new taxi path. Returns the path's ID. Will replace an existing path if pathId provided and already used. path table structure: T = {{map, x, y, z[, actionFlag, delay, arrivalEvId, departEvId]}, {...}, ...} UDOCUMENTED
+    lua_register(L, "AddCorpse", &LuaGlobalFunctions::AddCorpse);                                           // AddCorpse(corpse) - Adds the player's corpse to the world. More specifically, the cell.
+    lua_register(L, "RemoveCorpse", &LuaGlobalFunctions::RemoveCorpse);                                     // RemoveCorpse(corpse) - Removes the player's corpse from the world.
+    lua_register(L, "ConvertCorpseForPlayer", &LuaGlobalFunctions::ConvertCorpseForPlayer);                 // ConvertCorpseFromPlayer(guid[, insignia]) - Converts the player's corpse to bones. Adding insignia for PvP is optional (true or false).
+    lua_register(L, "RemoveOldCorpses", &LuaGlobalFunctions::RemoveOldCorpses);                             // RemoveOldCorpses() - Converts (removes) old corpses that aren't bones.
 }
 
 ElunaRegister<Unit> UnitMethods[] =
@@ -156,6 +161,7 @@ ElunaRegister<Unit> UnitMethods[] =
     {"GetSelectedUnit", &LuaUnit::GetSelectedUnit},                                                         // :GetSelectedUnit() - Returns player's selected unit.
     {"GetDbLocaleIndex", &LuaUnit::GetDbLocaleIndex},                                                       // :GetDbLocaleIndex() - Returns locale index
     {"GetDbcLocale", &LuaUnit::GetDbcLocale},                                                               // :GetDbcLocale() - Returns DBC locale
+    {"GetCorpse", &LuaUnit::GetCorpse},                                                                     // :GetCorpse() - Returns the player's corpse
 
     // Setters
     {"AdvanceSkillsToMax", &LuaUnit::AdvanceSkillsToMax},                                                   // :AdvanceSkillsToMax() - Advances all currently known skills to the currently known max level
@@ -339,6 +345,9 @@ ElunaRegister<Unit> UnitMethods[] =
     {"GossipSendPOI", &LuaUnit::GossipSendPOI},                                                             // :GossipSendPOI(X, Y, Icon, Flags, Data, Name) - Sends a point of interest to the player
     {"GossipAddQuests", &LuaUnit::GossipAddQuests},                                                         // :GossipAddQuests(unit) - Adds unit's quests to player's gossip menu
     {"SendQuestTemplate", &LuaUnit::SendQuestTemplate},                                                     // :SendQuestTemplate(questId, activeAccept) -- Sends quest template to player
+    {"CreateCorpse", &LuaUnit::CreateCorpse},                                                               // :CreateCorpse() - Creates the player's corpse
+    {"SpawnBones", &LuaUnit::SpawnBones},                                                                   // :SpawnBones() - Removes the player's corpse and spawns bones
+    {"RemovedInsignia", &LuaUnit::RemovedInsignia},                                                         // :RemovedInsignia(looter) - Looter removes the player's corpse, looting the player and replacing with lootable bones
 
     // Creature methods
     // Getters
@@ -982,6 +991,18 @@ ElunaRegister<Map> MapMethods[] =
     {NULL, NULL},
 };
 
+ElunaRegister<Corpse> CorpseMethods[] =
+{
+    {"GetOwnerGUID", &LuaCorpse::GetOwnerGUID},                                                             // :GetOwnerGUID() - Returns the corpse owner GUID
+    {"GetGhostTime", &LuaCorpse::GetGhostTime},                                                             // :GetGhostTime() - Returns the ghost time of a corpse
+    {"GetType", &LuaCorpse::GetType},                                                                       // :GetType() - Returns the (CorpseType) of a corpse
+    {"Create", &LuaCorpse::Create},                                                                         // :Create(player) - Creates the player's corpse
+    {"ResetGhostTime", &LuaCorpse::ResetGhostTime},                                                         // :ResetGhostTime() - Resets the corpse's ghost time
+    {"SaveToDB", &LuaCorpse::SaveToDB},                                                                     // :SaveToDB() - Saves the corpse data to the corpse database table.
+    {"DeleteBonesFromWorld", &LuaCorpse::DeleteBonesFromWorld},                                             // :DeleteBonesFromWorld() - Deletes all bones from the world
+    {NULL, NULL}
+};
+
 template<typename T> ElunaRegister<T>* GetMethodTable() { return NULL; }
 template<> ElunaRegister<Unit>* GetMethodTable<Unit>() { return UnitMethods; }
 template<> ElunaRegister<GameObject>* GetMethodTable<GameObject>() { return GameObjectMethods; }
@@ -994,3 +1015,4 @@ template<> ElunaRegister<WorldPacket>* GetMethodTable<WorldPacket>() { return Pa
 template<> ElunaRegister<Spell>* GetMethodTable<Spell>() { return SpellMethods; }
 template<> ElunaRegister<Quest>* GetMethodTable<Quest>() { return QuestMethods; }
 template<> ElunaRegister<Map>* GetMethodTable<Map>() { return MapMethods; }
+template<> ElunaRegister<Corpse>* GetMethodTable<Corpse>() { return CorpseMethods; }

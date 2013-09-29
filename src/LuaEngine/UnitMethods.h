@@ -102,6 +102,10 @@ namespace LuaUnit
     int GetCritterGUID(lua_State*, Unit*);
     int GetControllerGUID(lua_State*, Unit*);
     int GetControllerGUIDS(lua_State*, Unit*);
+    int GetCorpse(lua_State*, Unit*);
+    int CreateCorpse(lua_State*, Unit*);
+    int SpawnBones(lua_State*, Unit*);
+    int RemovedInsignia(lua_State*, Unit*);
     int SendAuctionMenu(lua_State*, Unit*);
     int SendMailMenu(lua_State*, Unit*);
     int SendTaxiMenu(lua_State*, Unit*);

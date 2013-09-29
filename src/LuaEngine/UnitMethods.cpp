@@ -4539,6 +4539,14 @@ int LuaUnit::GetAccountName(lua_State* L, Unit* unit)
     return 1;
 }
 
+int LuaUnit::GetCorpse(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    sEluna->PushCorpse(L, player->GetCorpse());
+    return 1;
+}
+
 int LuaUnit::GetAITarget(lua_State* L, Unit* unit)
 {
     TO_CREATURE();
@@ -5524,6 +5532,33 @@ int LuaUnit::SendQuestTemplate(lua_State* L, Unit* unit)
         return 0;
 
     player->PlayerTalkClass->SendQuestGiverQuestDetails(quest, player->GetGUID(), activeAccept);
+    return 0;
+}
+
+int LuaUnit::CreateCorpse(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    player->CreateCorpse();
+    return 0;
+}
+
+int LuaUnit::SpawnBones(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    player->SpawnCorpseBones();
+    return 0;
+}
+
+int LuaUnit::RemovedInsignia(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    Player* looter = sEluna->CHECK_PLAYER(L, 1);
+    if (!looter)
+        return 0;
+    player->RemovedInsignia(looter);
     return 0;
 }
 

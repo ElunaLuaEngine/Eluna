@@ -1043,5 +1043,33 @@ namespace LuaGlobalFunctions
         }
         return 1;
     }
+
+    static int AddCorpse(lua_State* L)
+    {
+        Corpse* corpse = sEluna->CHECK_CORPSE(L, 1);
+        sObjectAccessor->AddCorpse(corpse);
+        return 1;
+    }
+
+    static int RemoveCorpse(lua_State* L)
+    {
+        Corpse* corpse = sEluna->CHECK_CORPSE(L, 1);
+        sObjectAccessor->RemoveCorpse(corpse);
+        return 1;
+    }
+
+    static int ConvertCorpseForPlayer(lua_State* L)
+    {
+        uint64 guid = sEluna->CHECK_ULONG(L, 1);
+        bool insignia = luaL_optbool(L, 2, false);
+        sObjectAccessor->ConvertCorpseForPlayer(guid, insignia);
+        return 0;
+    }
+
+    static int RemoveOldCorpses(lua_State* L)
+    {
+        sObjectAccessor->RemoveOldCorpses();
+        return 0;
+    }
 }
 #endif

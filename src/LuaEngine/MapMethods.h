@@ -71,7 +71,6 @@ public:
     // :GetAreaId(x, y, z)
     static int GetAreaId(lua_State* L, Map* map)
     {
-
         if(!map)
             return 0;
 
@@ -86,7 +85,6 @@ public:
     // :IsArena()
     static int IsArena(lua_State* L, Map* map)
     {
-
         if(!map)
             return 0;
         
@@ -97,7 +95,6 @@ public:
     // :IsBattleground()
     static int IsBattleground(lua_State* L, Map* map)
     {
-
         if(!map)
             return 0;
 
@@ -108,7 +105,6 @@ public:
     // :IsDungeon()
     static int IsDungeon(lua_State* L, Map* map)
     {
-
         if(!map)
             return 0;
         
@@ -119,7 +115,6 @@ public:
     // :IsEmpty()
     static int IsEmpty(lua_State* L, Map* map)
     {
-
         if(!map)
             return 0;
         
@@ -130,7 +125,6 @@ public:
     // :IsHeroic()
     static int IsHeroic(lua_State* L, Map* map)
     {
-
         if(!map)
             return 0;
         
@@ -141,7 +135,6 @@ public:
     // :IsRaid()
     static int IsRaid(lua_State* L, Map* map)
     {
-
         if(!map)
             return 0;
         

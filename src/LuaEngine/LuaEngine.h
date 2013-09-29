@@ -280,6 +280,7 @@ public:
     void PushSpell(lua_State*, Spell*);
     void PushQuest(lua_State*, Quest const*);
     void PushPacket(lua_State*, WorldPacket*);
+    void PushCorpse(lua_State*, Corpse*);
     // Checks
     WorldPacket* CHECK_PACKET(lua_State* L, int narg);
     Object* CHECK_OBJECT(lua_State* L, int narg);
@@ -288,6 +289,7 @@ public:
     Player * CHECK_PLAYER(lua_State* L, int narg);
     Creature * CHECK_CREATURE(lua_State* L, int narg);
     GameObject* CHECK_GAMEOBJECT(lua_State* L, int narg);
+    Corpse* CHECK_CORPSE(lua_State* L, int narg);
     Quest* CHECK_QUEST(lua_State* L, int narg);
     Spell* CHECK_SPELL(lua_State* L, int narg);
     uint64 CHECK_ULONG(lua_State* L, int narg);
