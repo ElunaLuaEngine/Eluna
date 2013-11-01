@@ -383,7 +383,7 @@ void WorldSession::HandleItemQuerySingleOpcode(WorldPacket& recvData)
                 else
                 {
                     data << uint32(spell->RecoveryTime);
-                    data << uint32(spell->Category);
+                    data << uint32(spell->GetCategory());
                     data << uint32(spell->CategoryRecoveryTime);
                 }
             }
