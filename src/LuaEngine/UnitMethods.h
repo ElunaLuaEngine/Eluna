@@ -290,6 +290,7 @@ namespace LuaUnit
     int GetBagItem(lua_State*, Unit*);
     int SummonGameObject(lua_State*, Unit*);
     int SpawnCreature(lua_State*, Unit*);
+    int AttackStart(lua_State*, Unit*);
     int Despawn(lua_State*, Unit*);
     int GetArenaPoints(lua_State*, Unit*);
     int KnockbackFrom(lua_State*, Unit*);

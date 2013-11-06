@@ -830,6 +830,17 @@ int LuaUnit::GetHomePosition(lua_State* L, Unit* unit)
     return 4;
 }
 
+int LuaUnit::AttackStart(lua_State* L, Unit* unit)
+{
+    TO_CREATURE();
+
+    Unit* target = sEluna->CHECK_UNIT(L, 1);
+    if (!target)
+        return 0;
+    creature->GetAI()->AttackStart(target);
+    return 0;
+}
+
 int LuaUnit::RewardQuest(lua_State* L, Unit* unit)
 {
     TO_PLAYER_BOOL();
@@ -2197,7 +2208,7 @@ int LuaUnit::GroupEventHappens(lua_State* L, Unit* unit)
     TO_PLAYER();
 
     uint32 questId = luaL_checkunsigned(L, 1);
-    WorldObject* obj = sEluna->CHECK_WORLDOBJECT(L, 1);
+    WorldObject* obj = sEluna->CHECK_WORLDOBJECT(L, 2);
     if (!obj)
         return 0;
 
@@ -3153,7 +3164,6 @@ int LuaUnit::MoveTo(lua_State* L, Unit* unit)
     float y = luaL_checknumber(L, 3);
     float z = luaL_checknumber(L, 4);
     bool generatePath = luaL_optbool(L, 5, true);
-
     unit->GetMotionMaster()->MovePoint(id, x, y, z, generatePath);
     return 0;
 }
