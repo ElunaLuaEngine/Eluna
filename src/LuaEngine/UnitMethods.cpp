@@ -3240,6 +3240,17 @@ int LuaUnit::GetHonorPoints(lua_State* L, Unit* unit)
     return 1;
 }
 
+int LuaUnit::GetGossipTextId(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    WorldObject* obj = sEluna->CHECK_WORLDOBJECT(L, 1);
+    if (!obj)
+        return 0;
+    sEluna->PushUnsigned(L, player->GetGossipTextId(obj));
+    return 1;
+}
+
 int LuaUnit::GetSelection(lua_State* L, Unit* unit)
 {
     TO_PLAYER();

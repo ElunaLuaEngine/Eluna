@@ -353,6 +353,7 @@ namespace LuaUnit
     int GetGuild(lua_State*, Unit*);
     int GetGroup(lua_State*, Unit*);
     int GetGearLevel(lua_State*, Unit*);
+    int GetGossipTextId(lua_State*, Unit*);
     int GetEntry(lua_State*, Unit*);
     int GetFaction(lua_State*, Unit*);
     int SetFaction(lua_State*, Unit*);
