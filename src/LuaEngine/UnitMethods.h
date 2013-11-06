@@ -417,6 +417,7 @@ namespace LuaUnit
     int SendUnitEmote(lua_State*, Unit*);
     int SendUnitSay(lua_State*, Unit*);
     int SendUnitYell(lua_State*, Unit*);
+    int SendCreatureTalk(lua_State*, Unit*);
     int SendPacketToPlayer(lua_State*, Unit*);
     int SendPacket(lua_State*, Unit*);
     int SendPacketToGroup(lua_State*, Unit*);

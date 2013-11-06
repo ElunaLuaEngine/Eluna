@@ -3153,6 +3153,7 @@ int LuaUnit::MoveTo(lua_State* L, Unit* unit)
     float y = luaL_checknumber(L, 3);
     float z = luaL_checknumber(L, 4);
     bool generatePath = luaL_optbool(L, 5, true);
+
     unit->GetMotionMaster()->MovePoint(id, x, y, z, generatePath);
     return 0;
 }
@@ -4364,6 +4365,16 @@ int LuaUnit::SendUnitYell(lua_State* L, Unit* unit)
     uint32 language = luaL_checknumber(L, 2);
     if (std::string(msg).length() > 0)
         unit->MonsterYell(msg, language, unit->GetGUID());
+    return 0;
+}
+
+int LuaUnit::SendCreatureTalk(lua_State* L, Unit* unit)
+{
+    TO_CREATURE();
+
+    uint8 id = luaL_checknumber(L, 1);
+    uint64 playerGUID = sEluna->CHECK_ULONG(L, 2);
+    creature->AI()->Talk(id, playerGUID);
     return 0;
 }
 

@@ -425,6 +425,7 @@ ElunaRegister<Unit> UnitMethods[] =
     {"SelectVictim", &LuaUnit::SelectVictim},                                                               // :SelectVictim() - Returns a victim or nil
     {"AddLootMode", &LuaUnit::AddLootMode},                                                                 // :AddLootMode(lootMode)
     {"DealDamage", &LuaUnit::DealDamage},                                                                   // :DealDamage(target, amount) - Deals damage to target (if target) : if no target, unit will damage self
+    {"SendCreatureTalk", &LuaUnit::SendCreatureTalk},                                                       // :SendCreatureTalk(id, playerGUID) - Sends a chat message to a playerGUID (player) by id. Id can be found in creature_text under the 'group_id' column
 
     // Unit Methods
     // Getters
