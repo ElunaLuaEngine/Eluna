@@ -180,8 +180,8 @@ int LuaGameObject::SummonCreature(lua_State* L, GameObject* go)
             type = TEMPSUMMON_CORPSE_DESPAWN;
             break;
         case 6:
-           type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
-           break;
+            type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
+            break;
         case 7:
             type = TEMPSUMMON_DEAD_DESPAWN;
             break;
