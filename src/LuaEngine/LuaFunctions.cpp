@@ -560,6 +560,9 @@ ElunaRegister<Unit> UnitMethods[] =
     {"IsStopped", &LuaUnit::IsStopped},                                                                     // :IsStopped()
     {"HasFlag", &LuaUnit::HasFlag},                                                                         // :HasFlag(index, flag)
     {"HasUnitState", &LuaUnit::HasUnitState},                                                               // :HasUnitState(state) - state from UnitState enum
+    {"IsQuestGiver", &LuaUnit::IsQuestGiver},                                                               // :IsQuestGiver() - Returns true if the unit is a quest giver, false if not
+    {"IsWithinDistInMap", &LuaUnit::IsWithinDistInMap},                                                     // :IsWithinDistInMap(worldObject, radius) - Returns if the unit is within distance in map of the worldObject
+    {"IsInAccessiblePlaceFor", &LuaUnit::IsInAccessiblePlaceFor},                                           // :IsInAccessiblePlaceFor(creature) - Returns if the unit is in an accessible place for the specified creature
 
     // Other
     {"RegisterEvent", &LuaUnit::RegisterEvent},                                                             // :RegisterEvent(function, delay, calls)

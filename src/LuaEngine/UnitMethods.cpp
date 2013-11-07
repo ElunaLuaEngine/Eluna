@@ -198,6 +198,31 @@ int LuaUnit::IsWithinLoS(lua_State* L, Unit* unit)
     return 1;
 }
 
+int LuaUnit::IsWithinDistInMap(lua_State* L, Unit* unit)
+{
+    TO_UNIT_BOOL();
+
+    WorldObject* obj = sEluna->CHECK_WORLDOBJECT(L, 1);
+    if (!obj)
+        return 0;
+    float radius = luaL_checknumber(L, 2);
+
+    sEluna->PushBoolean(L, unit->IsWithinDistInMap(obj, radius));
+    return 1;
+}
+
+int LuaUnit::IsInAccessiblePlaceFor(lua_State* L, Unit* unit)
+{
+    TO_UNIT_BOOL();
+
+    Creature* creature = sEluna->CHECK_CREATURE(L, 1);
+    if (!creature)
+        return 0;
+
+    sEluna->PushBoolean(L, unit->isInAccessiblePlaceFor(creature));
+    return 1;
+}
+
 int LuaUnit::GetScale(lua_State* L, Unit* unit)
 {
     TO_UNIT();
@@ -5426,6 +5451,14 @@ int LuaUnit::IsStopped(lua_State* L, Unit* unit)
     TO_UNIT_BOOL();
 
     sEluna->PushBoolean(L, unit->IsStopped());
+    return 1;
+}
+
+int LuaUnit::IsQuestGiver(lua_State* L, Unit* unit)
+{
+    TO_UNIT_BOOL();
+
+    sEluna->PushBoolean(L, unit->IsQuestGiver());
     return 1;
 }
 

@@ -275,6 +275,8 @@ namespace LuaUnit
     int IsFalling(lua_State*, Unit*);
     int IsUnderWater(lua_State*, Unit*);
     int IsInWater(lua_State*, Unit*);
+    int IsWithinDistInMap(lua_State*, Unit*);
+    int IsInAccessiblePlaceFor(lua_State*, Unit*);
     int GetVictim(lua_State*, Unit*);
     int GetNearestTargetInAttackDistance(lua_State*, Unit*);
     int GetNearestTarget(lua_State*, Unit*);
@@ -396,6 +398,7 @@ namespace LuaUnit
     int IsInArenaTeam(lua_State*, Unit*);
     int IsInWorld(lua_State*, Unit*);
     int IsPvPFlagged(lua_State*, Unit*);
+    int IsQuestGiver(lua_State*, Unit*);
     int HasQuest(lua_State*, Unit*);
     int IsHorde(lua_State*, Unit*);
     int IsAlliance(lua_State*, Unit*);
