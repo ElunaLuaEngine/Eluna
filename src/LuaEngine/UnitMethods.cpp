@@ -3042,8 +3042,8 @@ int LuaUnit::SpawnCreature(lua_State* L, Unit* unit)
             type = TEMPSUMMON_CORPSE_DESPAWN;
             break;
         case 6:
-           type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
-           break;
+            type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
+            break;
         case 7:
             type = TEMPSUMMON_DEAD_DESPAWN;
             break;
