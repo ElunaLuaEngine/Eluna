@@ -103,6 +103,7 @@ namespace LuaUnit
     int GetControllerGUID(lua_State*, Unit*);
     int GetControllerGUIDS(lua_State*, Unit*);
     int GetCorpse(lua_State*, Unit*);
+    int GetQuestRewardStatus(lua_State*, Unit*);
     int CreateCorpse(lua_State*, Unit*);
     int SpawnBones(lua_State*, Unit*);
     int RemovedInsignia(lua_State*, Unit*);
@@ -244,6 +245,7 @@ namespace LuaUnit
     int GetQuestLevel(lua_State*, Unit*);
     int GetItemByEntry(lua_State*, Unit*);
     int SetSheath(lua_State*, Unit*);
+    int SetName(lua_State*, Unit*);
     int Whisper(lua_State*, Unit*);
     int TextEmote(lua_State*, Unit*);
     int Yell(lua_State*, Unit*);
@@ -358,6 +360,7 @@ namespace LuaUnit
     int GetGossipTextId(lua_State*, Unit*);
     int GetEntry(lua_State*, Unit*);
     int GetFaction(lua_State*, Unit*);
+    int GetStandState(lua_State*, Unit*);
     int SetFaction(lua_State*, Unit*);
     int SetLevel(lua_State*, Unit*);
     int SetPhaseMask(lua_State*, Unit*);
@@ -391,6 +394,7 @@ namespace LuaUnit
     int IsDead(lua_State*, Unit*);
     int IsDying(lua_State*, Unit*);
     int IsBanker(lua_State*, Unit*);
+    int IsVendor(lua_State*, Unit*);
     int IsBattleMaster(lua_State*, Unit*);
     int IsCharmed(lua_State*, Unit*);
     int IsArmorer(lua_State*, Unit*);

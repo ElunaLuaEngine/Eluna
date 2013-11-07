@@ -27,7 +27,6 @@ void RegisterGlobals(lua_State* L)
 
     // Getters
     lua_register(L, "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine);                                     // GetLuaEngine() - Returns ElunaEngine
-    lua_register(L, "GetLUAEngine", &LuaGlobalFunctions::GetLuaEngine);                                     // GetLUAEngine() - Returns ElunaEngine
     lua_register(L, "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion);                                 // GetCoreVersion() - Returns core version string
     lua_register(L, "GetQuest", &LuaGlobalFunctions::GetQuest);                                             // GetQuest(questId) - Returns quest object
     lua_register(L, "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID);                               // GetPlayerByGUID(guid) - Returns player object by GUID
@@ -163,6 +162,7 @@ ElunaRegister<Unit> UnitMethods[] =
     {"GetDbcLocale", &LuaUnit::GetDbcLocale},                                                               // :GetDbcLocale() - Returns DBC locale
     {"GetCorpse", &LuaUnit::GetCorpse},                                                                     // :GetCorpse() - Returns the player's corpse
     {"GetGossipTextId", &LuaUnit::GetGossipTextId},                                                         // :GetGossipTextId(worldObject) - Returns the WorldObject's gossip textId
+    {"GetQuestRewardStatus", &LuaUnit::GetQuestRewardStatus},                                               // :GetQuestRewardStatus(questId) - Returns the true/false of the quest reward status
 
     // Setters
     {"AdvanceSkillsToMax", &LuaUnit::AdvanceSkillsToMax},                                                   // :AdvanceSkillsToMax() - Advances all currently known skills to the currently known max level
@@ -493,7 +493,8 @@ ElunaRegister<Unit> UnitMethods[] =
     {"GetCritterGUID", &LuaUnit::GetCritterGUID},                                                           // :GetCritterGUID() - Returns the critter's GUID
     {"GetControllerGUID", &LuaUnit::GetControllerGUID},                                                     // :GetControllerGUID() - Returns the Charmer or Owner GUID
     {"GetControllerGUIDS", &LuaUnit::GetControllerGUIDS},                                                   // :GetControllerGUIDS() - Returns the charmer, owner or unit's own GUID
-    
+    {"GetStandState", &LuaUnit::GetStandState},                                                             // :GetStandState() - Returns the unit's stand state
+
     // Setters
     {"SetFaction", &LuaUnit::SetFaction},                                                                   // :SetFaction(factionId) - Sets the unit's faction
     {"SetLevel", &LuaUnit::SetLevel},                                                                       // :SetLevel(amount)
@@ -528,6 +529,7 @@ ElunaRegister<Unit> UnitMethods[] =
     {"SetVisible", &LuaUnit::SetVisible},                                                                   // :SetVisible(x)
     {"SetOwnerGUID", &LuaUnit::SetOwnerGUID},                                                               // :SetOwnerGUID(guid) - Sets the guid of the owner
     {"SetFlag", &LuaUnit::SetFlag},                                                                         // :SetFlag(index, flag)
+    {"SetName", &LuaUnit::SetName},                                                                         // :SetName(name) - Sets the unit's name
 
     // Boolean
     {"IsAlive", &LuaUnit::IsAlive},                                                                         // :IsAlive()
@@ -563,6 +565,7 @@ ElunaRegister<Unit> UnitMethods[] =
     {"IsQuestGiver", &LuaUnit::IsQuestGiver},                                                               // :IsQuestGiver() - Returns true if the unit is a quest giver, false if not
     {"IsWithinDistInMap", &LuaUnit::IsWithinDistInMap},                                                     // :IsWithinDistInMap(worldObject, radius) - Returns if the unit is within distance in map of the worldObject
     {"IsInAccessiblePlaceFor", &LuaUnit::IsInAccessiblePlaceFor},                                           // :IsInAccessiblePlaceFor(creature) - Returns if the unit is in an accessible place for the specified creature
+    {"IsVendor", &LuaUnit::IsVendor},                                                                       // :IsVendor() - Returns if the unit is a vendor or not
 
     // Other
     {"RegisterEvent", &LuaUnit::RegisterEvent},                                                             // :RegisterEvent(function, delay, calls)

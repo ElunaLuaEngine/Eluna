@@ -2335,6 +2335,16 @@ int LuaUnit::GetQuestStatus(lua_State* L, Unit* unit)
     return 1;
 }
 
+int LuaUnit::GetQuestRewardStatus(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    uint32 questId = luaL_checkunsigned(L, 1);
+
+    sEluna->PushBoolean(L, player->GetQuestRewardStatus(questId));
+    return 1;
+}
+
 int LuaUnit::FailQuest(lua_State* L, Unit* unit)
 {
     TO_PLAYER();
@@ -3010,8 +3020,9 @@ int LuaUnit::SpawnCreature(lua_State* L, Unit* unit)
     float y = luaL_checknumber(L, 3);
     float z = luaL_checknumber(L, 4);
     float o = luaL_checknumber(L, 5);
-    uint32 desp = luaL_optunsigned(L, 6, 0);
-    sEluna->PushUnit(L, unit->SummonCreature(entry, x, y, z, o, desp ? TEMPSUMMON_TIMED_OR_DEAD_DESPAWN : TEMPSUMMON_MANUAL_DESPAWN, desp));
+    uint32 spawnType = luaL_optunsigned(L, 6, 0);
+    uint32 despawnTimer = luaL_optunsigned(L, 7, 0);
+    sEluna->PushUnit(L, unit->SummonCreature(entry, x, y, z, o, (TempSummonType)spawnType, despawnTimer));
     return 1;
 }
 
@@ -3035,6 +3046,14 @@ int LuaUnit::Despawn(lua_State* L, Unit* unit)
 
     uint32 time = luaL_optunsigned(L, 1, 0);
     creature->DespawnOrUnsummon(time);
+    return 0;
+}
+
+int LuaUnit::GetStandState(lua_State* L, Unit* unit)
+{
+    TO_UNIT();
+
+    sEluna->PushUnsigned(L, unit->getStandState());
     return 0;
 }
 
@@ -3115,6 +3134,16 @@ int LuaUnit::MoveChase(lua_State* L, Unit* unit)
     float dist = luaL_optnumber(L, 2, 0.0f);
     float angle = luaL_optnumber(L, 3, 0.0f);
     unit->GetMotionMaster()->MoveChase(target, dist, angle);
+    return 0;
+}
+
+int LuaUnit::SetName(lua_State* L, Unit* unit)
+{
+    TO_UNIT();
+
+    const char* name = luaL_checkstring(L, 1);
+    if (std::string(name).length() > 0)
+        unit->SetName(name);
     return 0;
 }
 
@@ -4091,6 +4120,14 @@ int LuaUnit::IsBanker(lua_State* L, Unit* unit)
     TO_UNIT_BOOL();
 
     sEluna->PushBoolean(L, unit->IsBanker());
+    return 1;
+}
+
+int LuaUnit::IsVendor(lua_State* L, Unit* unit)
+{
+    TO_UNIT_BOOL();
+
+    sEluna->PushBoolean(L, unit->IsVendor());
     return 1;
 }
 
