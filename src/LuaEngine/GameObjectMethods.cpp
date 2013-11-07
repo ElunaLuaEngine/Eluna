@@ -307,6 +307,15 @@ int LuaGameObject::Move(lua_State* L, GameObject* go)
     return 0;
 }
 
+int LuaGameObject::SaveToDB(lua_State* L, GameObject* go)
+{
+    if (!go || !go->IsInWorld())
+        return 0;
+
+    go->SaveToDB();
+    return 0;
+}
+
 int LuaGameObject::SetScale(lua_State* L, GameObject* go)
 {
     if (!go || !go->IsInWorld())

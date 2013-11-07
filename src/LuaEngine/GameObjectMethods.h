@@ -30,6 +30,7 @@ namespace LuaGameObject
     int IsDestructible(lua_State*, GameObject*);
     int IsActive(lua_State*, GameObject*);
     int Move(lua_State*, GameObject*);
+    int SaveToDB(lua_State*, GameObject*);
     int SetScale(lua_State*, GameObject*);
     int RegisterEvent(lua_State*, GameObject*);
     int RemoveEventById(lua_State*, GameObject*);
