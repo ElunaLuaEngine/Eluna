@@ -3022,7 +3022,36 @@ int LuaUnit::SpawnCreature(lua_State* L, Unit* unit)
     float o = luaL_checknumber(L, 5);
     uint32 spawnType = luaL_optunsigned(L, 6, 0);
     uint32 despawnTimer = luaL_optunsigned(L, 7, 0);
-    sEluna->PushUnit(L, unit->SummonCreature(entry, x, y, z, o, (TempSummonType)spawnType, despawnTimer));
+
+    TempSummonType type;
+    switch (spawnType)
+    {
+        case 1:
+            type = TEMPSUMMON_TIMED_OR_DEAD_DESPAWN;
+            break;
+        case 2:
+            type = TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN;
+            break;
+        case 3:
+            type = TEMPSUMMON_TIMED_DESPAWN;
+            break;
+        case 4:
+            type = TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT;
+            break;
+        case 5:
+            type = TEMPSUMMON_CORPSE_DESPAWN;
+            break;
+        case 6:
+           type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
+           break;
+        case 7:
+            type = TEMPSUMMON_DEAD_DESPAWN;
+            break;
+        case 8:
+            type = TEMPSUMMON_MANUAL_DESPAWN;
+            break;
+    }
+    sEluna->PushUnit(L, unit->SummonCreature(entry, x, y, z, o, type, despawnTimer));
     return 1;
 }
 

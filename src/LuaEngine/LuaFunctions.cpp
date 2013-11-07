@@ -691,7 +691,7 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     // Other
     {"CastSpell", &LuaGameObject::CastSpell},                                                               // :CastSpellOnTarget(target, spellId) - Casts the spell on target, no manacost or cast time
     {"Move", &LuaGameObject::Move},                                                                         // :Move(x, y, z, o) - Moves the GO to coordinates
-    {"SpawnCreature", &LuaGameObject::SummonCreature},                                                      // :SummonCreature(entry, x, y, z, o, despawntime) Summons a temporary creature. 0 for infinitely, otherwise despawns after despawntime (ms)
+    {"SpawnCreature", &LuaGameObject::SummonCreature},                                                      // :SpawnCreature(entry, x, y, z, o, [, spawnType, despawnTimer]) - Spawns a creature to location that despawns depending on your TempSummon type and how long you give it to despawn. SpawnType [TempSummon Type] and despawnTimer are optional. 
     {"RegisterEvent", &LuaGameObject::RegisterEvent},                                                       // :RegisterEvent(function, delay, calls)
     {"RemoveEventById", &LuaGameObject::RemoveEventById},                                                   // :RemoveEventById(eventID)
     {"RemoveEvents", &LuaGameObject::RemoveEvents},                                                         // :RemoveEvents()
