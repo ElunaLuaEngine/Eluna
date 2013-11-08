@@ -620,6 +620,8 @@ ElunaRegister<Unit> UnitMethods[] =
     {"AddUnitState", &LuaUnit::AddUnitState},                                                               // :AddUnitState(state)
     {"DisableMelee", &LuaUnit::DisableMelee},                                                               // :DisableMelee([disable]) - if true, enables
     {"SummonGuardian", &LuaUnit::SummonGuardian},                                                           // :SummonGuardian(entry, x, y, z, o[, duration]) - summons a guardian to location. Scales with summoner, is friendly to him and guards him.
+    {"FindNearestGameObject", &LuaUnit::FindNearestGameObject},                                             // :FindNearestGameObject(entry, range) - Finds the nearest gameobject and returns it
+    {"FindNearestCreature", &LuaUnit::FindNearestCreature},                                                 // :FindNearestCreature(entry, range[, alive]) - Finds the nearest creature and returns it. Alive is optional, if true it checks if the creature is alive
 
     /* Vehicle */
     {"AddVehiclePassenger", &LuaUnit::AddVehiclePassenger},                                                 // :AddVehiclePassenger(unit, seatId) - Adds a passenger to the vehicle by specifying a unit and seatId

@@ -5745,3 +5745,26 @@ int LuaUnit::CanUseItem(lua_State* L, Unit* unit)
     }
     return 1;
 }
+
+int LuaUnit::FindNearestGameObject(lua_State* L, Unit* unit)
+{
+    TO_UNIT();
+
+    uint32 entry = luaL_checkunsigned(L, 1);
+    float range = luaL_checknumber(L, 2);
+
+    sEluna->PushGO(L, unit->FindNearestGameObject(entry, range));
+    return 1;
+}
+
+int LuaUnit::FindNearestCreature(lua_State* L, Unit* unit)
+{
+    TO_UNIT();
+
+    uint32 entry = luaL_checkunsigned(L, 1);
+    float range = luaL_checknumber(L, 2);
+    bool alive = luaL_optbool(L, 3, true);
+
+    sEluna->PushUnit(L, unit->FindNearestCreature(entry, range, alive));
+    return 1;
+}

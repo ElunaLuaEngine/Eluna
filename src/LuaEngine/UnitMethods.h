@@ -522,5 +522,7 @@ namespace LuaUnit
     int GetDbLocaleIndex(lua_State*, Unit*);
     int GetDbcLocale(lua_State*, Unit*);
     int CanUseItem(lua_State*, Unit*);
+    int FindNearestGameObject(lua_State*, Unit*);
+    int FindNearestCreature(lua_State*, Unit*);
 };
 #endif

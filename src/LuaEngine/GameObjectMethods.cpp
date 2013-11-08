@@ -322,10 +322,8 @@ int LuaGameObject::RemoveFromWorld(lua_State* L, GameObject* go)
         return 0;
 
     bool del = luaL_optbool(L, 1, false);
-
     if (del)
         go->DeleteFromDB();
-
     go->RemoveFromWorld();
     return 0;
 }

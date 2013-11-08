@@ -31,7 +31,6 @@ namespace LuaGameObject
     int IsActive(lua_State*, GameObject*);
     int Move(lua_State*, GameObject*);
     int SaveToDB(lua_State*, GameObject*);
-    int DeleteFromDB(lua_State*, GameObject*);
     int SetScale(lua_State*, GameObject*);
     int RegisterEvent(lua_State*, GameObject*);
     int RemoveEventById(lua_State*, GameObject*);
@@ -59,5 +58,6 @@ namespace LuaGameObject
     int SetLootState(lua_State*, GameObject*);
     int SetFlag(lua_State*, GameObject*);
     int RemoveFlag(lua_State*, GameObject*);
+    int RemoveFromWorld(lua_State*, GameObject*);
 };
 #endif
