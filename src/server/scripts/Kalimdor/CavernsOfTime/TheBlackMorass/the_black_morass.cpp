@@ -92,6 +92,10 @@ public:
         void Reset() OVERRIDE
         {
             SpellCorrupt_Timer = 0;
+            Check_Timer = 0;
+            Life75 = true;
+            Life50 = true;
+            Life25 = true;
 
             if (!instance)
                 return;
@@ -147,7 +151,7 @@ public:
             //ScriptedAI::AttackStart(who);
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void SpellHit(Unit* /*caster*/, const SpellInfo* spell) OVERRIDE
         {
@@ -299,7 +303,7 @@ public:
             else mWaveId = 1;
 
         }
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void DoSummonAtRift(uint32 creature_entry)
         {

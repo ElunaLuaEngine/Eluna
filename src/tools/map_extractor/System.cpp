@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #define _CRT_SECURE_NO_DEPRECATE
 
 #include <stdio.h>
@@ -89,6 +107,12 @@ static const char* const langs[] = {"enGB", "enUS", "deDE", "esES", "frFR", "koK
 
 void CreateDir( const std::string& Path )
 {
+    if(chdir(Path.c_str()) == 0)
+    {
+            chdir("../");
+            return;
+    }
+
     int ret;
     #ifdef _WIN32
     ret = _mkdir( Path.c_str());
@@ -186,7 +210,7 @@ uint32 ReadBuild(int locale)
         exit(1);
     }
 
-    std::string text = m.getPointer();
+    std::string text = std::string(m.getPointer(), m.getSize());
     m.close();
 
     size_t pos = text.find("version=\"");
@@ -1028,6 +1052,9 @@ void ExtractDBCFiles(int locale, bool basicLocale)
     {
         string filename = path;
         filename += (iter->c_str() + strlen("DBFilesClient\\"));
+        
+        if(FileExists(filename.c_str()))
+            continue;
 
         if (ExtractFile(iter->c_str(), filename))
             ++count;

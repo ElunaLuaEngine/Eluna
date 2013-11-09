@@ -102,6 +102,11 @@ namespace LuaUnit
     int GetCritterGUID(lua_State*, Unit*);
     int GetControllerGUID(lua_State*, Unit*);
     int GetControllerGUIDS(lua_State*, Unit*);
+    int GetCorpse(lua_State*, Unit*);
+    int GetQuestRewardStatus(lua_State*, Unit*);
+    int CreateCorpse(lua_State*, Unit*);
+    int SpawnBones(lua_State*, Unit*);
+    int RemovedInsignia(lua_State*, Unit*);
     int SendAuctionMenu(lua_State*, Unit*);
     int SendMailMenu(lua_State*, Unit*);
     int SendTaxiMenu(lua_State*, Unit*);
@@ -240,6 +245,7 @@ namespace LuaUnit
     int GetQuestLevel(lua_State*, Unit*);
     int GetItemByEntry(lua_State*, Unit*);
     int SetSheath(lua_State*, Unit*);
+    int SetName(lua_State*, Unit*);
     int Whisper(lua_State*, Unit*);
     int TextEmote(lua_State*, Unit*);
     int Yell(lua_State*, Unit*);
@@ -271,6 +277,8 @@ namespace LuaUnit
     int IsFalling(lua_State*, Unit*);
     int IsUnderWater(lua_State*, Unit*);
     int IsInWater(lua_State*, Unit*);
+    int IsWithinDistInMap(lua_State*, Unit*);
+    int IsInAccessiblePlaceFor(lua_State*, Unit*);
     int GetVictim(lua_State*, Unit*);
     int GetNearestTargetInAttackDistance(lua_State*, Unit*);
     int GetNearestTarget(lua_State*, Unit*);
@@ -286,6 +294,7 @@ namespace LuaUnit
     int GetBagItem(lua_State*, Unit*);
     int SummonGameObject(lua_State*, Unit*);
     int SpawnCreature(lua_State*, Unit*);
+    int AttackStart(lua_State*, Unit*);
     int Despawn(lua_State*, Unit*);
     int GetArenaPoints(lua_State*, Unit*);
     int KnockbackFrom(lua_State*, Unit*);
@@ -348,8 +357,10 @@ namespace LuaUnit
     int GetGuild(lua_State*, Unit*);
     int GetGroup(lua_State*, Unit*);
     int GetGearLevel(lua_State*, Unit*);
+    int GetGossipTextId(lua_State*, Unit*);
     int GetEntry(lua_State*, Unit*);
     int GetFaction(lua_State*, Unit*);
+    int GetStandState(lua_State*, Unit*);
     int SetFaction(lua_State*, Unit*);
     int SetLevel(lua_State*, Unit*);
     int SetPhaseMask(lua_State*, Unit*);
@@ -383,6 +394,7 @@ namespace LuaUnit
     int IsDead(lua_State*, Unit*);
     int IsDying(lua_State*, Unit*);
     int IsBanker(lua_State*, Unit*);
+    int IsVendor(lua_State*, Unit*);
     int IsBattleMaster(lua_State*, Unit*);
     int IsCharmed(lua_State*, Unit*);
     int IsArmorer(lua_State*, Unit*);
@@ -390,6 +402,7 @@ namespace LuaUnit
     int IsInArenaTeam(lua_State*, Unit*);
     int IsInWorld(lua_State*, Unit*);
     int IsPvPFlagged(lua_State*, Unit*);
+    int IsQuestGiver(lua_State*, Unit*);
     int HasQuest(lua_State*, Unit*);
     int IsHorde(lua_State*, Unit*);
     int IsAlliance(lua_State*, Unit*);
@@ -413,6 +426,7 @@ namespace LuaUnit
     int SendUnitEmote(lua_State*, Unit*);
     int SendUnitSay(lua_State*, Unit*);
     int SendUnitYell(lua_State*, Unit*);
+    int SendCreatureTalk(lua_State*, Unit*);
     int SendPacketToPlayer(lua_State*, Unit*);
     int SendPacket(lua_State*, Unit*);
     int SendPacketToGroup(lua_State*, Unit*);
@@ -508,5 +522,7 @@ namespace LuaUnit
     int GetDbLocaleIndex(lua_State*, Unit*);
     int GetDbcLocale(lua_State*, Unit*);
     int CanUseItem(lua_State*, Unit*);
+    int FindNearestGameObject(lua_State*, Unit*);
+    int FindNearestCreature(lua_State*, Unit*);
 };
 #endif

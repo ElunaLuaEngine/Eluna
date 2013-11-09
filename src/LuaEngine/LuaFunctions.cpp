@@ -11,6 +11,7 @@
 #include "SpellMethods.h"
 #include "QuestMethods.h"
 #include "MapMethods.h"
+#include "CorpseMethods.h"
 
 void RegisterGlobals(lua_State* L)
 {
@@ -26,7 +27,6 @@ void RegisterGlobals(lua_State* L)
 
     // Getters
     lua_register(L, "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine);                                     // GetLuaEngine() - Returns ElunaEngine
-    lua_register(L, "GetLUAEngine", &LuaGlobalFunctions::GetLuaEngine);                                     // GetLUAEngine() - Returns ElunaEngine
     lua_register(L, "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion);                                 // GetCoreVersion() - Returns core version string
     lua_register(L, "GetQuest", &LuaGlobalFunctions::GetQuest);                                             // GetQuest(questId) - Returns quest object
     lua_register(L, "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID);                               // GetPlayerByGUID(guid) - Returns player object by GUID
@@ -81,6 +81,10 @@ void RegisterGlobals(lua_State* L)
     lua_register(L, "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers);                                 // SaveAllPlayers() - Saves all players
     lua_register(L, "SendMail", &LuaGlobalFunctions::SendMail);                                             // SendMail(subject, text, receiverLowGUID[, sender, stationary, delay, itemEntry, itemAmount, itemEntry2, itemAmount2...]) - Sends a mail to player with lowguid. use nil to use default values on optional arguments. Sender is an optional player object. UNDOCUMENTED
     lua_register(L, "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath);                                       // AddTaxiPath(pathTable, mountA, mountH[, price, pathId]) - Adds a new taxi path. Returns the path's ID. Will replace an existing path if pathId provided and already used. path table structure: T = {{map, x, y, z[, actionFlag, delay, arrivalEvId, departEvId]}, {...}, ...} UDOCUMENTED
+    lua_register(L, "AddCorpse", &LuaGlobalFunctions::AddCorpse);                                           // AddCorpse(corpse) - Adds the player's corpse to the world. More specifically, the cell.
+    lua_register(L, "RemoveCorpse", &LuaGlobalFunctions::RemoveCorpse);                                     // RemoveCorpse(corpse) - Removes the player's corpse from the world.
+    lua_register(L, "ConvertCorpseForPlayer", &LuaGlobalFunctions::ConvertCorpseForPlayer);                 // ConvertCorpseFromPlayer(guid[, insignia]) - Converts the player's corpse to bones. Adding insignia for PvP is optional (true or false).
+    lua_register(L, "RemoveOldCorpses", &LuaGlobalFunctions::RemoveOldCorpses);                             // RemoveOldCorpses() - Converts (removes) old corpses that aren't bones.
 }
 
 ElunaRegister<Unit> UnitMethods[] =
@@ -156,6 +160,9 @@ ElunaRegister<Unit> UnitMethods[] =
     {"GetSelectedUnit", &LuaUnit::GetSelectedUnit},                                                         // :GetSelectedUnit() - Returns player's selected unit.
     {"GetDbLocaleIndex", &LuaUnit::GetDbLocaleIndex},                                                       // :GetDbLocaleIndex() - Returns locale index
     {"GetDbcLocale", &LuaUnit::GetDbcLocale},                                                               // :GetDbcLocale() - Returns DBC locale
+    {"GetCorpse", &LuaUnit::GetCorpse},                                                                     // :GetCorpse() - Returns the player's corpse
+    {"GetGossipTextId", &LuaUnit::GetGossipTextId},                                                         // :GetGossipTextId(worldObject) - Returns the WorldObject's gossip textId
+    {"GetQuestRewardStatus", &LuaUnit::GetQuestRewardStatus},                                               // :GetQuestRewardStatus(questId) - Returns the true/false of the quest reward status
 
     // Setters
     {"AdvanceSkillsToMax", &LuaUnit::AdvanceSkillsToMax},                                                   // :AdvanceSkillsToMax() - Advances all currently known skills to the currently known max level
@@ -339,6 +346,9 @@ ElunaRegister<Unit> UnitMethods[] =
     {"GossipSendPOI", &LuaUnit::GossipSendPOI},                                                             // :GossipSendPOI(X, Y, Icon, Flags, Data, Name) - Sends a point of interest to the player
     {"GossipAddQuests", &LuaUnit::GossipAddQuests},                                                         // :GossipAddQuests(unit) - Adds unit's quests to player's gossip menu
     {"SendQuestTemplate", &LuaUnit::SendQuestTemplate},                                                     // :SendQuestTemplate(questId, activeAccept) -- Sends quest template to player
+    {"CreateCorpse", &LuaUnit::CreateCorpse},                                                               // :CreateCorpse() - Creates the player's corpse
+    {"SpawnBones", &LuaUnit::SpawnBones},                                                                   // :SpawnBones() - Removes the player's corpse and spawns bones
+    {"RemovedInsignia", &LuaUnit::RemovedInsignia},                                                         // :RemovedInsignia(looter) - Looter removes the player's corpse, looting the player and replacing with lootable bones
 
     // Creature methods
     // Getters
@@ -416,6 +426,8 @@ ElunaRegister<Unit> UnitMethods[] =
     {"SelectVictim", &LuaUnit::SelectVictim},                                                               // :SelectVictim() - Returns a victim or nil
     {"AddLootMode", &LuaUnit::AddLootMode},                                                                 // :AddLootMode(lootMode)
     {"DealDamage", &LuaUnit::DealDamage},                                                                   // :DealDamage(target, amount) - Deals damage to target (if target) : if no target, unit will damage self
+    {"SendCreatureTalk", &LuaUnit::SendCreatureTalk},                                                       // :SendCreatureTalk(id, playerGUID) - Sends a chat message to a playerGUID (player) by id. Id can be found in creature_text under the 'group_id' column
+    {"AttackStart", &LuaUnit::AttackStart},                                                                 // :AttackStart(target) - Creature attacks the specified target
 
     // Unit Methods
     // Getters
@@ -481,7 +493,8 @@ ElunaRegister<Unit> UnitMethods[] =
     {"GetCritterGUID", &LuaUnit::GetCritterGUID},                                                           // :GetCritterGUID() - Returns the critter's GUID
     {"GetControllerGUID", &LuaUnit::GetControllerGUID},                                                     // :GetControllerGUID() - Returns the Charmer or Owner GUID
     {"GetControllerGUIDS", &LuaUnit::GetControllerGUIDS},                                                   // :GetControllerGUIDS() - Returns the charmer, owner or unit's own GUID
-    
+    {"GetStandState", &LuaUnit::GetStandState},                                                             // :GetStandState() - Returns the unit's stand state
+
     // Setters
     {"SetFaction", &LuaUnit::SetFaction},                                                                   // :SetFaction(factionId) - Sets the unit's faction
     {"SetLevel", &LuaUnit::SetLevel},                                                                       // :SetLevel(amount)
@@ -516,6 +529,7 @@ ElunaRegister<Unit> UnitMethods[] =
     {"SetVisible", &LuaUnit::SetVisible},                                                                   // :SetVisible(x)
     {"SetOwnerGUID", &LuaUnit::SetOwnerGUID},                                                               // :SetOwnerGUID(guid) - Sets the guid of the owner
     {"SetFlag", &LuaUnit::SetFlag},                                                                         // :SetFlag(index, flag)
+    {"SetName", &LuaUnit::SetName},                                                                         // :SetName(name) - Sets the unit's name
 
     // Boolean
     {"IsAlive", &LuaUnit::IsAlive},                                                                         // :IsAlive()
@@ -548,6 +562,10 @@ ElunaRegister<Unit> UnitMethods[] =
     {"IsStopped", &LuaUnit::IsStopped},                                                                     // :IsStopped()
     {"HasFlag", &LuaUnit::HasFlag},                                                                         // :HasFlag(index, flag)
     {"HasUnitState", &LuaUnit::HasUnitState},                                                               // :HasUnitState(state) - state from UnitState enum
+    {"IsQuestGiver", &LuaUnit::IsQuestGiver},                                                               // :IsQuestGiver() - Returns true if the unit is a quest giver, false if not
+    {"IsWithinDistInMap", &LuaUnit::IsWithinDistInMap},                                                     // :IsWithinDistInMap(worldObject, radius) - Returns if the unit is within distance in map of the worldObject
+    {"IsInAccessiblePlaceFor", &LuaUnit::IsInAccessiblePlaceFor},                                           // :IsInAccessiblePlaceFor(creature) - Returns if the unit is in an accessible place for the specified creature
+    {"IsVendor", &LuaUnit::IsVendor},                                                                       // :IsVendor() - Returns if the unit is a vendor or not
 
     // Other
     {"RegisterEvent", &LuaUnit::RegisterEvent},                                                             // :RegisterEvent(function, delay, calls)
@@ -602,6 +620,8 @@ ElunaRegister<Unit> UnitMethods[] =
     {"AddUnitState", &LuaUnit::AddUnitState},                                                               // :AddUnitState(state)
     {"DisableMelee", &LuaUnit::DisableMelee},                                                               // :DisableMelee([disable]) - if true, enables
     {"SummonGuardian", &LuaUnit::SummonGuardian},                                                           // :SummonGuardian(entry, x, y, z, o[, duration]) - summons a guardian to location. Scales with summoner, is friendly to him and guards him.
+    {"FindNearestGameObject", &LuaUnit::FindNearestGameObject},                                             // :FindNearestGameObject(entry, range) - Finds the nearest gameobject and returns it
+    {"FindNearestCreature", &LuaUnit::FindNearestCreature},                                                 // :FindNearestCreature(entry, range[, alive]) - Finds the nearest creature and returns it. Alive is optional, if true it checks if the creature is alive
 
     /* Vehicle */
     {"AddVehiclePassenger", &LuaUnit::AddVehiclePassenger},                                                 // :AddVehiclePassenger(unit, seatId) - Adds a passenger to the vehicle by specifying a unit and seatId
@@ -673,7 +693,7 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     // Other
     {"CastSpell", &LuaGameObject::CastSpell},                                                               // :CastSpellOnTarget(target, spellId) - Casts the spell on target, no manacost or cast time
     {"Move", &LuaGameObject::Move},                                                                         // :Move(x, y, z, o) - Moves the GO to coordinates
-    {"SpawnCreature", &LuaGameObject::SummonCreature},                                                      // :SummonCreature(entry, x, y, z, o, despawntime) Summons a temporary creature. 0 for infinitely, otherwise despawns after despawntime (ms)
+    {"SpawnCreature", &LuaGameObject::SummonCreature},                                                      // :SpawnCreature(entry, x, y, z, o, [, spawnType, despawnTimer]) - Spawns a creature to location that despawns depending on your TempSummon type and how long you give it to despawn. SpawnType [TempSummon Type] and despawnTimer are optional. 
     {"RegisterEvent", &LuaGameObject::RegisterEvent},                                                       // :RegisterEvent(function, delay, calls)
     {"RemoveEventById", &LuaGameObject::RemoveEventById},                                                   // :RemoveEventById(eventID)
     {"RemoveEvents", &LuaGameObject::RemoveEvents},                                                         // :RemoveEvents()
@@ -799,7 +819,7 @@ ElunaRegister<Spell> SpellMethods[] =
     {"GetEntry", &LuaSpell::GetId},                                                                         // :GetEntry() - Returns the spell's ID
     {"GetDuration", &LuaSpell::GetDuration},                                                                // :GetDuration() - Returns the spell's duration
     {"GetPowerCost", &LuaSpell::GetPowerCost},                                                              // :GetPowerCost() - Returns the spell's power cost (mana, energy, rage, etc)
-    {"GetTargetDest", &LuaSpell::GetTargetDest},                                                            // :GetTargetDest() - Returns the target destination (like GetLocation does) or nil
+    {"GetTargetDest", &LuaSpell::GetTargetDest},                                                            // :GetTargetDest() - Returns the target destination (x,y,z,o,map) or nil. Orientation and map may be 0.
 
     // Setters
     {"SetAutoRepeat", &LuaSpell::SetAutoRepeat},                                                            // :SetAutoRepeat(boolean)
@@ -984,6 +1004,18 @@ ElunaRegister<Map> MapMethods[] =
     {NULL, NULL},
 };
 
+ElunaRegister<Corpse> CorpseMethods[] =
+{
+    {"GetOwnerGUID", &LuaCorpse::GetOwnerGUID},                                                             // :GetOwnerGUID() - Returns the corpse owner GUID
+    {"GetGhostTime", &LuaCorpse::GetGhostTime},                                                             // :GetGhostTime() - Returns the ghost time of a corpse
+    {"GetType", &LuaCorpse::GetType},                                                                       // :GetType() - Returns the (CorpseType) of a corpse
+    {"Create", &LuaCorpse::Create},                                                                         // :Create(player) - Creates the player's corpse
+    {"ResetGhostTime", &LuaCorpse::ResetGhostTime},                                                         // :ResetGhostTime() - Resets the corpse's ghost time
+    {"SaveToDB", &LuaCorpse::SaveToDB},                                                                     // :SaveToDB() - Saves the corpse data to the corpse database table.
+    {"DeleteBonesFromWorld", &LuaCorpse::DeleteBonesFromWorld},                                             // :DeleteBonesFromWorld() - Deletes all bones from the world
+    {NULL, NULL}
+};
+
 template<typename T> ElunaRegister<T>* GetMethodTable() { return NULL; }
 template<> ElunaRegister<Unit>* GetMethodTable<Unit>() { return UnitMethods; }
 template<> ElunaRegister<GameObject>* GetMethodTable<GameObject>() { return GameObjectMethods; }
@@ -996,3 +1028,4 @@ template<> ElunaRegister<WorldPacket>* GetMethodTable<WorldPacket>() { return Pa
 template<> ElunaRegister<Spell>* GetMethodTable<Spell>() { return SpellMethods; }
 template<> ElunaRegister<Quest>* GetMethodTable<Quest>() { return QuestMethods; }
 template<> ElunaRegister<Map>* GetMethodTable<Map>() { return MapMethods; }
+template<> ElunaRegister<Corpse>* GetMethodTable<Corpse>() { return CorpseMethods; }

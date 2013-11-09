@@ -198,6 +198,31 @@ int LuaUnit::IsWithinLoS(lua_State* L, Unit* unit)
     return 1;
 }
 
+int LuaUnit::IsWithinDistInMap(lua_State* L, Unit* unit)
+{
+    TO_UNIT_BOOL();
+
+    WorldObject* obj = sEluna->CHECK_WORLDOBJECT(L, 1);
+    if (!obj)
+        return 0;
+    float radius = luaL_checknumber(L, 2);
+
+    sEluna->PushBoolean(L, unit->IsWithinDistInMap(obj, radius));
+    return 1;
+}
+
+int LuaUnit::IsInAccessiblePlaceFor(lua_State* L, Unit* unit)
+{
+    TO_UNIT_BOOL();
+
+    Creature* creature = sEluna->CHECK_CREATURE(L, 1);
+    if (!creature)
+        return 0;
+
+    sEluna->PushBoolean(L, unit->isInAccessiblePlaceFor(creature));
+    return 1;
+}
+
 int LuaUnit::GetScale(lua_State* L, Unit* unit)
 {
     TO_UNIT();
@@ -828,6 +853,17 @@ int LuaUnit::GetHomePosition(lua_State* L, Unit* unit)
     sEluna->PushFloat(L, z);
     sEluna->PushFloat(L, o);
     return 4;
+}
+
+int LuaUnit::AttackStart(lua_State* L, Unit* unit)
+{
+    TO_CREATURE();
+
+    Unit* target = sEluna->CHECK_UNIT(L, 1);
+    if (!target)
+        return 0;
+    creature->GetAI()->AttackStart(target);
+    return 0;
 }
 
 int LuaUnit::RewardQuest(lua_State* L, Unit* unit)
@@ -2197,7 +2233,7 @@ int LuaUnit::GroupEventHappens(lua_State* L, Unit* unit)
     TO_PLAYER();
 
     uint32 questId = luaL_checkunsigned(L, 1);
-    WorldObject* obj = sEluna->CHECK_WORLDOBJECT(L, 1);
+    WorldObject* obj = sEluna->CHECK_WORLDOBJECT(L, 2);
     if (!obj)
         return 0;
 
@@ -2296,6 +2332,16 @@ int LuaUnit::GetQuestStatus(lua_State* L, Unit* unit)
     uint32 entry = luaL_checkunsigned(L, 1);
 
     sEluna->PushInteger(L, player->GetQuestStatus(entry));
+    return 1;
+}
+
+int LuaUnit::GetQuestRewardStatus(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    uint32 questId = luaL_checkunsigned(L, 1);
+
+    sEluna->PushBoolean(L, player->GetQuestRewardStatus(questId));
     return 1;
 }
 
@@ -2974,8 +3020,38 @@ int LuaUnit::SpawnCreature(lua_State* L, Unit* unit)
     float y = luaL_checknumber(L, 3);
     float z = luaL_checknumber(L, 4);
     float o = luaL_checknumber(L, 5);
-    uint32 desp = luaL_optunsigned(L, 6, 0);
-    sEluna->PushUnit(L, unit->SummonCreature(entry, x, y, z, o, desp ? TEMPSUMMON_TIMED_OR_DEAD_DESPAWN : TEMPSUMMON_MANUAL_DESPAWN, desp));
+    uint32 spawnType = luaL_optunsigned(L, 6, 0);
+    uint32 despawnTimer = luaL_optunsigned(L, 7, 0);
+
+    TempSummonType type;
+    switch (spawnType)
+    {
+        case 1:
+            type = TEMPSUMMON_TIMED_OR_DEAD_DESPAWN;
+            break;
+        case 2:
+            type = TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN;
+            break;
+        case 3:
+            type = TEMPSUMMON_TIMED_DESPAWN;
+            break;
+        case 4:
+            type = TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT;
+            break;
+        case 5:
+            type = TEMPSUMMON_CORPSE_DESPAWN;
+            break;
+        case 6:
+            type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
+            break;
+        case 7:
+            type = TEMPSUMMON_DEAD_DESPAWN;
+            break;
+        case 8:
+            type = TEMPSUMMON_MANUAL_DESPAWN;
+            break;
+    }
+    sEluna->PushUnit(L, unit->SummonCreature(entry, x, y, z, o, type, despawnTimer));
     return 1;
 }
 
@@ -2999,6 +3075,14 @@ int LuaUnit::Despawn(lua_State* L, Unit* unit)
 
     uint32 time = luaL_optunsigned(L, 1, 0);
     creature->DespawnOrUnsummon(time);
+    return 0;
+}
+
+int LuaUnit::GetStandState(lua_State* L, Unit* unit)
+{
+    TO_UNIT();
+
+    sEluna->PushUnsigned(L, unit->getStandState());
     return 0;
 }
 
@@ -3079,6 +3163,16 @@ int LuaUnit::MoveChase(lua_State* L, Unit* unit)
     float dist = luaL_optnumber(L, 2, 0.0f);
     float angle = luaL_optnumber(L, 3, 0.0f);
     unit->GetMotionMaster()->MoveChase(target, dist, angle);
+    return 0;
+}
+
+int LuaUnit::SetName(lua_State* L, Unit* unit)
+{
+    TO_UNIT();
+
+    const char* name = luaL_checkstring(L, 1);
+    if (std::string(name).length() > 0)
+        unit->SetName(name);
     return 0;
 }
 
@@ -3226,6 +3320,17 @@ int LuaUnit::GetHonorPoints(lua_State* L, Unit* unit)
     TO_PLAYER();
 
     sEluna->PushUnsigned(L, player->GetHonorPoints());
+    return 1;
+}
+
+int LuaUnit::GetGossipTextId(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    WorldObject* obj = sEluna->CHECK_WORLDOBJECT(L, 1);
+    if (!obj)
+        return 0;
+    sEluna->PushUnsigned(L, player->GetGossipTextId(obj));
     return 1;
 }
 
@@ -4047,6 +4152,14 @@ int LuaUnit::IsBanker(lua_State* L, Unit* unit)
     return 1;
 }
 
+int LuaUnit::IsVendor(lua_State* L, Unit* unit)
+{
+    TO_UNIT_BOOL();
+
+    sEluna->PushBoolean(L, unit->IsVendor());
+    return 1;
+}
+
 int LuaUnit::IsBattleMaster(lua_State* L, Unit* unit)
 {
     TO_UNIT_BOOL();
@@ -4367,6 +4480,16 @@ int LuaUnit::SendUnitYell(lua_State* L, Unit* unit)
     return 0;
 }
 
+int LuaUnit::SendCreatureTalk(lua_State* L, Unit* unit)
+{
+    TO_CREATURE();
+
+    uint8 id = luaL_checknumber(L, 1);
+    uint64 playerGUID = sEluna->CHECK_ULONG(L, 2);
+    creature->AI()->Talk(id, playerGUID);
+    return 0;
+}
+
 int LuaUnit::SendPacketToPlayer(lua_State* L, Unit* unit)
 {
     TO_PLAYER();
@@ -4536,6 +4659,14 @@ int LuaUnit::GetAccountName(lua_State* L, Unit* unit)
         sEluna->PushString(L, accName.c_str());
     else
         return 0;
+    return 1;
+}
+
+int LuaUnit::GetCorpse(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    sEluna->PushCorpse(L, player->GetCorpse());
     return 1;
 }
 
@@ -5389,6 +5520,14 @@ int LuaUnit::IsStopped(lua_State* L, Unit* unit)
     return 1;
 }
 
+int LuaUnit::IsQuestGiver(lua_State* L, Unit* unit)
+{
+    TO_UNIT_BOOL();
+
+    sEluna->PushBoolean(L, unit->IsQuestGiver());
+    return 1;
+}
+
 int LuaUnit::RestoreDisplayId(lua_State* L, Unit* unit)
 {
     TO_UNIT();
@@ -5527,6 +5666,33 @@ int LuaUnit::SendQuestTemplate(lua_State* L, Unit* unit)
     return 0;
 }
 
+int LuaUnit::CreateCorpse(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    player->CreateCorpse();
+    return 0;
+}
+
+int LuaUnit::SpawnBones(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    player->SpawnCorpseBones();
+    return 0;
+}
+
+int LuaUnit::RemovedInsignia(lua_State* L, Unit* unit)
+{
+    TO_PLAYER();
+
+    Player* looter = sEluna->CHECK_PLAYER(L, 1);
+    if (!looter)
+        return 0;
+    player->RemovedInsignia(looter);
+    return 0;
+}
+
 int LuaUnit::GetNPCFlags(lua_State* L, Unit* unit)
 {
     TO_CREATURE();
@@ -5577,5 +5743,28 @@ int LuaUnit::CanUseItem(lua_State* L, Unit* unit)
         else
             sEluna->PushInteger(L, EQUIP_ERR_ITEM_NOT_FOUND);
     }
+    return 1;
+}
+
+int LuaUnit::FindNearestGameObject(lua_State* L, Unit* unit)
+{
+    TO_UNIT();
+
+    uint32 entry = luaL_checkunsigned(L, 1);
+    float range = luaL_checknumber(L, 2);
+
+    sEluna->PushGO(L, unit->FindNearestGameObject(entry, range));
+    return 1;
+}
+
+int LuaUnit::FindNearestCreature(lua_State* L, Unit* unit)
+{
+    TO_UNIT();
+
+    uint32 entry = luaL_checkunsigned(L, 1);
+    float range = luaL_checknumber(L, 2);
+    bool alive = luaL_optbool(L, 3, true);
+
+    sEluna->PushUnit(L, unit->FindNearestCreature(entry, range, alive));
     return 1;
 }

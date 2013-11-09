@@ -158,14 +158,38 @@ int LuaGameObject::SummonCreature(lua_State* L, GameObject* go)
     float y = luaL_checknumber(L, 3);
     float z = luaL_checknumber(L, 4);
     float o = luaL_checknumber(L, 5);
-    uint32 despawn = luaL_optunsigned(L, 6, 0);
+    uint32 spawnType = luaL_optunsigned(L, 6, 0);
+    uint32 despawnTimer = luaL_optunsigned(L, 7, 0);
 
-    TempSummonType summontype;
-    if (despawn)
-        summontype = TEMPSUMMON_TIMED_OR_DEAD_DESPAWN;
-    else
-        summontype = TEMPSUMMON_MANUAL_DESPAWN;
-    sEluna->PushUnit(L, go->SummonCreature(entry, x, y, z, o, summontype, despawn));
+    TempSummonType type;
+    switch (spawnType)
+    {
+        case 1:
+            type = TEMPSUMMON_TIMED_OR_DEAD_DESPAWN;
+            break;
+        case 2:
+            type = TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN;
+            break;
+        case 3:
+            type = TEMPSUMMON_TIMED_DESPAWN;
+            break;
+        case 4:
+            type = TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT;
+            break;
+        case 5:
+            type = TEMPSUMMON_CORPSE_DESPAWN;
+            break;
+        case 6:
+            type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
+            break;
+        case 7:
+            type = TEMPSUMMON_DEAD_DESPAWN;
+            break;
+        case 8:
+            type = TEMPSUMMON_MANUAL_DESPAWN;
+            break;
+    }
+    sEluna->PushUnit(L, go->SummonCreature(entry, x, y, z, o, type, despawnTimer));
     return 1;
 }
 
@@ -269,6 +293,27 @@ int LuaGameObject::Move(lua_State* L, GameObject* go)
     float z = luaL_checknumber(L, 3);
     float o = luaL_checknumber(L, 4);
     go->Relocate(x, y, z, o);
+    return 0;
+}
+
+int LuaGameObject::SaveToDB(lua_State* L, GameObject* go)
+{
+    if (!go || !go->IsInWorld())
+        return 0;
+
+    go->SaveToDB();
+    return 0;
+}
+
+int LuaGameObject::RemoveFromWorld(lua_State* L, GameObject* go)
+{
+    if (!go || !go->IsInWorld())
+        return 0;
+
+    bool del = luaL_optbool(L, 1, false);
+    if (del)
+        go->DeleteFromDB();
+    go->RemoveFromWorld();
     return 0;
 }
 

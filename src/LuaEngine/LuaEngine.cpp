@@ -18,6 +18,7 @@ template<> const char* GetTName<Item>() { return "Item"; }
 template<> const char* GetTName<Spell>() { return "Spell"; }
 template<> const char* GetTName<Quest>() { return "Quest"; }
 template<> const char* GetTName<Map>() { return "Map"; }
+template<> const char* GetTName<Corpse>() { return "Corpse"; }
 
 extern void RegisterGlobals(lua_State* L);
 
@@ -75,6 +76,7 @@ void Eluna::StartEluna(bool restart)
     ElunaTemplate<Spell>::Register(LuaState);
     ElunaTemplate<Quest>::Register(LuaState);
     ElunaTemplate<Map>::Register(LuaState);
+    ElunaTemplate<Corpse>::Register(LuaState);
 
     uint32 count = 0;
     char filename[200];
@@ -110,14 +112,6 @@ void Eluna::StartEluna(bool restart)
                     // if(sEluna->CreatureEventBindings->GetBindMap(iter->second->GetEntry())) // update all AI or just Eluna?
                         iter->second->AIM_Initialize();
         }
-        /*{
-            TRINITY_READ_GUARD(HashMapHolder<GameObject>::LockType, *HashMapHolder<GameObject>::GetLock());
-            HashMapHolder<GameObject>::MapType const& m = ObjectAccessor::GetGameObjects();
-            for (HashMapHolder<GameObject>::MapType::const_iterator iter = m.begin(); iter != m.end(); ++iter)
-                if (iter->second->IsInWorld()) // must check?
-                    // if(sEluna->GameObjectEventBindings->GetBindMap(iter->second->GetEntry())) // update all AI or just Eluna?
-                        iter->second->AIM_Initialize(); // inaccessible
-        }*/
     }
 
     TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, "Eluna::Loaded %u Lua scripts..", count);
@@ -136,11 +130,11 @@ void Eluna::LoadDirectory(char* Dirname, LoadedScripts* lscr)
     strcat(SearchName, "\\*.*");
 
     hFile = FindFirstFile(SearchName, &FindData);
-
-    // break if we don't find dir
-    if (!hFile)
+    if (hFile == INVALID_HANDLE_VALUE)
     {
-        TC_LOG_ERROR(LOG_FILTER_SERVER_LOADING, "Eluna::No `scripts` directory found!");
+        TC_LOG_ERROR(LOG_FILTER_SERVER_LOADING, "Eluna::No `scripts` directory found! Creating a 'scripts' directory and restarting Eluna.");
+        CreateDirectory("scripts", NULL);
+        StartEluna(true);
         return;
     }
 
@@ -428,6 +422,15 @@ void Eluna::PushPacket(lua_State* L, WorldPacket* packet)
         lua_pushnil(L);
 }
 
+void Eluna::PushCorpse(lua_State* L, Corpse* corpse)
+{
+    if (!L) L = LuaState;
+    if (corpse)
+        ElunaTemplate<Corpse>::push(L, corpse);
+    else
+        lua_pushnil(L);
+}
+
 Object* Eluna::CHECK_OBJECT(lua_State* L, int narg)
 {
     if (!L)
@@ -444,7 +447,7 @@ WorldObject* Eluna::CHECK_WORLDOBJECT(lua_State* L, int narg)
         return ElunaTemplate<WorldObject>::check(L, narg);
 }
 
-Unit * Eluna::CHECK_UNIT(lua_State* L, int narg)
+Unit* Eluna::CHECK_UNIT(lua_State* L, int narg)
 {
     WorldObject* obj = CHECK_WORLDOBJECT(L, narg);
     if(!obj)
@@ -452,7 +455,7 @@ Unit * Eluna::CHECK_UNIT(lua_State* L, int narg)
     return obj->ToUnit();
 }
 
-Player * Eluna::CHECK_PLAYER(lua_State* L, int narg)
+Player* Eluna::CHECK_PLAYER(lua_State* L, int narg)
 {
     WorldObject* obj = CHECK_WORLDOBJECT(L, narg);
     if(!obj)
@@ -460,7 +463,7 @@ Player * Eluna::CHECK_PLAYER(lua_State* L, int narg)
     return obj->ToPlayer();
 }
 
-Creature * Eluna::CHECK_CREATURE(lua_State* L, int narg)
+Creature* Eluna::CHECK_CREATURE(lua_State* L, int narg)
 {
     WorldObject* obj = CHECK_WORLDOBJECT(L, narg);
     if(!obj)
@@ -474,6 +477,14 @@ GameObject* Eluna::CHECK_GAMEOBJECT(lua_State* L, int narg)
     if(!obj)
         return NULL;
     return obj->ToGameObject();
+}
+
+Corpse* Eluna::CHECK_CORPSE(lua_State* L, int narg)
+{
+    WorldObject* obj = CHECK_WORLDOBJECT(L, narg);
+    if (!obj)
+        return NULL;
+    return obj->ToCorpse();
 }
 
 WorldPacket* Eluna::CHECK_PACKET(lua_State* L, int narg)

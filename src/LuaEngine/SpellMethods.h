@@ -133,7 +133,8 @@ public:
         sEluna->PushFloat(L, y);
         sEluna->PushFloat(L, z);
         sEluna->PushFloat(L, o);
-        return 4;
+        sEluna->PushUnsigned(L, spell->m_targets.GetDstPos()->GetMapId());
+        return 5;
     }
 };
 #endif

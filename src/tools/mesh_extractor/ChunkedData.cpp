@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "ChunkedData.h"
 #include "MPQManager.h"
 #include "Utils.h"
@@ -12,7 +29,7 @@ Stream(stream)
     Load(maxLength, chunksHint);
 }
 
-ChunkedData::ChunkedData( std::string file, uint32 chunksHint /*= 300*/ )
+ChunkedData::ChunkedData( const std::string& file, uint32 chunksHint /*= 300*/ )
 {
     Stream = MPQHandler->GetFile(file);
     if (!Stream)
@@ -47,7 +64,7 @@ void ChunkedData::Load( uint32 maxLength, uint32 chunksHint )
     }
 }
 
-int ChunkedData::GetFirstIndex( std::string name )
+int ChunkedData::GetFirstIndex( const std::string& name )
 {
     for (uint32 i = 0; i < Chunks.size(); ++i)
         if (Chunks[i]->Name == name)
@@ -55,7 +72,7 @@ int ChunkedData::GetFirstIndex( std::string name )
     return -1;
 }
 
-Chunk* ChunkedData::GetChunkByName( std::string name )
+Chunk* ChunkedData::GetChunkByName( const std::string& name )
 {
     for (uint32 i = 0; i < Chunks.size(); ++i)
         if (Chunks[i]->Name == name)

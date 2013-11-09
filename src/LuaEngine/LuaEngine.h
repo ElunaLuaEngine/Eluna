@@ -280,6 +280,7 @@ public:
     void PushSpell(lua_State*, Spell*);
     void PushQuest(lua_State*, Quest const*);
     void PushPacket(lua_State*, WorldPacket*);
+    void PushCorpse(lua_State*, Corpse*);
     // Checks
     WorldPacket* CHECK_PACKET(lua_State* L, int narg);
     Object* CHECK_OBJECT(lua_State* L, int narg);
@@ -288,6 +289,7 @@ public:
     Player * CHECK_PLAYER(lua_State* L, int narg);
     Creature * CHECK_CREATURE(lua_State* L, int narg);
     GameObject* CHECK_GAMEOBJECT(lua_State* L, int narg);
+    Corpse* CHECK_CORPSE(lua_State* L, int narg);
     Quest* CHECK_QUEST(lua_State* L, int narg);
     Spell* CHECK_SPELL(lua_State* L, int narg);
     uint64 CHECK_ULONG(lua_State* L, int narg);
@@ -648,15 +650,12 @@ private:
     EventStore _eventMap;
     uint32 _time;
 };
+
 class Eluna::Eluna_WorldScript : public WorldScript, public Eluna::LuaEventMap
 {
 public:
-    Eluna_WorldScript() : WorldScript("SmartEluna_WorldScript"), LuaEventMap()
-    {
-    }
-    ~Eluna_WorldScript()
-    {
-    }
+    Eluna_WorldScript() : WorldScript("SmartEluna_WorldScript"), LuaEventMap() { }
+    ~Eluna_WorldScript() { }
 
     void OnOpenStateChange(bool open) OVERRIDE
     {
@@ -763,24 +762,17 @@ public:
         }
     }
 };
+
 class Eluna::Eluna_CreatureScript : public CreatureScript
 {
 public:
-    Eluna_CreatureScript() : CreatureScript("SmartEluna_CreatureScript") // Smart suppressing error @startup
-    {
-    }
-    ~Eluna_CreatureScript()
-    {
-    }
+    Eluna_CreatureScript() : CreatureScript("SmartEluna_CreatureScript") { }// Smart suppressing error @startup 
+    ~Eluna_CreatureScript() { }
 
     struct ScriptCreatureAI : ScriptedAI
     {
-        ScriptCreatureAI(Creature* creature) : ScriptedAI(creature)
-        {
-        }
-        ~ScriptCreatureAI()
-        {
-        }
+        ScriptCreatureAI(Creature* creature) : ScriptedAI(creature) { }
+        ~ScriptCreatureAI() { }
 
         //Called at World update tick
         void UpdateAI(uint32 diff) OVERRIDE
@@ -1199,21 +1191,16 @@ public:
         return luaCreatureAI;
     }
 };
+
 class Eluna::Eluna_GameObjectScript : public GameObjectScript
 {
 public:
-    Eluna_GameObjectScript() : GameObjectScript("SmartEluna_GameObjectScript") // Smart suppressing error @startup
-    {
-    }
-    ~Eluna_GameObjectScript()
-    {
-    }
+    Eluna_GameObjectScript() : GameObjectScript("SmartEluna_GameObjectScript") { } // Smart suppressing error @startup
+    ~Eluna_GameObjectScript() { }
 
     struct ScriptGameObjectAI : public GameObjectAI, public Eluna::LuaEventMap
     {
-        ScriptGameObjectAI(GameObject* _go) : GameObjectAI(_go), LuaEventMap()
-        {
-        }
+        ScriptGameObjectAI(GameObject* _go) : GameObjectAI(_go), LuaEventMap() { }
         ~ScriptGameObjectAI()
         {
             LuaEventMap::LuaEventMaps.erase(go->GetGUID());
@@ -1263,6 +1250,7 @@ public:
         return luaGameObjectAI;
     }
 };
+
 struct Eluna::LuaEventData : public BasicEvent, public Eluna::LuaEventMap::eventData
 {
     static UNORDERED_MAP<int, LuaEventData*> LuaEvents;
@@ -1342,6 +1330,7 @@ struct Eluna::LuaEventData : public BasicEvent, public Eluna::LuaEventMap::event
         return false; // dont destory event
     }
 };
+
 class LuaTaxiMgr
 {
 private:

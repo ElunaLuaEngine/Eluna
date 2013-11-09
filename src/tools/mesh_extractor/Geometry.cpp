@@ -1,8 +1,26 @@
+/*
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "Geometry.h"
 #include "Constants.h"
 #include "ADT.h"
 #include "WorldModelHandler.h"
 #include "DoodadHandler.h"
+#include <limits.h>
 
 Geometry::Geometry() : Transform(false)
 {
@@ -14,6 +32,11 @@ void Geometry::CalculateBoundingBox( float*& min, float*& max )
 {
     min = new float[3];
     max = new float[3];
+    for (int i = 0; i < 3; ++i)
+    {
+        max[i] = std::numeric_limits<float>::lowest();
+        min[i] = std::numeric_limits<float>::max();
+    }
 
     for (std::vector<Vector3>::iterator itr = Vertices.begin(); itr != Vertices.end(); ++itr)
     {
@@ -36,8 +59,8 @@ void Geometry::CalculateBoundingBox( float*& min, float*& max )
 
 void Geometry::CalculateMinMaxHeight( float& min, float& max )
 {
-    min = 0.0f;
-    max = 0.0f;
+    min = std::numeric_limits<float>::max();
+    max = std::numeric_limits<float>::lowest();
 
     for (std::vector<Vector3>::iterator itr = Vertices.begin(); itr != Vertices.end(); ++itr)
     {
