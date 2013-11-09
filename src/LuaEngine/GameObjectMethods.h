@@ -20,12 +20,11 @@ namespace LuaGameObject
     int GetEntry(lua_State*, GameObject*);
     int SummonCreature(lua_State*, GameObject*);
     int SummonGameObject(lua_State*, GameObject*);
-    int Despawn(lua_State*, GameObject*);
     int GetDisplayId(lua_State*, GameObject*);
     int GetScale(lua_State*, GameObject*);
     int IsInWorld(lua_State*, GameObject*);
     int HasQuest(lua_State*, GameObject*);
-    int IsInvisibleDueToDespawn(lua_State*, GameObject*);
+    int IsSpawned(lua_State*, GameObject*);
     int IsTransport(lua_State*, GameObject*);
     int IsDestructible(lua_State*, GameObject*);
     int IsActive(lua_State*, GameObject*);
@@ -57,5 +56,7 @@ namespace LuaGameObject
     int SetLootState(lua_State*, GameObject*);
     int SetFlag(lua_State*, GameObject*);
     int RemoveFlag(lua_State*, GameObject*);
+    int Despawn(lua_State*, GameObject*);
+    int Respawn(lua_State*, GameObject*);
 };
 #endif

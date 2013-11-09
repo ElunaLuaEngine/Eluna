@@ -118,5 +118,22 @@ public:
         spell->finish();
         return 0;
     }
+
+    // GetTargetDest()
+    static int GetTargetDest(lua_State* L, Spell* spell)
+    {
+        if (!spell)
+            return 0;
+
+        if (!spell->m_targets.HasDst())
+            return 0;
+        float x, y, z, o;
+        spell->m_targets.GetDstPos()->GetPosition(x,y,z,o);
+        sEluna->PushFloat(L, x);
+        sEluna->PushFloat(L, y);
+        sEluna->PushFloat(L, z);
+        sEluna->PushFloat(L, o);
+        return 4;
+    }
 };
 #endif

@@ -184,15 +184,6 @@ int LuaGameObject::SummonGameObject(lua_State* L, GameObject* go)
     return 1;
 }
 
-int LuaGameObject::Despawn(lua_State* L, GameObject* go)
-{
-    if (!go || !go->IsInWorld())
-        return 0;
-
-    go->RemoveFromWorld();
-    return 0;
-}
-
 int LuaGameObject::GetDisplayId(lua_State* L, GameObject* go)
 {
     if (!go || !go->IsInWorld())
@@ -232,14 +223,12 @@ int LuaGameObject::HasQuest(lua_State* L, GameObject* go)
     return 1;
 }
 
-int LuaGameObject::IsInvisibleDueToDespawn(lua_State* L, GameObject * go)
+int LuaGameObject::IsSpawned(lua_State* L, GameObject * go)
 {
     if (!go || !go->IsInWorld())
         sEluna->PushBoolean(L, false);
     else
-    {
-        sEluna->PushBoolean(L, go->IsInvisibleDueToDespawn());
-    }
+        sEluna->PushBoolean(L, go->isSpawned());
     return 1;
 }
 
@@ -614,5 +603,33 @@ int LuaGameObject::RemoveFlag(lua_State* L, GameObject* go)
     uint32 flag = luaL_optunsigned(L, 1, 0);
 
     go->RemoveFlag(GAMEOBJECT_FLAGS, flag);
+    return 0;
+}
+
+int LuaGameObject::Despawn(lua_State* L, GameObject* go)
+{
+    if (!go)
+        return 0;
+
+    int32 delay = luaL_optint(L, 1, 1);
+
+    if (delay <= 0)
+        delay = 1;
+    go->SetSpawnedByDefault(false);
+    go->SetRespawnTime(delay);
+    return 0;
+}
+
+int LuaGameObject::Respawn(lua_State* L, GameObject* go)
+{
+    if (!go)
+        return 0;
+
+    int32 delay = luaL_optint(L, 1, 1);
+
+    if (delay <= 0)
+        delay = 1;
+    go->SetSpawnedByDefault(true);
+    go->SetRespawnTime(delay);
     return 0;
 }

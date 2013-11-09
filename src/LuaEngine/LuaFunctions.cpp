@@ -661,15 +661,15 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     {"SetGoState", &LuaGameObject::SetGoState},
     {"SetLootState", &LuaGameObject::SetLootState},
     {"SetFlag", &LuaGameObject::SetFlag},
-
+    
     // Boolean
     {"IsInWorld", &LuaGameObject::IsInWorld},                                                               // :IsInWorld()
     {"IsTransport", &LuaGameObject::IsTransport},                                                           // :IsTransport()
     {"IsDestructible", &LuaGameObject::IsDestructible},                                                     // :IsDestructible()
     {"IsActive", &LuaGameObject::IsActive},                                                                 // :IsActive()
     {"HasQuest", &LuaGameObject::HasQuest},                                                                 // :HasQuest(questId)
-    {"IsInvisibleDueToDespawn", &LuaGameObject::IsInvisibleDueToDespawn},                                   // :IsInvisibleDueToDespawn()
-
+    {"IsSpawned", &LuaGameObject::IsSpawned},                                                               // :IsSpawned()
+    
     // Other
     {"CastSpell", &LuaGameObject::CastSpell},                                                               // :CastSpellOnTarget(target, spellId) - Casts the spell on target, no manacost or cast time
     {"Move", &LuaGameObject::Move},                                                                         // :Move(x, y, z, o) - Moves the GO to coordinates
@@ -677,10 +677,11 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     {"RegisterEvent", &LuaGameObject::RegisterEvent},                                                       // :RegisterEvent(function, delay, calls)
     {"RemoveEventById", &LuaGameObject::RemoveEventById},                                                   // :RemoveEventById(eventID)
     {"RemoveEvents", &LuaGameObject::RemoveEvents},                                                         // :RemoveEvents()
-    {"Despawn", &LuaGameObject::Despawn},                                                                   // :Despawn() - Object despawns
     {"SummonGameObject", &LuaGameObject::SummonGameObject},                                                 // :SummonGameObject(entry, x, y, z, o[, respawnDelay]) - Spawns an object to location. Returns the object or nil
     {"RemoveFlag", &LuaGameObject::RemoveFlag},
     {"UseDoorOrButton", &LuaGameObject::UseDoorOrButton},                                                   // :UseDoorOrButton(delay) - Activates/closes/opens after X delay UNDOCUMENTED
+    {"Despawn", &LuaGameObject::Despawn},                                                                   // :Despawn([delay]) - Despawns the object after delay
+    {"Respawn", &LuaGameObject::Respawn},                                                                   // :Respawn([delay]) - respawns the object after delay
 
     { NULL, NULL },
 };
@@ -798,6 +799,7 @@ ElunaRegister<Spell> SpellMethods[] =
     {"GetEntry", &LuaSpell::GetId},                                                                         // :GetEntry() - Returns the spell's ID
     {"GetDuration", &LuaSpell::GetDuration},                                                                // :GetDuration() - Returns the spell's duration
     {"GetPowerCost", &LuaSpell::GetPowerCost},                                                              // :GetPowerCost() - Returns the spell's power cost (mana, energy, rage, etc)
+    {"GetTargetDest", &LuaSpell::GetTargetDest},                                                            // :GetTargetDest() - Returns the target destination (like GetLocation does) or nil
 
     // Setters
     {"SetAutoRepeat", &LuaSpell::SetAutoRepeat},                                                            // :SetAutoRepeat(boolean)
