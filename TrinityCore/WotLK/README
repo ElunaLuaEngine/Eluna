@@ -1,36 +1,36 @@
 #######================================================####
             Eluna
-		  Lua Engine
+          Lua Engine
         Home: http://emudevs.com/forum.php
-		Wiki: http://wiki.emudevs.com/doku.php?id=eluna
-		Scripts: https://github.com/ElunaLuaEngine/Scripts
+        Wiki: http://wiki.emudevs.com/doku.php?id=eluna
+        Scripts: https://github.com/ElunaLuaEngine/Scripts
 
-		    Team:
-		Tommy (Easelm)
-		Foereaper
-		Rochet2
-		Jameyboor
-		Hamar (Hammer)
+            Team:
+        Tommy (Easelm)
+        Foereaper
+        Rochet2
+        Jameyboor
+        Hamar (Hammer)
 		
-		    Supports:
-		TrinityCore : [WotLK] - [Cataclysm]
+            Supports:
+        TrinityCore : [WotLK] - [Cataclysm]
 		
-		    In Development:
-		MaNGOS : [WotLK]
+            In Development:
+        MaNGOS : [WotLK]
 		
-		    About:
-		Eluna is a Lua Engine for World of Warcraft-
-		emulators. Our main site is Emudevs. You will-
-		find everything you need to know on Eluna's wiki.
+            About:
+        Eluna is a Lua Engine for World of Warcraft-
+        emulators. Our main site is Emudevs. You will-
+        find everything you need to know on Eluna's wiki.
 		
-		Eluna's team is working hard to support other-
-		emulators rather than just one. We want to-
-		be the major Lua source for World of Warcraft-
-		emulation.
+        Eluna's team is working hard to support other-
+        emulators rather than just one. We want to-
+        be the major Lua source for World of Warcraft-
+        emulation.
 ########================================================####
 
 ------------------------------------------------------------
-					 ABOUT/HOW TO SETUP
+                     ABOUT/HOW TO SETUP
 You have folders that pertains to changes within TrinityCore's source. Each folder will contain a specific change to make Eluna work with the emulator. Each file is up to date with the latest changes. Worrying about errors shouldn't happen if you have a fresh TrinityCore source. If you have a fresh source without any specific (custom) changes, you can just move and replace the folders/files with TrinityCore's existing.
 
 With custom content, it is recommended not to move and replace files. It might cause issues if you do. However, it is recommended to open each individual files and setup Eluna that way if you do have custom content. To do this, search for "#ifndef ELUNA" or "ELUNA" inside of the source/header files to copy the Eluna code, and put it in your custom source.
