@@ -207,6 +207,8 @@ namespace LuaUnit
     int GetFreeTalentPoints(lua_State*, Unit*);
     int GetGuildName(lua_State*, Unit*);
     int GetReputation(lua_State*, Unit*);
+    int GetStat(lua_State*, Unit*);
+    int GetBaseSpellPower(lua_State*, Unit*);
     int SetReputation(lua_State*, Unit*);
     int RemoveSpell(lua_State*, Unit*);
     int ClearComboPoints(lua_State*, Unit*);

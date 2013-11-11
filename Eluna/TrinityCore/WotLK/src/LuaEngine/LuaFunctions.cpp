@@ -163,6 +163,8 @@ ElunaRegister<Unit> UnitMethods[] =
     {"GetCorpse", &LuaUnit::GetCorpse},                                                                     // :GetCorpse() - Returns the player's corpse
     {"GetGossipTextId", &LuaUnit::GetGossipTextId},                                                         // :GetGossipTextId(worldObject) - Returns the WorldObject's gossip textId
     {"GetQuestRewardStatus", &LuaUnit::GetQuestRewardStatus},                                               // :GetQuestRewardStatus(questId) - Returns the true/false of the quest reward status
+    {"GetStat", &LuaUnit::GetStat},
+    {"GetBaseSpellPower", &LuaUnit::GetBaseSpellPower},
 
     // Setters
     {"AdvanceSkillsToMax", &LuaUnit::AdvanceSkillsToMax},                                                   // :AdvanceSkillsToMax() - Advances all currently known skills to the currently known max level
