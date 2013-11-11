@@ -29,7 +29,7 @@ If you're having trouble, post in Eluna's support here: [Eluna Support Forum] (h
 
 ## SUPPORTED EMULATORS
 
-TrinityCore : WotLK/Cataclysm
+[TrinityCore] (https://github.com/TrinityCore/TrinityCore) : WotLK/Cataclysm
 		
 ## IN DEVELOPMENT
 MaNGOS : WotLK
