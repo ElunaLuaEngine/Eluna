@@ -51,6 +51,7 @@ SOURCE_DIRECTORY/src/CMakeLists.txt
 SOURCE_DIRECTORY/src/game/CMakeLists.txt
 SOURCE_DIRECTORY/src/game/ScriptMgr.cpp
 SOURCE_DIRECTORY/src/game/World.cpp
+SOURCE_DIRECTORY/src/game/Object.h
 -
 SOURCE_DIRECTORY/src/server/scripts/CMakeLists.txt
 SOURCE_DIRECTORY/src/server/scripts/Commands/cs_reload.cpp
