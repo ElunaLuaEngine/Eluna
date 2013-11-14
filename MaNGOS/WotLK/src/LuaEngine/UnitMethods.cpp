@@ -4902,7 +4902,7 @@ int LuaUnit::GossipMenuAddItem(lua_State* L, Unit* unit)
     bool _code = luaL_optbool(L, 5, false);
     const char* _promptMsg = luaL_optstring(L, 6, "");
     uint32 _money = luaL_optunsigned(L, 7, 0);
-    //player->ADD_GOSSIP_ITEM_EXTENDED(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
+    player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
     return 0;
 }
 
@@ -4910,7 +4910,7 @@ int LuaUnit::GossipComplete(lua_State* L, Unit* unit)
 {
     TO_PLAYER();
 
-    //player->CLOSE_GOSSIP_MENU();
+    player->PlayerTalkClass->CloseGossip();
     return 0;
 }
 
@@ -4927,7 +4927,7 @@ int LuaUnit::GossipSendMenu(lua_State* L, Unit* unit)
             uint32 menu_id = luaL_checkunsigned(L, 3);
             player->PlayerTalkClass->GetGossipMenu().SetMenuId(menu_id);
         }
-        //player->SEND_GOSSIP_MENU(_npcText, sender->GetGUID());
+        player->PlayerTalkClass->SendGossipMenu(_npcText, sender->GetObjectGuid());
     }
     return 0;
 }

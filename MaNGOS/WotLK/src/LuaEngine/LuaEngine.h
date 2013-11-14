@@ -762,429 +762,431 @@ public:
 };*/
 class Eluna::Eluna_CreatureScript
 {
-struct ScriptCreatureAI : public CreatureAI
-{
-    ScriptCreatureAI(Creature* creature) : CreatureAI(creature) { }
-    ~ScriptCreatureAI() { }
-
-    //Called at World update tick
-    void UpdateAI(uint32 const diff)
-    {
-        CreatureAI::UpdateAI(diff);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_AIUPDATE);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_AIUPDATE);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnsigned(sEluna.LuaState, diff);
-        sEluna.ExecuteCall(3, 0);
-    }
-
-    //Called for reaction at enter to combat if not in combat yet (enemy can be NULL)
-    //Called at creature aggro either by MoveInLOS or Attack Start
-    void EnterCombat(Unit* target)
-    {
-        CreatureAI::EnterCombat(target);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_ENTER_COMBAT);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_ENTER_COMBAT);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, target);
-        sEluna.ExecuteCall(3, 0);
-    }
-
-    // Called at any Damage from any attacker (before damage apply)
-    void DamageTaken(Unit* attacker, uint32& damage)
-    {
-        CreatureAI::DamageTaken(attacker, damage);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_DAMAGE_TAKEN);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_DAMAGE_TAKEN);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, attacker);
-        sEluna.PushUnsigned(sEluna.LuaState, damage);
-        sEluna.ExecuteCall(4, 0);
-    }
-
-    //Called at creature death
-    void JustDied(Unit* killer)
-    {
-        CreatureAI::JustDied(killer);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_DIED);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_DIED);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, killer);
-        sEluna.ExecuteCall(3, 0);
-    }
-
-    //Called at creature killing another unit
-    void KilledUnit(Unit* victim)
-    {
-        CreatureAI::KilledUnit(victim);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_TARGET_DIED);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_TARGET_DIED);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, victim);
-        sEluna.ExecuteCall(3, 0);
-    }
-
-    // Called when the creature summon successfully other creature
-    void JustSummoned(Creature* summon)
-    {
-        CreatureAI::JustSummoned(summon);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, summon);
-        sEluna.ExecuteCall(3, 0);
-    }
-
-    // Called when a summoned creature is despawned
-    void SummonedCreatureDespawn(Creature* summon)
-    {
-        CreatureAI::SummonedCreatureDespawn(summon);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, summon);
-        sEluna.ExecuteCall(3, 0);
-    }
-
-    // Called when hit by a spell
-    void SpellHit(Unit* caster, SpellEntry const* spell)
-    {
-        CreatureAI::SpellHit(caster, spell);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_HIT_BY_SPELL);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_HIT_BY_SPELL);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, caster);
-        sEluna.PushUnsigned(sEluna.LuaState, spell->Id); // Pass spell object?
-        sEluna.ExecuteCall(4, 0);
-    }
-
-    // Called when spell hits a target
-    void SpellHitTarget(Unit* target, SpellEntry const* spell)
-    {
-        CreatureAI::SpellHitTarget(target, spell);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SPELL_HIT_TARGET);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SPELL_HIT_TARGET);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, target);
-        sEluna.PushUnsigned(sEluna.LuaState, spell->Id); // Pass spell object?
-        sEluna.ExecuteCall(4, 0);
-    }
-
-    //Called at waypoint reached or PointMovement end
-    void MovementInform(uint32 type, uint32 id)
-    {
-        CreatureAI::MovementInform(type, id);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_REACH_WP);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_REACH_WP);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnsigned(sEluna.LuaState, type);
-        sEluna.PushUnsigned(sEluna.LuaState, id);
-        sEluna.ExecuteCall(4, 0);
-    }
-
-    // Called when AI is temporarily replaced or put back when possess is applied or removed
-    /*
-    void OnPossess(bool apply)
-    {
-        CreatureAI::OnPossess(apply);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_POSSESS);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_POSSESS);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushBoolean(sEluna.LuaState, apply);
-        sEluna.ExecuteCall(3, 0);
-    }*/
-
-    //Called at creature reset either by death or evade
-    /*void Reset()
-    {
-        CreatureAI::Reset();
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_RESET);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_RESET);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.ExecuteCall(2, 0);
-    }*/
-
-    // Called before EnterCombat even before the creature is in combat.
-    void AttackStart(Unit* target)
-    {
-        CreatureAI::AttackStart(target);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_PRE_COMBAT);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_PRE_COMBAT);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, target);
-        sEluna.ExecuteCall(3, 0);
-    }
-
-    // Called in Creature::Update when deathstate = DEAD. Inherited classes may maniuplate the ability to respawn based on scripted events.
-    /*
-    bool CanRespawn()
-    {
-        CreatureAI::CanRespawn();
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_CAN_RESPAWN);
-        if (!bind)
-            return true;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_CAN_RESPAWN);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.ExecuteCall(2, 0);
-        return true;
-    }*/
-
-    // Called for reaction at stopping attack at no attackers or targets
-    void EnterEvadeMode()
-    {
-        CreatureAI::EnterEvadeMode();
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_LEAVE_COMBAT);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_LEAVE_COMBAT);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.ExecuteCall(2, 0);
-    }
-
-    // Called when the creature is summoned successfully by other creature
-    /*void IsSummonedBy(Unit* summoner)
-    {
-        CreatureAI::IsSummonedBy(summoner);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SUMMONED);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SUMMONED);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, summoner);
-        sEluna.ExecuteCall(3, 0);
-    }*/
-
-    /*void SummonedCreatureDies(Creature* summon, Unit* killer)
-    {
-        CreatureAI::SummonedCreatureDies(summon, killer);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, summon);
-        sEluna.PushUnit(sEluna.LuaState, killer);
-        sEluna.ExecuteCall(4, 0);
-    }*/
-
-    // Called when the creature is target of hostile action: swing, hostile spell landed, fear/etc)
-    void AttackedBy(Unit* attacker)
-    {
-        CreatureAI::AttackedBy(attacker);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_ATTACKED_AT);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_ATTACKED_AT);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, attacker);
-        sEluna.ExecuteCall(3, 0);
-    }
-
-    // Called when creature is spawned or respawned (for reseting variables)
-    void JustRespawned()
-    {
-        CreatureAI::JustRespawned();
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SPAWN);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SPAWN);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.ExecuteCall(2, 0);
-    }
-
-    /*void OnCharmed(bool apply)
-    {
-        CreatureAI::OnCharmed(apply);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_CHARMED);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_CHARMED);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushBoolean(sEluna.LuaState, apply);
-        sEluna.ExecuteCall(3, 0);
-    }*/
-
-    // Called at reaching home after evade
-    void JustReachedHome()
-    {
-        CreatureAI::JustReachedHome();
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_REACH_HOME);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_REACH_HOME);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.ExecuteCall(2, 0);
-    }
-
-    // Called at text emote receive from player
-    void ReceiveEmote(Player* player, uint32 emoteId)
-    {
-        CreatureAI::ReceiveEmote(player, emoteId);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_RECEIVE_EMOTE);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_RECEIVE_EMOTE);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, player);
-        sEluna.PushUnsigned(sEluna.LuaState, emoteId);
-        sEluna.ExecuteCall(4, 0);
-    }
-
-    // Called when owner takes damage
-    /*void OwnerAttackedBy(Unit* attacker)
-    {
-        CreatureAI::OwnerAttackedBy(attacker);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_OWNER_ATTACKED_AT);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_OWNER_ATTACKED_AT);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, attacker);
-        sEluna.ExecuteCall(3, 0);
-    }*/
-
-    // Called when owner attacks something
-    /*void OwnerAttacked(Unit* target)
-    {
-        CreatureAI::OwnerAttacked(target);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_OWNER_ATTACKED);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_OWNER_ATTACKED);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, target);
-        sEluna.ExecuteCall(3, 0);
-    }*/
-
-    // called when the corpse of this creature gets removed
-    void CorpseRemoved(uint32& respawnDelay)
-    {
-        CreatureAI::CorpseRemoved(respawnDelay);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_CORPSE_REMOVED);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_CORPSE_REMOVED);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnsigned(sEluna.LuaState, respawnDelay);
-        sEluna.ExecuteCall(3, 0);
-    }
-
-    /*void PassengerBoarded(Unit* passenger, int8 seatId, bool apply)
-    {
-        CreatureAI::PassengerBoarded(passenger, seatId, apply);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_PASSANGER_BOARDED);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_PASSANGER_BOARDED);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, passenger);
-        sEluna.PushInteger(sEluna.LuaState, seatId);
-        sEluna.PushBoolean(sEluna.LuaState, apply);
-        sEluna.ExecuteCall(5, 0);
-    }*/
-
-    /*void OnSpellClick(Unit* clicker, bool& result)
-    {
-        CreatureAI::OnSpellClick(clicker, result);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SPELL_CLICK);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SPELL_CLICK);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, clicker);
-        sEluna.PushBoolean(sEluna.LuaState, result);
-        sEluna.ExecuteCall(4, 0);
-    }*/
-
-    void MoveInLineOfSight(Unit* who)
-    {
-        CreatureAI::MoveInLineOfSight(who);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_MOVE_IN_LOS);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_MOVE_IN_LOS);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, who);
-        sEluna.ExecuteCall(3, 0);
-    }
-
-    // Called if IsVisible(Unit* who) is true at each who move, reaction at visibility zone enter
-    /*void MoveInLineOfSight_Safe(Unit* who)
-    {
-        CreatureAI::MoveInLineOfSight_Safe(who);
-        int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_VISIBLE_MOVE_IN_LOS);
-        if (!bind)
-            return;
-        sEluna.BeginCall(bind);
-        sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_VISIBLE_MOVE_IN_LOS);
-        sEluna.PushUnit(sEluna.LuaState, m_creature);
-        sEluna.PushUnit(sEluna.LuaState, who);
-        sEluna.ExecuteCall(3, 0);
-    }*/
-};
 public:
-CreatureAI* GetAI(Creature* creature)
-{
-    if (!sEluna.CreatureEventBindings->GetBindMap(creature->GetEntry()))
-        return NULL;
 
-    ScriptCreatureAI* luaCreatureAI = new ScriptCreatureAI(creature);
-    return luaCreatureAI;
-}
+    struct ScriptCreatureAI : public CreatureAI
+    {
+        ScriptCreatureAI(Creature* creature) : CreatureAI(creature) { }
+        ~ScriptCreatureAI() { }
+
+        //Called at World update tick
+        void UpdateAI(uint32 const diff)
+        {
+            CreatureAI::UpdateAI(diff);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_AIUPDATE);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_AIUPDATE);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnsigned(sEluna.LuaState, diff);
+            sEluna.ExecuteCall(3, 0);
+        }
+
+        //Called for reaction at enter to combat if not in combat yet (enemy can be NULL)
+        //Called at creature aggro either by MoveInLOS or Attack Start
+        void EnterCombat(Unit* target)
+        {
+            CreatureAI::EnterCombat(target);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_ENTER_COMBAT); 
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_ENTER_COMBAT);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, target);
+            sEluna.ExecuteCall(3, 0);
+        }
+
+        // Called at any Damage from any attacker (before damage apply)
+        void DamageTaken(Unit* attacker, uint32& damage)
+        {
+            CreatureAI::DamageTaken(attacker, damage);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_DAMAGE_TAKEN);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_DAMAGE_TAKEN);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, attacker);
+            sEluna.PushUnsigned(sEluna.LuaState, damage);
+            sEluna.ExecuteCall(4, 0);
+        }
+
+        //Called at creature death
+        void JustDied(Unit* killer)
+        {
+            CreatureAI::JustDied(killer);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_DIED);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_DIED);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, killer);
+            sEluna.ExecuteCall(3, 0);
+        }
+
+        //Called at creature killing another unit
+        void KilledUnit(Unit* victim)
+        {
+            CreatureAI::KilledUnit(victim);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_TARGET_DIED);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_TARGET_DIED);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, victim);
+            sEluna.ExecuteCall(3, 0);
+        }
+
+        // Called when the creature summon successfully other creature
+        void JustSummoned(Creature* summon)
+        {
+            CreatureAI::JustSummoned(summon);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, summon);
+            sEluna.ExecuteCall(3, 0);
+        }
+
+        // Called when a summoned creature is despawned
+        void SummonedCreatureDespawn(Creature* summon)
+        {
+            CreatureAI::SummonedCreatureDespawn(summon);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, summon);
+            sEluna.ExecuteCall(3, 0);
+        }
+
+        // Called when hit by a spell
+        void SpellHit(Unit* caster, SpellEntry const* spell)
+        {
+            CreatureAI::SpellHit(caster, spell);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_HIT_BY_SPELL);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_HIT_BY_SPELL);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, caster);
+            sEluna.PushUnsigned(sEluna.LuaState, spell->Id); // Pass spell object?
+            sEluna.ExecuteCall(4, 0);
+        }
+
+        // Called when spell hits a target
+        void SpellHitTarget(Unit* target, SpellEntry const* spell)
+        {
+            CreatureAI::SpellHitTarget(target, spell);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SPELL_HIT_TARGET);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SPELL_HIT_TARGET);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, target);
+            sEluna.PushUnsigned(sEluna.LuaState, spell->Id); // Pass spell object?
+            sEluna.ExecuteCall(4, 0);
+        }
+
+        //Called at waypoint reached or PointMovement end
+        void MovementInform(uint32 type, uint32 id)
+        {
+            CreatureAI::MovementInform(type, id);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_REACH_WP);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_REACH_WP);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnsigned(sEluna.LuaState, type);
+            sEluna.PushUnsigned(sEluna.LuaState, id);
+            sEluna.ExecuteCall(4, 0);
+        }
+
+        // Called when AI is temporarily replaced or put back when possess is applied or removed
+        /*
+        void OnPossess(bool apply)
+        {
+            CreatureAI::OnPossess(apply);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_POSSESS);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_POSSESS);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushBoolean(sEluna.LuaState, apply);
+            sEluna.ExecuteCall(3, 0);
+        }*/
+
+        //Called at creature reset either by death or evade
+        /*void Reset()
+        {
+            CreatureAI::Reset();
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_RESET);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_RESET);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.ExecuteCall(2, 0);
+        }*/
+
+        // Called before EnterCombat even before the creature is in combat.
+        void AttackStart(Unit* target)
+        {
+            CreatureAI::AttackStart(target);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_PRE_COMBAT);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_PRE_COMBAT);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, target);
+            sEluna.ExecuteCall(3, 0);
+        }
+
+        // Called in Creature::Update when deathstate = DEAD. Inherited classes may maniuplate the ability to respawn based on scripted events.
+        /*
+        bool CanRespawn()
+        {
+            CreatureAI::CanRespawn();
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_CAN_RESPAWN);
+            if (!bind)
+                return true;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_CAN_RESPAWN);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.ExecuteCall(2, 0);
+            return true;
+        }*/
+
+        // Called for reaction at stopping attack at no attackers or targets
+        void EnterEvadeMode()
+        {
+            CreatureAI::EnterEvadeMode();
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_LEAVE_COMBAT);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_LEAVE_COMBAT);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.ExecuteCall(2, 0);
+        }
+
+        // Called when the creature is summoned successfully by other creature
+        /*void IsSummonedBy(Unit* summoner)
+        {
+            CreatureAI::IsSummonedBy(summoner);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SUMMONED);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SUMMONED);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, summoner);
+            sEluna.ExecuteCall(3, 0);
+        }*/
+
+        /*void SummonedCreatureDies(Creature* summon, Unit* killer)
+        {
+            CreatureAI::SummonedCreatureDies(summon, killer);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, summon);
+            sEluna.PushUnit(sEluna.LuaState, killer);
+            sEluna.ExecuteCall(4, 0);
+        }*/
+
+        // Called when the creature is target of hostile action: swing, hostile spell landed, fear/etc)
+        void AttackedBy(Unit* attacker)
+        {
+            CreatureAI::AttackedBy(attacker);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_ATTACKED_AT);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_ATTACKED_AT);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, attacker);
+            sEluna.ExecuteCall(3, 0);
+        }
+
+        // Called when creature is spawned or respawned (for reseting variables)
+        void JustRespawned()
+        {
+            CreatureAI::JustRespawned();
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SPAWN);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SPAWN);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.ExecuteCall(2, 0);
+        }
+
+        /*void OnCharmed(bool apply)
+        {
+            CreatureAI::OnCharmed(apply);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_CHARMED);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_CHARMED);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushBoolean(sEluna.LuaState, apply);
+            sEluna.ExecuteCall(3, 0);
+        }*/
+
+        // Called at reaching home after evade
+        void JustReachedHome()
+        {
+            CreatureAI::JustReachedHome();
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_REACH_HOME);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_REACH_HOME);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.ExecuteCall(2, 0);
+        }
+
+        // Called at text emote receive from player
+        void ReceiveEmote(Player* player, uint32 emoteId)
+        {
+            CreatureAI::ReceiveEmote(player, emoteId);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_RECEIVE_EMOTE);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_RECEIVE_EMOTE);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, player);
+            sEluna.PushUnsigned(sEluna.LuaState, emoteId);
+            sEluna.ExecuteCall(4, 0);
+        }
+
+        // Called when owner takes damage
+        /*void OwnerAttackedBy(Unit* attacker)
+        {
+            CreatureAI::OwnerAttackedBy(attacker);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_OWNER_ATTACKED_AT);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_OWNER_ATTACKED_AT);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, attacker);
+            sEluna.ExecuteCall(3, 0);
+        }*/
+
+        // Called when owner attacks something
+        /*void OwnerAttacked(Unit* target)
+        {
+            CreatureAI::OwnerAttacked(target);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_OWNER_ATTACKED);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_OWNER_ATTACKED);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, target);
+            sEluna.ExecuteCall(3, 0);
+        }*/
+
+        // called when the corpse of this creature gets removed
+        void CorpseRemoved(uint32& respawnDelay)
+        {
+            CreatureAI::CorpseRemoved(respawnDelay);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_CORPSE_REMOVED);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_CORPSE_REMOVED);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnsigned(sEluna.LuaState, respawnDelay);
+            sEluna.ExecuteCall(3, 0);
+        }
+
+        /*void PassengerBoarded(Unit* passenger, int8 seatId, bool apply)
+        {
+            CreatureAI::PassengerBoarded(passenger, seatId, apply);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_PASSANGER_BOARDED);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_PASSANGER_BOARDED);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, passenger);
+            sEluna.PushInteger(sEluna.LuaState, seatId);
+            sEluna.PushBoolean(sEluna.LuaState, apply);
+            sEluna.ExecuteCall(5, 0);
+        }*/
+
+        /*void OnSpellClick(Unit* clicker, bool& result)
+        {
+            CreatureAI::OnSpellClick(clicker, result);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_SPELL_CLICK);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_SPELL_CLICK);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, clicker);
+            sEluna.PushBoolean(sEluna.LuaState, result);
+            sEluna.ExecuteCall(4, 0);
+        }*/
+
+        void MoveInLineOfSight(Unit* who)
+        {
+            CreatureAI::MoveInLineOfSight(who);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_MOVE_IN_LOS);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_MOVE_IN_LOS);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, who);
+            sEluna.ExecuteCall(3, 0);
+        }
+
+        // Called if IsVisible(Unit* who) is true at each who move, reaction at visibility zone enter
+        /*void MoveInLineOfSight_Safe(Unit* who)
+        {
+            CreatureAI::MoveInLineOfSight_Safe(who);
+            int bind = sEluna.CreatureEventBindings->GetBind(m_creature->GetEntry(), CREATURE_EVENT_ON_VISIBLE_MOVE_IN_LOS);
+            if (!bind)
+                return;
+            sEluna.BeginCall(bind);
+            sEluna.PushInteger(sEluna.LuaState, CREATURE_EVENT_ON_VISIBLE_MOVE_IN_LOS);
+            sEluna.PushUnit(sEluna.LuaState, m_creature);
+            sEluna.PushUnit(sEluna.LuaState, who);
+            sEluna.ExecuteCall(3, 0);
+        }*/
+    };
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        if (!sEluna.CreatureEventBindings->GetBindMap(creature->GetEntry()))
+            return NULL;
+
+        ScriptCreatureAI* luaCreatureAI = new ScriptCreatureAI(creature);
+        return luaCreatureAI;
+    }
 };
 /*
 class Eluna::Eluna_GameObjectScript : public GameObjectScript

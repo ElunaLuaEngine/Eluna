@@ -1993,6 +1993,10 @@ InstanceData* ScriptMgr::CreateInstanceData(Map* pMap)
 
 bool ScriptMgr::OnGossipHello(Player* pPlayer, Creature* pCreature)
 {
+//#ifdef ELUNA
+    if (sHookMgr.OnGossipHello(pPlayer, pCreature))
+        return true;
+//#endif
     return m_pOnGossipHello != NULL && m_pOnGossipHello(pPlayer, pCreature);
 }
 
@@ -2003,6 +2007,16 @@ bool ScriptMgr::OnGossipHello(Player* pPlayer, GameObject* pGameObject)
 
 bool ScriptMgr::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code)
 {
+//#ifdef ELUNA
+    if (code)
+    {
+        if (sHookMgr.OnGossipSelectCode(pPlayer, pCreature, sender, action, code))
+            return true;
+    }
+    else
+        if (sHookMgr.OnGossipSelect(pPlayer, pCreature, sender, action))
+            return true;
+//#endif
     if (code)
         return m_pOnGossipSelectWithCode != NULL && m_pOnGossipSelectWithCode(pPlayer, pCreature, sender, action, code);
     else
