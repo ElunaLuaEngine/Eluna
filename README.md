@@ -15,6 +15,8 @@ Eluna's team is working hard to support other emulators rather than just one. We
 
 [Eluna Scripts] (https://github.com/ElunaLuaEngine/Scripts)
 
+[Setup Video] (http://www.youtube.com/watch?v=8wGHf7FbhSw)
+
 ## SUPPORT
 
 If you're having trouble, post in Eluna's support here: [Eluna Support Forum] (http://emudevs.com/forumdisplay.php/84-Support)
