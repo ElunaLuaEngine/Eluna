@@ -31,7 +31,7 @@ void Eluna::StartEluna(bool restart)
     if (restart)
     {
         sHookMgr->OnEngineRestart();
-        TC_LOG_INFO(LOG_FILTER_GENERAL, "Eluna::Restarting Lua Engine");
+        TC_LOG_INFO("misc", "Eluna::Restarting Lua Engine");
 
         if (LuaState)
         {
@@ -61,7 +61,7 @@ void Eluna::StartEluna(bool restart)
         AddScriptHooks();
 
     LuaState = luaL_newstate();
-    TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, "Eluna Lua Engine loaded.");
+    TC_LOG_INFO("server.loading", "Eluna Lua Engine loaded.");
 
     LoadedScripts loadedScripts;
     LoadDirectory("scripts", &loadedScripts);
@@ -89,7 +89,7 @@ void Eluna::StartEluna(bool restart)
         strcpy(filename, itr->c_str());
         if (luaL_loadfile(LuaState, filename) != 0)
         {
-            TC_LOG_ERROR(LOG_FILTER_SERVER_LOADING, "Eluna::Error loading `%s`.", itr->c_str());
+            TC_LOG_ERROR("server.loading", "Eluna::Error loading `%s`.", itr->c_str());
             report(LuaState);
         }
         else
@@ -97,7 +97,7 @@ void Eluna::StartEluna(bool restart)
             int err = lua_pcall(LuaState, 0, 0, 0);
             if (err != 0 && err == LUA_ERRRUN)
             {
-                TC_LOG_ERROR(LOG_FILTER_SERVER_LOADING, "Eluna::Error loading `%s`.", itr->c_str());
+                TC_LOG_ERROR("server.loading", "Eluna::Error loading `%s`.", itr->c_str());
                 report(LuaState);
             }
         }
@@ -118,7 +118,7 @@ void Eluna::StartEluna(bool restart)
         }
     }
 
-    TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, "Eluna::Loaded %u Lua scripts..", count);
+    TC_LOG_INFO("server.loading", "Eluna::Loaded %u Lua scripts..", count);
 }
 
 // Loads lua scripts from given directory
@@ -136,7 +136,7 @@ void Eluna::LoadDirectory(char* Dirname, LoadedScripts* lscr)
     hFile = FindFirstFile(SearchName, &FindData);
     if (hFile == INVALID_HANDLE_VALUE)
     {
-        TC_LOG_ERROR(LOG_FILTER_SERVER_LOADING, "Eluna::No `scripts` directory found! Creating a 'scripts' directory and restarting Eluna.");
+        TC_LOG_ERROR("server.loading", "Eluna::No `scripts` directory found! Creating a 'scripts' directory and restarting Eluna.");
         CreateDirectory("scripts", NULL);
         StartEluna(true);
         return;
