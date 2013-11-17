@@ -195,7 +195,7 @@ void Eluna::LoadDirectory(char* Dirname, LoadedScripts* lscr)
         if (stat(_path, &attributes) == -1)
         {
             error = true;
-            TC_LOG_ERROR(LOG_FILTER_SERVER_LOADING, "Eluna::Error opening `%s`", _path);
+            TC_LOG_ERROR("server.loading", "Eluna::Error opening `%s`", _path);
         }
         else
             error = false;
