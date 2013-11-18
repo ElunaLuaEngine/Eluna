@@ -163,6 +163,8 @@ namespace LuaUnit
     int ModifyArenaPoints(lua_State*, Unit*);
     int ModifyHonorPoints(lua_State*, Unit*);
     int GetReputationRank(lua_State*, Unit*);
+    int GetStat(lua_State*, Unit*);
+    int GetBaseSpellPower(lua_State*, Unit*);
     int IsHonorOrXPTarget(lua_State*, Unit*);
     int SetFactionForRace(lua_State*, Unit*);
     int SetSkill(lua_State*, Unit*);

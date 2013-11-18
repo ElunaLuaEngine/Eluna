@@ -1457,6 +1457,30 @@ int LuaUnit::GetDrunkValue(lua_State* L, Unit* unit)
     return 1;
 }
 
+int LuaUnit::GetStat(lua_State* L, Unit* unit)
+{
+    TO_UNIT();
+    uint32 stat = luaL_checkunsigned(L, 1);
+
+    //if(stat >= MAX_STATS)
+    //    return 0;
+
+    //sEluna.PushUnsigned(L, unit->GetStat((Stats)stat));
+    return 1;
+}
+
+int LuaUnit::GetBaseSpellPower(lua_State* L, Unit* unit)
+{
+    TO_UNIT();
+    uint32 spellschool = luaL_checkunsigned(L, 1);
+
+    //if(spellschool >= MAX_SPELL_SCHOOL)
+    //    return 0;
+    
+    //sEluna.PushUnsigned(L, unit->GetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS + spellschool));
+    return 1;
+}
+
 int LuaUnit::SetDrunkValue(lua_State* L, Unit* unit)
 {
     TO_PLAYER();
