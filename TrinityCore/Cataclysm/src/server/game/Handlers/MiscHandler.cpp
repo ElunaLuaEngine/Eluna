@@ -172,18 +172,6 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket& recvData)
             if (!sScriptMgr->OnGossipSelectCode(_player, unit, _player->PlayerTalkClass->GetGossipOptionSender(gossipListId), _player->PlayerTalkClass->GetGossipOptionAction(gossipListId), code.c_str()))
                 _player->OnGossipSelect(unit, gossipListId, menuId);
         }
-#ifdef ELUNA
-        else if (_player->GetGUID() == guid)
-        {
-            sHookMgr->HandleGossipSelectOption(GetPlayer(), guid, GetPlayer()->PlayerTalkClass->GetGossipOptionSender(gossipListId), GetPlayer()->PlayerTalkClass->GetGossipOptionAction(gossipListId), code, menuId);
-            return;
-        }
-        else if (item)
-        {
-            sHookMgr->HandleGossipSelectOption(GetPlayer(), guid, GetPlayer()->PlayerTalkClass->GetGossipOptionSender(gossipListId), GetPlayer()->PlayerTalkClass->GetGossipOptionAction(gossipListId), code, menuId);
-            return;
-        }
-#endif
         else
         {
             go->AI()->GossipSelectCode(_player, menuId, gossipListId, code.c_str());
@@ -198,6 +186,18 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket& recvData)
             if (!sScriptMgr->OnGossipSelect(_player, unit, _player->PlayerTalkClass->GetGossipOptionSender(gossipListId), _player->PlayerTalkClass->GetGossipOptionAction(gossipListId)))
                 _player->OnGossipSelect(unit, gossipListId, menuId);
         }
+#ifdef ELUNA
+        else if (_player->GetGUID() == guid)
+        {
+            sHookMgr->HandleGossipSelectOption(GetPlayer(), guid, GetPlayer()->PlayerTalkClass->GetGossipOptionSender(gossipListId), GetPlayer()->PlayerTalkClass->GetGossipOptionAction(gossipListId), code, menuId);
+            return;
+        }
+        else if (item)
+        {
+            sHookMgr->HandleGossipSelectOption(GetPlayer(), guid, GetPlayer()->PlayerTalkClass->GetGossipOptionSender(gossipListId), GetPlayer()->PlayerTalkClass->GetGossipOptionAction(gossipListId), code, menuId);
+            return;
+        }
+#endif
         else
         {
             go->AI()->GossipSelect(_player, menuId, gossipListId);
