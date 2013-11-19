@@ -3991,7 +3991,7 @@ int LuaUnit::SetBindPoint(lua_State * L, Unit* unit)
     uint32 areaId = luaL_checkunsigned(L, 5);
 
     WorldLocation loc(mapId, x, y, z);
-    //player->SetHomebind(loc, areaId);
+    player->SetHomebindToLocation(loc, areaId);
     return 0;
 }
 
@@ -4352,7 +4352,7 @@ int LuaUnit::AddItem(lua_State* L, Unit* unit)
 
     uint32 itemId = luaL_checkunsigned(L, 1);
     uint32 itemCount = luaL_checkunsigned(L, 2);
-    //sEluna.PushBoolean(L, player->AddItem(itemId, itemCount));
+    sEluna.PushBoolean(L, player->StoreNewItemInInventorySlot(itemId, itemCount));
     return 0;
 }
 
@@ -5545,7 +5545,7 @@ int LuaUnit::IsQuestGiver(lua_State* L, Unit* unit)
 {
     TO_UNIT_BOOL();
 
-    //sEluna.PushBoolean(L, unit->IsQuestGiver());
+    sEluna.PushBoolean(L, unit->isQuestGiver());
     return 1;
 }
 
@@ -5595,7 +5595,7 @@ int LuaUnit::AddUnitState(lua_State* L, Unit* unit)
 
     uint32 state = luaL_checkunsigned(L, 1);
 
-    //unit->AddUnitState(state);
+    unit->addUnitState(state);
     return 0;
 }
 
@@ -5605,7 +5605,7 @@ int LuaUnit::ClearUnitState(lua_State* L, Unit* unit)
 
     uint32 state = luaL_checkunsigned(L, 1);
 
-    //unit->ClearUnitState(state);
+    unit->clearUnitState(state);
     return 0;
 }
 
@@ -5615,7 +5615,7 @@ int LuaUnit::HasUnitState(lua_State* L, Unit* unit)
 
     uint32 state = luaL_checkunsigned(L, 1);
 
-    //sEluna.PushBoolean(L, unit->HasUnitState(state));
+    sEluna.PushBoolean(L, unit->hasUnitState(state));
     return 1;
 }
 
