@@ -2,7 +2,7 @@
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.TXT for more information */
 
-/*#ifndef GAMEOBJECTMETHODS_H
+#ifndef GAMEOBJECTMETHODS_H
 #define GAMEOBJECTMETHODS_H
 
 namespace LuaGameObject
@@ -65,4 +65,4 @@ namespace LuaGameObject
     int Respawn(lua_State*, GameObject*);
     int RemoveFromWorld(lua_State*, GameObject*);
 };
-#endif*/
+#endif
