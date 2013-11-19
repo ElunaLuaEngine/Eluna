@@ -1373,7 +1373,7 @@ int LuaUnit::InBattlegroundQueue(lua_State* L, Unit* unit)
 {
     TO_PLAYER();
 
-    //sEluna.PushUnsigned(L, player->InBattlegroundQueue());
+    sEluna.PushUnsigned(L, player->InBattleGroundQueue());
     return 1;
 }
 
@@ -1381,7 +1381,7 @@ int LuaUnit::GetBattlegroundTypeId(lua_State* L, Unit* unit)
 {
     TO_PLAYER();
 
-    //sEluna.PushUnsigned(L, player->GetBattlegroundTypeId());
+    sEluna.PushUnsigned(L, player->GetBattleGroundTypeId());
     return 1;
 }
 
@@ -1389,7 +1389,7 @@ int LuaUnit::GetBattlegroundId(lua_State* L, Unit* unit)
 {
     TO_PLAYER();
 
-    //sEluna.PushUnsigned(L, player->GetBattlegroundId());
+    sEluna.PushUnsigned(L, player->GetBattleGroundId());
     return 1;
 }
 
