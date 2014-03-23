@@ -7,8 +7,6 @@
 #ifndef LUAHOOKS_H
 #define LUAHOOKS_H
 
-#include "Includes.h"
-
 // Base
 #include "Common.h"
 #include "SharedDefines.h"
