@@ -135,7 +135,11 @@ namespace LuaGroup
 
     int GetGUID(lua_State* L, Group* group)
     {
+#ifdef CLASSIC
+        sEluna->Push(L, group->GetId());
+#else
         sEluna->Push(L, group->GET_GUID());
+#endif
         return 1;
     }
 

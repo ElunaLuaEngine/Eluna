@@ -29,14 +29,9 @@
 #define SpellEffIndex           SpellEffectIndex
 #define ItemTemplate            ItemPrototype
 #define GetTemplate             GetProto
-//#include "Common.h"
-//#include "Policies/Singleton.h"
-//#include "ObjectGuid.h"
-//#include "ace/Atomic_Op.h"
-//
-//enums
-//#include "DBCEnums.h"
-//#include "Includes.h"
+#ifdef CLASSIC
+#define Difficulty              int
+#endif
 #endif
 
 struct AreaTriggerEntry;

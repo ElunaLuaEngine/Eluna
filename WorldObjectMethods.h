@@ -22,7 +22,7 @@ namespace LuaWorldObject
         return 1;
     }
 
-#ifndef TBC
+#if (!defined(TBC) && !defined(CLASSIC))
     int GetPhaseMask(lua_State* L, WorldObject* obj)
     {
         sEluna->Push(L, obj->GetPhaseMask());
@@ -297,7 +297,7 @@ namespace LuaWorldObject
         case HIGHGUID_TRANSPORT:
         case HIGHGUID_MO_TRANSPORT:
         case HIGHGUID_GAMEOBJECT:    sEluna->Push(L, obj->GetMap()->GetGameObject(GUID_TYPE(guid))); break;
-#ifndef TBC
+#if (!defined(TBC) && !defined(CLASSIC))
         case HIGHGUID_VEHICLE:
 #endif
         case HIGHGUID_UNIT:

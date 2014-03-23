@@ -104,6 +104,7 @@ namespace LuaGuild
     }
 #endif
 
+#ifndef CLASSIC
     int SetBankTabText(lua_State* L, Guild* guild)
     {
         uint8 tabId = sEluna->CHECKVAL<uint8>(L, 2);
@@ -115,6 +116,7 @@ namespace LuaGuild
 #endif
         return 0;
     }
+#endif
 
     /* OTHER */
     // SendPacketToGuild(packet)
@@ -173,6 +175,7 @@ namespace LuaGuild
         return 0;
     }
 
+#ifndef CLASSIC
     // Move to Player methods
     int WithdrawBankMoney(lua_State* L, Guild* guild)
     {
@@ -201,5 +204,6 @@ namespace LuaGuild
 #endif
         return 0;
     }
+#endif
 };
 #endif

@@ -21,11 +21,13 @@ namespace LuaQuest
         return 1;
     }
 
+#ifndef CLASSIC
     int IsDaily(lua_State* L, Quest* quest)
     {
         sEluna->Push(L, quest->IsDaily());
         return 1;
     }
+#endif
 
     int IsRepeatable(lua_State* L, Quest* quest)
     {

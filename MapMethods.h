@@ -10,11 +10,13 @@
 namespace LuaMap
 {
     /* BOOLEAN */
+#ifndef CLASSIC
     int IsArena(lua_State* L, Map* map)
     {
         sEluna->Push(L, map->IsBattleArena());
         return 1;
     }
+#endif
 
     int IsBattleground(lua_State* L, Map* map)
     {
@@ -38,11 +40,13 @@ namespace LuaMap
         return 1;
     }
 
+#ifndef CLASSIC
     int IsHeroic(lua_State* L, Map* map)
     {
         sEluna->Push(L, map->IsHeroic());
         return 1;
     }
+#endif
 
     int IsRaid(lua_State* L, Map* map)
     {
@@ -61,7 +65,7 @@ namespace LuaMap
     {
         float x = sEluna->CHECKVAL<float>(L, 2);
         float y = sEluna->CHECKVAL<float>(L, 3);
-#ifdef TBC
+#if (defined(TBC) || defined(CLASSIC))
         float z = map->GetHeight(x, y, MAX_HEIGHT);
 #else
         uint32 phasemask = sEluna->CHECKVAL<uint32>(L, 4, 1);
@@ -75,7 +79,11 @@ namespace LuaMap
 
     int GetDifficulty(lua_State* L, Map* map)
     {
+#ifndef CLASSIC
         sEluna->Push(L, map->GetDifficulty());
+#else
+        sEluna->Push(L, (Difficulty)0);
+#endif
         return 1;
     }
 

@@ -4,9 +4,9 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef TBC
 #ifndef VEHICLEMETHODS_H
 #define VEHICLEMETHODS_H
+#if (!defined(TBC) && !defined(CLASSIC))
 
 namespace LuaVehicle
 {
