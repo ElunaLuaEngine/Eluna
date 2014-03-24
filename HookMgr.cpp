@@ -1283,7 +1283,7 @@ bool HookMgr::OnPacketReceive(WorldSession* session, WorldPacket& packet)
             WorldPacket* data = sEluna->CHECKOBJ<WorldPacket>(sEluna->L, i, false);
             if (data)
                 packet = *data;
-            if (!sEluna->CHECKOBJ<bool>(sEluna->L, i, true))
+            if (!sEluna->CHECKVAL<bool>(sEluna->L, i, true))
                 result = false;
         }
         sEluna->PacketEventBindings.EndCall();
