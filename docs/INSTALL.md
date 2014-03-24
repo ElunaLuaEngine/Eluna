@@ -17,7 +17,7 @@
 You can get it from git with `git log` for example.
 You should take note what are the newest SQL updates in `sql/updates/*` folders.
 2. Use `git pull` to get the newest source changes.
-3. Then use `git submodule update` to update Eluna from github.
+3. Then use `git submodule init` `git submodule update` to update Eluna from github.
 4. additionally to get latest Eluna code you can do `git submodule foreach git pull origin master`
 5. Try compiling and if you encounter errors, report to [support](https://github.com/ElunaLuaEngine/Eluna#links) or [issues](https://github.com/ElunaLuaEngine/Eluna/issues).
 You can revert back to the old sources by using `git reset --hard 000000` `git submodule update`, where 000000 is the `commit hash`.
