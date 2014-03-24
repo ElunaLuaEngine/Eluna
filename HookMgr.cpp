@@ -319,7 +319,7 @@ bool HookMgr::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& target
         sEluna->ExecuteCall(4, 0);
     }
     // pPlayer->SendEquipError((InventoryResult)83, pItem, NULL);
-    return false;
+    return true;
 }
 
 bool HookMgr::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
