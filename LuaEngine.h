@@ -97,7 +97,9 @@ typedef std::set<std::string> LoadedScripts;
 typedef TemporarySummon TempSummon;
 #ifndef CLASSIC
 #define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
+#ifndef TBC
 typedef VehicleInfo Vehicle;
+#endif
 #endif
 #define MAX_TALENT_SPECS        MAX_TALENT_SPEC_COUNT
 #define GUID_ENPART(guid)       ObjectGuid(guid).GetEntry()
