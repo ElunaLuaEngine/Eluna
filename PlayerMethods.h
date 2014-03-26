@@ -1742,7 +1742,7 @@ namespace LuaPlayer
         uint32 lang = sEluna->CHECKVAL<uint32>(L, 3);
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 4);
 
-        player->Whisper(text, lang, GUID_TYPE(guid));
+        player->Whisper(text, lang, ObjectGuid(guid));
         return 0;
     }
 
@@ -1776,131 +1776,8 @@ namespace LuaPlayer
     {
         uint32 xp = sEluna->CHECKVAL<uint32>(L, 2);
         Unit* victim = sEluna->CHECKOBJ<Unit>(L, 3, false);
-        bool pureXP = sEluna->CHECKVAL<bool>(L, 4, true);
-        bool triggerHook = sEluna->CHECKVAL<bool>(L, 5, true);
 
-#ifdef MANGOS
-        if (xp < 1)
-            return 0;
-
-        if (!player->isAlive())
-            return 0;
-
-#if (!defined(TBC) && !defined(CLASSIC))
-        if (player->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_XP_USER_DISABLED))
-            return 0;
-#endif
-
-        uint32 level = player->getLevel();
-
-        if (triggerHook)
-            sHookMgr->OnGiveXP(player, xp, victim);
-
-        // XP to money conversion processed in Player::RewardQuest
-        if (level >= sWorld->getConfig(CONFIG_UINT32_MAX_PLAYER_LEVEL))
-            return 0;
-
-#ifndef CLASSIC
-        if (!pureXP)
-        {
-            if (victim)
-            {
-                // handle SPELL_AURA_MOD_KILL_XP_PCT auras
-                Unit::AuraList const& ModXPPctAuras = player->GetAurasByType(SPELL_AURA_MOD_KILL_XP_PCT);
-                for (Unit::AuraList::const_iterator i = ModXPPctAuras.begin(); i != ModXPPctAuras.end(); ++i)
-                    xp = uint32(xp * (1.0f + (*i)->GetModifier()->m_amount / 100.0f));
-            }
-#ifndef TBC
-            else
-            {
-                // handle SPELL_AURA_MOD_QUEST_XP_PCT auras
-                Unit::AuraList const& ModXPPctAuras = player->GetAurasByType(SPELL_AURA_MOD_QUEST_XP_PCT);
-                for (Unit::AuraList::const_iterator i = ModXPPctAuras.begin(); i != ModXPPctAuras.end(); ++i)
-                    xp = uint32(xp * (1.0f + (*i)->GetModifier()->m_amount / 100.0f));
-            }
-#endif
-        }
-#endif
-
-        // XP resting bonus for kill
-        uint32 rested_bonus_xp = victim ? player->GetXPRestBonus(xp) : 0;
-
-        player->SendLogXPGain(xp, victim, rested_bonus_xp);
-
-        uint32 curXP = player->GetUInt32Value(PLAYER_XP);
-        uint32 nextLvlXP = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
-        uint32 newXP = curXP + xp + rested_bonus_xp;
-
-        while (newXP >= nextLvlXP && level < sWorld->getConfig(CONFIG_UINT32_MAX_PLAYER_LEVEL))
-        {
-            newXP -= nextLvlXP;
-
-            if (level < sWorld->getConfig(CONFIG_UINT32_MAX_PLAYER_LEVEL))
-                player->GiveLevel(level + 1);
-
-            level = player->getLevel();
-            nextLvlXP = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
-        }
-
-        player->SetUInt32Value(PLAYER_XP, newXP);
-#else
-        if (xp < 1)
-            return 0;
-        if (player->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_NO_XP_GAIN))
-            return 0;
-        if (victim && victim->GetTypeId() == TYPEID_UNIT && !victim->ToCreature()->hasLootRecipient())
-            return 0;
-
-        uint8 level = player->getLevel();
-
-        if (triggerHook)
-            sScriptMgr->OnGivePlayerXP(player, xp, victim);
-
-        if (!pureXP)
-        {
-            // Favored experience increase START
-            uint32 zone = player->GetZoneId();
-            float favored_exp_mult = 0;
-            if ((player->HasAura(32096) || player->HasAura(32098)) && (zone == 3483 || zone == 3562 || zone == 3836 || zone == 3713 || zone == 3714))
-                favored_exp_mult = 0.05f; // Thrallmar's Favor and Honor Hold's Favor
-            xp = uint32(xp * (1 + favored_exp_mult));
-            // Favored experience increase END
-        }
-
-        // XP to money conversion processed in Player::RewardQuest
-        if (level >= sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
-            return 0;
-
-        uint32 bonus_xp = 0;
-        bool recruitAFriend = pureXP ? false : player->GetsRecruitAFriendBonus(true);
-        if (!pureXP)
-        {
-            // RaF does NOT stack with rested experience
-            if (recruitAFriend)
-                bonus_xp = 2 * xp; // xp + bonus_xp must add up to 3 * xp for RaF; calculation for quests done client-side
-            else
-                bonus_xp = victim ? player->GetXPRestBonus(xp) : 0; // XP resting bonus
-        }
-
-        player->SendLogXPGain(xp, victim, bonus_xp, recruitAFriend, 1.0f);
-
-        uint32 curXP = player->GetUInt32Value(PLAYER_XP);
-        uint32 nextLvlXP = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
-        uint32 newXP = curXP + xp + bonus_xp;
-
-        while (newXP >= nextLvlXP && level < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
-        {
-            newXP -= nextLvlXP;
-
-            if (level < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
-                player->GiveLevel(level + 1);
-
-            level = player->getLevel();
-            nextLvlXP = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
-        }
-
-        player->SetUInt32Value(PLAYER_XP, newXP);
-#endif
+        player->GiveXP(xp, victim);
         return 0;
     }
 

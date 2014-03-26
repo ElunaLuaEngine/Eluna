@@ -865,9 +865,9 @@ namespace LuaUnit
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 2);
 
 #ifdef MANGOS
-        unit->SetOwnerGuid(GUID_TYPE(guid));
+        unit->SetOwnerGuid(ObjectGuid(guid));
 #else
-        unit->SetOwnerGUID(GUID_TYPE(guid));
+        unit->SetOwnerGUID(ObjectGuid(guid));
 #endif
         return 0;
     }
@@ -1029,9 +1029,9 @@ namespace LuaUnit
     {
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 2);
 #ifdef MANGOS
-        unit->SetOwnerGuid(GUID_TYPE(guid));
+        unit->SetOwnerGuid(ObjectGuid(guid));
 #else
-        unit->SetOwnerGUID(GUID_TYPE(guid));
+        unit->SetOwnerGUID(ObjectGuid(guid));
 #endif
         return 0;
     }
@@ -1040,9 +1040,9 @@ namespace LuaUnit
     {
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 2);
 #ifdef MANGOS
-        unit->SetPetGuid(GUID_TYPE(guid));
+        unit->SetPetGuid(ObjectGuid(guid));
 #else
-        unit->SetMinionGUID(GUID_TYPE(guid));
+        unit->SetMinionGUID(ObjectGuid(guid));
 #endif
         return 0;
     }
@@ -1051,9 +1051,9 @@ namespace LuaUnit
     {
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 2);
 #ifdef MANGOS
-        unit->SetCharmerGuid(GUID_TYPE(guid));
+        unit->SetCharmerGuid(ObjectGuid(guid));
 #else
-        unit->SetCharmerGUID(GUID_TYPE(guid));
+        unit->SetCharmerGUID(ObjectGuid(guid));
 #endif
         return 0;
     }
@@ -1062,9 +1062,9 @@ namespace LuaUnit
     {
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 2);
 #ifdef MANGOS
-        unit->SetPetGuid(GUID_TYPE(guid));
+        unit->SetPetGuid(ObjectGuid(guid));
 #else
-        unit->SetPetGUID(GUID_TYPE(guid));
+        unit->SetPetGUID(ObjectGuid(guid));
 #endif
         return 0;
     }
@@ -1139,9 +1139,9 @@ namespace LuaUnit
     {
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 2);
 #ifdef MANGOS
-        unit->SetCritterGuid(GUID_TYPE(guid));
+        unit->SetCritterGuid(ObjectGuid(guid));
 #else
-        unit->SetCritterGUID(GUID_TYPE(guid));
+        unit->SetCritterGUID(ObjectGuid(guid));
 #endif
         return 0;
     }

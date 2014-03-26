@@ -23,18 +23,18 @@
 #include "Weather.h"
 
 #ifdef MANGOS
-#define ScriptedAI              ReactorAI
-#define SpellEffIndex           SpellEffectIndex
-#define ItemTemplate            ItemPrototype
+typedef SpellEffectIndex SpellEffIndex;
+typedef ItemPrototype ItemTemplate;
 #define GetTemplate             GetProto
 #ifdef CLASSIC
-#define Difficulty              int
+typedef int Difficulty;
 #endif
 #endif
 
 struct AreaTriggerEntry;
 #ifdef MANGOS
-class ScriptedAI;
+class ReactorAI;
+typedef ReactorAI ScriptedAI;
 #else
 struct ScriptedAI;
 #endif
@@ -141,17 +141,17 @@ enum PlayerEvents
     PLAYER_EVENT_ON_DUEL_REQUEST            =     9,        // (event, target, challenger)
     PLAYER_EVENT_ON_DUEL_START              =     10,       // (event, player1, player2)
     PLAYER_EVENT_ON_DUEL_END                =     11,       // (event, winner, loser, type)
-    PLAYER_EVENT_ON_GIVE_XP                 =     12,       // (event, player, amount, victim)
+    PLAYER_EVENT_ON_GIVE_XP                 =     12,       // (event, player, amount, victim) - Can return new XP amount
     PLAYER_EVENT_ON_LEVEL_CHANGE            =     13,       // (event, player, oldLevel)
     PLAYER_EVENT_ON_MONEY_CHANGE            =     14,       // (event, player, amount)
-    PLAYER_EVENT_ON_REPUTATION_CHANGE       =     15,       // (event, player, factionId, standing, incremental)
+    PLAYER_EVENT_ON_REPUTATION_CHANGE       =     15,       // (event, player, factionId, standing, incremental) - Can return new standing
     PLAYER_EVENT_ON_TALENTS_CHANGE          =     16,       // (event, player, points)
     PLAYER_EVENT_ON_TALENTS_RESET           =     17,       // (event, player, noCost)
-    PLAYER_EVENT_ON_CHAT                    =     18,       // (event, player, msg, Type, lang) - Can return false
-    PLAYER_EVENT_ON_WHISPER                 =     19,       // (event, player, msg, Type, lang, receiver)
-    PLAYER_EVENT_ON_GROUP_CHAT              =     20,       // (event, player, msg, Type, lang, group) - Can return false
-    PLAYER_EVENT_ON_GUILD_CHAT              =     21,       // (event, player, msg, Type, lang, guild) - Can return false
-    PLAYER_EVENT_ON_CHANNEL_CHAT            =     22,       // (event, player, msg, Type, lang, channel) - Can return false
+    PLAYER_EVENT_ON_CHAT                    =     18,       // (event, player, msg, Type, lang) - Can return false or new msg
+    PLAYER_EVENT_ON_WHISPER                 =     19,       // (event, player, msg, Type, lang, receiver) - Can return false or new msg
+    PLAYER_EVENT_ON_GROUP_CHAT              =     20,       // (event, player, msg, Type, lang, group) - Can return false or new msg
+    PLAYER_EVENT_ON_GUILD_CHAT              =     21,       // (event, player, msg, Type, lang, guild) - Can return false or new msg
+    PLAYER_EVENT_ON_CHANNEL_CHAT            =     22,       // (event, player, msg, Type, lang, channel) - Can return false or new msg
     PLAYER_EVENT_ON_EMOTE                   =     23,       // (event, player, emote) - Not triggered on any known emote
     PLAYER_EVENT_ON_TEXT_EMOTE              =     24,       // (event, player, textEmote, emoteNum, guid)
     PLAYER_EVENT_ON_SAVE                    =     25,       // (event, player)
@@ -306,6 +306,8 @@ enum GossipEvents
 class HookMgr
 {
 public:
+    friend class ACE_Singleton<HookMgr, ACE_Thread_Mutex>;
+
     CreatureAI* GetAI(Creature* creature);
 
 #ifndef MANGOS
@@ -382,11 +384,11 @@ public:
     void OnDuelRequest(Player* pTarget, Player* pChallenger);
     void OnDuelStart(Player* pStarter, Player* pChallenger);
     void OnDuelEnd(Player* pWinner, Player* pLoser, DuelCompleteType type);
-    void OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver);
     bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg);
     bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Group* pGroup);
     bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Guild* pGuild);
     bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Channel* pChannel);
+    bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver);
     void OnEmote(Player* pPlayer, uint32 emote);
     void OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint64 guid);
     void OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck);
@@ -454,7 +456,7 @@ public:
 #ifdef MANGOS
 #define sHookMgr (&MaNGOS::Singleton<HookMgr>::Instance())
 #else
-#define sHookMgr ACE_Singleton<HookMgr, ACE_Null_Mutex>::instance()
+#define sHookMgr ACE_Singleton<HookMgr, ACE_Thread_Mutex>::instance()
 #endif
 
 #endif

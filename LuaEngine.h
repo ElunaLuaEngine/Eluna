@@ -65,8 +65,8 @@ extern "C"
 
 typedef std::set<std::string> LoadedScripts;
 
-#define ELUNA_GUARD() \
-    ACE_Guard< ACE_Thread_Mutex > ELUNA_GUARD_OBJECT (sEluna->lock);
+#define ELUNA_GUARD() { }
+    // ACE_Guard< ACE_Thread_Mutex > ELUNA_GUARD_OBJECT (sEluna->lock);
 
 #ifdef MANGOS
 #undef  sWorld
@@ -82,7 +82,6 @@ typedef std::set<std::string> LoadedScripts;
 #define sAccountMgr             (&MaNGOS::Singleton<AccountMgr>::Instance())
 #define sObjectAccessor         (&ObjectAccessor::Instance())
 #define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
-#define GUID_TYPE               ObjectGuid
 #define GET_GUID                GetObjectGuid
 #define GetGameObjectTemplate   GetGameObjectInfo
 #define GetItemTemplate         GetItemPrototype
@@ -95,12 +94,12 @@ typedef std::set<std::string> LoadedScripts;
 #define MAX_LOCALES             MAX_LOCALE
 #define OVERRIDE                override
 #define DIALOG_STATUS_SCRIPTED_NO_STATUS    DIALOG_STATUS_UNDEFINED
-#define TempSummon              TemporarySummon
+typedef TemporarySummon TempSummon;
 #ifndef CLASSIC
 #define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
 #endif
 #define MAX_TALENT_SPECS        MAX_TALENT_SPEC_COUNT
-#define Vehicle                 VehicleInfo
+typedef VehicleInfo Vehicle;
 #define GUID_ENPART(guid)       ObjectGuid(guid).GetEntry()
 #define GUID_LOPART(guid)       ObjectGuid(guid).GetCounter()
 #define GUID_HIPART(guid)       ObjectGuid(guid).GetHigh()
@@ -120,12 +119,12 @@ enum SelectAggroTarget
 #define Opcodes                 OpcodesList
 #endif
 #else
-#define GUID_TYPE               uint64
+typedef uint64 ObjectGuid;
 #define GET_GUID                GetGUID
 #define CORE_VERSION            _DATE
 #define CORE_NAME               "TrinityCore"
 #define REGEN_TIME_FULL
-#define ThreatList              ThreatContainer::StorageType
+typedef ThreatContainer::StorageType ThreatList;
 #ifdef CATA
 #define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
 #endif
@@ -448,9 +447,11 @@ class Eluna
 {
 public:
     friend class ScriptMgr;
+    friend class ACE_Singleton<Eluna, ACE_Thread_Mutex>;
+
     lua_State* L;
     EventMgr m_EventMgr;
-    ACE_Thread_Mutex lock;
+    // ACE_Thread_Mutex lock;
 
     Eluna()
     {
@@ -601,13 +602,13 @@ public:
 
     struct ObjectGUIDCheck
     {
-        ObjectGUIDCheck(GUID_TYPE guid) : _guid(guid) { }
+        ObjectGUIDCheck(ObjectGuid guid) : _guid(guid) { }
         bool operator()(WorldObject* object)
         {
             return object->GET_GUID() == _guid;
         }
 
-        GUID_TYPE _guid;
+        ObjectGuid _guid;
     };
 
     // Binary predicate to sort WorldObjects based on the distance to a reference WorldObject
@@ -682,7 +683,7 @@ template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error);
 #ifdef MANGOS
 #define sEluna (&MaNGOS::Singleton<Eluna>::Instance())
 #else
-#define sEluna ACE_Singleton<Eluna, ACE_Null_Mutex>::instance()
+#define sEluna ACE_Singleton<Eluna, ACE_Thread_Mutex>::instance()
 #endif
 
 class LuaTaxiMgr

@@ -774,6 +774,12 @@ void HookMgr::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
     sEluna->Push(sEluna->L, amount);
     sEluna->Push(sEluna->L, pVictim);
     sEluna->PlayerEventBindings.ExecuteCall();
+    for (int i = 1; i <= lua_gettop(sEluna->L); ++i)
+    {
+        if (lua_isnoneornil(sEluna->L, i))
+            continue;
+        amount = sEluna->CHECKVAL<uint32>(sEluna->L, i, 0);
+    }
     sEluna->PlayerEventBindings.EndCall();
 }
 
@@ -787,6 +793,12 @@ void HookMgr::OnReputationChange(Player* pPlayer, uint32 factionID, int32& stand
     sEluna->Push(sEluna->L, standing);
     sEluna->Push(sEluna->L, incremental);
     sEluna->PlayerEventBindings.ExecuteCall();
+    for (int i = 1; i <= lua_gettop(sEluna->L); ++i)
+    {
+        if (lua_isnoneornil(sEluna->L, i))
+            continue;
+        standing = sEluna->CHECKVAL<uint32>(sEluna->L, i, 0);
+    }
     sEluna->PlayerEventBindings.EndCall();
 }
 
@@ -820,20 +832,6 @@ void HookMgr::OnDuelEnd(Player* pWinner, Player* pLoser, DuelCompleteType type)
     sEluna->Push(sEluna->L, pWinner);
     sEluna->Push(sEluna->L, pLoser);
     sEluna->Push(sEluna->L, type);
-    sEluna->PlayerEventBindings.ExecuteCall();
-    sEluna->PlayerEventBindings.EndCall();
-}
-
-void HookMgr::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver)
-{
-    ELUNA_GUARD();
-    if (!sEluna->PlayerEventBindings.BeginCall(PLAYER_EVENT_ON_WHISPER))
-        return;
-    sEluna->Push(sEluna->L, pPlayer);
-    sEluna->Push(sEluna->L, msg);
-    sEluna->Push(sEluna->L, type);
-    sEluna->Push(sEluna->L, lang);
-    sEluna->Push(sEluna->L, pReceiver);
     sEluna->PlayerEventBindings.ExecuteCall();
     sEluna->PlayerEventBindings.EndCall();
 }
@@ -974,8 +972,13 @@ bool HookMgr::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg
         {
             if (lua_isnoneornil(sEluna->L, i))
                 continue;
-            if (!lua_toboolean(sEluna->L, i))
+            if (const char* c_str = sEluna->CHECKVAL<const char*>(sEluna->L, i, NULL))
+                msg = std::string(c_str);
+            else if (!sEluna->CHECKVAL<bool>(sEluna->L, i, true))
+            {
                 result = false;
+                break;
+            }
         }
         sEluna->PlayerEventBindings.EndCall();
     }
@@ -998,8 +1001,13 @@ bool HookMgr::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg
         {
             if (lua_isnoneornil(sEluna->L, i))
                 continue;
-            if (!lua_toboolean(sEluna->L, i))
+            if (const char* c_str = sEluna->CHECKVAL<const char*>(sEluna->L, i, NULL))
+                msg = std::string(c_str);
+            else if (!sEluna->CHECKVAL<bool>(sEluna->L, i, true))
+            {
                 result = false;
+                break;
+            }
         }
         sEluna->PlayerEventBindings.EndCall();
     }
@@ -1022,8 +1030,13 @@ bool HookMgr::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg
         {
             if (lua_isnoneornil(sEluna->L, i))
                 continue;
-            if (!lua_toboolean(sEluna->L, i))
+            if (const char* c_str = sEluna->CHECKVAL<const char*>(sEluna->L, i, NULL))
+                msg = std::string(c_str);
+            else if (!sEluna->CHECKVAL<bool>(sEluna->L, i, true))
+            {
                 result = false;
+                break;
+            }
         }
         sEluna->PlayerEventBindings.EndCall();
     }
@@ -1046,8 +1059,42 @@ bool HookMgr::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg
         {
             if (lua_isnoneornil(sEluna->L, i))
                 continue;
-            if (!lua_toboolean(sEluna->L, i))
+            if (const char* c_str = sEluna->CHECKVAL<const char*>(sEluna->L, i, NULL))
+                msg = std::string(c_str);
+            else if (!sEluna->CHECKVAL<bool>(sEluna->L, i, true))
+            {
                 result = false;
+                break;
+            }
+        }
+        sEluna->PlayerEventBindings.EndCall();
+    }
+    return result;
+}
+
+bool HookMgr::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver)
+{
+    ELUNA_GUARD();
+    bool result = true;
+    if (sEluna->PlayerEventBindings.BeginCall(PLAYER_EVENT_ON_WHISPER))
+    {
+        sEluna->Push(sEluna->L, pPlayer);
+        sEluna->Push(sEluna->L, msg);
+        sEluna->Push(sEluna->L, type);
+        sEluna->Push(sEluna->L, lang);
+        sEluna->Push(sEluna->L, pReceiver);
+        sEluna->PlayerEventBindings.ExecuteCall();
+        for (int i = 1; i <= lua_gettop(sEluna->L); ++i)
+        {
+            if (lua_isnoneornil(sEluna->L, i))
+                continue;
+            if (const char* c_str = sEluna->CHECKVAL<const char*>(sEluna->L, i, NULL))
+                msg = std::string(c_str);
+            else if (!sEluna->CHECKVAL<bool>(sEluna->L, i, true))
+            {
+                result = false;
+                break;
+            }
         }
         sEluna->PlayerEventBindings.EndCall();
     }
@@ -1220,11 +1267,13 @@ bool HookMgr::OnPacketSend(WorldSession* session, WorldPacket& packet)
         {
             if (lua_isnoneornil(sEluna->L, i))
                 continue;
-            WorldPacket* data = sEluna->CHECKOBJ<WorldPacket>(sEluna->L, i, false);
-            if (data)
+            if (WorldPacket* data = sEluna->CHECKOBJ<WorldPacket>(sEluna->L, i, false))
                 packet = *data;
             if (!sEluna->CHECKVAL<bool>(sEluna->L, i, true))
+            {
                 result = false;
+                break;
+            }
         }
         sEluna->ServerEventBindings.EndCall();
     }
@@ -1237,11 +1286,13 @@ bool HookMgr::OnPacketSend(WorldSession* session, WorldPacket& packet)
         {
             if (lua_isnoneornil(sEluna->L, i))
                 continue;
-            WorldPacket* data = sEluna->CHECKOBJ<WorldPacket>(sEluna->L, i, false);
-            if (data)
+            if (WorldPacket* data = sEluna->CHECKOBJ<WorldPacket>(sEluna->L, i, false))
                 packet = *data;
             if (!sEluna->CHECKVAL<bool>(sEluna->L, i, true))
+            {
                 result = false;
+                break;
+            }
         }
         sEluna->PacketEventBindings.EndCall();
     }
@@ -1263,11 +1314,13 @@ bool HookMgr::OnPacketReceive(WorldSession* session, WorldPacket& packet)
         {
             if (lua_isnoneornil(sEluna->L, i))
                 continue;
-            WorldPacket* data = sEluna->CHECKOBJ<WorldPacket>(sEluna->L, i, false);
-            if (data)
+            if (WorldPacket* data = sEluna->CHECKOBJ<WorldPacket>(sEluna->L, i, false))
                 packet = *data;
             if (!sEluna->CHECKVAL<bool>(sEluna->L, i, true))
+            {
                 result = false;
+                break;
+            }
         }
         sEluna->ServerEventBindings.EndCall();
     }
@@ -1280,11 +1333,13 @@ bool HookMgr::OnPacketReceive(WorldSession* session, WorldPacket& packet)
         {
             if (lua_isnoneornil(sEluna->L, i))
                 continue;
-            WorldPacket* data = sEluna->CHECKOBJ<WorldPacket>(sEluna->L, i, false);
-            if (data)
+            if (WorldPacket* data = sEluna->CHECKOBJ<WorldPacket>(sEluna->L, i, false))
                 packet = *data;
             if (!sEluna->CHECKVAL<bool>(sEluna->L, i, true))
+            {
                 result = false;
+                break;
+            }
         }
         sEluna->PacketEventBindings.EndCall();
     }

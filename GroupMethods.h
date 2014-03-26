@@ -13,7 +13,7 @@ namespace LuaGroup
     int IsLeader(lua_State* L, Group* group)
     {
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 2);
-        sEluna->Push(L, group->IsLeader(GUID_TYPE(guid)));
+        sEluna->Push(L, group->IsLeader(ObjectGuid(guid)));
         return 1;
     }
 
@@ -184,7 +184,7 @@ namespace LuaGroup
         bool ignorePlayersInBg = sEluna->CHECKVAL<bool>(L, 3);
         uint64 ignore = sEluna->CHECKVAL<uint64>(L, 4);
 
-        group->BroadcastPacket(data, ignorePlayersInBg, -1, (GUID_TYPE)ignore);
+        group->BroadcastPacket(data, ignorePlayersInBg, -1, ObjectGuid(ignore));
         return 0;
     }
 

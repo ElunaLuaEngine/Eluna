@@ -293,27 +293,27 @@ namespace LuaWorldObject
 #ifdef MANGOS
         switch (GUID_HIPART(guid))
         {
-        case HIGHGUID_PLAYER:        sEluna->Push(L, obj->GetMap()->GetPlayer(GUID_TYPE(guid))); break;
+        case HIGHGUID_PLAYER:        sEluna->Push(L, obj->GetMap()->GetPlayer(ObjectGuid(guid))); break;
         case HIGHGUID_TRANSPORT:
         case HIGHGUID_MO_TRANSPORT:
-        case HIGHGUID_GAMEOBJECT:    sEluna->Push(L, obj->GetMap()->GetGameObject(GUID_TYPE(guid))); break;
+        case HIGHGUID_GAMEOBJECT:    sEluna->Push(L, obj->GetMap()->GetGameObject(ObjectGuid(guid))); break;
 #if (!defined(TBC) && !defined(CLASSIC))
         case HIGHGUID_VEHICLE:
 #endif
         case HIGHGUID_UNIT:
-        case HIGHGUID_PET:           sEluna->Push(L, obj->GetMap()->GetAnyTypeCreature(GUID_TYPE(guid))); break;
+        case HIGHGUID_PET:           sEluna->Push(L, obj->GetMap()->GetAnyTypeCreature(ObjectGuid(guid))); break;
         default:                     return 0;
         }
 #else
         switch (GUID_HIPART(guid))
         {
-        case HIGHGUID_PLAYER:        sEluna->Push(L, sObjectAccessor->GetPlayer(*obj, GUID_TYPE(guid))); break;
+        case HIGHGUID_PLAYER:        sEluna->Push(L, sObjectAccessor->GetPlayer(*obj, ObjectGuid(guid))); break;
         case HIGHGUID_TRANSPORT:
         case HIGHGUID_MO_TRANSPORT:
-        case HIGHGUID_GAMEOBJECT:    sEluna->Push(L, sObjectAccessor->GetGameObject(*obj, GUID_TYPE(guid))); break;
+        case HIGHGUID_GAMEOBJECT:    sEluna->Push(L, sObjectAccessor->GetGameObject(*obj, ObjectGuid(guid))); break;
         case HIGHGUID_VEHICLE:
-        case HIGHGUID_UNIT:          sEluna->Push(L, sObjectAccessor->GetCreature(*obj, GUID_TYPE(guid))); break;
-        case HIGHGUID_PET:           sEluna->Push(L, sObjectAccessor->GetPet(*obj, GUID_TYPE(guid))); break;
+        case HIGHGUID_UNIT:          sEluna->Push(L, sObjectAccessor->GetCreature(*obj, ObjectGuid(guid))); break;
+        case HIGHGUID_PET:           sEluna->Push(L, sObjectAccessor->GetPet(*obj, ObjectGuid(guid))); break;
         default:                     return 0;
         }
 #endif

@@ -41,7 +41,7 @@ namespace LuaGlobalFunctions
     int GetPlayerByGUID(lua_State* L)
     {
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 1);
-        sEluna->Push(L, sObjectAccessor->FindPlayer(GUID_TYPE(guid)));
+        sEluna->Push(L, sObjectAccessor->FindPlayer(ObjectGuid(guid)));
         return 1;
     }
 
@@ -151,7 +151,7 @@ namespace LuaGlobalFunctions
     {
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 1);
 
-        sEluna->Push(L, sGuildMgr->GetGuildByLeader(GUID_TYPE(guid)));
+        sEluna->Push(L, sGuildMgr->GetGuildByLeader(ObjectGuid(guid)));
         return 1;
     }
 
@@ -597,7 +597,7 @@ namespace LuaGlobalFunctions
                 if (!cinfo)
                     return 0;
 
-                TemporarySummon* pCreature = new TemporarySummon(GUID_TYPE(uint64(0)));
+                TemporarySummon* pCreature = new TemporarySummon(ObjectGuid(uint64(0)));
 #if (defined(TBC) || defined(CLASSIC))
                 CreatureCreatePos pos(map, x, y, z, o);
 #else
@@ -1118,7 +1118,7 @@ namespace LuaGlobalFunctions
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 1);
         bool insignia = sEluna->CHECKVAL<bool>(L, 2, false);
 
-        sEluna->Push(L, sObjectAccessor->ConvertCorpseForPlayer(GUID_TYPE(guid), insignia));
+        sEluna->Push(L, sObjectAccessor->ConvertCorpseForPlayer(ObjectGuid(guid), insignia));
         return 0;
     }
 
