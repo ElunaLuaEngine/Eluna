@@ -119,7 +119,9 @@ enum SelectAggroTarget
 #define Opcodes                 OpcodesList
 #endif
 #else
+#ifndef CATA
 typedef uint64 ObjectGuid;
+#endif
 #define GET_GUID                GetGUID
 #define CORE_VERSION            _DATE
 #define CORE_NAME               "TrinityCore"
