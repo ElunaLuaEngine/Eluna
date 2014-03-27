@@ -926,15 +926,15 @@ namespace LuaGlobalFunctions
     int SendMail(lua_State* L)
     {
         int i = 0;
-        std::string subject = luaL_checkstring(L, ++i);
-        std::string text = luaL_checkstring(L, ++i);
-        uint32 receiverGUIDLow = luaL_checkunsigned(L, ++i);
-        Player* senderPlayer = sEluna->CHECKOBJ<Player>(L, ++i);
-        uint32 stationary = luaL_optunsigned(L, ++i, MAIL_STATIONERY_DEFAULT);
-        uint32 delay = luaL_optunsigned(L, ++i, 0);
-        int32 argAmount = lua_gettop(L);
+        std::string subject = sEluna->CHECKVAL<std::string>(L, ++i);
+        std::string text = sEluna->CHECKVAL<std::string>(L, ++i);
+        uint32 receiverGUIDLow = sEluna->CHECKVAL<uint32>(L, ++i);
+        uint32 senderGUIDLow = sEluna->CHECKVAL<uint32>(L, ++i, 0);
+        uint32 stationary = sEluna->CHECKVAL<uint32>(L, ++i, MAIL_STATIONERY_DEFAULT);
+        uint32 delay = sEluna->CHECKVAL<uint32>(L, ++i, 0);
+        int argAmount = lua_gettop(L);
 
-        MailSender sender(MAIL_NORMAL, senderPlayer ? senderPlayer->GetGUIDLow() : 0, (MailStationery)stationary);
+        MailSender sender(MAIL_NORMAL, senderGUIDLow, (MailStationery)stationary);
         MailDraft draft(subject, text);
 
 #ifndef MANGOS
@@ -961,7 +961,7 @@ namespace LuaGlobalFunctions
                 luaL_error(L, "Item entry %d has invalid amount %d", entry, amount);
                 continue;
             }
-            if (Item* item = Item::CreateItem(entry, amount, senderPlayer ? senderPlayer : 0))
+            if (Item* item = Item::CreateItem(entry, amount))
             {
 #ifdef MANGOS
                 item->SaveToDB();
