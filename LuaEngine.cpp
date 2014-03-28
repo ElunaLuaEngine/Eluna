@@ -750,15 +750,19 @@ void Eluna::EventBind::Insert(int eventId, int funcRef)
     Bindings[eventId].push_back(funcRef);
 }
 
-bool Eluna::EventBind::BeginCall(int eventId) const
+bool Eluna::EventBind::HasEvents(int eventId) const
 {
     if (Bindings.empty())
         return false;
     if (Bindings.find(eventId) == Bindings.end())
         return false;
+    return true;
+}
+
+void Eluna::EventBind::BeginCall(int eventId) const
+{
     lua_settop(sEluna->L, 0); // stack should be empty
     sEluna->Push(sEluna->L, eventId);
-    return true;
 }
 
 void Eluna::EventBind::ExecuteCall()

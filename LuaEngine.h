@@ -65,9 +65,6 @@ extern "C"
 
 typedef std::set<std::string> LoadedScripts;
 
-#define ELUNA_GUARD() { }
-    // ACE_Guard< ACE_Thread_Mutex > ELUNA_GUARD_OBJECT (sEluna->lock);
-
 #ifdef MANGOS
 #undef  sWorld
 #undef  sMapMgr
@@ -451,11 +448,11 @@ class Eluna
 {
 public:
     friend class ScriptMgr;
-    friend class ACE_Singleton<Eluna, ACE_Thread_Mutex>;
+    friend class ACE_Singleton<Eluna, ACE_Null_Mutex>;
 
     lua_State* L;
     EventMgr m_EventMgr;
-    // ACE_Thread_Mutex lock;
+    ACE_Recursive_Thread_Mutex lock;
 
     Eluna()
     {
@@ -491,8 +488,10 @@ public:
             return &itr->second;
         }
 
-        // Checks if there are events for ID, if so, cleans stack and pushes eventId
-        bool BeginCall(int eventId) const;
+        // Checks if there are events for ID
+        bool HasEvents(int eventId) const;
+        // Cleans stack and pushes eventId
+        void BeginCall(int eventId) const;
         // Loops through all registered events for the eventId at stack index 1
         // Copies the whole stack as arguments for the called function. Before Executing, push all params to stack!
         // Leaves return values from all functions in order to the stack.
@@ -687,8 +686,49 @@ template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error);
 #ifdef MANGOS
 #define sEluna (&MaNGOS::Singleton<Eluna>::Instance())
 #else
-#define sEluna ACE_Singleton<Eluna, ACE_Thread_Mutex>::instance()
+#define sEluna ACE_Singleton<Eluna, ACE_Null_Mutex>::instance()
 #endif
+
+/*
+class FakeLock
+{
+public:
+static bool locked;
+FakeLock()
+{
+if (locked)
+printf("ELUNA_GUARD CREATE\n");
+locked = true;
+}
+~FakeLock()
+{
+if (!locked)
+printf("ELUNA_GUARD DELETE\n");
+locked = false;
+}
+};
+class FakeRecursiveLock
+{
+public:
+static uint32 locked;
+FakeRecursiveLock()
+{
+++locked;
+if (locked > 1)
+printf("GUARD LOCK %u\n", locked);
+}
+~FakeRecursiveLock()
+{
+if (!locked)
+printf("GUARD FAULTY\n");
+else if (locked > 1)
+printf("GUARD RELE %u\n", locked);
+--locked;
+}
+};
+*/
+#define ELUNA_GUARD() \
+    ACE_Guard< ACE_Recursive_Thread_Mutex > ELUNA_GUARD_OBJECT(sEluna->lock);
 
 class LuaTaxiMgr
 {

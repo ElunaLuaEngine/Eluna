@@ -456,7 +456,7 @@ public:
 #ifdef MANGOS
 #define sHookMgr (&MaNGOS::Singleton<HookMgr>::Instance())
 #else
-#define sHookMgr ACE_Singleton<HookMgr, ACE_Thread_Mutex>::instance()
+#define sHookMgr ACE_Singleton<HookMgr, ACE_Null_Mutex>::instance()
 #endif
 
 #endif
