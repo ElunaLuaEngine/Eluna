@@ -214,6 +214,31 @@ bool HookMgr::OnPacketReceive(WorldSession* session, WorldPacket& packet)
     }
     return result;
 }
+// AddOns
+void HookMgr::OnAddonMessage(Player* pPlayer, std::string& msg, uint32 type, std::string& to)
+{
+    if (!sEluna->ServerEventBindings.HasEvents(ADDON_EVENT_ON_MESSAGE))
+		return;
+	ELUNA_GUARD();
+    sEluna->ServerEventBindings.BeginCall(ADDON_EVENT_ON_MESSAGE);
+	sEluna->Push(sEluna->L, pPlayer);
+
+    const char* c_msg = msg.c_str();
+    char* arg = strtok((char*)c_msg, "\t");
+    while (arg)
+    {
+        sEluna->Push(sEluna->L, arg);
+        arg = strtok(NULL, "\t");
+    }
+
+    sEluna->Push(sEluna->L, type);
+    if (to.empty())
+        sEluna->Push(sEluna->L);
+    else
+        sEluna->Push(sEluna->L, to);
+	sEluna->ServerEventBindings.ExecuteCall();
+	sEluna->ServerEventBindings.EndCall();
+}
 
 #ifndef MANGOS
 class ElunaWorldAI : public WorldScript

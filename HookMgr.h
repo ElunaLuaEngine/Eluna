@@ -124,6 +124,9 @@ enum ServerEvents
     AUCTION_EVENT_ON_SUCCESSFUL             =     28,       // (event, AHObject) // NOT SUPPORTED YET
     AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, AHObject) // NOT SUPPORTED YET
 
+	// AddOns
+    ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, msg)
+
     SERVER_EVENT_COUNT
 };
 
@@ -329,6 +332,7 @@ public:
     void OnGmTicketDelete(Player* pPlayer); // Not on TC
     InventoryResult OnCanUseItem(const Player* pPlayer, uint32 itemEntry);
     void OnEngineRestart();
+    void OnAddonMessage(Player* pPlayer, std::string& msg, uint32 type, std::string& to);
 
     /* Item */
     bool OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget);
