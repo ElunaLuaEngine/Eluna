@@ -2073,8 +2073,10 @@ namespace LuaPlayer
         data << uint8(channel);
         data << int32(LANG_ADDON);
         data << uint64(player->GET_GUID());
+#ifndef CLASSIC
         data << uint32(0);
         data << uint64(receiver->GET_GUID());
+#endif
         data << uint32(fullmsg.length() + 1);
         data << fullmsg;
         data << uint8(0);
