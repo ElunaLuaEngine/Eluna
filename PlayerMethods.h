@@ -2060,6 +2060,32 @@ namespace LuaPlayer
         return 0;
     }
 
+    int SendAddonMessage(lua_State* L, Player* player)
+    {
+        std::string prefix = sEluna->CHECKVAL<std::string>(L, 2);
+        std::string message = sEluna->CHECKVAL<std::string>(L, 3);
+        uint8 channel = sEluna->CHECKVAL<uint8>(L, 4);
+        Player* receiver = sEluna->CHECKOBJ<Player>(L, 5);
+
+        std::string fullmsg = prefix + "\t" + message;
+
+        // Needs a custom built packet since TC doesnt send guid
+        WorldPacket* data = new WorldPacket();
+        uint32 messageLength = (uint32)strlen(fullmsg.c_str()) + 1;
+        data->Initialize(SMSG_MESSAGECHAT, 100);
+        *data << (uint8)channel;
+        *data << LANG_ADDON;
+        *data << player->GetGUID();
+        *data << uint32(0);
+        *data << player->GetGUID();
+        *data << messageLength;
+        *data << fullmsg;
+        *data << uint8(0);
+        player->GetSession()->SendPacket(data);
+        
+        return 0;
+    }
+
     int SendVendorWindow(lua_State* L, Player* player)
     {
         Unit* sendTo = sEluna->CHECKOBJ<Unit>(L, 2);
@@ -2226,37 +2252,6 @@ namespace LuaPlayer
     {
         Player* looter = sEluna->CHECKOBJ<Player>(L, 2);
         player->RemovedInsignia(looter);
-        return 0;
-    }
-
-    int SendAddonMessage(lua_State* L, Player* player)
-    {
-        std::string prefix = sEluna->CHECKVAL<std::string>(L, 1);
-        std::string message = sEluna->CHECKVAL<std::string>(L, 2);
-        uint8 channel = sEluna->CHECKVAL<uint8>(L, 3);
-        uint64 receiver = sEluna->CHECKVAL<uint64>(L, 4);
-
-        std::string fullmsg = prefix + '\t' + message;
-
-        // Needs a custom built packet since TC doesnt send guid
-        WorldPacket* data = new WorldPacket();
-        uint32 messageLength = (uint32)strlen(fullmsg.c_str()) + 1;
-        data->Initialize(SMSG_MESSAGECHAT, 100);
-        *data << channel;
-        *data << LANG_ADDON;
-        *data << player->GetGUID();
-        *data << uint32(0);
-
-        if (channel == CHAT_MSG_WHISPER)
-            *data << receiver;
-        else
-            *data << uint64(0);
-
-        *data << messageLength;
-        *data << fullmsg;
-        *data << uint8(0);
-        player->GetSession()->SendPacket(data);
-
         return 0;
     }
 
