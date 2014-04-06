@@ -91,6 +91,7 @@ typedef std::set<std::string> LoadedScripts;
 #define MAX_LOCALES             MAX_LOCALE
 #define OVERRIDE                override
 #define DIALOG_STATUS_SCRIPTED_NO_STATUS    DIALOG_STATUS_UNDEFINED
+#define TARGETICONCOUNT         TARGET_ICON_COUNT
 typedef TemporarySummon TempSummon;
 #ifndef CLASSIC
 #define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS

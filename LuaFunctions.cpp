@@ -142,8 +142,6 @@ ElunaRegister<Object> ObjectMethods[] =
     { "ToPlayer", &LuaObject::ToPlayer },                     // :ToPlayer()
     { "ToCorpse", &LuaObject::ToCorpse },                     // :ToCorpse()
     { "RemoveFlag", &LuaObject::RemoveFlag },                 // :RemoveFlag(index, flag)
-    { "RemoveUInt64Value", &LuaObject::RemoveUInt64Value },   // :RemoveUInt64Value(index, value)
-    { "AddUInt64Value", &LuaObject::AddUInt64Value },         // :AddUInt64Value(index, value)
 
     { NULL, NULL },
 };

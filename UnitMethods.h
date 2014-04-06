@@ -1251,7 +1251,11 @@ namespace LuaUnit
             return luaL_argerror(L, 3, "valid Language expected");
 
         WorldPacket data;
+#ifdef TRINITY
         ChatHandler::BuildChatPacket(data, ChatMsg(type), Language(lang), unit, target, msg);
+#else
+        ChatHandler::BuildChatPacket(data, ChatMsg(type), msg.c_str(), Language(lang), 0, unit->GET_GUID(), unit->GetName(), target->GET_GUID(), target->GetName());
+#endif
         target->GetSession()->SendPacket(&data);
         return 0;
     }

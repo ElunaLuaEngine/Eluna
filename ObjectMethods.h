@@ -225,21 +225,5 @@ namespace LuaObject
         sEluna->Push(L, obj->ToPlayer());
         return 1;
     }
-
-    int RemoveUInt64Value(lua_State* L, Object* obj)
-    {
-        uint16 index = sEluna->CHECKVAL<uint16>(L, 2);
-        uint64 value = sEluna->CHECKVAL<uint64>(L, 3);
-        obj->RemoveUInt64Value(index, value);
-        return 0;
-    }
-
-    int AddUInt64Value(lua_State* L, Object* obj)
-    {
-        uint16 index = sEluna->CHECKVAL<uint16>(L, 2);
-        uint64 value = sEluna->CHECKVAL<uint64>(L, 3);
-        obj->AddUInt64Value(index, value);
-        return 0;
-    }
 };
 #endif

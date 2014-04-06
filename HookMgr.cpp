@@ -350,7 +350,7 @@ void HookMgr::HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sende
         sEluna->Push(sEluna->L, sender);
         sEluna->Push(sEluna->L, action);
         if (code.empty())
-            lua_pushnil(sEluna->L);
+            sEluna->Push(sEluna->L);
         else
             sEluna->Push(sEluna->L, code);
         sEluna->ExecuteCall(6, 0);
@@ -371,7 +371,7 @@ void HookMgr::HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 se
         sEluna->Push(sEluna->L, sender);
         sEluna->Push(sEluna->L, action);
         if (code.empty())
-            lua_pushnil(sEluna->L);
+            sEluna->Push(sEluna->L);
         else
             sEluna->Push(sEluna->L, code);
         sEluna->Push(sEluna->L, menuId);

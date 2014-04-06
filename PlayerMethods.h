@@ -2072,9 +2072,9 @@ namespace LuaPlayer
         WorldPacket data(SMSG_MESSAGECHAT, 100);
         data << uint8(channel);
         data << int32(LANG_ADDON);
-        data << uint64(player->GetGUID());
+        data << uint64(player->GET_GUID());
         data << uint32(0);
-        data << uint64(receiver->GetGUID());
+        data << uint64(receiver->GET_GUID());
         data << uint32(fullmsg.length() + 1);
         data << fullmsg;
         data << uint8(0);
