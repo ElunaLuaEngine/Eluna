@@ -115,6 +115,7 @@ ElunaRegister<Object> ObjectMethods[] =
     { "GetFloatValue", &LuaObject::GetFloatValue },           // :GetFloatValue(index) - returns a float value from object fields
     { "GetByteValue", &LuaObject::GetByteValue },             // :GetByteValue(index, offset) - returns a byte value from object fields
     { "GetUInt16Value", &LuaObject::GetUInt16Value },         // :GetUInt16Value(index, offset) - returns a uint16 value from object fields
+    { "GetUInt64Value", &LuaObject::GetUInt64Value },         // :GetUInt64Value(index) - returns a uint64 value from object fields
     { "GetScale", &LuaObject::GetScale },                     // :GetScale()
     { "GetTypeId", &LuaObject::GetTypeId },                   // :GetTypeId() - Returns the object's typeId
 
@@ -126,6 +127,7 @@ ElunaRegister<Object> ObjectMethods[] =
     { "SetByteValue", &LuaObject::SetByteValue },             // :SetByteValue(index, offset, value) - Sets a byte value for the object
     { "SetUInt16Value", &LuaObject::SetUInt16Value },         // :SetUInt16Value(index, offset, value) - Sets an uint16 value for the object
     { "SetInt16Value", &LuaObject::SetInt16Value },           // :SetInt16Value(index, offset, value) - Sets an int16 value for the object
+    { "SetUInt64Value", &LuaObject::SetUInt64Value },         // :SetUInt64Value(index, value) - Sets an uint64 value for the object
     { "SetScale", &LuaObject::SetScale },                     // :SetScale(scale)
     { "SetFlag", &LuaObject::SetFlag },                       // :SetFlag(index, flag)
 
@@ -140,6 +142,9 @@ ElunaRegister<Object> ObjectMethods[] =
     { "ToPlayer", &LuaObject::ToPlayer },                     // :ToPlayer()
     { "ToCorpse", &LuaObject::ToCorpse },                     // :ToCorpse()
     { "RemoveFlag", &LuaObject::RemoveFlag },                 // :RemoveFlag(index, flag)
+    { "RemoveUInt64Value", &LuaObject::RemoveUInt64Value },   // :RemoveUInt64Value(index, value)
+    { "AddUInt64Value", &LuaObject::AddUInt64Value },         // :AddUInt64Value(index, value)
+    { "ApplyModUInt64Value", &LuaObject::ApplyModUInt64Value }, // :ApplyModUInt64Value(index, value, apply)
 
     { NULL, NULL },
 };

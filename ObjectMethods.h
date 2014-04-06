@@ -19,7 +19,7 @@ namespace LuaObject
         return 1;
     }
 
-    static int IsInWorld(lua_State* L, Object* obj)
+    int IsInWorld(lua_State* L, Object* obj)
     {
         sEluna->Push(L, obj->IsInWorld());
         return 1;
@@ -63,34 +63,41 @@ namespace LuaObject
         return 1;
     }
 
-    static int GetScale(lua_State* L, Object* obj)
+    int GetScale(lua_State* L, Object* obj)
     {
         sEluna->Push(L, obj->GetObjectScale());
         return 1;
     }
 
-    static int GetEntry(lua_State* L, Object* obj)
+    int GetEntry(lua_State* L, Object* obj)
     {
         sEluna->Push(L, obj->GetEntry());
         return 1;
     }
 
-    static int GetGUID(lua_State* L, Object* obj)
+    int GetGUID(lua_State* L, Object* obj)
     {
         sEluna->Push(L, obj->GET_GUID());
         return 1;
     }
 
-    static int GetGUIDLow(lua_State* L, Object* obj)
+    int GetGUIDLow(lua_State* L, Object* obj)
     {
         sEluna->Push(L, obj->GetGUIDLow());
         return 1;
     }
 
-    static int GetTypeId(lua_State* L, Object* obj)
+    int GetTypeId(lua_State* L, Object* obj)
     {
         sEluna->Push(L, obj->GetTypeId());
         return 1;
+    }
+
+    int GetUInt64Value(lua_State* L, Object* obj)
+    {
+        uint16 index = sEluna->CHECKVAL<uint16>(L, 2);
+        obj->GetUInt64Value(index);
+        return 0;
     }
 
     /* SETTERS */
@@ -163,6 +170,14 @@ namespace LuaObject
         return 0;
     }
 
+    int SetUInt64Value(lua_State* L, Object* obj)
+    {
+        uint16 index = sEluna->CHECKVAL<uint16>(L, 2);
+        uint64 value = sEluna->CHECKVAL<uint64>(L, 3);
+        obj->SetUInt64Value(index, value);
+        return 0;
+    }
+
     /* OTHER */
     int RemoveFlag(lua_State* L, Object* obj)
     {
@@ -181,34 +196,59 @@ namespace LuaObject
         return 0;
     }
 
-    static int ToCorpse(lua_State* L, Object* obj)
+    int ToCorpse(lua_State* L, Object* obj)
     {
         sEluna->Push(L, obj->ToCorpse());
         return 1;
     }
 
-    static int ToGameObject(lua_State* L, Object* obj)
+    int ToGameObject(lua_State* L, Object* obj)
     {
         sEluna->Push(L, obj->ToGameObject());
         return 1;
     }
 
-    static int ToUnit(lua_State* L, Object* obj)
+    int ToUnit(lua_State* L, Object* obj)
     {
         sEluna->Push(L, obj->ToUnit());
         return 1;
     }
 
-    static int ToCreature(lua_State* L, Object* obj)
+    int ToCreature(lua_State* L, Object* obj)
     {
         sEluna->Push(L, obj->ToCreature());
         return 1;
     }
 
-    static int ToPlayer(lua_State* L, Object* obj)
+    int ToPlayer(lua_State* L, Object* obj)
     {
         sEluna->Push(L, obj->ToPlayer());
         return 1;
+    }
+
+    int RemoveUInt64Value(lua_State* L, Object* obj)
+    {
+        uint16 index = sEluna->CHECKVAL<uint16>(L, 2);
+        uint64 value = sEluna->CHECKVAL<uint64>(L, 3);
+        obj->RemoveUInt64Value(index, value);
+        return 0;
+    }
+
+    int AddUInt64Value(lua_State* L, Object* obj)
+    {
+        uint16 index = sEluna->CHECKVAL<uint16>(L, 2);
+        uint64 value = sEluna->CHECKVAL<uint64>(L, 3);
+        obj->AddUInt64Value(index, value);
+        return 0;
+    }
+
+    int ApplyModUInt64Value(lua_State* L, Object* obj)
+    {
+        uint16 index = sEluna->CHECKVAL<uint16>(L, 2);
+        int32 value = sEluna->CHECKVAL<int32>(L, 3);
+        bool apply = sEluna->CHECKVAL<bool>(L, 4);
+        obj->ApplyModUInt64Value(index, value, apply);
+        return 0;
     }
 };
 #endif
