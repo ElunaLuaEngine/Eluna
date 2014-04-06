@@ -241,14 +241,5 @@ namespace LuaObject
         obj->AddUInt64Value(index, value);
         return 0;
     }
-
-    int ApplyModUInt64Value(lua_State* L, Object* obj)
-    {
-        uint16 index = sEluna->CHECKVAL<uint16>(L, 2);
-        int32 value = sEluna->CHECKVAL<int32>(L, 3);
-        bool apply = sEluna->CHECKVAL<bool>(L, 4);
-        obj->ApplyModUInt64Value(index, value, apply);
-        return 0;
-    }
 };
 #endif

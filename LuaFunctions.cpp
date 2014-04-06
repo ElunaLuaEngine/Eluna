@@ -144,7 +144,6 @@ ElunaRegister<Object> ObjectMethods[] =
     { "RemoveFlag", &LuaObject::RemoveFlag },                 // :RemoveFlag(index, flag)
     { "RemoveUInt64Value", &LuaObject::RemoveUInt64Value },   // :RemoveUInt64Value(index, value)
     { "AddUInt64Value", &LuaObject::AddUInt64Value },         // :AddUInt64Value(index, value)
-    { "ApplyModUInt64Value", &LuaObject::ApplyModUInt64Value }, // :ApplyModUInt64Value(index, value, apply)
 
     { NULL, NULL },
 };
@@ -980,6 +979,7 @@ ElunaRegister<Group> GroupMethods[] =
     // Setters
     { "SetLeader", &LuaGroup::ChangeLeader },                     // :SetLeader(Player) - Sets the player as the new leader
     { "SetMembersGroup", &LuaGroup::ChangeMembersGroup },         // :ChangeMembersGroup(player, subGroup) - Changes the member's subgroup
+    { "SetTargetIcon", &LuaGroup::SetTargetIcon },                // :SetTargetIcon(icon, targetguid[, setterguid]) - Sets target's icon for group. target 0 to clear.
 
     // Boolean
     { "IsLeader", &LuaGroup::IsLeader },                          // :IsLeader(GUID)

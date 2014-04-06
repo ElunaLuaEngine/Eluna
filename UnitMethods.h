@@ -1242,26 +1242,17 @@ namespace LuaUnit
     {
         uint8 type = sEluna->CHECKVAL<uint8>(L, 2);
         uint32 lang = sEluna->CHECKVAL<uint32>(L, 3);
-        const char* msg = sEluna->CHECKVAL<const char*>(L, 4);
+        std::string msg = sEluna->CHECKVAL<std::string>(L, 4);
         Player* target = sEluna->CHECKOBJ<Player>(L, 5);
-        if (type == CHAT_MSG_CHANNEL)
-            return 0;
 
-        WorldPacket* data = new WorldPacket();
-        uint32 messageLength = (uint32)strlen(msg) + 1;
-        data->Initialize(SMSG_MESSAGECHAT, 100);
-        *data << (uint8)type;
-        *data << lang;
-        *data << unit->GetGUIDLow();
-        *data << uint32(0);
-        *data << unit->GetGUIDLow();
-        *data << messageLength;
-        *data << msg;
-        if (unit->ToPlayer() && type != CHAT_MSG_WHISPER_INFORM && type != CHAT_MSG_DND && type != CHAT_MSG_AFK)
-            *data << uint8(unit->ToPlayer()->GetChatTag());
-        else
-            *data << uint8(0);
-        target->GetSession()->SendPacket(data);
+        if (type >= MAX_CHAT_MSG_TYPE)
+            return luaL_argerror(L, 2, "valid ChatMsg expected");
+        if (lang >= LANGUAGES_COUNT)
+            return luaL_argerror(L, 3, "valid Language expected");
+
+        WorldPacket data;
+        ChatHandler::BuildChatPacket(data, ChatMsg(type), Language(lang), unit, target, msg);
+        target->GetSession()->SendPacket(&data);
         return 0;
     }
 

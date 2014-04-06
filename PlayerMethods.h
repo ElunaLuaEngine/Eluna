@@ -2028,17 +2028,17 @@ namespace LuaPlayer
 
     int SendAreaTriggerMessage(lua_State* L, Player* player)
     {
-        const char* msg = sEluna->CHECKVAL<const char*>(L, 2);
-        if (std::string(msg).length() > 0)
-            player->GetSession()->SendAreaTriggerMessage(msg);
+        std::string msg = sEluna->CHECKVAL<std::string>(L, 2);
+        if (msg.length() > 0)
+            player->GetSession()->SendAreaTriggerMessage(msg.c_str());
         return 0;
     }
 
     int SendNotification(lua_State* L, Player* player)
     {
-        const char* msg = sEluna->CHECKVAL<const char*>(L, 2);
-        if (std::string(msg).length() > 0)
-            player->GetSession()->SendNotification(msg);
+        std::string msg = sEluna->CHECKVAL<std::string>(L, 2);
+        if (msg.length() > 0)
+            player->GetSession()->SendNotification(msg.c_str());
         return 0;
     }
 
@@ -2069,20 +2069,16 @@ namespace LuaPlayer
 
         std::string fullmsg = prefix + "\t" + message;
 
-        // Needs a custom built packet since TC doesnt send guid
-        WorldPacket* data = new WorldPacket();
-        uint32 messageLength = (uint32)strlen(fullmsg.c_str()) + 1;
-        data->Initialize(SMSG_MESSAGECHAT, 100);
-        *data << (uint8)channel;
-        *data << LANG_ADDON;
-        *data << player->GetGUID();
-        *data << uint32(0);
-        *data << player->GetGUID();
-        *data << messageLength;
-        *data << fullmsg;
-        *data << uint8(0);
-        player->GetSession()->SendPacket(data);
-        
+        WorldPacket data(SMSG_MESSAGECHAT, 100);
+        data << uint8(channel);
+        data << int32(LANG_ADDON);
+        data << uint64(player->GetGUID());
+        data << uint32(0);
+        data << uint64(receiver->GetGUID());
+        data << uint32(fullmsg.length() + 1);
+        data << fullmsg;
+        data << uint8(0);
+        receiver->GetSession()->SendPacket(&data);
         return 0;
     }
 
