@@ -1338,7 +1338,7 @@ namespace LuaPlayer
         uint64 guid = sEluna->CHECKVAL<uint64>(L, 2, player->GET_GUID());
 
 #if (defined(CLASSIC) || defined(TBC))
-        WorldPacket data(SMSG_SHOW_MAILBOX, 8);
+        WorldPacket data(CMSG_GET_MAIL_LIST, 8);
         data << uint64(guid);
         player->GetSession()->HandleGetMailList(data);
 #else
