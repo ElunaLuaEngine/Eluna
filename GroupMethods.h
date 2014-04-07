@@ -231,7 +231,7 @@ namespace LuaGroup
         if (icon >= TARGETICONCOUNT)
             return luaL_argerror(L, 2, "valid target icon expected");
 
-#if (defined(TBC) || defined(TBC))
+#if (defined(CLASSIC) || defined(TBC))
         group->SetTargetIcon(icon, ObjectGuid(target));
 #else
         group->SetTargetIcon(icon, ObjectGuid(setter), ObjectGuid(target));
