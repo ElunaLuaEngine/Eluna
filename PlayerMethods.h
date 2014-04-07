@@ -1333,17 +1333,19 @@ namespace LuaPlayer
     }
 #endif
 
-#ifdef WOTLK
-    int SendMailMenu(lua_State* L, Player* player)
+    int SendShowMailBox(lua_State* L, Player* player)
     {
-        GameObject* object = sEluna->CHECKOBJ<GameObject>(L, 2);
+        uint64 guid = sEluna->CHECKVAL<uint64>(L, 2, player->GET_GUID());
 
+#if (defined(CLASSIC) || defined(TBC))
         WorldPacket data(SMSG_SHOW_MAILBOX, 8);
-        data << uint64(object->GetGUIDLow());
+        data << uint64(guid);
         player->GetSession()->HandleGetMailList(data);
+#else
+        player->GetSession()->SendShowMailBox(ObjectGuid(guid));
+#endif
         return 0;
     }
-#endif
 
 #ifndef CATA
 #ifndef CLASSIC
