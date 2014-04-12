@@ -11,6 +11,8 @@
 `git submodule update`
 3. Compile the core normally (use cmake if needed)
 
+- If you really dont get how to use git bash (and do try!), you can navigate to the LuaEngine folder and clone [the eluna repository](https://github.com/ElunaLuaEngine/Eluna) there. This is not suggested though.
+
 #Updating
 1. When updating you should take up the `commit hash` you are on, just in case.
 You can get it from git with `git log` for example.
