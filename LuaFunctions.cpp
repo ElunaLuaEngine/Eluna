@@ -47,6 +47,7 @@ void RegisterGlobals(lua_State* L)
     lua_register(L, "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine);                                     // GetLuaEngine() - Returns ElunaEngine
     lua_register(L, "GetCoreName", &LuaGlobalFunctions::GetCoreName);                                       // GetCoreName() - Returns core name
     lua_register(L, "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion);                                 // GetCoreVersion() - Returns core version string
+    lua_register(L, "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion);                             // GetCoreExpansion() - Returns core expansion number (0 for classic, 1 for tbc, 2 for wotlk, 3 for cata), returns nil if not found.
     lua_register(L, "GetQuest", &LuaGlobalFunctions::GetQuest);                                             // GetQuest(questId) - Returns quest object
     lua_register(L, "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID);                               // GetPlayerByGUID(guid) - Returns player object by GUID
     lua_register(L, "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName);                               // GetPlayerByName(name) - Returns player object by player name

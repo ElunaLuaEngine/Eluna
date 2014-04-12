@@ -30,6 +30,22 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    int GetCoreExpansion(lua_State* L)
+    {
+#ifdef CLASSIC
+        sEluna->Push(L, 0);
+#elif defined(TBC)
+        sEluna->Push(L, 1);
+#elif defined(WOTLK)
+        sEluna->Push(L, 2);
+#elif defined(CATA)
+        sEluna->Push(L, 3);
+#else
+        sEluna->Push(L);
+#endif
+        return 1;
+    }
+
     int GetQuest(lua_State* L)
     {
         uint32 questId = sEluna->CHECKVAL<uint32>(L, 1);
