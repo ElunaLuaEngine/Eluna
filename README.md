@@ -7,7 +7,7 @@ We want to be the major Lua source for World of Warcraft emulation.<br />
 Follow us on our [Twitter](https://twitter.com/EmuDevs) page to view the latest news about EmuDevs and what's going on with Eluna.
 
 If you're having trouble, post in Eluna's support here: [Eluna Support Forum](http://emudevs.com/forumdisplay.php/84-Support)<br />
-If you need help regarding methods, hooks and other wiki related documentation, go to [Eluna's Wiki](http://wiki.emudevs.com/doku.php?id=eluna). This is not suggested though.
+If you need help regarding methods, hooks and other wiki related documentation, go to [Eluna's Wiki](http://wiki.emudevs.com/doku.php?id=eluna).
 
 ## Source
 
