@@ -18,7 +18,7 @@ local T = {}
 function Object:GetData(instance)
     assert(self, "ObjectVariables: self was nil")
     if(instance) then
-        if(not self:GetInstanceId or not self:GetMapId) then
+        if(not self.GetInstanceId or not self.GetMapId) then
             error("instance is true and object is not worldobject", 2)
         end
         local map = -self:GetMapId()
@@ -41,7 +41,7 @@ end
 function Object:RemoveData(instance)
     assert(self, "ObjectVariables: self was nil")
     if(instance) then
-        if(not self:GetInstance or not self:GetMapId) then
+        if(not self.GetInstance or not self.GetMapId) then
             error("instance or map is true and object is not worldobject", 2)
         end
         local map = -self:GetMapId()
