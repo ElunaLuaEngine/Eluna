@@ -21,7 +21,7 @@ bool StartEluna()
 #ifndef ELUNA
 #ifndef MANGOS
     {
-        TC_LOG_ERROR("eluna", "[Eluna]: LuaEngine is Disabled. (If you want to use it please enable in cmake)");
+        ELUNA_LOG_ERROR("[Eluna]: LuaEngine is Disabled. (If you want to use it please enable in cmake)");
         return false;
     }
 #endif
@@ -63,7 +63,7 @@ bool StartEluna()
     // Check config file for eluna is enabled or disabled
     if (!sWorld->getConfig(CONFIG_BOOL_ELUNA_ENABLED))
     {
-        TC_LOG_ERROR("eluna", "[Eluna]: LuaEngine is Disabled. (If you want to use it please set config in 'mangosd.conf')");
+        ELUNA_LOG_ERROR("[Eluna]: LuaEngine is Disabled. (If you want to use it please set config in 'mangosd.conf')");
         return false;
     }
 #endif
