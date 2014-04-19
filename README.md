@@ -13,6 +13,7 @@ If you need help regarding methods, hooks and other wiki related documentation, 
 
 * [Installation & Updating](/docs/INSTALL.md)
 * [Function & method documentation](/LuaFunctions.cpp)
+* [Hook documentation](/HookMgr.h#L76)
 
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/Eluna-TC-Wotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/Eluna-TC-Wotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/Eluna-TC-Wotlk)<br />
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/Eluna-TC-Cata.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/Eluna-TC-Cata) [Eluna TrinityCore Cataclysm](https://github.com/ElunaLuaEngine/Eluna-TC-Cata)
