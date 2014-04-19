@@ -63,7 +63,7 @@ extern "C"
 #include "ArenaTeam.h"
 #endif
 
-typedef std::vector<std::string> ScriptPaths;
+typedef std::set<std::string> ScriptPaths;
 
 #ifdef MANGOS
 #undef  sWorld
@@ -82,9 +82,9 @@ typedef std::vector<std::string> ScriptPaths;
 #define GET_GUID                GetObjectGuid
 #define GetGameObjectTemplate   GetGameObjectInfo
 #define GetItemTemplate         GetItemPrototype
-#define TC_LOG_INFO(L, ...)     sLog.outString(__VA_ARGS__);
-#define TC_LOG_ERROR(L, ...)    sLog.outErrorEluna(__VA_ARGS__);
-#define TC_LOG_DEBUG(L, ...)    sLog.outDebug(__VA_ARGS__);
+#define ELUNA_LOG_INFO(...)     sLog.outString(__VA_ARGS__);
+#define ELUNA_LOG_ERROR(...)    sLog.outErrorEluna(__VA_ARGS__);
+#define ELUNA_LOG_DEBUG(...)    sLog.outDebug(__VA_ARGS__);
 #define CORE_VERSION            REVISION_NR
 #define CORE_NAME               "MaNGOS"
 #define SERVER_MSG_STRING       SERVER_MSG_CUSTOM
@@ -126,6 +126,9 @@ typedef uint64 ObjectGuid;
 #define CORE_VERSION            _DATE
 #define CORE_NAME               "TrinityCore"
 #define REGEN_TIME_FULL
+#define ELUNA_LOG_INFO(...)     TC_LOG_INFO("eluna", __VA_ARGS__);
+#define ELUNA_LOG_ERROR(...)    TC_LOG_ERROR("eluna", __VA_ARGS__);
+#define ELUNA_LOG_DEBUG(...)    TC_LOG_DEBUG("eluna", __VA_ARGS__);
 typedef ThreatContainer::StorageType ThreatList;
 #ifdef CATA
 #define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
