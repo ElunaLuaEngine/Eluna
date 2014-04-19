@@ -63,7 +63,7 @@ extern "C"
 #include "ArenaTeam.h"
 #endif
 
-typedef std::set<std::string> LoadedScripts;
+typedef std::vector<std::string> ScriptPaths;
 
 #ifdef MANGOS
 #undef  sWorld
@@ -573,7 +573,8 @@ public:
     void BeginCall(int fReference);
     bool ExecuteCall(int params, int res);
     void EndCall(int res);
-    void LoadDirectory(char* directory, LoadedScripts* scr);
+    void GetScripts(std::string path, ScriptPaths& scripts);
+    void RunScripts(ScriptPaths& scripts);
 
     // Pushes
     void Push(lua_State*); // nil
