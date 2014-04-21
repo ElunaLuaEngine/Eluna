@@ -1592,12 +1592,19 @@ void HookMgr::OnSummoned(Creature* pCreature, Unit* pSummoner)
 
 struct ElunaCreatureAI : ScriptedAI
 {
-    ElunaCreatureAI(Creature* creature) : ScriptedAI(creature) {}
-    ~ElunaCreatureAI() {}
-
 #ifdef MANGOS
 #define me  m_creature
 #endif
+
+    ElunaCreatureAI(Creature* creature) : ScriptedAI(creature)
+    {
+        JustRespawned();
+#ifdef MANGOS
+        if (!me->isDead())
+            Reset();
+#endif
+    }
+    ~ElunaCreatureAI() {}
 
     //Called at World update tick
 #ifdef MANGOS
@@ -1654,6 +1661,9 @@ struct ElunaCreatureAI : ScriptedAI
     void JustDied(Unit* killer) OVERRIDE
     {
         ScriptedAI::JustDied(killer);
+#ifdef MANGOS
+        Reset();
+#endif
         int bind = sEluna->CreatureEventBindings.GetBind(me->GetEntry(), CREATURE_EVENT_ON_DIED);
         if (!bind)
             return;
@@ -1745,6 +1755,9 @@ struct ElunaCreatureAI : ScriptedAI
     void EnterEvadeMode() OVERRIDE
     {
         ScriptedAI::EnterEvadeMode();
+#ifdef MANGOS
+        Reset();
+#endif
         int bind = sEluna->CreatureEventBindings.GetBind(me->GetEntry(), CREATURE_EVENT_ON_LEAVE_COMBAT);
         if (!bind)
             return;
@@ -1829,6 +1842,13 @@ struct ElunaCreatureAI : ScriptedAI
         sEluna->ExecuteCall(3, 0);
     }
 
+#ifdef MANGOS
+    bool IsVisible(Unit* who) const OVERRIDE
+    {
+        return me->IsWithinLOSInMap(who);
+    }
+#endif
+
     void MoveInLineOfSight(Unit* who) OVERRIDE
     {
         ScriptedAI::MoveInLineOfSight(who);
@@ -1843,7 +1863,22 @@ struct ElunaCreatureAI : ScriptedAI
         sEluna->ExecuteCall(3, 0);
     }
 
-#ifndef MANGOS
+    //Called at creature reset either by death or evade
+    void Reset()
+    {
+#ifdef TRINITY
+        ScriptedAI::Reset();
+#endif
+        int bind = sEluna->CreatureEventBindings.GetBind(me->GetEntry(), CREATURE_EVENT_ON_RESET);
+        if (!bind)
+            return;
+        ELUNA_GUARD();
+        sEluna->BeginCall(bind);
+        sEluna->Push(sEluna->L, CREATURE_EVENT_ON_RESET);
+        sEluna->Push(sEluna->L, me);
+        sEluna->ExecuteCall(2, 0);
+    }
+
     // Called when hit by a spell
     void SpellHit(Unit* caster, SpellInfo const* spell) OVERRIDE
     {
@@ -1876,49 +1911,7 @@ struct ElunaCreatureAI : ScriptedAI
         sEluna->ExecuteCall(4, 0);
     }
 
-    // Called when AI is temporarily replaced or put back when possess is applied or removed
-    void OnPossess(bool apply)
-    {
-        ScriptedAI::OnPossess(apply);
-        int bind = sEluna->CreatureEventBindings.GetBind(me->GetEntry(), CREATURE_EVENT_ON_POSSESS);
-        if (!bind)
-            return;
-        ELUNA_GUARD();
-        sEluna->BeginCall(bind);
-        sEluna->Push(sEluna->L, CREATURE_EVENT_ON_POSSESS);
-        sEluna->Push(sEluna->L, me);
-        sEluna->Push(sEluna->L, apply);
-        sEluna->ExecuteCall(3, 0);
-    }
-
-    //Called at creature reset either by death or evade
-    void Reset() OVERRIDE
-    {
-        ELUNA_GUARD();
-        ScriptedAI::Reset();
-        int bind = sEluna->CreatureEventBindings.GetBind(me->GetEntry(), CREATURE_EVENT_ON_RESET);
-        if (!bind)
-            return;
-        sEluna->BeginCall(bind);
-        sEluna->Push(sEluna->L, CREATURE_EVENT_ON_RESET);
-        sEluna->Push(sEluna->L, me);
-        sEluna->ExecuteCall(2, 0);
-    }
-
-    // Called in Creature::Update when deathstate = DEAD. Inherited classes may maniuplate the ability to respawn based on scripted events.
-    bool CanRespawn() OVERRIDE
-    {
-        ScriptedAI::CanRespawn();
-        int bind = sEluna->CreatureEventBindings.GetBind(me->GetEntry(), CREATURE_EVENT_ON_CAN_RESPAWN);
-        if (!bind)
-            return true;
-        ELUNA_GUARD();
-        sEluna->BeginCall(bind);
-        sEluna->Push(sEluna->L, CREATURE_EVENT_ON_CAN_RESPAWN);
-        sEluna->Push(sEluna->L, me);
-        sEluna->ExecuteCall(2, 0);
-        return true;
-    }
+#ifndef MANGOS
 
     // Called when the creature is summoned successfully by other creature
     void IsSummonedBy(Unit* summoner) OVERRIDE
@@ -1940,20 +1933,6 @@ struct ElunaCreatureAI : ScriptedAI
         sEluna->Push(sEluna->L, summon);
         sEluna->Push(sEluna->L, killer);
         sEluna->ExecuteCall(4, 0);
-    }
-
-    void OnCharmed(bool apply) OVERRIDE
-    {
-        ScriptedAI::OnCharmed(apply);
-        int bind = sEluna->CreatureEventBindings.GetBind(me->GetEntry(), CREATURE_EVENT_ON_CHARMED);
-        if (!bind)
-            return;
-        ELUNA_GUARD();
-        sEluna->BeginCall(bind);
-        sEluna->Push(sEluna->L, CREATURE_EVENT_ON_CHARMED);
-        sEluna->Push(sEluna->L, me);
-        sEluna->Push(sEluna->L, apply);
-        sEluna->ExecuteCall(3, 0);
     }
 
     // Called when owner takes damage
@@ -2000,36 +1979,6 @@ struct ElunaCreatureAI : ScriptedAI
         sEluna->Push(sEluna->L, seatId);
         sEluna->Push(sEluna->L, apply);
         sEluna->ExecuteCall(5, 0);
-    }
-
-    void OnSpellClick(Unit* clicker, bool& result) OVERRIDE
-    {
-        ScriptedAI::OnSpellClick(clicker, result);
-        int bind = sEluna->CreatureEventBindings.GetBind(me->GetEntry(), CREATURE_EVENT_ON_SPELL_CLICK);
-        if (!bind)
-            return;
-        ELUNA_GUARD();
-        sEluna->BeginCall(bind);
-        sEluna->Push(sEluna->L, CREATURE_EVENT_ON_SPELL_CLICK);
-        sEluna->Push(sEluna->L, me);
-        sEluna->Push(sEluna->L, clicker);
-        sEluna->Push(sEluna->L, result);
-        sEluna->ExecuteCall(4, 0);
-    }
-
-    // Called if IsVisible(Unit* who) is true at each who move, reaction at visibility zone enter
-    void MoveInLineOfSight_Safe(Unit* who)
-    {
-        ScriptedAI::MoveInLineOfSight_Safe(who);
-        int bind = sEluna->CreatureEventBindings.GetBind(me->GetEntry(), CREATURE_EVENT_ON_VISIBLE_MOVE_IN_LOS);
-        if (!bind)
-            return;
-        ELUNA_GUARD();
-        sEluna->BeginCall(bind);
-        sEluna->Push(sEluna->L, CREATURE_EVENT_ON_VISIBLE_MOVE_IN_LOS);
-        sEluna->Push(sEluna->L, me);
-        sEluna->Push(sEluna->L, who);
-        sEluna->ExecuteCall(3, 0);
     }
 #endif
 

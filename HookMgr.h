@@ -24,6 +24,7 @@
 
 #ifdef MANGOS
 typedef SpellEffectIndex SpellEffIndex;
+typedef SpellEntry SpellInfo;
 typedef ItemPrototype ItemTemplate;
 #define GetTemplate             GetProto
 #ifdef CLASSIC
@@ -241,24 +242,24 @@ enum CreatureEvents
     CREATURE_EVENT_ON_DAMAGE_TAKEN                    = 9,  // (event, creature, attacker, damage)
     CREATURE_EVENT_ON_PRE_COMBAT                      = 10, // (event, creature, target)
     CREATURE_EVENT_ON_ATTACKED_AT                     = 11, // (event, creature, attacker)
-    CREATURE_EVENT_ON_OWNER_ATTACKED                  = 12, // (event, creature, target)
-    CREATURE_EVENT_ON_OWNER_ATTACKED_AT               = 13, // (event, creature, attacker)
+    CREATURE_EVENT_ON_OWNER_ATTACKED                  = 12, // (event, creature, target) // Not on mangos
+    CREATURE_EVENT_ON_OWNER_ATTACKED_AT               = 13, // (event, creature, attacker) // Not on mangos
     CREATURE_EVENT_ON_HIT_BY_SPELL                    = 14, // (event, creature, caster, spellid)
     CREATURE_EVENT_ON_SPELL_HIT_TARGET                = 15, // (event, creature, target, spellid)
-    CREATURE_EVENT_ON_SPELL_CLICK                     = 16, // (event, creature, clicker)
-    CREATURE_EVENT_ON_CHARMED                         = 17, // (event, creature, apply)
-    CREATURE_EVENT_ON_POSSESS                         = 18, // (event, creature, apply)
+    // UNUSED                                         = 16, // (event, creature)
+    // UNUSED                                         = 17, // (event, creature)
+    // UNUSED                                         = 18, // (event, creature)
     CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE          = 19, // (event, creature, summon)
     CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN       = 20, // (event, creature, summon)
-    CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED          = 21, // (event, creature, summon, killer)
+    CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED          = 21, // (event, creature, summon, killer) // Not on mangos
     CREATURE_EVENT_ON_SUMMONED                        = 22, // (event, creature, summoner)
     CREATURE_EVENT_ON_RESET                           = 23, // (event, creature)
     CREATURE_EVENT_ON_REACH_HOME                      = 24, // (event, creature)
-    CREATURE_EVENT_ON_CAN_RESPAWN                     = 25, // (event, creature)
+    // UNUSED                                         = 25, // (event, creature)
     CREATURE_EVENT_ON_CORPSE_REMOVED                  = 26, // (event, creature, respawndelay)
     CREATURE_EVENT_ON_MOVE_IN_LOS                     = 27, // (event, creature, unit)
-    CREATURE_EVENT_ON_VISIBLE_MOVE_IN_LOS             = 28, // (event, creature, unit)
-    CREATURE_EVENT_ON_PASSANGER_BOARDED               = 29, // (event, creature, passanger, seatid, apply)
+    // UNUSED                                         = 28, // (event, creature)
+    CREATURE_EVENT_ON_PASSANGER_BOARDED               = 29, // (event, creature, passanger, seatid, apply) // Not on mangos
     CREATURE_EVENT_ON_DUMMY_EFFECT                    = 30, // (event, caster, spellid, effindex, creature)
     CREATURE_EVENT_ON_QUEST_ACCEPT                    = 31, // (event, player, creature, quest)
     CREATURE_EVENT_ON_QUEST_SELECT                    = 32, // (event, player, creature, quest)
