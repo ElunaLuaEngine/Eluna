@@ -1,7 +1,7 @@
 #Installation
 1. Get the core:<br/>
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/Eluna-TC-Wotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/Eluna-TC-Wotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/Eluna-TC-Wotlk)<br />
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/Eluna-TC-Cata.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/Eluna-TC-Cata) [Eluna TrinityCore Cataclysm](https://github.com/ElunaLuaEngine/Eluna-TC-Cata)<br />
+[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk)<br />
+[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata) [Eluna TrinityCore Cataclysm](https://github.com/ElunaLuaEngine/ElunaTrinityCata)<br />
 <br />
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic) [Eluna cMaNGOS Classic](https://github.com/ElunaLuaEngine/ElunaMangosClassic)<br />
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc) [Eluna cMaNGOS TBC](https://github.com/ElunaLuaEngine/ElunaMangosTbc)<br />
