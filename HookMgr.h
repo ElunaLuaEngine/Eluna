@@ -55,6 +55,16 @@ class Transport;
 class Unit;
 class Weather;
 class WorldPacket;
+#ifndef CLASSIC
+#ifndef TBC
+#ifdef TRINITY
+class Vehicle;
+#else
+class VehicleInfo;
+typedef VehicleInfo Vehicle;
+#endif
+#endif
+#endif
 
 enum RegisterTypes
 {
@@ -105,13 +115,13 @@ enum ServerEvents
     ELUNA_EVENT_ON_RESTART                  =     16,       // (event)
 
     // Map
-    MAP_EVENT_ON_CREATE                     =     17,       // Not Implemented
-    MAP_EVENT_ON_DESTROY                    =     18,       // Not Implemented
-    MAP_EVENT_ON_LOAD                       =     19,       // Not Implemented
-    MAP_EVENT_ON_UNLOAD                     =     20,       // Not Implemented
-    MAP_EVENT_ON_PLAYER_ENTER               =     21,       // Not Implemented
-    MAP_EVENT_ON_PLAYER_LEAVE               =     22,       // Not Implemented
-    MAP_EVENT_ON_UPDATE                     =     23,       // Not Implemented
+    MAP_EVENT_ON_CREATE                     =     17,       // (event, map)
+    MAP_EVENT_ON_DESTROY                    =     18,       // (event, map)
+    MAP_EVENT_ON_GRID_LOAD                  =     19,       // Not Implemented
+    MAP_EVENT_ON_GRID_UNLOAD                =     20,       // Not Implemented
+    MAP_EVENT_ON_PLAYER_ENTER               =     21,       // (event, map, player)
+    MAP_EVENT_ON_PLAYER_LEAVE               =     22,       // (event, map, player)
+    MAP_EVENT_ON_UPDATE                     =     23,       // (event, map, diff)
 
     // Area trigger
     TRIGGER_EVENT_ON_TRIGGER                =     24,       // (event, player, triggerId)
@@ -122,8 +132,8 @@ enum ServerEvents
     // Auction house
     AUCTION_EVENT_ON_ADD                    =     26,       // (event, AHObject)
     AUCTION_EVENT_ON_REMOVE                 =     27,       // (event, AHObject)
-    AUCTION_EVENT_ON_SUCCESSFUL             =     28,       // (event, AHObject) // NOT SUPPORTED YET
-    AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, AHObject) // NOT SUPPORTED YET
+    AUCTION_EVENT_ON_SUCCESSFUL             =     28,       // (event, AHObject) // Not Implemented
+    AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, AHObject) // Not Implemented
 
 	// AddOns
     ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guid/group/channel
@@ -173,10 +183,10 @@ enum PlayerEvents
     PLAYER_EVENT_ON_REPOP                   =     35,       // (event, player)
     PLAYER_EVENT_ON_RESURRECT               =     36,       // (event, player)
     PLAYER_EVENT_ON_LOOT_MONEY              =     37,       // (event, player, amount)
-    PLAYER_EVENT_ON_QUEST_ABANDON           =     38,       // (event, player, questId)
-    PLAYER_EVENT_ON_GM_TICKET_CREATE        =     39,       // (event, player, ticketText)
-    PLAYER_EVENT_ON_GM_TICKET_UPDATE        =     40,       // (event, player, ticketText)
-    PLAYER_EVENT_ON_GM_TICKET_DELETE        =     41,       // (event, player)
+    PLAYER_EVENT_ON_QUEST_ABANDON           =     38,       // (event, player, questId)     // Not on TC
+    PLAYER_EVENT_ON_GM_TICKET_CREATE        =     39,       // (event, player, ticketText)  // Not on TC
+    PLAYER_EVENT_ON_GM_TICKET_UPDATE        =     40,       // (event, player, ticketText)  // Not on TC
+    PLAYER_EVENT_ON_GM_TICKET_DELETE        =     41,       // (event, player)              // Not on TC
     PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - Can return false
 
     PLAYER_EVENT_COUNT
@@ -190,12 +200,12 @@ enum GuildEventTypes
     GUILD_EVENT_ON_REMOVE_MEMBER            =     2,       // (event, guild, isDisbanding)
     GUILD_EVENT_ON_MOTD_CHANGE              =     3,       // (event, guild, newMotd)
     GUILD_EVENT_ON_INFO_CHANGE              =     4,       // (event, guild, newInfo)
-    GUILD_EVENT_ON_CREATE                   =     5,       // (event, guild, leader, name)
+    GUILD_EVENT_ON_CREATE                   =     5,       // (event, guild, leader, name)  // Not on TC
     GUILD_EVENT_ON_DISBAND                  =     6,       // (event, guild)
     GUILD_EVENT_ON_MONEY_WITHDRAW           =     7,       // (event, guild, player, amount, isRepair)
     GUILD_EVENT_ON_MONEY_DEPOSIT            =     8,       // (event, guild, player, amount)
-    GUILD_EVENT_ON_ITEM_MOVE                =     9,       // (event, guild, player, item, isSrcBank, srcContainer, srcSlotId, isDestBank, destContainer, destSlotId)
-    GUILD_EVENT_ON_EVENT                    =     10,      // (event, guild, eventType, plrGUIDLow1, plrGUIDLow2, newRank)
+    GUILD_EVENT_ON_ITEM_MOVE                =     9,       // (event, guild, player, item, isSrcBank, srcContainer, srcSlotId, isDestBank, destContainer, destSlotId)   // TODO
+    GUILD_EVENT_ON_EVENT                    =     10,      // (event, guild, eventType, plrGUIDLow1, plrGUIDLow2, newRank)  // TODO
     GUILD_EVENT_ON_BANK_EVENT               =     11,      // (event, guild, eventType, tabId, playerGUIDLow, itemOrMoney, itemStackCount, destTabId)
 
     GUILD_EVENT_COUNT
@@ -218,12 +228,12 @@ enum GroupEvents
 // RegisterVehicleEvent(eventId, function)
 enum VehicleEvents
 {
-    VEHICLE_EVENT_ON_INSTALL                =     1,
-    VEHICLE_EVENT_ON_UNINSTALL              =     2,
-    VEHICLE_EVENT_ON_RESET                  =     3,
-    VEHICLE_EVENT_ON_INSTALL_ACCESSORY      =     4,
-    VEHICLE_EVENT_ON_ADD_PASSENGER          =     5,
-    VEHICLE_EVENT_ON_REMOVE_PASSENGER       =     6,
+    VEHICLE_EVENT_ON_INSTALL                =     1,    // (event, vehicle)
+    VEHICLE_EVENT_ON_UNINSTALL              =     2,    // (event, vehicle)
+    // UNUSED                               =     3,    // (event, vehicle)
+    VEHICLE_EVENT_ON_INSTALL_ACCESSORY      =     4,    // (event, vehicle, creature)
+    VEHICLE_EVENT_ON_ADD_PASSENGER          =     5,    // (event, vehicle, unit, seatId)
+    VEHICLE_EVENT_ON_REMOVE_PASSENGER       =     6,    // (event, vehicle, unit)
 
     VEHICLE_EVENT_COUNT
 };
@@ -242,8 +252,8 @@ enum CreatureEvents
     CREATURE_EVENT_ON_DAMAGE_TAKEN                    = 9,  // (event, creature, attacker, damage)
     CREATURE_EVENT_ON_PRE_COMBAT                      = 10, // (event, creature, target)
     CREATURE_EVENT_ON_ATTACKED_AT                     = 11, // (event, creature, attacker)
-    CREATURE_EVENT_ON_OWNER_ATTACKED                  = 12, // (event, creature, target) // Not on mangos
-    CREATURE_EVENT_ON_OWNER_ATTACKED_AT               = 13, // (event, creature, attacker) // Not on mangos
+    CREATURE_EVENT_ON_OWNER_ATTACKED                  = 12, // (event, creature, target)    // Not on mangos
+    CREATURE_EVENT_ON_OWNER_ATTACKED_AT               = 13, // (event, creature, attacker)  // Not on mangos
     CREATURE_EVENT_ON_HIT_BY_SPELL                    = 14, // (event, creature, caster, spellid)
     CREATURE_EVENT_ON_SPELL_HIT_TARGET                = 15, // (event, creature, target, spellid)
     // UNUSED                                         = 16, // (event, creature)
@@ -251,7 +261,7 @@ enum CreatureEvents
     // UNUSED                                         = 18, // (event, creature)
     CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE          = 19, // (event, creature, summon)
     CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN       = 20, // (event, creature, summon)
-    CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED          = 21, // (event, creature, summon, killer) // Not on mangos
+    CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED          = 21, // (event, creature, summon, killer)    // Not on mangos
     CREATURE_EVENT_ON_SUMMONED                        = 22, // (event, creature, summoner)
     CREATURE_EVENT_ON_RESET                           = 23, // (event, creature)
     CREATURE_EVENT_ON_REACH_HOME                      = 24, // (event, creature)
@@ -259,7 +269,7 @@ enum CreatureEvents
     CREATURE_EVENT_ON_CORPSE_REMOVED                  = 26, // (event, creature, respawndelay)
     CREATURE_EVENT_ON_MOVE_IN_LOS                     = 27, // (event, creature, unit)
     // UNUSED                                         = 28, // (event, creature)
-    CREATURE_EVENT_ON_PASSANGER_BOARDED               = 29, // (event, creature, passanger, seatid, apply) // Not on mangos
+    // UNUSED                                         = 29, // (event, creature)
     CREATURE_EVENT_ON_DUMMY_EFFECT                    = 30, // (event, caster, spellid, effindex, creature)
     CREATURE_EVENT_ON_QUEST_ACCEPT                    = 31, // (event, player, creature, quest)
     CREATURE_EVENT_ON_QUEST_SELECT                    = 32, // (event, player, creature, quest)
@@ -273,15 +283,15 @@ enum CreatureEvents
 enum GameObjectEvents
 {
     GAMEOBJECT_EVENT_ON_AIUPDATE                    = 1,    // (event, go, diff)
-    GAMEOBJECT_EVENT_ON_RESET                       = 2,    // (event, go)                  // TODO
+    GAMEOBJECT_EVENT_ON_SPAWN                       = 2,    // (event, go)
     GAMEOBJECT_EVENT_ON_DUMMY_EFFECT                = 3,    // (event, caster, spellid, effindex, go)
     GAMEOBJECT_EVENT_ON_QUEST_ACCEPT                = 4,    // (event, player, go, quest)
     GAMEOBJECT_EVENT_ON_QUEST_REWARD                = 5,    // (event, player, go, quest, opt)
     GAMEOBJECT_EVENT_ON_DIALOG_STATUS               = 6,    // (event, player, go)
-    GAMEOBJECT_EVENT_ON_DESTROYED                   = 7,    // (event, go, player)          // TODO
-    GAMEOBJECT_EVENT_ON_DAMAGED                     = 8,    // (event, go, player)          // TODO
-    GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE           = 9,    // (event, go, state, unit)     // TODO
-    GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED            = 10,   // (event, go, state)           // TODO
+    GAMEOBJECT_EVENT_ON_DESTROYED                   = 7,    // (event, go, player)
+    GAMEOBJECT_EVENT_ON_DAMAGED                     = 8,    // (event, go, player)
+    GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE           = 9,    // (event, go, state)
+    GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED            = 10,   // (event, go, state)
     GAMEOBJECT_EVENT_ON_QUEST_COMPLETE              = 11,   // (event, player, go, quest)
     GAMEOBJECT_EVENT_COUNT
 };
@@ -293,6 +303,7 @@ enum ItemEvents
     ITEM_EVENT_ON_USE                               = 2,    // (event, player, item, target)
     ITEM_EVENT_ON_QUEST_ACCEPT                      = 3,    // (event, player, item, quest)
     ITEM_EVENT_ON_EXPIRE                            = 4,    // (event, player, itemid)
+    ITEM_EVENT_ON_REMOVE                            = 5,    // (event, player, item)
     ITEM_EVENT_COUNT
 };
 
@@ -327,10 +338,10 @@ public:
     void OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
     void OnRepop(Player* pPlayer);
     void OnResurrect(Player* pPlayer);
-    void OnQuestAbandon(Player* pPlayer, uint32 questId); // Not on TC
-    void OnGmTicketCreate(Player* pPlayer, std::string& ticketText); // Not on TC
-    void OnGmTicketUpdate(Player* pPlayer, std::string& ticketText); // Not on TC
-    void OnGmTicketDelete(Player* pPlayer); // Not on TC
+    void OnQuestAbandon(Player* pPlayer, uint32 questId);
+    void OnGmTicketCreate(Player* pPlayer, std::string& ticketText);
+    void OnGmTicketUpdate(Player* pPlayer, std::string& ticketText);
+    void OnGmTicketDelete(Player* pPlayer);
     InventoryResult OnCanUseItem(const Player* pPlayer, uint32 itemEntry);
     void OnEngineRestart();
     bool OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel);
@@ -340,6 +351,7 @@ public:
     bool OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest);
     bool OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
     bool OnExpire(Player* pPlayer, ItemTemplate const* pProto);
+    bool OnRemove(Player* pPlayer, Item* item);
     void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, std::string code);
 
     /* Creature */
@@ -351,7 +363,7 @@ public:
     bool OnQuestSelect(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
     bool OnQuestComplete(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
-    uint32 GetDialogStatus(Player* pPlayer, Creature* pCreature); // Not on TC
+    uint32 GetDialogStatus(Player* pPlayer, Creature* pCreature);
     void OnSummoned(Creature* creature, Unit* summoner);
 
     /* GameObject */
@@ -362,13 +374,17 @@ public:
     bool OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
     bool OnQuestComplete(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
-    bool OnGameObjectUse(Player* pPlayer, GameObject* pGameObject) { return false; }; // TODO? Not on TC
     uint32 GetDialogStatus(Player* pPlayer, GameObject* pGameObject);
-    void OnDestroyed(GameObject* pGameObject, Player* pPlayer); // TODO
-    void OnDamaged(GameObject* pGameObject, Player* pPlayer); // TODO
-    void OnLootStateChanged(GameObject* pGameObject, uint32 state, Unit* pUnit); // TODO
-    void OnGameObjectStateChanged(GameObject* pGameObject, uint32 state); // TODO
+#ifndef CLASSIC
+#ifndef TBC
+    void OnDestroyed(GameObject* pGameObject, Player* pPlayer);
+    void OnDamaged(GameObject* pGameObject, Player* pPlayer);
+#endif
+#endif
+    void OnLootStateChanged(GameObject* pGameObject, uint32 state);
+    void OnGameObjectStateChanged(GameObject* pGameObject, uint32 state);
     void UpdateAI(GameObject* pGameObject, uint32 diff);
+    void OnSpawn(GameObject* gameobject);
 
     /* Packet */
     bool OnPacketSend(WorldSession* session, WorldPacket& packet);
@@ -404,24 +420,25 @@ public:
     void OnSave(Player* pPlayer);
     void OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapid, bool permanent);
     void OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea);
-    void OnMapChanged(Player* pPlayer); // TODO
+    void OnMapChanged(Player* pPlayer);
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, std::string code);
 
-#ifndef MANGOS
+#ifndef CLASSIC
+#ifndef TBC
     /* Vehicle */
     void OnInstall(Vehicle* vehicle);
     void OnUninstall(Vehicle* vehicle);
-    void OnReset(Vehicle* vehicle);
     void OnInstallAccessory(Vehicle* vehicle, Creature* accessory);
     void OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId);
     void OnRemovePassenger(Vehicle* vehicle, Unit* passenger);
+#endif
 #endif
 
     /* AreaTrigger */
     bool OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger);
 
     /* Weather */
-    void OnChange(Weather* weather, WeatherState state, float grade); // TODO
+    void OnChange(Weather* weather, WeatherState state, float grade);
 
     /* Auction House */
     void OnAdd(AuctionHouseObject* auctionHouse);
@@ -429,25 +446,17 @@ public:
     void OnSuccessful(AuctionHouseObject* auctionHouse);
     void OnExpire(AuctionHouseObject* auctionHouse);
 
-    /* Condition */
-
-    /* Transport */
-    void OnAddPassenger(Transport* transport, Player* player); // TODO
-    void OnAddCreaturePassenger(Transport* transport, Creature* creature); // TODO
-    void OnRemovePassenger(Transport* transport, Player* player); // TODO
-    void OnRelocate(Transport* transport, uint32 waypointId, uint32 mapId, float x, float y, float z); // TODO
-
     /* Guild */
     void OnAddMember(Guild* guild, Player* player, uint32 plRank);
     void OnRemoveMember(Guild* guild, Player* player, bool isDisbanding);
     void OnMOTDChanged(Guild* guild, const std::string& newMotd);
     void OnInfoChanged(Guild* guild, const std::string& newInfo);
-    void OnCreate(Guild* guild, Player* leader, const std::string& name); // TODO: Implement to TC
+    void OnCreate(Guild* guild, Player* leader, const std::string& name);
     void OnDisband(Guild* guild);
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair);
     void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount);
-    void OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId, bool isDestBank, uint8 destContainer, uint8 destSlotId); // TODO: Implement
-    void OnEvent(Guild* guild, uint8 eventType, uint32 playerGuid1, uint32 playerGuid2, uint8 newRank); // TODO: Implement
+    void OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId, bool isDestBank, uint8 destContainer, uint8 destSlotId);
+    void OnEvent(Guild* guild, uint8 eventType, uint32 playerGuid1, uint32 playerGuid2, uint8 newRank);
     void OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playerGuid, uint32 itemOrMoney, uint16 itemStackCount, uint8 destTabId);
 
     /* Group */
@@ -457,6 +466,13 @@ public:
     void OnChangeLeader(Group* group, uint64 newLeaderGuid, uint64 oldLeaderGuid);
     void OnDisband(Group* group);
     void OnCreate(Group* group, uint64 leaderGuid, GroupType groupType);
+
+    /* Map */
+    void OnCreate(Map* map);
+    void OnDestroy(Map* map);
+    void OnPlayerEnter(Map* map, Player* player);
+    void OnPlayerLeave(Map* map, Player* player);
+    void OnUpdate(Map* map, uint32 diff);
 };
 #ifdef MANGOS
 #define sHookMgr (&MaNGOS::Singleton<HookMgr>::Instance())

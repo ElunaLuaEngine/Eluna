@@ -1039,7 +1039,8 @@ ElunaRegister<Guild> GuildMethods[] =
     { NULL, NULL },
 };
 
-#if (!defined(TBC) && !defined(CLASSIC))
+#ifndef CLASSIC
+#ifndef TBC
 ElunaRegister<Vehicle> VehicleMethods[] =
 {
     // Getters
@@ -1056,6 +1057,7 @@ ElunaRegister<Vehicle> VehicleMethods[] =
 
     { NULL, NULL },
 };
+#endif
 #endif
 
 ElunaRegister<QueryResult> QueryMethods[] =
@@ -1228,9 +1230,11 @@ void RegisterFunctions(lua_State* L)
     ElunaTemplate<Item>::SetMethods(L, ObjectMethods);
     ElunaTemplate<Item>::SetMethods(L, ItemMethods);
 
-#if (!defined(TBC) && !defined(CLASSIC))
+#ifndef CLASSIC
+#ifndef TBC
     ElunaTemplate<Vehicle>::Register(L, "Vehicle");
     ElunaTemplate<Vehicle>::SetMethods(L, VehicleMethods);
+#endif
 #endif
 
     ElunaTemplate<Group>::Register(L, "Group");

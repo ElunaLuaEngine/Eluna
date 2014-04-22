@@ -6,7 +6,8 @@
 
 #ifndef VEHICLEMETHODS_H
 #define VEHICLEMETHODS_H
-#if (!defined(TBC) && !defined(CLASSIC))
+#ifndef CLASSIC
+#ifndef TBC
 
 namespace LuaVehicle
 {
@@ -76,5 +77,6 @@ namespace LuaVehicle
     }
 }
 
+#endif
 #endif
 #endif
