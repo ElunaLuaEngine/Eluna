@@ -2032,7 +2032,7 @@ namespace LuaPlayer
     {
         std::string msg = sEluna->CHECKVAL<std::string>(L, 2);
         if (msg.length() > 0)
-            player->GetSession()->SendAreaTriggerMessage(msg.c_str());
+            player->GetSession()->SendAreaTriggerMessage("%s", msg.c_str());
         return 0;
     }
 
@@ -2040,7 +2040,7 @@ namespace LuaPlayer
     {
         std::string msg = sEluna->CHECKVAL<std::string>(L, 2);
         if (msg.length() > 0)
-            player->GetSession()->SendNotification(msg.c_str());
+            player->GetSession()->SendNotification("%s", msg.c_str());
         return 0;
     }
 

@@ -76,7 +76,7 @@ bool StartEluna()
 
     ScriptPaths scripts;
     sEluna->GetScripts("lua_scripts", scripts);
-    sEluna->GetScripts("lua_scripts\\extensions", scripts);
+    sEluna->GetScripts("lua_scripts/extensions", scripts);
     sEluna->RunScripts(scripts);
 
     /*
@@ -113,6 +113,8 @@ bool StartEluna()
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
 void Eluna::GetScripts(std::string path, ScriptPaths& scripts)
 {
+    ELUNA_LOG_DEBUG("Eluna::GetScripts from path `%s`", path.c_str());
+
     ACE_Dirent dir;
     if (dir.open(path.c_str()) == -1)
     {
@@ -142,11 +144,13 @@ void Eluna::GetScripts(std::string path, ScriptPaths& scripts)
         }
 
         // was file, check extension
+        ELUNA_LOG_DEBUG("[Eluna]: GetScripts Checking file `%s`", fullpath.c_str());
         std::string ext = fullpath.substr(fullpath.length() - 4, 4);
         if (ext != ".lua" && ext != ".dll")
             continue;
 
         // was correct, add path to scripts to load
+        ELUNA_LOG_DEBUG("[Eluna]: GetScripts add path `%s`", fullpath.c_str());
         scripts.erase(fullpath);
         scripts.insert(fullpath);
     }
@@ -161,14 +165,14 @@ void Eluna::RunScripts(ScriptPaths& scripts)
         if (!luaL_loadfile(L, it->c_str()) && !lua_pcall(L, 0, 0, 0))
         {
             // successfully loaded and ran file
-            ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `%s`.", it->c_str());
+            ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `%s`", it->c_str());
             ++count;
             continue;
         }
-        ELUNA_LOG_ERROR("[Eluna]: Error loading file `%s`.", it->c_str());
+        ELUNA_LOG_ERROR("[Eluna]: Error loading file `%s`", it->c_str());
         report(L);
     }
-    ELUNA_LOG_INFO("[Eluna]: Loaded %u Lua scripts..", count);
+    ELUNA_LOG_INFO("[Eluna]: Loaded %u Lua scripts", count);
 }
 
 void Eluna::report(lua_State* L)
