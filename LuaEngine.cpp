@@ -78,7 +78,7 @@ bool StartEluna()
     std::string folderpath = sConfigMgr->GetStringDefault("Eluna.ScriptPath", "lua_scripts");
 #if PLATFORM == PLATFORM_UNIX || PLATFORM == PLATFORM_APPLE
     if (folderpath[0] == '~')
-        if (const char* home = getenv("HOME");)
+        if (const char* home = getenv("HOME"))
             folderpath.replace(0, 1, home);
 #endif
     ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", folderpath.c_str());
