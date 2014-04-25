@@ -23,6 +23,11 @@ extern "C"
 #include "CellImpl.h"
 #include "Chat.h"
 #include "Channel.h"
+#ifdef MANGOS
+#include "Config/Config.h"
+#else
+#include "Config.h"
+#endif
 #include "DBCStores.h"
 #include "GossipDef.h"
 #include "GridNotifiers.h"

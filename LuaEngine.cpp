@@ -7,7 +7,6 @@
 #include <ace/Dirent.h>
 #include <ace/OS_NS_sys_stat.h>
 #include "LuaEngine.h"
-#include "Config.h"
 
 #ifdef MANGOS
 INSTANTIATE_SINGLETON_1(Eluna);
