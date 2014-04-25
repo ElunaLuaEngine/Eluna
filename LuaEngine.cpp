@@ -7,6 +7,7 @@
 #include <ace/Dirent.h>
 #include <ace/OS_NS_sys_stat.h>
 #include "LuaEngine.h"
+#include "Config.h"
 
 #ifdef MANGOS
 INSTANTIATE_SINGLETON_1(Eluna);
@@ -75,8 +76,15 @@ bool StartEluna()
     RegisterFunctions(sEluna->L);
 
     ScriptPaths scripts;
-    sEluna->GetScripts("lua_scripts", scripts);
-    sEluna->GetScripts("lua_scripts/extensions", scripts);
+    std::string folderpath = sConfigMgr->GetStringDefault("Eluna.ScriptPath", "lua_scripts");
+#if PLATFORM == PLATFORM_UNIX || PLATFORM == PLATFORM_APPLE
+    if (folderpath[0] == '~')
+        if (const char* home = getenv("HOME");)
+            folderpath.replace(0, 1, home);
+#endif
+    ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", folderpath.c_str());
+    sEluna->GetScripts(folderpath, scripts);
+    sEluna->GetScripts(folderpath+"/extensions", scripts);
     sEluna->RunScripts(scripts);
 
     /*
@@ -113,7 +121,7 @@ bool StartEluna()
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
 void Eluna::GetScripts(std::string path, ScriptPaths& scripts)
 {
-    ELUNA_LOG_DEBUG("Eluna::GetScripts from path `%s`", path.c_str());
+    ELUNA_LOG_DEBUG("[Eluna]: GetScripts from path `%s`", path.c_str());
 
     ACE_Dirent dir;
     if (dir.open(path.c_str()) == -1)
@@ -130,7 +138,7 @@ void Eluna::GetScripts(std::string path, ScriptPaths& scripts)
         if (ACE::isdotdir(directory->d_name))
             continue;
 
-        std::string fullpath = path + "\\" + directory->d_name;
+        std::string fullpath = path + "/" + directory->d_name;
 
         ACE_stat stat_buf;
         if (ACE_OS::lstat(fullpath.c_str(), &stat_buf) == -1)

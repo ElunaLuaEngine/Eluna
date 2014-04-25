@@ -68,12 +68,14 @@ typedef std::set<std::string> ScriptPaths;
 #ifdef MANGOS
 #undef  sWorld
 #undef  sMapMgr
+#undef  sConfigMgr
 #undef  sGuildMgr
 #undef  sObjectMgr
 #undef  sAccountMgr
 #undef  sObjectAccessor
 #define sWorld                  (&MaNGOS::Singleton<World>::Instance())
 #define sMapMgr                 (&MapManager::Instance())
+#define SConfigMgr              (&MaNGOS::Singleton<Config>::Instance())
 #define sGuildMgr               (&MaNGOS::Singleton<GuildMgr>::Instance())
 #define sObjectMgr              (&MaNGOS::Singleton<ObjectMgr>::Instance())
 #define sAccountMgr             (&MaNGOS::Singleton<AccountMgr>::Instance())
