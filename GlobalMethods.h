@@ -267,6 +267,17 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    int GetAreaName(lua_State* L)
+    {
+        uint32 areaOrZoneId = sEluna->CHECKVAL<uint32>(L, 1);
+        AreaTableEntry const* areaEntry = GetAreaEntryByAreaID(areaOrZoneId);
+        if (!areaEntry)
+            return luaL_argerror(L, 1, "Invalid Area or Zone ID");
+
+        sEluna->Push(L, areaEntry->area_name[sWorld->GetDefaultDbcLocale()]);
+        return 1;
+    }
+
     /* OTHER */
     int RegisterPacketEvent(lua_State* L)
     {
