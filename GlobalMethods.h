@@ -270,11 +270,15 @@ namespace LuaGlobalFunctions
     int GetAreaName(lua_State* L)
     {
         uint32 areaOrZoneId = sEluna->CHECKVAL<uint32>(L, 1);
+        int locale = sEluna->CHECKVAL<int>(L, 2, DEFAULT_LOCALE);
+        if (locale < 0 || locale >= MAX_LOCALES)
+            return luaL_argerror(L, 2, "Invalid locale specified");
+
         AreaTableEntry const* areaEntry = GetAreaEntryByAreaID(areaOrZoneId);
         if (!areaEntry)
             return luaL_argerror(L, 1, "Invalid Area or Zone ID");
 
-        sEluna->Push(L, areaEntry->area_name[sWorld->GetDefaultDbcLocale()]);
+        sEluna->Push(L, areaEntry->area_name[locale]);
         return 1;
     }
 
