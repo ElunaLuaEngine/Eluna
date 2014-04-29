@@ -88,7 +88,7 @@ namespace LuaCreature
         else
             sEluna->Push(L, false);
 #else
-        sEluna->Push(L, !creature->HasReactState(REACT_PASSIVE);
+        sEluna->Push(L, !creature->HasReactState(REACT_PASSIVE));
 #endif
         return 1;
     }
