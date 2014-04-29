@@ -122,7 +122,6 @@ enum SelectAggroTarget
 #undef Opcodes
 #define Opcodes                 OpcodesList
 #endif
-#define AllowCombat             m_isCombatMovement
 #else
 #ifndef CATA
 typedef uint64 ObjectGuid;
@@ -138,7 +137,6 @@ typedef ThreatContainer::StorageType ThreatList;
 #ifdef CATA
 #define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
 #endif
-#define AllowCombat             _isCombatMovementAllowed
 #endif
 
 template<typename T>

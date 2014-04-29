@@ -702,7 +702,6 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetScriptId", &LuaCreature::GetScriptId },                                     // :GetScriptId() - Returns creature's script ID
     { "GetAIName", &LuaCreature::GetAIName },                                         // :GetAIName() - Returns creature's AI name
     { "GetScriptName", &LuaCreature::GetScriptName },                                 // :GetScriptName() - Returns creature's script name
-    { "GetReactState", &LuaCreature::GetReactState },                                 // :GetReactState() - Returns creature's react state
     { "GetAttackDistance", &LuaCreature::GetAttackDistance },                         // :GetAttackDistance(unit) - Returns attack distance to unit
     { "GetAggroRange", &LuaCreature::GetAggroRange },                                 // :GetAggroRange(unit) - Returns aggro distance to unit
     { "GetDefaultMovementType", &LuaCreature::GetDefaultMovementType },               // :GetDefaultMovementType() - Returns default movement type
@@ -721,7 +720,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     // Setters
     { "SetHover", &LuaCreature::SetHover },                                   // :SetHover([enable]) - Sets hover on or off
     // {"SetDisableGravity", &LuaCreature::SetDisableGravity},              // :SetDisableGravity([disable, packetOnly]) - Disables or enables gravity
-    { "SetReactState", &LuaCreature::SetReactState },                         // :SetReactState(state) - Sets react state
+    { "SetAllowedCombat", &LuaCreature::SetAllowedCombat },                   // :SetAllowedCombat(allow) - Allows the creature to attack or not
     { "SetNoCallAssistance", &LuaCreature::SetNoCallAssistance },             // :SetNoCallAssistance([noCall]) - Sets call assistance to false or true
     { "SetNoSearchAssistance", &LuaCreature::SetNoSearchAssistance },         // :SetNoSearchAssistance([noSearch]) - Sets assistance searhing to false or true
     { "SetDefaultMovementType", &LuaCreature::SetDefaultMovementType },       // :SetDefaultMovementType(type) - Sets default movement type
@@ -745,7 +744,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "HasCategoryCooldown", &LuaCreature::HasCategoryCooldown },                                 // :HasCategoryCooldown(spellId) - Returns true if the creature has a cooldown for the spell's category
     { "CanWalk", &LuaCreature::CanWalk },                                                         // :CanWalk() - Returns true if the creature can walk
     { "CanSwim", &LuaCreature::CanSwim },                                                         // :CanSwim() - Returns true if the creature can swim
-    { "HasReactState", &LuaCreature::HasReactState },                                             // :HasReactState(state) - Returns true if the creature has react state
+    { "IsCombatAllowed", &LuaCreature::IsCombatAllowed },                                         // :IsCombatAllowed() - Returns true if the creature has combat allowed
     // {"CanStartAttack", &LuaCreature::CanStartAttack},                                        // :CanStartAttack(unit[, force]) - Returns true if the creature can attack the unit
     { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },                             // :HasSearchedAssistance() - Returns true if the creature has searched assistance
     { "CanAssistTo", &LuaCreature::CanAssistTo },                                                 // :CanAssistTo(unit, enemy[, checkfaction]) - Returns true if the creature can assist unit with enemy

@@ -1656,7 +1656,13 @@ struct ElunaCreatureAI : ScriptedAI
     void UpdateAI(uint32 diff) OVERRIDE
 #endif
     {
-        ScriptedAI::UpdateAI(diff);
+#ifdef MANGOS
+        if (IsCombatMovement())
+            ScriptedAI::UpdateAI(diff);
+#else
+        if (!me->HasReactState(REACT_PASSIVE))
+            ScriptedAI::UpdateAI(diff);
+#endif
         int bind = sEluna->CreatureEventBindings.GetBind(me->GetEntry(), CREATURE_EVENT_ON_AIUPDATE);
         if (!bind)
             return;

@@ -80,14 +80,15 @@ namespace LuaCreature
         return 1;
     }
 
-    int HasReactState(lua_State* L, Creature* creature)
+    int IsCombatAllowed(lua_State* L, Creature* creature)
     {
-        int32 state = sEluna->CHECKVAL<int32>(L, 2);
-
 #ifdef MANGOS
-        sEluna->Push(L, creature->GetCharmInfo()->HasReactState((ReactStates)state));
+        if (CreatureAI* ai = creature->AI())
+            sEluna->Push(L, ai->IsCombatMovement());
+        else
+            sEluna->Push(L, false);
 #else
-        sEluna->Push(L, creature->HasReactState((ReactStates)state));
+        sEluna->Push(L, !creature->HasReactState(REACT_PASSIVE);
 #endif
         return 1;
     }
@@ -267,16 +268,6 @@ namespace LuaCreature
     int GetLootRecipient(lua_State* L, Creature* creature)
     {
         sEluna->Push(L, creature->GetLootRecipient());
-        return 1;
-    }
-
-    int GetReactState(lua_State* L, Creature* creature)
-    {
-#ifdef MANGOS
-        sEluna->Push(L, creature->GetCharmInfo()->GetReactState());
-#else
-        sEluna->Push(L, creature->GetReactState());
-#endif
         return 1;
     }
 
@@ -480,14 +471,15 @@ namespace LuaCreature
         return 0;
     }
 
-    int SetReactState(lua_State* L, Creature* creature)
+    int SetAllowedCombat(lua_State* L, Creature* creature)
     {
-        int32 state = sEluna->CHECKVAL<int32>(L, 2);
+        bool allow = sEluna->CHECKVAL<bool>(L, 2);
 
 #ifdef MANGOS
-        creature->GetCharmInfo()->SetReactState((ReactStates)state);
+        if (CreatureAI* ai = creature->AI())
+            ai->SetCombatMovement(allow);
 #else
-        creature->SetReactState((ReactStates)state);
+        creature->SetReactState(allow ? REACT_AGGRESSIVE : REACT_PASSIVE);
 #endif
         return 0;
     }
