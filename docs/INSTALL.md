@@ -7,12 +7,15 @@
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc) [Eluna cMaNGOS TBC](https://github.com/ElunaLuaEngine/ElunaMangosTbc)<br />
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk) [Eluna cMaNGOS WotLK](https://github.com/ElunaLuaEngine/ElunaMangosWotlk)
 
-2. Open `git bash` and do
-`git submodule init`
-`git submodule update`
-3. Compile the core normally (use cmake if needed)
+2. Open `git bash` and do<br />
+`git submodule init`<br />
+`git submodule update`<br />
+<br />
+If you really dont get how to use git bash (and do try!), you can navigate to the LuaEngine folder and clone [the eluna repository](https://github.com/ElunaLuaEngine/Eluna) there. This is not suggested though.
 
-- If you really dont get how to use git bash (and do try!), you can navigate to the LuaEngine folder and clone [the eluna repository](https://github.com/ElunaLuaEngine/Eluna) there. This is not suggested though.
+3. Compile the core normally:<br />
+[TrinityCore](http://collab.kpsn.org/display/tc/TrinityCore+Home)<br />
+[cMaNGOS](https://github.com/cmangos/issues/wiki/Installation-Instructions)
 
 #Updating
 1. When updating you should take up the `commit hash` you are on, just in case.
