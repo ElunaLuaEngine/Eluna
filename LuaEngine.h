@@ -96,7 +96,6 @@ typedef std::set<std::string> ScriptPaths;
 #define CORE_NAME               "MaNGOS"
 #define SERVER_MSG_STRING       SERVER_MSG_CUSTOM
 #define MAX_LOCALES             MAX_LOCALE
-#define OVERRIDE                override
 #define DIALOG_STATUS_SCRIPTED_NO_STATUS    DIALOG_STATUS_UNDEFINED
 #define TARGETICONCOUNT         TARGET_ICON_COUNT
 typedef TemporarySummon TempSummon;
