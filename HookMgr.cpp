@@ -1831,7 +1831,7 @@ struct ElunaCreatureAI : ScriptedAI
     // Enables use of MoveInLineOfSight
     bool IsVisible(Unit* who) const override
     {
-        return true
+        return true;
     }
 #endif
 
