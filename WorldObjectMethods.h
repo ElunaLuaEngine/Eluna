@@ -283,7 +283,7 @@ namespace LuaWorldObject
             return 1;
         }
 
-        return 0;
+        return 1;
     }
 
     int GetWorldObject(lua_State* L, WorldObject* obj)
@@ -302,7 +302,6 @@ namespace LuaWorldObject
 #endif
         case HIGHGUID_UNIT:
         case HIGHGUID_PET:           sEluna->Push(L, obj->GetMap()->GetAnyTypeCreature(ObjectGuid(guid))); break;
-        default:                     return 0;
         }
 #else
         switch (GUID_HIPART(guid))
@@ -314,7 +313,6 @@ namespace LuaWorldObject
         case HIGHGUID_VEHICLE:
         case HIGHGUID_UNIT:          sEluna->Push(L, sObjectAccessor->GetCreature(*obj, ObjectGuid(guid))); break;
         case HIGHGUID_PET:           sEluna->Push(L, sObjectAccessor->GetPet(*obj, ObjectGuid(guid))); break;
-        default:                     return 0;
         }
 #endif
         return 1;

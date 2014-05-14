@@ -18,12 +18,11 @@ namespace LuaQuery
     int IsNull(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, true);
-        else
 #ifdef MANGOS
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].IsNULL());
 #else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].IsNull());
 #endif
         return 1;
@@ -32,33 +31,23 @@ namespace LuaQuery
     /* GETTERS */
     int GetColumnCount(lua_State* L, QueryResult* result)
     {
-        if (!result)
-            sEluna->Push(L, 0);
-        else
-            sEluna->Push(L, RESULT->GetFieldCount());
+        sEluna->Push(L, RESULT->GetFieldCount());
         return 1;
     }
 
     int GetRowCount(lua_State* L, QueryResult* result)
     {
-        if (!result)
-            sEluna->Push(L, 0);
+        if (RESULT->GetRowCount() > (uint32)-1)
+            sEluna->Push(L, (uint32)-1);
         else
-        {
-            if (RESULT->GetRowCount() > (uint32)-1)
-                sEluna->Push(L, (uint32)-1);
-            else
-                sEluna->Push(L, RESULT->GetRowCount());
-        }
+            sEluna->Push(L, RESULT->GetRowCount());
         return 1;
     }
 
     int GetBool(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, false);
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetBool());
         return 1;
     }
@@ -66,9 +55,7 @@ namespace LuaQuery
     int GetUInt8(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, 0);
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetUInt8());
         return 1;
     }
@@ -76,9 +63,7 @@ namespace LuaQuery
     int GetUInt16(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, 0);
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetUInt16());
         return 1;
     }
@@ -86,9 +71,7 @@ namespace LuaQuery
     int GetUInt32(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, 0);
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetUInt32());
         return 1;
     }
@@ -96,9 +79,7 @@ namespace LuaQuery
     int GetUInt64(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, 0);
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetUInt64());
         return 1;
     }
@@ -106,9 +87,7 @@ namespace LuaQuery
     int GetInt8(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, 0);
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetInt8());
         return 1;
     }
@@ -116,9 +95,7 @@ namespace LuaQuery
     int GetInt16(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, 0);
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetInt16());
         return 1;
     }
@@ -126,9 +103,7 @@ namespace LuaQuery
     int GetInt32(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, 0);
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetInt32());
         return 1;
     }
@@ -136,9 +111,7 @@ namespace LuaQuery
     int GetInt64(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, 0);
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetInt64());
         return 1;
     }
@@ -146,9 +119,7 @@ namespace LuaQuery
     int GetFloat(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, 0.0f);
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetFloat());
         return 1;
     }
@@ -156,9 +127,7 @@ namespace LuaQuery
     int GetDouble(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, 0.0);
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetDouble());
         return 1;
     }
@@ -166,9 +135,7 @@ namespace LuaQuery
     int GetString(lua_State* L, QueryResult* result)
     {
         uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
-        if (!result || col >= RESULT->GetFieldCount())
-            sEluna->Push(L, "");
-        else
+        if (col < RESULT->GetFieldCount())
             sEluna->Push(L, RESULT->Fetch()[col].GetString());
         return 1;
     }
@@ -176,10 +143,7 @@ namespace LuaQuery
     /* OTHER */
     int NextRow(lua_State* L, QueryResult* result)
     {
-        if (!result)
-            sEluna->Push(L, false);
-        else
-            sEluna->Push(L, RESULT->NextRow());
+        sEluna->Push(L, RESULT->NextRow());
         return 1;
     }
 };

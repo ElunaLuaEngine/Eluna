@@ -956,9 +956,6 @@ ElunaRegister<Quest> QuestMethods[] =
 #endif
     { "IsRepeatable", &LuaQuest::IsRepeatable },                  // :IsRepeatable() - Returns true or false if the quest is repeatable
 
-    // Setters
-    { "SetFlag", &LuaQuest::SetFlag },                            // :SetFlag(flag) - Sets the flag of the quest by the specified flag
-
     { NULL, NULL },
 };
 

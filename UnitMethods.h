@@ -503,7 +503,7 @@ namespace LuaUnit
         uint32 stat = sEluna->CHECKVAL<uint32>(L, 2);
 
         if (stat >= MAX_STATS)
-            return 0;
+            return 1;
 
         sEluna->Push(L, unit->GetStat((Stats)stat));
         return 1;
@@ -514,7 +514,7 @@ namespace LuaUnit
         uint32 spellschool = sEluna->CHECKVAL<uint32>(L, 2);
 
         if (spellschool >= MAX_SPELL_SCHOOL)
-            return 0;
+            return 1;
 
         sEluna->Push(L, unit->GetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS + spellschool));
         return 1;
@@ -1260,12 +1260,12 @@ namespace LuaUnit
         return 0;
     }
 
-    static void PrepareMove(Unit* unit)
-    {
-        unit->GetMotionMaster()->MovementExpired(); // Chase
-        unit->StopMoving(); // Some
-        unit->GetMotionMaster()->Clear(); // all
-    }
+    // static void PrepareMove(Unit* unit)
+    // {
+    //     unit->GetMotionMaster()->MovementExpired(); // Chase
+    //     unit->StopMoving(); // Some
+    //     unit->GetMotionMaster()->Clear(); // all
+    // }
 
     int MoveStop(lua_State* L, Unit* unit)
     {
@@ -1479,11 +1479,11 @@ namespace LuaUnit
         Unit* target = sEluna->CHECKOBJ<Unit>(L, 3);
         SpellEntry const* spellInfo = sSpellStore.LookupEntry(spellId);
         if (!spellInfo)
-            return 0;
+            return 1;
 
 #ifdef MANGOS
         if (!IsSpellAppliesAura(spellInfo) && !IsSpellHaveEffect(spellInfo, SPELL_EFFECT_PERSISTENT_AREA_AURA))
-            return 0;
+            return 1;
 
         SpellAuraHolder* holder = CreateSpellAuraHolder(spellInfo, target, unit);
 
@@ -1559,8 +1559,6 @@ namespace LuaUnit
         functionRef = sEluna->m_EventMgr.AddEvent(&unit->m_Events, functionRef, delay, repeats, unit);
         if (functionRef)
             sEluna->Push(L, functionRef);
-        else
-            sEluna->Push(L);
         return 1;
     }
 
@@ -1675,13 +1673,13 @@ namespace LuaUnit
 
     SummonPropertiesEntry const* properties = sSummonPropertiesStore.LookupEntry(61);
     if (!properties)
-    return 0;
+    return 1;
     Position pos;
     pos.Relocate(x,y,z,o);
     TempSummon* summon = unit->GetMap()->SummonCreature(entry, pos, properties, desp, unit);
 
     if (!summon)
-    return 0;
+    return 1;
 
     if (summon->HasUnitTypeMask(UNIT_MASK_GUARDIAN))
     ((Guardian*)summon)->InitStatsForLevel(unit->getLevel());

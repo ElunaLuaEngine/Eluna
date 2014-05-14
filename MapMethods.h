@@ -71,9 +71,8 @@ namespace LuaMap
         uint32 phasemask = sEluna->CHECKVAL<uint32>(L, 4, 1);
         float z = map->GetHeight(phasemask, x, y, MAX_HEIGHT);
 #endif
-        if (z == INVALID_HEIGHT)
-            return 0;
-        sEluna->Push(L, z);
+        if (z != INVALID_HEIGHT)
+            sEluna->Push(L, z);
         return 1;
     }
 

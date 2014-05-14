@@ -324,15 +324,12 @@ namespace LuaCreature
         uint32 targetType = sEluna->CHECKVAL<uint32>(L, 2);
         bool playerOnly = sEluna->CHECKVAL<bool>(L, 3, false);
         uint32 position = sEluna->CHECKVAL<uint32>(L, 4, 0);
-        float dist = sEluna->CHECKVAL<float>(L, 5, 0.0f);
+        float dist = sEluna->CHECKVAL<float>(L, 5, -1.0f);
         int32 aura = sEluna->CHECKVAL<int32>(L, 6, 0);
 
         ThreatList const&  threatlist = creature->getThreatManager().getThreatList();
         if (position >= threatlist.size())
-        {
-            sEluna->Push(L);
             return 1;
-        }
 
         std::list<Unit*> targetList;
         for (ThreatList::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
@@ -352,10 +349,7 @@ namespace LuaCreature
         }
 
         if (position >= targetList.size())
-        {
-            sEluna->Push(L);
             return 1;
-        }
 
         if (targetType == SELECT_TARGET_NEAREST || targetType == SELECT_TARGET_FARTHEST)
             targetList.sort(Eluna::ObjectDistanceOrderPred(creature));
@@ -368,7 +362,6 @@ namespace LuaCreature
             std::list<Unit*>::const_iterator itr = targetList.begin();
             std::advance(itr, position);
             sEluna->Push(L, *itr);
-            return 1;
         }
         case SELECT_TARGET_FARTHEST:
         case SELECT_TARGET_BOTTOMAGGRO:
@@ -376,20 +369,17 @@ namespace LuaCreature
             std::list<Unit*>::reverse_iterator ritr = targetList.rbegin();
             std::advance(ritr, position);
             sEluna->Push(L, *ritr);
-            return 1;
         }
         case SELECT_TARGET_RANDOM:
         {
             std::list<Unit*>::const_iterator itr = targetList.begin();
             std::advance(itr, urand(position, targetList.size() - 1));
             sEluna->Push(L, *itr);
-            return 1;
         }
         default:
             luaL_argerror(L, 2, "SelectAggroTarget expected");
         }
 
-        sEluna->Push(L);
         return 1;
     }
 

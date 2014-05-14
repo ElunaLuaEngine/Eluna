@@ -24,36 +24,24 @@ namespace LuaGameObject
 
     int IsSpawned(lua_State* L, GameObject* go)
     {
-        if (!go || !go->IsInWorld())
-            sEluna->Push(L, false);
-        else
-            sEluna->Push(L, go->isSpawned());
+        sEluna->Push(L, go->isSpawned());
         return 1;
     }
 
     int IsTransport(lua_State* L, GameObject* go)
     {
-        if (!go || !go->IsInWorld())
-            sEluna->Push(L, false);
-        else
-            sEluna->Push(L, go->IsTransport());
+        sEluna->Push(L, go->IsTransport());
         return 1;
     }
 
     int IsActive(lua_State* L, GameObject* go)
     {
-        if (!go || !go->IsInWorld())
-            sEluna->Push(L, false);
-        else
-            sEluna->Push(L, go->isActiveObject());
+        sEluna->Push(L, go->isActiveObject());
         return 1;
     }
 
     /*int IsDestructible(lua_State* L, GameObject* go) // TODO: Implementation core side
     {
-    if (!go || !go->IsInWorld())
-    sEluna->Push(L, false);
-    else
     sEluna->Push(L, go->IsDestructibleBuilding());
     return 1;
     }*/
@@ -61,27 +49,18 @@ namespace LuaGameObject
     /* GETTERS */
     int GetDisplayId(lua_State* L, GameObject* go)
     {
-        if (!go || !go->IsInWorld())
-            return 0;
-
         sEluna->Push(L, go->GetDisplayId());
         return 1;
     }
 
     int GetGoState(lua_State* L, GameObject* go)
     {
-        if (!go || !go->IsInWorld())
-            return 0;
-
         sEluna->Push(L, go->GetGoState());
         return 1;
     }
 
     int GetLootState(lua_State* L, GameObject* go)
     {
-        if (!go || !go->IsInWorld())
-            return 0;
-
         sEluna->Push(L, go->getLootState());
         return 1;
     }
@@ -89,9 +68,6 @@ namespace LuaGameObject
     /* SETTERS */
     int SetGoState(lua_State* L, GameObject* go)
     {
-        if (!go || !go->IsInWorld())
-            return 0;
-
         uint32 state = sEluna->CHECKVAL<uint32>(L, 2, 0);
 
         if (state == 0)
@@ -106,9 +82,6 @@ namespace LuaGameObject
 
     int SetLootState(lua_State* L, GameObject* go)
     {
-        if (!go || !go->IsInWorld())
-            return 0;
-
         uint32 state = sEluna->CHECKVAL<uint32>(L, 2, 0);
 
         if (state == 0)
@@ -132,11 +105,8 @@ namespace LuaGameObject
 
     int RemoveFromWorld(lua_State* L, GameObject* go)
     {
-        if (!go || !go->IsInWorld())
-            return 0;
-
-        bool del = sEluna->CHECKVAL<bool>(L, 2, false);
-        if (del)
+        bool deldb = sEluna->CHECKVAL<bool>(L, 2, false);
+        if (deldb)
             go->DeleteFromDB();
         go->RemoveFromWorld();
         return 0;
@@ -153,8 +123,6 @@ namespace LuaGameObject
         functionRef = sEluna->m_EventMgr.AddEvent(&go->m_Events, functionRef, delay, repeats, go);
         if (functionRef)
             sEluna->Push(L, functionRef);
-        else
-            sEluna->Push(L);
         return 1;
     }
 
@@ -173,9 +141,6 @@ namespace LuaGameObject
 
     int UseDoorOrButton(lua_State* L, GameObject* go)
     {
-        if (!go || !go->IsInWorld())
-            return 0;
-
         uint32 delay = sEluna->CHECKVAL<uint32>(L, 2, 0);
 
         go->UseDoorOrButton(delay);

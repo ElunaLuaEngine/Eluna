@@ -136,12 +136,13 @@ namespace LuaItem
         return 1;
     }
 
+    /*
     int IsRefundExpired(lua_State* L, Item* item)// TODO: Implement core support
     {
-        /*sEluna->Push(L, item->IsRefundExpired());
-        return 1;*/
-        return 0; // Temp till supported
+        sEluna->Push(L, item->IsRefundExpired());
+        return 1;
     }
+    */
 
     /* GETTERS */
     int GetItemLink(lua_State* L, Item* item)
@@ -271,7 +272,7 @@ namespace LuaItem
         uint32 enchant_slot = sEluna->CHECKVAL<uint32>(L, 2);
 
         if (enchant_slot >= MAX_INSPECTED_ENCHANTMENT_SLOT)
-            return 0;
+            return luaL_argerror(L, 2, "valid EnchantmentSlot expected");
 
         sEluna->Push(L, item->GetEnchantmentId(EnchantmentSlot(enchant_slot)));
         return 1;

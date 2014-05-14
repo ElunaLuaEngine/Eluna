@@ -257,17 +257,6 @@ public:
         sEluna->ServerEventBindings.EndCall();
     }
 
-    void OnMotdChange(std::string& newMotd) override
-    {
-        if (!sEluna->ServerEventBindings.HasEvents(WORLD_EVENT_ON_MOTD_CHANGE))
-            return;
-        ELUNA_GUARD();
-        sEluna->ServerEventBindings.BeginCall(WORLD_EVENT_ON_MOTD_CHANGE);
-        sEluna->Push(sEluna->L, newMotd);
-        sEluna->ServerEventBindings.ExecuteCall();
-        sEluna->ServerEventBindings.EndCall();
-    }
-
     void OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask) override
     {
         if (!sEluna->ServerEventBindings.HasEvents(WORLD_EVENT_ON_SHUTDOWN_INIT))
@@ -588,41 +577,6 @@ void HookMgr::OnQuestAbandon(Player* pPlayer, uint32 questId)
     sEluna->PlayerEventBindings.BeginCall(PLAYER_EVENT_ON_QUEST_ABANDON);
     sEluna->Push(sEluna->L, pPlayer);
     sEluna->Push(sEluna->L, questId);
-    sEluna->PlayerEventBindings.ExecuteCall();
-    sEluna->PlayerEventBindings.EndCall();
-}
-
-void HookMgr::OnGmTicketCreate(Player* pPlayer, std::string& ticketText)
-{
-    if (!sEluna->PlayerEventBindings.HasEvents(PLAYER_EVENT_ON_GM_TICKET_CREATE))
-        return;
-    ELUNA_GUARD();
-    sEluna->PlayerEventBindings.BeginCall(PLAYER_EVENT_ON_GM_TICKET_CREATE);
-    sEluna->Push(sEluna->L, pPlayer);
-    sEluna->Push(sEluna->L, ticketText);
-    sEluna->PlayerEventBindings.ExecuteCall();
-    sEluna->PlayerEventBindings.EndCall();
-}
-
-void HookMgr::OnGmTicketUpdate(Player* pPlayer, std::string& ticketText)
-{
-    if (!sEluna->PlayerEventBindings.HasEvents(PLAYER_EVENT_ON_GM_TICKET_UPDATE))
-        return;
-    ELUNA_GUARD();
-    sEluna->PlayerEventBindings.BeginCall(PLAYER_EVENT_ON_GM_TICKET_UPDATE);
-    sEluna->Push(sEluna->L, pPlayer);
-    sEluna->Push(sEluna->L, ticketText);
-    sEluna->PlayerEventBindings.ExecuteCall();
-    sEluna->PlayerEventBindings.EndCall();
-}
-
-void HookMgr::OnGmTicketDelete(Player* pPlayer)
-{
-    if (!sEluna->PlayerEventBindings.HasEvents(PLAYER_EVENT_ON_GM_TICKET_DELETE))
-        return;
-    ELUNA_GUARD();
-    sEluna->PlayerEventBindings.BeginCall(PLAYER_EVENT_ON_GM_TICKET_DELETE);
-    sEluna->Push(sEluna->L, pPlayer);
     sEluna->PlayerEventBindings.ExecuteCall();
     sEluna->PlayerEventBindings.EndCall();
 }
@@ -1565,21 +1519,6 @@ bool HookMgr::OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* p
     return true;
 }
 
-bool HookMgr::OnQuestSelect(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
-{
-    int bind = sEluna->CreatureEventBindings.GetBind(pCreature->GetEntry(), CREATURE_EVENT_ON_QUEST_SELECT);
-    if (!bind)
-        return false;
-    ELUNA_GUARD();
-    sEluna->BeginCall(bind);
-    sEluna->Push(sEluna->L, CREATURE_EVENT_ON_QUEST_SELECT);
-    sEluna->Push(sEluna->L, pPlayer);
-    sEluna->Push(sEluna->L, pCreature);
-    sEluna->Push(sEluna->L, pQuest);
-    sEluna->ExecuteCall(4, 0);
-    return true;
-}
-
 bool HookMgr::OnQuestComplete(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
 {
     int bind = sEluna->CreatureEventBindings.GetBind(pCreature->GetEntry(), CREATURE_EVENT_ON_QUEST_COMPLETE);
@@ -1892,7 +1831,7 @@ struct ElunaCreatureAI : ScriptedAI
     // Enables use of MoveInLineOfSight
     bool IsVisible(Unit* who) const override
     {
-        return me->IsWithinLOSInMap(who);
+        return true
     }
 #endif
 

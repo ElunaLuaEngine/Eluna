@@ -21,10 +21,9 @@ namespace LuaPlayer
     {
         uint32 talentId = sEluna->CHECKVAL<uint32>(L, 2);
         uint8 spec = sEluna->CHECKVAL<uint8>(L, 3);
-        if (spec >= MAX_TALENT_SPECS)
-            sEluna->Push(L, false);
-        else
-            sEluna->Push(L, player->HasTalent(talentId, spec));
+        if (spec < MAX_TALENT_SPECS)
+            return 1;
+        sEluna->Push(L, player->HasTalent(talentId, spec));
         return 1;
     }
 
@@ -87,8 +86,6 @@ namespace LuaPlayer
         CharTitlesEntry const* titleInfo = sCharTitlesStore.LookupEntry(id);
         if (titleInfo)
             sEluna->Push(L, player->HasTitle(titleInfo));
-        else
-            sEluna->Push(L, false);
         return 1;
     }
 #endif
@@ -724,7 +721,7 @@ namespace LuaPlayer
     int GetGuildName(lua_State* L, Player* player)
     {
         if (!player->GetGuildId())
-            return 0;
+            return 1;
         sEluna->Push(L, sGuildMgr->GetGuildNameById(player->GetGuildId()));
         return 1;
     }
@@ -808,7 +805,7 @@ namespace LuaPlayer
     {
         uint8 slot = sEluna->CHECKVAL<uint8>(L, 2);
         if (slot >= EQUIPMENT_SLOT_END)
-            return 0;
+            return 1;
 
         Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
         sEluna->Push(L, item);
@@ -953,8 +950,6 @@ namespace LuaPlayer
         std::string accName;
         if (sAccountMgr->GetName(player->GetSession()->GetAccountId(), accName))
             sEluna->Push(L, accName);
-        else
-            return 0;
         return 1;
     }
 
@@ -1474,9 +1469,8 @@ namespace LuaPlayer
     int SendListInventory(lua_State* L, Player* player)
     {
         WorldObject* obj = sEluna->CHECKOBJ<WorldObject>(L, 2);
-        uint32 entry = sEluna->CHECKVAL<uint32>(L, 3, 0);
 
-        player->GetSession()->SendListInventory(obj->GET_GUID()), entry;
+        player->GetSession()->SendListInventory(obj->GET_GUID());
         return 0;
     }
 
@@ -1802,20 +1796,20 @@ namespace LuaPlayer
         uint32 slot = sEluna->CHECKVAL<uint32>(L, 3);
 
         if (slot >= INVENTORY_SLOT_BAG_END)
-            return 0;
+            return 1;
 
         if (!item)
         {
             uint32 entry = sEluna->CHECKVAL<uint32>(L, 2);
             item = Item::CreateItem(entry, 1, player);
             if (!item)
-                return 0;
+                return 1;
 
             InventoryResult result = player->CanEquipItem(slot, dest, item, false);
             if (result != EQUIP_ERR_OK)
             {
                 delete item;
-                return 0;
+                return 1;
             }
             player->ItemAddedQuestCheck(entry, 1);
 #if (!defined(TBC) && !defined(CLASSIC))
@@ -1826,7 +1820,7 @@ namespace LuaPlayer
         {
             InventoryResult result = player->CanEquipItem(slot, dest, item, false);
             if (result != EQUIP_ERR_OK)
-                return 0;
+                return 1;
             player->RemoveItem(item->GetBagSlot(), item->GetSlot(), true);
         }
 
@@ -1905,7 +1899,7 @@ namespace LuaPlayer
         };
         static const uint32 skillsSize = sizeof(skillsArray) / sizeof(*skillsArray);
 
-        for (int i = 0; i < skillsSize; ++i)
+        for (uint32 i = 0; i < skillsSize; ++i)
         {
             if (player->HasSkill(skillsArray[i]))
                 player->UpdateSkill(skillsArray[i], step);

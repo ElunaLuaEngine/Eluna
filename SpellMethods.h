@@ -55,12 +55,12 @@ namespace LuaSpell
     {
 #ifdef MANGOS
         if (!(spell->m_targets.m_targetMask & TARGET_FLAG_DEST_LOCATION))
-            return 0;
+            return 3;
         float x, y, z;
         spell->m_targets.getDestination(x, y, z);
 #else
         if (!spell->m_targets.HasDst())
-            return 0;
+            return 3;
         float x, y, z;
         spell->m_targets.GetDstPos()->GetPosition(x, y, z);
 #endif
@@ -81,8 +81,6 @@ namespace LuaSpell
             sEluna->Push(sEluna->L, target);
         else if (Unit* target = spell->m_targets.getUnitTarget())
             sEluna->Push(sEluna->L, target);
-        else
-            sEluna->Push(sEluna->L);
 #else
         if (GameObject* target = spell->m_targets.GetGOTarget())
             sEluna->Push(L, target);
@@ -94,8 +92,6 @@ namespace LuaSpell
             sEluna->Push(L, target);
         else if (WorldObject* target = spell->m_targets.GetObjectTarget())
             sEluna->Push(L, target);
-        else
-            sEluna->Push(L);
 #endif
         return 1;
     }

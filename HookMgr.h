@@ -104,7 +104,7 @@ enum ServerEvents
     // World // Not implemented on mangos
     WORLD_EVENT_ON_OPEN_STATE_CHANGE        =     8,        // (event, open)
     WORLD_EVENT_ON_CONFIG_LOAD              =     9,        // (event, reload)
-    WORLD_EVENT_ON_MOTD_CHANGE              =     10,       // (event, newMOTD)
+    // UNUSED                               =     10,       // (event)
     WORLD_EVENT_ON_SHUTDOWN_INIT            =     11,       // (event, code, mask)
     WORLD_EVENT_ON_SHUTDOWN_CANCEL          =     12,       // (event)
     WORLD_EVENT_ON_UPDATE                   =     13,       // (event, diff)
@@ -183,10 +183,10 @@ enum PlayerEvents
     PLAYER_EVENT_ON_REPOP                   =     35,       // (event, player)
     PLAYER_EVENT_ON_RESURRECT               =     36,       // (event, player)
     PLAYER_EVENT_ON_LOOT_MONEY              =     37,       // (event, player, amount)
-    PLAYER_EVENT_ON_QUEST_ABANDON           =     38,       // (event, player, questId)     // Not on TC
-    PLAYER_EVENT_ON_GM_TICKET_CREATE        =     39,       // (event, player, ticketText)  // Not on TC
-    PLAYER_EVENT_ON_GM_TICKET_UPDATE        =     40,       // (event, player, ticketText)  // Not on TC
-    PLAYER_EVENT_ON_GM_TICKET_DELETE        =     41,       // (event, player)              // Not on TC
+    PLAYER_EVENT_ON_QUEST_ABANDON           =     38,       // (event, player, questId)
+    // UNUSED                               =     39,       // (event, player)
+    // UNUSED                               =     40,       // (event, player)
+    // UNUSED                               =     41,       // (event, player)
     PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - Can return false
 
     PLAYER_EVENT_COUNT
@@ -267,12 +267,12 @@ enum CreatureEvents
     CREATURE_EVENT_ON_REACH_HOME                      = 24, // (event, creature)
     // UNUSED                                         = 25, // (event, creature)
     CREATURE_EVENT_ON_CORPSE_REMOVED                  = 26, // (event, creature, respawndelay)
-    CREATURE_EVENT_ON_MOVE_IN_LOS                     = 27, // (event, creature, unit)
+    CREATURE_EVENT_ON_MOVE_IN_LOS                     = 27, // (event, creature, unit) // Doesnt actually check LOS
     // UNUSED                                         = 28, // (event, creature)
     // UNUSED                                         = 29, // (event, creature)
     CREATURE_EVENT_ON_DUMMY_EFFECT                    = 30, // (event, caster, spellid, effindex, creature)
     CREATURE_EVENT_ON_QUEST_ACCEPT                    = 31, // (event, player, creature, quest)
-    CREATURE_EVENT_ON_QUEST_SELECT                    = 32, // (event, player, creature, quest)
+    // UNUSED                                         = 32, // (event, creature)
     CREATURE_EVENT_ON_QUEST_COMPLETE                  = 33, // (event, player, creature, quest)
     CREATURE_EVENT_ON_QUEST_REWARD                    = 34, // (event, player, creature, quest, opt)
     CREATURE_EVENT_ON_DIALOG_STATUS                   = 35, // (event, player, creature)
@@ -339,9 +339,6 @@ public:
     void OnRepop(Player* pPlayer);
     void OnResurrect(Player* pPlayer);
     void OnQuestAbandon(Player* pPlayer, uint32 questId);
-    void OnGmTicketCreate(Player* pPlayer, std::string& ticketText);
-    void OnGmTicketUpdate(Player* pPlayer, std::string& ticketText);
-    void OnGmTicketDelete(Player* pPlayer);
     InventoryResult OnCanUseItem(const Player* pPlayer, uint32 itemEntry);
     void OnEngineRestart();
     bool OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel);
@@ -360,7 +357,6 @@ public:
     bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action);
     bool OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code);
     bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
-    bool OnQuestSelect(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
     bool OnQuestComplete(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
     uint32 GetDialogStatus(Player* pPlayer, Creature* pCreature);

@@ -122,6 +122,8 @@ enum SelectAggroTarget
 #define Opcodes                 OpcodesList
 #endif
 #else
+#undef UNORDERED_MAP
+#define UNORDERED_MAP   std::unordered_map
 #ifndef CATA
 typedef uint64 ObjectGuid;
 #endif
@@ -268,7 +270,18 @@ public:
         ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
         if (!obj)
             return 0;
-        return l->mfunc(L, obj);
+        int args = lua_gettop(L);
+        int expected = l->mfunc(L, obj);
+        args = lua_gettop(L) - args;
+        if (args <= 0 || args > expected)
+        {
+            if (args < 0 || args > expected) // Assert instead?
+                 ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
+            return expected;
+        }
+        for (; args < expected; ++args)
+             lua_pushnil(L);
+        return expected;
     }
 
     static int tostringT(lua_State* L)
@@ -455,11 +468,11 @@ class Eluna
 {
 public:
     friend class ScriptMgr;
-    friend class ACE_Singleton<Eluna, ACE_Null_Mutex>;
+    // friend class ACE_Singleton<Eluna, ACE_Null_Mutex>;
 
     lua_State* L;
     EventMgr m_EventMgr;
-    ACE_Recursive_Thread_Mutex lock;
+    // ACE_Recursive_Thread_Mutex lock;
 
     Eluna()
     {
@@ -511,7 +524,7 @@ public:
     struct EntryBind
     {
         typedef std::map<int, int> ElunaBindingMap;
-        typedef std::map<uint32, ElunaBindingMap> ElunaEntryMap;
+        typedef UNORDERED_MAP<uint32, ElunaBindingMap> ElunaEntryMap;
 
         ~EntryBind()
         {
@@ -697,46 +710,7 @@ template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error);
 #define sEluna ACE_Singleton<Eluna, ACE_Null_Mutex>::instance()
 #endif
 
-/*
-class FakeLock
-{
-public:
-static bool locked;
-FakeLock()
-{
-if (locked)
-printf("ELUNA_GUARD CREATE\n");
-locked = true;
-}
-~FakeLock()
-{
-if (!locked)
-printf("ELUNA_GUARD DELETE\n");
-locked = false;
-}
-};
-class FakeRecursiveLock
-{
-public:
-static uint32 locked;
-FakeRecursiveLock()
-{
-++locked;
-if (locked > 1)
-printf("GUARD LOCK %u\n", locked);
-}
-~FakeRecursiveLock()
-{
-if (!locked)
-printf("GUARD FAULTY\n");
-else if (locked > 1)
-printf("GUARD RELE %u\n", locked);
---locked;
-}
-};
-*/
-#define ELUNA_GUARD() \
-    ACE_Guard< ACE_Recursive_Thread_Mutex > ELUNA_GUARD_OBJECT(sEluna->lock);
+#define ELUNA_GUARD() // ACE_Guard< ACE_Recursive_Thread_Mutex > ELUNA_GUARD_OBJECT(sEluna->lock);
 
 class LuaTaxiMgr
 {
