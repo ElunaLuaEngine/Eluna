@@ -649,7 +649,11 @@ namespace LuaUnit
 
     int GetPowerType(lua_State* L, Unit* unit)
     {
+#if (defined(MANGOS) && defined(WOTLK))
+        sEluna->Push(L, unit->GetPowerType());
+#else
         sEluna->Push(L, unit->getPowerType());
+#endif
         return 1;
     }
 
