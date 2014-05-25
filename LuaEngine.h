@@ -273,12 +273,8 @@ public:
         int args = lua_gettop(L);
         int expected = l->mfunc(L, obj);
         args = lua_gettop(L) - args;
-        if (args <= 0 || args > expected)
-        {
-            if (args < 0 || args > expected) // Assert instead?
-                 ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
-            return expected;
-        }
+        if (args < 0 || args > expected) // Assert instead?
+            ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
         for (; args < expected; ++args)
              lua_pushnil(L);
         return expected;
