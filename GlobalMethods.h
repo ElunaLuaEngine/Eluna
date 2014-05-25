@@ -283,9 +283,9 @@ namespace LuaGlobalFunctions
     /* OTHER */
     int RegisterPacketEvent(lua_State* L)
     {
-        lua_settop(L, 2);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 1);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 2, LUA_TFUNCTION);
+        lua_pushvalue(L, 2);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_PACKET, 0, ev, functionRef);
@@ -294,9 +294,9 @@ namespace LuaGlobalFunctions
 
     int RegisterServerEvent(lua_State* L)
     {
-        lua_settop(L, 2);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 1);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 2, LUA_TFUNCTION);
+        lua_pushvalue(L, 2);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_SERVER, 0, ev, functionRef);
@@ -305,9 +305,9 @@ namespace LuaGlobalFunctions
 
     int RegisterPlayerEvent(lua_State* L)
     {
-        lua_settop(L, 2);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 1);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 2, LUA_TFUNCTION);
+        lua_pushvalue(L, 2);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_PLAYER, 0, ev, functionRef);
@@ -316,9 +316,9 @@ namespace LuaGlobalFunctions
 
     int RegisterGuildEvent(lua_State* L)
     {
-        lua_settop(L, 2);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 1);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 2, LUA_TFUNCTION);
+        lua_pushvalue(L, 2);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_GUILD, 0, ev, functionRef);
@@ -327,9 +327,9 @@ namespace LuaGlobalFunctions
 
     int RegisterGroupEvent(lua_State* L)
     {
-        lua_settop(L, 2);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 1);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 2, LUA_TFUNCTION);
+        lua_pushvalue(L, 2);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_GROUP, 0, ev, functionRef);
@@ -338,10 +338,10 @@ namespace LuaGlobalFunctions
 
     int RegisterCreatureGossipEvent(lua_State* L)
     {
-        lua_settop(L, 3);
         uint32 entry = sEluna->CHECKVAL<uint32>(L, 1);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 2);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 3, LUA_TFUNCTION);
+        lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_CREATURE_GOSSIP, entry, ev, functionRef);
@@ -350,10 +350,10 @@ namespace LuaGlobalFunctions
 
     int RegisterGameObjectGossipEvent(lua_State* L)
     {
-        lua_settop(L, 3);
         uint32 entry = sEluna->CHECKVAL<uint32>(L, 1);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 2);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 3, LUA_TFUNCTION);
+        lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_GAMEOBJECT_GOSSIP, entry, ev, functionRef);
@@ -362,10 +362,10 @@ namespace LuaGlobalFunctions
 
     int RegisterItemEvent(lua_State* L)
     {
-        lua_settop(L, 3);
         uint32 entry = sEluna->CHECKVAL<uint32>(L, 1);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 2);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 3, LUA_TFUNCTION);
+        lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_ITEM, entry, ev, functionRef);
@@ -374,10 +374,10 @@ namespace LuaGlobalFunctions
 
     int RegisterItemGossipEvent(lua_State* L)
     {
-        lua_settop(L, 3);
         uint32 entry = sEluna->CHECKVAL<uint32>(L, 1);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 2);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 3, LUA_TFUNCTION);
+        lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_ITEM_GOSSIP, entry, ev, functionRef);
@@ -386,10 +386,10 @@ namespace LuaGlobalFunctions
 
     int RegisterPlayerGossipEvent(lua_State* L)
     {
-        lua_settop(L, 3);
         uint32 menu_id = sEluna->CHECKVAL<uint32>(L, 1);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 2);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 3, LUA_TFUNCTION);
+        lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_PLAYER_GOSSIP, menu_id, ev, functionRef);
@@ -398,10 +398,10 @@ namespace LuaGlobalFunctions
 
     int RegisterCreatureEvent(lua_State* L)
     {
-        lua_settop(L, 3);
         uint32 entry = sEluna->CHECKVAL<uint32>(L, 1);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 2);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 3, LUA_TFUNCTION);
+        lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_CREATURE, entry, ev, functionRef);
@@ -410,10 +410,10 @@ namespace LuaGlobalFunctions
 
     int RegisterGameObjectEvent(lua_State* L)
     {
-        lua_settop(L, 3);
         uint32 entry = sEluna->CHECKVAL<uint32>(L, 1);
         uint32 ev = sEluna->CHECKVAL<uint32>(L, 2);
-        luaL_checktype(L, lua_gettop(L), LUA_TFUNCTION);
+        luaL_checktype(L, 3, LUA_TFUNCTION);
+        lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
             sEluna->Register(REGTYPE_GAMEOBJECT, entry, ev, functionRef);
@@ -524,7 +524,7 @@ namespace LuaGlobalFunctions
         uint32 delay = sEluna->CHECKVAL<uint32>(L, 2);
         uint32 repeats = sEluna->CHECKVAL<uint32>(L, 3);
 
-        lua_settop(L, 1);
+        lua_pushvalue(L, 1);
         int functionRef = lua_ref(L, true);
         functionRef = sEluna->m_EventMgr.AddEvent(&sEluna->m_EventMgr.GlobalEvents, functionRef, delay, repeats);
         if (functionRef)
@@ -1076,7 +1076,7 @@ namespace LuaGlobalFunctions
         uint32 mountH = sEluna->CHECKVAL<uint32>(L, 3);
         uint32 price = sEluna->CHECKVAL<uint32>(L, 4, 0);
         uint32 pathId = sEluna->CHECKVAL<uint32>(L, 5, 0);
-        lua_settop(L, 1);
+        lua_pushvalue(L, 1);
 
         std::list<TaxiPathNodeEntry> nodes;
 

@@ -1562,7 +1562,7 @@ namespace LuaUnit
         uint32 delay = sEluna->CHECKVAL<uint32>(L, 3);
         uint32 repeats = sEluna->CHECKVAL<uint32>(L, 4);
 
-        lua_settop(L, 2);
+        lua_pushvalue(L, 2);
         int functionRef = lua_ref(L, true);
         functionRef = sEluna->m_EventMgr.AddEvent(&unit->m_Events, functionRef, delay, repeats, unit);
         if (functionRef)
