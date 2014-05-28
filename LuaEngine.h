@@ -122,8 +122,6 @@ enum SelectAggroTarget
 #define Opcodes                 OpcodesList
 #endif
 #else
-#undef UNORDERED_MAP
-#define UNORDERED_MAP   std::unordered_map
 #ifndef CATA
 typedef uint64 ObjectGuid;
 #endif
@@ -145,149 +143,6 @@ struct ElunaRegister
 {
     const char* name;
     int(*mfunc)(lua_State*, T*);
-};
-
-template<typename T>
-class ElunaTemplate
-{
-public:
-    static const char* tname;
-    static bool manageMemory;
-
-    static int type(lua_State* L)
-    {
-        lua_pushstring(L, tname);
-        return 1;
-    }
-
-    static int gcT(lua_State* L)
-    {
-        if (!manageMemory)
-            return 0;
-        T* obj = check(L, 1);
-        delete obj; // Deleting NULL should be safe
-        return 1;
-    }
-
-    // name will be used as type name
-    // If gc is true, lua will handle the memory management for object pushed
-    // gc should be used if pushing for example WorldPacket,
-    // that will only be needed on lua side and will not be managed by TC/mangos/<core>
-    static void Register(lua_State* L, const char* name, bool gc = false)
-    {
-        tname = name;
-        manageMemory = gc;
-
-        lua_settop(L, 0); // clean stack
-
-        lua_newtable(L);
-        int methods = lua_gettop(L);
-
-        luaL_newmetatable(L, tname);
-        int metatable = lua_gettop(L);
-
-        // store method table in globals so that
-        // scripts can add functions in Lua
-        lua_pushvalue(L, methods);
-        lua_setglobal(L, tname);
-
-        // hide metatable
-        lua_pushvalue(L, methods);
-        lua_setfield(L, metatable, "__metatable");
-
-        lua_pushvalue(L, methods);
-        lua_setfield(L, metatable, "__index");
-
-        lua_pushcfunction(L, tostringT);
-        lua_setfield(L, metatable, "__tostring");
-
-        lua_pushcfunction(L, gcT);
-        lua_setfield(L, metatable, "__gc");
-
-        lua_newtable(L);
-        lua_setmetatable(L, methods);
-    }
-
-    template<typename C>
-    static void SetMethods(lua_State* L, ElunaRegister<C>* methodTable)
-    {
-        if (!methodTable)
-            return;
-        if (!lua_istable(L, 1))
-            return;
-        lua_pushstring(L, "GetObjectType");
-        lua_pushcclosure(L, type, 0);
-        lua_settable(L, 1);
-        for (; methodTable->name; ++methodTable)
-        {
-            lua_pushstring(L, methodTable->name);
-            lua_pushlightuserdata(L, (void*)methodTable);
-            lua_pushcclosure(L, thunk, 1);
-            lua_settable(L, 1);
-        }
-    }
-
-    static int push(lua_State* L, T const* obj)
-    {
-        if (!obj)
-        {
-            lua_pushnil(L);
-            return lua_gettop(L);
-        }
-        luaL_getmetatable(L, tname);
-        if (lua_isnoneornil(L, -1))
-            return luaL_error(L, "%s missing metatable", tname);
-        T const** ptrHold = (T const**)lua_newuserdata(L, sizeof(T**));
-        if (ptrHold)
-        {
-            *ptrHold = obj;
-            lua_pushvalue(L, -2);
-            lua_setmetatable(L, -2);
-        }
-        lua_replace(L, -2);
-        return lua_gettop(L);
-    }
-
-    static T* check(lua_State* L, int narg, bool error = true)
-    {
-        T** ptrHold = static_cast<T**>(lua_touserdata(L, narg));
-        if (!ptrHold)
-        {
-            if (error)
-            {
-                std::string errmsg(ElunaTemplate<T>::tname);
-                errmsg += " expected";
-                luaL_argerror(L, narg, errmsg.c_str());
-            }
-            return NULL;
-        }
-        return *ptrHold;
-    }
-
-    static int thunk(lua_State* L)
-    {
-        T* obj = check(L, 1); // get self
-        ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
-        if (!obj)
-            return 0;
-        int args = lua_gettop(L);
-        int expected = l->mfunc(L, obj);
-        args = lua_gettop(L) - args;
-        if (args < 0 || args > expected) // Assert instead?
-            ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
-        for (; args < expected; ++args)
-             lua_pushnil(L);
-        return expected;
-    }
-
-    static int tostringT(lua_State* L)
-    {
-        char buff[32];
-        T** ptrHold = (T**)lua_touserdata(L, 1);
-        sprintf(buff, "%p", *ptrHold);
-        lua_pushfstring(L, "%s (%s)", tname, buff);
-        return 1;
-    }
 };
 
 struct EventMgr
@@ -622,7 +477,7 @@ public:
 
     struct ObjectGUIDCheck
     {
-        ObjectGUIDCheck(ObjectGuid guid) : _guid(guid) { }
+        ObjectGUIDCheck(ObjectGuid guid): _guid(guid) {}
         bool operator()(WorldObject* object)
         {
             return object->GET_GUID() == _guid;
@@ -634,7 +489,7 @@ public:
     // Binary predicate to sort WorldObjects based on the distance to a reference WorldObject
     struct ObjectDistanceOrderPred
     {
-        ObjectDistanceOrderPred(WorldObject const* pRefObj, bool ascending = true) : m_refObj(pRefObj), m_ascending(ascending) { }
+        ObjectDistanceOrderPred(WorldObject const* pRefObj, bool ascending = true): m_refObj(pRefObj), m_ascending(ascending) {}
         bool operator()(WorldObject const* pLeft, WorldObject const* pRight) const
         {
             return m_ascending ? m_refObj->GetDistanceOrder(pLeft, pRight) : !m_refObj->GetDistanceOrder(pLeft, pRight);
@@ -648,8 +503,10 @@ public:
     struct WorldObjectInRangeCheck
     {
         WorldObjectInRangeCheck(bool nearest, WorldObject const* obj, float range,
-            uint16 typeMask = 0, uint32 entry = 0, uint32 hostile = 0) : i_nearest(nearest),
-            i_obj(obj), i_range(range), i_typeMask(typeMask), i_entry(entry), i_hostile(hostile) {}
+            uint16 typeMask = 0, uint32 entry = 0, uint32 hostile = 0): i_nearest(nearest),
+            i_obj(obj), i_range(range), i_typeMask(typeMask), i_entry(entry), i_hostile(hostile)
+        {
+        }
         WorldObject const& GetFocusObject() const { return *i_obj; }
         bool operator()(WorldObject* u)
         {
@@ -707,6 +564,239 @@ template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error);
 #endif
 
 #define ELUNA_GUARD() // ACE_Guard< ACE_Recursive_Thread_Mutex > ELUNA_GUARD_OBJECT(sEluna->lock);
+
+template<typename T>
+class ElunaTemplate
+{
+public:
+    static const char* tname;
+    static bool manageMemory;
+
+    static int typeT(lua_State* L)
+    {
+        lua_pushstring(L, tname);
+        return 1;
+    }
+
+    // name will be used as type name
+    // If gc is true, lua will handle the memory management for object pushed
+    // gc should be used if pushing for example WorldPacket,
+    // that will only be needed on lua side and will not be managed by TC/mangos/<core>
+    static void Register(lua_State* L, const char* name, bool gc = false)
+    {
+        tname = name;
+        manageMemory = gc;
+
+        lua_newtable(L);
+        int methods = lua_gettop(L);
+
+        // store method table in globals so that
+        // scripts can add functions in Lua
+        lua_pushvalue(L, methods);
+        lua_setglobal(L, tname);
+
+        luaL_newmetatable(L, tname);
+        int metatable = lua_gettop(L);
+
+        // hide metatable
+        lua_pushvalue(L, methods);
+        lua_setfield(L, metatable, "__metatable");
+
+        // required to access methods
+        lua_pushvalue(L, methods);
+        lua_setfield(L, metatable, "__index");
+
+        // metamethods
+        lua_pushcfunction(L, tostringT);
+        lua_setfield(L, metatable, "__tostring");
+
+        lua_pushcfunction(L, gcT);
+        lua_setfield(L, metatable, "__gc");
+
+        // special method to get the object type
+        lua_pushcfunction(L, typeT);
+        lua_setfield(L, methods, "GetObjectType");
+
+        lua_setmetatable(L, methods);
+
+        lua_remove(L, methods);
+    }
+
+    template<typename C>
+    static void SetMethods(lua_State* L, ElunaRegister<C>* methodTable)
+    {
+        if (!methodTable)
+            return;
+
+        luaL_getmetatable(L, tname);
+        if (!lua_istable(L, -1))
+        {
+            lua_remove(L, -1);
+            ELUNA_LOG_ERROR("%s missing metatable", tname);
+            return;
+        }
+
+        lua_getfield(L, -1, "__metatable");
+        lua_remove(L, -2);
+        if (!lua_istable(L, -1))
+        {
+            lua_remove(L, -1);
+            ELUNA_LOG_ERROR("%s missing method table from metatable", tname);
+            return;
+        }
+
+        for (; methodTable && methodTable->name && methodTable->mfunc; ++methodTable)
+        {
+            lua_pushstring(L, methodTable->name);
+            lua_pushlightuserdata(L, (void*)methodTable);
+            lua_pushcclosure(L, thunk, 1);
+            lua_settable(L, -3);
+        }
+
+        lua_remove(L, -1);
+    }
+
+    // Remember special case ElunaTemplate<Vehicle>::gcT
+    static int gcT(lua_State* L)
+    {
+        if (!manageMemory)
+            return 0;
+
+        // Get object pointer (and check type, no error)
+        T** ptrHold = static_cast<T**>(luaL_testudata(L, -1, tname));
+        if (ptrHold)
+            delete *ptrHold;
+        return 0;
+    }
+
+    static int push(lua_State* L, T const* obj)
+    {
+        if (!obj)
+        {
+            lua_pushnil(L);
+            return 1;
+        }
+
+        if (!manageMemory)
+        {
+            lua_rawgeti(L, LUA_REGISTRYINDEX, sHookMgr->userdata_table);
+            lua_pushfstring(L, "%p", obj);
+            lua_gettable(L, -2);
+            if (!lua_isnoneornil(L, -1) && luaL_checkudata(L, -1, tname))
+            {
+                lua_remove(L, -2);
+                return 1;
+            }
+            lua_remove(L, -1);
+            // left userdata_table in stack
+        }
+
+        // Create new userdata
+        T const** ptrHold = (T const**)lua_newuserdata(L, sizeof(T const**));
+        if (!ptrHold)
+        {
+            ELUNA_LOG_ERROR("%s could not create new userdata", tname);
+            lua_remove(L, -1);
+            lua_pushnil(L);
+            return 1;
+        }
+        *ptrHold = obj;
+
+        // Set metatable for it
+        luaL_getmetatable(L, tname);
+        if (!lua_istable(L, -1))
+        {
+            ELUNA_LOG_ERROR("%s missing metatable", tname);
+            lua_pop(L, 2);
+            lua_pushnil(L);
+            return 1;
+        }
+        lua_setmetatable(L, -2);
+
+
+        if (!manageMemory)
+        {
+            lua_pushfstring(L, "%p", obj);
+            lua_pushvalue(L, -2);
+            lua_settable(L, -3);
+            lua_remove(L, -2);
+        }
+        return 1;
+    }
+
+    static T* check(lua_State* L, int narg, bool error = true)
+    {
+        T** ptrHold = static_cast<T**>(error ? luaL_checkudata(L, narg, tname) : lua_touserdata(L, narg));
+        if (!ptrHold)
+        {
+            if (error)
+            {
+                char buff[256];
+                snprintf(buff, 256, "%s expected, got %s", tname, luaL_typename(L, narg));
+                luaL_argerror(L, narg, buff);
+            }
+            return NULL;
+        }
+
+        if (!manageMemory)
+        {
+            // Check pointer validity
+            lua_rawgeti(L, LUA_REGISTRYINDEX, sHookMgr->userdata_table);
+            lua_pushfstring(L, "%p", *ptrHold);
+            lua_gettable(L, -2);
+            lua_remove(L, -2);
+            bool valid = lua_isuserdata(L, -1);
+            lua_remove(L, -1);
+            if (!valid)
+            {
+                char buff[256];
+                snprintf(buff, 256, "%s expected, got pointer to nonexisting object (%s). This should never happen", tname, luaL_typename(L, narg));
+                if (error)
+                {
+                    luaL_argerror(L, narg, buff);
+                }
+                else
+                {
+                    ELUNA_LOG_ERROR("%s", buff);
+                }
+                return NULL;
+            }
+        }
+        return *ptrHold;
+    }
+
+    static int thunk(lua_State* L)
+    {
+        T* obj = sEluna->CHECKOBJ<T>(L, 1); // get self
+        if (!obj)
+            return 0;
+        ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
+        int args = lua_gettop(L);
+        int expected = l->mfunc(L, obj);
+        args = lua_gettop(L) - args;
+        if (args < 0 || args > expected) // Assert instead?
+        {
+            ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
+        }
+        for (; args < expected; ++args)
+            lua_pushnil(L);
+        return expected;
+    }
+
+    static int tostringT(lua_State* L)
+    {
+        T* obj = sEluna->CHECKOBJ<T>(L, 1); // get self
+        if (obj)
+        {
+            lua_pushfstring(L, "%s: (%p)", tname, obj);
+            return 1;
+        }
+        lua_pushnil(L);
+        lua_replace(L, 1);
+        luaL_tolstring(L, 1, NULL);
+        return 1;
+    }
+};
 
 class LuaTaxiMgr
 {

@@ -455,9 +455,9 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },                   // :GetShieldBlockValue() - Returns block value
 #endif
 #ifdef CLASSIC
-    {"GetHonorStoredKills", &LuaPlayer::GetHonorStoredKills},                     // :GetHonorStoredKills(on/off)
-    {"GetRankPoints", &LuaPlayer::GetRankPoints},                                 // :GetRankPoints()
-    {"GetHonorLastWeekStandingPos", &LuaPlayer::GetHonorLastWeekStandingPos},     // :GetHonorLastWeekStandingPos()
+    { "GetHonorStoredKills", &LuaPlayer::GetHonorStoredKills },                     // :GetHonorStoredKills(on/off)
+    { "GetRankPoints", &LuaPlayer::GetRankPoints },                                 // :GetRankPoints()
+    { "GetHonorLastWeekStandingPos", &LuaPlayer::GetHonorLastWeekStandingPos },     // :GetHonorLastWeekStandingPos()
 #endif
 
     // Setters
@@ -478,9 +478,9 @@ ElunaRegister<Player> PlayerMethods[] =
 #endif
 #endif
 #ifdef CLASSIC
-    {"SetHonorStoredKills", &LuaPlayer::SetHonorStoredKills},     // :SetHonorStoredKills(kills, [on/off])
-    {"SetRankPoints", &LuaPlayer::SetRankPoints},                 // :SetRankPoints(rankPoints)
-    {"SetHonorLastWeekStandingPos", &LuaPlayer::SetHonorLastWeekStandingPos}, // :SetHonorLastWeekStandingPos(standingPos)
+    { "SetHonorStoredKills", &LuaPlayer::SetHonorStoredKills },     // :SetHonorStoredKills(kills, [on/off])
+    { "SetRankPoints", &LuaPlayer::SetRankPoints },                 // :SetRankPoints(rankPoints)
+    { "SetHonorLastWeekStandingPos", &LuaPlayer::SetHonorLastWeekStandingPos }, // :SetHonorLastWeekStandingPos(standingPos)
 #endif
     { "SetLifetimeKills", &LuaPlayer::SetLifetimeKills },         // :SetLifetimeKills(val) - Sets the overall lifetime (honorable) kills of the player
     { "SetGameMaster", &LuaPlayer::SetGameMaster },               // :SetGameMaster([on]) - Sets GM mode on or off
@@ -682,9 +682,9 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SummonPlayer", &LuaPlayer::SummonPlayer },                                         // :SummonPlayer(player, map, x, y, z, zoneId[, delay]) - Sends a popup to the player asking if he wants to be summoned if yes, teleported to coords. ZoneID defines the location name shown in the popup Delay is the time until the popup closes automatically.
     { "SaveToDB", &LuaPlayer::SaveToDB },                                                 // :SaveToDB() - Saves to database
 #ifdef CLASSIC
-    {"UpdateHonor", &LuaPlayer::UpdateHonor},                                             // :UpdateHonor() - Updates Player Honor
-    {"ResetHonor", &LuaPlayer::ResetHonor},                                               // :ResetHonor() - Resets Player Honor
-    {"ClearHonorInfo", &LuaPlayer::ClearHonorInfo},                                       // :ClearHonorInfo() - Clear Player Honor Info
+    { "UpdateHonor", &LuaPlayer::UpdateHonor },                                             // :UpdateHonor() - Updates Player Honor
+    { "ResetHonor", &LuaPlayer::ResetHonor },                                               // :ResetHonor() - Resets Player Honor
+    { "ClearHonorInfo", &LuaPlayer::ClearHonorInfo },                                       // :ClearHonorInfo() - Clear Player Honor Info
 #endif
 
     { NULL, NULL },
@@ -1181,13 +1181,20 @@ template<typename T> const char* ElunaTemplate<T>::tname = NULL;
 template<typename T> bool ElunaTemplate<T>::manageMemory = false;
 #if (!defined(TBC) && !defined(CLASSIC))
 // fix compile error about accessing vehicle destructor
-template<> int ElunaTemplate<Vehicle>::gcT(lua_State* L) { return 0; }
+template<> int ElunaTemplate<Vehicle>::gcT(lua_State* L)
+{
+    // If assert fails, should code mem management here or flag Vehicles not mem managed
+    ASSERT(!manageMemory);
+    return 0;
+}
 #endif
 
 void RegisterFunctions(lua_State* L)
 {
     RegisterGlobals(L);
-    lua_settop(L, 0); // clean stack
+
+    // You should add sHookMgr->RemoveRef(this); to all destructors for objects that are NOT mem managed (gc) by lua.
+    // Exceptions being Quest type static data structs that will never be destructed (during runtime), though they can have it as well.
 
     ElunaTemplate<Object>::Register(L, "Object");
     ElunaTemplate<Object>::SetMethods(L, ObjectMethods);
@@ -1263,6 +1270,4 @@ void RegisterFunctions(lua_State* L)
 
     ElunaTemplate<QueryResult>::Register(L, "QueryResult", true);
     ElunaTemplate<QueryResult>::SetMethods(L, QueryMethods);
-
-    lua_settop(L, 0); // clean stack
 }

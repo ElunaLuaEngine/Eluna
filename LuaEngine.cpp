@@ -74,6 +74,14 @@ bool StartEluna()
     luaL_openlibs(sEluna->L);
     RegisterFunctions(sEluna->L);
 
+    // Create hidden table with weak values
+    lua_newtable(sEluna->L);
+    lua_newtable(sEluna->L);
+    lua_pushstring(sEluna->L, "v");
+    lua_setfield(sEluna->L, -2, "__mode");
+    lua_setmetatable(sEluna->L, -2);
+    sHookMgr->userdata_table = luaL_ref(sEluna->L, LUA_REGISTRYINDEX);
+
     ScriptPaths scripts;
     std::string folderpath = sConfigMgr->GetStringDefault("Eluna.ScriptPath", "lua_scripts");
 #if PLATFORM == PLATFORM_UNIX || PLATFORM == PLATFORM_APPLE
@@ -83,7 +91,7 @@ bool StartEluna()
 #endif
     ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", folderpath.c_str());
     sEluna->GetScripts(folderpath, scripts);
-    sEluna->GetScripts(folderpath+"/extensions", scripts);
+    sEluna->GetScripts(folderpath + "/extensions", scripts);
     sEluna->RunScripts(scripts);
 
     /*
@@ -187,7 +195,7 @@ void Eluna::report(lua_State* L)
     const char* msg = lua_tostring(L, -1);
     while (msg)
     {
-        lua_pop(L, -1);
+        lua_pop(L, 1);
         ELUNA_LOG_ERROR("%s", msg);
         msg = lua_tostring(L, -1);
     }
@@ -504,15 +512,15 @@ template<> int64 Eluna::CHECKVAL<int64>(lua_State* L, int narg, int64 def)
 #define TEST_OBJ(T, O, E, F)\
 {\
     if (!O || !O->F())\
-{\
+    {\
     if (E)\
-{\
+    {\
     std::string errmsg(ElunaTemplate<T>::tname);\
     errmsg += " expected";\
     luaL_argerror(L, narg, errmsg.c_str());\
-}\
+    }\
     return NULL;\
-}\
+    }\
     return O->F();\
 }
 template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error)
@@ -772,7 +780,7 @@ void Eluna::EntryBind::Insert(uint32 entryId, int eventId, int funcRef)
         Bindings[entryId][eventId] = funcRef;
 }
 
-EventMgr::LuaEvent::LuaEvent(EventProcessor* _events, int _funcRef, uint32 _delay, uint32 _calls, Object* _obj) :
+EventMgr::LuaEvent::LuaEvent(EventProcessor* _events, int _funcRef, uint32 _delay, uint32 _calls, Object* _obj):
 events(_events), funcRef(_funcRef), delay(_delay), calls(_calls), obj(_obj)
 {
     if (_events)

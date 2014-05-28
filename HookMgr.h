@@ -37,6 +37,8 @@ struct AreaTriggerEntry;
 class ReactorAI;
 typedef ReactorAI ScriptedAI;
 #else
+#undef UNORDERED_MAP
+#define UNORDERED_MAP   std::unordered_map
 struct ScriptedAI;
 #endif
 class AuctionHouseObject;
@@ -321,7 +323,8 @@ enum GossipEvents
 class HookMgr
 {
 public:
-    friend class ACE_Singleton<HookMgr, ACE_Thread_Mutex>;
+    int userdata_table;
+    void RemoveRef(const void* obj) const;
 
     CreatureAI* GetAI(Creature* creature);
 

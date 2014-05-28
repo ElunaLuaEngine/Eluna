@@ -7,6 +7,20 @@
 #include "LuaEngine.h"
 #include "HookMgr.h"
 
+void HookMgr::RemoveRef(const void* obj) const
+{
+    lua_rawgeti(sEluna->L, LUA_REGISTRYINDEX, sHookMgr->userdata_table);
+    lua_pushfstring(sEluna->L, "%p", obj);
+    lua_gettable(sEluna->L, -2);
+    if (!lua_isnoneornil(sEluna->L, -1))
+    {
+        lua_pushfstring(sEluna->L, "%p", obj);
+        lua_pushnil(sEluna->L);
+        lua_settable(sEluna->L, -4);
+    }
+    lua_pop(sEluna->L, 2);
+}
+
 void HookMgr::OnEngineRestart()
 {
     if (!sEluna->ServerEventBindings.HasEvents(ELUNA_EVENT_ON_RESTART))
@@ -205,8 +219,8 @@ bool HookMgr::OnPacketReceive(WorldSession* session, WorldPacket& packet)
 bool HookMgr::OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel)
 {
     if (!sEluna->ServerEventBindings.HasEvents(ADDON_EVENT_ON_MESSAGE))
-		return false;
-	ELUNA_GUARD();
+        return false;
+    ELUNA_GUARD();
     sEluna->ServerEventBindings.BeginCall(ADDON_EVENT_ON_MESSAGE);
     sEluna->Push(sEluna->L, sender);
     sEluna->Push(sEluna->L, type);
@@ -223,8 +237,8 @@ bool HookMgr::OnAddonMessage(Player* sender, uint32 type, std::string& msg, Play
         sEluna->Push(sEluna->L, channel->GetChannelId());
     else
         sEluna->Push(sEluna->L);
-	sEluna->ServerEventBindings.ExecuteCall();
-	sEluna->ServerEventBindings.EndCall();
+    sEluna->ServerEventBindings.ExecuteCall();
+    sEluna->ServerEventBindings.EndCall();
     return true;
 }
 
@@ -232,7 +246,7 @@ bool HookMgr::OnAddonMessage(Player* sender, uint32 type, std::string& msg, Play
 class ElunaWorldAI : public WorldScript
 {
 public:
-    ElunaWorldAI() : WorldScript("ElunaWorldAI") {}
+    ElunaWorldAI(): WorldScript("ElunaWorldAI") {}
     ~ElunaWorldAI() {}
 
     void OnOpenStateChange(bool open) override
@@ -1582,7 +1596,7 @@ struct ElunaCreatureAI : ScriptedAI
 #define me  m_creature
 #endif
 
-    ElunaCreatureAI(Creature* creature) : ScriptedAI(creature)
+    ElunaCreatureAI(Creature* creature): ScriptedAI(creature)
     {
         JustRespawned();
     }
