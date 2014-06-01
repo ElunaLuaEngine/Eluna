@@ -19,10 +19,13 @@ extern "C"
 #include "SharedDefines.h"
 #include <ace/Singleton.h>
 #include <ace/Atomic_Op.h>
-// enums
+// enums & singletons
 #ifdef MANGOS
+#include "AccountMgr.h"
+#include "Config/Config.h"
 #include "Player.h"
 #else
+#include "Config.h"
 #include "GameObjectAI.h"
 #endif
 #include "Group.h"
@@ -34,7 +37,7 @@ extern "C"
 typedef SpellEffectIndex SpellEffIndex;
 typedef SpellEntry SpellInfo;
 typedef ItemPrototype ItemTemplate;
-#define GetTemplate             GetProto
+#define GetTemplate GetProto
 #ifdef CLASSIC
 typedef int Difficulty;
 #endif
@@ -61,6 +64,7 @@ class Player;
 class Quest;
 class Spell;
 class SpellCastTargets;
+class TemporarySummon;
 class Transport;
 class Unit;
 class Weather;
@@ -77,20 +81,13 @@ typedef VehicleInfo Vehicle;
 #endif
 
 #ifdef MANGOS
-#undef  sWorld
-#undef  sMapMgr
-#undef  sConfigMgr
-#undef  sGuildMgr
-#undef  sObjectMgr
-#undef  sAccountMgr
-#undef  sObjectAccessor
-#define sWorld                  (&MaNGOS::Singleton<World>::Instance())
-#define sMapMgr                 (&MapManager::Instance())
-#define sConfigMgr              (&MaNGOS::Singleton<Config>::Instance())
-#define sGuildMgr               (&MaNGOS::Singleton<GuildMgr>::Instance())
-#define sObjectMgr              (&MaNGOS::Singleton<ObjectMgr>::Instance())
-#define sAccountMgr             (&MaNGOS::Singleton<AccountMgr>::Instance())
-#define sObjectAccessor         (&ObjectAccessor::Instance())
+#define eWorld                  (&sWorld)
+#define eMapMgr                 (&sMapMgr)
+#define eConfigMgr              (&sConfig)
+#define eGuildMgr               (&sGuildMgr)
+#define eObjectMgr              (&sObjectMgr)
+#define eAccountMgr             (&sAccountMgr)
+#define eObjectAccessor         (&sObjectAccessor)
 #define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
 #define GET_GUID                GetObjectGuid
 #define GetGameObjectTemplate   GetGameObjectInfo
@@ -112,6 +109,7 @@ typedef TemporarySummon TempSummon;
 #define GUID_ENPART(guid)       ObjectGuid(guid).GetEntry()
 #define GUID_LOPART(guid)       ObjectGuid(guid).GetCounter()
 #define GUID_HIPART(guid)       ObjectGuid(guid).GetHigh()
+#define ASSERT  MANGOS_ASSERT
 enum SelectAggroTarget
 {
     SELECT_TARGET_RANDOM = 0,                               // Just selects a random target
@@ -128,6 +126,13 @@ enum SelectAggroTarget
 #define Opcodes                 OpcodesList
 #endif
 #else
+#define eWorld                  (sWorld)
+#define eMapMgr                 (sMapMgr)
+#define eConfigMgr              (sConfigMgr)
+#define eGuildMgr               (sGuildMgr)
+#define eObjectMgr              (sObjectMgr)
+#define eAccountMgr             (sAccountMgr)
+#define eObjectAccessor         (sObjectAccessor)
 #ifndef CATA
 typedef uint64 ObjectGuid;
 #endif
@@ -491,6 +496,24 @@ public:
     template<typename T> static T* CHECKOBJ(lua_State* L, int narg, bool error = true)
     {
         return ElunaTemplate<T>::check(L, narg, error);
+    }
+
+    static inline uint32 GetCurrTime()
+    {
+#ifdef MANGOS
+        return WorldTimer::getMSTime();
+#else
+        return getMSTime();
+#endif
+    }
+
+    static inline uint32 GetTimeDiff(uint32 oldMSTime)
+    {
+#ifdef MANGOS
+        return WorldTimer::getMSTimeDiff(oldMSTime, GetCurrTime());
+#else
+        return GetMSTimeDiffToNow(uint32 oldMSTime);
+#endif
     }
 
     struct ObjectGUIDCheck

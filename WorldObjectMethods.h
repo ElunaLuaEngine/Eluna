@@ -306,13 +306,13 @@ namespace LuaWorldObject
 #else
         switch (GUID_HIPART(guid))
         {
-        case HIGHGUID_PLAYER:        Eluna::Push(L, sObjectAccessor->GetPlayer(*obj, ObjectGuid(guid))); break;
+        case HIGHGUID_PLAYER:        Eluna::Push(L, eObjectAccessor->GetPlayer(*obj, ObjectGuid(guid))); break;
         case HIGHGUID_TRANSPORT:
         case HIGHGUID_MO_TRANSPORT:
-        case HIGHGUID_GAMEOBJECT:    Eluna::Push(L, sObjectAccessor->GetGameObject(*obj, ObjectGuid(guid))); break;
+        case HIGHGUID_GAMEOBJECT:    Eluna::Push(L, eObjectAccessor->GetGameObject(*obj, ObjectGuid(guid))); break;
         case HIGHGUID_VEHICLE:
-        case HIGHGUID_UNIT:          Eluna::Push(L, sObjectAccessor->GetCreature(*obj, ObjectGuid(guid))); break;
-        case HIGHGUID_PET:           Eluna::Push(L, sObjectAccessor->GetPet(*obj, ObjectGuid(guid))); break;
+        case HIGHGUID_UNIT:          Eluna::Push(L, eObjectAccessor->GetCreature(*obj, ObjectGuid(guid))); break;
+        case HIGHGUID_PET:           Eluna::Push(L, eObjectAccessor->GetPet(*obj, ObjectGuid(guid))); break;
         }
 #endif
         return 1;

@@ -16,7 +16,7 @@ namespace LuaGuild
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
-        SessionMap const& sessions = sWorld->GetAllSessions();
+        SessionMap const& sessions = eWorld->GetAllSessions();
         for (SessionMap::const_iterator it = sessions.begin(); it != sessions.end(); ++it)
         {
             if (Player* player = it->second->GetPlayer())
@@ -44,9 +44,9 @@ namespace LuaGuild
     int GetLeader(lua_State* L, Guild* guild)
     {
 #ifdef MANGOS
-        Eluna::Push(L, sObjectAccessor->FindPlayer(guild->GetLeaderGuid()));
+        Eluna::Push(L, eObjectAccessor->FindPlayer(guild->GetLeaderGuid()));
 #else
-        Eluna::Push(L, sObjectAccessor->FindPlayer(guild->GetLeaderGUID()));
+        Eluna::Push(L, eObjectAccessor->FindPlayer(guild->GetLeaderGUID()));
 #endif
         return 1;
     }

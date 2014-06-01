@@ -5,13 +5,11 @@
 */
 
 // Required
-#include "AccountMgr.h"
 #include "AuctionHouseMgr.h"
 #include "Cell.h"
 #include "CellImpl.h"
 #include "Chat.h"
 #include "Channel.h"
-#include "Config.h"
 #include "DBCStores.h"
 #include "GossipDef.h"
 #include "GridNotifiers.h"

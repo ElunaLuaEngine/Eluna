@@ -467,7 +467,7 @@ bool Eluna::OnCommand(Player* player, const char* text)
             std::transform(eluna.begin(), eluna.end(), eluna.begin(), ::tolower);
             if (std::string("eluna").find(eluna) == 0)
             {
-                sWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
+                eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
                 ReloadEluna();
                 return false;
             }
