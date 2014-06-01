@@ -14,11 +14,11 @@ namespace LuaVehicle
     /* BOOLEAN */
     int IsOnBoard(lua_State* L, Vehicle* vehicle)
     {
-        Unit* passenger = sEluna->CHECKOBJ<Unit>(L, 2);
+        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
 #ifdef MANGOS
-        sEluna->Push(L, vehicle->HasOnBoard(passenger));
+        Eluna::Push(L, vehicle->HasOnBoard(passenger));
 #else
-        sEluna->Push(L, passenger->IsOnVehicle(vehicle->GetBase()));
+        Eluna::Push(L, passenger->IsOnVehicle(vehicle->GetBase()));
 #endif
         return 1;
     }
@@ -27,9 +27,9 @@ namespace LuaVehicle
     int GetOwner(lua_State* L, Vehicle* vehicle)
     {
 #ifdef MANGOS
-        sEluna->Push(L, vehicle->GetOwner());
+        Eluna::Push(L, vehicle->GetOwner());
 #else
-        sEluna->Push(L, vehicle->GetBase());
+        Eluna::Push(L, vehicle->GetBase());
 #endif
         return 1;
     }
@@ -37,25 +37,25 @@ namespace LuaVehicle
     int GetEntry(lua_State* L, Vehicle* vehicle)
     {
 #ifdef MANGOS
-        sEluna->Push(L, vehicle->GetVehicleEntry()->m_ID);
+        Eluna::Push(L, vehicle->GetVehicleEntry()->m_ID);
 #else
-        sEluna->Push(L, vehicle->GetVehicleInfo()->m_ID);
+        Eluna::Push(L, vehicle->GetVehicleInfo()->m_ID);
 #endif
         return 1;
     }
 
     int GetPassenger(lua_State* L, Vehicle* vehicle)
     {
-        int8 seatId = sEluna->CHECKVAL<int8>(L, 2);
-        sEluna->Push(L, vehicle->GetPassenger(seatId));
+        int8 seatId = Eluna::CHECKVAL<int8>(L, 2);
+        Eluna::Push(L, vehicle->GetPassenger(seatId));
         return 1;
     }
 
     /* OTHER */
     int AddPassenger(lua_State* L, Vehicle* vehicle)
     {
-        Unit* passenger = sEluna->CHECKOBJ<Unit>(L, 2);
-        int8 seatId = sEluna->CHECKVAL<int8>(L, 3);
+        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
+        int8 seatId = Eluna::CHECKVAL<int8>(L, 3);
 #ifdef MANGOS
         if (vehicle->CanBoard(passenger))
             vehicle->Board(passenger, seatId);
@@ -67,7 +67,7 @@ namespace LuaVehicle
 
     int RemovePassenger(lua_State* L, Vehicle* vehicle)
     {
-        Unit* passenger = sEluna->CHECKOBJ<Unit>(L, 2);
+        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
 #ifdef MANGOS
         vehicle->UnBoard(passenger, false);
 #else

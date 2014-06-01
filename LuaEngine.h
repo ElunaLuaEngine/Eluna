@@ -14,61 +14,67 @@ extern "C"
 #include "lauxlib.h"
 };
 
-#include "HookMgr.h"
-
-// Required
-#include "AccountMgr.h"
-#include "AuctionHouseMgr.h"
-#include "Cell.h"
-#include "CellImpl.h"
-#include "Chat.h"
-#include "Channel.h"
+// Base
+#include "Common.h"
+#include "SharedDefines.h"
+#include <ace/Singleton.h>
+#include <ace/Atomic_Op.h>
+// enums
 #ifdef MANGOS
-#include "Config/Config.h"
-#else
-#include "Config.h"
-#endif
-#include "DBCStores.h"
-#include "GossipDef.h"
-#include "GridNotifiers.h"
-#include "GridNotifiersImpl.h"
-#include "Group.h"
-#include "Guild.h"
-#include "GuildMgr.h"
-#include "Language.h"
-#include "Mail.h"
-#include "MapManager.h"
-#include "ObjectAccessor.h"
-#include "ObjectMgr.h"
-#include "Opcodes.h"
 #include "Player.h"
-#include "Pet.h"
-#include "ReputationMgr.h"
-#include "revision.h"
-#include "ScriptMgr.h"
-#include "Spell.h"
-#include "SpellAuras.h"
-#include "SpellMgr.h"
-#include "TemporarySummon.h"
-#include "World.h"
-#include "WorldPacket.h"
-#include "WorldSession.h"
-#ifdef MANGOS
-#include "ReactorAI.h"
-#include "revision_nr.h"
 #else
-#include "ScriptedCreature.h"
-#include "SpellInfo.h"
-#include "WeatherMgr.h"
+#include "GameObjectAI.h"
 #endif
-#if (!defined(TBC) && !defined(CLASSIC))
-#include "Vehicle.h"
+#include "Group.h"
+#include "Item.h"
+#include "Weather.h"
+#include "World.h"
+
+#ifdef MANGOS
+typedef SpellEffectIndex SpellEffIndex;
+typedef SpellEntry SpellInfo;
+typedef ItemPrototype ItemTemplate;
+#define GetTemplate             GetProto
+#ifdef CLASSIC
+typedef int Difficulty;
 #endif
-#ifndef CLASSIC
-#include "ArenaTeam.h"
 #endif
 
-typedef std::set<std::string> ScriptPaths;
+struct AreaTriggerEntry;
+#ifdef MANGOS
+class ReactorAI;
+typedef ReactorAI ScriptedAI;
+#else
+#undef UNORDERED_MAP
+#define UNORDERED_MAP   std::unordered_map
+struct ScriptedAI;
+#endif
+class AuctionHouseObject;
+class Channel;
+class Creature;
+class CreatureAI;
+class GameObject;
+class Guild;
+class Group;
+class Item;
+class Player;
+class Quest;
+class Spell;
+class SpellCastTargets;
+class Transport;
+class Unit;
+class Weather;
+class WorldPacket;
+#ifndef CLASSIC
+#ifndef TBC
+#ifdef TRINITY
+class Vehicle;
+#else
+class VehicleInfo;
+typedef VehicleInfo Vehicle;
+#endif
+#endif
+#endif
 
 #ifdef MANGOS
 #undef  sWorld
@@ -138,6 +144,8 @@ typedef ThreatContainer::StorageType ThreatList;
 #endif
 #endif
 
+class Eluna;
+
 template<typename T>
 struct ElunaRegister
 {
@@ -152,6 +160,7 @@ struct EventMgr
     typedef std::set<LuaEvent*> EventSet;
     typedef std::map<EventProcessor*, EventSet> EventMap;
     // typedef UNORDERED_MAP<uint64, EventProcessor> ProcessorMap;
+    Eluna& E;
 
     EventMap LuaEvents; // LuaEvents[processor] = {LuaEvent, LuaEvent...}
     // ProcessorMap Processors; // Processors[guid] = processor
@@ -159,19 +168,29 @@ struct EventMgr
 
     struct LuaEvent : public BasicEvent
     {
-        LuaEvent(EventProcessor* _events, int _funcRef, uint32 _delay, uint32 _calls, Object* _obj);
+        LuaEvent(Eluna& _E, EventProcessor* _events, int _funcRef, uint32 _delay, uint32 _calls, Object* _obj);
 
         ~LuaEvent();
 
         // Should never execute on dead events
         bool Execute(uint64 time, uint32 diff);
 
+        Eluna& E;
         EventProcessor* events; // Pointer to events (holds the timed event)
         int funcRef;    // Lua function reference ID, also used as event ID
         uint32 delay;   // Delay between event calls
         uint32 calls;   // Amount of calls to make, 0 for infinite
         Object* obj;    // Object to push
     };
+
+    EventMgr(Eluna& _E) : E(_E)
+    {
+    }
+
+    ~EventMgr()
+    {
+        RemoveEvents();
+    }
 
     // Should be run on world tick
     void Update(uint32 diff)
@@ -243,7 +262,7 @@ struct EventMgr
     {
         if (!events || funcRef <= 0) // If funcRef <= 0, function reference failed
             return 0; // on fail always return 0. funcRef can be negative.
-        events->AddEvent(new LuaEvent(events, funcRef, delay, calls, obj), events->CalculateTime(delay));
+        events->AddEvent(new LuaEvent(E, events, funcRef, delay, calls, obj), events->CalculateTime(delay));
         return funcRef; // return the event ID
     }
 
@@ -308,169 +327,168 @@ struct EventMgr
             if (RemoveEvent((it++)->first, eventId))
                 break; // succesfully remove the event, stop loop.
     }
+};
 
-    ~EventMgr()
+struct EventBind
+{
+    typedef std::vector<int> ElunaBindingMap;
+    typedef std::map<int, ElunaBindingMap> ElunaEntryMap;
+    Eluna& E;
+
+    EventBind(Eluna& _E): E(_E)
     {
-        RemoveEvents();
     }
+
+    ~EventBind()
+    {
+        Clear();
+    }
+
+    void Clear(); // unregisters all registered functions and clears all registered events from the bind std::maps (reset)
+    void Insert(int eventId, int funcRef); // Inserts a new registered event
+
+    // Gets the binding std::map containing all registered events with the function refs for the entry
+    ElunaBindingMap* GetBindMap(int eventId)
+    {
+        if (Bindings.empty())
+            return NULL;
+        ElunaEntryMap::iterator itr = Bindings.find(eventId);
+        if (itr == Bindings.end())
+            return NULL;
+
+        return &itr->second;
+    }
+
+    // Checks if there are events for ID
+    bool HasEvents(int eventId) const;
+
+    ElunaEntryMap Bindings; // Binding store Bindings[eventId] = {funcRef};
+};
+
+struct EntryBind
+{
+    typedef std::map<int, int> ElunaBindingMap;
+    typedef UNORDERED_MAP<uint32, ElunaBindingMap> ElunaEntryMap;
+    Eluna& E;
+
+    EntryBind(Eluna& _E): E(_E)
+    {
+    }
+
+    ~EntryBind()
+    {
+        Clear();
+    }
+
+    void Clear(); // unregisters all registered functions and clears all registered events from the bind std::maps (reset)
+    void Insert(uint32 entryId, int eventId, int funcRef); // Inserts a new registered event
+
+    // Gets the function ref of an entry for an event
+    int GetBind(uint32 entryId, int eventId) const
+    {
+        if (Bindings.empty())
+            return 0;
+        ElunaEntryMap::const_iterator itr = Bindings.find(entryId);
+        if (itr == Bindings.end() || itr->second.empty())
+            return 0;
+        ElunaBindingMap::const_iterator itr2 = itr->second.find(eventId);
+        if (itr2 == itr->second.end())
+            return 0;
+        return itr2->second;
+    }
+
+    // Gets the binding std::map containing all registered events with the function refs for the entry
+    const ElunaBindingMap* GetBindMap(uint32 entryId) const
+    {
+        if (Bindings.empty())
+            return NULL;
+        ElunaEntryMap::const_iterator itr = Bindings.find(entryId);
+        if (itr == Bindings.end())
+            return NULL;
+
+        return &itr->second;
+    }
+
+    // Returns true if the entry has registered binds
+    bool HasBinds(uint32 entryId) const
+    {
+        if (Bindings.empty())
+            return false;
+        return Bindings.find(entryId) != Bindings.end();
+    }
+
+    ElunaEntryMap Bindings; // Binding store Bindings[entryId][eventId] = funcRef;
 };
 
 class Eluna
 {
 public:
     friend class ScriptMgr;
-    // friend class ACE_Singleton<Eluna, ACE_Null_Mutex>;
+    typedef std::set<std::string> ScriptPaths;
+
+    static Eluna* GEluna;
 
     lua_State* L;
-    EventMgr m_EventMgr;
-    // ACE_Recursive_Thread_Mutex lock;
+    int userdata_table;
 
-    Eluna()
-    {
-        L = NULL;
-    }
-
-    ~Eluna()
-    {
-    }
-
-    struct EventBind
-    {
-        typedef std::vector<int> ElunaBindingMap;
-        typedef std::map<int, ElunaBindingMap> ElunaEntryMap;
-
-        ~EventBind()
-        {
-            Clear();
-        }
-
-        void Clear(); // unregisters all registered functions and clears all registered events from the bind std::maps (reset)
-        void Insert(int eventId, int funcRef); // Inserts a new registered event
-
-        // Gets the binding std::map containing all registered events with the function refs for the entry
-        ElunaBindingMap* GetBindMap(int eventId)
-        {
-            if (Bindings.empty())
-                return NULL;
-            ElunaEntryMap::iterator itr = Bindings.find(eventId);
-            if (itr == Bindings.end())
-                return NULL;
-
-            return &itr->second;
-        }
-
-        // Checks if there are events for ID
-        bool HasEvents(int eventId) const;
-        // Cleans stack and pushes eventId
-        void BeginCall(int eventId) const;
-        // Loops through all registered events for the eventId at stack index 1
-        // Copies the whole stack as arguments for the called function. Before Executing, push all params to stack!
-        // Leaves return values from all functions in order to the stack.
-        void ExecuteCall();
-        void EndCall() const;
-
-        ElunaEntryMap Bindings; // Binding store Bindings[eventId] = {funcRef};
-    };
-
-    struct EntryBind
-    {
-        typedef std::map<int, int> ElunaBindingMap;
-        typedef UNORDERED_MAP<uint32, ElunaBindingMap> ElunaEntryMap;
-
-        ~EntryBind()
-        {
-            Clear();
-        }
-
-        void Clear(); // unregisters all registered functions and clears all registered events from the bind std::maps (reset)
-        void Insert(uint32 entryId, int eventId, int funcRef); // Inserts a new registered event
-
-        // Gets the function ref of an entry for an event
-        int GetBind(uint32 entryId, int eventId) const
-        {
-            if (Bindings.empty())
-                return 0;
-            ElunaEntryMap::const_iterator itr = Bindings.find(entryId);
-            if (itr == Bindings.end() || itr->second.empty())
-                return 0;
-            ElunaBindingMap::const_iterator itr2 = itr->second.find(eventId);
-            if (itr2 == itr->second.end())
-                return 0;
-            return itr2->second;
-        }
-
-        // Gets the binding std::map containing all registered events with the function refs for the entry
-        const ElunaBindingMap* GetBindMap(uint32 entryId) const
-        {
-            if (Bindings.empty())
-                return NULL;
-            ElunaEntryMap::const_iterator itr = Bindings.find(entryId);
-            if (itr == Bindings.end())
-                return NULL;
-
-            return &itr->second;
-        }
-
-        // Returns true if the entry has registered binds
-        bool HasBinds(uint32 entryId) const
-        {
-            if (Bindings.empty())
-                return false;
-            return Bindings.find(entryId) != Bindings.end();
-        }
-
-        ElunaEntryMap Bindings; // Binding store Bindings[entryId][eventId] = funcRef;
-    };
+    EventMgr* m_EventMgr;
 
     // Use templates for EventBind
-    EventBind PacketEventBindings;
-    EventBind ServerEventBindings;
-    EventBind PlayerEventBindings;
-    EventBind GuildEventBindings;
-    EventBind GroupEventBindings;
-    EventBind VehicleEventBindings;
+    EventBind* ServerEventBindings;
+    EventBind* PlayerEventBindings;
+    EventBind* GuildEventBindings;
+    EventBind* GroupEventBindings;
+    EventBind* VehicleEventBindings;
 
-    EntryBind CreatureEventBindings;
-    EntryBind CreatureGossipBindings;
-    EntryBind GameObjectEventBindings;
-    EntryBind GameObjectGossipBindings;
-    EntryBind ItemEventBindings;
-    EntryBind ItemGossipBindings;
-    EntryBind playerGossipBindings;
+    EntryBind* PacketEventBindings;
+    EntryBind* CreatureEventBindings;
+    EntryBind* CreatureGossipBindings;
+    EntryBind* GameObjectEventBindings;
+    EntryBind* GameObjectGossipBindings;
+    EntryBind* ItemEventBindings;
+    EntryBind* ItemGossipBindings;
+    EntryBind* playerGossipBindings;
+
+    Eluna();
+    ~Eluna();
+
+    static ScriptPaths scripts;
+    static void Initialize();
+    static void Uninitialize();
+    static void ReloadEluna();
+    void static GetScripts(std::string path, ScriptPaths& scripts);
 
     static void report(lua_State*);
+    static void ExecuteCall(lua_State* L, int params, int res);
     void Register(uint8 reg, uint32 id, uint32 evt, int func);
-    void BeginCall(int fReference);
-    bool ExecuteCall(int params, int res);
-    void EndCall(int res);
-    void GetScripts(std::string path, ScriptPaths& scripts);
     void RunScripts(ScriptPaths& scripts);
+    static void RemoveRef(const void* obj);
 
     // Pushes
-    void Push(lua_State*); // nil
-    void Push(lua_State*, const uint64);
-    void Push(lua_State*, const int64);
-    void Push(lua_State*, const uint32);
-    void Push(lua_State*, const int32);
-    void Push(lua_State*, const bool);
-    void Push(lua_State*, const float);
-    void Push(lua_State*, const double);
-    void Push(lua_State*, const char*);
-    void Push(lua_State*, const std::string);
-    template<typename T> void Push(lua_State* L, T const* ptr)
+    static void Push(lua_State*); // nil
+    static void Push(lua_State*, const uint64);
+    static void Push(lua_State*, const int64);
+    static void Push(lua_State*, const uint32);
+    static void Push(lua_State*, const int32);
+    static void Push(lua_State*, const bool);
+    static void Push(lua_State*, const float);
+    static void Push(lua_State*, const double);
+    static void Push(lua_State*, const char*);
+    static void Push(lua_State*, const std::string);
+    template<typename T> static void Push(lua_State* L, T const* ptr)
     {
         ElunaTemplate<T>::push(L, ptr);
     }
-    void Push(lua_State* L, Object const* obj);
-    void Push(lua_State* L, WorldObject const* obj);
-    void Push(lua_State* L, Unit const* unit);
-    void Push(lua_State* L, Pet const* pet);
-    void Push(lua_State* L, TempSummon const* summon);
+    static void Push(lua_State* L, Object const* obj);
+    static void Push(lua_State* L, WorldObject const* obj);
+    static void Push(lua_State* L, Unit const* unit);
+    static void Push(lua_State* L, Pet const* pet);
+    static void Push(lua_State* L, TempSummon const* summon);
 
     // Checks
-    template<typename T> T CHECKVAL(lua_State* L, int narg);
-    template<typename T> T CHECKVAL(lua_State* L, int narg, T def);
-    template<typename T> T* CHECKOBJ(lua_State* L, int narg, bool error = true)
+    template<typename T> static T CHECKVAL(lua_State* L, int narg);
+    template<typename T> static T CHECKVAL(lua_State* L, int narg, T def);
+    template<typename T> static T* CHECKOBJ(lua_State* L, int narg, bool error = true)
     {
         return ElunaTemplate<T>::check(L, narg, error);
     }
@@ -550,6 +568,167 @@ public:
 
         WorldObjectInRangeCheck(WorldObjectInRangeCheck const&);
     };
+
+    CreatureAI* GetAI(Creature* creature);
+#ifndef MANGOS
+    GameObjectAI* GetAI(GameObject* gameObject);
+#endif
+
+    /* Custom */
+    bool OnCommand(Player* player, const char* text);
+    void OnWorldUpdate(uint32 diff);
+    void OnLootItem(Player* pPlayer, Item* pItem, uint32 count, uint64 guid);
+    void OnLootMoney(Player* pPlayer, uint32 amount);
+    void OnFirstLogin(Player* pPlayer);
+    void OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
+    void OnRepop(Player* pPlayer);
+    void OnResurrect(Player* pPlayer);
+    void OnQuestAbandon(Player* pPlayer, uint32 questId);
+    InventoryResult OnCanUseItem(const Player* pPlayer, uint32 itemEntry);
+    void OnLuaStateClose();
+    bool OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel);
+
+    /* Item */
+    bool OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget);
+    bool OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest);
+    bool OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
+    bool OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
+    bool OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
+    bool OnExpire(Player* pPlayer, ItemTemplate const* pProto);
+    bool OnRemove(Player* pPlayer, Item* item);
+    void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, std::string code);
+
+    /* Creature */
+    bool OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, Creature* pTarget);
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature);
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action);
+    bool OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code);
+    bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
+    bool OnQuestComplete(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
+    bool OnQuestReward(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
+    uint32 GetDialogStatus(Player* pPlayer, Creature* pCreature);
+    void OnSummoned(Creature* creature, Unit* summoner);
+
+    /* GameObject */
+    bool OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, GameObject* pTarget);
+    bool OnGossipHello(Player* pPlayer, GameObject* pGameObject);
+    bool OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action);
+    bool OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action, const char* code);
+    bool OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
+    bool OnQuestComplete(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
+    bool OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
+    uint32 GetDialogStatus(Player* pPlayer, GameObject* pGameObject);
+#ifndef CLASSIC
+#ifndef TBC
+    void OnDestroyed(GameObject* pGameObject, Player* pPlayer);
+    void OnDamaged(GameObject* pGameObject, Player* pPlayer);
+#endif
+#endif
+    void OnLootStateChanged(GameObject* pGameObject, uint32 state);
+    void OnGameObjectStateChanged(GameObject* pGameObject, uint32 state);
+    void UpdateAI(GameObject* pGameObject, uint32 diff);
+    void OnSpawn(GameObject* gameobject);
+
+    /* Packet */
+    bool OnPacketSend(WorldSession* session, WorldPacket& packet);
+    void OnPacketSendAny(Player* player, WorldPacket& packet, bool& result);
+    void OnPacketSendOne(Player* player, WorldPacket& packet, bool& result);
+    bool OnPacketReceive(WorldSession* session, WorldPacket& packet);
+    void OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result);
+    void OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result);
+
+    /* Player */
+    void OnPlayerEnterCombat(Player* pPlayer, Unit* pEnemy);
+    void OnPlayerLeaveCombat(Player* pPlayer);
+    void OnPVPKill(Player* pKiller, Player* pKilled);
+    void OnCreatureKill(Player* pKiller, Creature* pKilled);
+    void OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled);
+    void OnLevelChanged(Player* pPlayer, uint8 oldLevel);
+    void OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints);
+    void OnTalentsReset(Player* pPlayer, bool noCost);
+    void OnMoneyChanged(Player* pPlayer, int32& amount);
+    void OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim);
+    void OnReputationChange(Player* pPlayer, uint32 factionID, int32& standing, bool incremental);
+    void OnDuelRequest(Player* pTarget, Player* pChallenger);
+    void OnDuelStart(Player* pStarter, Player* pChallenger);
+    void OnDuelEnd(Player* pWinner, Player* pLoser, DuelCompleteType type);
+    bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg);
+    bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Group* pGroup);
+    bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Guild* pGuild);
+    bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Channel* pChannel);
+    bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver);
+    void OnEmote(Player* pPlayer, uint32 emote);
+    void OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint64 guid);
+    void OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck);
+    void OnLogin(Player* pPlayer);
+    void OnLogout(Player* pPlayer);
+    void OnCreate(Player* pPlayer);
+    void OnDelete(uint32 guid);
+    void OnSave(Player* pPlayer);
+    void OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapid, bool permanent);
+    void OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea);
+    void OnMapChanged(Player* pPlayer);
+    void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, std::string code);
+
+#ifndef CLASSIC
+#ifndef TBC
+    /* Vehicle */
+    void OnInstall(Vehicle* vehicle);
+    void OnUninstall(Vehicle* vehicle);
+    void OnInstallAccessory(Vehicle* vehicle, Creature* accessory);
+    void OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId);
+    void OnRemovePassenger(Vehicle* vehicle, Unit* passenger);
+#endif
+#endif
+
+    /* AreaTrigger */
+    bool OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger);
+
+    /* Weather */
+    void OnChange(Weather* weather, WeatherState state, float grade);
+
+    /* Auction House */
+    void OnAdd(AuctionHouseObject* auctionHouse);
+    void OnRemove(AuctionHouseObject* auctionHouse);
+    void OnSuccessful(AuctionHouseObject* auctionHouse);
+    void OnExpire(AuctionHouseObject* auctionHouse);
+
+    /* Guild */
+    void OnAddMember(Guild* guild, Player* player, uint32 plRank);
+    void OnRemoveMember(Guild* guild, Player* player, bool isDisbanding);
+    void OnMOTDChanged(Guild* guild, const std::string& newMotd);
+    void OnInfoChanged(Guild* guild, const std::string& newInfo);
+    void OnCreate(Guild* guild, Player* leader, const std::string& name);
+    void OnDisband(Guild* guild);
+    void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair);
+    void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount);
+    void OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId, bool isDestBank, uint8 destContainer, uint8 destSlotId);
+    void OnEvent(Guild* guild, uint8 eventType, uint32 playerGuid1, uint32 playerGuid2, uint8 newRank);
+    void OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playerGuid, uint32 itemOrMoney, uint16 itemStackCount, uint8 destTabId);
+
+    /* Group */
+    void OnAddMember(Group* group, uint64 guid);
+    void OnInviteMember(Group* group, uint64 guid);
+    void OnRemoveMember(Group* group, uint64 guid, uint8 method);
+    void OnChangeLeader(Group* group, uint64 newLeaderGuid, uint64 oldLeaderGuid);
+    void OnDisband(Group* group);
+    void OnCreate(Group* group, uint64 leaderGuid, GroupType groupType);
+
+    /* Map */
+    void OnCreate(Map* map);
+    void OnDestroy(Map* map);
+    void OnPlayerEnter(Map* map, Player* player);
+    void OnPlayerLeave(Map* map, Player* player);
+    void OnUpdate(Map* map, uint32 diff);
+
+    /* World */
+    void OnOpenStateChange(bool open);
+    void OnConfigLoad(bool reload);
+    void OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask);
+    void OnShutdownCancel();
+    void OnUpdate(uint32 diff);
+    void OnStartup();
+    void OnShutdown();
 };
 template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error);
 template<> Player* Eluna::CHECKOBJ<Player>(lua_State* L, int narg, bool error);
@@ -557,13 +736,9 @@ template<> Creature* Eluna::CHECKOBJ<Creature>(lua_State* L, int narg, bool erro
 template<> GameObject* Eluna::CHECKOBJ<GameObject>(lua_State* L, int narg, bool error);
 template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error);
 
-#ifdef MANGOS
-#define sEluna (&MaNGOS::Singleton<Eluna>::Instance())
-#else
-#define sEluna ACE_Singleton<Eluna, ACE_Null_Mutex>::instance()
-#endif
+#define sEluna Eluna::GEluna
 
-#define ELUNA_GUARD() // ACE_Guard< ACE_Recursive_Thread_Mutex > ELUNA_GUARD_OBJECT(sEluna->lock);
+// #define ELUNA_GUARD() ACE_Guard< ACE_Recursive_Thread_Mutex > ELUNA_GUARD_OBJECT(sEluna->lock);
 
 template<typename T>
 class ElunaTemplate
@@ -679,7 +854,7 @@ public:
 
         if (!manageMemory)
         {
-            lua_rawgeti(L, LUA_REGISTRYINDEX, sHookMgr->userdata_table);
+            lua_rawgeti(L, LUA_REGISTRYINDEX, sEluna->userdata_table);
             lua_pushfstring(L, "%p", obj);
             lua_gettable(L, -2);
             if (!lua_isnoneornil(L, -1) && luaL_checkudata(L, -1, tname))
@@ -692,11 +867,11 @@ public:
         }
 
         // Create new userdata
-        T const** ptrHold = (T const**)lua_newuserdata(L, sizeof(T const**));
+        T const** ptrHold = static_cast<T const**>(lua_newuserdata(L, sizeof(T const*)));
         if (!ptrHold)
         {
             ELUNA_LOG_ERROR("%s could not create new userdata", tname);
-            lua_remove(L, -1);
+            lua_pop(L, manageMemory ? 1 : 2);
             lua_pushnil(L);
             return 1;
         }
@@ -707,18 +882,17 @@ public:
         if (!lua_istable(L, -1))
         {
             ELUNA_LOG_ERROR("%s missing metatable", tname);
-            lua_pop(L, 2);
+            lua_pop(L, manageMemory ? 2 : 3);
             lua_pushnil(L);
             return 1;
         }
         lua_setmetatable(L, -2);
 
-
         if (!manageMemory)
         {
             lua_pushfstring(L, "%p", obj);
             lua_pushvalue(L, -2);
-            lua_settable(L, -3);
+            lua_settable(L, -4);
             lua_remove(L, -2);
         }
         return 1;
@@ -741,7 +915,7 @@ public:
         if (!manageMemory)
         {
             // Check pointer validity
-            lua_rawgeti(L, LUA_REGISTRYINDEX, sHookMgr->userdata_table);
+            lua_rawgeti(L, LUA_REGISTRYINDEX, sEluna->userdata_table);
             lua_pushfstring(L, "%p", *ptrHold);
             lua_gettable(L, -2);
             lua_remove(L, -2);
@@ -767,7 +941,7 @@ public:
 
     static int thunk(lua_State* L)
     {
-        T* obj = sEluna->CHECKOBJ<T>(L, 1); // get self
+        T* obj = Eluna::CHECKOBJ<T>(L, 1); // get self
         if (!obj)
             return 0;
         ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
@@ -785,7 +959,7 @@ public:
 
     static int tostringT(lua_State* L)
     {
-        T* obj = sEluna->CHECKOBJ<T>(L, 1); // get self
+        T* obj = Eluna::CHECKOBJ<T>(L, 1); // get self
         if (obj)
         {
             lua_pushfstring(L, "%s: (%p)", tname, obj);
@@ -798,12 +972,4 @@ public:
     }
 };
 
-class LuaTaxiMgr
-{
-private:
-    static uint32 nodeId;
-public:
-    static void StartTaxi(Player* player, uint32 pathid);
-    static uint32 AddPath(std::list<TaxiPathNodeEntry> nodes, uint32 mountA, uint32 mountH, uint32 price = 0, uint32 pathId = 0);
-};
 #endif

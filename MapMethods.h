@@ -13,7 +13,7 @@ namespace LuaMap
 #ifndef CLASSIC
     int IsArena(lua_State* L, Map* map)
     {
-        sEluna->Push(L, map->IsBattleArena());
+        Eluna::Push(L, map->IsBattleArena());
         return 1;
     }
 #endif
@@ -21,99 +21,99 @@ namespace LuaMap
     int IsBattleground(lua_State* L, Map* map)
     {
 #ifdef MANGOS
-        sEluna->Push(L, map->IsBattleGround());
+        Eluna::Push(L, map->IsBattleGround());
 #else
-        sEluna->Push(L, map->IsBattleground());
+        Eluna::Push(L, map->IsBattleground());
 #endif
         return 1;
     }
 
     int IsDungeon(lua_State* L, Map* map)
     {
-        sEluna->Push(L, map->IsDungeon());
+        Eluna::Push(L, map->IsDungeon());
         return 1;
     }
 
     int IsEmpty(lua_State* L, Map* map)
     {
-        sEluna->Push(L, map->isEmpty());
+        Eluna::Push(L, map->isEmpty());
         return 1;
     }
 
 #ifndef CLASSIC
     int IsHeroic(lua_State* L, Map* map)
     {
-        sEluna->Push(L, map->IsHeroic());
+        Eluna::Push(L, map->IsHeroic());
         return 1;
     }
 #endif
 
     int IsRaid(lua_State* L, Map* map)
     {
-        sEluna->Push(L, map->IsRaid());
+        Eluna::Push(L, map->IsRaid());
         return 1;
     }
 
     /* GETTERS */
     int GetName(lua_State* L, Map* map)
     {
-        sEluna->Push(L, map->GetMapName());
+        Eluna::Push(L, map->GetMapName());
         return 1;
     }
 
     int GetHeight(lua_State* L, Map* map)
     {
-        float x = sEluna->CHECKVAL<float>(L, 2);
-        float y = sEluna->CHECKVAL<float>(L, 3);
+        float x = Eluna::CHECKVAL<float>(L, 2);
+        float y = Eluna::CHECKVAL<float>(L, 3);
 #if (defined(TBC) || defined(CLASSIC))
         float z = map->GetHeight(x, y, MAX_HEIGHT);
 #else
-        uint32 phasemask = sEluna->CHECKVAL<uint32>(L, 4, 1);
+        uint32 phasemask = Eluna::CHECKVAL<uint32>(L, 4, 1);
         float z = map->GetHeight(phasemask, x, y, MAX_HEIGHT);
 #endif
         if (z != INVALID_HEIGHT)
-            sEluna->Push(L, z);
+            Eluna::Push(L, z);
         return 1;
     }
 
     int GetDifficulty(lua_State* L, Map* map)
     {
 #ifndef CLASSIC
-        sEluna->Push(L, map->GetDifficulty());
+        Eluna::Push(L, map->GetDifficulty());
 #else
-        sEluna->Push(L, (Difficulty)0);
+        Eluna::Push(L, (Difficulty)0);
 #endif
         return 1;
     }
 
     int GetInstanceId(lua_State* L, Map* map)
     {
-        sEluna->Push(L, map->GetInstanceId());
+        Eluna::Push(L, map->GetInstanceId());
         return 1;
     }
 
     int GetPlayerCount(lua_State* L, Map* map)
     {
-        sEluna->Push(L, map->GetPlayersCountExceptGMs());
+        Eluna::Push(L, map->GetPlayersCountExceptGMs());
         return 1;
     }
 
     int GetMapId(lua_State* L, Map* map)
     {
-        sEluna->Push(L, map->GetId());
+        Eluna::Push(L, map->GetId());
         return 1;
     }
 
     int GetAreaId(lua_State* L, Map* map)
     {
-        float x = sEluna->CHECKVAL<float>(L, 2);
-        float y = sEluna->CHECKVAL<float>(L, 3);
-        float z = sEluna->CHECKVAL<float>(L, 4);
+        float x = Eluna::CHECKVAL<float>(L, 2);
+        float y = Eluna::CHECKVAL<float>(L, 3);
+        float z = Eluna::CHECKVAL<float>(L, 4);
 
 #ifdef MANGOS
-        sEluna->Push(L, map->GetTerrain()->GetAreaId(x, y, z));
+        Eluna::Push(L, map->GetTerrain()->GetAreaId(x, y, z));
 #else
-        sEluna->Push(L, map->GetAreaId(x, y, z));
+        Eluna::Push(L, map->GetAreaId(x, y, z));
 #endif
         return 1;
     }

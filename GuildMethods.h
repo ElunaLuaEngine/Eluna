@@ -24,8 +24,8 @@ namespace LuaGuild
                 if (player->GetSession() && (player->GetGuildId() == guild->GetId()))
                 {
                     ++i;
-                    sEluna->Push(L, i);
-                    sEluna->Push(L, player);
+                    Eluna::Push(L, i);
+                    Eluna::Push(L, player);
                     lua_settable(L, tbl);
                 }
             }
@@ -37,16 +37,16 @@ namespace LuaGuild
 
     int GetMemberCount(lua_State* L, Guild* guild)
     {
-        sEluna->Push(L, guild->GetMemberSize());
+        Eluna::Push(L, guild->GetMemberSize());
         return 1;
     }
 
     int GetLeader(lua_State* L, Guild* guild)
     {
 #ifdef MANGOS
-        sEluna->Push(L, sObjectAccessor->FindPlayer(guild->GetLeaderGuid()));
+        Eluna::Push(L, sObjectAccessor->FindPlayer(guild->GetLeaderGuid()));
 #else
-        sEluna->Push(L, sObjectAccessor->FindPlayer(guild->GetLeaderGUID()));
+        Eluna::Push(L, sObjectAccessor->FindPlayer(guild->GetLeaderGUID()));
 #endif
         return 1;
     }
@@ -54,37 +54,37 @@ namespace LuaGuild
     int GetLeaderGUID(lua_State* L, Guild* guild)
     {
 #ifdef MANGOS
-        sEluna->Push(L, guild->GetLeaderGuid());
+        Eluna::Push(L, guild->GetLeaderGuid());
 #else
-        sEluna->Push(L, guild->GetLeaderGUID());
+        Eluna::Push(L, guild->GetLeaderGUID());
 #endif
         return 1;
     }
 
     int GetId(lua_State* L, Guild* guild)
     {
-        sEluna->Push(L, guild->GetId());
+        Eluna::Push(L, guild->GetId());
         return 1;
     }
 
     int GetName(lua_State* L, Guild* guild)
     {
-        sEluna->Push(L, guild->GetName());
+        Eluna::Push(L, guild->GetName());
         return 1;
     }
 
     int GetMOTD(lua_State* L, Guild* guild)
     {
-        sEluna->Push(L, guild->GetMOTD());
+        Eluna::Push(L, guild->GetMOTD());
         return 1;
     }
 
     int GetInfo(lua_State* L, Guild* guild)
     {
 #ifdef MANGOS
-        sEluna->Push(L, guild->GetGINFO());
+        Eluna::Push(L, guild->GetGINFO());
 #else
-        sEluna->Push(L, guild->GetInfo());
+        Eluna::Push(L, guild->GetInfo());
 #endif
         return 1;
     }
@@ -93,7 +93,7 @@ namespace LuaGuild
 #ifndef CATA
     int SetLeader(lua_State* L, Guild* guild)
     {
-        Player* player = sEluna->CHECKOBJ<Player>(L, 2);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
 
 #ifdef MANGOS
         guild->SetLeader(player->GET_GUID());
@@ -107,8 +107,8 @@ namespace LuaGuild
 #ifndef CLASSIC
     int SetBankTabText(lua_State* L, Guild* guild)
     {
-        uint8 tabId = sEluna->CHECKVAL<uint8>(L, 2);
-        const char* text = sEluna->CHECKVAL<const char*>(L, 3);
+        uint8 tabId = Eluna::CHECKVAL<uint8>(L, 2);
+        const char* text = Eluna::CHECKVAL<const char*>(L, 3);
 #ifdef MANGOS
         guild->SetGuildBankTabText(tabId, text);
 #else
@@ -122,7 +122,7 @@ namespace LuaGuild
     // SendPacketToGuild(packet)
     int SendPacket(lua_State* L, Guild* guild)
     {
-        WorldPacket* data = sEluna->CHECKOBJ<WorldPacket>(L, 2);
+        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
 
         guild->BroadcastPacket(data);
         return 0;
@@ -131,8 +131,8 @@ namespace LuaGuild
     // SendPacketToRankedInGuild(packet, rankId)
     int SendPacketToRanked(lua_State* L, Guild* guild)
     {
-        WorldPacket* data = sEluna->CHECKOBJ<WorldPacket>(L, 2);
-        uint8 ranked = sEluna->CHECKVAL<uint8>(L, 3);
+        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
+        uint8 ranked = Eluna::CHECKVAL<uint8>(L, 3);
 
         guild->BroadcastPacketToRank(data, ranked);
         return 0;
@@ -146,8 +146,8 @@ namespace LuaGuild
 
     int AddMember(lua_State* L, Guild* guild)
     {
-        Player* player = sEluna->CHECKOBJ<Player>(L, 2);
-        uint8 rankId = sEluna->CHECKVAL<uint8>(L, 3, GUILD_RANK_NONE);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        uint8 rankId = Eluna::CHECKVAL<uint8>(L, 3, GUILD_RANK_NONE);
 
         guild->AddMember(player->GET_GUID(), rankId);
         return 0;
@@ -155,8 +155,8 @@ namespace LuaGuild
 
     int DeleteMember(lua_State* L, Guild* guild)
     {
-        Player* player = sEluna->CHECKOBJ<Player>(L, 2);
-        bool isDisbanding = sEluna->CHECKVAL<bool>(L, 3, false);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        bool isDisbanding = Eluna::CHECKVAL<bool>(L, 3, false);
 
 #ifdef MANGOS
         guild->DelMember(player->GET_GUID(), isDisbanding);
@@ -168,8 +168,8 @@ namespace LuaGuild
 
     int ChangeMemberRank(lua_State* L, Guild* guild)
     {
-        Player* player = sEluna->CHECKOBJ<Player>(L, 2);
-        uint8 newRank = sEluna->CHECKVAL<uint8>(L, 3);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        uint8 newRank = Eluna::CHECKVAL<uint8>(L, 3);
 
         guild->ChangeMemberRank(player->GET_GUID(), newRank);
         return 0;
@@ -179,8 +179,8 @@ namespace LuaGuild
     // Move to Player methods
     int WithdrawBankMoney(lua_State* L, Guild* guild)
     {
-        Player* player = sEluna->CHECKOBJ<Player>(L, 2);
-        uint32 money = sEluna->CHECKVAL<uint32>(L, 3);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        uint32 money = Eluna::CHECKVAL<uint32>(L, 3);
 #ifdef MANGOS
         if (guild->GetGuildBankMoney() < money)
             return 0;
@@ -194,8 +194,8 @@ namespace LuaGuild
     // Move to Player methods
     int DepositBankMoney(lua_State* L, Guild* guild)
     {
-        Player* player = sEluna->CHECKOBJ<Player>(L, 2);
-        uint32 money = sEluna->CHECKVAL<uint32>(L, 3);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        uint32 money = Eluna::CHECKVAL<uint32>(L, 3);
 
 #ifdef MANGOS
         guild->SetBankMoney(guild->GetGuildBankMoney() + money);

@@ -7,67 +7,6 @@
 #ifndef LUAHOOKS_H
 #define LUAHOOKS_H
 
-// Base
-#include "Common.h"
-#include "SharedDefines.h"
-#include <ace/Singleton.h>
-#include <ace/Atomic_Op.h>
-// enums
-#ifdef MANGOS
-#include "Player.h"
-#else
-#include "GameObjectAI.h"
-#endif
-#include "Group.h"
-#include "Item.h"
-#include "Weather.h"
-
-#ifdef MANGOS
-typedef SpellEffectIndex SpellEffIndex;
-typedef SpellEntry SpellInfo;
-typedef ItemPrototype ItemTemplate;
-#define GetTemplate             GetProto
-#ifdef CLASSIC
-typedef int Difficulty;
-#endif
-#endif
-
-struct AreaTriggerEntry;
-#ifdef MANGOS
-class ReactorAI;
-typedef ReactorAI ScriptedAI;
-#else
-#undef UNORDERED_MAP
-#define UNORDERED_MAP   std::unordered_map
-struct ScriptedAI;
-#endif
-class AuctionHouseObject;
-class Channel;
-class Creature;
-class CreatureAI;
-class GameObject;
-class Guild;
-class Group;
-class Item;
-class Player;
-class Quest;
-class Spell;
-class SpellCastTargets;
-class Transport;
-class Unit;
-class Weather;
-class WorldPacket;
-#ifndef CLASSIC
-#ifndef TBC
-#ifdef TRINITY
-class Vehicle;
-#else
-class VehicleInfo;
-typedef VehicleInfo Vehicle;
-#endif
-#endif
-#endif
-
 enum RegisterTypes
 {
     REGTYPE_PACKET,
@@ -86,7 +25,7 @@ enum RegisterTypes
     REGTYPE_COUNT
 };
 
-// RegisterPacketEvent(Opcode, function)
+// RegisterPacketEvent(Opcode, event, function)
 // SERVER_EVENT_ON_PACKET_RECEIVE          =     5,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
 // SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN  =     6,       // Not Implemented
 // SERVER_EVENT_ON_PACKET_SEND             =     7,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
@@ -114,7 +53,7 @@ enum ServerEvents
     WORLD_EVENT_ON_SHUTDOWN                 =     15,       // (event)
 
     // Eluna
-    ELUNA_EVENT_ON_RESTART                  =     16,       // (event)
+    ELUNA_EVENT_ON_LUA_STATE_CLOSE          =     16,       // (event)
 
     // Map
     MAP_EVENT_ON_CREATE                     =     17,       // (event, map)
@@ -319,164 +258,4 @@ enum GossipEvents
     GOSSIP_EVENT_ON_SELECT                          = 2,    // (event, player, object, sender, intid, code, menu_id) - Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip
     GOSSIP_EVENT_COUNT
 };
-
-class HookMgr
-{
-public:
-    int userdata_table;
-    void RemoveRef(const void* obj) const;
-
-    CreatureAI* GetAI(Creature* creature);
-
-#ifndef MANGOS
-    GameObjectAI* GetAI(GameObject* gameObject);
-#endif
-
-    /* Custom */
-    bool OnCommand(Player* player, const char* text);
-    void OnWorldUpdate(uint32 diff);
-    void OnLootItem(Player* pPlayer, Item* pItem, uint32 count, uint64 guid);
-    void OnLootMoney(Player* pPlayer, uint32 amount);
-    void OnFirstLogin(Player* pPlayer);
-    void OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
-    void OnRepop(Player* pPlayer);
-    void OnResurrect(Player* pPlayer);
-    void OnQuestAbandon(Player* pPlayer, uint32 questId);
-    InventoryResult OnCanUseItem(const Player* pPlayer, uint32 itemEntry);
-    void OnEngineRestart();
-    bool OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel);
-
-    /* Item */
-    bool OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget);
-    bool OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest);
-    bool OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
-    bool OnExpire(Player* pPlayer, ItemTemplate const* pProto);
-    bool OnRemove(Player* pPlayer, Item* item);
-    void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, std::string code);
-
-    /* Creature */
-    bool OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, Creature* pTarget);
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature);
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action);
-    bool OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code);
-    bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
-    bool OnQuestComplete(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
-    bool OnQuestReward(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
-    uint32 GetDialogStatus(Player* pPlayer, Creature* pCreature);
-    void OnSummoned(Creature* creature, Unit* summoner);
-
-    /* GameObject */
-    bool OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, GameObject* pTarget);
-    bool OnGossipHello(Player* pPlayer, GameObject* pGameObject);
-    bool OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action);
-    bool OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action, const char* code);
-    bool OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
-    bool OnQuestComplete(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
-    bool OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
-    uint32 GetDialogStatus(Player* pPlayer, GameObject* pGameObject);
-#ifndef CLASSIC
-#ifndef TBC
-    void OnDestroyed(GameObject* pGameObject, Player* pPlayer);
-    void OnDamaged(GameObject* pGameObject, Player* pPlayer);
-#endif
-#endif
-    void OnLootStateChanged(GameObject* pGameObject, uint32 state);
-    void OnGameObjectStateChanged(GameObject* pGameObject, uint32 state);
-    void UpdateAI(GameObject* pGameObject, uint32 diff);
-    void OnSpawn(GameObject* gameobject);
-
-    /* Packet */
-    bool OnPacketSend(WorldSession* session, WorldPacket& packet);
-    bool OnPacketReceive(WorldSession* session, WorldPacket& packet);
-
-    /* Player */
-    void OnPlayerEnterCombat(Player* pPlayer, Unit* pEnemy);
-    void OnPlayerLeaveCombat(Player* pPlayer);
-    void OnPVPKill(Player* pKiller, Player* pKilled);
-    void OnCreatureKill(Player* pKiller, Creature* pKilled);
-    void OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled);
-    void OnLevelChanged(Player* pPlayer, uint8 oldLevel);
-    void OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints);
-    void OnTalentsReset(Player* pPlayer, bool noCost);
-    void OnMoneyChanged(Player* pPlayer, int32& amount);
-    void OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim);
-    void OnReputationChange(Player* pPlayer, uint32 factionID, int32& standing, bool incremental);
-    void OnDuelRequest(Player* pTarget, Player* pChallenger);
-    void OnDuelStart(Player* pStarter, Player* pChallenger);
-    void OnDuelEnd(Player* pWinner, Player* pLoser, DuelCompleteType type);
-    bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg);
-    bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Group* pGroup);
-    bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Guild* pGuild);
-    bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Channel* pChannel);
-    bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver);
-    void OnEmote(Player* pPlayer, uint32 emote);
-    void OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint64 guid);
-    void OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck);
-    void OnLogin(Player* pPlayer);
-    void OnLogout(Player* pPlayer);
-    void OnCreate(Player* pPlayer);
-    void OnDelete(uint32 guid);
-    void OnSave(Player* pPlayer);
-    void OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapid, bool permanent);
-    void OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea);
-    void OnMapChanged(Player* pPlayer);
-    void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, std::string code);
-
-#ifndef CLASSIC
-#ifndef TBC
-    /* Vehicle */
-    void OnInstall(Vehicle* vehicle);
-    void OnUninstall(Vehicle* vehicle);
-    void OnInstallAccessory(Vehicle* vehicle, Creature* accessory);
-    void OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId);
-    void OnRemovePassenger(Vehicle* vehicle, Unit* passenger);
-#endif
-#endif
-
-    /* AreaTrigger */
-    bool OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger);
-
-    /* Weather */
-    void OnChange(Weather* weather, WeatherState state, float grade);
-
-    /* Auction House */
-    void OnAdd(AuctionHouseObject* auctionHouse);
-    void OnRemove(AuctionHouseObject* auctionHouse);
-    void OnSuccessful(AuctionHouseObject* auctionHouse);
-    void OnExpire(AuctionHouseObject* auctionHouse);
-
-    /* Guild */
-    void OnAddMember(Guild* guild, Player* player, uint32 plRank);
-    void OnRemoveMember(Guild* guild, Player* player, bool isDisbanding);
-    void OnMOTDChanged(Guild* guild, const std::string& newMotd);
-    void OnInfoChanged(Guild* guild, const std::string& newInfo);
-    void OnCreate(Guild* guild, Player* leader, const std::string& name);
-    void OnDisband(Guild* guild);
-    void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair);
-    void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount);
-    void OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId, bool isDestBank, uint8 destContainer, uint8 destSlotId);
-    void OnEvent(Guild* guild, uint8 eventType, uint32 playerGuid1, uint32 playerGuid2, uint8 newRank);
-    void OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playerGuid, uint32 itemOrMoney, uint16 itemStackCount, uint8 destTabId);
-
-    /* Group */
-    void OnAddMember(Group* group, uint64 guid);
-    void OnInviteMember(Group* group, uint64 guid);
-    void OnRemoveMember(Group* group, uint64 guid, uint8 method);
-    void OnChangeLeader(Group* group, uint64 newLeaderGuid, uint64 oldLeaderGuid);
-    void OnDisband(Group* group);
-    void OnCreate(Group* group, uint64 leaderGuid, GroupType groupType);
-
-    /* Map */
-    void OnCreate(Map* map);
-    void OnDestroy(Map* map);
-    void OnPlayerEnter(Map* map, Player* player);
-    void OnPlayerLeave(Map* map, Player* player);
-    void OnUpdate(Map* map, uint32 diff);
-};
-#ifdef MANGOS
-#define sHookMgr (&MaNGOS::Singleton<HookMgr>::Instance())
-#else
-#define sHookMgr ACE_Singleton<HookMgr, ACE_Null_Mutex>::instance()
-#endif
-
 #endif

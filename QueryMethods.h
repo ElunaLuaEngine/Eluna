@@ -17,13 +17,13 @@ namespace LuaQuery
     /* BOOLEAN */
     int IsNull(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
 #ifdef MANGOS
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].IsNULL());
+            Eluna::Push(L, RESULT->Fetch()[col].IsNULL());
 #else
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].IsNull());
+            Eluna::Push(L, RESULT->Fetch()[col].IsNull());
 #endif
         return 1;
     }
@@ -31,119 +31,119 @@ namespace LuaQuery
     /* GETTERS */
     int GetColumnCount(lua_State* L, QueryResult* result)
     {
-        sEluna->Push(L, RESULT->GetFieldCount());
+        Eluna::Push(L, RESULT->GetFieldCount());
         return 1;
     }
 
     int GetRowCount(lua_State* L, QueryResult* result)
     {
         if (RESULT->GetRowCount() > (uint32)-1)
-            sEluna->Push(L, (uint32)-1);
+            Eluna::Push(L, (uint32)-1);
         else
-            sEluna->Push(L, RESULT->GetRowCount());
+            Eluna::Push(L, RESULT->GetRowCount());
         return 1;
     }
 
     int GetBool(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetBool());
+            Eluna::Push(L, RESULT->Fetch()[col].GetBool());
         return 1;
     }
 
     int GetUInt8(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetUInt8());
+            Eluna::Push(L, RESULT->Fetch()[col].GetUInt8());
         return 1;
     }
 
     int GetUInt16(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetUInt16());
+            Eluna::Push(L, RESULT->Fetch()[col].GetUInt16());
         return 1;
     }
 
     int GetUInt32(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetUInt32());
+            Eluna::Push(L, RESULT->Fetch()[col].GetUInt32());
         return 1;
     }
 
     int GetUInt64(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetUInt64());
+            Eluna::Push(L, RESULT->Fetch()[col].GetUInt64());
         return 1;
     }
 
     int GetInt8(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetInt8());
+            Eluna::Push(L, RESULT->Fetch()[col].GetInt8());
         return 1;
     }
 
     int GetInt16(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetInt16());
+            Eluna::Push(L, RESULT->Fetch()[col].GetInt16());
         return 1;
     }
 
     int GetInt32(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetInt32());
+            Eluna::Push(L, RESULT->Fetch()[col].GetInt32());
         return 1;
     }
 
     int GetInt64(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetInt64());
+            Eluna::Push(L, RESULT->Fetch()[col].GetInt64());
         return 1;
     }
 
     int GetFloat(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetFloat());
+            Eluna::Push(L, RESULT->Fetch()[col].GetFloat());
         return 1;
     }
 
     int GetDouble(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetDouble());
+            Eluna::Push(L, RESULT->Fetch()[col].GetDouble());
         return 1;
     }
 
     int GetString(lua_State* L, QueryResult* result)
     {
-        uint32 col = sEluna->CHECKVAL<uint32>(L, 2);
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-            sEluna->Push(L, RESULT->Fetch()[col].GetString());
+            Eluna::Push(L, RESULT->Fetch()[col].GetString());
         return 1;
     }
 
     /* OTHER */
     int NextRow(lua_State* L, QueryResult* result)
     {
-        sEluna->Push(L, RESULT->NextRow());
+        Eluna::Push(L, RESULT->NextRow());
         return 1;
     }
 };
