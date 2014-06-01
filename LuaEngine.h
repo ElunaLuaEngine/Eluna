@@ -512,7 +512,7 @@ public:
 #ifdef MANGOS
         return WorldTimer::getMSTimeDiff(oldMSTime, GetCurrTime());
 #else
-        return GetMSTimeDiffToNow(uint32 oldMSTime);
+        return GetMSTimeDiffToNow(oldMSTime);
 #endif
     }
 
