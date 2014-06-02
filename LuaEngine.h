@@ -30,6 +30,7 @@ extern "C"
 #endif
 #include "Group.h"
 #include "Item.h"
+#include "Opcodes.h"
 #include "Weather.h"
 #include "World.h"
 
