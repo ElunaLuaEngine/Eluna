@@ -425,6 +425,9 @@ struct EntryBind
     ElunaEntryMap Bindings; // Binding store Bindings[entryId][eventId] = funcRef;
 };
 
+template<typename T>
+class ElunaTemplate;
+
 class Eluna
 {
 public:
