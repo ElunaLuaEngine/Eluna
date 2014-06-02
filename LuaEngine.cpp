@@ -130,7 +130,7 @@ void Eluna::GetScripts(std::string path, ScriptPaths& scripts)
     }
 
     ACE_DIRENT *directory = 0;
-    while (directory = dir.read())
+    while ((directory = dir.read()))
     {
         // Skip the ".." and "." files.
         if (ACE::isdotdir(directory->d_name))
@@ -741,7 +741,7 @@ EventMgr::LuaEvent::~LuaEvent()
     luaL_unref(E.L, LUA_REGISTRYINDEX, funcRef); // Free lua function ref
 }
 
-bool EventMgr::LuaEvent::Execute(uint64 time, uint32 diff)
+bool EventMgr::LuaEvent::Execute(uint64 /*time*/, uint32 /*diff*/)
 {
     bool remove = (calls == 1);
     if (!remove)

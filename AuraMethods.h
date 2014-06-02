@@ -115,7 +115,6 @@ namespace LuaAura
 
     int Remove(lua_State* L, Aura* aura)
     {
-        int duration = Eluna::CHECKVAL<int>(L, 2);
 #ifdef MANGOS
         aura->GetHolder()->RemoveAura(aura->GetEffIndex());
 #else

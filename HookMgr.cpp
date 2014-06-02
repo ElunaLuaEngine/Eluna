@@ -62,7 +62,6 @@ ENDCALL();
     lua_State* L = sEluna->L; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
-    EntryBind* _LuaBindMap = sEluna->BINDMAP; \
     lua_rawgeti(L, LUA_REGISTRYINDEX, _Luabind); \
     Eluna::Push(L, _LuaEvent);
 
