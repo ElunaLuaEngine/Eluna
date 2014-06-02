@@ -121,10 +121,6 @@ enum SelectAggroTarget
 #ifdef TBC
 #define SPELL_AURA_MOD_KILL_XP_PCT  SPELL_AURA_MOD_XP_PCT
 #endif
-#ifdef CLASSIC
-#undef Opcodes
-#define Opcodes                 OpcodesList
-#endif
 #else
 #define eWorld                  (sWorld)
 #define eMapMgr                 (sMapMgr)
@@ -147,6 +143,9 @@ typedef ThreatContainer::StorageType ThreatList;
 #ifdef CATA
 #define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
 #endif
+#endif
+#ifndef CLASSIC
+typedef OpcodesList             Opcodes
 #endif
 
 class Eluna;

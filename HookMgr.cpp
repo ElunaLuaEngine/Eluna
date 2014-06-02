@@ -173,7 +173,7 @@ void Eluna::OnPacketSendAny(Player* player, WorldPacket& packet, bool& result)
 }
 void Eluna::OnPacketSendOne(Player* player, WorldPacket& packet, bool& result)
 {
-    ENTRY_BEGIN(PacketEventBindings, Opcodes(packet.GetOpcode()), SERVER_EVENT_ON_PACKET_SEND, return);
+    ENTRY_BEGIN(PacketEventBindings, OpcodesList(packet.GetOpcode()), SERVER_EVENT_ON_PACKET_SEND, return);
     Push(L, new WorldPacket(packet));
     Push(L, player);
     ENTRY_EXECUTE(2);
@@ -224,7 +224,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
 }
 void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result)
 {
-    ENTRY_BEGIN(PacketEventBindings, Opcodes(packet.GetOpcode()), SERVER_EVENT_ON_PACKET_RECEIVE, return);
+    ENTRY_BEGIN(PacketEventBindings, OpcodesList(packet.GetOpcode()), SERVER_EVENT_ON_PACKET_RECEIVE, return);
     Push(L, new WorldPacket(packet));
     Push(L, player);
     ENTRY_EXECUTE(2);

@@ -831,7 +831,7 @@ namespace LuaGlobalFunctions
         if (opcode >= NUM_MSG_TYPES)
             return luaL_argerror(L, 1, "valid opcode expected");
 
-        Eluna::Push(L, new WorldPacket((Opcodes)opcode, size));
+        Eluna::Push(L, new WorldPacket((OpcodesList)opcode, size));
         return 1;
     }
 

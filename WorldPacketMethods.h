@@ -29,7 +29,7 @@ namespace LuaPacket
         uint32 opcode = Eluna::CHECKVAL<uint32>(L, 2);
         if (opcode >= NUM_MSG_TYPES)
             return luaL_argerror(L, 2, "valid opcode expected");
-        packet->SetOpcode((Opcodes)opcode);
+        packet->SetOpcode((OpcodesList)opcode);
         return 0;
     }
 
