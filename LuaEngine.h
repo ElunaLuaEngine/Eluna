@@ -430,8 +430,12 @@ class ElunaTemplate;
 
 class Eluna
 {
+private:
+    // prevent copy
+    Eluna(Eluna const&);
+    Eluna& operator=(const Eluna&);
+
 public:
-    friend class ScriptMgr;
     typedef std::set<std::string> ScriptPaths;
 
     static Eluna* GEluna;
@@ -585,11 +589,11 @@ public:
             return true;
         }
 
+        bool i_nearest;
         WorldObject const* i_obj;
         float i_range;
         uint16 i_typeMask;
         uint32 i_entry;
-        bool i_nearest;
         uint32 i_hostile;
 
         WorldObjectInRangeCheck(WorldObjectInRangeCheck const&);
