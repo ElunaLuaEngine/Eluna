@@ -112,11 +112,11 @@ namespace LuaGlobalFunctions
         uint32 instanceID = Eluna::CHECKVAL<uint32>(L, 2, 0);
         uint32 team = Eluna::CHECKVAL<uint32>(L, 3, TEAM_NEUTRAL);
 
+        lua_newtable(L);
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
             return 1;
 
-        lua_newtable(L);
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
@@ -435,8 +435,6 @@ namespace LuaGlobalFunctions
     int WorldDBQuery(lua_State* L)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
-        if (!query)
-            return 1;
 
         QueryResult* result = NULL;
 #ifdef MANGOS
@@ -446,26 +444,23 @@ namespace LuaGlobalFunctions
         if (res)
             result = new QueryResult(res);
 #endif
-        if (!result)
-            return 1;
-
-        Eluna::Push(L, result);
+        if (result)
+            Eluna::Push(L, result);
+        else
+            Eluna::Push(L);
         return 1;
     }
 
     int WorldDBExecute(lua_State* L)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
-        if (query)
-            WorldDatabase.Execute(query);
+        WorldDatabase.Execute(query);
         return 0;
     }
 
     int CharDBQuery(lua_State* L)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
-        if (!query)
-            return 1;
 
         QueryResult* result = NULL;
 #ifdef MANGOS
@@ -475,18 +470,17 @@ namespace LuaGlobalFunctions
         if (res)
             result = new QueryResult(res);
 #endif
-        if (!result)
-            return 1;
-
-        Eluna::Push(L, result);
+        if (result)
+            Eluna::Push(L, result);
+        else
+            Eluna::Push(L);
         return 1;
     }
 
     int CharDBExecute(lua_State* L)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
-        if (query)
-            CharacterDatabase.Execute(query);
+        CharacterDatabase.Execute(query);
         return 0;
     }
 
@@ -502,18 +496,17 @@ namespace LuaGlobalFunctions
         if (res)
             result = new QueryResult(res);
 #endif
-        if (!result)
-            return 0;
-
-        Eluna::Push(L, result);
+        if (result)
+            Eluna::Push(L, result);
+        else
+            Eluna::Push(L);
         return 1;
     }
 
     int AuthDBExecute(lua_State* L)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
-        if (query)
-            LoginDatabase.Execute(query);
+        LoginDatabase.Execute(query);
         return 0;
     }
 
@@ -528,6 +521,8 @@ namespace LuaGlobalFunctions
         functionRef = sEluna->m_EventMgr->AddEvent(&sEluna->m_EventMgr->GlobalEvents, functionRef, delay, repeats);
         if (functionRef)
             Eluna::Push(L, functionRef);
+        else
+            Eluna::Push(L);
         return 1;
     }
 
@@ -569,13 +564,19 @@ namespace LuaGlobalFunctions
 #if (!defined(TBC) && !defined(CLASSIC))
         uint32 phase = Eluna::CHECKVAL<uint32>(L, 11, PHASEMASK_NORMAL);
         if (!phase)
+        {
+            Eluna::Push(L);
             return 1;
+        }
 #endif
 
 #ifdef MANGOS
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
+        {
+            Eluna::Push(L);
             return 1;
+        }
 
         if (spawntype == 1) // spawn creature
         {
@@ -583,7 +584,10 @@ namespace LuaGlobalFunctions
             {
                 CreatureInfo const* cinfo = ObjectMgr::GetCreatureTemplate(entry);
                 if (!cinfo)
+                {
+                    Eluna::Push(L);
                     return 1;
+                }
 
 #if (defined(TBC) || defined(CLASSIC))
                 CreatureCreatePos pos(map, x, y, z, o);
@@ -594,11 +598,15 @@ namespace LuaGlobalFunctions
                 // used guids from specially reserved range (can be 0 if no free values)
                 uint32 lowguid = eObjectMgr->GenerateStaticCreatureLowGuid();
                 if (!lowguid)
+                {
+                    Eluna::Push(L);
                     return 1;
+                }
 
                 if (!pCreature->Create(lowguid, pos, cinfo))
                 {
                     delete pCreature;
+                    Eluna::Push(L);
                     return 1;
                 }
 
@@ -626,7 +634,10 @@ namespace LuaGlobalFunctions
             {
                 CreatureInfo const* cinfo = ObjectMgr::GetCreatureTemplate(entry);
                 if (!cinfo)
+                {
+                    Eluna::Push(L);
                     return 1;
+                }
 
                 TemporarySummon* pCreature = new TemporarySummon(ObjectGuid(uint64(0)));
 #if (defined(TBC) || defined(CLASSIC))
@@ -638,7 +649,10 @@ namespace LuaGlobalFunctions
                 if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo, TEAM_NONE))
                 {
                     delete pCreature;
-                    return 1;
+                    {
+                        Eluna::Push(L);
+                        return 1;
+                    }
                 }
 
                 pCreature->SetRespawnCoord(pos);
@@ -665,12 +679,18 @@ namespace LuaGlobalFunctions
             {
                 const GameObjectInfo* gInfo = ObjectMgr::GetGameObjectInfo(entry);
                 if (!gInfo)
+                {
+                    Eluna::Push(L);
                     return 1;
+                }
 
                 // used guids from specially reserved range (can be 0 if no free values)
                 uint32 db_lowGUID = eObjectMgr->GenerateStaticGameObjectLowGuid();
                 if (!db_lowGUID)
+                {
+                    Eluna::Push(L);
                     return 1;
+                }
 
                 GameObject* pGameObj = new GameObject;
 #if (defined(TBC) || defined(CLASSIC))
@@ -680,6 +700,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete pGameObj;
+                    Eluna::Push(L);
                     return 1;
                 }
 
@@ -699,6 +720,7 @@ namespace LuaGlobalFunctions
                 if (!pGameObj->LoadFromDB(db_lowGUID, map))
                 {
                     delete pGameObj;
+                    Eluna::Push(L);
                     return 1;
                 }
 
@@ -721,6 +743,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete pGameObj;
+                    Eluna::Push(L);
                     return 1;
                 }
 
@@ -735,7 +758,10 @@ namespace LuaGlobalFunctions
 #else
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
+        {
+            Eluna::Push(L);
             return 1;
+        }
 
         Position pos = { x, y, z, o };
 
@@ -747,6 +773,7 @@ namespace LuaGlobalFunctions
                 if (!creature->Create(eObjectMgr->GenerateLowGuid(HIGHGUID_UNIT), map, phase, entry, x, y, z, o))
                 {
                     delete creature;
+                    Eluna::Push(L);
                     return 1;
                 }
 
@@ -756,6 +783,7 @@ namespace LuaGlobalFunctions
                 if (!creature->LoadCreatureFromDB(db_lowguid, map))
                 {
                     delete creature;
+                    Eluna::Push(L);
                     return 1;
                 }
 
@@ -766,7 +794,10 @@ namespace LuaGlobalFunctions
             {
                 TempSummon* creature = map->SummonCreature(entry, pos, NULL, durorresptime);
                 if (!creature)
+                {
+                    Eluna::Push(L);
                     return 1;
+                }
 
                 if (durorresptime)
                     creature->SetTempSummonType(TEMPSUMMON_TIMED_OR_DEAD_DESPAWN);
@@ -783,10 +814,16 @@ namespace LuaGlobalFunctions
         {
             const GameObjectTemplate* objectInfo = eObjectMgr->GetGameObjectTemplate(entry);
             if (!objectInfo)
+            {
+                Eluna::Push(L);
                 return 1;
+            }
 
             if (objectInfo->displayId && !sGameObjectDisplayInfoStore.LookupEntry(objectInfo->displayId))
+            {
+                Eluna::Push(L);
                 return 1;
+            }
 
             GameObject* object = new GameObject;
             uint32 lowguid = eObjectMgr->GenerateLowGuid(HIGHGUID_GAMEOBJECT);
@@ -794,6 +831,7 @@ namespace LuaGlobalFunctions
             if (!object->Create(lowguid, objectInfo->entry, map, phase, x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY))
             {
                 delete object;
+                Eluna::Push(L);
                 return 1;
             }
 
@@ -809,6 +847,7 @@ namespace LuaGlobalFunctions
                 if (!object->LoadGameObjectFromDB(lowguid, map))
                 {
                     delete object;
+                    Eluna::Push(L);
                     return 1;
                 }
 
@@ -820,6 +859,7 @@ namespace LuaGlobalFunctions
             return 1;
         }
 #endif
+        Eluna::Push(L);
         return 1;
     }
 
@@ -1126,7 +1166,10 @@ namespace LuaGlobalFunctions
         }
 
         if (nodes.size() < 2)
+        {
+            Eluna::Push(L);
             return 1;
+        }
         if (!pathId)
             pathId = sTaxiPathNodesByPath.size();
         if (sTaxiPathNodesByPath.size() <= pathId)
@@ -1153,7 +1196,10 @@ namespace LuaGlobalFunctions
             sTaxiPathNodesByPath[pathId].set(index++, TaxiPathNodePtr(new TaxiPathNodeEntry(entry)));
         }
         if (startNode >= nodeId)
+        {
+            Eluna::Push(L);
             return 1;
+        }
         sTaxiPathSetBySource[startNode][nodeId - 1] = TaxiPathBySourceAndDestination(pathId, price);
         Eluna::Push(L, pathId);
         return 1;

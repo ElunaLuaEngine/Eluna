@@ -339,7 +339,7 @@ template<typename T>
 struct EventBind
 {
     typedef std::vector<int> ElunaBindingMap;
-    typedef std::map<T, ElunaBindingMap> ElunaEntryMap;
+    typedef std::map<int, ElunaBindingMap> ElunaEntryMap;
 
     Eluna& E;
 
@@ -366,7 +366,7 @@ struct EventBind
 
     void Insert(int eventId, int funcRef) // Inserts a new registered event
     {
-        Bindings[(T)eventId].push_back(funcRef);
+        Bindings[eventId].push_back(funcRef);
     }
 
     // Gets the binding std::map containing all registered events with the function refs for the entry
@@ -397,7 +397,7 @@ struct EventBind
 template<typename T>
 struct EntryBind
 {
-    typedef std::map<T, int> ElunaBindingMap;
+    typedef std::map<int, int> ElunaBindingMap;
     typedef UNORDERED_MAP<uint32, ElunaBindingMap> ElunaEntryMap;
 
     Eluna& E;
@@ -424,13 +424,13 @@ struct EntryBind
 
     void Insert(uint32 entryId, int eventId, int funcRef) // Inserts a new registered event
     {
-        if (Bindings[entryId][(T)eventId])
+        if (Bindings[entryId][eventId])
         {
             luaL_unref(E.L, LUA_REGISTRYINDEX, funcRef); // free the unused ref
             luaL_error(E.L, "A function is already registered for entry (%d) event (%d)", entryId, eventId);
         }
         else
-            Bindings[entryId][(T)eventId] = funcRef;
+            Bindings[entryId][eventId] = funcRef;
     }
 
     // Gets the function ref of an entry for an event
@@ -974,7 +974,7 @@ public:
 
     static T* check(lua_State* L, int narg, bool error = true)
     {
-        T** ptrHold = static_cast<T**>(error ? luaL_checkudata(L, narg, tname) : lua_touserdata(L, narg));
+        T** ptrHold = static_cast<T**>(lua_touserdata(L, narg));
         if (!ptrHold)
         {
             if (error)
