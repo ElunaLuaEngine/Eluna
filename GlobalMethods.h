@@ -287,7 +287,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 2);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_PACKET, entry, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_PACKET, entry, ev, functionRef);
         return 0;
     }
 
@@ -298,7 +298,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 2);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_SERVER, 0, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_SERVER, 0, ev, functionRef);
         return 0;
     }
 
@@ -309,7 +309,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 2);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_PLAYER, 0, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_PLAYER, 0, ev, functionRef);
         return 0;
     }
 
@@ -320,7 +320,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 2);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_GUILD, 0, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_GUILD, 0, ev, functionRef);
         return 0;
     }
 
@@ -331,7 +331,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 2);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_GROUP, 0, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_GROUP, 0, ev, functionRef);
         return 0;
     }
 
@@ -343,7 +343,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_CREATURE_GOSSIP, entry, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_CREATURE_GOSSIP, entry, ev, functionRef);
         return 0;
     }
 
@@ -355,7 +355,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_GAMEOBJECT_GOSSIP, entry, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_GAMEOBJECT_GOSSIP, entry, ev, functionRef);
         return 0;
     }
 
@@ -367,7 +367,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_ITEM, entry, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_ITEM, entry, ev, functionRef);
         return 0;
     }
 
@@ -379,7 +379,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_ITEM_GOSSIP, entry, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_ITEM_GOSSIP, entry, ev, functionRef);
         return 0;
     }
 
@@ -391,7 +391,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_PLAYER_GOSSIP, menu_id, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_PLAYER_GOSSIP, menu_id, ev, functionRef);
         return 0;
     }
 
@@ -403,7 +403,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_CREATURE, entry, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_CREATURE, entry, ev, functionRef);
         return 0;
     }
 
@@ -415,7 +415,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 3);
         int functionRef = lua_ref(L, true);
         if (functionRef > 0)
-            sEluna->Register(REGTYPE_GAMEOBJECT, entry, ev, functionRef);
+            sEluna->Register(HookMgr::REGTYPE_GAMEOBJECT, entry, ev, functionRef);
         return 0;
     }
 

@@ -366,7 +366,7 @@ struct EventBind
 
     void Insert(int eventId, int funcRef) // Inserts a new registered event
     {
-        Bindings[eventId].push_back(funcRef);
+        Bindings[(T)eventId].push_back(funcRef);
     }
 
     // Gets the binding std::map containing all registered events with the function refs for the entry
@@ -424,13 +424,13 @@ struct EntryBind
 
     void Insert(uint32 entryId, int eventId, int funcRef) // Inserts a new registered event
     {
-        if (Bindings[entryId][eventId])
+        if (Bindings[entryId][(T)eventId])
         {
             luaL_unref(E.L, LUA_REGISTRYINDEX, funcRef); // free the unused ref
             luaL_error(E.L, "A function is already registered for entry (%d) event (%d)", entryId, eventId);
         }
         else
-            Bindings[entryId][eventId] = funcRef;
+            Bindings[entryId][(T)eventId] = funcRef;
     }
 
     // Gets the function ref of an entry for an event
