@@ -40,6 +40,7 @@ void Eluna::Initialize()
 void Eluna::Uninitialize()
 {
     delete GEluna;
+    scripts.clear();
 }
 
 void Eluna::ReloadEluna()
@@ -53,20 +54,20 @@ L(luaL_newstate()),
 
 m_EventMgr(new EventMgr(*this)),
 
-ServerEventBindings(new EventBind(*this)),
-PlayerEventBindings(new EventBind(*this)),
-GuildEventBindings(new EventBind(*this)),
-GroupEventBindings(new EventBind(*this)),
-VehicleEventBindings(new EventBind(*this)),
+ServerEventBindings(new EventBind<HookMgr::ServerEvents>(*this)),
+PlayerEventBindings(new EventBind<HookMgr::PlayerEvents>(*this)),
+GuildEventBindings(new EventBind<HookMgr::GuildEvents>(*this)),
+GroupEventBindings(new EventBind<HookMgr::GroupEvents>(*this)),
+VehicleEventBindings(new EventBind<HookMgr::VehicleEvents>(*this)),
 
-PacketEventBindings(new EntryBind(*this)),
-CreatureEventBindings(new EntryBind(*this)),
-CreatureGossipBindings(new EntryBind(*this)),
-GameObjectEventBindings(new EntryBind(*this)),
-GameObjectGossipBindings(new EntryBind(*this)),
-ItemEventBindings(new EntryBind(*this)),
-ItemGossipBindings(new EntryBind(*this)),
-playerGossipBindings(new EntryBind(*this))
+PacketEventBindings(new EntryBind<HookMgr::PacketEvents>(*this)),
+CreatureEventBindings(new EntryBind<HookMgr::CreatureEvents>(*this)),
+CreatureGossipBindings(new EntryBind<HookMgr::GossipEvents>(*this)),
+GameObjectEventBindings(new EntryBind<HookMgr::GameObjectEvents>(*this)),
+GameObjectGossipBindings(new EntryBind<HookMgr::GossipEvents>(*this)),
+ItemEventBindings(new EntryBind<HookMgr::ItemEvents>(*this)),
+ItemGossipBindings(new EntryBind<HookMgr::GossipEvents>(*this)),
+playerGossipBindings(new EntryBind<HookMgr::GossipEvents>(*this))
 {
     // open base lua
     luaL_openlibs(L);
@@ -525,56 +526,63 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
 {
     switch (regtype)
     {
-    case REGTYPE_PACKET:
-        if (evt < NUM_MSG_TYPES)
-        {
-            PacketEventBindings->Insert(id, evt, functionRef);
-            return;
-        }
-        break;
-
-    case REGTYPE_SERVER:
-        if (evt < SERVER_EVENT_COUNT)
+    case HookMgr::REGTYPE_SERVER:
+        if (evt < HookMgr::SERVER_EVENT_COUNT)
         {
             ServerEventBindings->Insert(evt, functionRef);
             return;
         }
         break;
 
-    case REGTYPE_PLAYER:
-        if (evt < PLAYER_EVENT_COUNT)
+    case HookMgr::REGTYPE_PLAYER:
+        if (evt < HookMgr::PLAYER_EVENT_COUNT)
         {
             PlayerEventBindings->Insert(evt, functionRef);
             return;
         }
         break;
 
-    case REGTYPE_GUILD:
-        if (evt < GUILD_EVENT_COUNT)
+    case HookMgr::REGTYPE_GUILD:
+        if (evt < HookMgr::GUILD_EVENT_COUNT)
         {
             GuildEventBindings->Insert(evt, functionRef);
             return;
         }
         break;
 
-    case REGTYPE_GROUP:
-        if (evt < GROUP_EVENT_COUNT)
+    case HookMgr::REGTYPE_GROUP:
+        if (evt < HookMgr::GROUP_EVENT_COUNT)
         {
             GroupEventBindings->Insert(evt, functionRef);
             return;
         }
         break;
 
-    case REGTYPE_VEHICLE:
-        if (evt < VEHICLE_EVENT_COUNT)
+    case HookMgr::REGTYPE_VEHICLE:
+        if (evt < HookMgr::VEHICLE_EVENT_COUNT)
         {
             VehicleEventBindings->Insert(evt, functionRef);
             return;
         }
         break;
 
-    case REGTYPE_CREATURE:
-        if (evt < CREATURE_EVENT_COUNT)
+    case HookMgr::REGTYPE_PACKET:
+        if (evt < HookMgr::PACKET_EVENT_COUNT)
+        {
+            if (id >= NUM_MSG_TYPES)
+            {
+                luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                luaL_error(L, "Couldn't find a creature with (ID: %d)!", id);
+                return;
+            }
+
+            PacketEventBindings->Insert(id, evt, functionRef);
+            return;
+        }
+        break;
+
+    case HookMgr::REGTYPE_CREATURE:
+        if (evt < HookMgr::CREATURE_EVENT_COUNT)
         {
             if (!eObjectMgr->GetCreatureTemplate(id))
             {
@@ -588,8 +596,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         }
         break;
 
-    case REGTYPE_CREATURE_GOSSIP:
-        if (evt < GOSSIP_EVENT_COUNT)
+    case HookMgr::REGTYPE_CREATURE_GOSSIP:
+        if (evt < HookMgr::GOSSIP_EVENT_COUNT)
         {
             if (!eObjectMgr->GetCreatureTemplate(id))
             {
@@ -603,8 +611,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         }
         break;
 
-    case REGTYPE_GAMEOBJECT:
-        if (evt < GAMEOBJECT_EVENT_COUNT)
+    case HookMgr::REGTYPE_GAMEOBJECT:
+        if (evt < HookMgr::GAMEOBJECT_EVENT_COUNT)
         {
             if (!eObjectMgr->GetGameObjectTemplate(id))
             {
@@ -618,8 +626,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         }
         break;
 
-    case REGTYPE_GAMEOBJECT_GOSSIP:
-        if (evt < GOSSIP_EVENT_COUNT)
+    case HookMgr::REGTYPE_GAMEOBJECT_GOSSIP:
+        if (evt < HookMgr::GOSSIP_EVENT_COUNT)
         {
             if (!eObjectMgr->GetGameObjectTemplate(id))
             {
@@ -633,8 +641,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         }
         break;
 
-    case REGTYPE_ITEM:
-        if (evt < ITEM_EVENT_COUNT)
+    case HookMgr::REGTYPE_ITEM:
+        if (evt < HookMgr::ITEM_EVENT_COUNT)
         {
             if (!eObjectMgr->GetItemTemplate(id))
             {
@@ -648,8 +656,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         }
         break;
 
-    case REGTYPE_ITEM_GOSSIP:
-        if (evt < GOSSIP_EVENT_COUNT)
+    case HookMgr::REGTYPE_ITEM_GOSSIP:
+        if (evt < HookMgr::GOSSIP_EVENT_COUNT)
         {
             if (!eObjectMgr->GetItemTemplate(id))
             {
@@ -663,8 +671,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         }
         break;
 
-    case REGTYPE_PLAYER_GOSSIP:
-        if (evt < GOSSIP_EVENT_COUNT)
+    case HookMgr::REGTYPE_PLAYER_GOSSIP:
+        if (evt < HookMgr::GOSSIP_EVENT_COUNT)
         {
             playerGossipBindings->Insert(id, evt, functionRef);
             return;
@@ -673,53 +681,6 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     luaL_error(L, "Unknown event type (regtype %d, id %d, event %d)", regtype, id, evt);
-}
-
-void EventBind::Clear()
-{
-    for (ElunaEntryMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
-    {
-        for (ElunaBindingMap::iterator it = itr->second.begin(); it != itr->second.end(); ++it)
-            luaL_unref(E.L, LUA_REGISTRYINDEX, (*it));
-        itr->second.clear();
-    }
-    Bindings.clear();
-}
-
-void EventBind::Insert(int eventId, int funcRef)
-{
-    Bindings[eventId].push_back(funcRef);
-}
-
-bool EventBind::HasEvents(int eventId) const
-{
-    if (Bindings.empty())
-        return false;
-    if (Bindings.find(eventId) == Bindings.end())
-        return false;
-    return true;
-}
-
-void EntryBind::Clear()
-{
-    for (ElunaEntryMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
-    {
-        for (ElunaBindingMap::const_iterator it = itr->second.begin(); it != itr->second.end(); ++it)
-            luaL_unref(E.L, LUA_REGISTRYINDEX, it->second);
-        itr->second.clear();
-    }
-    Bindings.clear();
-}
-
-void EntryBind::Insert(uint32 entryId, int eventId, int funcRef)
-{
-    if (Bindings[entryId][eventId])
-    {
-        luaL_unref(E.L, LUA_REGISTRYINDEX, funcRef); // free the unused ref
-        luaL_error(E.L, "A function is already registered for entry (%d) event (%d)", entryId, eventId);
-    }
-    else
-        Bindings[entryId][eventId] = funcRef;
 }
 
 EventMgr::LuaEvent::LuaEvent(Eluna& _E, EventProcessor* _events, int _funcRef, uint32 _delay, uint32 _calls, Object* _obj):

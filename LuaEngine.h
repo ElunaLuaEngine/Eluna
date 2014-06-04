@@ -20,6 +20,7 @@ extern "C"
 #include <ace/Singleton.h>
 #include <ace/Atomic_Op.h>
 // enums & singletons
+#include "HookMgr.h"
 #ifdef MANGOS
 #include "AccountMgr.h"
 #include "Config/Config.h"
@@ -334,10 +335,12 @@ struct EventMgr
     }
 };
 
+template<typename T>
 struct EventBind
 {
     typedef std::vector<int> ElunaBindingMap;
-    typedef std::map<int, ElunaBindingMap> ElunaEntryMap;
+    typedef std::map<T, ElunaBindingMap> ElunaEntryMap;
+
     Eluna& E;
 
     EventBind(Eluna& _E): E(_E)
@@ -349,11 +352,25 @@ struct EventBind
         Clear();
     }
 
-    void Clear(); // unregisters all registered functions and clears all registered events from the bind std::maps (reset)
-    void Insert(int eventId, int funcRef); // Inserts a new registered event
+    // unregisters all registered functions and clears all registered events from the bind std::maps (reset)
+    void Clear()
+    {
+        for (ElunaEntryMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
+        {
+            for (ElunaBindingMap::iterator it = itr->second.begin(); it != itr->second.end(); ++it)
+                luaL_unref(E.L, LUA_REGISTRYINDEX, (*it));
+            itr->second.clear();
+        }
+        Bindings.clear();
+    }
+
+    void Insert(int eventId, int funcRef) // Inserts a new registered event
+    {
+        Bindings[eventId].push_back(funcRef);
+    }
 
     // Gets the binding std::map containing all registered events with the function refs for the entry
-    ElunaBindingMap* GetBindMap(int eventId)
+    ElunaBindingMap* GetBindMap(T eventId)
     {
         if (Bindings.empty())
             return NULL;
@@ -365,15 +382,24 @@ struct EventBind
     }
 
     // Checks if there are events for ID
-    bool HasEvents(int eventId) const;
+    bool HasEvents(T eventId) const
+    {
+        if (Bindings.empty())
+            return false;
+        if (Bindings.find(eventId) == Bindings.end())
+            return false;
+        return true;
+    }
 
     ElunaEntryMap Bindings; // Binding store Bindings[eventId] = {funcRef};
 };
 
+template<typename T>
 struct EntryBind
 {
-    typedef std::map<int, int> ElunaBindingMap;
+    typedef std::map<T, int> ElunaBindingMap;
     typedef UNORDERED_MAP<uint32, ElunaBindingMap> ElunaEntryMap;
+
     Eluna& E;
 
     EntryBind(Eluna& _E): E(_E)
@@ -385,11 +411,30 @@ struct EntryBind
         Clear();
     }
 
-    void Clear(); // unregisters all registered functions and clears all registered events from the bind std::maps (reset)
-    void Insert(uint32 entryId, int eventId, int funcRef); // Inserts a new registered event
+    void Clear() // unregisters all registered functions and clears all registered events from the bind std::maps (reset)
+    {
+        for (ElunaEntryMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
+        {
+            for (ElunaBindingMap::const_iterator it = itr->second.begin(); it != itr->second.end(); ++it)
+                luaL_unref(E.L, LUA_REGISTRYINDEX, it->second);
+            itr->second.clear();
+        }
+        Bindings.clear();
+    }
+
+    void Insert(uint32 entryId, int eventId, int funcRef) // Inserts a new registered event
+    {
+        if (Bindings[entryId][eventId])
+        {
+            luaL_unref(E.L, LUA_REGISTRYINDEX, funcRef); // free the unused ref
+            luaL_error(E.L, "A function is already registered for entry (%d) event (%d)", entryId, eventId);
+        }
+        else
+            Bindings[entryId][eventId] = funcRef;
+    }
 
     // Gets the function ref of an entry for an event
-    int GetBind(uint32 entryId, int eventId) const
+    int GetBind(uint32 entryId, T eventId) const
     {
         if (Bindings.empty())
             return 0;
@@ -445,21 +490,20 @@ public:
 
     EventMgr* m_EventMgr;
 
-    // Use templates for EventBind
-    EventBind* ServerEventBindings;
-    EventBind* PlayerEventBindings;
-    EventBind* GuildEventBindings;
-    EventBind* GroupEventBindings;
-    EventBind* VehicleEventBindings;
+    EventBind<HookMgr::ServerEvents>*       ServerEventBindings;
+    EventBind<HookMgr::PlayerEvents>*       PlayerEventBindings;
+    EventBind<HookMgr::GuildEvents>*        GuildEventBindings;
+    EventBind<HookMgr::GroupEvents>*        GroupEventBindings;
+    EventBind<HookMgr::VehicleEvents>*      VehicleEventBindings;
 
-    EntryBind* PacketEventBindings;
-    EntryBind* CreatureEventBindings;
-    EntryBind* CreatureGossipBindings;
-    EntryBind* GameObjectEventBindings;
-    EntryBind* GameObjectGossipBindings;
-    EntryBind* ItemEventBindings;
-    EntryBind* ItemGossipBindings;
-    EntryBind* playerGossipBindings;
+    EntryBind<HookMgr::PacketEvents>*       PacketEventBindings;
+    EntryBind<HookMgr::CreatureEvents>*     CreatureEventBindings;
+    EntryBind<HookMgr::GossipEvents>*       CreatureGossipBindings;
+    EntryBind<HookMgr::GameObjectEvents>*   GameObjectEventBindings;
+    EntryBind<HookMgr::GossipEvents>*       GameObjectGossipBindings;
+    EntryBind<HookMgr::ItemEvents>*         ItemEventBindings;
+    EntryBind<HookMgr::GossipEvents>*       ItemGossipBindings;
+    EntryBind<HookMgr::GossipEvents>*       playerGossipBindings;
 
     Eluna();
     ~Eluna();

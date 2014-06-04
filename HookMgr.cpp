@@ -8,6 +8,8 @@
 #include "LuaEngine.h"
 #include "Includes.h"
 
+using namespace HookMgr;
+
 /*
 Call model for EventBind:
 
@@ -30,26 +32,27 @@ ENDCALL();
     lua_State* L = sEluna->L; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
-    EventBind* _LuaBindMap = sEluna->BINDMAP; \
+    for (int i = 0; i < sEluna->BINDMAP->Bindings[EVENT].size(); ++i) \
+        lua_rawgeti(L, LUA_REGISTRYINDEX, (sEluna->BINDMAP->Bindings[EVENT][i])); \
+    int _LuaFuncTop = lua_gettop(L); \
     Eluna::Push(L, _LuaEvent);
 
 // use LUA_MULTRET for multiple return values
 // return values will be at top of stack if any
 #define EVENT_EXECUTE(RETVALS) \
     int _LuaReturnValues = RETVALS; \
-    int _LuaParams = lua_gettop(L) - _LuaStackTop; \
+    int _LuaParams = lua_gettop(L) - _LuaFuncTop; \
     if (_LuaParams < 1) \
-        { \
+    { \
         ELUNA_LOG_ERROR("[Eluna]: Executing event %u, params was %i. Report to devs", _LuaEvent, _LuaParams); \
-        } \
-    for (EventBind::ElunaBindingMap::const_iterator it = _LuaBindMap->Bindings[_LuaEvent].begin(); it != _LuaBindMap->Bindings[_LuaEvent].end(); ++it) \
-        { \
-        lua_rawgeti(L, LUA_REGISTRYINDEX, (*it)); \
-        int stacktop = lua_gettop(L); \
-        for (int i = stacktop - _LuaParams; i < stacktop; ++i) \
-            lua_pushvalue(L, i); \
+    } \
+    for (int j = _LuaFuncTop-_LuaStackTop; j > 0; --j) \
+    { \
+        for (int i = 0; i <= _LuaParams; ++i) \
+            lua_pushvalue(L, _LuaFuncTop+i); \
         Eluna::ExecuteCall(L, _LuaParams, _LuaReturnValues); \
-        } \
+        lua_remove(L, _LuaFuncTop--); \
+    } \
     for (int i = _LuaParams; i > 0; --i) \
         if (!lua_isnone(L, i)) \
             lua_remove(L, i);
@@ -75,9 +78,9 @@ ENDCALL();
 
 #define ENDCALL() \
     if (_LuaReturnValues != LUA_MULTRET && lua_gettop(L) != _LuaStackTop + _LuaReturnValues) \
-            { \
+    { \
         ELUNA_LOG_ERROR("[Eluna]: Ending event %u, stack top was %i and was supposed to be %i. Report to devs", _LuaEvent, lua_gettop(L), _LuaStackTop); \
-            } \
+    } \
     lua_settop(L, _LuaStackTop);
 
 void Eluna::OnLuaStateClose()
@@ -173,7 +176,7 @@ void Eluna::OnPacketSendAny(Player* player, WorldPacket& packet, bool& result)
 }
 void Eluna::OnPacketSendOne(Player* player, WorldPacket& packet, bool& result)
 {
-    ENTRY_BEGIN(PacketEventBindings, OpcodesList(packet.GetOpcode()), SERVER_EVENT_ON_PACKET_SEND, return);
+    ENTRY_BEGIN(PacketEventBindings, OpcodesList(packet.GetOpcode()), PACKET_EVENT_ON_PACKET_SEND, return);
     Push(L, new WorldPacket(packet));
     Push(L, player);
     ENTRY_EXECUTE(2);
@@ -224,7 +227,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
 }
 void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result)
 {
-    ENTRY_BEGIN(PacketEventBindings, OpcodesList(packet.GetOpcode()), SERVER_EVENT_ON_PACKET_RECEIVE, return);
+    ENTRY_BEGIN(PacketEventBindings, OpcodesList(packet.GetOpcode()), PACKET_EVENT_ON_PACKET_RECEIVE, return);
     Push(L, new WorldPacket(packet));
     Push(L, player);
     ENTRY_EXECUTE(2);
@@ -473,7 +476,7 @@ bool Eluna::OnCommand(Player* player, const char* text)
         }
     }
     bool result = true;
-    EVENT_BEGIN(ServerEventBindings, PLAYER_EVENT_ON_COMMAND, return result);
+    EVENT_BEGIN(PlayerEventBindings, PLAYER_EVENT_ON_COMMAND, return result);
     Push(L, player);
     Push(L, fullcmd);
     EVENT_EXECUTE(1);
