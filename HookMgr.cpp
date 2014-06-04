@@ -388,7 +388,7 @@ bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 }
 bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 {
-    ENTRY_BEGIN(ItemEventBindings, pItem->GetEntry(), GOSSIP_EVENT_ON_HELLO, return false);
+    ENTRY_BEGIN(ItemEventBindings, pItem->GetEntry(), ITEM_EVENT_ON_USE, return false);
     Push(L, pPlayer);
     Push(L, pItem);
 #ifdef MANGOS
@@ -422,7 +422,7 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
 }
 bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 {
-    ENTRY_BEGIN(ItemEventBindings, pItem->GetEntry(), ITEM_EVENT_ON_USE, return false);
+    ENTRY_BEGIN(ItemGossipBindings, pItem->GetEntry(), GOSSIP_EVENT_ON_HELLO, return false);
     Push(L, pPlayer);
     Push(L, pItem);
     ENTRY_EXECUTE(0);
@@ -1228,7 +1228,7 @@ bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex,
 
 bool Eluna::OnGossipHello(Player* pPlayer, Creature* pCreature)
 {
-    ENTRY_BEGIN(CreatureEventBindings, pCreature->GetEntry(), GOSSIP_EVENT_ON_HELLO, return false);
+    ENTRY_BEGIN(CreatureGossipBindings, pCreature->GetEntry(), GOSSIP_EVENT_ON_HELLO, return false);
     Push(L, pPlayer);
     Push(L, pCreature);
     ENTRY_EXECUTE(0);
@@ -1238,7 +1238,7 @@ bool Eluna::OnGossipHello(Player* pPlayer, Creature* pCreature)
 
 bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
-    ENTRY_BEGIN(CreatureEventBindings, pCreature->GetEntry(), GOSSIP_EVENT_ON_SELECT, return false);
+    ENTRY_BEGIN(CreatureGossipBindings, pCreature->GetEntry(), GOSSIP_EVENT_ON_SELECT, return false);
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(L, pPlayer);
     Push(L, pCreature);
@@ -1251,7 +1251,7 @@ bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, 
 
 bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code)
 {
-    ENTRY_BEGIN(CreatureEventBindings, pCreature->GetEntry(), GOSSIP_EVENT_ON_SELECT, return false);
+    ENTRY_BEGIN(CreatureGossipBindings, pCreature->GetEntry(), GOSSIP_EVENT_ON_SELECT, return false);
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(L, pPlayer);
     Push(L, pCreature);
@@ -1620,7 +1620,7 @@ bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex,
 
 bool Eluna::OnGossipHello(Player* pPlayer, GameObject* pGameObject)
 {
-    ENTRY_BEGIN(GameObjectEventBindings, pGameObject->GetEntry(), GOSSIP_EVENT_ON_HELLO, return false);
+    ENTRY_BEGIN(GameObjectGossipBindings, pGameObject->GetEntry(), GOSSIP_EVENT_ON_HELLO, return false);
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(L, pPlayer);
     Push(L, pGameObject);
@@ -1631,7 +1631,7 @@ bool Eluna::OnGossipHello(Player* pPlayer, GameObject* pGameObject)
 
 bool Eluna::OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action)
 {
-    ENTRY_BEGIN(GameObjectEventBindings, pGameObject->GetEntry(), GOSSIP_EVENT_ON_SELECT, return false);
+    ENTRY_BEGIN(GameObjectGossipBindings, pGameObject->GetEntry(), GOSSIP_EVENT_ON_SELECT, return false);
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(L, pPlayer);
     Push(L, pGameObject);
@@ -1644,7 +1644,7 @@ bool Eluna::OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 send
 
 bool Eluna::OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action, const char* code)
 {
-    ENTRY_BEGIN(GameObjectEventBindings, pGameObject->GetEntry(), GOSSIP_EVENT_ON_SELECT, return false);
+    ENTRY_BEGIN(GameObjectGossipBindings, pGameObject->GetEntry(), GOSSIP_EVENT_ON_SELECT, return false);
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(L, pPlayer);
     Push(L, pGameObject);
