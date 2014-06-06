@@ -426,6 +426,7 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
 bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 {
     ENTRY_BEGIN(ItemGossipBindings, pItem->GetEntry(), GOSSIP_EVENT_ON_HELLO, return false);
+    pPlayer->PlayerTalkClass->ClearMenus();
     Push(L, pPlayer);
     Push(L, pItem);
     ENTRY_EXECUTE(0);
@@ -1232,6 +1233,7 @@ bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex,
 bool Eluna::OnGossipHello(Player* pPlayer, Creature* pCreature)
 {
     ENTRY_BEGIN(CreatureGossipBindings, pCreature->GetEntry(), GOSSIP_EVENT_ON_HELLO, return false);
+    pPlayer->PlayerTalkClass->ClearMenus();
     Push(L, pPlayer);
     Push(L, pCreature);
     ENTRY_EXECUTE(0);
