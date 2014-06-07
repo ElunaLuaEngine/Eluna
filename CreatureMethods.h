@@ -243,7 +243,13 @@ namespace LuaCreature
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
 
+#ifdef MANGOS
+        float AttackDist = creature->GetAttackDistance(target);
+        float ThreatRadius = sWorld.getConfig(CONFIG_FLOAT_THREAT_RADIUS);
+        Eluna::Push(L, ThreatRadius > AttackDist ? ThreatRadius : AttackDist);
+#else
         Eluna::Push(L, creature->GetAggroRange(target));
+#endif
         return 1;
     }
 
