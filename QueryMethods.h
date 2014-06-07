@@ -136,7 +136,11 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
+#ifdef MANGOS
+            Eluna::Push(L, RESULT->Fetch()[col].GetCppString());
+#else
             Eluna::Push(L, RESULT->Fetch()[col].GetString());
+#endif
         return 1;
     }
 
@@ -144,7 +148,11 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
+#ifdef MANGOS
+            Eluna::Push(L, RESULT->Fetch()[col].GetString());
+#else
             Eluna::Push(L, RESULT->Fetch()[col].GetCString());
+#endif
         return 1;
     }
 
