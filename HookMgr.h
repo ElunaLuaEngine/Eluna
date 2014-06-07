@@ -84,7 +84,7 @@ namespace HookMgr
         AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, AHObject) // Not Implemented
 
 	    // AddOns
-        ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guid/group/channel
+        ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel
 
         SERVER_EVENT_COUNT
     };
@@ -197,7 +197,7 @@ namespace HookMgr
         CREATURE_EVENT_ON_REACH_WP                        = 6,  // (event, creature, type, id)
         CREATURE_EVENT_ON_AIUPDATE                        = 7,  // (event, creature, diff)
         CREATURE_EVENT_ON_RECEIVE_EMOTE                   = 8,  // (event, creature, player, emoteid)
-        CREATURE_EVENT_ON_DAMAGE_TAKEN                    = 9,  // (event, creature, attacker, damage)
+        CREATURE_EVENT_ON_DAMAGE_TAKEN                    = 9,  // (event, creature, attacker, damage) - Can return new damage
         CREATURE_EVENT_ON_PRE_COMBAT                      = 10, // (event, creature, target)
         CREATURE_EVENT_ON_ATTACKED_AT                     = 11, // (event, creature, attacker)
         CREATURE_EVENT_ON_OWNER_ATTACKED                  = 12, // (event, creature, target)    // Not on mangos
@@ -214,8 +214,8 @@ namespace HookMgr
         CREATURE_EVENT_ON_RESET                           = 23, // (event, creature)
         CREATURE_EVENT_ON_REACH_HOME                      = 24, // (event, creature)
         // UNUSED                                         = 25, // (event, creature)
-        CREATURE_EVENT_ON_CORPSE_REMOVED                  = 26, // (event, creature, respawndelay)
-        CREATURE_EVENT_ON_MOVE_IN_LOS                     = 27, // (event, creature, unit) // Doesnt actually check LOS
+        CREATURE_EVENT_ON_CORPSE_REMOVED                  = 26, // (event, creature, respawndelay) - Can return new respawndelay
+        CREATURE_EVENT_ON_MOVE_IN_LOS                     = 27, // (event, creature, unit) - Does not actually check LOS. Just uses the sight range
         // UNUSED                                         = 28, // (event, creature)
         // UNUSED                                         = 29, // (event, creature)
         CREATURE_EVENT_ON_DUMMY_EFFECT                    = 30, // (event, caster, spellid, effindex, creature)

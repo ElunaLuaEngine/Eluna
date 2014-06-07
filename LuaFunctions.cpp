@@ -294,7 +294,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "IsTaxi", &LuaUnit::IsTaxi },                                   // :IsTaxi()
     { "IsSpiritHealer", &LuaUnit::IsSpiritHealer },                   // :IsSpiritHealer()
     { "IsSpiritGuide", &LuaUnit::IsSpiritGuide },                     // :IsSpiritGuide()
-    { "IsTabardDesigner", &LuaUnit::IsTabardDesigner },               // :IsSpiritGuide()
+    { "IsTabardDesigner", &LuaUnit::IsTabardDesigner },               // :IsTabardDesigner()
     { "IsServiceProvider", &LuaUnit::IsServiceProvider },             // :IsServiceProvider()
     { "IsSpiritService", &LuaUnit::IsSpiritService },                 // :IsSpiritService()
     { "HealthBelowPct", &LuaUnit::HealthBelowPct },                   // :HealthBelowPct(int32 pct)
@@ -321,9 +321,9 @@ ElunaRegister<Unit> UnitMethods[] =
 #endif
 
     // Other
-    { "RegisterEvent", &LuaUnit::RegisterEvent },                     // :RegisterEvent(function, delay, calls)
-    { "RemoveEventById", &LuaUnit::RemoveEventById },                 // :RemoveEventById(eventID)
-    { "RemoveEvents", &LuaUnit::RemoveEvents },                       // :RemoveEvents()
+    { "RegisterEvent", &LuaUnit::RegisterEvent },                     // :RegisterEvent(function, delay, repeats) - The timer ticks if this unit is visible to someone. The function is called with arguments (eventid, delay, repeats, unit) after the time has passed if the unit exists. Returns EventId
+    { "RemoveEventById", &LuaUnit::RemoveEventById },                 // :RemoveEventById(eventID) - Removes a Registered (timed) event by it's ID.
+    { "RemoveEvents", &LuaUnit::RemoveEvents },                       // :RemoveEvents() - Removes all registered timed events
     { "AddAura", &LuaUnit::AddAura },                                 // :AddAura(spellId, target) - Adds an aura to the specified target
     { "RemoveAura", &LuaUnit::RemoveAura },                           // :RemoveAura(spellId[, casterGUID]) - Removes an aura from the unit by the spellId, casterGUID(Original caster) is optional
     { "RemoveAllAuras", &LuaUnit::RemoveAllAuras },                   // :RemoveAllAuras() - Removes all the unit's auras
@@ -337,7 +337,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "CastSpellAoF", &LuaUnit::CastSpellAoF },                       // :CastSpellAoF(x, y, z, spellID[, triggered]) - Casts the spell on coordinates, if triggered is false has mana cost and cast time
     { "PlayDirectSound", &LuaUnit::PlayDirectSound },                 // :PlayDirectSound(soundId, player) - Unit plays soundID to player, or everyone around if no player
     { "PlayDistanceSound", &LuaUnit::PlayDistanceSound },             // :PlayDistanceSound(soundId, player) - Unit plays soundID to player, or everyone around if no player. The sound fades the further you are
-    // {"Kill", &LuaUnit::Kill},                                    // :Kill(target, durabilityLoss) - Unit kills the target. Durabilityloss is true by default
+    { "Kill", &LuaUnit::Kill },                                       // :Kill(target, durabilityLoss) - Unit kills the target. Durabilityloss is true by default
     { "StopSpellCast", &LuaUnit::StopSpellCast },                     // :StopSpellCast(spellId(optional)) - Stops the unit from casting a spell. If a spellId is defined, it will stop that unit from casting that spell
     { "InterruptSpell", &LuaUnit::InterruptSpell },                   // :InterruptSpell(spellType, delayed(optional)) - Interrupts the unit's spell by the spellType. If delayed is true it will skip if the spell is delayed.
     { "SendChatMessageToPlayer", &LuaUnit::SendChatMessageToPlayer }, // :SendChatMessageToPlayer(type, lang, msg, target) - Unit sends a chat message to the given target player
@@ -370,6 +370,8 @@ ElunaRegister<Unit> UnitMethods[] =
     { "MoveStop", &LuaUnit::MoveStop },                               // :MoveStop()
     { "MoveExpire", &LuaUnit::MoveExpire },                           // :MoveExpire([reset])
     { "MoveClear", &LuaUnit::MoveClear },                             // :MoveClear([reset])
+    { "DealDamage", &LuaUnit::DealDamage },                           // :DealDamage(target, amount[, durabilityloss]) - Deals damage to target, durabilityloss is true by default
+    { "DealHeal", &LuaUnit::DealHeal },                               // :DealDamage(target, amount, spell[, critical]) - Heals target by given amount. This will be logged as being healed by spell as critical if true.
 
     { NULL, NULL },
 };
@@ -762,7 +764,6 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "CanFly", &LuaCreature::CanFly },                                                           // :CanFly() - Returns true if the creature can fly
 
     // Other
-    // {"Despawn", &LuaCreature::Despawn},                          // :Despawn([despawnDelay]) - Creature despawns after given time
     { "FleeToGetAssistance", &LuaCreature::FleeToGetAssistance },     // :FleeToGetAssistance() - Creature flees for assistance
     { "CallForHelp", &LuaCreature::CallForHelp },                     // :CallForHelp(radius) - Creature calls for help from units in radius
     { "CallAssistance", &LuaCreature::CallAssistance },               // :CallAssistance() - Creature calls for assistance
@@ -770,7 +771,6 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "DespawnOrUnsummon", &LuaCreature::DespawnOrUnsummon },         // :DespawnOrUnsummon([Delay]) - Despawns the creature after delay if given
     { "Respawn", &LuaCreature::Respawn },                             // :Respawn([force]) - Respawns the creature
     // {"AddLootMode", &LuaCreature::AddLootMode},                  // :AddLootMode(lootMode)
-    // {"DealDamage", &LuaCreature::DealDamage},                    // :DealDamage(target, amount) - Deals damage to target (if target) : if no target, unit will damage self
     // {"SendCreatureTalk", &LuaCreature::SendCreatureTalk},        // :SendCreatureTalk(id, playerGUID) - Sends a chat message to a playerGUID (player) by id. Id can be found in creature_text under the 'group_id' column
     { "AttackStart", &LuaCreature::AttackStart },                     // :AttackStart(target) - Creature attacks the specified target
     // {"ResetLootMode", &LuaCreature::ResetLootMode},
@@ -801,9 +801,9 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "IsSpawned", &LuaGameObject::IsSpawned },               // :IsSpawned()
 
     // Other
-    { "RegisterEvent", &LuaGameObject::RegisterEvent },       // :RegisterEvent(function, delay, calls)
-    { "RemoveEventById", &LuaGameObject::RemoveEventById },   // :RemoveEventById(eventID)
-    { "RemoveEvents", &LuaGameObject::RemoveEvents },         // :RemoveEvents()
+    { "RegisterEvent", &LuaGameObject::RegisterEvent },       // :RegisterEvent(function, delay, calls) - The timer ticks if this gameobject is visible to someone. The function is called with arguments (eventid, delay, repeats, gameobject) after the time has passed if the gameobject exists. Returns EventId
+    { "RemoveEventById", &LuaGameObject::RemoveEventById },   // :RemoveEventById(eventID) - Removes a Registered (timed) event by it's ID.
+    { "RemoveEvents", &LuaGameObject::RemoveEvents },         // :RemoveEvents() - Removes all registered timed events
     { "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },   // :RemoveFromWorld(del)
     { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },   // :UseDoorOrButton(delay) - Activates/closes/opens after X delay UNDOCUMENTED
     { "Despawn", &LuaGameObject::Despawn },                   // :Despawn([delay]) - Despawns the object after delay
@@ -1076,7 +1076,8 @@ ElunaRegister<QueryResult> QueryMethods[] =
     { "GetInt64", &LuaQuery::GetInt64 },                      // :GetInt64(column) - returns the value of a bigint column as string
     { "GetFloat", &LuaQuery::GetFloat },                      // :GetFloat(column) - returns the value of a float column
     { "GetDouble", &LuaQuery::GetDouble },                    // :GetDouble(column) - returns the value of a double column
-    { "GetString", &LuaQuery::GetString },                    // :GetString(column) - returns the value of a string column
+    { "GetString", &LuaQuery::GetString },                    // :GetString(column) - returns the value of a string column, always returns a string
+    { "GetCString", &LuaQuery::GetCString },                  // :GetCString(column) - returns the value of a string column, can return nil
     { "IsNull", &LuaQuery::IsNull },                          // :IsNull(column) - returns true if the column is null
 
     { NULL, NULL },

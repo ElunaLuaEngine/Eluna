@@ -140,6 +140,14 @@ namespace LuaQuery
         return 1;
     }
 
+    int GetCString(lua_State* L, QueryResult* result)
+    {
+        uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
+        if (col < RESULT->GetFieldCount())
+            Eluna::Push(L, RESULT->Fetch()[col].GetCString());
+        return 1;
+    }
+
     /* OTHER */
     int NextRow(lua_State* L, QueryResult* result)
     {

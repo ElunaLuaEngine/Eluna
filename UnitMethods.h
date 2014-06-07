@@ -1618,22 +1618,45 @@ namespace LuaUnit
         return 1;
     }
 
-    /*int DealDamage(lua_State* L, Unit* unit)
+    int DealDamage(lua_State* L, Unit* unit)
     {
-    Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
-    uint32 amount = Eluna::CHECKVAL<uint32>(L, 3);
+        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+        uint32 amount = Eluna::CHECKVAL<uint32>(L, 3);
+        bool durabilityloss = Eluna::CHECKVAL<bool>(L, 4, true);
 
-    unit->DealDamage(target, amount);
-    return 0;
-    }*/
+        unit->DealDamage(target, amount, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
+        return 0;
+    }
 
-    /*int Kill(lua_State* L, Unit* unit)
+    int DealHeal(lua_State* L, Unit* unit)
     {
-    Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
-    bool durLoss = Eluna::CHECKVAL<bool>(L, 3, true);
-    unit->Kill(target, durLoss);
-    return 0;
-    }*/
+        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+        uint32 spell = Eluna::CHECKVAL<uint32>(L, 3);
+        uint32 amount = Eluna::CHECKVAL<uint32>(L, 4);
+        uint32 critical = Eluna::CHECKVAL<uint32>(L, 5, false);
+
+#ifdef MANGOS
+        if (const SpellInfo* info = sSpellStore.LookupEntry(spell))
+            unit->DealHeal(target, amount, info, critical);
+#else
+        if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
+            unit->HealBySpell(target, info, amount, critical);
+#endif
+        return 0;
+    }
+
+    int Kill(lua_State* L, Unit* unit)
+    {
+        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+        bool durLoss = Eluna::CHECKVAL<bool>(L, 3, true);
+
+#ifdef MANGOS
+        unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
+#else
+        unit->Kill(target, durLoss);
+#endif
+        return 0;
+    }
 
     /*int RestoreDisplayId(lua_State* L, Unit* unit)
     {

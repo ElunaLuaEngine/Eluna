@@ -243,7 +243,7 @@ namespace LuaCreature
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
 
-        Eluna::Push(L, creature->GetAttackDistance(target));
+        Eluna::Push(L, creature->GetAggroRange(target));
         return 1;
     }
 

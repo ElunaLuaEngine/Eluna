@@ -1373,7 +1373,13 @@ struct ElunaCreatureAI : ScriptedAI
         Eluna::Push(L, me);
         Eluna::Push(L, attacker);
         Eluna::Push(L, damage);
-        ENTRY_EXECUTE(0);
+        ENTRY_EXECUTE(1);
+        FOR_RETS(i)
+        {
+            if (lua_isnoneornil(L, i))
+                continue;
+            damage = Eluna::CHECKVAL<uint32>(L, i, damage);
+        }
         ENDCALL();
     }
 
@@ -1507,7 +1513,13 @@ struct ElunaCreatureAI : ScriptedAI
         ENTRY_BEGIN(CreatureEventBindings, me->GetEntry(), CREATURE_EVENT_ON_CORPSE_REMOVED, return);
         Eluna::Push(L, me);
         Eluna::Push(L, respawnDelay);
-        ENTRY_EXECUTE(0);
+        ENTRY_EXECUTE(1);
+        FOR_RETS(i)
+        {
+            if (lua_isnoneornil(L, i))
+                continue;
+            respawnDelay = Eluna::CHECKVAL<uint32>(L, i, respawnDelay);
+        }
         ENDCALL();
     }
 
