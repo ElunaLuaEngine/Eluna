@@ -739,7 +739,7 @@ namespace LuaPlayer
 #ifdef MANGOS
         Eluna::Push(L, player->GetMap()->GetUnit(player->GetComboTargetGuid()));
 #else
-        Eluna::Push(L, Unit::GetUnit(*player, player->GetComboTarget()));
+        Eluna::Push(L, ObjectAccessor::GetUnit(*player, player->GetComboTarget()));
 #endif
         return 1;
     }
