@@ -117,5 +117,42 @@ namespace LuaMap
 #endif
         return 1;
     }
+
+    int GetWorldObject(lua_State* L, Map* map)
+    {
+        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+
+#ifdef MANGOS
+        Eluna::Push(L, map->GetWorldObject(ObjectGuid(guid)));
+#else
+        switch (GUID_HIPART(guid))
+        {
+        case HIGHGUID_PLAYER:
+            Eluna::Push(L, sObjectAccessor->GetObjectInMap(guid, map, (Player*)NULL));
+            break;
+        case HIGHGUID_TRANSPORT:
+        case HIGHGUID_MO_TRANSPORT:
+        case HIGHGUID_GAMEOBJECT:
+            Eluna::Push(L, sObjectAccessor->GetObjectInMap(guid, map, (GameObject*)NULL));
+            break;
+        case HIGHGUID_VEHICLE:
+        case HIGHGUID_UNIT:
+            Eluna::Push(L, sObjectAccessor->GetObjectInMap(guid, map, (Creature*)NULL));
+            break;
+        case HIGHGUID_PET:
+            Eluna::Push(L, sObjectAccessor->GetObjectInMap(guid, map, (Pet*)NULL));
+            break;
+        case HIGHGUID_DYNAMICOBJECT:
+            Eluna::Push(L, sObjectAccessor->GetObjectInMap(guid, map, (DynamicObject*)NULL));
+            break;
+        case HIGHGUID_CORPSE:
+            Eluna::Push(L, sObjectAccessor->GetObjectInMap(guid, map, (Corpse*)NULL));
+            break;
+        default:
+            break;
+        }
+#endif
+        return 1;
+    }
 };
 #endif
