@@ -353,6 +353,7 @@ public:
     typedef std::set<std::string> ScriptPaths;
 
     static Eluna* GEluna;
+    static bool reload;
 
     lua_State* L;
     int userdata_table;
@@ -380,6 +381,8 @@ public:
     static ScriptPaths scripts;
     static void Initialize();
     static void Uninitialize();
+    // Use Eluna::reload = true; instead.
+    // This will be called on next update
     static void ReloadEluna();
     void static GetScripts(std::string path, ScriptPaths& scripts);
 

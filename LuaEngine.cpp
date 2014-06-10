@@ -12,6 +12,7 @@
 
 Eluna::ScriptPaths Eluna::scripts;
 Eluna* Eluna::GEluna = NULL;
+bool Eluna::reload = false;
 
 extern void RegisterFunctions(lua_State* L);
 
@@ -45,8 +46,11 @@ void Eluna::Uninitialize()
 
 void Eluna::ReloadEluna()
 {
+    eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
     Uninitialize();
     Initialize();
+
+    reload = false;
 }
 
 Eluna::Eluna():

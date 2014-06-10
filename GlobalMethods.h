@@ -421,7 +421,7 @@ namespace LuaGlobalFunctions
 
     int ReloadEluna(lua_State* L)
     {
-        Eluna::ReloadEluna();
+        Eluna::reload = true;
         return 0;
     }
 
