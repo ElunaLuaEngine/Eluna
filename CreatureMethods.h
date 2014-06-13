@@ -369,6 +369,7 @@ namespace LuaCreature
             std::advance(itr, position);
             Eluna::Push(L, *itr);
         }
+        break;
         case SELECT_TARGET_FARTHEST:
         case SELECT_TARGET_BOTTOMAGGRO:
         {
@@ -376,14 +377,17 @@ namespace LuaCreature
             std::advance(ritr, position);
             Eluna::Push(L, *ritr);
         }
+        break;
         case SELECT_TARGET_RANDOM:
         {
             std::list<Unit*>::const_iterator itr = targetList.begin();
             std::advance(itr, urand(position, targetList.size() - 1));
             Eluna::Push(L, *itr);
         }
+        break;
         default:
             luaL_argerror(L, 2, "SelectAggroTarget expected");
+        break;
         }
 
         return 1;
