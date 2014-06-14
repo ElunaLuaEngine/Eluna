@@ -661,7 +661,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "UnbindInstance", &LuaPlayer::UnbindInstance },                                     // :UnbindInstance(map, difficulty) - Unbinds the player from an instance
     { "RemoveFromBattlegroundRaid", &LuaPlayer::RemoveFromBattlegroundRaid },             // :RemoveFromBattlegroundRaid() - Removes the player from a battleground or battlefield raid
 #if (!defined(TBC) && !defined(CLASSIC))
-    { "ResetAchievements", &LuaPlayer::ResetAchievements },                               // :ResetAchievements() - Resets playeräs achievements
+    { "ResetAchievements", &LuaPlayer::ResetAchievements },                               // :ResetAchievements() - Resets playerï¿½s achievements
 #endif
     { "KickPlayer", &LuaPlayer::KickPlayer },                                             // :KickPlayer() - Kicks player from server
     { "LogoutPlayer", &LuaPlayer::LogoutPlayer },                                         // :LogoutPlayer([save]) - Logs the player out and saves if true
@@ -697,7 +697,7 @@ ElunaRegister<Player> PlayerMethods[] =
 ElunaRegister<Creature> CreatureMethods[] =
 {
     // Getters
-    { "GetAITarget", &LuaCreature::GetAITarget },                                     // :GetAITarget(type[, playeronly, position, distance, aura]) - Get an unit in threat list
+    { "GetAITarget", &LuaCreature::GetAITarget },                                     // :GetAITarget(type[, playeronly, position, distance, aura]) - Get an unit in threat list. type can be 0 (random), 1 (topaggro), 2 (botaggro), 3 (nearest), 4 (farthest). If for example type 1 is used and position is 4, the 5th top aggro is selected, 0 is the top aggro (default). For random target position means the amount of top targets to choose from. positive distance tells that target should be within given radius, negative means target shouldnt be inside given radius. positive aura means target needs to have the aura, negative means target should not have the aura
     { "GetAITargets", &LuaCreature::GetAITargets },                                   // :GetAITargets() - Get units in threat list
     { "GetAITargetsCount", &LuaCreature::GetAITargetsCount },                         // :GetAITargetsCount() - Get threat list size
     { "GetHomePosition", &LuaCreature::GetHomePosition },                             // :GetHomePosition() - Returns x,y,z,o of spawn position
