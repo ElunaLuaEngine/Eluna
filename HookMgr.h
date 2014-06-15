@@ -135,7 +135,7 @@ namespace HookMgr
         // UNUSED                               =     39,       // (event, player)
         // UNUSED                               =     40,       // (event, player)
         // UNUSED                               =     41,       // (event, player)
-        PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - Can return false
+        PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - player is nil if command used from console. Can return false
 
         PLAYER_EVENT_COUNT
     };

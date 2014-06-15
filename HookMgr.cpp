@@ -463,8 +463,9 @@ bool Eluna::OnRemove(Player* pPlayer, Item* item)
 // Player
 bool Eluna::OnCommand(Player* player, const char* text)
 {
+    // If from console, player is NULL
     std::string fullcmd(text);
-    if (player->GetSession()->GetSecurity() >= SEC_ADMINISTRATOR)
+    if (!player || player->GetSession()->GetSecurity() >= SEC_ADMINISTRATOR)
     {
         char* creload = strtok((char*)text, " ");
         char* celuna = strtok(NULL, "");
