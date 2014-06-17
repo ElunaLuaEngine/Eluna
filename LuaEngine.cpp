@@ -58,20 +58,20 @@ L(luaL_newstate()),
 
 m_EventMgr(new EventMgr(*this)),
 
-ServerEventBindings(new EventBind<HookMgr::ServerEvents>(*this)),
-PlayerEventBindings(new EventBind<HookMgr::PlayerEvents>(*this)),
-GuildEventBindings(new EventBind<HookMgr::GuildEvents>(*this)),
-GroupEventBindings(new EventBind<HookMgr::GroupEvents>(*this)),
-VehicleEventBindings(new EventBind<HookMgr::VehicleEvents>(*this)),
+ServerEventBindings(new EventBind<HookMgr::ServerEvents>("ServerEvents", *this)),
+PlayerEventBindings(new EventBind<HookMgr::PlayerEvents>("PlayerEvents", *this)),
+GuildEventBindings(new EventBind<HookMgr::GuildEvents>("GuildEvents", *this)),
+GroupEventBindings(new EventBind<HookMgr::GroupEvents>("GroupEvents", *this)),
+VehicleEventBindings(new EventBind<HookMgr::VehicleEvents>("VehicleEvents", *this)),
 
-PacketEventBindings(new EntryBind<HookMgr::PacketEvents>(*this)),
-CreatureEventBindings(new EntryBind<HookMgr::CreatureEvents>(*this)),
-CreatureGossipBindings(new EntryBind<HookMgr::GossipEvents>(*this)),
-GameObjectEventBindings(new EntryBind<HookMgr::GameObjectEvents>(*this)),
-GameObjectGossipBindings(new EntryBind<HookMgr::GossipEvents>(*this)),
-ItemEventBindings(new EntryBind<HookMgr::ItemEvents>(*this)),
-ItemGossipBindings(new EntryBind<HookMgr::GossipEvents>(*this)),
-playerGossipBindings(new EntryBind<HookMgr::GossipEvents>(*this))
+PacketEventBindings(new EntryBind<HookMgr::PacketEvents>("PacketEvents", *this)),
+CreatureEventBindings(new EntryBind<HookMgr::CreatureEvents>("CreatureEvents", *this)),
+CreatureGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (creature)", *this)),
+GameObjectEventBindings(new EntryBind<HookMgr::GameObjectEvents>("GameObjectEvents", *this)),
+GameObjectGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (gameobject)", *this)),
+ItemEventBindings(new EntryBind<HookMgr::ItemEvents>("ItemEvents", *this)),
+ItemGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (item)", *this)),
+playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)", *this))
 {
     // open base lua
     luaL_openlibs(L);

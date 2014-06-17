@@ -30,6 +30,7 @@ ENDCALL();
     if (!BINDMAP->HasEvents(EVENT)) \
         RET; \
     lua_State* L = sEluna->L; \
+    const char* _LuaBindType = sEluna->BINDMAP->groupName; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
     for (size_t i = 0; i < sEluna->BINDMAP->Bindings[_LuaEvent].size(); ++i) \
@@ -44,7 +45,7 @@ ENDCALL();
     int _LuaParams = lua_gettop(L) - _LuaFuncTop; \
     if (_LuaParams < 1) \
     { \
-        ELUNA_LOG_ERROR("[Eluna]: Executing event %u, params was %i. Report to devs", _LuaEvent, _LuaParams); \
+        ELUNA_LOG_ERROR("[Eluna]: Executing event %u for %s, params was %i. Report to devs", _LuaEvent, _LuaBindType, _LuaParams); \
     } \
     for (int j = _LuaFuncTop-_LuaStackTop; j > 0; --j) \
     { \
@@ -63,6 +64,7 @@ ENDCALL();
     if (!_Luabind) \
         RET; \
     lua_State* L = sEluna->L; \
+    const char* _LuaBindType = sEluna->BINDMAP->groupName; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
     lua_rawgeti(L, LUA_REGISTRYINDEX, _Luabind); \
@@ -79,7 +81,11 @@ ENDCALL();
 #define ENDCALL() \
     if (_LuaReturnValues != LUA_MULTRET && lua_gettop(L) != _LuaStackTop + _LuaReturnValues) \
     { \
-        ELUNA_LOG_ERROR("[Eluna]: Ending event %u, stack top was %i and was supposed to be %i. Report to devs", _LuaEvent, lua_gettop(L), _LuaStackTop + _LuaReturnValues); \
+        ELUNA_LOG_ERROR("[Eluna]: Ending event %u for %s, stack top was %i and was supposed to be %i. Report to devs", _LuaEvent, _LuaBindType, lua_gettop(L), _LuaStackTop + _LuaReturnValues); \
+    } \
+    else if (_LuaReturnValues == LUA_MULTRET && lua_gettop(L) < _LuaStackTop) \
+    { \
+        ELUNA_LOG_ERROR("[Eluna]: Ending event %u for %s, stack top was %i and was supposed to be >= %i. Report to devs", _LuaEvent, _LuaBindType, lua_gettop(L), _LuaStackTop); \
     } \
     lua_settop(L, _LuaStackTop);
 
