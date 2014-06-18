@@ -79,13 +79,13 @@ ENDCALL();
     for (int IT = _LuaStackTop + 1; IT <= lua_gettop(L); ++IT)
 
 #define ENDCALL() \
-    if (_LuaReturnValues != LUA_MULTRET && lua_gettop(L) != _LuaStackTop + _LuaReturnValues) \
-    { \
-        ELUNA_LOG_ERROR("[Eluna]: Ending event %u for %s, stack top was %i and was supposed to be %i. Report to devs", _LuaEvent, _LuaBindType, lua_gettop(L), _LuaStackTop + _LuaReturnValues); \
-    } \
-    else if (_LuaReturnValues == LUA_MULTRET && lua_gettop(L) < _LuaStackTop) \
+    if (lua_gettop(L) < _LuaStackTop) \
     { \
         ELUNA_LOG_ERROR("[Eluna]: Ending event %u for %s, stack top was %i and was supposed to be >= %i. Report to devs", _LuaEvent, _LuaBindType, lua_gettop(L), _LuaStackTop); \
+    } \
+    if (_LuaReturnValues != LUA_MULTRET && lua_gettop(L) > _LuaStackTop + _LuaReturnValues) \
+    { \
+        ELUNA_LOG_ERROR("[Eluna]: Ending event %u for %s, stack top was %i and was supposed to be between %i and %i. Report to devs", _LuaEvent, _LuaBindType, lua_gettop(L), _LuaStackTop, _LuaStackTop + _LuaReturnValues); \
     } \
     lua_settop(L, _LuaStackTop);
 
