@@ -157,7 +157,7 @@ bool Eluna::OnPacketSend(WorldSession* session, WorldPacket& packet)
     Player* player = NULL;
     if (session)
         player = session->GetPlayer();
-    OnPacketSendOne(player, packet, result);
+    OnPacketSendAny(player, packet, result);
     OnPacketSendOne(player, packet, result);
     return result;
 }
@@ -396,11 +396,9 @@ bool Eluna::OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest)
 
 bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 {
-    OnItemUse(pPlayer, pItem, targets);
-    OnItemGossip(pPlayer, pItem, targets);
+    return OnItemGossip(pPlayer, pItem, targets) || OnItemUse(pPlayer, pItem, targets);
     // pPlayer->SendEquipError((InventoryResult)83, pItem, NULL);
     // return true;
-    return false;
 }
 bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 {
