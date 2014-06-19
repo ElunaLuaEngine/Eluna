@@ -778,6 +778,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "SaveToDB", &LuaCreature::SaveToDB },                           // :SaveToDB() - Saves to database
     { "SelectVictim", &LuaCreature::SelectVictim },                   // :SelectVictim() - Selects a victim
     { "MoveWaypoint", &LuaCreature::MoveWaypoint },                   // :MoveWaypoint()
+    { "UpdateEntry", &LuaCreature::UpdateEntry },                     // :UpdateEntry(entry[, dataGuidLow]) - Sets the creature's data from the given entry and guid. Guid can be left out.
 
     { NULL, NULL },
 };

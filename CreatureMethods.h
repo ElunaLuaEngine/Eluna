@@ -656,6 +656,19 @@ namespace LuaCreature
         return 1;
     }
 
+    int UpdateEntry(lua_State* L, Creature* creature)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 dataGuidLow = Eluna::CHECKVAL<uint32>(L, 3, 0);
+
+#ifdef MANGOS
+        creature->UpdateEntry(entry, ALLIANCE, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);
+#else
+        creature->UpdateEntry(entry, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);
+#endif
+        return 0;
+    }
+
     /*int ResetLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
     {
     creature->ResetLootMode();
