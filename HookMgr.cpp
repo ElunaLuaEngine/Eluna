@@ -36,6 +36,7 @@ ENDCALL();
     for (size_t i = 0; i < sEluna->BINDMAP->Bindings[_LuaEvent].size(); ++i) \
         lua_rawgeti(L, LUA_REGISTRYINDEX, (sEluna->BINDMAP->Bindings[_LuaEvent][i])); \
     int _LuaFuncTop = lua_gettop(L); \
+    int _LuaFuncCount = _LuaFuncTop-_LuaStackTop; \
     Eluna::Push(L, _LuaEvent);
 
 // use LUA_MULTRET for multiple return values
@@ -69,6 +70,7 @@ ENDCALL();
     int _LuaStackTop = lua_gettop(L); \
     lua_rawgeti(L, LUA_REGISTRYINDEX, _Luabind); \
     int _LuaFuncTop = lua_gettop(L); \
+    int _LuaFuncCount = _LuaFuncTop-_LuaStackTop; \
     Eluna::Push(L, _LuaEvent);
 
 #define ENTRY_EXECUTE(RETVALS) \
@@ -84,9 +86,9 @@ ENDCALL();
     { \
         ELUNA_LOG_ERROR("[Eluna]: Ending event %u for %s, stack top was %i and was supposed to be >= %i. Report to devs", _LuaEvent, _LuaBindType, lua_gettop(L), _LuaStackTop); \
     } \
-    if (_LuaReturnValues != LUA_MULTRET && lua_gettop(L) > _LuaStackTop + (_LuaFuncTop-_LuaStackTop)*_LuaReturnValues) \
+    if (_LuaReturnValues != LUA_MULTRET && lua_gettop(L) > _LuaStackTop + _LuaFuncCount * _LuaReturnValues) \
     { \
-        ELUNA_LOG_ERROR("[Eluna]: Ending event %u for %s, stack top was %i and was supposed to be between %i and %i. Report to devs", _LuaEvent, _LuaBindType, lua_gettop(L), _LuaStackTop, _LuaStackTop + _LuaReturnValues); \
+        ELUNA_LOG_ERROR("[Eluna]: Ending event %u for %s, stack top was %i and was supposed to be between %i and %i. Report to devs", _LuaEvent, _LuaBindType, lua_gettop(L), _LuaStackTop, _LuaStackTop + _LuaFuncCount * _LuaReturnValues); \
     } \
     lua_settop(L, _LuaStackTop);
 
