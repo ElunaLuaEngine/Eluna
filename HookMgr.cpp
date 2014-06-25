@@ -436,7 +436,8 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
     ENDCALL();
     return true;
 }
-bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
+
+bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& /*targets*/)
 {
     ENTRY_BEGIN(ItemGossipBindings, pItem->GetEntry(), GOSSIP_EVENT_ON_HELLO, return false);
     pPlayer->PlayerTalkClass->ClearMenus();

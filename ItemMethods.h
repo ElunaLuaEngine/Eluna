@@ -493,7 +493,7 @@ namespace LuaItem
         return 1;
     }
 
-    int SaveToDB(lua_State* L, Item* item)
+    int SaveToDB(lua_State* /*L*/, Item* item)
     {
 #ifdef MANGOS
         item->SaveToDB();

@@ -97,7 +97,7 @@ namespace LuaGameObject
     }
 
     /* OTHER */
-    int SaveToDB(lua_State* L, GameObject* go)
+    int SaveToDB(lua_State* /*L*/, GameObject* go)
     {
         go->SaveToDB();
         return 0;
@@ -133,7 +133,7 @@ namespace LuaGameObject
         return 0;
     }
 
-    int RemoveEvents(lua_State* L, GameObject* go)
+    int RemoveEvents(lua_State* /*L*/, GameObject* go)
     {
         sEluna->m_EventMgr->RemoveEvents(&go->m_Events);
         return 0;

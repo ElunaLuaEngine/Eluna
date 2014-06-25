@@ -138,7 +138,7 @@ namespace LuaGuild
         return 0;
     }
 
-    int Disband(lua_State* L, Guild* guild)
+    int Disband(lua_State* /*L*/, Guild* guild)
     {
         guild->Disband();
         return 0;

@@ -201,13 +201,13 @@ namespace LuaGroup
         return 1;
     }
 
-    int Disband(lua_State* L, Group* group)
+    int Disband(lua_State* /*L*/, Group* group)
     {
         group->Disband();
         return 0;
     }
 
-    int ConvertToRaid(lua_State* L, Group* group)
+    int ConvertToRaid(lua_State* /*L*/, Group* group)
     {
         group->ConvertToRaid();
         return 0;

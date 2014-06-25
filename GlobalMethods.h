@@ -419,7 +419,7 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
-    int ReloadEluna(lua_State* L)
+    int ReloadEluna(lua_State* /*L*/)
     {
         Eluna::reload = true;
         return 0;
@@ -988,7 +988,7 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
-    int SaveAllPlayers(lua_State* L)
+    int SaveAllPlayers(lua_State* /*L*/)
     {
         eObjectAccessor->SaveAllPlayers();
         return 0;
@@ -1229,7 +1229,7 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
-    int RemoveOldCorpses(lua_State* L)
+    int RemoveOldCorpses(lua_State* /*L*/)
     {
         eObjectAccessor->RemoveOldCorpses();
         return 0;

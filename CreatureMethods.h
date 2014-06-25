@@ -502,7 +502,7 @@ namespace LuaCreature
         return 0;
     }
 
-    int SetInCombatWithZone(lua_State* L, Creature* creature)
+    int SetInCombatWithZone(lua_State* /*L*/, Creature* creature)
     {
         creature->SetInCombatWithZone();
         return 0;
@@ -590,19 +590,19 @@ namespace LuaCreature
         return 0;
     }
 
-    int Respawn(lua_State* L, Creature* creature)
+    int Respawn(lua_State* /*L*/, Creature* creature)
     {
         creature->Respawn();
         return 0;
     }
 
-    int RemoveCorpse(lua_State* L, Creature* creature)
+    int RemoveCorpse(lua_State* /*L*/, Creature* creature)
     {
         creature->RemoveCorpse();
         return 0;
     }
 
-    int MoveWaypoint(lua_State* L, Creature* creature)
+    int MoveWaypoint(lua_State* /*L*/, Creature* creature)
     {
 #ifdef MANGOS
         creature->GetMotionMaster()->MoveWaypoint();
@@ -612,7 +612,7 @@ namespace LuaCreature
         return 0;
     }
 
-    int CallAssistance(lua_State* L, Creature* creature)
+    int CallAssistance(lua_State* /*L*/, Creature* creature)
     {
         creature->CallAssistance();
         return 0;
@@ -626,7 +626,7 @@ namespace LuaCreature
         return 0;
     }
 
-    int FleeToGetAssistance(lua_State* L, Creature* creature)
+    int FleeToGetAssistance(lua_State* /*L*/, Creature* creature)
     {
         creature->DoFleeToGetAssistance();
         return 0;
@@ -640,7 +640,7 @@ namespace LuaCreature
         return 0;
     }
 
-    int SaveToDB(lua_State* L, Creature* creature)
+    int SaveToDB(lua_State* /*L*/, Creature* creature)
     {
         creature->SaveToDB();
         return 0;

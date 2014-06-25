@@ -104,7 +104,6 @@ namespace LuaAura
     int SetStackAmount(lua_State* L, Aura* aura)
     {
         int amount = Eluna::CHECKVAL<int>(L, 2);
-        int duration = Eluna::CHECKVAL<int>(L, 2);
 #ifdef MANGOS
         aura->GetHolder()->SetStackAmount(amount);
 #else
@@ -113,7 +112,7 @@ namespace LuaAura
         return 0;
     }
 
-    int Remove(lua_State* L, Aura* aura)
+    int Remove(lua_State* /*L*/, Aura* aura)
     {
 #ifdef MANGOS
         aura->GetHolder()->RemoveAura(aura->GetEffIndex());

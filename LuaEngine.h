@@ -695,7 +695,7 @@ struct ElunaBind
     {
     }
 
-    ~ElunaBind()
+    virtual ~ElunaBind()
     {
         Clear();
     }

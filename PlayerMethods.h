@@ -1303,7 +1303,7 @@ namespace LuaPlayer
 
     /* OTHER */
 #if (!defined(TBC) && !defined(CLASSIC))
-    int ResetPetTalents(lua_State* L, Player* player)
+    int ResetPetTalents(lua_State* /*L*/, Player* player)
     {
 #ifdef MANGOS
         Pet* pet = player->GetPet();
@@ -1317,7 +1317,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int ResetAchievements(lua_State* L, Player* player)
+    int ResetAchievements(lua_State* /*L*/, Player* player)
     {
 #ifdef MANGOS
         player->GetAchievementMgr().Reset();
@@ -1362,7 +1362,7 @@ namespace LuaPlayer
 #endif
 #endif
 
-    int SaveToDB(lua_State* L, Player* player)
+    int SaveToDB(lua_State* /*L*/, Player* player)
     {
         player->SaveToDB();
         return 0;
@@ -1400,7 +1400,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int CreateCorpse(lua_State* L, Player* player)
+    int CreateCorpse(lua_State* /*L*/, Player* player)
     {
         player->CreateCorpse();
         return 0;
@@ -1444,7 +1444,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int SendSpiritResurrect(lua_State* L, Player* player)
+    int SendSpiritResurrect(lua_State* /*L*/, Player* player)
     {
         player->GetSession()->SendSpiritResurrect();
         return 0;
@@ -1503,7 +1503,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int RemoveFromBattlegroundRaid(lua_State* L, Player* player)
+    int RemoveFromBattlegroundRaid(lua_State* /*L*/, Player* player)
     {
 #ifdef MANGOS
         player->RemoveFromBattleGroundRaid();
@@ -1609,13 +1609,13 @@ namespace LuaPlayer
         return 0;
     }
 
-    int KillPlayer(lua_State* L, Player* player)
+    int KillPlayer(lua_State* /*L*/, Player* player)
     {
         player->KillPlayer();
         return 0;
     }
 
-    int RemoveFromGroup(lua_State* L, Player* player)
+    int RemoveFromGroup(lua_State* /*L*/, Player* player)
     {
         if (!player->GetGroup())
             return 0;
@@ -1659,7 +1659,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int ClearComboPoints(lua_State* L, Player* player)
+    int ClearComboPoints(lua_State* /*L*/, Player* player)
     {
         player->ClearComboPoints();
         return 0;
@@ -1777,13 +1777,13 @@ namespace LuaPlayer
         return 0;
     }
 
-    int ToggleDND(lua_State* L, Player* player)
+    int ToggleDND(lua_State* /*L*/, Player* player)
     {
         player->ToggleDND();
         return 0;
     }
 
-    int ToggleAFK(lua_State* L, Player* player)
+    int ToggleAFK(lua_State* /*L*/, Player* player)
     {
         player->ToggleAFK();
         return 0;
@@ -1874,7 +1874,7 @@ namespace LuaPlayer
     }
 #endif
 
-    int AdvanceSkillsToMax(lua_State* L, Player* player)
+    int AdvanceSkillsToMax(lua_State* /*L*/, Player* player)
     {
         player->UpdateSkillsToMaxSkillsForLevel();
         return 0;
@@ -1999,7 +1999,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int ResetAllCooldowns(lua_State* L, Player* player)
+    int ResetAllCooldowns(lua_State* /*L*/, Player* player)
     {
         player->RemoveAllSpellCooldown();
         return 0;
@@ -2087,7 +2087,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int KickPlayer(lua_State* L, Player* player)
+    int KickPlayer(lua_State* /*L*/, Player* player)
     {
         player->GetSession()->KickPlayer();
         return 0;
@@ -2138,7 +2138,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int GossipComplete(lua_State* L, Player* player)
+    int GossipComplete(lua_State* /*L*/, Player* player)
     {
 #ifdef MANGOS
         player->PlayerTalkClass->CloseGossip();
@@ -2161,7 +2161,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int GossipClearMenu(lua_State* L, Player* player)
+    int GossipClearMenu(lua_State* /*L*/, Player* player)
     {
         player->PlayerTalkClass->ClearMenus();
         return 0;
@@ -2248,7 +2248,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int SpawnBones(lua_State* L, Player* player)
+    int SpawnBones(lua_State* /*L*/, Player* player)
     {
         player->SpawnCorpseBones();
         return 0;

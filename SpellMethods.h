@@ -112,13 +112,13 @@ namespace LuaSpell
         return 0;
     }
 
-    int cancel(lua_State* L, Spell* spell)
+    int cancel(lua_State* /*L*/, Spell* spell)
     {
         spell->cancel();
         return 0;
     }
 
-    int Finish(lua_State* L, Spell* spell)
+    int Finish(lua_State* /*L*/, Spell* spell)
     {
         spell->finish();
         return 0;

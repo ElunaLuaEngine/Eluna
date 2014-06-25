@@ -9,7 +9,6 @@
 
 namespace LuaCorpse
 {
-    // GetOwnerGUID()
     int GetOwnerGUID(lua_State* L, Corpse* corpse)
     {
 #ifdef MANGOS
@@ -20,36 +19,31 @@ namespace LuaCorpse
         return 1;
     }
 
-    // GetGhostTime()
     int GetGhostTime(lua_State* L, Corpse* corpse)
     {
         Eluna::Push(L, uint32(corpse->GetGhostTime()));
         return 1;
     }
 
-    // GetType()
     int GetType(lua_State* L, Corpse* corpse)
     {
         Eluna::Push(L, corpse->GetType());
         return 1;
     }
 
-    // ResetGhostTime()
-    int ResetGhostTime(lua_State* L, Corpse* corpse)
+    int ResetGhostTime(lua_State* /*L*/, Corpse* corpse)
     {
         corpse->ResetGhostTime();
         return 0;
     }
 
-    // SaveToDB()
-    int SaveToDB(lua_State* L, Corpse* corpse)
+    int SaveToDB(lua_State* /*L*/, Corpse* corpse)
     {
         corpse->SaveToDB();
         return 0;
     }
 
-    // DeleteBonesFromWorld()
-    int DeleteBonesFromWorld(lua_State* L, Corpse* corpse)
+    int DeleteBonesFromWorld(lua_State* /*L*/, Corpse* corpse)
     {
         corpse->DeleteBonesFromWorld();
         return 0;

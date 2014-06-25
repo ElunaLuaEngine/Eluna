@@ -601,7 +601,7 @@ namespace LuaUnit
                 type = POWER_MANA;
             }
         }
-        else if (type < 0 || type >= POWER_ALL)
+        else if (type < 0 || type >= int(MAX_POWERS))
             return luaL_argerror(L, 2, "valid Powers expected");
 
         Eluna::Push(L, unit->GetPower((Powers)type));
@@ -640,7 +640,7 @@ namespace LuaUnit
                 type = POWER_MANA;
             }
         }
-        else if (type < 0 || type >= POWER_ALL)
+        else if (type < 0 || type >= int(MAX_POWERS))
             return luaL_argerror(L, 2, "valid Powers expected");
 
         Eluna::Push(L, unit->GetMaxPower((Powers)type));
@@ -850,11 +850,13 @@ namespace LuaUnit
         return 1;
     }
 
+    /*
     int GetVehicle(lua_State* L, Unit* unit)
     {
-        // Eluna::Push(L, unit->GetVehicle());
+        Eluna::Push(L, unit->GetVehicle());
         return 1;
     }
+    */
 
     int GetCritterGUID(lua_State* L, Unit* unit)
     {
@@ -1198,7 +1200,7 @@ namespace LuaUnit
     }*/
 
     /* OTHER */
-    int ClearThreatList(lua_State* L, Unit* unit)
+    int ClearThreatList(lua_State* /*L*/, Unit* unit)
     {
         unit->getThreatManager().clearReferences();
         return 0;
@@ -1212,7 +1214,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int Dismount(lua_State* L, Unit* unit)
+    int Dismount(lua_State* /*L*/, Unit* unit)
     {
         if (unit->IsMounted())
         {
@@ -1275,7 +1277,7 @@ namespace LuaUnit
     //     unit->GetMotionMaster()->Clear(); // all
     // }
 
-    int MoveStop(lua_State* L, Unit* unit)
+    int MoveStop(lua_State* /*L*/, Unit* unit)
     {
         unit->StopMoving();
         return 0;
@@ -1295,7 +1297,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int MoveIdle(lua_State* L, Unit* unit)
+    int MoveIdle(lua_State* /*L*/, Unit* unit)
     {
         unit->GetMotionMaster()->MoveIdle();
         return 0;
@@ -1314,7 +1316,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int MoveHome(lua_State* L, Unit* unit)
+    int MoveHome(lua_State* /*L*/, Unit* unit)
     {
         unit->GetMotionMaster()->MoveTargetedHome();
         return 0;
@@ -1338,7 +1340,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int MoveConfused(lua_State* L, Unit* unit)
+    int MoveConfused(lua_State* /*L*/, Unit* unit)
     {
         unit->GetMotionMaster()->MoveConfused();
         return 0;
@@ -1415,7 +1417,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int DeMorph(lua_State* L, Unit* unit)
+    int DeMorph(lua_State* /*L*/, Unit* unit)
     {
         unit->DeMorph();
         return 0;
@@ -1445,7 +1447,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int ClearInCombat(lua_State* L, Unit* unit)
+    int ClearInCombat(lua_State* /*L*/, Unit* unit)
     {
         unit->ClearInCombat();
         return 0;
@@ -1522,7 +1524,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int RemoveAllAuras(lua_State* L, Unit* unit)
+    int RemoveAllAuras(lua_State* /*L*/, Unit* unit)
     {
         unit->RemoveAllAuras();
         return 0;
@@ -1577,7 +1579,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int RemoveEvents(lua_State* L, Unit* unit)
+    int RemoveEvents(lua_State* /*L*/, Unit* unit)
     {
         sEluna->m_EventMgr->RemoveEvents(&unit->m_Events);
         return 0;
