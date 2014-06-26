@@ -11,9 +11,9 @@ If you need help regarding methods, hooks and other wiki related documentation, 
 
 ## Source
 
-* [Installation & Updating](/docs/INSTALL.md)
-* [Function & method documentation](/LuaFunctions.cpp)
-* [Hook documentation](/HookMgr.h#L76)
+* [Installation & Updating](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/INSTALL.md)
+* [Function & method documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/LuaFunctions.cpp)
+* [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/HookMgr.h)
 
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk)<br />
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata) [Eluna TrinityCore Cataclysm](https://github.com/ElunaLuaEngine/ElunaTrinityCata)<br />
@@ -29,7 +29,7 @@ If you need help regarding methods, hooks and other wiki related documentation, 
 * [Eluna Support Forum](http://emudevs.com)
 * [cMaNGOS](http://cmangos.net/)
 * [TrinityCore](http://www.trinitycore.org/)
-* [License](/docs/LICENSE.md)
+* [License](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/LICENSE.md)
 
 ## Team
 
