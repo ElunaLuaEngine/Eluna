@@ -418,7 +418,7 @@ bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
     WorldPacket data(SMSG_INVENTORY_CHANGE_FAILURE, 18);
     data << uint8(83);
     data << ObjectGuid(guid);
-    data << ObjectGuid(0);
+    data << ObjectGuid(uint64(0));
     data << uint8(0);
     pPlayer->GetSession()->SendPacket(&data);
     return false;
