@@ -248,7 +248,7 @@ namespace HookMgr
     enum ItemEvents
     {
         ITEM_EVENT_ON_DUMMY_EFFECT                      = 1,    // (event, caster, spellid, effindex, item)
-        ITEM_EVENT_ON_USE                               = 2,    // (event, player, item, target)
+        ITEM_EVENT_ON_USE                               = 2,    // (event, player, item, target) - Can return false to stop the spell casting
         ITEM_EVENT_ON_QUEST_ACCEPT                      = 3,    // (event, player, item, quest)
         ITEM_EVENT_ON_EXPIRE                            = 4,    // (event, player, itemid)
         ITEM_EVENT_ON_REMOVE                            = 5,    // (event, player, item)
@@ -261,7 +261,7 @@ namespace HookMgr
     // RegisterPlayerGossipEvent(menu_id, EventId, function)
     enum GossipEvents
     {
-        GOSSIP_EVENT_ON_HELLO                           = 1,    // (event, player, object) - Object is the Creature/GameObject/Item
+        GOSSIP_EVENT_ON_HELLO                           = 1,    // (event, player, object) - Object is the Creature/GameObject/Item. For item gossip can return false to stop spell casting.
         GOSSIP_EVENT_ON_SELECT                          = 2,    // (event, player, object, sender, intid, code, menu_id) - Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip
         GOSSIP_EVENT_COUNT
     };

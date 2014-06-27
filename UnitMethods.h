@@ -853,8 +853,8 @@ namespace LuaUnit
     /*
     int GetVehicle(lua_State* L, Unit* unit)
     {
-        Eluna::Push(L, unit->GetVehicle());
-        return 1;
+    Eluna::Push(L, unit->GetVehicle());
+    return 1;
     }
     */
 
@@ -1478,7 +1478,10 @@ namespace LuaUnit
         case 3:
             spellType = CURRENT_AUTOREPEAT_SPELL;
             break;
+        default:
+            return luaL_argerror(L, 2, "valid CurrentSpellTypes expected");
         }
+
         unit->InterruptSpell((CurrentSpellTypes)spellType, delayed);
         return 0;
     }

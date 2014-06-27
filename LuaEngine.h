@@ -189,7 +189,7 @@ struct EventMgr
         Object* obj;    // Object to push
     };
 
-    EventMgr(Eluna& _E) : E(_E)
+    EventMgr(Eluna& _E): E(_E)
     {
     }
 
