@@ -285,7 +285,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 2, LUA_TFUNCTION);
         lua_pushvalue(L, 2);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_PACKET, entry, ev, functionRef);
         return 0;
@@ -296,7 +296,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
         luaL_checktype(L, 2, LUA_TFUNCTION);
         lua_pushvalue(L, 2);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_SERVER, 0, ev, functionRef);
         return 0;
@@ -307,7 +307,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
         luaL_checktype(L, 2, LUA_TFUNCTION);
         lua_pushvalue(L, 2);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_PLAYER, 0, ev, functionRef);
         return 0;
@@ -318,7 +318,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
         luaL_checktype(L, 2, LUA_TFUNCTION);
         lua_pushvalue(L, 2);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_GUILD, 0, ev, functionRef);
         return 0;
@@ -329,7 +329,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
         luaL_checktype(L, 2, LUA_TFUNCTION);
         lua_pushvalue(L, 2);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_GROUP, 0, ev, functionRef);
         return 0;
@@ -341,7 +341,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 3, LUA_TFUNCTION);
         lua_pushvalue(L, 3);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_CREATURE_GOSSIP, entry, ev, functionRef);
         return 0;
@@ -353,7 +353,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 3, LUA_TFUNCTION);
         lua_pushvalue(L, 3);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_GAMEOBJECT_GOSSIP, entry, ev, functionRef);
         return 0;
@@ -365,7 +365,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 3, LUA_TFUNCTION);
         lua_pushvalue(L, 3);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_ITEM, entry, ev, functionRef);
         return 0;
@@ -377,7 +377,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 3, LUA_TFUNCTION);
         lua_pushvalue(L, 3);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_ITEM_GOSSIP, entry, ev, functionRef);
         return 0;
@@ -389,7 +389,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 3, LUA_TFUNCTION);
         lua_pushvalue(L, 3);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_PLAYER_GOSSIP, menu_id, ev, functionRef);
         return 0;
@@ -401,7 +401,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 3, LUA_TFUNCTION);
         lua_pushvalue(L, 3);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_CREATURE, entry, ev, functionRef);
         return 0;
@@ -413,7 +413,7 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 3, LUA_TFUNCTION);
         lua_pushvalue(L, 3);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_GAMEOBJECT, entry, ev, functionRef);
         return 0;
@@ -517,7 +517,7 @@ namespace LuaGlobalFunctions
         uint32 repeats = Eluna::CHECKVAL<uint32>(L, 3);
 
         lua_pushvalue(L, 1);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         functionRef = sEluna->m_EventMgr->AddEvent(&sEluna->m_EventMgr->GlobalEvents, functionRef, delay, repeats);
         if (functionRef)
             Eluna::Push(L, functionRef);

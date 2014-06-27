@@ -119,7 +119,7 @@ namespace LuaGameObject
         uint32 repeats = Eluna::CHECKVAL<uint32>(L, 4);
 
         lua_pushvalue(L, 2);
-        int functionRef = lua_ref(L, true);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         functionRef = sEluna->m_EventMgr->AddEvent(&go->m_Events, functionRef, delay, repeats, go);
         if (functionRef)
             Eluna::Push(L, functionRef);
