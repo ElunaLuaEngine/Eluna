@@ -416,7 +416,7 @@ bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
     // Send equip error that shows no message
     // This is a hack fix to stop spell casting visual bug when a spell is not cast on use
     WorldPacket data(SMSG_INVENTORY_CHANGE_FAILURE, 18);
-    data << uint8(83);
+    data << uint8(59); // EQUIP_ERR_NONE / EQUIP_ERR_CANT_BE_DISENCHANTED
     data << ObjectGuid(guid);
     data << ObjectGuid(uint64(0));
     data << uint8(0);
