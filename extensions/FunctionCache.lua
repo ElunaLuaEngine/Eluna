@@ -116,9 +116,11 @@ T.Guild = {}
 table.insert(T.Guild, "GetId")
 table.insert(T.Guild, "GetName")
 
-T.Vehicle = {}
-table.insert(T.Vehicle, "GetOwner")
-table.insert(T.Vehicle, "GetEntry")
+if (GetCoreExpansion() >= 2) then
+    T.Vehicle = {}
+    table.insert(T.Vehicle, "GetOwner")
+    table.insert(T.Vehicle, "GetEntry")
+end
 
 T.QueryResult = {}
 table.insert(T.QueryResult, "GetColumnCount")
