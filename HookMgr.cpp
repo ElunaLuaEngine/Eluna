@@ -430,7 +430,7 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
     ENTRY_BEGIN(ItemEventBindings, pItem->GetEntry(), ITEM_EVENT_ON_USE, return result);
     Push(L, pPlayer);
     Push(L, pItem);
-#ifdef MANGOS
+#ifndef TRINITY
     if (GameObject* target = targets.getGOTarget())
         Push(L, target);
     else if (Item* target = targets.getItemTarget())
@@ -1376,7 +1376,7 @@ void Eluna::OnSummoned(Creature* pCreature, Unit* pSummoner)
 
 struct ElunaCreatureAI : ScriptedAI
 {
-#ifdef MANGOS
+#ifndef TRINITY
 #define me  m_creature
 #endif
 
@@ -1387,13 +1387,13 @@ struct ElunaCreatureAI : ScriptedAI
     ~ElunaCreatureAI() {}
 
     //Called at World update tick
-#ifdef MANGOS
+#ifndef TRINITY
     void UpdateAI(const uint32 diff) override
 #else
     void UpdateAI(uint32 diff) override
 #endif
     {
-#ifdef MANGOS
+#ifndef TRINITY
         if (IsCombatMovement())
             ScriptedAI::UpdateAI(diff);
 #else
@@ -1577,7 +1577,7 @@ struct ElunaCreatureAI : ScriptedAI
         ENDCALL();
     }
 
-#ifdef MANGOS
+#ifndef TRINITY
     // Enables use of MoveInLineOfSight
     bool IsVisible(Unit* who) const override
     {
@@ -1628,7 +1628,7 @@ struct ElunaCreatureAI : ScriptedAI
         ENDCALL();
     }
 
-#ifndef MANGOS
+#ifdef TRINITY
 
     // Called when the creature is summoned successfully by other creature
     void IsSummonedBy(Unit* summoner) override
@@ -1671,7 +1671,7 @@ struct ElunaCreatureAI : ScriptedAI
     }
 #endif
 
-#ifdef MANGOS
+#ifndef TRINITY
 #undef me
 #endif
 };

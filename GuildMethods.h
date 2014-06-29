@@ -43,7 +43,7 @@ namespace LuaGuild
 
     int GetLeader(lua_State* L, Guild* guild)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, eObjectAccessor->FindPlayer(guild->GetLeaderGuid()));
 #else
         Eluna::Push(L, eObjectAccessor->FindPlayer(guild->GetLeaderGUID()));
@@ -53,7 +53,7 @@ namespace LuaGuild
 
     int GetLeaderGUID(lua_State* L, Guild* guild)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, guild->GetLeaderGuid());
 #else
         Eluna::Push(L, guild->GetLeaderGUID());
@@ -81,7 +81,7 @@ namespace LuaGuild
 
     int GetInfo(lua_State* L, Guild* guild)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, guild->GetGINFO());
 #else
         Eluna::Push(L, guild->GetInfo());
@@ -95,7 +95,7 @@ namespace LuaGuild
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
 
-#ifdef MANGOS
+#ifndef TRINITY
         guild->SetLeader(player->GET_GUID());
 #else
         guild->HandleSetLeader(player->GetSession(), player->GetName());
@@ -109,7 +109,7 @@ namespace LuaGuild
     {
         uint8 tabId = Eluna::CHECKVAL<uint8>(L, 2);
         const char* text = Eluna::CHECKVAL<const char*>(L, 3);
-#ifdef MANGOS
+#ifndef TRINITY
         guild->SetGuildBankTabText(tabId, text);
 #else
         guild->SetBankTabText(tabId, text);
@@ -158,7 +158,7 @@ namespace LuaGuild
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         bool isDisbanding = Eluna::CHECKVAL<bool>(L, 3, false);
 
-#ifdef MANGOS
+#ifndef TRINITY
         guild->DelMember(player->GET_GUID(), isDisbanding);
 #else
         guild->DeleteMember(player->GET_GUID(), isDisbanding);
@@ -181,7 +181,7 @@ namespace LuaGuild
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         uint32 money = Eluna::CHECKVAL<uint32>(L, 3);
-#ifdef MANGOS
+#ifndef TRINITY
         if (guild->GetGuildBankMoney() < money)
             return 0;
         guild->SetBankMoney(guild->GetGuildBankMoney() - money);
@@ -197,7 +197,7 @@ namespace LuaGuild
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         uint32 money = Eluna::CHECKVAL<uint32>(L, 3);
 
-#ifdef MANGOS
+#ifndef TRINITY
         guild->SetBankMoney(guild->GetGuildBankMoney() + money);
 #else
         guild->HandleMemberDepositMoney(player->GetSession(), money);

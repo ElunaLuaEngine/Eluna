@@ -49,7 +49,7 @@ namespace LuaUnit
 
     int IsRooted(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isInRoots() || unit->IsRooted());
 #else
         Eluna::Push(L, unit->isInRoots() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT));
@@ -76,7 +76,7 @@ namespace LuaUnit
     {
         Creature* creature = Eluna::CHECKOBJ<Creature>(L, 2);
 
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isInAccessablePlaceFor(creature));
 #else
         Eluna::Push(L, unit->isInAccessiblePlaceFor(creature));
@@ -86,7 +86,7 @@ namespace LuaUnit
 
     int IsAuctioneer(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isAuctioner());
 #else
         Eluna::Push(L, unit->IsAuctioner());
@@ -96,7 +96,7 @@ namespace LuaUnit
 
     int IsGuildMaster(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isGuildMaster());
 #else
         Eluna::Push(L, unit->IsGuildMaster());
@@ -106,7 +106,7 @@ namespace LuaUnit
 
     int IsInnkeeper(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isInnkeeper());
 #else
         Eluna::Push(L, unit->IsInnkeeper());
@@ -116,7 +116,7 @@ namespace LuaUnit
 
     int IsTrainer(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isTrainer());
 #else
         Eluna::Push(L, unit->IsTrainer());
@@ -126,7 +126,7 @@ namespace LuaUnit
 
     int IsGossip(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isGossip());
 #else
         Eluna::Push(L, unit->IsGossip());
@@ -136,7 +136,7 @@ namespace LuaUnit
 
     int IsTaxi(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isTaxi());
 #else
         Eluna::Push(L, unit->IsTaxi());
@@ -146,7 +146,7 @@ namespace LuaUnit
 
     int IsSpiritHealer(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isSpiritHealer());
 #else
         Eluna::Push(L, unit->IsSpiritHealer());
@@ -156,7 +156,7 @@ namespace LuaUnit
 
     int IsSpiritGuide(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isSpiritGuide());
 #else
         Eluna::Push(L, unit->IsSpiritGuide());
@@ -166,7 +166,7 @@ namespace LuaUnit
 
     int IsTabardDesigner(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isTabardDesigner());
 #else
         Eluna::Push(L, unit->IsTabardDesigner());
@@ -176,7 +176,7 @@ namespace LuaUnit
 
     int IsServiceProvider(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isServiceProvider());
 #else
         Eluna::Push(L, unit->IsServiceProvider());
@@ -186,7 +186,7 @@ namespace LuaUnit
 
     int IsSpiritService(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isSpiritService());
 #else
         Eluna::Push(L, unit->IsSpiritService());
@@ -196,7 +196,7 @@ namespace LuaUnit
 
     int IsAlive(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isAlive());
 #else
         Eluna::Push(L, unit->IsAlive());
@@ -218,7 +218,7 @@ namespace LuaUnit
 
     int IsBanker(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isBanker());
 #else
         Eluna::Push(L, unit->IsBanker());
@@ -228,7 +228,7 @@ namespace LuaUnit
 
     int IsVendor(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isVendor());
 #else
         Eluna::Push(L, unit->IsVendor());
@@ -238,7 +238,7 @@ namespace LuaUnit
 
     int IsBattleMaster(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isBattleMaster());
 #else
         Eluna::Push(L, unit->IsBattleMaster());
@@ -248,7 +248,7 @@ namespace LuaUnit
 
     int IsCharmed(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isCharmed());
 #else
         Eluna::Push(L, unit->IsCharmed());
@@ -258,7 +258,7 @@ namespace LuaUnit
 
     int IsArmorer(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isArmorer());
 #else
         Eluna::Push(L, unit->IsArmorer());
@@ -281,7 +281,7 @@ namespace LuaUnit
 #ifndef CLASSIC
     int IsOnVehicle(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->IsBoarded());
 #else
         Eluna::Push(L, unit->GetVehicle());
@@ -292,7 +292,7 @@ namespace LuaUnit
 
     int IsInCombat(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isInCombat());
 #else
         Eluna::Push(L, unit->IsInCombat());
@@ -320,7 +320,7 @@ namespace LuaUnit
 
     int IsQuestGiver(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->isQuestGiver());
 #else
         Eluna::Push(L, unit->IsQuestGiver());
@@ -351,7 +351,7 @@ namespace LuaUnit
     int HasUnitState(lua_State* L, Unit* unit)
     {
         uint32 state = Eluna::CHECKVAL<uint32>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->hasUnitState(state));
 #else
         Eluna::Push(L, unit->HasUnitState(state));
@@ -386,7 +386,7 @@ namespace LuaUnit
 
     int GetOwnerGUID(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetOwnerGuid());
 #else
         Eluna::Push(L, unit->GetOwnerGUID());
@@ -402,7 +402,7 @@ namespace LuaUnit
 
     int GetCreatorGUID(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetCreatorGuid());
 #else
         Eluna::Push(L, unit->GetCreatorGUID());
@@ -412,7 +412,7 @@ namespace LuaUnit
 
     int GetMinionGUID(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetPetGuid());
 #else
         Eluna::Push(L, unit->GetPetGUID());
@@ -422,7 +422,7 @@ namespace LuaUnit
 
     int GetCharmerGUID(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetCharmerGuid());
 #else
         Eluna::Push(L, unit->GetCharmerGUID());
@@ -432,7 +432,7 @@ namespace LuaUnit
 
     int GetCharmGUID(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetCharmGuid());
 #else
         Eluna::Push(L, unit->GetCharmGUID());
@@ -442,7 +442,7 @@ namespace LuaUnit
 
     int GetPetGUID(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetPetGuid());
 #else
         Eluna::Push(L, unit->GetPetGUID());
@@ -452,7 +452,7 @@ namespace LuaUnit
 
     int GetControllerGUID(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetCharmerOrOwnerGuid());
 #else
         Eluna::Push(L, unit->GetCharmerOrOwnerGUID());
@@ -462,7 +462,7 @@ namespace LuaUnit
 
     int GetControllerGUIDS(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetCharmerOrOwnerOrOwnGuid());
 #else
         Eluna::Push(L, unit->GetCharmerOrOwnerOrOwnGUID());
@@ -494,7 +494,7 @@ namespace LuaUnit
 
     int GetVictim(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->getVictim());
 #else
         Eluna::Push(L, unit->GetVictim());
@@ -621,7 +621,7 @@ namespace LuaUnit
 
     int GetPowerType(lua_State* L, Unit* unit)
     {
-#if (defined(MANGOS) && defined(WOTLK))
+#if (!defined(TRINITY) && defined(WOTLK))
         Eluna::Push(L, unit->GetPowerType());
 #else
         Eluna::Push(L, unit->getPowerType());
@@ -637,7 +637,7 @@ namespace LuaUnit
 
     int GetHealthPct(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetHealthPercent());
 #else
         Eluna::Push(L, unit->GetHealthPct());
@@ -647,7 +647,7 @@ namespace LuaUnit
 
     int GetPowerPct(lua_State* L, Unit* unit)
     {
-#if (defined(MANGOS) && defined(WOTLK))
+#if (!defined(TRINITY) && defined(WOTLK))
         float percent = (unit->GetPower(unit->GetPowerType()) / unit->GetMaxPower(unit->GetPowerType())) * 100;
 #else
         float percent = (unit->GetPower(unit->getPowerType()) / unit->GetMaxPower(unit->getPowerType())) * 100;
@@ -733,7 +733,7 @@ namespace LuaUnit
     int GetAura(lua_State* L, Unit* unit)
     {
         uint32 spellID = Eluna::CHECKVAL<uint32>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetAura(spellID, EFFECT_INDEX_0));
 #else
         Eluna::Push(L, unit->GetAura(spellID));
@@ -752,7 +752,7 @@ namespace LuaUnit
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
 
         std::list<Unit*> list;
-#ifdef MANGOS
+#ifndef TRINITY
         MaNGOS::AnyFriendlyUnitInObjectRangeCheck checker(unit, range);
         MaNGOS::UnitListSearcher<MaNGOS::AnyFriendlyUnitInObjectRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(unit, searcher, range);
@@ -784,7 +784,7 @@ namespace LuaUnit
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
 
         std::list<Unit*> list;
-#ifdef MANGOS
+#ifndef TRINITY
         MaNGOS::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, range);
         MaNGOS::UnitListSearcher<MaNGOS::AnyUnfriendlyUnitInObjectRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(unit, searcher, range);
@@ -814,7 +814,7 @@ namespace LuaUnit
 #if (!defined(TBC) && !defined(CLASSIC))
     int GetVehicleKit(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetVehicleInfo());
 #else
         Eluna::Push(L, unit->GetVehicleKit());
@@ -832,7 +832,7 @@ namespace LuaUnit
 
     int GetCritterGUID(lua_State* L, Unit* unit)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, unit->GetCritterGuid());
 #else
         Eluna::Push(L, unit->GetCritterGUID());
@@ -846,7 +846,7 @@ namespace LuaUnit
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
 
-#ifdef MANGOS
+#ifndef TRINITY
         unit->SetOwnerGuid(ObjectGuid(guid));
 #else
         unit->SetOwnerGUID(ObjectGuid(guid));
@@ -887,7 +887,7 @@ namespace LuaUnit
         bool forced = Eluna::CHECKVAL<bool>(L, 4, false);
         if (type >= MAX_MOVE_TYPE)
             return luaL_argerror(L, 2, "valid UnitMoveType expected");
-#ifdef MANGOS
+#ifndef TRINITY
         unit->SetSpeedRate((UnitMoveType)type, rate, forced);
 #else
         unit->SetSpeed((UnitMoveType)type, rate, forced);
@@ -1010,7 +1010,7 @@ namespace LuaUnit
     int SetCreatorGUID(lua_State* L, Unit* unit)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         unit->SetOwnerGuid(ObjectGuid(guid));
 #else
         unit->SetOwnerGUID(ObjectGuid(guid));
@@ -1021,7 +1021,7 @@ namespace LuaUnit
     int SetMinionGUID(lua_State* L, Unit* unit)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         unit->SetPetGuid(ObjectGuid(guid));
 #else
         unit->SetMinionGUID(ObjectGuid(guid));
@@ -1032,7 +1032,7 @@ namespace LuaUnit
     int SetCharmerGUID(lua_State* L, Unit* unit)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         unit->SetCharmerGuid(ObjectGuid(guid));
 #else
         unit->SetCharmerGUID(ObjectGuid(guid));
@@ -1043,7 +1043,7 @@ namespace LuaUnit
     int SetPetGUID(lua_State* L, Unit* unit)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         unit->SetPetGuid(ObjectGuid(guid));
 #else
         unit->SetPetGUID(ObjectGuid(guid));
@@ -1054,7 +1054,7 @@ namespace LuaUnit
     int SetWaterWalk(lua_State* L, Unit* unit)
     {
         bool enable = Eluna::CHECKVAL<bool>(L, 2, true);
-#ifdef MANGOS
+#ifndef TRINITY
         unit->SetWaterWalk(enable);
 #else
         unit->SetWaterWalking(enable);
@@ -1074,7 +1074,7 @@ namespace LuaUnit
     {
         bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
 
-#ifdef MANGOS
+#ifndef TRINITY
         unit->SetFFAPvP(apply);
 #else
         if (apply)
@@ -1120,7 +1120,7 @@ namespace LuaUnit
     int SetCritterGUID(lua_State* L, Unit* unit)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         unit->SetCritterGuid(ObjectGuid(guid));
 #else
         unit->SetCritterGUID(ObjectGuid(guid));
@@ -1190,7 +1190,7 @@ namespace LuaUnit
     {
         if (unit->IsMounted())
         {
-#ifdef MANGOS
+#ifndef TRINITY
             unit->Unmount();
             unit->RemoveSpellsCausingAura(SPELL_AURA_MOUNTED);
 #else
@@ -1280,7 +1280,7 @@ namespace LuaUnit
         float radius = Eluna::CHECKVAL<float>(L, 2);
         float x, y, z;
         unit->GetPosition(x, y, z);
-#ifdef MANGOS
+#ifndef TRINITY
         unit->GetMotionMaster()->MoveRandomAroundPoint(x, y, z, radius);
 #else
         unit->GetMotionMaster()->MoveRandom(radius);
@@ -1466,7 +1466,7 @@ namespace LuaUnit
         if (!spellInfo)
             return 1;
 
-#ifdef MANGOS
+#ifndef TRINITY
         if (!IsSpellAppliesAura(spellInfo) && !IsSpellHaveEffect(spellInfo, SPELL_EFFECT_PERSISTENT_AREA_AURA))
             return 1;
 
@@ -1564,7 +1564,7 @@ namespace LuaUnit
     {
         uint32 state = Eluna::CHECKVAL<uint32>(L, 2);
 
-#ifdef MANGOS
+#ifndef TRINITY
         unit->addUnitState(state);
 #else
         unit->AddUnitState(state);
@@ -1576,7 +1576,7 @@ namespace LuaUnit
     {
         uint32 state = Eluna::CHECKVAL<uint32>(L, 2);
 
-#ifdef MANGOS
+#ifndef TRINITY
         unit->clearUnitState(state);
 #else
         unit->ClearUnitState(state);
@@ -1612,7 +1612,7 @@ namespace LuaUnit
         uint32 amount = Eluna::CHECKVAL<uint32>(L, 4);
         uint32 critical = Eluna::CHECKVAL<uint32>(L, 5, false);
 
-#ifdef MANGOS
+#ifndef TRINITY
         if (const SpellInfo* info = sSpellStore.LookupEntry(spell))
             unit->DealHeal(target, amount, info, critical);
 #else
@@ -1627,7 +1627,7 @@ namespace LuaUnit
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
         bool durLoss = Eluna::CHECKVAL<bool>(L, 3, true);
 
-#ifdef MANGOS
+#ifndef TRINITY
         unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
 #else
         unit->Kill(target, durLoss);

@@ -17,7 +17,7 @@ namespace LuaAura
 
     int GetCasterGUID(lua_State* L, Aura* aura)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, aura->GetCasterGuid());
 #else
         Eluna::Push(L, aura->GetCasterGUID());
@@ -33,7 +33,7 @@ namespace LuaAura
 
     int GetDuration(lua_State* L, Aura* aura)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, aura->GetAuraDuration());
 #else
         Eluna::Push(L, aura->GetDuration());
@@ -55,7 +55,7 @@ namespace LuaAura
 
     int GetMaxDuration(lua_State* L, Aura* aura)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, aura->GetAuraMaxDuration());
 #else
         Eluna::Push(L, aura->GetMaxDuration());
@@ -71,7 +71,7 @@ namespace LuaAura
 
     int GetOwner(lua_State* L, Aura* aura)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, aura->GetTarget());
 #else
         Eluna::Push(L, aura->GetOwner());
@@ -82,7 +82,7 @@ namespace LuaAura
     int SetDuration(lua_State* L, Aura* aura)
     {
         int duration = Eluna::CHECKVAL<int>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         aura->GetHolder()->SetAuraDuration(duration);
 #else
         aura->SetDuration(duration);
@@ -93,7 +93,7 @@ namespace LuaAura
     int SetMaxDuration(lua_State* L, Aura* aura)
     {
         int duration = Eluna::CHECKVAL<int>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         aura->GetHolder()->SetAuraMaxDuration(duration);
 #else
         aura->SetMaxDuration(duration);
@@ -104,7 +104,7 @@ namespace LuaAura
     int SetStackAmount(lua_State* L, Aura* aura)
     {
         int amount = Eluna::CHECKVAL<int>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         aura->GetHolder()->SetStackAmount(amount);
 #else
         aura->SetStackAmount(amount);
@@ -114,7 +114,7 @@ namespace LuaAura
 
     int Remove(lua_State* /*L*/, Aura* aura)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         aura->GetHolder()->RemoveAura(aura->GetEffIndex());
 #else
         aura->Remove();

@@ -14,7 +14,7 @@ namespace LuaGameObject
     {
         uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
 
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, go->HasQuest(questId));
 #else
         Eluna::Push(L, go->hasQuest(questId));

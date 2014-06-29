@@ -11,7 +11,7 @@ namespace LuaCorpse
 {
     int GetOwnerGUID(lua_State* L, Corpse* corpse)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, corpse->GetOwnerGuid());
 #else
         Eluna::Push(L, corpse->GetOwnerGUID());

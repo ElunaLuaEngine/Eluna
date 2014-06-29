@@ -20,7 +20,7 @@ namespace LuaMap
 
     int IsBattleground(lua_State* L, Map* map)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, map->IsBattleGround());
 #else
         Eluna::Push(L, map->IsBattleground());
@@ -110,7 +110,7 @@ namespace LuaMap
         float y = Eluna::CHECKVAL<float>(L, 3);
         float z = Eluna::CHECKVAL<float>(L, 4);
 
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, map->GetTerrain()->GetAreaId(x, y, z));
 #else
         Eluna::Push(L, map->GetAreaId(x, y, z));
@@ -122,7 +122,7 @@ namespace LuaMap
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
 
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, map->GetWorldObject(ObjectGuid(guid)));
 #else
         switch (GUID_HIPART(guid))

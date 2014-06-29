@@ -93,7 +93,7 @@ namespace LuaWorldObject
 
         Unit* target = NULL;
         Eluna::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER);
-#ifdef MANGOS
+#ifndef TRINITY
         MaNGOS::UnitLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
 #else
@@ -112,7 +112,7 @@ namespace LuaWorldObject
 
         GameObject* target = NULL;
         Eluna::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry);
-#ifdef MANGOS
+#ifndef TRINITY
         MaNGOS::GameObjectLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
 #else
@@ -131,7 +131,7 @@ namespace LuaWorldObject
 
         Creature* target = NULL;
         Eluna::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_UNIT, entry);
-#ifdef MANGOS
+#ifndef TRINITY
         MaNGOS::CreatureLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
 #else
@@ -149,7 +149,7 @@ namespace LuaWorldObject
 
         std::list<Player*> list;
         Eluna::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_PLAYER);
-#ifdef MANGOS
+#ifndef TRINITY
         MaNGOS::PlayerListSearcher<Eluna::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
 #else
@@ -179,7 +179,7 @@ namespace LuaWorldObject
 
         std::list<Creature*> list;
         Eluna::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry);
-#ifdef MANGOS
+#ifndef TRINITY
         MaNGOS::CreatureListSearcher<Eluna::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
 #else
@@ -209,7 +209,7 @@ namespace LuaWorldObject
 
         std::list<GameObject*> list;
         Eluna::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_GAMEOBJECT, entry);
-#ifdef MANGOS
+#ifndef TRINITY
         MaNGOS::GameObjectListSearcher<Eluna::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
 #else
@@ -246,7 +246,7 @@ namespace LuaWorldObject
         if (nearest)
         {
             WorldObject* target = NULL;
-#ifdef MANGOS
+#ifndef TRINITY
             MaNGOS::WorldObjectLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(target, checker);
             Cell::VisitAllObjects(obj, searcher, range);
 #else
@@ -260,7 +260,7 @@ namespace LuaWorldObject
         else
         {
             std::list<WorldObject*> list;
-#ifdef MANGOS
+#ifndef TRINITY
             MaNGOS::WorldObjectListSearcher<Eluna::WorldObjectInRangeCheck> searcher(list, checker);
             Cell::VisitAllObjects(obj, searcher, range);
 #else
@@ -290,7 +290,7 @@ namespace LuaWorldObject
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
 
-#ifdef MANGOS
+#ifndef TRINITY
         switch (GUID_HIPART(guid))
         {
         case HIGHGUID_PLAYER:        Eluna::Push(L, obj->GetMap()->GetPlayer(ObjectGuid(guid))); break;
@@ -378,7 +378,7 @@ namespace LuaWorldObject
         float z = Eluna::CHECKVAL<float>(L, 5);
         float o = Eluna::CHECKVAL<float>(L, 6);
         uint32 respawnDelay = Eluna::CHECKVAL<uint32>(L, 7, 30);
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, respawnDelay));
 #else
         Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, 0, 0, 0, 0, respawnDelay));

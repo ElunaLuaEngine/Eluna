@@ -7,7 +7,7 @@
 #ifndef QUERYMETHODS_H
 #define QUERYMETHODS_H
 
-#ifdef MANGOS
+#ifndef TRINITY
 #define RESULT  result
 #else
 #define RESULT  (*result)
@@ -18,7 +18,7 @@ namespace LuaQuery
     int IsNull(lua_State* L, QueryResult* result)
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         if (col < RESULT->GetFieldCount())
             Eluna::Push(L, RESULT->Fetch()[col].IsNULL());
 #else
@@ -136,7 +136,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-#ifdef MANGOS
+#ifndef TRINITY
             Eluna::Push(L, RESULT->Fetch()[col].GetCppString());
 #else
             Eluna::Push(L, RESULT->Fetch()[col].GetString());
@@ -148,7 +148,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         if (col < RESULT->GetFieldCount())
-#ifdef MANGOS
+#ifndef TRINITY
             Eluna::Push(L, RESULT->Fetch()[col].GetString());
 #else
             Eluna::Push(L, RESULT->Fetch()[col].GetCString());

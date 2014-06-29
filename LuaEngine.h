@@ -21,7 +21,7 @@ extern "C"
 #include <ace/Atomic_Op.h>
 // enums & singletons
 #include "HookMgr.h"
-#ifdef MANGOS
+#ifndef TRINITY
 #include "AccountMgr.h"
 #include "Config/Config.h"
 #include "Player.h"
@@ -35,7 +35,7 @@ extern "C"
 #include "Weather.h"
 #include "World.h"
 
-#ifdef MANGOS
+#ifndef TRINITY
 typedef SpellEffectIndex SpellEffIndex;
 typedef SpellEntry SpellInfo;
 typedef ItemPrototype ItemTemplate;
@@ -46,7 +46,7 @@ typedef int Difficulty;
 #endif
 
 struct AreaTriggerEntry;
-#ifdef MANGOS
+#ifndef TRINITY
 class ReactorAI;
 typedef ReactorAI ScriptedAI;
 #else
@@ -82,7 +82,7 @@ typedef VehicleInfo Vehicle;
 #endif
 #endif
 
-#ifdef MANGOS
+#ifndef TRINITY
 #define eWorld                  (&sWorld)
 #define eMapMgr                 (&sMapMgr)
 #define eConfigMgr              (&sConfig)
@@ -423,7 +423,7 @@ public:
 
     static inline uint32 GetCurrTime()
     {
-#ifdef MANGOS
+#ifndef TRINITY
         return WorldTimer::getMSTime();
 #else
         return getMSTime();
@@ -432,7 +432,7 @@ public:
 
     static inline uint32 GetTimeDiff(uint32 oldMSTime)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         return WorldTimer::getMSTimeDiff(oldMSTime, GetCurrTime());
 #else
         return GetMSTimeDiffToNow(oldMSTime);
@@ -484,7 +484,7 @@ public:
                 return false;
             if (Unit* unit = u->ToUnit())
             {
-#ifdef MANGOS
+#ifndef TRINITY
                 if (!unit->isAlive())
                     return false;
 #else
@@ -516,7 +516,7 @@ public:
     };
 
     CreatureAI* GetAI(Creature* creature);
-#ifndef MANGOS
+#ifdef TRINITY
     GameObjectAI* GetAI(GameObject* gameObject);
 #endif
 

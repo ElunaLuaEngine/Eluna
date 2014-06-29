@@ -34,7 +34,7 @@
 #include "TemporarySummon.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
-#ifdef MANGOS
+#ifndef TRINITY
 #include "ReactorAI.h"
 #include "revision_nr.h"
 #else

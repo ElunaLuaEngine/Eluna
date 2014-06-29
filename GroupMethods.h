@@ -94,7 +94,7 @@ namespace LuaGroup
 
         for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
         {
-#ifdef MANGOS
+#ifndef TRINITY
             Player* member = itr->getSource();
 #else
             Player* member = itr->GetSource();
@@ -115,7 +115,7 @@ namespace LuaGroup
 
     int GetLeaderGUID(lua_State* L, Group* group)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, group->GetLeaderGuid());
 #else
         Eluna::Push(L, group->GetLeaderGUID());
@@ -125,7 +125,7 @@ namespace LuaGroup
 
     int GetLeader(lua_State* L, Group* group)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, eObjectAccessor->FindPlayer(group->GetLeaderGuid()));
 #else
         Eluna::Push(L, eObjectAccessor->FindPlayer(group->GetLeaderGUID()));
@@ -146,7 +146,7 @@ namespace LuaGroup
     int GetMemberGUID(lua_State* L, Group* group)
     {
         const char* name = Eluna::CHECKVAL<const char*>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, group->GetMemberGuid(name));
 #else
         Eluna::Push(L, group->GetMemberGUID(name));
@@ -193,7 +193,7 @@ namespace LuaGroup
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         uint32 method = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, group->RemoveMember(player->GET_GUID(), method));
 #else
         Eluna::Push(L, group->RemoveMember(player->GET_GUID(), (RemoveMethod)method));

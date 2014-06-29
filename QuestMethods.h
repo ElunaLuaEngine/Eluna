@@ -13,7 +13,7 @@ namespace LuaQuest
     int HasFlag(lua_State* L, Quest* quest)
     {
         uint32 flag = Eluna::CHECKVAL<uint32>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, quest->HasQuestFlag((QuestFlags)flag));
 #else
         Eluna::Push(L, quest->HasFlag(flag));
@@ -74,7 +74,7 @@ namespace LuaQuest
 
     int GetFlags(lua_State* L, Quest* quest)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, quest->GetQuestFlags());
 #else
         Eluna::Push(L, quest->GetFlags());

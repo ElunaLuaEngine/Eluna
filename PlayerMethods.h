@@ -30,7 +30,7 @@ namespace LuaPlayer
     int HasAchieved(lua_State* L, Player* player)
     {
         uint32 achievementId = Eluna::CHECKVAL<uint32>(L, 2);
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, player->GetAchievementMgr().HasAchievement(achievementId));
 #else
         Eluna::Push(L, player->HasAchieved(achievementId));
@@ -236,7 +236,7 @@ namespace LuaPlayer
 
     int IsGM(lua_State* L, Player* player)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, player->isGameMaster());
 #else
         Eluna::Push(L, player->IsGameMaster());
@@ -355,7 +355,7 @@ namespace LuaPlayer
 
     int InBattlegroundQueue(lua_State* L, Player* player)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, player->InBattleGroundQueue());
 #else
         Eluna::Push(L, player->InBattlegroundQueue());
@@ -373,7 +373,7 @@ namespace LuaPlayer
 
     int InBattleground(lua_State* L, Player* player)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, player->InBattleGround());
 #else
         Eluna::Push(L, player->InBattleground());
@@ -511,7 +511,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#ifndef MANGOS
+#ifdef TRINITY
     int GetChampioningFaction(lua_State* L, Player* player)
     {
         Eluna::Push(L, player->GetChampioningFaction());
@@ -567,7 +567,7 @@ namespace LuaPlayer
 
     int GetBattlegroundTypeId(lua_State* L, Player* player)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, player->GetBattleGroundTypeId());
 #else
         Eluna::Push(L, player->GetBattlegroundTypeId());
@@ -577,7 +577,7 @@ namespace LuaPlayer
 
     int GetBattlegroundId(lua_State* L, Player* player)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, player->GetBattleGroundId());
 #else
         Eluna::Push(L, player->GetBattlegroundId());
@@ -728,7 +728,7 @@ namespace LuaPlayer
 
     int GetComboTarget(lua_State* L, Player* player)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, player->GetMap()->GetUnit(player->GetComboTargetGuid()));
 #else
         Eluna::Push(L, ObjectAccessor::GetUnit(*player, player->GetComboTarget()));
@@ -777,7 +777,7 @@ namespace LuaPlayer
     {
         Quest* quest = Eluna::CHECKOBJ<Quest>(L, 2);
 
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, player->GetQuestLevelForPlayer(quest));
 #else
         Eluna::Push(L, player->GetQuestLevel(quest));
@@ -855,7 +855,7 @@ namespace LuaPlayer
 
     int GetSelection(lua_State* L, Player* player)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, player->GetMap()->GetUnit(player->GetSelectionGuid()));
 #else
         Eluna::Push(L, player->GetSelectedUnit());
@@ -1256,7 +1256,7 @@ namespace LuaPlayer
         uint32 areaId = Eluna::CHECKVAL<uint32>(L, 6);
 
         WorldLocation loc(mapId, x, y, z);
-#ifdef MANGOS
+#ifndef TRINITY
         player->SetHomebindToLocation(loc, areaId);
 #else
         player->SetHomebind(loc, areaId);
@@ -1275,7 +1275,7 @@ namespace LuaPlayer
     }
 #endif
 
-#ifdef MANGOS
+#ifndef TRINITY
     int SetFFA(lua_State* L, Player* player)
     {
         bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
@@ -1297,7 +1297,7 @@ namespace LuaPlayer
 #if (!defined(TBC) && !defined(CLASSIC))
     int ResetPetTalents(lua_State* /*L*/, Player* player)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         Pet* pet = player->GetPet();
         Pet::resetTalentsForAllPetsOf(player, pet);
         if (pet)
@@ -1311,7 +1311,7 @@ namespace LuaPlayer
 
     int ResetAchievements(lua_State* /*L*/, Player* player)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         player->GetAchievementMgr().Reset();
 #else
         player->ResetAchievements();
@@ -1412,7 +1412,7 @@ namespace LuaPlayer
     {
         Unit* unit = Eluna::CHECKOBJ<Unit>(L, 2);
 
-#ifdef MANGOS
+#ifndef TRINITY
         AuctionHouseEntry const* ahEntry = AuctionHouseMgr::GetAuctionHouseEntry(unit);
 #else
         AuctionHouseEntry const* ahEntry = AuctionHouseMgr::GetAuctionHouseEntry(unit->getFaction());
@@ -1478,7 +1478,7 @@ namespace LuaPlayer
     {
         Player* plr = Eluna::CHECKOBJ<Player>(L, 2);
 
-#ifdef MANGOS
+#ifndef TRINITY
         player->GetSession()->SendGuildInvite(plr);
 #else
         if (Guild* guild = player->GetGuild())
@@ -1497,7 +1497,7 @@ namespace LuaPlayer
 
     int RemoveFromBattlegroundRaid(lua_State* /*L*/, Player* player)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         player->RemoveFromBattleGroundRaid();
 #else
         player->RemoveFromBattlegroundOrBattlefieldRaid();
@@ -1918,7 +1918,7 @@ namespace LuaPlayer
         float y = Eluna::CHECKVAL<float>(L, 4);
         float z = Eluna::CHECKVAL<float>(L, 5);
         float o = Eluna::CHECKVAL<float>(L, 6);
-#ifdef MANGOS
+#ifndef TRINITY
         if (player->IsTaxiFlying())
 #else
         if (player->IsInFlight())
@@ -1943,7 +1943,7 @@ namespace LuaPlayer
     {
         uint32 itemId = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 itemCount = Eluna::CHECKVAL<uint32>(L, 3);
-#ifdef MANGOS
+#ifndef TRINITY
         Eluna::Push(L, player->StoreNewItemInInventorySlot(itemId, itemCount) ? true : false);
 #else
         Eluna::Push(L, player->AddItem(itemId, itemCount));
@@ -2111,7 +2111,7 @@ namespace LuaPlayer
         bool _code = Eluna::CHECKVAL<bool>(L, 6, false);
         const char* _promptMsg = Eluna::CHECKVAL<const char*>(L, 7, "");
         uint32 _money = Eluna::CHECKVAL<uint32>(L, 8, 0);
-#ifdef MANGOS
+#ifndef TRINITY
 #ifndef CLASSIC
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
 #else
@@ -2125,7 +2125,7 @@ namespace LuaPlayer
 
     int GossipComplete(lua_State* /*L*/, Player* player)
     {
-#ifdef MANGOS
+#ifndef TRINITY
         player->PlayerTalkClass->CloseGossip();
 #else
         player->PlayerTalkClass->SendCloseGossip();
