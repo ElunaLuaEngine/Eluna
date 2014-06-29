@@ -42,7 +42,11 @@ namespace LuaCreature
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
 
+#ifdef MANGOS
+        Eluna::Push(L, creature->IsTargetableForAttack(target));
+#else
         Eluna::Push(L, creature->isTargetableForAttack(target));
+#endif
         return 1;
     }
 
@@ -333,7 +337,11 @@ namespace LuaCreature
         float dist = Eluna::CHECKVAL<float>(L, 5, 0.0f);
         int32 aura = Eluna::CHECKVAL<int32>(L, 6, 0);
 
+#ifdef MANGOS
+        ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
+#else
         ThreatList const& threatlist = creature->getThreatManager().getThreatList();
+#endif
         if (threatlist.empty())
             return 1;
         if (position >= threatlist.size())
@@ -407,11 +415,15 @@ namespace LuaCreature
         lua_newtable(L);
         int tbl = lua_gettop(L);
         uint32 i = 0;
-
-        ThreatList const& threatList = creature->getThreatManager().getThreatList();
-        if (threatList.empty())
+        
+#ifdef MANGOS
+        ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
+#else
+        ThreatList const& threatlist = creature->getThreatManager().getThreatList();
+#endif
+        if (threatlist.empty())
             return 1;
-        for (ThreatList::const_iterator itr = threatList.begin(); itr != threatList.end(); ++itr)
+        for (ThreatList::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
         {
             Unit* target = (*itr)->getTarget();
             if (!target)
@@ -428,7 +440,11 @@ namespace LuaCreature
 
     int GetAITargetsCount(lua_State* L, Creature* creature)
     {
+#ifdef MANGOS
+        Eluna::Push(L, creature->GetThreatManager().getThreatList().size());
+#else
         Eluna::Push(L, creature->getThreatManager().getThreatList().size());
+#endif
         return 1;
     }
 

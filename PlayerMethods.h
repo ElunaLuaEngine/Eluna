@@ -331,7 +331,11 @@ namespace LuaPlayer
 
     int IsTaxiCheater(lua_State* L, Player* player)
     {
+#ifdef MANGOS
+        Eluna::Push(L, player->IsTaxiCheater());
+#else
         Eluna::Push(L, player->isTaxiCheater());
+#endif
         return 1;
     }
 

@@ -484,7 +484,7 @@ public:
                 return false;
             if (Unit* unit = u->ToUnit())
             {
-#ifndef TRINITY
+#ifdef CMANGOS
                 if (!unit->isAlive())
                     return false;
 #else
