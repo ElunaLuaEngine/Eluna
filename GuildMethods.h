@@ -166,7 +166,7 @@ namespace LuaGuild
         return 0;
     }
 
-    int ChangeMemberRank(lua_State* L, Guild* guild)
+    int SetMemberRank(lua_State* L, Guild* guild)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         uint8 newRank = Eluna::CHECKVAL<uint8>(L, 3);

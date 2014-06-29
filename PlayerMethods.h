@@ -286,14 +286,6 @@ namespace LuaPlayer
         return 1;
     }
 
-    int IsActiveQuest(lua_State* L, Player* player)
-    {
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
-
-        Eluna::Push(L, player->IsActiveQuest(entry));
-        return 1;
-    }
-
     int IsGroupVisibleFor(lua_State* L, Player* player)
     {
         Player* target = Eluna::CHECKOBJ<Player>(L, 2);
@@ -2035,13 +2027,6 @@ namespace LuaPlayer
         std::string msg = Eluna::CHECKVAL<std::string>(L, 2);
         if (msg.length() > 0)
             player->GetSession()->SendNotification("%s", msg.c_str());
-        return 0;
-    }
-
-    int SendPacketToPlayer(lua_State* L, Player* player)
-    {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
-        player->GetSession()->SendPacket(data);
         return 0;
     }
 

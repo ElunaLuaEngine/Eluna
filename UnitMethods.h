@@ -272,12 +272,6 @@ namespace LuaUnit
         return 1;
     }
 
-    int IsInWorld(lua_State* L, Unit* unit)
-    {
-        Eluna::Push(L, unit->IsInWorld());
-        return 1;
-    }
-
     int IsPvPFlagged(lua_State* L, Unit* unit)
     {
         Eluna::Push(L, unit->IsPvP());
@@ -400,31 +394,9 @@ namespace LuaUnit
         return 1;
     }
 
-    int GetMap(lua_State* L, Unit* unit)
-    {
-        Map* map = unit->GetMap();
-        Eluna::Push(L, map);
-        return 1;
-    }
-
     int GetMountId(lua_State* L, Unit* unit)
     {
         Eluna::Push(L, unit->GetMountID());
-        return 1;
-    }
-
-    int GetDistance(lua_State* L, Unit* unit)
-    {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
-        if (obj && obj->IsInWorld())
-            Eluna::Push(L, unit->GetDistance(obj));
-        else
-        {
-            float X = Eluna::CHECKVAL<float>(L, 2);
-            float Y = Eluna::CHECKVAL<float>(L, 3);
-            float Z = Eluna::CHECKVAL<float>(L, 4);
-            Eluna::Push(L, unit->GetDistance(X, Y, Z));
-        }
         return 1;
     }
 

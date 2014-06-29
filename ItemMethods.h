@@ -215,12 +215,6 @@ namespace LuaItem
         return 1;
     }
 
-    int GetGUID(lua_State* L, Item* item)
-    {
-        Eluna::Push(L, item->GetGUIDLow());
-        return 1;
-    }
-
     int GetOwnerGUID(lua_State* L, Item* item)
     {
 #ifdef MANGOS
@@ -258,12 +252,6 @@ namespace LuaItem
     int GetBagSlot(lua_State* L, Item* item)
     {
         Eluna::Push(L, item->GetBagSlot());
-        return 1;
-    }
-
-    int GetGUIDLow(lua_State* L, Item* item)
-    {
-        Eluna::Push(L, item->GetGUIDLow());
         return 1;
     }
 

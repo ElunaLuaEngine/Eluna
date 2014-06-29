@@ -8,7 +8,7 @@
 #include "HookMgr.h"
 #include "LuaEngine.h"
 #include "Includes.h"
-// Methods
+// Method includes
 #include "GlobalMethods.h"
 #include "ObjectMethods.h"
 #include "WorldObjectMethods.h"
@@ -210,7 +210,6 @@ ElunaRegister<Unit> UnitMethods[] =
     { "GetCurrentSpell", &LuaUnit::GetCurrentSpell },                     // :GetCurrentSpell(type) - Returns the currently casted spell of given type if any
     { "GetCreatureType", &LuaUnit::GetCreatureType },                     // :GetCreatureType() - Returns the unit's type
     { "GetMountId", &LuaUnit::GetMountId },                               // :GetMountId()
-    { "GetOwnerGUID", &LuaUnit::GetOwnerGUID },                           // :GetOwnerGUID() - Returns the GUID of the owner
     { "GetOwner", &LuaUnit::GetOwner },                                   // :GetOwner() - Returns the owner
     { "GetFriendlyUnitsInRange", &LuaUnit::GetFriendlyUnitsInRange },     // :GetFriendlyUnitsInRange([range]) - Returns a list of friendly units in range, can return nil
     { "GetUnfriendlyUnitsInRange", &LuaUnit::GetUnfriendlyUnitsInRange }, // :GetUnfriendlyUnitsInRange([range]) - Returns a list of unfriendly units in range, can return nil
@@ -312,7 +311,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "IsInAccessiblePlaceFor", &LuaUnit::IsInAccessiblePlaceFor },   // :IsInAccessiblePlaceFor(creature) - Returns if the unit is in an accessible place for the specified creature
     { "IsVendor", &LuaUnit::IsVendor },                               // :IsVendor() - Returns if the unit is a vendor or not
     { "IsWithinLoS", &LuaUnit::IsWithinLoS },                         // :IsWithinLoS(x, y, z)
-    // {"IsRooted", &LuaUnit::IsRooted},                            // :IsRooted()
+    {"IsRooted", &LuaUnit::IsRooted},                                 // :IsRooted()
     { "IsFullHealth", &LuaUnit::IsFullHealth },                       // :IsFullHealth() - Returns if the unit is full health
     { "HasAura", &LuaUnit::HasAura },                                 // :HasAura(spellId) - Returns true if the unit has the aura from the spell
     { "IsStandState", &LuaUnit::IsStandState },                       // :IsStandState() - Returns true if the unit is standing
@@ -751,6 +750,8 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "IsCombatAllowed", &LuaCreature::IsCombatAllowed },                                         // :IsCombatAllowed() - Returns true if the creature has combat allowed
     // {"CanStartAttack", &LuaCreature::CanStartAttack},                                        // :CanStartAttack(unit[, force]) - Returns true if the creature can attack the unit
     { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },                             // :HasSearchedAssistance() - Returns true if the creature has searched assistance
+    { "IsTappedBy", &LuaCreature::IsTappedBy },                                                   // :IsTappedBy(player)
+    { "HasLootRecipient", &LuaCreature::HasLootRecipient },                                       // :HasLootRecipient() - Returns true if the creature has a loot recipient
     { "CanAssistTo", &LuaCreature::CanAssistTo },                                                 // :CanAssistTo(unit, enemy[, checkfaction]) - Returns true if the creature can assist unit with enemy
     { "IsTargetAcceptable", &LuaCreature::IsTargetAcceptable },                                   // :IsTargetAcceptable(unit) - Returns true if the creature can target unit
     { "HasInvolvedQuest", &LuaCreature::HasInvolvedQuest },                                       // :HasInvolvedQuest(questId) - Returns true if the creature can finish the quest for players
@@ -919,7 +920,7 @@ ElunaRegister<Spell> SpellMethods[] =
     // Getters
     { "GetCaster", &LuaSpell::GetCaster },                // :GetCaster() - Returns the spell's caster (UNIT)
     { "GetCastTime", &LuaSpell::GetCastTime },            // :GetCastTime() - Returns the spell cast time
-    { "GetEntry", &LuaSpell::GetId },                     // :GetEntry() - Returns the spell's ID
+    { "GetEntry", &LuaSpell::GetEntry },                     // :GetEntry() - Returns the spell's ID
     { "GetDuration", &LuaSpell::GetDuration },            // :GetDuration() - Returns the spell's duration
     { "GetPowerCost", &LuaSpell::GetPowerCost },          // :GetPowerCost() - Returns the spell's power cost (mana, energy, rage, etc)
     { "GetTargetDest", &LuaSpell::GetTargetDest },        // :GetTargetDest() - Returns the target destination (x,y,z,o,map) or nil. Orientation and map may be 0.
@@ -932,7 +933,7 @@ ElunaRegister<Spell> SpellMethods[] =
     { "IsAutoRepeat", &LuaSpell::IsAutoRepeat },          // :IsAutoRepeat()
 
     // Other
-    { "Cancel", &LuaSpell::cancel },                      // :Cancel() - Cancels the spell casting
+    { "Cancel", &LuaSpell::Cancel },                      // :Cancel() - Cancels the spell casting
     { "Cast", &LuaSpell::Cast },                          // :Cast(skipCheck) - Casts the spell (if true, removes the check for instant spells, etc)
     { "Finish", &LuaSpell::Finish },                      // :Finish() - Finishes the spell (SPELL_STATE_FINISH)
 
@@ -974,8 +975,8 @@ ElunaRegister<Group> GroupMethods[] =
     { "GetMembersCount", &LuaGroup::GetMembersCount },            // :GetMembersCount() - Returns the member count of the group
 
     // Setters
-    { "SetLeader", &LuaGroup::ChangeLeader },                     // :SetLeader(Player) - Sets the player as the new leader
-    { "SetMembersGroup", &LuaGroup::ChangeMembersGroup },         // :ChangeMembersGroup(player, subGroup) - Changes the member's subgroup
+    { "SetLeader", &LuaGroup::SetLeader },                     // :SetLeader(Player) - Sets the player as the new leader
+    { "SetMembersGroup", &LuaGroup::SetMembersGroup },         // :ChangeMembersGroup(player, subGroup) - Changes the member's subgroup
     { "SetTargetIcon", &LuaGroup::SetTargetIcon },                // :SetTargetIcon(icon, targetguid[, setterguid]) - Sets target's icon for group. target 0 to clear.
 
     // Boolean
@@ -984,10 +985,10 @@ ElunaRegister<Group> GroupMethods[] =
     { "RemoveMember", &LuaGroup::RemoveMember },                  // :RemoveMember(player) - Removes player from group. Returns true on success
     { "Disband", &LuaGroup::Disband },                            // :Disband() - Disbands the group
     { "IsFull", &LuaGroup::IsFull },                              // :IsFull() - Returns true if the group is full
-    // {"IsLFGGroup", &LuaGroup::isLFGGroup},                   // :IsLFGGroup() - Returns true if the group is an LFG group
-    { "IsRaidGroup", &LuaGroup::isRaidGroup },                    // :IsRaidGroup() - Returns true if the group is a raid group
-    { "IsBGGroup", &LuaGroup::isBGGroup },                        // :IsBGGroup() - Returns true if the group is a battleground group
-    // {"IsBFGroup", &LuaGroup::isBFGroup},                     // :IsBFGroup() - Returns true if the group is a battlefield group
+    // {"IsLFGGroup", &LuaGroup::IsLFGGroup},                   // :IsLFGGroup() - Returns true if the group is an LFG group
+    { "IsRaidGroup", &LuaGroup::IsRaidGroup },                    // :IsRaidGroup() - Returns true if the group is a raid group
+    { "IsBGGroup", &LuaGroup::IsBGGroup },                        // :IsBGGroup() - Returns true if the group is a battleground group
+    // {"IsBFGroup", &LuaGroup::IsBFGroup},                     // :IsBFGroup() - Returns true if the group is a battlefield group
     { "IsMember", &LuaGroup::IsMember },                          // :IsMember(player) - Returns true if the player is a member of the group
     { "IsAssistant", &LuaGroup::IsAssistant },                    // :IsAssistant(player) - returns true if the player is an assistant in the group
     { "SameSubGroup", &LuaGroup::SameSubGroup },                  // :SameSubGroup(player1, player2) - Returns true if the players are in the same subgroup in the group
@@ -1017,7 +1018,7 @@ ElunaRegister<Guild> GuildMethods[] =
 #ifndef CLASSIC
     { "SetBankTabText", &LuaGuild::SetBankTabText },          // :SetBankTabText(tabId, text)
 #endif
-    { "SetMemberRank", &LuaGuild::ChangeMemberRank },         // :SetMemberRank(player, newRank) - Sets the player rank in the guild to the new rank
+    { "SetMemberRank", &LuaGuild::SetMemberRank },         // :SetMemberRank(player, newRank) - Sets the player rank in the guild to the new rank
 #ifndef CATA
     { "SetLeader", &LuaGuild::SetLeader },                    // :SetLeader() - Sets the guild's leader
 #endif
@@ -1025,7 +1026,6 @@ ElunaRegister<Guild> GuildMethods[] =
     // Boolean
 
     // Other
-    { "ChangeMemberRank", &LuaGuild::ChangeMemberRank },      // :ChangeMemberRank(player, rankId) - Changes players rank to rank specified
     { "SendPacket", &LuaGuild::SendPacket },                  // :SendPacket(packet) - sends packet to guild
     { "SendPacketToRanked", &LuaGuild::SendPacketToRanked },  // :SendPacketToRanked(packet, rankId) - sends packet to guild, specifying a rankId will only send the packet to your ranked members
     { "Disband", &LuaGuild::Disband },                        // :Disband() - Disbands the guild

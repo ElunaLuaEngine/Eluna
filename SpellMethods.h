@@ -29,7 +29,7 @@ namespace LuaSpell
         return 1;
     }
 
-    int GetId(lua_State* L, Spell* spell)
+    int GetEntry(lua_State* L, Spell* spell)
     {
         Eluna::Push(L, spell->m_spellInfo->Id);
         return 1;
@@ -112,7 +112,7 @@ namespace LuaSpell
         return 0;
     }
 
-    int cancel(lua_State* /*L*/, Spell* spell)
+    int Cancel(lua_State* /*L*/, Spell* spell)
     {
         spell->cancel();
         return 0;

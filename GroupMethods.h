@@ -23,13 +23,13 @@ namespace LuaGroup
         return 1;
     }
 
-    int isRaidGroup(lua_State* L, Group* group)
+    int IsRaidGroup(lua_State* L, Group* group)
     {
         Eluna::Push(L, group->isRaidGroup());
         return 1;
     }
 
-    int isBGGroup(lua_State* L, Group* group)
+    int IsBGGroup(lua_State* L, Group* group)
     {
         Eluna::Push(L, group->isBGGroup());
         return 1;
@@ -73,13 +73,13 @@ namespace LuaGroup
         return 1;
     }
 
-    /*int isLFGGroup(lua_State* L, Group* group) // TODO: Implementation
+    /*int IsLFGGroup(lua_State* L, Group* group) // TODO: Implementation
     {
     Eluna::Push(L, group->isLFGGroup());
     return 1;
     }*/
 
-    /*int isBFGroup(lua_State* L, Group* group) // TODO: Implementation
+    /*int IsBFGroup(lua_State* L, Group* group) // TODO: Implementation
     {
     Eluna::Push(L, group->isBFGroup());
     return 1;
@@ -169,7 +169,7 @@ namespace LuaGroup
     }
 
     /* OTHER */
-    int ChangeLeader(lua_State* L, Group* group)
+    int SetLeader(lua_State* L, Group* group)
     {
         Player* leader = Eluna::CHECKOBJ<Player>(L, 2);
 
@@ -213,7 +213,7 @@ namespace LuaGroup
         return 0;
     }
 
-    int ChangeMembersGroup(lua_State* L, Group* group)
+    int SetMembersGroup(lua_State* L, Group* group)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         uint8 groupID = Eluna::CHECKVAL<uint8>(L, 3);
