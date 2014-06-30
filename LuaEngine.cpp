@@ -50,6 +50,18 @@ void Eluna::ReloadEluna()
     Uninitialize();
     Initialize();
 
+#ifdef TRINITY
+    // Re initialize creature AI restoring C++ AI or applying lua AI
+    {
+        TRINITY_READ_GUARD(HashMapHolder<Creature>::LockType, *HashMapHolder<Creature>::GetLock());
+        HashMapHolder<Creature>::MapType const& m = ObjectAccessor::GetCreatures();
+        for (HashMapHolder<Creature>::MapType::const_iterator iter = m.begin(); iter != m.end(); ++iter)
+        {
+            iter->second->AIM_Initialize();
+        }
+    }
+#endif
+
     reload = false;
 }
 

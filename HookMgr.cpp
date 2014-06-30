@@ -401,14 +401,16 @@ bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
     ObjectGuid guid = pItem->GET_GUID();
     bool castSpell = true;
 
-    if (!OnItemGossip(pPlayer, pItem, targets))
+    if (!OnItemUse(pPlayer, pItem, targets))
         castSpell = false;
 
     pItem = pPlayer->GetItemByGuid(guid);
-    if (pItem && OnItemUse(pPlayer, pItem, targets))
+    if (pItem)
+    {
+        if (!OnItemGossip(pPlayer, pItem, targets))
+            castSpell = false;
         pItem = pPlayer->GetItemByGuid(guid);
-    else
-        castSpell = false;
+    }
 
     if (pItem && castSpell)
         return true;

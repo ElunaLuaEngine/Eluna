@@ -1420,6 +1420,37 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+    Casts the spell at target.
+    pb0, 1 and 2 are modifiers for the base points of the spell.
+
+    @param &Unit target
+    @param uint32 spell
+    @param bool triggered = false
+    @param int32 bp0 = nil
+    @param int32 bp1 = nil
+    @param int32 bp2 = nil
+    @param &Item castItem = nil
+    @param uint64 originalCaster = 0
+    */
+    int CastCustomSpell(lua_State* L, Unit* unit)
+    {
+        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+        uint32 spell = Eluna::CHECKVAL<uint32>(L, 3);
+        bool triggered = Eluna::CHECKVAL<bool>(L, 4, false);
+        bool has_bp0 = lua_isnoneornil(L, 5);
+        int32 bp0 = Eluna::CHECKVAL<int32>(L, 5, 0);
+        bool has_bp1 = lua_isnoneornil(L, 6);
+        int32 bp1 = Eluna::CHECKVAL<int32>(L, 6, 0);
+        bool has_bp2 = lua_isnoneornil(L, 7);
+        int32 bp2 = Eluna::CHECKVAL<int32>(L, 7, 0);
+        Item* castItem = Eluna::CHECKOBJ<Item>(L, 8, false);
+        uint64 originalCaster = Eluna::CHECKVAL<uint64>(L, 9, 0);
+
+        unit->CastCustomSpell(target, spell, has_bp0 ? &bp0 : NULL, has_bp1 ? &bp1 : NULL, has_bp2 ? &bp2 : NULL, triggered, castItem, NULL, ObjectGuid(originalCaster));
+        return 0;
+    }
+
     int CastSpellAoF(lua_State* L, Unit* unit)
     {
         float _x = Eluna::CHECKVAL<float>(L, 2);

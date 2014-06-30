@@ -859,28 +859,35 @@ public:
         luaL_newmetatable(L, tname);
         int metatable = lua_gettop(L);
 
+        // tostring
+        lua_pushcfunction(L, tostringT);
+        lua_setfield(L, metatable, "__tostring");
+
+        // garbage collecting
+        if (manageMemory)
+        {
+            lua_pushcfunction(L, gcT);
+            lua_setfield(L, metatable, "__gc");
+        }
+
         // hide metatable
         lua_pushvalue(L, methods);
         lua_setfield(L, metatable, "__metatable");
 
-        // required to access methods
+        // make methods accessible through metatable
         lua_pushvalue(L, methods);
         lua_setfield(L, metatable, "__index");
 
-        // metamethods
-        lua_pushcfunction(L, tostringT);
-        lua_setfield(L, metatable, "__tostring");
-
-        lua_pushcfunction(L, gcT);
-        lua_setfield(L, metatable, "__gc");
+        // make new indexes saved to methods
+        lua_pushvalue(L, methods);
+        lua_setfield(L, metatable, "__newindex");
 
         // special method to get the object type
         lua_pushcfunction(L, typeT);
-        lua_setfield(L, methods, "GetObjectType");
+        lua_setfield(L, metatable, "GetObjectType");
 
-        lua_setmetatable(L, methods);
-
-        lua_remove(L, methods);
+        // pop methods and metatable
+        lua_pop(L, 2);
     }
 
     template<typename C>
@@ -897,7 +904,7 @@ public:
             return;
         }
 
-        lua_getfield(L, -1, "__metatable");
+        lua_getfield(L, -1, "__index");
         lua_remove(L, -2);
         if (!lua_istable(L, -1))
         {
