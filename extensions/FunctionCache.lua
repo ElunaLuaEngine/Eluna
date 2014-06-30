@@ -139,7 +139,9 @@ if (GetCoreExpansion() ~= 0) then
 end
 table.insert(T.Map, "IsBattleground")
 table.insert(T.Map, "IsDungeon")
-table.insert(T.Map, "IsHeroic")
+if (GetCoreExpansion() ~= 0) then
+    table.insert(T.Map, "IsHeroic")
+end
 table.insert(T.Map, "IsRaid")
 
 T.Corpse = {}
