@@ -27,9 +27,9 @@ void Eluna::Initialize()
 
     lua_folderpath = eConfigMgr->GetStringDefault("Eluna.ScriptPath", "lua_scripts");
 #if PLATFORM == PLATFORM_UNIX || PLATFORM == PLATFORM_APPLE
-    if (folderpath[0] == '~')
+    if (lua_folderpath[0] == '~')
         if (const char* home = getenv("HOME"))
-            folderpath.replace(0, 1, home);
+            lua_folderpath.replace(0, 1, home);
 #endif
     ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", lua_folderpath.c_str());
     GetScripts(lua_folderpath + "/extensions", lua_extensions);
