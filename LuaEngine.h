@@ -350,7 +350,14 @@ private:
     Eluna& operator=(const Eluna&);
 
 public:
-    typedef std::set<std::string> ScriptPaths;
+    struct LuaScript
+    {
+        std::string fileext;
+        std::string filename;
+        std::string filepath;
+        std::string modulepath;
+    };
+    typedef std::list<LuaScript> ScriptList;
 
     static Eluna* GEluna;
     static bool reload;
@@ -378,18 +385,20 @@ public:
     Eluna();
     ~Eluna();
 
-    static ScriptPaths scripts;
+    static ScriptList lua_scripts;
+    static ScriptList lua_extensions;
+    static std::string lua_folderpath;
     static void Initialize();
     static void Uninitialize();
     // Use Eluna::reload = true; instead.
     // This will be called on next update
     static void ReloadEluna();
-    void static GetScripts(std::string path, ScriptPaths& scripts);
+    static void GetScripts(std::string path, ScriptList& scripts);
 
     static void report(lua_State*);
     static void ExecuteCall(lua_State* L, int params, int res);
     void Register(uint8 reg, uint32 id, uint32 evt, int func);
-    void RunScripts(ScriptPaths& scripts);
+    void RunScripts();
     static void RemoveRef(const void* obj);
 
     // Pushes

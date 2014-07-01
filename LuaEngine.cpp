@@ -10,7 +10,9 @@
 #include "LuaEngine.h"
 #include "Includes.h"
 
-Eluna::ScriptPaths Eluna::scripts;
+Eluna::ScriptList Eluna::lua_scripts;
+Eluna::ScriptList Eluna::lua_extensions;
+std::string Eluna::lua_folderpath;
 Eluna* Eluna::GEluna = NULL;
 bool Eluna::reload = false;
 
@@ -20,19 +22,20 @@ void Eluna::Initialize()
 {
     uint32 oldMSTime = GetCurrTime();
 
-    scripts.clear();
+    lua_scripts.clear();
+    lua_extensions.clear();
 
-    std::string folderpath = eConfigMgr->GetStringDefault("Eluna.ScriptPath", "lua_scripts");
+    lua_folderpath = eConfigMgr->GetStringDefault("Eluna.ScriptPath", "lua_scripts");
 #if PLATFORM == PLATFORM_UNIX || PLATFORM == PLATFORM_APPLE
     if (folderpath[0] == '~')
         if (const char* home = getenv("HOME"))
             folderpath.replace(0, 1, home);
 #endif
-    ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", folderpath.c_str());
-    GetScripts(folderpath, scripts);
-    GetScripts(folderpath + "/extensions", scripts);
+    ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", lua_folderpath.c_str());
+    GetScripts(lua_folderpath + "/extensions", lua_extensions);
+    GetScripts(lua_folderpath, lua_scripts);
 
-    ELUNA_LOG_INFO("[Eluna]: Loaded %u scripts in %u ms", uint32(scripts.size()), GetTimeDiff(oldMSTime));
+    ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size()), GetTimeDiff(oldMSTime));
 
     // Create global eluna
     new Eluna();
@@ -41,7 +44,8 @@ void Eluna::Initialize()
 void Eluna::Uninitialize()
 {
     delete GEluna;
-    scripts.clear();
+    lua_scripts.clear();
+    lua_extensions.clear();
 }
 
 void Eluna::ReloadEluna()
@@ -102,7 +106,7 @@ playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)
     Eluna::GEluna = this;
 
     // run scripts
-    RunScripts(scripts);
+    RunScripts();
 }
 
 Eluna::~Eluna()
@@ -134,7 +138,7 @@ Eluna::~Eluna()
 }
 
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
-void Eluna::GetScripts(std::string path, ScriptPaths& scripts)
+void Eluna::GetScripts(std::string path, ScriptList& scripts)
 {
     ELUNA_LOG_DEBUG("[Eluna]: GetScripts from path `%s`", path.c_str());
 
@@ -168,34 +172,71 @@ void Eluna::GetScripts(std::string path, ScriptPaths& scripts)
 
         // was file, check extension
         ELUNA_LOG_DEBUG("[Eluna]: GetScripts Checking file `%s`", fullpath.c_str());
-        std::string ext = fullpath.substr(fullpath.length() - 4, 4);
+
+        // split file name
+        std::string filename = directory->d_name;
+        uint32 extDot = filename.find_last_of('.');
+        if (extDot == std::string::npos)
+            continue;
+        std::string ext = filename.substr(extDot);
+        filename = filename.substr(0, extDot);
+
+        // check extension and add path to scripts to load
         if (ext != ".lua" && ext != ".dll")
             continue;
 
-        // was correct, add path to scripts to load
+        LuaScript script;
+        script.fileext = ext;
+        script.filename = filename;
+        script.filepath = fullpath;
+        script.modulepath = fullpath.substr(0, fullpath.length() - ext.length());
+        scripts.push_back(script);
         ELUNA_LOG_DEBUG("[Eluna]: GetScripts add path `%s`", fullpath.c_str());
-        scripts.erase(fullpath);
-        scripts.insert(fullpath);
     }
 }
 
-void Eluna::RunScripts(ScriptPaths& scripts)
+void Eluna::RunScripts()
 {
+    uint32 oldMSTime = GetCurrTime();
     uint32 count = 0;
-    // load last first to load extensions first
-    for (ScriptPaths::const_reverse_iterator it = scripts.rbegin(); it != scripts.rend(); ++it)
+
+    ScriptList scripts;
+    scripts.insert(scripts.end(), lua_extensions.begin(), lua_extensions.end());
+    scripts.insert(scripts.end(), lua_scripts.begin(), lua_scripts.end());
+
+    lua_getglobal(L, "package");
+    luaL_getsubtable(L, -1, "loaded");
+    int modules = lua_gettop(L);
+    for (ScriptList::const_iterator it = scripts.begin(); it != scripts.end(); ++it)
     {
-        if (!luaL_loadfile(L, it->c_str()) && !lua_pcall(L, 0, 0, 0))
+        lua_getfield(L, modules, it->modulepath.c_str());
+        if (!lua_isnoneornil(L, -1))
         {
+            lua_pop(L, 1);
+            ELUNA_LOG_DEBUG("[Eluna]: Extension was already loaded or required `%s`", it->filepath.c_str());
+            continue;
+        }
+        lua_pop(L, 1);
+        if (!luaL_loadfile(L, it->filepath.c_str()) && !lua_pcall(L, 0, 1, 0))
+        {
+            if (!lua_toboolean(L, -1))
+            {
+                lua_pop(L, 1);
+                Push(L, true);
+            }
+            lua_setfield(L, modules, it->modulepath.c_str());
+
             // successfully loaded and ran file
-            ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `%s`", it->c_str());
+            ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `%s`", it->filepath.c_str());
             ++count;
             continue;
         }
-        ELUNA_LOG_ERROR("[Eluna]: Error loading file `%s`", it->c_str());
+        ELUNA_LOG_ERROR("[Eluna]: Error loading extension `%s`", it->filepath.c_str());
         report(L);
     }
-    ELUNA_LOG_DEBUG("[Eluna]: Loaded %u Lua scripts", count);
+    lua_pop(L, 2);
+
+    ELUNA_LOG_INFO("[Eluna]: Executed %u Lua scripts in %u ms", count, GetTimeDiff(oldMSTime));
 }
 
 void Eluna::RemoveRef(const void* obj)
