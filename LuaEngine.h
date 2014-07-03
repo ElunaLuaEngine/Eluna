@@ -893,7 +893,7 @@ public:
 
         // special method to get the object type
         lua_pushcfunction(L, typeT);
-        lua_setfield(L, metatable, "GetObjectType");
+        lua_setfield(L, methods, "GetObjectType");
 
         // pop methods and metatable
         lua_pop(L, 2);
