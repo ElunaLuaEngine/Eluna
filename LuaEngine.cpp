@@ -44,6 +44,7 @@ void Eluna::Initialize()
 void Eluna::Uninitialize()
 {
     delete GEluna;
+    GEluna = NULL;
     lua_scripts.clear();
     lua_extensions.clear();
 }
@@ -241,6 +242,8 @@ void Eluna::RunScripts()
 
 void Eluna::RemoveRef(const void* obj)
 {
+    if (!sEluna)
+        return;
     lua_rawgeti(sEluna->L, LUA_REGISTRYINDEX, sEluna->userdata_table);
     lua_pushfstring(sEluna->L, "%p", obj);
     lua_gettable(sEluna->L, -2);
