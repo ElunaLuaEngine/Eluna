@@ -32,7 +32,7 @@ void Eluna::Initialize()
             lua_folderpath.replace(0, 1, home);
 #endif
     ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", lua_folderpath.c_str());
-    GetScripts(lua_folderpath + "/extensions", lua_extensions);
+    // GetScripts(lua_folderpath + "/extensions", lua_extensions);
     GetScripts(lua_folderpath, lua_scripts);
 
     ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size()), GetTimeDiff(oldMSTime));
@@ -183,7 +183,9 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
         filename = filename.substr(0, extDot);
 
         // check extension and add path to scripts to load
-        if (ext != ".lua" && ext != ".dll")
+        bool luascript = ext == ".lua" || ext == ".dll";
+        bool extension = ext == ".ext" || (filename.length() >= 4 && filename.find_last_of("_ext") == filename.length() - 4);
+        if (!luascript && !extension)
             continue;
 
         LuaScript script;
@@ -191,7 +193,10 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
         script.filename = filename;
         script.filepath = fullpath;
         script.modulepath = fullpath.substr(0, fullpath.length() - ext.length());
-        scripts.push_back(script);
+        if (extension)
+            lua_extensions.push_back(script);
+        else
+            scripts.push_back(script);
         ELUNA_LOG_DEBUG("[Eluna]: GetScripts add path `%s`", fullpath.c_str());
     }
 }
