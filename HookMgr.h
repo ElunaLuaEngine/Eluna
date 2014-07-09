@@ -86,6 +86,9 @@ namespace HookMgr
 	    // AddOns
         ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel
 
+        MAP_EVENT_ON_REMOVE_CREATURE            =     31,       // (event, map, creature)
+        MAP_EVENT_ON_REMOVE_GAMEOBJECT          =     32,       // (event, map, gameobject)
+
         SERVER_EVENT_COUNT
     };
 

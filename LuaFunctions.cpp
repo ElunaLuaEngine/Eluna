@@ -194,12 +194,12 @@ ElunaRegister<Unit> UnitMethods[] =
     { "GetHealth", &LuaUnit::GetHealth },                                 // :GetHealth()
     { "GetDisplayId", &LuaUnit::GetDisplayId },                           // :GetDisplayId()
     { "GetNativeDisplayId", &LuaUnit::GetNativeDisplayId },               // :GetNativeDisplayId()
-    { "GetPower", &LuaUnit::GetPower },                                   // :GetPower(index) - returns power at index. Index can be omitted
-    { "GetMaxPower", &LuaUnit::GetMaxPower },                             // :GetMaxPower(index) - returns power at index. Index can be omitted
-    { "GetPowerType", &LuaUnit::GetPowerType },                           // :GetPowerType() - Returns the power type
+    { "GetPower", &LuaUnit::GetPower },                                   // :GetPower([type]) - returns power for power type. type can be omitted
+    { "GetMaxPower", &LuaUnit::GetMaxPower },                             // :GetMaxPower([type]) - returns max power for power type. type can be omitted
+    { "GetPowerType", &LuaUnit::GetPowerType },                           // :GetPowerType() - Returns the power type tye unit uses
     { "GetMaxHealth", &LuaUnit::GetMaxHealth },                           // :GetMaxHealth()
     { "GetHealthPct", &LuaUnit::GetHealthPct },                           // :GetHealthPct()
-    { "GetPowerPct", &LuaUnit::GetPowerPct },                             // :GetPowerPct(power_id)
+    { "GetPowerPct", &LuaUnit::GetPowerPct },                             // :GetPowerPct([type]) - returns power percent for power type. type can be omitted
     { "GetGender", &LuaUnit::GetGender },                                 // :GetGender() - returns the gender where male = 0 female = 1
     { "GetRace", &LuaUnit::GetRace },                                     // :GetRace()
     { "GetClass", &LuaUnit::GetClass },                                   // :GetClass()
@@ -238,8 +238,9 @@ ElunaRegister<Unit> UnitMethods[] =
     { "SetLevel", &LuaUnit::SetLevel },                       // :SetLevel(amount)
     { "SetHealth", &LuaUnit::SetHealth },                     // :SetHealth(amount)
     { "SetMaxHealth", &LuaUnit::SetMaxHealth },               // :SetMaxHealth(amount)
-    { "SetPower", &LuaUnit::SetPower },                       // :SetPower(index, amount)
-    { "SetMaxPower", &LuaUnit::SetMaxPower },                 // :SetMaxPower(index, amount)
+    { "SetPower", &LuaUnit::SetPower },                       // :SetPower([type,] amount)
+    { "SetMaxPower", &LuaUnit::SetMaxPower },                 // :SetMaxPower([type,] amount)
+    { "SetPowerType", &LuaUnit::SetPowerType },               // :SetPowerType(type)
     { "SetDisplayId", &LuaUnit::SetDisplayId },               // :SetDisplayId(id)
     { "SetNativeDisplayId", &LuaUnit::SetNativeDisplayId },   // :SetNativeDisplayId(id)
     { "SetFacing", &LuaUnit::SetFacing },                     // :SetFacing(o) - Sets the Unit facing to arg

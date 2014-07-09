@@ -549,81 +549,46 @@ namespace LuaUnit
         return 1;
     }
 
+    Powers PowerSelectorHelper(lua_State* L, Unit* unit, int powerType = -1)
+    {
+        if (powerType == -1)
+            return unit->getPowerType();
+
+        if (powerType < 0 || powerType >= int(MAX_POWERS))
+            luaL_argerror(L, 2, "valid Powers expected");
+
+        return (Powers)powerType;
+    }
+
     int GetPower(lua_State* L, Unit* unit)
     {
         int type = Eluna::CHECKVAL<int>(L, 2, -1);
-        if (type == -1)
-        {
+        Powers power = PowerSelectorHelper(L, unit, type);
 
-            switch (unit->getClass())
-            {
-            case 1:
-                type = POWER_RAGE;
-                break;
-            case 4:
-                type = POWER_ENERGY;
-                break;
-#if (!defined(TBC) && !defined(CLASSIC))
-            case 6:
-                type = POWER_RUNIC_POWER;
-                break;
-#endif
-            case 2:
-            case 3:
-            case 5:
-            case 7:
-            case 8:
-            case 9:
-            case 11:
-                type = POWER_MANA;
-                break;
-            default:
-                type = POWER_MANA;
-            }
-        }
-        else if (type < 0 || type >= int(MAX_POWERS))
-            return luaL_argerror(L, 2, "valid Powers expected");
-
-        Eluna::Push(L, unit->GetPower((Powers)type));
+        Eluna::Push(L, unit->GetPower(power));
         return 1;
     }
 
     int GetMaxPower(lua_State* L, Unit* unit)
     {
         int type = Eluna::CHECKVAL<int>(L, 2, -1);
-        if (type == -1)
-        {
+        Powers power = PowerSelectorHelper(L, unit, type);
 
-            switch (unit->getClass())
-            {
-            case 1:
-                type = POWER_RAGE;
-                break;
-            case 4:
-                type = POWER_ENERGY;
-                break;
-#if (!defined(TBC) && !defined(CLASSIC))
-            case 6:
-                type = POWER_RUNIC_POWER;
-                break;
+        Eluna::Push(L, unit->GetMaxPower(power));
+        return 1;
+    }
+
+    int GetPowerPct(lua_State* L, Unit* unit)
+    {
+        int type = Eluna::CHECKVAL<int>(L, 2, -1);
+        Powers power = PowerSelectorHelper(L, unit, type);
+
+#if (!defined(TRINITY) && defined(WOTLK))
+        float percent = ((float)unit->GetPower(power) / (float)unit->GetMaxPower(power)) * 100.0f;
+#else
+        float percent = ((float)unit->GetPower(power) / (float)unit->GetMaxPower(power)) * 100.0f;
 #endif
-            case 2:
-            case 3:
-            case 5:
-            case 7:
-            case 8:
-            case 9:
-            case 11:
-                type = POWER_MANA;
-                break;
-            default:
-                type = POWER_MANA;
-            }
-        }
-        else if (type < 0 || type >= int(MAX_POWERS))
-            return luaL_argerror(L, 2, "valid Powers expected");
-
-        Eluna::Push(L, unit->GetMaxPower((Powers)type));
+        Eluna::Push(L, percent);
         return 1;
     }
 
@@ -650,17 +615,6 @@ namespace LuaUnit
 #else
         Eluna::Push(L, unit->GetHealthPct());
 #endif
-        return 1;
-    }
-
-    int GetPowerPct(lua_State* L, Unit* unit)
-    {
-#if (!defined(TRINITY) && defined(WOTLK))
-        float percent = (unit->GetPower(unit->GetPowerType()) / unit->GetMaxPower(unit->GetPowerType())) * 100;
-#else
-        float percent = (unit->GetPower(unit->getPowerType()) / unit->GetMaxPower(unit->getPowerType())) * 100;
-#endif
-        Eluna::Push(L, percent);
         return 1;
     }
 
@@ -933,57 +887,30 @@ namespace LuaUnit
 
     int SetPower(lua_State* L, Unit* unit)
     {
-        int type = Eluna::CHECKVAL<int>(L, 2);
+        int type = Eluna::CHECKVAL<int>(L, 2, -1);
         uint32 amt = Eluna::CHECKVAL<uint32>(L, 3);
+        Powers power = PowerSelectorHelper(L, unit, type);
 
-        switch (type)
-        {
-        case POWER_MANA:
-            unit->SetPower(POWER_MANA, amt);
-            break;
-        case POWER_RAGE:
-            unit->SetPower(POWER_RAGE, amt);
-            break;
-        case POWER_ENERGY:
-            unit->SetPower(POWER_ENERGY, amt);
-            break;
-#if (!defined(TBC) && !defined(CLASSIC))
-        case POWER_RUNIC_POWER:
-            unit->SetMaxPower(POWER_RUNIC_POWER, amt);
-            break;
-#endif
-        default:
-            return luaL_argerror(L, 2, "valid Powers expected");
-            break;
-        }
+        unit->SetPower(power, amt);
         return 0;
     }
 
     int SetMaxPower(lua_State* L, Unit* unit)
     {
-        int type = Eluna::CHECKVAL<int>(L, 2);
+        int type = Eluna::CHECKVAL<int>(L, 2, -1);
         uint32 amt = Eluna::CHECKVAL<uint32>(L, 3);
+        Powers power = PowerSelectorHelper(L, unit, type);
 
-        switch (type)
-        {
-        case POWER_MANA:
-            unit->SetMaxPower(POWER_MANA, amt);
-            break;
-        case POWER_RAGE:
-            unit->SetMaxPower(POWER_RAGE, amt);
-            break;
-        case POWER_ENERGY:
-            unit->SetMaxPower(POWER_ENERGY, amt);
-            break;
-#if (!defined(TBC) && !defined(CLASSIC))
-        case POWER_RUNIC_POWER:
-            unit->SetMaxPower(POWER_RUNIC_POWER, amt);
-            break;
-#endif
-        default:
+        unit->SetMaxPower(power, amt);
+        return 0;
+    }
+
+    int SetPowerType(lua_State* L, Unit* unit)
+    {
+        uint32 type = Eluna::CHECKVAL<uint32>(L, 2);
+        if (type >= int(MAX_POWERS))
             return luaL_argerror(L, 2, "valid Powers expected");
-            break;
-        }
+        unit->setPowerType((Powers)type);
         return 0;
     }
 

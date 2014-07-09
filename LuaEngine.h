@@ -675,6 +675,8 @@ public:
     void OnPlayerEnter(Map* map, Player* player);
     void OnPlayerLeave(Map* map, Player* player);
     void OnUpdate(Map* map, uint32 diff);
+    void OnRemove(Map* map, Creature* creature);
+    void OnRemove(Map* map, GameObject* gameobject);
 
     /* World */
     void OnOpenStateChange(bool open);
@@ -1063,13 +1065,9 @@ public:
     {
         T* obj = Eluna::CHECKOBJ<T>(L, 1); // get self
         if (obj)
-        {
             lua_pushfstring(L, "%s: (%p)", tname, obj);
-            return 1;
-        }
-        lua_pushnil(L);
-        lua_replace(L, 1);
-        luaL_tolstring(L, 1, NULL);
+        else
+            lua_pushstring(L, "nil");
         return 1;
     }
 };

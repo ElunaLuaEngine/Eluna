@@ -1272,6 +1272,22 @@ void Eluna::OnUpdate(Map* map, uint32 diff)
     EVENT_EXECUTE(0);
     ENDCALL();
 }
+void Eluna::OnRemove(Map* map, Creature* creature)
+{
+    EVENT_BEGIN(ServerEventBindings, MAP_EVENT_ON_REMOVE_CREATURE, return);
+    Push(L, map);
+    Push(L, creature);
+    ENTRY_EXECUTE(0);
+    ENDCALL();
+}
+void Eluna::OnRemove(Map* map, GameObject* gameobject)
+{
+    EVENT_BEGIN(ServerEventBindings, MAP_EVENT_ON_REMOVE_GAMEOBJECT, return);
+    Push(L, map);
+    Push(L, gameobject);
+    ENTRY_EXECUTE(0);
+    ENDCALL();
+}
 
 // creature
 bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, Creature* pTarget)
