@@ -4,58 +4,83 @@
 -- Please see the included DOCS/LICENSE.md for more information
 --
 
---[[
-Functions:
-Object:GetData(instance) -- returns a table unique for the object or it's instance
-Object:RemoveData(instance) -- deletes the unique table for the object or it's instance
+local variableStores = {
+    Map = {},
+    Player = {},
+    Creature = {},
+    GameObject = {},
+}
 
-Usage:
--- Set a variable
-creature:GetData().escorted = true
--- Check a variable
-if(creature:GetData().escorted) then
-    print(creature:GetName().." has been escorted")
-end
--- Remove all variables (on death, logout etc)
-creature:RemoveData()
-]]
-
-local T = {}
-function Object:GetData(instance)
-    assert(self, "ObjectVariables: self was nil")
-    if(instance) then
-        if(not self.GetInstanceId or not self.GetMapId) then
-            error("instance is true and object is not worldobject", 2)
-        end
-        local map = -self:GetMapId()
-        local ID = self:GetInstanceId()
-        if(not T[map]) then
-            T[map] = {}
-        end
-        if(not T[map][ID]) then
-            T[map][ID] = {}
-        end
-        return T[map][ID]
-    else
-        local ID = self:GetGUID()
-        if(not T[ID]) then
-            T[ID] = {}
-        end
-        return T[ID]
-    end
-end
-function Object:RemoveData(instance)
-    assert(self, "ObjectVariables: self was nil")
-    if(instance) then
-        if(not self.GetInstance or not self.GetMapId) then
-            error("instance or map is true and object is not worldobject", 2)
-        end
-        local map = -self:GetMapId()
-        local ID = self:GetInstanceId()
-        if(T[map]) then
-            T[map][ID] = nil
+local function DestroyData(event, obj)
+    if (event == 18) then
+        local mapid = obj:GetMapId()
+        local instid = obj:GetInstanceId()
+        if (variableStores.Map[mapid]) then
+            variableStores.Map[mapid][instid] = nil
         end
     else
-        T[self:GetGUID()] = nil
+        variableStores[obj:GetObjectType()][obj:GetGUIDLow()] = nil
     end
 end
+
+local function GetData(self, field)
+    local Type = self:GetObjectType()
+    local varStore = variableStores[Type]
+    local id
+    if (Type == "Map") then
+        local mapid = self:GetMapId()
+        varStore = varStore[mapid]
+        if (not varStore) then
+            return nil
+        end
+        id = self:GetInstanceId()
+    else
+        id = self:GetGUIDLow()
+    end
+    
+    if (not varStore[id]) then
+        return nil
+    end
+    
+    if (field == nil) then
+        return varStore[id]
+    else
+        return varStore[id][field]
+    end
+end
+
+local function SetData(self, field, val)
+    assert(field ~= nil, "field was nil", 2)
+    
+    local Type = self:GetObjectType()
+    local varStore = variableStores[Type]
+    local id
+    if (Type == "Map") then
+        local mapid = self:GetMapId()
+    
+        if (not varStore[mapid]) then
+            varStore[mapid] = {}
+        end
+        varStore = varStore[mapid]
+        
+        id = self:GetInstanceId()
+    else
+        id = self:GetGUIDLow()
+    end
+    
+    if (not varStore[id]) then
+        varStore[id] = {}
+    end
+    
+    varStore[id][field] = val
+end
+
+for k,v in pairs(variableStores) do
+    _G[k].GetData = GetData
+    _G[k].SetData = SetData
+end
+
+RegisterPlayerEvent(4, DestroyData)
+RegisterServerEvent(31, DestroyData)
+RegisterServerEvent(32, DestroyData)
+RegisterServerEvent(18, DestroyData)

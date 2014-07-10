@@ -85,9 +85,9 @@ namespace HookMgr
 
 	    // AddOns
         ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel
-
-        MAP_EVENT_ON_REMOVE_CREATURE            =     31,       // (event, map, creature)
-        MAP_EVENT_ON_REMOVE_GAMEOBJECT          =     32,       // (event, map, gameobject)
+        
+        WORLD_EVENT_ON_DELETE_CREATURE          =     31,       // (event, creature)
+        WORLD_EVENT_ON_DELETE_GAMEOBJECT        =     32,       // (event, gameobject)
 
         SERVER_EVENT_COUNT
     };
@@ -227,6 +227,8 @@ namespace HookMgr
         CREATURE_EVENT_ON_QUEST_COMPLETE                  = 33, // (event, player, creature, quest)
         CREATURE_EVENT_ON_QUEST_REWARD                    = 34, // (event, player, creature, quest, opt)
         CREATURE_EVENT_ON_DIALOG_STATUS                   = 35, // (event, player, creature)
+        CREATURE_EVENT_ON_ADD                             = 36, // (event, creature)
+        CREATURE_EVENT_ON_REMOVE                          = 37, // (event, creature)
         CREATURE_EVENT_COUNT
     };
 
@@ -244,6 +246,8 @@ namespace HookMgr
         GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE           = 9,    // (event, go, state)
         GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED            = 10,   // (event, go, state)
         GAMEOBJECT_EVENT_ON_QUEST_COMPLETE              = 11,   // (event, player, go, quest)
+        GAMEOBJECT_EVENT_ON_ADD                         = 12,   // (event, gameobject)
+        GAMEOBJECT_EVENT_ON_REMOVE                      = 13,   // (event, gameobject)
         GAMEOBJECT_EVENT_COUNT
     };
 

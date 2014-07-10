@@ -675,8 +675,12 @@ public:
     void OnPlayerEnter(Map* map, Player* player);
     void OnPlayerLeave(Map* map, Player* player);
     void OnUpdate(Map* map, uint32 diff);
-    void OnRemove(Map* map, Creature* creature);
-    void OnRemove(Map* map, GameObject* gameobject);
+    void OnAddToWorld(Creature* creature);
+    void OnRemoveFromWorld(Creature* creature);
+    void OnAddToWorld(GameObject* gameobject);
+    void OnRemoveFromWorld(GameObject* gameobject);
+    void OnRemove(Creature* creature);
+    void OnRemove(GameObject* gameobject);
 
     /* World */
     void OnOpenStateChange(bool open);
@@ -880,10 +884,6 @@ public:
             lua_pushcfunction(L, gcT);
             lua_setfield(L, metatable, "__gc");
         }
-
-        // hide metatable
-        lua_pushvalue(L, methods);
-        lua_setfield(L, metatable, "__metatable");
 
         // make methods accessible through metatable
         lua_pushvalue(L, methods);

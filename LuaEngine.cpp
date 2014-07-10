@@ -35,7 +35,7 @@ void Eluna::Initialize()
     // GetScripts(lua_folderpath + "/extensions", lua_extensions);
     GetScripts(lua_folderpath, lua_scripts);
 
-    ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size()), GetTimeDiff(oldMSTime));
+    ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size() + lua_extensions.size()), GetTimeDiff(oldMSTime));
 
     // Create global eluna
     new Eluna();

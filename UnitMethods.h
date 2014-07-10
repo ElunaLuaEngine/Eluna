@@ -551,8 +551,13 @@ namespace LuaUnit
 
     Powers PowerSelectorHelper(lua_State* L, Unit* unit, int powerType = -1)
     {
+#if (!defined(TRINITY) && defined(WOTLK))
+        if (powerType == -1)
+            return unit->GetPowerType();
+#else
         if (powerType == -1)
             return unit->getPowerType();
+#endif
 
         if (powerType < 0 || powerType >= int(MAX_POWERS))
             luaL_argerror(L, 2, "valid Powers expected");
@@ -910,7 +915,11 @@ namespace LuaUnit
         uint32 type = Eluna::CHECKVAL<uint32>(L, 2);
         if (type >= int(MAX_POWERS))
             return luaL_argerror(L, 2, "valid Powers expected");
+#if (!defined(TRINITY) && defined(WOTLK))
+        unit->SetPowerType((Powers)type);
+#else
         unit->setPowerType((Powers)type);
+#endif
         return 0;
     }
 
