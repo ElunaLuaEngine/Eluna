@@ -220,7 +220,11 @@ namespace LuaUnit
 
     int IsDying(lua_State* L, Unit* unit)
     {
+#ifdef MANGOS
+        Eluna::Push(L, unit->IsDying());
+#else
         Eluna::Push(L, unit->isDying());
+#endif
         return 1;
     }
 
