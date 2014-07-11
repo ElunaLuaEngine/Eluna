@@ -70,7 +70,11 @@ namespace LuaCreature
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
 
+#ifdef MANGOS
+        Eluna::Push(L, creature->IsTappedBy(player));
+#else
         Eluna::Push(L, creature->isTappedBy(player));
+#endif
         return 1;
     }
 
