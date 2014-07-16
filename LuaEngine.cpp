@@ -4,6 +4,7 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
+#include <ace/ACE.h>
 #include <ace/Dirent.h>
 #include <ace/OS_NS_sys_stat.h>
 #include "HookMgr.h"
