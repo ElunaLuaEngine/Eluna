@@ -376,7 +376,7 @@ namespace LuaCreature
             return 1;
 
         if (targetType == SELECT_TARGET_NEAREST || targetType == SELECT_TARGET_FARTHEST)
-            targetList.sort(Eluna::ObjectDistanceOrderPred(creature));
+            targetList.sort(ElunaUtil::ObjectDistanceOrderPred(creature));
 
         switch (targetType)
         {

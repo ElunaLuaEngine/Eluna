@@ -4,10 +4,18 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
+extern "C"
+{
+#include "lua.h"
+};
+
 // Eluna
-#include "HookMgr.h"
 #include "LuaEngine.h"
-#include "Includes.h"
+#include "ElunaEventMgr.h"
+#include "ElunaIncludes.h"
+#include "ElunaTemplate.h"
+#include "ElunaUtilitiy.h"
+
 // Method includes
 #include "GlobalMethods.h"
 #include "ObjectMethods.h"

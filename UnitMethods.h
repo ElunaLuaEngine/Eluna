@@ -732,7 +732,7 @@ namespace LuaUnit
         Trinity::UnitListSearcher<Trinity::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
         unit->VisitNearbyObject(range, searcher);
 #endif
-        Eluna::ObjectGUIDCheck guidCheck(unit->GET_GUID());
+        ElunaUtil::ObjectGUIDCheck guidCheck(unit->GET_GUID());
         list.remove_if(guidCheck);
 
         lua_newtable(L);
@@ -764,7 +764,7 @@ namespace LuaUnit
         Trinity::UnitListSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
         unit->VisitNearbyObject(range, searcher);
 #endif
-        Eluna::ObjectGUIDCheck guidCheck(unit->GET_GUID());
+        ElunaUtil::ObjectGUIDCheck guidCheck(unit->GET_GUID());
         list.remove_if(guidCheck);
 
         lua_newtable(L);

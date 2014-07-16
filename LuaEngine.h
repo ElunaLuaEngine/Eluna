@@ -4,70 +4,55 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef __ELUNA__H
-#define __ELUNA__H
+#ifndef _LUA_ENGINE_H
+#define _LUA_ENGINE_H
 
-extern "C"
-{
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-};
-
-// Base
 #include "Common.h"
 #include "SharedDefines.h"
-#include <ace/Singleton.h>
-#include <ace/Atomic_Op.h>
-// enums & singletons
-#include "HookMgr.h"
-#ifndef TRINITY
-#include "AccountMgr.h"
-#include "Config/Config.h"
-#include "Player.h"
-#else
-#include "Config.h"
-#include "GameObjectAI.h"
-#endif
+#include "DBCEnums.h"
+
 #include "Group.h"
 #include "Item.h"
-#include "Opcodes.h"
 #include "Weather.h"
 #include "World.h"
+#include "HookMgr.h"
 
-#ifndef TRINITY
-typedef SpellEffectIndex SpellEffIndex;
-typedef SpellEntry SpellInfo;
+#ifdef TRINITY
+struct ItemTemplate;
+#else
+struct ItemPrototype;
 typedef ItemPrototype ItemTemplate;
-#define GetTemplate GetProto
+typedef SpellEffectIndex SpellEffIndex;
 #ifdef CLASSIC
 typedef int Difficulty;
 #endif
 #endif
 
 struct AreaTriggerEntry;
-#ifndef TRINITY
-class ReactorAI;
-typedef ReactorAI ScriptedAI;
-#else
-#undef UNORDERED_MAP
-#define UNORDERED_MAP   std::unordered_map
-struct ScriptedAI;
-#endif
 class AuctionHouseObject;
 class Channel;
+class Corpse;
 class Creature;
 class CreatureAI;
 class GameObject;
+#ifdef TRINITY
+class GameObjectAI;
+#endif
 class Guild;
 class Group;
 class Item;
+class Pet;
 class Player;
 class Quest;
 class Spell;
 class SpellCastTargets;
+#ifdef TRINITY
+class TempSummon;
+#else
 class TemporarySummon;
-class Transport;
+typedef TemporarySummon TempSummon;
+#endif
+// class Transport;
 class Unit;
 class Weather;
 class WorldPacket;
@@ -82,265 +67,22 @@ typedef VehicleInfo Vehicle;
 #endif
 #endif
 
-#ifndef TRINITY
-#define eWorld                  (&sWorld)
-#define eMapMgr                 (&sMapMgr)
-#define eConfigMgr              (&sConfig)
-#define eGuildMgr               (&sGuildMgr)
-#define eObjectMgr              (&sObjectMgr)
-#define eAccountMgr             (&sAccountMgr)
-#define eObjectAccessor         (&sObjectAccessor)
-#define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
-#define GET_GUID                GetObjectGuid
-#define GetGameObjectTemplate   GetGameObjectInfo
-#define GetItemTemplate         GetItemPrototype
-#define ELUNA_LOG_INFO(...)     sLog.outString(__VA_ARGS__);
-#define ELUNA_LOG_ERROR(...)    sLog.outErrorEluna(__VA_ARGS__);
-#define ELUNA_LOG_DEBUG(...)    sLog.outDebug(__VA_ARGS__);
-#define CORE_VERSION            REVISION_NR
-#define CORE_NAME               "MaNGOS"
-#define SERVER_MSG_STRING       SERVER_MSG_CUSTOM
-#define MAX_LOCALES             MAX_LOCALE
-#define DIALOG_STATUS_SCRIPTED_NO_STATUS    DIALOG_STATUS_UNDEFINED
-#define TARGETICONCOUNT         TARGET_ICON_COUNT
-typedef TemporarySummon TempSummon;
-#ifndef CLASSIC
-#define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
-#endif
-#define MAX_TALENT_SPECS        MAX_TALENT_SPEC_COUNT
-#define GUID_ENPART(guid)       ObjectGuid(guid).GetEntry()
-#define GUID_LOPART(guid)       ObjectGuid(guid).GetCounter()
-#define GUID_HIPART(guid)       ObjectGuid(guid).GetHigh()
-#define ASSERT  MANGOS_ASSERT
-enum SelectAggroTarget
-{
-    SELECT_TARGET_RANDOM = 0,                               // Just selects a random target
-    SELECT_TARGET_TOPAGGRO,                                 // Selects targes from top aggro to bottom
-    SELECT_TARGET_BOTTOMAGGRO,                              // Selects targets from bottom aggro to top
-    SELECT_TARGET_NEAREST,
-    SELECT_TARGET_FARTHEST
-};
-#ifdef TBC
-#define SPELL_AURA_MOD_KILL_XP_PCT  SPELL_AURA_MOD_XP_PCT
-#endif
-#else
-#define eWorld                  (sWorld)
-#define eMapMgr                 (sMapMgr)
-#define eConfigMgr              (sConfigMgr)
-#define eGuildMgr               (sGuildMgr)
-#define eObjectMgr              (sObjectMgr)
-#define eAccountMgr             (sAccountMgr)
-#define eObjectAccessor         (sObjectAccessor)
-#ifndef CATA
-typedef uint64 ObjectGuid;
-#endif
-#define GET_GUID                GetGUID
-#define CORE_VERSION            _DATE
-#define CORE_NAME               "TrinityCore"
-#define REGEN_TIME_FULL
-#define ELUNA_LOG_INFO(...)     TC_LOG_INFO("eluna", __VA_ARGS__);
-#define ELUNA_LOG_ERROR(...)    TC_LOG_ERROR("eluna", __VA_ARGS__);
-#define ELUNA_LOG_DEBUG(...)    TC_LOG_DEBUG("eluna", __VA_ARGS__);
-typedef ThreatContainer::StorageType ThreatList;
-#ifdef CATA
-#define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
-#endif
-#endif
-#ifndef CLASSIC
-typedef Opcodes                 OpcodesList;
-#endif
-
-class Eluna;
-
-template<typename T>
-struct ElunaRegister
-{
-    const char* name;
-    int(*mfunc)(lua_State*, T*);
-};
-
-struct EventMgr
-{
-    struct LuaEvent;
-
-    typedef std::set<LuaEvent*> EventSet;
-    typedef std::map<EventProcessor*, EventSet> EventMap;
-    // typedef UNORDERED_MAP<uint64, EventProcessor> ProcessorMap;
-    Eluna& E;
-
-    EventMap LuaEvents; // LuaEvents[processor] = {LuaEvent, LuaEvent...}
-    // ProcessorMap Processors; // Processors[guid] = processor
-    EventProcessor GlobalEvents;
-
-    struct LuaEvent : public BasicEvent
-    {
-        LuaEvent(Eluna& _E, EventProcessor* _events, int _funcRef, uint32 _delay, uint32 _calls, Object* _obj);
-
-        ~LuaEvent();
-
-        // Should never execute on dead events
-        bool Execute(uint64 time, uint32 diff);
-
-        Eluna& E;
-        EventProcessor* events; // Pointer to events (holds the timed event)
-        int funcRef;    // Lua function reference ID, also used as event ID
-        uint32 delay;   // Delay between event calls
-        uint32 calls;   // Amount of calls to make, 0 for infinite
-        Object* obj;    // Object to push
-    };
-
-    EventMgr(Eluna& _E): E(_E)
-    {
-    }
-
-    ~EventMgr()
-    {
-        RemoveEvents();
-    }
-
-    // Should be run on world tick
-    void Update(uint32 diff)
-    {
-        GlobalEvents.Update(diff);
-    }
-
-    // Updates processor stored for guid || remove from Update()
-    // Should be run on gameobject tick
-    /*void Update(uint64 guid, uint32 diff)
-    {
-    if (Processors.find(guid) == Processors.end())
-    return;
-    Processors[guid].Update(diff);
-    }*/
-
-    // Aborts all lua events
-    void KillAllEvents(EventProcessor* events)
-    {
-        if (!events)
-            return;
-        if (LuaEvents.empty())
-            return;
-        EventMap::const_iterator it = LuaEvents.find(events); // Get event set
-        if (it == LuaEvents.end())
-            return;
-        if (it->second.empty())
-            return;
-        for (EventSet::const_iterator itr = it->second.begin(); itr != it->second.end();) // Loop events
-            (*(itr++))->to_Abort = true; // Abort event
-    }
-
-    // Remove all timed events
-    void RemoveEvents()
-    {
-        if (!LuaEvents.empty())
-            for (EventMap::const_iterator it = LuaEvents.begin(); it != LuaEvents.end();) // loop processors
-                KillAllEvents((it++)->first);
-        LuaEvents.clear(); // remove pointers
-        // This is handled automatically on delete
-        // for (ProcessorMap::iterator it = Processors.begin(); it != Processors.end();)
-        //    (it++)->second.KillAllEvents(true);
-        // Processors.clear(); // remove guid saved processors
-        GlobalEvents.KillAllEvents(true);
-    }
-
-    // Remove timed events from processor
-    void RemoveEvents(EventProcessor* events)
-    {
-        if (!events)
-            return;
-        KillAllEvents(events);
-        LuaEvents.erase(events); // remove pointer set
-    }
-
-    // Remove timed events from guid
-    // void RemoveEvents(uint64 guid)
-    //{
-    //    if (Processors.empty())
-    //        return;
-    //    if (Processors.find(guid) != Processors.end())
-    //        LuaEvents.erase(&Processors[guid]);
-    //    // Processors[guid].KillAllEvents(true); // remove events
-    //    Processors.erase(guid); // remove processor
-    //}
-
-    // Adds a new event to the processor and returns the eventID or 0 (Never negative)
-    int AddEvent(EventProcessor* events, int funcRef, uint32 delay, uint32 calls, Object* obj = NULL)
-    {
-        if (!events || funcRef <= 0) // If funcRef <= 0, function reference failed
-            return 0; // on fail always return 0. funcRef can be negative.
-        events->AddEvent(new LuaEvent(E, events, funcRef, delay, calls, obj), events->CalculateTime(delay));
-        return funcRef; // return the event ID
-    }
-
-    // Creates a processor for the guid if needed and adds the event to it
-    // int AddEvent(uint64 guid, int funcRef, uint32 delay, uint32 calls, Object* obj = NULL)
-    //{
-    //    if (!guid) // 0 should be unused
-    //        return 0;
-    //    return AddEvent(&Processors[guid], funcRef, delay, calls, obj);
-    //}
-
-    // Finds the event that has the ID from events
-    LuaEvent* GetEvent(EventProcessor* events, int eventId)
-    {
-        if (!events || !eventId)
-            return NULL;
-        if (LuaEvents.empty())
-            return NULL;
-        EventMap::const_iterator it = LuaEvents.find(events); // Get event set
-        if (it == LuaEvents.end())
-            return NULL;
-        if (it->second.empty())
-            return NULL;
-        for (EventSet::const_iterator itr = it->second.begin(); itr != it->second.end(); ++itr) // Loop events
-            if ((*itr) && (*itr)->funcRef == eventId) // Check if the event has our ID
-                return *itr; // Return the event if found
-        return NULL;
-    }
-
-    // Remove the event with the eventId from processor
-    // Returns true if event is removed
-    bool RemoveEvent(EventProcessor* events, int eventId) // eventId = funcRef
-    {
-        if (!events || !eventId)
-            return false;
-        LuaEvent* luaEvent = GetEvent(events, eventId);
-        if (!luaEvent)
-            return false;
-        luaEvent->to_Abort = true; // Set to remove on next call
-        LuaEvents[events].erase(luaEvent); // Remove pointer
-        return true;
-    }
-
-    // Remove event by ID from processor stored for guid
-    /*bool RemoveEvent(uint64 guid, int eventId)
-    {
-    if (Processors.empty())
-    return false;
-    if (!guid || Processors.find(guid) == Processors.end())
-    return false;
-    return RemoveEvent(&Processors[guid], eventId);
-    }*/
-
-    // Removes the eventId from all events
-    void RemoveEvent(int eventId)
-    {
-        if (!eventId)
-            return;
-        if (LuaEvents.empty())
-            return;
-        for (EventMap::const_iterator it = LuaEvents.begin(); it != LuaEvents.end();) // loop processors
-            if (RemoveEvent((it++)->first, eventId))
-                break; // succesfully remove the event, stop loop.
-    }
-};
-
-template<typename T>
-struct EventBind;
-template<typename T>
-struct EntryBind;
+struct lua_State;
+class EventMgr;
 template<typename T>
 class ElunaTemplate;
+template<typename T>
+class EventBind;
+template<typename T>
+class EntryBind;
+
+struct LuaScript
+{
+    std::string fileext;
+    std::string filename;
+    std::string filepath;
+    std::string modulepath;
+};
 
 class Eluna
 {
@@ -350,13 +92,6 @@ private:
     Eluna& operator=(const Eluna&);
 
 public:
-    struct LuaScript
-    {
-        std::string fileext;
-        std::string filename;
-        std::string filepath;
-        std::string modulepath;
-    };
     typedef std::list<LuaScript> ScriptList;
 
     static Eluna* GEluna;
@@ -429,100 +164,6 @@ public:
     {
         return ElunaTemplate<T>::check(L, narg, error);
     }
-
-    static inline uint32 GetCurrTime()
-    {
-#ifndef TRINITY
-        return WorldTimer::getMSTime();
-#else
-        return getMSTime();
-#endif
-    }
-
-    static inline uint32 GetTimeDiff(uint32 oldMSTime)
-    {
-#ifndef TRINITY
-        return WorldTimer::getMSTimeDiff(oldMSTime, GetCurrTime());
-#else
-        return GetMSTimeDiffToNow(oldMSTime);
-#endif
-    }
-
-    struct ObjectGUIDCheck
-    {
-        ObjectGUIDCheck(ObjectGuid guid): _guid(guid) {}
-        bool operator()(WorldObject* object)
-        {
-            return object->GET_GUID() == _guid;
-        }
-
-        ObjectGuid _guid;
-    };
-
-    // Binary predicate to sort WorldObjects based on the distance to a reference WorldObject
-    struct ObjectDistanceOrderPred
-    {
-        ObjectDistanceOrderPred(WorldObject const* pRefObj, bool ascending = true): m_refObj(pRefObj), m_ascending(ascending) {}
-        bool operator()(WorldObject const* pLeft, WorldObject const* pRight) const
-        {
-            return m_ascending ? m_refObj->GetDistanceOrder(pLeft, pRight) : !m_refObj->GetDistanceOrder(pLeft, pRight);
-        }
-
-        WorldObject const* m_refObj;
-        const bool m_ascending;
-    };
-
-    // Doesn't get self
-    struct WorldObjectInRangeCheck
-    {
-        WorldObjectInRangeCheck(bool nearest, WorldObject const* obj, float range,
-            uint16 typeMask = 0, uint32 entry = 0, uint32 hostile = 0): i_nearest(nearest),
-            i_obj(obj), i_range(range), i_typeMask(typeMask), i_entry(entry), i_hostile(hostile)
-        {
-        }
-        WorldObject const& GetFocusObject() const { return *i_obj; }
-        bool operator()(WorldObject* u)
-        {
-            if (i_typeMask && !u->isType(TypeMask(i_typeMask)))
-                return false;
-            if (i_entry && u->GetEntry() != i_entry)
-                return false;
-            if (i_obj->GET_GUID() == u->GET_GUID())
-                return false;
-            if (!i_obj->IsWithinDistInMap(u, i_range))
-                return false;
-            if (Unit* unit = u->ToUnit())
-            {
-#ifdef CMANGOS
-                if (!unit->isAlive())
-                    return false;
-#else
-                if (!unit->IsAlive())
-                    return false;
-#endif
-                if (i_hostile)
-                {
-                    if (const Unit* obj = i_obj->ToUnit())
-                    {
-                        if ((i_hostile == 1) != obj->IsHostileTo(unit))
-                            return false;
-                    }
-                }
-            }
-            if (i_nearest)
-                i_range = i_obj->GetDistance(u);
-            return true;
-        }
-
-        bool i_nearest;
-        WorldObject const* i_obj;
-        float i_range;
-        uint16 i_typeMask;
-        uint32 i_entry;
-        uint32 i_hostile;
-
-        WorldObjectInRangeCheck(WorldObjectInRangeCheck const&);
-    };
 
     CreatureAI* GetAI(Creature* creature);
 #ifdef TRINITY
@@ -698,378 +339,5 @@ template<> GameObject* Eluna::CHECKOBJ<GameObject>(lua_State* L, int narg, bool 
 template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error);
 
 #define sEluna Eluna::GEluna
-
-// #define ELUNA_GUARD() ACE_Guard< ACE_Recursive_Thread_Mutex > ELUNA_GUARD_OBJECT(sEluna->lock);
-
-struct ElunaBind
-{
-    Eluna& E;
-    const char* groupName;
-
-    ElunaBind(const char* bindGroupName, Eluna& _E): E(_E), groupName(bindGroupName)
-    {
-    }
-
-    virtual ~ElunaBind()
-    {
-        Clear();
-    }
-
-    // unregisters all registered functions and clears all registered events from the bindings
-    virtual void Clear() {};
-};
-
-template<typename T>
-struct EventBind : ElunaBind
-{
-    typedef std::vector<int> ElunaBindingMap;
-    typedef std::map<int, ElunaBindingMap> ElunaEntryMap;
-
-    EventBind(const char* bindGroupName, Eluna& _E): ElunaBind(bindGroupName, _E)
-    {
-    }
-
-    // unregisters all registered functions and clears all registered events from the bind std::maps (reset)
-    void Clear() override
-    {
-        for (ElunaEntryMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
-        {
-            for (ElunaBindingMap::iterator it = itr->second.begin(); it != itr->second.end(); ++it)
-                luaL_unref(E.L, LUA_REGISTRYINDEX, (*it));
-            itr->second.clear();
-        }
-        Bindings.clear();
-    }
-
-    void Insert(int eventId, int funcRef) // Inserts a new registered event
-    {
-        Bindings[eventId].push_back(funcRef);
-    }
-
-    // Gets the binding std::map containing all registered events with the function refs for the entry
-    ElunaBindingMap* GetBindMap(T eventId)
-    {
-        if (Bindings.empty())
-            return NULL;
-        ElunaEntryMap::iterator itr = Bindings.find(eventId);
-        if (itr == Bindings.end())
-            return NULL;
-
-        return &itr->second;
-    }
-
-    // Checks if there are events for ID
-    bool HasEvents(T eventId) const
-    {
-        if (Bindings.empty())
-            return false;
-        if (Bindings.find(eventId) == Bindings.end())
-            return false;
-        return true;
-    }
-
-    ElunaEntryMap Bindings; // Binding store Bindings[eventId] = {funcRef};
-};
-
-template<typename T>
-struct EntryBind : ElunaBind
-{
-    typedef std::map<int, int> ElunaBindingMap;
-    typedef UNORDERED_MAP<uint32, ElunaBindingMap> ElunaEntryMap;
-
-    EntryBind(const char* bindGroupName, Eluna& _E): ElunaBind(bindGroupName, _E)
-    {
-    }
-
-    // unregisters all registered functions and clears all registered events from the bindmap
-    void Clear() override
-    {
-        for (ElunaEntryMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
-        {
-            for (ElunaBindingMap::const_iterator it = itr->second.begin(); it != itr->second.end(); ++it)
-                luaL_unref(E.L, LUA_REGISTRYINDEX, it->second);
-            itr->second.clear();
-        }
-        Bindings.clear();
-    }
-
-    void Insert(uint32 entryId, int eventId, int funcRef) // Inserts a new registered event
-    {
-        if (Bindings[entryId][eventId])
-        {
-            luaL_unref(E.L, LUA_REGISTRYINDEX, funcRef); // free the unused ref
-            luaL_error(E.L, "A function is already registered for entry (%d) event (%d)", entryId, eventId);
-        }
-        else
-            Bindings[entryId][eventId] = funcRef;
-    }
-
-    // Gets the function ref of an entry for an event
-    int GetBind(uint32 entryId, T eventId) const
-    {
-        if (Bindings.empty())
-            return 0;
-        ElunaEntryMap::const_iterator itr = Bindings.find(entryId);
-        if (itr == Bindings.end() || itr->second.empty())
-            return 0;
-        ElunaBindingMap::const_iterator itr2 = itr->second.find(eventId);
-        if (itr2 == itr->second.end())
-            return 0;
-        return itr2->second;
-    }
-
-    // Gets the binding std::map containing all registered events with the function refs for the entry
-    const ElunaBindingMap* GetBindMap(uint32 entryId) const
-    {
-        if (Bindings.empty())
-            return NULL;
-        ElunaEntryMap::const_iterator itr = Bindings.find(entryId);
-        if (itr == Bindings.end())
-            return NULL;
-
-        return &itr->second;
-    }
-
-    // Returns true if the entry has registered binds
-    bool HasBinds(uint32 entryId) const
-    {
-        if (Bindings.empty())
-            return false;
-        return Bindings.find(entryId) != Bindings.end();
-    }
-
-    ElunaEntryMap Bindings; // Binding store Bindings[entryId][eventId] = funcRef;
-};
-
-template<typename T>
-class ElunaTemplate
-{
-public:
-    static const char* tname;
-    static bool manageMemory;
-
-    static int typeT(lua_State* L)
-    {
-        lua_pushstring(L, tname);
-        return 1;
-    }
-
-    // name will be used as type name
-    // If gc is true, lua will handle the memory management for object pushed
-    // gc should be used if pushing for example WorldPacket,
-    // that will only be needed on lua side and will not be managed by TC/mangos/<core>
-    static void Register(lua_State* L, const char* name, bool gc = false)
-    {
-        tname = name;
-        manageMemory = gc;
-
-        lua_newtable(L);
-        int methods = lua_gettop(L);
-
-        // store method table in globals so that
-        // scripts can add functions in Lua
-        lua_pushvalue(L, methods);
-        lua_setglobal(L, tname);
-
-        luaL_newmetatable(L, tname);
-        int metatable = lua_gettop(L);
-
-        // tostring
-        lua_pushcfunction(L, tostringT);
-        lua_setfield(L, metatable, "__tostring");
-
-        // garbage collecting
-        if (manageMemory)
-        {
-            lua_pushcfunction(L, gcT);
-            lua_setfield(L, metatable, "__gc");
-        }
-
-        // make methods accessible through metatable
-        lua_pushvalue(L, methods);
-        lua_setfield(L, metatable, "__index");
-
-        // make new indexes saved to methods
-        lua_pushvalue(L, methods);
-        lua_setfield(L, metatable, "__newindex");
-
-        // special method to get the object type
-        lua_pushcfunction(L, typeT);
-        lua_setfield(L, methods, "GetObjectType");
-
-        // pop methods and metatable
-        lua_pop(L, 2);
-    }
-
-    template<typename C>
-    static void SetMethods(lua_State* L, ElunaRegister<C>* methodTable)
-    {
-        if (!methodTable)
-            return;
-
-        luaL_getmetatable(L, tname);
-        if (!lua_istable(L, -1))
-        {
-            lua_remove(L, -1);
-            ELUNA_LOG_ERROR("%s missing metatable", tname);
-            return;
-        }
-
-        lua_getfield(L, -1, "__index");
-        lua_remove(L, -2);
-        if (!lua_istable(L, -1))
-        {
-            lua_remove(L, -1);
-            ELUNA_LOG_ERROR("%s missing method table from metatable", tname);
-            return;
-        }
-
-        for (; methodTable && methodTable->name && methodTable->mfunc; ++methodTable)
-        {
-            lua_pushstring(L, methodTable->name);
-            lua_pushlightuserdata(L, (void*)methodTable);
-            lua_pushcclosure(L, thunk, 1);
-            lua_settable(L, -3);
-        }
-
-        lua_remove(L, -1);
-    }
-
-    // Remember special case ElunaTemplate<Vehicle>::gcT
-    static int gcT(lua_State* L)
-    {
-        if (!manageMemory)
-            return 0;
-
-        // Get object pointer (and check type, no error)
-        T** ptrHold = static_cast<T**>(luaL_testudata(L, -1, tname));
-        if (ptrHold)
-            delete *ptrHold;
-        return 0;
-    }
-
-    static int push(lua_State* L, T const* obj)
-    {
-        if (!obj)
-        {
-            lua_pushnil(L);
-            return 1;
-        }
-
-        if (!manageMemory)
-        {
-            lua_rawgeti(L, LUA_REGISTRYINDEX, sEluna->userdata_table);
-            lua_pushfstring(L, "%p", obj);
-            lua_gettable(L, -2);
-            if (!lua_isnoneornil(L, -1) && luaL_checkudata(L, -1, tname))
-            {
-                lua_remove(L, -2);
-                return 1;
-            }
-            lua_remove(L, -1);
-            // left userdata_table in stack
-        }
-
-        // Create new userdata
-        T const** ptrHold = static_cast<T const**>(lua_newuserdata(L, sizeof(T const*)));
-        if (!ptrHold)
-        {
-            ELUNA_LOG_ERROR("%s could not create new userdata", tname);
-            lua_pop(L, manageMemory ? 1 : 2);
-            lua_pushnil(L);
-            return 1;
-        }
-        *ptrHold = obj;
-
-        // Set metatable for it
-        luaL_getmetatable(L, tname);
-        if (!lua_istable(L, -1))
-        {
-            ELUNA_LOG_ERROR("%s missing metatable", tname);
-            lua_pop(L, manageMemory ? 2 : 3);
-            lua_pushnil(L);
-            return 1;
-        }
-        lua_setmetatable(L, -2);
-
-        if (!manageMemory)
-        {
-            lua_pushfstring(L, "%p", obj);
-            lua_pushvalue(L, -2);
-            lua_settable(L, -4);
-            lua_remove(L, -2);
-        }
-        return 1;
-    }
-
-    static T* check(lua_State* L, int narg, bool error = true)
-    {
-        T** ptrHold = static_cast<T**>(lua_touserdata(L, narg));
-        if (!ptrHold)
-        {
-            if (error)
-            {
-                char buff[256];
-                snprintf(buff, 256, "%s expected, got %s", tname, luaL_typename(L, narg));
-                luaL_argerror(L, narg, buff);
-            }
-            return NULL;
-        }
-
-        if (!manageMemory)
-        {
-            // Check pointer validity
-            lua_rawgeti(L, LUA_REGISTRYINDEX, sEluna->userdata_table);
-            lua_pushfstring(L, "%p", *ptrHold);
-            lua_gettable(L, -2);
-            lua_remove(L, -2);
-            bool valid = lua_isuserdata(L, -1);
-            lua_remove(L, -1);
-            if (!valid)
-            {
-                char buff[256];
-                snprintf(buff, 256, "%s expected, got pointer to nonexisting object (%s). This should never happen", tname, luaL_typename(L, narg));
-                if (error)
-                {
-                    luaL_argerror(L, narg, buff);
-                }
-                else
-                {
-                    ELUNA_LOG_ERROR("%s", buff);
-                }
-                return NULL;
-            }
-        }
-        return *ptrHold;
-    }
-
-    static int thunk(lua_State* L)
-    {
-        T* obj = Eluna::CHECKOBJ<T>(L, 1); // get self
-        if (!obj)
-            return 0;
-        ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
-        int args = lua_gettop(L);
-        int expected = l->mfunc(L, obj);
-        args = lua_gettop(L) - args;
-        if (args < 0 || args > expected) // Assert instead?
-        {
-            ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
-        }
-        for (; args < expected; ++args)
-            lua_pushnil(L);
-        return expected;
-    }
-
-    static int tostringT(lua_State* L)
-    {
-        T* obj = Eluna::CHECKOBJ<T>(L, 1); // get self
-        if (obj)
-            lua_pushfstring(L, "%s: (%p)", tname, obj);
-        else
-            lua_pushstring(L, "nil");
-        return 1;
-    }
-};
 
 #endif

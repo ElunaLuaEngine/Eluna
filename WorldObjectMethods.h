@@ -92,12 +92,12 @@ namespace LuaWorldObject
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
 
         Unit* target = NULL;
-        Eluna::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER);
+        ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER);
 #ifndef TRINITY
-        MaNGOS::UnitLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(target, checker);
+        MaNGOS::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
 #else
-        Trinity::UnitLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        Trinity::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
         obj->VisitNearbyObject(range, searcher);
 #endif
 
@@ -111,12 +111,12 @@ namespace LuaWorldObject
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
         GameObject* target = NULL;
-        Eluna::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry);
+        ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry);
 #ifndef TRINITY
-        MaNGOS::GameObjectLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(target, checker);
+        MaNGOS::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
 #else
-        Trinity::GameObjectLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        Trinity::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
         obj->VisitNearbyObject(range, searcher);
 #endif
 
@@ -130,12 +130,12 @@ namespace LuaWorldObject
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
         Creature* target = NULL;
-        Eluna::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_UNIT, entry);
+        ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_UNIT, entry);
 #ifndef TRINITY
-        MaNGOS::CreatureLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(target, checker);
+        MaNGOS::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
 #else
-        Trinity::CreatureLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        Trinity::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
         obj->VisitNearbyObject(range, searcher);
 #endif
 
@@ -148,12 +148,12 @@ namespace LuaWorldObject
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
 
         std::list<Player*> list;
-        Eluna::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_PLAYER);
+        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_PLAYER);
 #ifndef TRINITY
-        MaNGOS::PlayerListSearcher<Eluna::WorldObjectInRangeCheck> searcher(list, checker);
+        MaNGOS::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
 #else
-        Trinity::PlayerListSearcher<Eluna::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        Trinity::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
         obj->VisitNearbyObject(range, searcher);
 #endif
 
@@ -178,12 +178,12 @@ namespace LuaWorldObject
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
         std::list<Creature*> list;
-        Eluna::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry);
+        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry);
 #ifndef TRINITY
-        MaNGOS::CreatureListSearcher<Eluna::WorldObjectInRangeCheck> searcher(list, checker);
+        MaNGOS::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
 #else
-        Trinity::CreatureListSearcher<Eluna::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        Trinity::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
         obj->VisitNearbyObject(range, searcher);
 #endif
 
@@ -208,12 +208,12 @@ namespace LuaWorldObject
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
         std::list<GameObject*> list;
-        Eluna::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_GAMEOBJECT, entry);
+        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_GAMEOBJECT, entry);
 #ifndef TRINITY
-        MaNGOS::GameObjectListSearcher<Eluna::WorldObjectInRangeCheck> searcher(list, checker);
+        MaNGOS::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
 #else
-        Trinity::GameObjectListSearcher<Eluna::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        Trinity::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
         obj->VisitNearbyObject(range, searcher);
 #endif
 
@@ -242,15 +242,15 @@ namespace LuaWorldObject
 
         float x, y, z;
         obj->GetPosition(x, y, z);
-        Eluna::WorldObjectInRangeCheck checker(nearest, obj, range, type, entry, hostile);
+        ElunaUtil::WorldObjectInRangeCheck checker(nearest, obj, range, type, entry, hostile);
         if (nearest)
         {
             WorldObject* target = NULL;
 #ifndef TRINITY
-            MaNGOS::WorldObjectLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(target, checker);
+            MaNGOS::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
             Cell::VisitAllObjects(obj, searcher, range);
 #else
-            Trinity::WorldObjectLastSearcher<Eluna::WorldObjectInRangeCheck> searcher(obj, target, checker);
+            Trinity::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
             obj->VisitNearbyObject(range, searcher);
 #endif
 
@@ -261,10 +261,10 @@ namespace LuaWorldObject
         {
             std::list<WorldObject*> list;
 #ifndef TRINITY
-            MaNGOS::WorldObjectListSearcher<Eluna::WorldObjectInRangeCheck> searcher(list, checker);
+            MaNGOS::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
             Cell::VisitAllObjects(obj, searcher, range);
 #else
-            Trinity::WorldObjectListSearcher<Eluna::WorldObjectInRangeCheck> searcher(obj, list, checker);
+            Trinity::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
             obj->VisitNearbyObject(range, searcher);
 #endif
 

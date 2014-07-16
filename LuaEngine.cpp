@@ -8,7 +8,18 @@
 #include <ace/OS_NS_sys_stat.h>
 #include "HookMgr.h"
 #include "LuaEngine.h"
-#include "Includes.h"
+#include "ElunaBinding.h"
+#include "ElunaEventMgr.h"
+#include "ElunaIncludes.h"
+#include "ElunaTemplate.h"
+#include "ElunaUtilitiy.h"
+
+extern "C"
+{
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+};
 
 Eluna::ScriptList Eluna::lua_scripts;
 Eluna::ScriptList Eluna::lua_extensions;
@@ -20,7 +31,7 @@ extern void RegisterFunctions(lua_State* L);
 
 void Eluna::Initialize()
 {
-    uint32 oldMSTime = GetCurrTime();
+    uint32 oldMSTime = ElunaUtil::GetCurrTime();
 
     lua_scripts.clear();
     lua_extensions.clear();
@@ -35,7 +46,7 @@ void Eluna::Initialize()
     // GetScripts(lua_folderpath + "/extensions", lua_extensions);
     GetScripts(lua_folderpath, lua_scripts);
 
-    ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size() + lua_extensions.size()), GetTimeDiff(oldMSTime));
+    ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size() + lua_extensions.size()), ElunaUtil::GetTimeDiff(oldMSTime));
 
     // Create global eluna
     new Eluna();
@@ -114,10 +125,10 @@ Eluna::~Eluna()
 {
     OnLuaStateClose();
 
+    delete m_EventMgr;
+
     // Replace this with map remove if making multithread version
     Eluna::GEluna = NULL;
-
-    delete m_EventMgr;
 
     delete ServerEventBindings;
     delete PlayerEventBindings;
@@ -203,7 +214,7 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
 
 void Eluna::RunScripts()
 {
-    uint32 oldMSTime = GetCurrTime();
+    uint32 oldMSTime = ElunaUtil::GetCurrTime();
     uint32 count = 0;
 
     ScriptList scripts;
@@ -242,7 +253,7 @@ void Eluna::RunScripts()
     }
     lua_pop(L, 2);
 
-    ELUNA_LOG_INFO("[Eluna]: Executed %u Lua scripts in %u ms", count, GetTimeDiff(oldMSTime));
+    ELUNA_LOG_INFO("[Eluna]: Executed %u Lua scripts in %u ms", count, ElunaUtil::GetTimeDiff(oldMSTime));
 }
 
 void Eluna::RemoveRef(const void* obj)
@@ -746,39 +757,4 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     luaL_error(L, "Unknown event type (regtype %d, id %d, event %d)", regtype, id, evt);
-}
-
-EventMgr::LuaEvent::LuaEvent(Eluna& _E, EventProcessor* _events, int _funcRef, uint32 _delay, uint32 _calls, Object* _obj):
-E(_E), events(_events), funcRef(_funcRef), delay(_delay), calls(_calls), obj(_obj)
-{
-    if (_events)
-        E.m_EventMgr->LuaEvents[_events].insert(this); // Able to access the event if we have the processor
-}
-
-EventMgr::LuaEvent::~LuaEvent()
-{
-    if (events)
-    {
-        // Attempt to remove the pointer from LuaEvents
-        EventMgr::EventMap::const_iterator it = E.m_EventMgr->LuaEvents.find(events); // Get event set
-        if (it != E.m_EventMgr->LuaEvents.end())
-            E.m_EventMgr->LuaEvents[events].erase(this);// Remove pointer
-    }
-    luaL_unref(E.L, LUA_REGISTRYINDEX, funcRef); // Free lua function ref
-}
-
-bool EventMgr::LuaEvent::Execute(uint64 /*time*/, uint32 /*diff*/)
-{
-    bool remove = (calls == 1);
-    if (!remove)
-        events->AddEvent(this, events->CalculateTime(delay)); // Reschedule before calling incase RemoveEvents used
-    lua_rawgeti(E.L, LUA_REGISTRYINDEX, funcRef);
-    Eluna::Push(E.L, funcRef);
-    Eluna::Push(E.L, delay);
-    Eluna::Push(E.L, calls);
-    if (!remove && calls)
-        --calls;
-    Eluna::Push(E.L, obj);
-    Eluna::ExecuteCall(E.L, 4, 0);
-    return remove; // Destory (true) event if not run
 }

@@ -6,7 +6,24 @@
 
 #include "HookMgr.h"
 #include "LuaEngine.h"
-#include "Includes.h"
+#include "ElunaBinding.h"
+#include "ElunaEventMgr.h"
+#include "ElunaIncludes.h"
+#include "ElunaTemplate.h"
+
+extern "C"
+{
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+};
+
+#ifndef TRINITY
+class ReactorAI;
+typedef ReactorAI ScriptedAI;
+#else
+struct ScriptedAI;
+#endif
 
 using namespace HookMgr;
 
