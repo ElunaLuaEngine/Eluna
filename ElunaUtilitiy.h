@@ -13,6 +13,8 @@
 #ifdef CATA
 #include "Object.h"
 #endif
+#else
+#include "ObjectGuid.h"
 #endif
 
 #ifdef TRINITY
