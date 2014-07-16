@@ -9,6 +9,11 @@
 
 #include "Common.h"
 #include "SharedDefines.h"
+#ifdef TRINITY
+#ifdef CATA
+#include "Object.h"
+#endif
+#endif
 
 #ifdef TRINITY
 #ifndef CATA

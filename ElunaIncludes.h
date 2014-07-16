@@ -84,8 +84,6 @@ typedef ThreatContainer::StorageType ThreatList;
 
 #ifdef CATA
 #define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
-#else
-typedef uint64 ObjectGuid;
 #endif
 #endif
 
