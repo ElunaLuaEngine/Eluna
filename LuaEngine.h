@@ -13,6 +13,9 @@
 
 #include "Group.h"
 #include "Item.h"
+#ifndef TRINITY
+#include "Player.h"
+#endif
 #include "Weather.h"
 #include "World.h"
 #include "HookMgr.h"
