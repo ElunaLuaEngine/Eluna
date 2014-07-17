@@ -4,7 +4,7 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#include "ElunaUtilitiy.h"
+#include "ElunaUtility.h"
 #include "World.h"
 #include "Object.h"
 #include "Unit.h"

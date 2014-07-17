@@ -13,7 +13,7 @@
 #include "ElunaEventMgr.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
-#include "ElunaUtilitiy.h"
+#include "ElunaUtility.h"
 
 extern "C"
 {

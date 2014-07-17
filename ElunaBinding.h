@@ -9,7 +9,7 @@
 
 #include "Common.h"
 #include "LuaEngine.h"
-#include "ElunaUtilitiy.h"
+#include "ElunaUtility.h"
 
 extern "C"
 {

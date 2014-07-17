@@ -14,7 +14,7 @@ extern "C"
 #include "lauxlib.h"
 };
 #include "LuaEngine.h"
-#include "ElunaUtilitiy.h"
+#include "ElunaUtility.h"
 
 template<typename T>
 struct ElunaRegister
