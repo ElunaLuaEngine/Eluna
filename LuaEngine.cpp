@@ -188,7 +188,7 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
 
         // split file name
         std::string filename = directory->d_name;
-        uint32 extDot = filename.find_last_of('.');
+        std::size_t extDot = filename.find_last_of('.');
         if (extDot == std::string::npos)
             continue;
         std::string ext = filename.substr(extDot);
