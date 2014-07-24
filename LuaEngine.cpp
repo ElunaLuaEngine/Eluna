@@ -4,9 +4,6 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#include <ace/ACE.h>
-#include <ace/Dirent.h>
-#include <ace/OS_NS_sys_stat.h>
 #include "HookMgr.h"
 #include "LuaEngine.h"
 #include "ElunaBinding.h"
@@ -14,6 +11,16 @@
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
 #include "ElunaUtility.h"
+
+// Some dummy includes containing BOOST_VERSION:
+// ObjectAccessor.h Config.h Log.h
+#ifdef BOOST_VERSION
+#include <boost/filesystem.hpp>
+#else
+#include <ace/ACE.h>
+#include <ace/Dirent.h>
+#include <ace/OS_NS_sys_stat.h>
+#endif
 
 extern "C"
 {
@@ -70,12 +77,15 @@ void Eluna::ReloadEluna()
 #ifdef TRINITY
     // Re initialize creature AI restoring C++ AI or applying lua AI
     {
+#ifdef BOOST_VERSION
+        boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Creature>::GetLock());
+#else
         TRINITY_READ_GUARD(HashMapHolder<Creature>::LockType, *HashMapHolder<Creature>::GetLock());
+#endif
         HashMapHolder<Creature>::MapType const& m = ObjectAccessor::GetCreatures();
         for (HashMapHolder<Creature>::MapType::const_iterator iter = m.begin(); iter != m.end(); ++iter)
-        {
-            iter->second->AIM_Initialize();
-        }
+            if (iter->second->IsInWorld())
+                iter->second->AIM_Initialize();
     }
 #endif
 
@@ -150,11 +160,66 @@ Eluna::~Eluna()
     lua_close(L);
 }
 
+void Eluna::AddScriptPath(std::string filename, std::string fullpath, ScriptList& scripts)
+{
+    ELUNA_LOG_DEBUG("[Eluna]: AddScriptPath Checking file `%s`", fullpath.c_str());
+
+    // split file name
+    std::size_t extDot = filename.find_last_of('.');
+    if (extDot == std::string::npos)
+        return;
+    std::string ext = filename.substr(extDot);
+    filename = filename.substr(0, extDot);
+
+    // check extension and add path to scripts to load
+    bool luascript = ext == ".lua" || ext == ".dll";
+    bool extension = ext == ".ext" || (filename.length() >= 4 && filename.find_last_of("_ext") == filename.length() - 4);
+    if (!luascript && !extension)
+        return;
+
+    LuaScript script;
+    script.fileext = ext;
+    script.filename = filename;
+    script.filepath = fullpath;
+    script.modulepath = fullpath.substr(0, fullpath.length() - ext.length());
+    if (extension)
+        lua_extensions.push_back(script);
+    else
+        scripts.push_back(script);
+    ELUNA_LOG_DEBUG("[Eluna]: GetScripts add path `%s`", fullpath.c_str());
+}
+
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
 void Eluna::GetScripts(std::string path, ScriptList& scripts)
 {
     ELUNA_LOG_DEBUG("[Eluna]: GetScripts from path `%s`", path.c_str());
 
+#ifdef BOOST_VERSION
+    boost::filesystem::path someDir(path);
+    boost::filesystem::directory_iterator end_iter;
+
+    if (boost::filesystem::exists(someDir) && boost::filesystem::is_directory(someDir))
+    {
+        for (boost::filesystem::directory_iterator dir_iter(someDir); dir_iter != end_iter; ++dir_iter)
+        {
+            std::string fullpath = dir_iter->path().generic_string();
+
+            // load subfolder
+            if (boost::filesystem::is_directory(dir_iter->status()))
+            {
+                GetScripts(fullpath, scripts);
+                continue;
+            }
+
+            if (boost::filesystem::is_regular_file(dir_iter->status()))
+            {
+                // was file, try add
+                std::string filename = dir_iter->path().filename().generic_string();
+                AddScriptPath(filename, fullpath, scripts);
+            }
+        }
+    }
+#else
     ACE_Dirent dir;
     if (dir.open(path.c_str()) == -1)
     {
@@ -183,34 +248,16 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
             continue;
         }
 
-        // was file, check extension
-        ELUNA_LOG_DEBUG("[Eluna]: GetScripts Checking file `%s`", fullpath.c_str());
-
-        // split file name
+        // was file, try add
         std::string filename = directory->d_name;
-        std::size_t extDot = filename.find_last_of('.');
-        if (extDot == std::string::npos)
-            continue;
-        std::string ext = filename.substr(extDot);
-        filename = filename.substr(0, extDot);
-
-        // check extension and add path to scripts to load
-        bool luascript = ext == ".lua" || ext == ".dll";
-        bool extension = ext == ".ext" || (filename.length() >= 4 && filename.find_last_of("_ext") == filename.length() - 4);
-        if (!luascript && !extension)
-            continue;
-
-        LuaScript script;
-        script.fileext = ext;
-        script.filename = filename;
-        script.filepath = fullpath;
-        script.modulepath = fullpath.substr(0, fullpath.length() - ext.length());
-        if (extension)
-            lua_extensions.push_back(script);
-        else
-            scripts.push_back(script);
-        ELUNA_LOG_DEBUG("[Eluna]: GetScripts add path `%s`", fullpath.c_str());
+        AddScriptPath(filename, fullpath, scripts);
     }
+#endif
+}
+
+static bool ScriptpathComparator(const LuaScript& first, const LuaScript& second)
+{
+    return first.filepath.compare(second.filepath) < 0;
 }
 
 void Eluna::RunScripts()
@@ -219,6 +266,8 @@ void Eluna::RunScripts()
     uint32 count = 0;
 
     ScriptList scripts;
+    lua_extensions.sort(ScriptpathComparator);
+    lua_scripts.sort(ScriptpathComparator);
     scripts.insert(scripts.end(), lua_extensions.begin(), lua_extensions.end());
     scripts.insert(scripts.end(), lua_scripts.begin(), lua_scripts.end());
 
@@ -415,11 +464,11 @@ void Eluna::Push(lua_State* L, Object const* obj)
 }
 template<> bool Eluna::CHECKVAL<bool>(lua_State* L, int narg)
 {
-    return lua_isnumber(L, narg) ? luaL_optnumber(L, narg, 1) ? true : false : lua_toboolean(L, narg);
+    return lua_isnumber(L, narg) != 0 ? luaL_optnumber(L, narg, 1) ? true : false : lua_toboolean(L, narg) != 0;
 }
 template<> bool Eluna::CHECKVAL<bool>(lua_State* L, int narg, bool def)
 {
-    return lua_isnone(L, narg) ? def : lua_isnumber(L, narg) ? luaL_optnumber(L, narg, 1) ? true : false : lua_toboolean(L, narg);
+    return lua_isnone(L, narg) != 0 ? def : lua_isnumber(L, narg) != 0 ? luaL_optnumber(L, narg, 1) != 0 ? true : false : lua_toboolean(L, narg) != 0;
 }
 template<> float Eluna::CHECKVAL<float>(lua_State* L, int narg)
 {

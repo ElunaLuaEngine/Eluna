@@ -205,7 +205,7 @@ public:
             lua_pushfstring(L, "%p", *ptrHold);
             lua_gettable(L, -2);
             lua_remove(L, -2);
-            bool valid = lua_isuserdata(L, -1);
+            bool valid = lua_isuserdata(L, -1) != 0;
             lua_remove(L, -1);
             if (!valid)
             {

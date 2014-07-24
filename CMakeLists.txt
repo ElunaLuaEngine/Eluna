@@ -119,9 +119,12 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/World
   ${CMAKE_SOURCE_DIR}/src/server/scripts/PrecompiledHeaders
   ${ACE_INCLUDE_DIR}
+  ${Boost_LIBRARIES}
   ${MYSQL_INCLUDE_DIR}
   ${OPENSSL_INCLUDE_DIR}
 )
+
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 
 add_library(LuaEngine STATIC 
   ${LuaEngine_STAT_SRCS}
@@ -131,6 +134,7 @@ add_library(LuaEngine STATIC
 
 target_link_libraries(LuaEngine
   game
+  ${Boost_LIBRARIES}
 )
 
 add_dependencies(LuaEngine game)

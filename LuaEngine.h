@@ -132,6 +132,7 @@ public:
     // This will be called on next update
     static void ReloadEluna();
     static void GetScripts(std::string path, ScriptList& scripts);
+    static void AddScriptPath(std::string filename, std::string fullpath, ScriptList& scripts);
 
     static void report(lua_State*);
     static void ExecuteCall(lua_State* L, int params, int res);

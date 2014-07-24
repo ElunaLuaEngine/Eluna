@@ -1593,7 +1593,7 @@ namespace LuaUnit
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
         uint32 spell = Eluna::CHECKVAL<uint32>(L, 3);
         uint32 amount = Eluna::CHECKVAL<uint32>(L, 4);
-        uint32 critical = Eluna::CHECKVAL<uint32>(L, 5, false);
+        bool critical = Eluna::CHECKVAL<bool>(L, 5, false);
 
 #ifndef TRINITY
         if (const SpellInfo* info = sSpellStore.LookupEntry(spell))
