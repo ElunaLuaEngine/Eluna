@@ -1,4 +1,7 @@
 #Installation
+
+0. Since TrinityCore uses boost and our file loader uses boost file system, you need boost filesystem. On windows this should be available with the default package, __but on linux__ you may need to install it: `sudo apt-get install libboost-filesystem-dev`
+
 1. Get the core:<br/>
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk)<br />
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata) [Eluna TrinityCore Cataclysm](https://github.com/ElunaLuaEngine/ElunaTrinityCata)<br />
