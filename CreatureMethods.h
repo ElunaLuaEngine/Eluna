@@ -40,7 +40,7 @@ namespace LuaCreature
 
     int IsTargetableForAttack(lua_State* L, Creature* creature)
     {
-        bool inversAlive = Eluna::CHECKOBJ<bool>(L, 2);
+        bool inversAlive = Eluna::CHECKVAL<bool>(L, 2);
 
 #ifdef MANGOS
         Eluna::Push(L, creature->IsTargetableForAttack(inversAlive));
