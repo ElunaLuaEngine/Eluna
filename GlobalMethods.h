@@ -1019,8 +1019,8 @@ namespace LuaGlobalFunctions
         uint8 addedItems = 0;
         while (addedItems <= MAX_MAIL_ITEMS && i + 2 <= argAmount)
         {
-            uint32 entry = luaL_checkunsigned(L, ++i);
-            uint32 amount = luaL_checkunsigned(L, ++i);
+            uint32 entry = Eluna::CHECKVAL<uint32>(L, ++i);
+            uint32 amount = Eluna::CHECKVAL<uint32>(L, ++i);
 
 #ifndef TRINITY
             ItemTemplate const* item_proto = ObjectMgr::GetItemPrototype(entry);
