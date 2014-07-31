@@ -948,11 +948,10 @@ namespace LuaGlobalFunctions
     int Ban(lua_State* L)
     {
         int banMode = Eluna::CHECKVAL<int>(L, 1);
-        const char* nameOrIP_cstr = Eluna::CHECKVAL<const char*>(L, 2);
+        std::string nameOrIP = Eluna::CHECKVAL<std::string>(L, 2);
         uint32 duration = Eluna::CHECKVAL<uint32>(L, 3);
         const char* reason = Eluna::CHECKVAL<const char*>(L, 4);
-        Player* whoBanned = Eluna::CHECKOBJ<Player>(L, 5);
-        std::string nameOrIP(nameOrIP_cstr);
+        const char* whoBanned = Eluna::CHECKOBJ<Player>(L, 5);
 
         switch (banMode)
         {
@@ -977,19 +976,7 @@ namespace LuaGlobalFunctions
             return 0;
         }
 
-        switch (eWorld->BanAccount((BanMode)banMode, nameOrIP, duration, reason, whoBanned->GetSession() ? whoBanned->GetName() : ""))
-        {
-        case BAN_SUCCESS:
-            if (duration > 0)
-                ChatHandler(whoBanned->GetSession()).PSendSysMessage(LANG_BAN_YOUBANNED, nameOrIP.c_str(), secsToTimeString(duration, true).c_str(), reason);
-            else
-                ChatHandler(whoBanned->GetSession()).PSendSysMessage(LANG_BAN_YOUPERMBANNED, nameOrIP.c_str(), reason);
-            break;
-        case BAN_SYNTAX_ERROR:
-            return 0;
-        case BAN_NOTFOUND:
-            return 0;
-        }
+        eWorld->BanAccount((BanMode)banMode, nameOrIP, duration, reason, whoBanned);
         return 0;
     }
 
