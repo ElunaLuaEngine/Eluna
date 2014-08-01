@@ -904,23 +904,22 @@ ElunaRegister<Item> ItemMethods[] =
 ElunaRegister<Aura> AuraMethods[] =
 {
     // Getters
-    { "GetCaster", &LuaAura::GetCaster },                 // :GetCaster() - Returns caster as object
-    { "GetCasterGUID", &LuaAura::GetCasterGUID },         // :GetCasterGUID() - Returns caster as GUID
-    { "GetCasterLevel", &LuaAura::GetCasterLevel },       // :GetCasterLevel() - Returns casters level
-    { "GetDuration", &LuaAura::GetDuration },             // :GetDuration() - Returns remaining duration
-    { "GetMaxDuration", &LuaAura::GetMaxDuration },       // :GetMaxDuration() - Returns maximum duration
-    { "GetCharges", &LuaAura::GetCharges },               // :GetCharges() - Returns remaining charges
-    { "GetAuraId", &LuaAura::GetAuraId },                 // :GetAuraId() - Returns aura ID
-    { "GetStackAmount", &LuaAura::GetStackAmount },       // :GetStackAmount() - Returns current stack amount
-    { "GetOwner", &LuaAura::GetOwner },                   // :GetOwner() - Gets the unit wearing the aura
+    { "GetCaster", &LuaAura::GetCaster },
+    { "GetCasterGUID", &LuaAura::GetCasterGUID },
+    { "GetCasterLevel", &LuaAura::GetCasterLevel },
+    { "GetDuration", &LuaAura::GetDuration },
+    { "GetMaxDuration", &LuaAura::GetMaxDuration },
+    { "GetAuraId", &LuaAura::GetAuraId },
+    { "GetStackAmount", &LuaAura::GetStackAmount },
+    { "GetOwner", &LuaAura::GetOwner },
 
     // Setters
-    { "SetDuration", &LuaAura::SetDuration },             // :SetDuration(duration) - Sets remaining duration
-    { "SetMaxDuration", &LuaAura::SetMaxDuration },       // :SetMaxDuration(duration) - Sets maximum duration
-    { "SetStackAmount", &LuaAura::SetStackAmount },       // :SetStackAmount(amount) - Sets current stack amount
+    { "SetDuration", &LuaAura::SetDuration },
+    { "SetMaxDuration", &LuaAura::SetMaxDuration },
+    { "SetStackAmount", &LuaAura::SetStackAmount },
 
     // Other
-    { "Remove", &LuaAura::Remove },                       // :Remove() - Removes the aura
+    { "Remove", &LuaAura::Remove },
 
     { NULL, NULL },
 };
