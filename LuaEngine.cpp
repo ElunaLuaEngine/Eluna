@@ -22,6 +22,12 @@
 #include <ace/OS_NS_sys_stat.h>
 #endif
 
+extern "C"
+{
+#include "lualib.h"
+#include "lauxlib.h"
+};
+
 Eluna::ScriptList Eluna::lua_scripts;
 Eluna::ScriptList Eluna::lua_extensions;
 std::string Eluna::lua_folderpath;
