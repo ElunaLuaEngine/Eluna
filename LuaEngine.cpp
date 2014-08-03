@@ -462,14 +462,14 @@ void Eluna::Push(lua_State* L, Object const* obj)
     }
 }
 
-static int32 CheckIntegerRange(lua_State *L, int narg, int32 max, int32 min)
+static int32 CheckIntegerRange(lua_State *L, int narg, int32 min, int32 max)
 {
-    int32 value = luaL_checklong(L, narg);
+    int64 value = luaL_checklong(L, narg);
     char error_buffer[64];
 
     if (value > max)
     {
-        snprintf(error_buffer, 64, "value must be less than %u", max);
+        snprintf(error_buffer, 64, "value must be less than %d", max);
         return luaL_argerror(L, narg, error_buffer);
     }
 
@@ -482,25 +482,21 @@ static int32 CheckIntegerRange(lua_State *L, int narg, int32 max, int32 min)
     return value;
 }
 
-// This function does not work properly for anything larger than uint16.
 static uint32 CheckUnsignedRange(lua_State *L, int narg, uint32 max)
 {
-    int32 value = luaL_checklong(L, narg);
+    int64 value = luaL_checklong(L, narg);
     char error_buffer[64];
 
     if (value < 0)
         return luaL_argerror(L, narg, "value must be greater than 0");
 
-    // Prevent signed-unsigned mismatch.
-    // This cast is safe because the value is not negative.
-    uint32 u_value = value;
-    if (u_value > max)
+    if (value > max)
     {
         snprintf(error_buffer, 64, "value must be less than %u", max);
         return luaL_argerror(L, narg, error_buffer);
     }
 
-    return u_value;
+    return value;
 }
 
 template<> bool Eluna::CHECKVAL<bool>(lua_State* L, int narg)
@@ -517,7 +513,7 @@ template<> double Eluna::CHECKVAL<double>(lua_State* L, int narg)
 }
 template<> int8 Eluna::CHECKVAL<int8>(lua_State* L, int narg)
 {
-    return CheckIntegerRange(L, narg, SCHAR_MAX, SCHAR_MIN);
+    return CheckIntegerRange(L, narg, SCHAR_MIN, SCHAR_MAX);
 }
 template<> uint8 Eluna::CHECKVAL<uint8>(lua_State* L, int narg)
 {
@@ -533,13 +529,11 @@ template<> uint16 Eluna::CHECKVAL<uint16>(lua_State* L, int narg)
 }
 template<> int32 Eluna::CHECKVAL<int32>(lua_State* L, int narg)
 {
-    return luaL_checklong(L, narg);
+    return CheckIntegerRange(L, narg, INT_MIN, INT_MAX);
 }
 template<> uint32 Eluna::CHECKVAL<uint32>(lua_State* L, int narg)
 {
-    // If a negative value is passed instead, it will become a large positive value.
-    // There is no way to catch this.
-    return luaL_checklong(L, narg);
+    return CheckUnsignedRange(L, narg, UINT_MAX);
 }
 template<> const char* Eluna::CHECKVAL<const char*>(lua_State* L, int narg)
 {
