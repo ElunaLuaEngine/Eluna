@@ -464,7 +464,7 @@ void Eluna::Push(lua_State* L, Object const* obj)
 
 static int32 CheckIntegerRange(lua_State *L, int narg, int32 min, int32 max)
 {
-    int64 value = luaL_checklong(L, narg);
+    int64 value = luaL_checknumber(L, narg);
     char error_buffer[64];
 
     if (value > max)
@@ -484,7 +484,7 @@ static int32 CheckIntegerRange(lua_State *L, int narg, int32 min, int32 max)
 
 static uint32 CheckUnsignedRange(lua_State *L, int narg, uint32 max)
 {
-    int64 value = luaL_checklong(L, narg);
+    int64 value = luaL_checknumber(L, narg);
     char error_buffer[64];
 
     if (value < 0)
