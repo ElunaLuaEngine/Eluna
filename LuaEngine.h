@@ -20,6 +20,11 @@
 #include "World.h"
 #include "HookMgr.h"
 
+extern "C"
+{
+#include "lua.h"
+};
+
 #ifdef TRINITY
 struct ItemTemplate;
 #else
@@ -163,7 +168,10 @@ public:
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* L, int narg);
-    template<typename T> static T CHECKVAL(lua_State* L, int narg, T def);
+    template<typename T> static T CHECKVAL(lua_State* L, int narg, T def)
+    {
+        return lua_isnoneornil(L, narg) ? def : CHECKVAL<T>(L, narg);
+    }
     template<typename T> static T* CHECKOBJ(lua_State* L, int narg, bool error = true)
     {
         return ElunaTemplate<T>::check(L, narg, error);

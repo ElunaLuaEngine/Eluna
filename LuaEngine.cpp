@@ -24,7 +24,6 @@
 
 extern "C"
 {
-#include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
 };
@@ -462,150 +461,115 @@ void Eluna::Push(lua_State* L, Object const* obj)
         ElunaTemplate<Object>::push(L, obj);
     }
 }
+
+static int32 CheckIntegerRange(lua_State *L, int narg, int32 min, int32 max)
+{
+    int64 value = luaL_checknumber(L, narg);
+    char error_buffer[64];
+
+    if (value > max)
+    {
+        snprintf(error_buffer, 64, "value must be less than %d", max);
+        return luaL_argerror(L, narg, error_buffer);
+    }
+
+    if (value < min)
+    {
+        snprintf(error_buffer, 64, "value must be greater than %d", min);
+        return luaL_argerror(L, narg, error_buffer);
+    }
+
+    return value;
+}
+
+static uint32 CheckUnsignedRange(lua_State *L, int narg, uint32 max)
+{
+    int64 value = luaL_checknumber(L, narg);
+    char error_buffer[64];
+
+    if (value < 0)
+        return luaL_argerror(L, narg, "value must be greater than 0");
+
+    if (value > max)
+    {
+        snprintf(error_buffer, 64, "value must be less than %u", max);
+        return luaL_argerror(L, narg, error_buffer);
+    }
+
+    return value;
+}
+
 template<> bool Eluna::CHECKVAL<bool>(lua_State* L, int narg)
 {
-    return lua_isnumber(L, narg) != 0 ? luaL_optnumber(L, narg, 1) ? true : false : lua_toboolean(L, narg) != 0;
-}
-template<> bool Eluna::CHECKVAL<bool>(lua_State* L, int narg, bool def)
-{
-    return lua_isnone(L, narg) != 0 ? def : lua_isnumber(L, narg) != 0 ? luaL_optnumber(L, narg, 1) != 0 ? true : false : lua_toboolean(L, narg) != 0;
+    return lua_toboolean(L, narg);
 }
 template<> float Eluna::CHECKVAL<float>(lua_State* L, int narg)
 {
     return luaL_checknumber(L, narg);
 }
-template<> float Eluna::CHECKVAL<float>(lua_State* L, int narg, float def)
-{
-    if (lua_isnoneornil(L, narg) || !lua_isnumber(L, narg))
-        return def;
-    return luaL_optnumber(L, narg, def);
-}
 template<> double Eluna::CHECKVAL<double>(lua_State* L, int narg)
 {
     return luaL_checknumber(L, narg);
 }
-template<> double Eluna::CHECKVAL<double>(lua_State* L, int narg, double def)
-{
-    if (lua_isnoneornil(L, narg) || !lua_isnumber(L, narg))
-        return def;
-    return luaL_optnumber(L, narg, def);
-}
 template<> int8 Eluna::CHECKVAL<int8>(lua_State* L, int narg)
 {
-    return luaL_checkint(L, narg);
-}
-template<> int8 Eluna::CHECKVAL<int8>(lua_State* L, int narg, int8 def)
-{
-    if (lua_isnoneornil(L, narg) || !lua_isnumber(L, narg))
-        return def;
-    return luaL_optint(L, narg, def);
+    return CheckIntegerRange(L, narg, SCHAR_MIN, SCHAR_MAX);
 }
 template<> uint8 Eluna::CHECKVAL<uint8>(lua_State* L, int narg)
 {
-    return luaL_checkunsigned(L, narg);
-}
-template<> uint8 Eluna::CHECKVAL<uint8>(lua_State* L, int narg, uint8 def)
-{
-    if (lua_isnoneornil(L, narg) || !lua_isnumber(L, narg))
-        return def;
-    return luaL_optunsigned(L, narg, def);
+    return CheckUnsignedRange(L, narg, UCHAR_MAX);
 }
 template<> int16 Eluna::CHECKVAL<int16>(lua_State* L, int narg)
 {
-    return luaL_checkint(L, narg);
-}
-template<> int16 Eluna::CHECKVAL<int16>(lua_State* L, int narg, int16 def)
-{
-    if (lua_isnoneornil(L, narg) || !lua_isnumber(L, narg))
-        return def;
-    return luaL_optint(L, narg, def);
+    return CheckIntegerRange(L, narg, SHRT_MIN, SHRT_MAX);
 }
 template<> uint16 Eluna::CHECKVAL<uint16>(lua_State* L, int narg)
 {
-    return luaL_checkunsigned(L, narg);
-}
-template<> uint16 Eluna::CHECKVAL<uint16>(lua_State* L, int narg, uint16 def)
-{
-    if (lua_isnoneornil(L, narg) || !lua_isnumber(L, narg))
-        return def;
-    return luaL_optunsigned(L, narg, def);
-}
-template<> uint32 Eluna::CHECKVAL<uint32>(lua_State* L, int narg)
-{
-    return luaL_checkunsigned(L, narg);
-}
-template<> uint32 Eluna::CHECKVAL<uint32>(lua_State* L, int narg, uint32 def)
-{
-    if (lua_isnoneornil(L, narg) || !lua_isnumber(L, narg))
-        return def;
-    return luaL_optunsigned(L, narg, def);
+    return CheckUnsignedRange(L, narg, USHRT_MAX);
 }
 template<> int32 Eluna::CHECKVAL<int32>(lua_State* L, int narg)
 {
-    return luaL_checklong(L, narg);
+    return CheckIntegerRange(L, narg, INT_MIN, INT_MAX);
 }
-template<> int32 Eluna::CHECKVAL<int32>(lua_State* L, int narg, int32 def)
+template<> uint32 Eluna::CHECKVAL<uint32>(lua_State* L, int narg)
 {
-    if (lua_isnoneornil(L, narg) || !lua_isnumber(L, narg))
-        return def;
-    return luaL_optlong(L, narg, def);
+    return CheckUnsignedRange(L, narg, UINT_MAX);
 }
 template<> const char* Eluna::CHECKVAL<const char*>(lua_State* L, int narg)
 {
     return luaL_checkstring(L, narg);
 }
-template<> const char* Eluna::CHECKVAL<const char*>(lua_State* L, int narg, const char* def)
-{
-    if (lua_isnoneornil(L, narg) || !lua_isstring(L, narg))
-        return def;
-    return luaL_optstring(L, narg, def);
-}
 template<> std::string Eluna::CHECKVAL<std::string>(lua_State* L, int narg)
 {
     return luaL_checkstring(L, narg);
-}
-template<> std::string Eluna::CHECKVAL<std::string>(lua_State* L, int narg, std::string def)
-{
-    if (lua_isnoneornil(L, narg) || !lua_isstring(L, narg))
-        return def;
-    return luaL_optstring(L, narg, def.c_str());
-}
-template<> uint64 Eluna::CHECKVAL<uint64>(lua_State* L, int narg)
-{
-    const char* c_str = CHECKVAL<const char*>(L, narg, NULL);
-    if (!c_str)
-        return luaL_argerror(L, narg, "uint64 (as string) expected");
-    uint64 l = 0;
-    sscanf(c_str, UI64FMTD, &l);
-    return l;
-}
-template<> uint64 Eluna::CHECKVAL<uint64>(lua_State* L, int narg, uint64 def)
-{
-    const char* c_str = CHECKVAL<const char*>(L, narg, NULL);
-    if (!c_str)
-        return def;
-    uint64 l = 0;
-    sscanf(c_str, UI64FMTD, &l);
-    return l;
 }
 template<> int64 Eluna::CHECKVAL<int64>(lua_State* L, int narg)
 {
     const char* c_str = CHECKVAL<const char*>(L, narg, NULL);
     if (!c_str)
         return luaL_argerror(L, narg, "int64 (as string) expected");
+
     int64 l = 0;
-    sscanf(c_str, SI64FMTD, &l);
+    int parsed_count = sscanf(c_str, SI64FMTD, &l);
+    if (parsed_count != 1)
+        return luaL_argerror(L, narg, "int64 (as string) could not be converted");
+
     return l;
 }
-template<> int64 Eluna::CHECKVAL<int64>(lua_State* L, int narg, int64 def)
+template<> uint64 Eluna::CHECKVAL<uint64>(lua_State* L, int narg)
 {
     const char* c_str = CHECKVAL<const char*>(L, narg, NULL);
     if (!c_str)
-        return def;
-    int64 l = 0;
-    sscanf(c_str, SI64FMTD, &l);
+        return luaL_argerror(L, narg, "uint64 (as string) expected");
+
+    uint64 l = 0;
+    int parsed_count = sscanf(c_str, UI64FMTD, &l);
+    if (parsed_count != 1)
+        return luaL_argerror(L, narg, "uint64 (as string) could not be converted");
+
     return l;
 }
+
 #define TEST_OBJ(T, O, E, F)\
 {\
     if (!O || !O->F())\
