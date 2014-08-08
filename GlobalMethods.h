@@ -950,8 +950,8 @@ namespace LuaGlobalFunctions
         int banMode = Eluna::CHECKVAL<int>(L, 1);
         std::string nameOrIP = Eluna::CHECKVAL<std::string>(L, 2);
         uint32 duration = Eluna::CHECKVAL<uint32>(L, 3);
-        const char* reason = Eluna::CHECKVAL<const char*>(L, 4);
-        const char* whoBanned = Eluna::CHECKOBJ<Player>(L, 5);
+        const char* reason = Eluna::CHECKVAL<const char*>(L, 4, "");
+        const char* whoBanned = Eluna::CHECKVAL<const char*>(L, 5, "");
 
         switch (banMode)
         {

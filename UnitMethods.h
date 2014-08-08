@@ -1361,18 +1361,17 @@ namespace LuaUnit
     }
 
     /**
-    Casts the spell at target.
-    pb0, 1 and 2 are modifiers for the base points of the spell.
-
-    @param &Unit target
-    @param uint32 spell
-    @param bool triggered = false
-    @param int32 bp0 = nil
-    @param int32 bp1 = nil
-    @param int32 bp2 = nil
-    @param &Item castItem = nil
-    @param uint64 originalCaster = 0
-    */
+     * Casts the spell at target with modified basepoints or casters.
+     *
+     * @param &Unit target
+     * @param uint32 spell
+     * @param bool triggered = false
+     * @param int32 bp0 = nil : modifier for the base points of the spell.
+     * @param int32 bp1 = nil : modifier for the base points of the spell.
+     * @param int32 bp2 = nil : modifier for the base points of the spell.
+     * @param &Item castItem = nil
+     * @param uint64 originalCaster = 0
+     */
     int CastCustomSpell(lua_State* L, Unit* unit)
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
@@ -1614,6 +1613,48 @@ namespace LuaUnit
         unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
 #else
         unit->Kill(target, durLoss);
+#endif
+        return 0;
+    }
+
+    /**
+     * Adds threat to the &Unit from the victim.
+     *
+     * <pre>
+     * enum SpellSchoolMask
+     * {
+     *     SPELL_SCHOOL_MASK_NONE    = 0,
+     *     SPELL_SCHOOL_MASK_NORMAL  = 1,
+     *     SPELL_SCHOOL_MASK_HOLY    = 2,
+     *     SPELL_SCHOOL_MASK_FIRE    = 4,
+     *     SPELL_SCHOOL_MASK_NATURE  = 8,
+     *     SPELL_SCHOOL_MASK_FROST   = 16,
+     *     SPELL_SCHOOL_MASK_SHADOW  = 32,
+     *     SPELL_SCHOOL_MASK_ARCANE  = 64,
+     * }
+     * </pre>
+     *
+     * @param &Unit victim : &Unit that caused the threat
+     * @param float threat : threat amount
+     * @param uint32 SpellSchoolMask = 0 : school mask of the threat causer
+     * @param uint32 spell = 0 : spell entry used for threat
+     */
+    int AddThreat(lua_State* L, Unit* unit)
+    {
+        Unit* victim = Eluna::CHECKOBJ<Unit>(L, 2);
+        float threat = Eluna::CHECKVAL<float>(L, 3, true);
+        uint32 schoolMask = Eluna::CHECKVAL<uint32>(L, 3, 0);
+        uint32 spell = Eluna::CHECKVAL<uint32>(L, 3, 0);
+
+        if (schoolMask > SPELL_SCHOOL_MASK_ALL)
+        {
+            return luaL_argerror(L, 3, "valid SpellSchoolMask expected");
+        }
+
+#ifdef TRINITY
+        unit->AddThreat(victim, threat, (SpellSchoolMask)schoolMask, spell ? sSpellMgr->GetSpellInfo(spell) : NULL);
+#else
+        unit->AddThreat(victim, threat, false, (SpellSchoolMask)schoolMask, spell ? sSpellStore.LookupEntry(spell) : NULL);
 #endif
         return 0;
     }

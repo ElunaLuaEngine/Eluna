@@ -10,9 +10,9 @@
 namespace LuaAura
 {
     /**
-     * Returns the `Unit` that casted the `Spell` that caused this Aura to be applied.
+     * Returns the &Unit that casted the &Spell that caused this &Aura to be applied.
      *
-     * @return :Unit the `Unit` that casted this Aura
+     * @return &Unit : the &Unit that casted this &Aura
      */
     int GetCaster(lua_State* L, Aura* aura)
     {
@@ -21,9 +21,9 @@ namespace LuaAura
     }
 
     /**
-     * Returns the GUID of the `Unit` that casted the `Spell` that caused this Aura to be applied.
+     * Returns the GUID of the &Unit that casted the &Spell that caused this &Aura to be applied.
      *
-     * @return :string the GUID of the `Unit` as a decimal string
+     * @return uint64 : the GUID of the &Unit as a string
      */
     int GetCasterGUID(lua_State* L, Aura* aura)
     {
@@ -36,9 +36,9 @@ namespace LuaAura
     }
 
     /**
-     * Returns the level of the `Unit` that casted the `Spell` that caused this Aura to be applied.
+     * Returns the level of the &Unit that casted the &Spell that caused this &Aura to be applied.
      *
-     * @return :number the level of the `Unit`
+     * @return uint8 : the level of the &Unit
      */
     int GetCasterLevel(lua_State* L, Aura* aura)
     {
@@ -47,9 +47,9 @@ namespace LuaAura
     }
 
     /**
-     * Returns the amount of time left until the Aura expires.
+     * Returns the amount of time left until the &Aura expires.
      *
-     * @return :number amount of time left in milliseconds
+     * @return int32 : amount of time left in milliseconds
      */
     int GetDuration(lua_State* L, Aura* aura)
     {
@@ -62,9 +62,9 @@ namespace LuaAura
     }
 
     /**
-     * Returns the ID of the `Spell` that caused this Aura to be applied.
+     * Returns the ID of the &Spell that caused this &Aura to be applied.
      *
-     * @return :number the `Spell` ID
+     * @return uint32 : the spellid
      */
     int GetAuraId(lua_State* L, Aura* aura)
     {
@@ -73,12 +73,12 @@ namespace LuaAura
     }
 
     /**
-     * Returns the amount of time this Aura lasts when applied.
+     * Returns the amount of time this &Aura lasts when applied.
      *
-     * To determine how much time has passed since this Aura was applied,
+     * To determine how much time has passed since this &Aura was applied,
      *   subtract the result of `GetDuration` from the result of this method.
      *
-     * @return :number the maximum duration of the Aura, in milliseconds
+     * @return int32 : the maximum duration of the &Aura, in milliseconds
      */
     int GetMaxDuration(lua_State* L, Aura* aura)
     {
@@ -91,11 +91,11 @@ namespace LuaAura
     }
 
     /**
-     * Returns the number of times the Aura has "stacked".
+     * Returns the number of times the &Aura has "stacked".
      *
-     * This is the same as the number displayed on the Aura's icon in-game.
+     * This is the same as the number displayed on the &Aura's icon in-game.
      *
-     * @return :number how many times the Aura has stacked
+     * @return uint8 : how many times the &Aura has stacked
      */
     int GetStackAmount(lua_State* L, Aura* aura)
     {
@@ -104,9 +104,9 @@ namespace LuaAura
     }
 
     /**
-     * Returns the `Unit` that the Aura has been applied to.
+     * Returns the &Unit that the &Aura has been applied to.
      *
-     * @return :Unit who the Aura has been applied to
+     * @return &Unit : &Unit who the &Aura has been applied to
      */
     int GetOwner(lua_State* L, Aura* aura)
     {
@@ -119,13 +119,13 @@ namespace LuaAura
     }
 
     /**
-     * Change the amount of time before the Aura expires.
+     * Change the amount of time before the &Aura expires.
      *
-     * @param duration :number the new duration of the Aura, in milliseconds
+     * @param int32 duration : the new duration of the &Aura, in milliseconds
      */
     int SetDuration(lua_State* L, Aura* aura)
     {
-        int duration = Eluna::CHECKVAL<int>(L, 2);
+        int32 duration = Eluna::CHECKVAL<int32>(L, 2);
 #ifndef TRINITY
         aura->GetHolder()->SetAuraDuration(duration);
 #else
@@ -135,16 +135,16 @@ namespace LuaAura
     }
 
     /**
-     * Change the maximum amount of time before the Aura expires.
+     * Change the maximum amount of time before the &Aura expires.
      *
-     * This does not affect the current duration of the Aura, but if the Aura
+     * This does not affect the current duration of the &Aura, but if the &Aura
      *   is reset to the maximum duration, it will instead change to `duration`.
      *
-     * @param duration :number the new maximum duration of the Aura, in milliseconds
+     * @param int32 duration : the new maximum duration of the &Aura, in milliseconds
      */
     int SetMaxDuration(lua_State* L, Aura* aura)
     {
-        int duration = Eluna::CHECKVAL<int>(L, 2);
+        int32 duration = Eluna::CHECKVAL<int32>(L, 2);
 #ifndef TRINITY
         aura->GetHolder()->SetAuraMaxDuration(duration);
 #else
@@ -154,16 +154,16 @@ namespace LuaAura
     }
 
     /**
-     * Change the amount of times the Aura has "stacked" on the `Unit`.
+     * Change the amount of times the &Aura has "stacked" on the &Unit.
      *
      * If `amount` is greater than or equal to the current number of stacks,
-     *   then the Aura has its duration reset to the maximum duration.
+     *   then the &Aura has its duration reset to the maximum duration.
      *
-     * @param amount :number the new stack amount for the Aura
+     * @param uint8 amount : the new stack amount for the &Aura
      */
     int SetStackAmount(lua_State* L, Aura* aura)
     {
-        int amount = Eluna::CHECKVAL<int>(L, 2);
+        uint8 amount = Eluna::CHECKVAL<uint8>(L, 2);
 #ifndef TRINITY
         aura->GetHolder()->SetStackAmount(amount);
 #else
@@ -173,7 +173,7 @@ namespace LuaAura
     }
 
     /**
-     * Remove this Aura from the `Unit` it is applied to.
+     * Remove this &Aura from the &Unit it is applied to.
      */
     int Remove(lua_State* /*L*/, Aura* aura)
     {

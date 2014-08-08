@@ -78,6 +78,14 @@ namespace LuaWorldObject
         return 1;
     }
 
+    /**
+     * Returns the coordinates and orientation of the &WorldObject
+     *
+     * @return float x
+     * @return float y
+     * @return float z
+     * @return float o
+     */
     int GetLocation(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetPositionX());
@@ -386,6 +394,18 @@ namespace LuaWorldObject
         return 1;
     }
 
+    /**
+     * Spawns the creature at specified location.
+     *
+     * @param uint32 entry : creature entry
+     * @param float x
+     * @param float y
+     * @param float z
+     * @param float o
+     * @param TempSummonType spawnType : defines how and when the creature despawns
+     * @param uint32 despawnTimer : despawn time in seconds
+     * @return &Creature
+     */
     int SpawnCreature(lua_State* L, WorldObject* obj)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
