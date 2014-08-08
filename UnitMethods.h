@@ -558,17 +558,7 @@ namespace LuaUnit
 #ifdef TRINITY
         if (powerType == -1)
             return unit->getPowerType();
-#endif
-#ifdef MANGOS
-#if (defined(WOTLK))
-        if (powerType == -1)
-            return unit->GetPowerType();
 #else
-        if (powerType == -1)
-            return unit->getPowerType();
-#endif
-#endif
-#ifdef CMANGOS
         if (powerType == -1)
             return unit->GetPowerType();
 #endif
@@ -615,15 +605,7 @@ namespace LuaUnit
     {
 #ifdef TRINITY
         Eluna::Push(L, unit->getPowerType());
-#endif
-#ifdef MANGOS
-#if (defined(WOTLK))
-        Eluna::Push(L, unit->GetPowerType());
 #else
-        Eluna::Push(L, unit->getPowerType());
-#endif
-#endif
-#ifdef CMANGOS
         Eluna::Push(L, unit->GetPowerType());
 #endif
         return 1;
@@ -940,15 +922,7 @@ namespace LuaUnit
 
 #ifdef TRINITY
         unit->setPowerType((Powers)type);
-#endif
-#ifdef MANGOS
-#if (defined(WOTLK))
-        unit->SetPowerType((Powers)type);
 #else
-        unit->setPowerType((Powers)type);
-#endif
-#endif
-#ifdef CMANGOS
         unit->SetPowerType((Powers)type);
 #endif
         return 0;
