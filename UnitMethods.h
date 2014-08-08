@@ -569,13 +569,8 @@ namespace LuaUnit
 #endif
 #endif
 #ifdef CMANGOS
-#if (defined(WOTLK) || defined(TBC))
         if (powerType == -1)
             return unit->GetPowerType();
-#else
-        if (powerType == -1)
-            return unit->getPowerType();
-#endif
 #endif
 
         if (powerType < 0 || powerType >= int(MAX_POWERS))
@@ -629,11 +624,7 @@ namespace LuaUnit
 #endif
 #endif
 #ifdef CMANGOS
-#if (defined(WOTLK) || defined(TBC))
         Eluna::Push(L, unit->GetPowerType());
-#else
-        Eluna::Push(L, unit->getPowerType());
-#endif
 #endif
         return 1;
     }
@@ -958,11 +949,7 @@ namespace LuaUnit
 #endif
 #endif
 #ifdef CMANGOS
-#if (defined(WOTLK) || defined(TBC))
         unit->SetPowerType((Powers)type);
-#else
-        unit->setPowerType((Powers)type);
-#endif
 #endif
         return 0;
     }
