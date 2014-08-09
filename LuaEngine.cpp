@@ -501,7 +501,7 @@ static uint32 CheckUnsignedRange(lua_State *L, int narg, uint32 max)
 
 template<> bool Eluna::CHECKVAL<bool>(lua_State* L, int narg)
 {
-    return lua_toboolean(L, narg);
+    return lua_toboolean(L, narg) != 0;
 }
 template<> float Eluna::CHECKVAL<float>(lua_State* L, int narg)
 {
