@@ -1159,12 +1159,12 @@ ElunaRegister<Map> MapMethods[] =
 
 ElunaRegister<Corpse> CorpseMethods[] =
 {
-    { "GetOwnerGUID", &LuaCorpse::GetOwnerGUID },                     // :GetOwnerGUID() - Returns the corpse owner GUID
-    { "GetGhostTime", &LuaCorpse::GetGhostTime },                     // :GetGhostTime() - Returns the ghost time of a corpse
-    { "GetType", &LuaCorpse::GetType },                               // :GetType() - Returns the (CorpseType) of a corpse
-    { "ResetGhostTime", &LuaCorpse::ResetGhostTime },                 // :ResetGhostTime() - Resets the corpse's ghost time
-    { "SaveToDB", &LuaCorpse::SaveToDB },                             // :SaveToDB() - Saves to database
-    { "DeleteBonesFromWorld", &LuaCorpse::DeleteBonesFromWorld },     // :DeleteBonesFromWorld() - Deletes all bones from the world
+    { "GetOwnerGUID", &LuaCorpse::GetOwnerGUID },
+    { "GetGhostTime", &LuaCorpse::GetGhostTime },
+    { "GetType", &LuaCorpse::GetType },
+    { "ResetGhostTime", &LuaCorpse::ResetGhostTime },
+    { "SaveToDB", &LuaCorpse::SaveToDB },
+    { "DeleteBonesFromWorld", &LuaCorpse::DeleteBonesFromWorld },
 
     { NULL, NULL }
 };
