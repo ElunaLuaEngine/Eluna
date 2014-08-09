@@ -76,12 +76,7 @@ void Eluna::ReloadEluna()
 #ifdef TRINITY
     // Re initialize creature AI restoring C++ AI or applying lua AI
     {
-#ifdef BOOST_VERSION
-        boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Creature>::GetLock());
-#else
-        TRINITY_READ_GUARD(HashMapHolder<Creature>::LockType, *HashMapHolder<Creature>::GetLock());
-#endif
-        HashMapHolder<Creature>::MapType const& m = ObjectAccessor::GetCreatures();
+        HashMapHolder<Creature>::MapType const m = ObjectAccessor::GetCreatures();
         for (HashMapHolder<Creature>::MapType::const_iterator iter = m.begin(); iter != m.end(); ++iter)
             if (iter->second->IsInWorld())
                 iter->second->AIM_Initialize();
