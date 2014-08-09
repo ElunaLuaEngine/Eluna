@@ -9,7 +9,11 @@
 
 namespace LuaSpell
 {
-    /* BOOLEAN */
+    /**
+     * Returns 'true' if the &Spell is automatically repeating, false otherwise.
+     *
+     * @return boolean isRepeatable
+     */
     int IsAutoRepeat(lua_State* L, Spell* spell)
     {
         Eluna::Push(L, spell->IsAutoRepeat());
@@ -146,7 +150,11 @@ namespace LuaSpell
         return 0;
     }
 
-    /* OTHER */
+    /**
+     * Casts the &Spell.
+     *
+     * May need further documentation.
+     */
     int Cast(lua_State* L, Spell* spell)
     {
         bool skipCheck = Eluna::CHECKVAL<bool>(L, 2);
