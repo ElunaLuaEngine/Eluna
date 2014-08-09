@@ -27,7 +27,7 @@ namespace LuaCorpse
     /**
     * Returns the ghost time of a &Corpse.
     *
-    * @return time_t ghostTime
+    * @return uint32 ghostTime
     */
     int GetGhostTime(lua_State* L, Corpse* corpse)
     {
@@ -47,7 +47,7 @@ namespace LuaCorpse
     * };
     * </pre>
     *
-    * @return CorpseType corpseType
+    * @return uint8 corpseType
     */
     int GetType(lua_State* L, Corpse* corpse)
     {
