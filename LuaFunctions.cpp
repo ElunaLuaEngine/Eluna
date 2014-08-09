@@ -928,24 +928,24 @@ ElunaRegister<Aura> AuraMethods[] =
 ElunaRegister<Spell> SpellMethods[] =
 {
     // Getters
-    { "GetCaster", &LuaSpell::GetCaster },                // :GetCaster() - Returns the spell's caster (UNIT)
-    { "GetCastTime", &LuaSpell::GetCastTime },            // :GetCastTime() - Returns the spell cast time
-    { "GetEntry", &LuaSpell::GetEntry },                     // :GetEntry() - Returns the spell's ID
-    { "GetDuration", &LuaSpell::GetDuration },            // :GetDuration() - Returns the spell's duration
-    { "GetPowerCost", &LuaSpell::GetPowerCost },          // :GetPowerCost() - Returns the spell's power cost (mana, energy, rage, etc)
-    { "GetTargetDest", &LuaSpell::GetTargetDest },        // :GetTargetDest() - Returns the target destination (x,y,z,o,map) or nil. Orientation and map may be 0.
-    { "GetTarget", &LuaSpell::GetTarget },                // :GetTarget() - Returns spell cast target (item, worldobject)
+    { "GetCaster", &LuaSpell::GetCaster },
+    { "GetCastTime", &LuaSpell::GetCastTime },
+    { "GetEntry", &LuaSpell::GetEntry },
+    { "GetDuration", &LuaSpell::GetDuration },
+    { "GetPowerCost", &LuaSpell::GetPowerCost },
+    { "GetTargetDest", &LuaSpell::GetTargetDest },
+    { "GetTarget", &LuaSpell::GetTarget },
 
     // Setters
-    { "SetAutoRepeat", &LuaSpell::SetAutoRepeat },        // :SetAutoRepeat(boolean)
+    { "SetAutoRepeat", &LuaSpell::SetAutoRepeat },
 
     // Boolean
-    { "IsAutoRepeat", &LuaSpell::IsAutoRepeat },          // :IsAutoRepeat()
+    { "IsAutoRepeat", &LuaSpell::IsAutoRepeat },
 
     // Other
-    { "Cancel", &LuaSpell::Cancel },                      // :Cancel() - Cancels the spell casting
-    { "Cast", &LuaSpell::Cast },                          // :Cast(skipCheck) - Casts the spell (if true, removes the check for instant spells, etc)
-    { "Finish", &LuaSpell::Finish },                      // :Finish() - Finishes the spell (SPELL_STATE_FINISH)
+    { "Cancel", &LuaSpell::Cancel },
+    { "Cast", &LuaSpell::Cast },
+    { "Finish", &LuaSpell::Finish },
 
     { NULL, NULL },
 };
@@ -953,22 +953,22 @@ ElunaRegister<Spell> SpellMethods[] =
 ElunaRegister<Quest> QuestMethods[] =
 {
     // Getters
-    { "GetId", &LuaQuest::GetId },                                // :GetId() - Returns the quest's Id
-    { "GetLevel", &LuaQuest::GetLevel },                          // :GetLevel() - Returns the quest's level
-    // {"GetMaxLevel", &LuaQuest::GetMaxLevel},                 // :GetMaxLevel() - Returns the quest's max level
-    { "GetMinLevel", &LuaQuest::GetMinLevel },                    // :GetMinLevel() - Returns the quest's min level
-    { "GetNextQuestId", &LuaQuest::GetNextQuestId },              // :GetNextQuestId() - Returns the quest's next quest ID
-    { "GetPrevQuestId", &LuaQuest::GetPrevQuestId },              // :GetPrevQuestId() - Returns the quest's previous quest ID
-    { "GetNextQuestInChain", &LuaQuest::GetNextQuestInChain },    // :GetNexQuestInChain() - Returns the next quest in its chain
-    { "GetFlags", &LuaQuest::GetFlags },                          // :GetFlags() - Returns the quest's flags
-    { "GetType", &LuaQuest::GetType },                            // :GetType() - Returns the quest's type
+    { "GetId", &LuaQuest::GetId },
+    { "GetLevel", &LuaQuest::GetLevel },
+    // {"GetMaxLevel", &LuaQuest::GetMaxLevel},                   // :GetMaxLevel() - Returns the quest's max level
+    { "GetMinLevel", &LuaQuest::GetMinLevel },
+    { "GetNextQuestId", &LuaQuest::GetNextQuestId },
+    { "GetPrevQuestId", &LuaQuest::GetPrevQuestId },
+    { "GetNextQuestInChain", &LuaQuest::GetNextQuestInChain },
+    { "GetFlags", &LuaQuest::GetFlags },
+    { "GetType", &LuaQuest::GetType },
 
     // Boolean
-    { "HasFlag", &LuaQuest::HasFlag },                            // :HasFlag(flag) - Returns true or false if the quest has the specified flag
+    { "HasFlag", &LuaQuest::HasFlag },
 #ifndef CLASSIC
-    { "IsDaily", &LuaQuest::IsDaily },                            // :IsDaily() - Returns true or false if the quest is a daily
+    { "IsDaily", &LuaQuest::IsDaily },
 #endif
-    { "IsRepeatable", &LuaQuest::IsRepeatable },                  // :IsRepeatable() - Returns true or false if the quest is repeatable
+    { "IsRepeatable", &LuaQuest::IsRepeatable },
 
     { NULL, NULL },
 };
@@ -1097,23 +1097,23 @@ ElunaRegister<QueryResult> QueryMethods[] =
 ElunaRegister<WorldPacket> PacketMethods[] =
 {
     // Getters
-    { "GetOpcode", &LuaPacket::GetOpcode },                   // :GetOpcode() - Returns an opcode
-    { "GetSize", &LuaPacket::GetSize },                       // :GetSize() - Returns the packet size
+    { "GetOpcode", &LuaPacket::GetOpcode },
+    { "GetSize", &LuaPacket::GetSize },
 
     // Setters
-    { "SetOpcode", &LuaPacket::SetOpcode },                   // :SetOpcode(opcode) - Sets the opcode by specifying an opcode
+    { "SetOpcode", &LuaPacket::SetOpcode },
 
     // Readers
-    { "ReadByte", &LuaPacket::ReadByte },                     // :ReadByte() - Reads an int8 value
-    { "ReadUByte", &LuaPacket::ReadUByte },                   // :ReadUByte() - Reads an uint8 value
-    { "ReadShort", &LuaPacket::ReadShort },                   // :ReadShort() - Reads an int16 value
-    { "ReadUShort", &LuaPacket::ReadUShort },                 // :ReadUShort() - Reads an uint16 value
-    { "ReadLong", &LuaPacket::ReadLong },                     // :ReadLong() - Reads an int32 value
-    { "ReadULong", &LuaPacket::ReadULong },                   // :ReadULong() - Reads an uint32 value
-    { "ReadGUID", &LuaPacket::ReadGUID },                     // :ReadGUID() - Reads an uint64 value
-    { "ReadString", &LuaPacket::ReadString },                 // :ReadString() - Reads a string value
-    { "ReadFloat", &LuaPacket::ReadFloat },                   // :ReadFloat() - Reads a float value
-    { "ReadDouble", &LuaPacket::ReadDouble },                 // :ReadDouble() - Reads a double value
+    { "ReadByte", &LuaPacket::ReadByte },
+    { "ReadUByte", &LuaPacket::ReadUByte },
+    { "ReadShort", &LuaPacket::ReadShort },
+    { "ReadUShort", &LuaPacket::ReadUShort },
+    { "ReadLong", &LuaPacket::ReadLong },
+    { "ReadULong", &LuaPacket::ReadULong },
+    { "ReadGUID", &LuaPacket::ReadGUID },
+    { "ReadString", &LuaPacket::ReadString },
+    { "ReadFloat", &LuaPacket::ReadFloat },
+    { "ReadDouble", &LuaPacket::ReadDouble },
 
     // Writers
     { "WriteByte", &LuaPacket::WriteByte },                   // :WriteByte(val) - Writes an int8 value
@@ -1172,17 +1172,17 @@ ElunaRegister<Corpse> CorpseMethods[] =
 ElunaRegister<Weather> WeatherMethods[] =
 {
     // Getters
-    { "GetZoneId", &LuaWeather::GetZoneId },                                  // :GetZoneId() - Returns the weather's zoneId
+    { "GetZoneId", &LuaWeather::GetZoneId },
 
     // Setters
-    { "SetWeather", &LuaWeather::SetWeather },                                // :SetWeather(weatherType, grade) - Sets the weather by weather type and grade
+    { "SetWeather", &LuaWeather::SetWeather },
 
     // Boolean
-    { "Regenerate", &LuaWeather::Regenerate },                                // :Regenerate() - Calculates weather, returns true if the weather changed
-    { "UpdateWeather", &LuaWeather::UpdateWeather },                          // :UpdateWeather() - Updates the weather in a zone that has players in it, returns false if players aren't found
+    { "Regenerate", &LuaWeather::Regenerate },
+    { "UpdateWeather", &LuaWeather::UpdateWeather },
 
     // Other
-    { "SendWeatherUpdateToPlayer", &LuaWeather::SendWeatherUpdateToPlayer },  // :SendWeatherUpdateToPlayer(player) - Sends weather update to the player
+    { "SendWeatherUpdateToPlayer", &LuaWeather::SendWeatherUpdateToPlayer },
 
     { NULL, NULL }
 };
