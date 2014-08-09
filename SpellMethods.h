@@ -16,31 +16,55 @@ namespace LuaSpell
         return 1;
     }
 
-    /* GETTERS */
+    /**
+     * Returns the &Unit that casted the &Spell.
+     *
+     * @return &Unit
+     */
     int GetCaster(lua_State* L, Spell* spell)
     {
         Eluna::Push(L, spell->GetCaster());
         return 1;
     }
 
+    /**
+     * Returns the cast time of the &Spell.
+     *
+     * @return int32 castTime
+     */
     int GetCastTime(lua_State* L, Spell* spell)
     {
         Eluna::Push(L, spell->GetCastTime());
         return 1;
     }
 
+    /**
+     * Returns the entry ID of the &Spell.
+     *
+     * @return uint32 entryId
+     */
     int GetEntry(lua_State* L, Spell* spell)
     {
         Eluna::Push(L, spell->m_spellInfo->Id);
         return 1;
     }
 
+    /**
+     * Returns the power cost of the &Spell.
+     *
+     * @return uint32 powerCost
+     */
     int GetPowerCost(lua_State* L, Spell* spell)
     {
         Eluna::Push(L, spell->GetPowerCost());
         return 1;
     }
 
+    /**
+     * Returns the spell duration of the &Spell.
+     *
+     * @return int32 duration
+     */
     int GetDuration(lua_State* L, Spell* spell)
     {
 #ifndef TRINITY
@@ -51,6 +75,13 @@ namespace LuaSpell
         return 1;
     }
 
+    /**
+     * Returns the target destination coordinates of the &Spell.
+     *
+     * @return float x : X Coordinate of the &Spell
+     * @return float y : Y Coordinate of the &Spell
+     * @return float z : Z Coordinate of the &Spell
+     */
     int GetTargetDest(lua_State* L, Spell* spell)
     {
 #ifndef TRINITY
@@ -70,6 +101,13 @@ namespace LuaSpell
         return 3;
     }
 
+    /**
+     * Returns the target &Object of the &Spell.
+     *
+     * Target can be any of the following &Object types: &Player, &Creature, &GameObject, &Item, &Corpse
+     *
+     * @return &Object target
+     */
     int GetTarget(lua_State* L, Spell* spell)
     {
 #ifndef TRINITY
@@ -96,7 +134,11 @@ namespace LuaSpell
         return 1;
     }
 
-    /* SETTERS */
+    /**
+     * Sets the &Spell to automatically repeat:
+     *
+     * @param bool repeat : Set variable to 'true' for spell to automatically repeat
+     */
     int SetAutoRepeat(lua_State* L, Spell* spell)
     {
         bool repeat = Eluna::CHECKVAL<bool>(L, 2);
@@ -112,12 +154,22 @@ namespace LuaSpell
         return 0;
     }
 
+    /**
+     * Cancels the &Spell.
+     *
+     * May need further documentation.
+     */
     int Cancel(lua_State* /*L*/, Spell* spell)
     {
         spell->cancel();
         return 0;
     }
 
+    /**
+     * Finishes the &Spell.
+     *
+     * May need further documentation.
+     */
     int Finish(lua_State* /*L*/, Spell* spell)
     {
         spell->finish();
