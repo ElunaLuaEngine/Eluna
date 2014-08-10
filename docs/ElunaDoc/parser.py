@@ -43,6 +43,10 @@ class ParameterDoc(object):
                 self.description += '<p><em>Valid numbers</em>: all decimal numbers.</p>'
 
             self.data_type = 'number'
+        elif self.data_type == 'bool':
+            self.data_type = 'boolean'
+        elif self.data_type == 'uint64':
+            self.data_type = 'string'
 
 
 class MethodDoc(object):
@@ -106,7 +110,7 @@ class ClassParser(object):
 
     param_regex = re.compile(r"""\s*\*\s@param\s # The @param tag starts with opt. whitespace followed by "* @param ".
                                  ([&\w]+)\s(\w+) # The data type, a space, and the name of the param.
-                                 (?:\s=\s(.+))?  # The default value: a = surrounded by spaces, followed by text.
+                                 (?:\s=\s(.-))?  # The default value: a = surrounded by spaces, followed by text.
                                  (?:\s:\s(.+))?  # The description: a colon surrounded by spaces, followed by text.""",
                              re.X)
 
