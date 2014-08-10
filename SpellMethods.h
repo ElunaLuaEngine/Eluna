@@ -12,7 +12,7 @@ namespace LuaSpell
     /**
      * Returns 'true' if the &Spell is automatically repeating, false otherwise.
      *
-     * @return boolean isRepeatable
+     * @return boolean isAutoRepeating
      */
     int IsAutoRepeat(lua_State* L, Spell* spell)
     {
@@ -23,7 +23,7 @@ namespace LuaSpell
     /**
      * Returns the &Unit that casted the &Spell.
      *
-     * @return &Unit
+     * @return &Unit caster
      */
     int GetCaster(lua_State* L, Spell* spell)
     {
@@ -82,9 +82,9 @@ namespace LuaSpell
     /**
      * Returns the target destination coordinates of the &Spell.
      *
-     * @return float x : X Coordinate of the &Spell
-     * @return float y : Y Coordinate of the &Spell
-     * @return float z : Z Coordinate of the &Spell
+     * @return float x : x coordinate of the &Spell
+     * @return float y : y coordinate of the &Spell
+     * @return float z : z coordinate of the &Spell
      */
     int GetTargetDest(lua_State* L, Spell* spell)
     {
@@ -107,7 +107,6 @@ namespace LuaSpell
 
     /**
      * Returns the target &Object of the &Spell.
-     *
      * Target can be any of the following &Object types: &Player, &Creature, &GameObject, &Item, &Corpse
      *
      * @return &Object target
@@ -141,7 +140,7 @@ namespace LuaSpell
     /**
      * Sets the &Spell to automatically repeat:
      *
-     * @param bool repeat : Set variable to 'true' for spell to automatically repeat
+     * @param bool repeat : set variable to 'true' for spell to automatically repeat
      */
     int SetAutoRepeat(lua_State* L, Spell* spell)
     {

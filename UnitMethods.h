@@ -1363,13 +1363,14 @@ namespace LuaUnit
 
     /**
      * Casts the spell at target with modified basepoints or casters.
+     * See also &Unit:CastSpell
      *
      * @param &Unit target
      * @param uint32 spell
      * @param bool triggered = false
-     * @param int32 bp0 = nil : modifier for the base points of the spell.
-     * @param int32 bp1 = nil : modifier for the base points of the spell.
-     * @param int32 bp2 = nil : modifier for the base points of the spell.
+     * @param int32 bp0 = nil : modifier for the base points of the spell. If left as nil, no change is made
+     * @param int32 bp1 = nil : modifier for the base points of the spell. If left as nil, no change is made
+     * @param int32 bp2 = nil : modifier for the base points of the spell. If left as nil, no change is made
      * @param &Item castItem = nil
      * @param uint64 originalCaster = 0
      */
@@ -1637,7 +1638,7 @@ namespace LuaUnit
      *
      * @param &Unit victim : &Unit that caused the threat
      * @param float threat : threat amount
-     * @param uint32 SpellSchoolMask = 0 : school mask of the threat causer
+     * @param SpellSchoolMask schoolMask = 0 : spell school mask of the threat causer
      * @param uint32 spell = 0 : spell entry used for threat
      */
     int AddThreat(lua_State* L, Unit* unit)

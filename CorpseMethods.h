@@ -10,10 +10,10 @@
 namespace LuaCorpse
 {
     /**
-    * Returns the &Corpse Owner GUID.
-    *
-    * @return uint64 ownerGUID
-    */
+     * Returns the &Corpse Owner GUID.
+     *
+     * @return uint64 ownerGUID
+     */
     int GetOwnerGUID(lua_State* L, Corpse* corpse)
     {
 #ifndef TRINITY
@@ -25,10 +25,10 @@ namespace LuaCorpse
     }
 
     /**
-    * Returns the ghost time of a &Corpse.
-    *
-    * @return uint32 ghostTime
-    */
+     * Returns the ghost time of a &Corpse.
+     *
+     * @return uint32 ghostTime
+     */
     int GetGhostTime(lua_State* L, Corpse* corpse)
     {
         Eluna::Push(L, uint32(corpse->GetGhostTime()));
@@ -36,19 +36,19 @@ namespace LuaCorpse
     }
 
     /**
-    * Returns the CorpseType of a &Corpse.
-    *
-    * <pre>
-    * enum CorpseType
-    * {
-    *     CORPSE_BONES             = 0,
-    *     CORPSE_RESURRECTABLE_PVE = 1,
-    *     CORPSE_RESURRECTABLE_PVP = 2
-    * };
-    * </pre>
-    *
-    * @return uint8 corpseType
-    */
+     * Returns the CorpseType of a &Corpse.
+     *
+     * <pre>
+     * enum CorpseType
+     * {
+     *     CORPSE_BONES             = 0,
+     *     CORPSE_RESURRECTABLE_PVE = 1,
+     *     CORPSE_RESURRECTABLE_PVP = 2
+     * };
+     * </pre>
+     *
+     * @return uint8 corpseType
+     */
     int GetType(lua_State* L, Corpse* corpse)
     {
         Eluna::Push(L, corpse->GetType());
@@ -56,9 +56,9 @@ namespace LuaCorpse
     }
 
     /**
-    * Resets the &Corpse ghost time.
-    *
-    */
+     * Resets the &Corpse ghost time.
+     *
+     */
     int ResetGhostTime(lua_State* /*L*/, Corpse* corpse)
     {
         corpse->ResetGhostTime();
@@ -66,9 +66,9 @@ namespace LuaCorpse
     }
 
     /**
-    * Saves the &Corpse to the database.
-    *
-    */
+     * Saves the &Corpse to the database.
+     *
+     */
     int SaveToDB(lua_State* /*L*/, Corpse* corpse)
     {
         corpse->SaveToDB();
@@ -76,9 +76,9 @@ namespace LuaCorpse
     }
 
     /**
-    * Deletes the &Corpse from the world.
-    *
-    */
+     * Deletes the &Corpse from the world.
+     *
+     */
     int DeleteBonesFromWorld(lua_State* /*L*/, Corpse* corpse)
     {
         corpse->DeleteBonesFromWorld();

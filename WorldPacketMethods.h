@@ -23,7 +23,7 @@ namespace LuaPacket
     /**
      * Returns the size of the &WorldPacket.
      *
-     * @return uint32 : size of &WorldPacket
+     * @return uint32 size : size of &WorldPacket
      */
     int GetSize(lua_State* L, WorldPacket* packet)
     {
@@ -34,7 +34,7 @@ namespace LuaPacket
     /**
      * Sets the opcode of the &WorldPacket by specifying an opcode.
      *
-     * @param uint32 packet : the packet specified to be set for the &WorldPacket
+     * @param uint32 opcode : the opcode specified to be set for the &WorldPacket
      */
     int SetOpcode(lua_State* L, WorldPacket* packet)
     {
@@ -48,33 +48,33 @@ namespace LuaPacket
     /**
      * Reads an int8 value of the &WorldPacket specified.
      *
-     * @return int8
+     * @return int8 value
      */
     int ReadByte(lua_State* L, WorldPacket* packet)
     {
-        int8 byte;
-        (*packet) >> byte;
-        Eluna::Push(L, byte);
+        int8 _byte;
+        (*packet) >> _byte;
+        Eluna::Push(L, _byte);
         return 1;
     }
 
     /**
      * Reads a uint8 value of the &WorldPacket specified.
      *
-     * @return uint8
+     * @return uint8 value
      */
     int ReadUByte(lua_State* L, WorldPacket* packet)
     {
-        uint8 byte;
-        (*packet) >> byte;
-        Eluna::Push(L, byte);
+        uint8 _ubyte;
+        (*packet) >> _ubyte;
+        Eluna::Push(L, _ubyte);
         return 1;
     }
 
     /**
      * Reads an int16 value of the &WorldPacket specified.
      *
-     * @return int16
+     * @return int16 value
      */
     int ReadShort(lua_State* L, WorldPacket* packet)
     {
@@ -87,7 +87,7 @@ namespace LuaPacket
     /**
      * Reads a uint16 value of the &WorldPacket specified.
      *
-     * @return uint16
+     * @return uint16 value
      */
     int ReadUShort(lua_State* L, WorldPacket* packet)
     {
@@ -100,7 +100,7 @@ namespace LuaPacket
     /**
      * Reads an int32 value of the &WorldPacket specified.
      *
-     * @return int32
+     * @return int32 value
      */
     int ReadLong(lua_State* L, WorldPacket* packet)
     {
@@ -113,7 +113,7 @@ namespace LuaPacket
     /**
      * Reads a uint32 value of the &WorldPacket specified.
      *
-     * @return uint32
+     * @return uint32 value
      */
     int ReadULong(lua_State* L, WorldPacket* packet)
     {
@@ -126,7 +126,7 @@ namespace LuaPacket
     /**
      * Reads a float value of the &WorldPacket specified.
      *
-     * @return float
+     * @return float value
      */
     int ReadFloat(lua_State* L, WorldPacket* packet)
     {
@@ -139,7 +139,7 @@ namespace LuaPacket
     /**
      * Reads a double value of the &WorldPacket specified.
      *
-     * @return double
+     * @return double value
      */
     int ReadDouble(lua_State* L, WorldPacket* packet)
     {
@@ -150,9 +150,9 @@ namespace LuaPacket
     }
 
     /**
-     * Reads a uint64 GUID value of the &WorldPacket specified.
+     * Reads a uint64 value of the &WorldPacket specified.
      *
-     * @return uint64 : GUID returned as uint64
+     * @return uint64 value : value returned as string
      */
     int ReadGUID(lua_State* L, WorldPacket* packet)
     {
@@ -165,7 +165,7 @@ namespace LuaPacket
     /**
      * Reads a string value of the &WorldPacket specified.
      *
-     * @return string
+     * @return string value
      */
     int ReadString(lua_State* L, WorldPacket* packet)
     {
@@ -176,9 +176,9 @@ namespace LuaPacket
     }
 
     /**
-     * Writes a uint64 GUID to the &WorldPacket.
+     * Writes an uint64 value to the &WorldPacket.
      *
-     * @param uint64 GUID : the GUID to be written to the &WorldPacket
+     * @param uint64 value : the value to be written to the &WorldPacket
      */
     int WriteGUID(lua_State* L, WorldPacket* packet)
     {
@@ -190,7 +190,7 @@ namespace LuaPacket
     /**
      * Writes a string to the &WorldPacket.
      *
-     * @param string : the string to be written to the &WorldPacket
+     * @param string value : the string to be written to the &WorldPacket
      */
     int WriteString(lua_State* L, WorldPacket* packet)
     {
@@ -212,7 +212,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes a uint8 value to the &WorldPacket.
+     * Writes an uint8 value to the &WorldPacket.
      *
      * @param uint8 value : the uint8 value to be written to the &WorldPacket
      */
@@ -236,7 +236,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes a uint16 value to the &WorldPacket.
+     * Writes an uint16 value to the &WorldPacket.
      *
      * @param uint16 value : the uint16 value to be written to the &WorldPacket
      */
@@ -260,7 +260,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes a uint32 value to the &WorldPacket.
+     * Writes an uint32 value to the &WorldPacket.
      *
      * @param uint32 value : the uint32 value to be written to the &WorldPacket
      */

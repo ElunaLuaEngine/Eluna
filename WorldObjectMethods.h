@@ -79,12 +79,12 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns the coordinates and orientation of the &WorldObject
+     * Returns the coordinates and orientation / facing of the &WorldObject
      *
-     * @return float x
-     * @return float y
-     * @return float z
-     * @return float o
+     * @return float x : x coordinate of the &WorldObject
+     * @return float y : y coordinate of the &WorldObject
+     * @return float z : z coordinate (height) of the &WorldObject
+     * @return float o : facing / orientation of  the &WorldObject
      */
     int GetLocation(lua_State* L, WorldObject* obj)
     {

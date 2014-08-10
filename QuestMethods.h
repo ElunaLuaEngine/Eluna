@@ -11,7 +11,6 @@ namespace LuaQuest
 {
     /**
      * Returns 'true' if the &Quest has the specified flag, false otherwise.
-     *
      * Below flags are based off of 3.3.5a. Subject to change.
      *
      * <pre>
@@ -45,8 +44,7 @@ namespace LuaQuest
      * </pre>
      *
      * @param uint32 flag : all available flags can be seen above
-     *
-     * @return bool
+     * @return bool hasFlag
      */
     int HasFlag(lua_State* L, Quest* quest)
     {
@@ -63,7 +61,7 @@ namespace LuaQuest
     /**
      * Returns 'true' if the &Quest is a daily quest, false otherwise.
      *
-     * @return bool
+     * @return bool isDaily
      */
     int IsDaily(lua_State* L, Quest* quest)
     {
@@ -75,7 +73,7 @@ namespace LuaQuest
     /**
      * Returns 'true' if the &Quest is repeatable, false otherwise.
      *
-     * @return bool
+     * @return bool isRepeatable
      */
     int IsRepeatable(lua_State* L, Quest* quest)
     {
@@ -84,7 +82,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns entry ID of the &Quest.
+     * Returns entry id of the &Quest.
      *
      * @return uint32 entryId
      */
@@ -106,7 +104,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns the minimum &Quest level required to pick up the &Quest.
+     * Returns the minimum level required to pick up the &Quest.
      *
      * @return uint32 minLevel
      */
@@ -117,7 +115,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns the next &Quest entry ID.
+     * Returns the next &Quest entry id.
      *
      * @return int32 entryId
      */
