@@ -498,7 +498,7 @@
                 });
             } else {
                 output += 'No results :( <a href="https://duckduckgo.com/?q=' +
-                    encodeURIComponent('rust ' + query.query) +
+                    encodeURIComponent('eluna ' + query.query) +
                     '">Try on DuckDuckGo?</a>';
             }
 
