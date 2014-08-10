@@ -105,9 +105,6 @@ namespace LuaAura
      *
      * This is the same as the number displayed on the &Aura's icon in-game.
      *
-<<<<<<< Updated upstream
-     * @return uint8 : how many times the &Aura has stacked
-=======
      * @return uint32 stack_amount
      */
     int GetStackAmount(lua_State* L, Aura* aura)
@@ -119,9 +116,6 @@ namespace LuaAura
     /**
      * Returns the &Unit that the &Aura has been applied to.
      *
-<<<<<<< Updated upstream
-     * @return &Unit : &Unit who the &Aura has been applied to
-=======
      * @return &Unit owner
      */
     int GetOwner(lua_State* L, Aura* aura)
@@ -137,9 +131,6 @@ namespace LuaAura
     /**
      * Change the amount of time before the &Aura expires.
      *
-<<<<<<< Updated upstream
-     * @param int32 duration : the new duration of the &Aura, in milliseconds
-=======
      * @param int32 duration : the new duration of the Aura, in milliseconds
      */
     int SetDuration(lua_State* L, Aura* aura)
@@ -159,9 +150,6 @@ namespace LuaAura
      * This does not affect the current duration of the &Aura, but if the &Aura
      *   is reset to the maximum duration, it will instead change to `duration`.
      *
-<<<<<<< Updated upstream
-     * @param int32 duration : the new maximum duration of the &Aura, in milliseconds
-=======
      * @param int32 duration : the new maximum duration of the Aura, in milliseconds
      */
     int SetMaxDuration(lua_State* L, Aura* aura)
