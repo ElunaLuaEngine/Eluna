@@ -494,7 +494,7 @@ namespace LuaWorldObject
      * @param float z
      * @param float o
      * @param uint32 respawnDelay = 30 : respawn time in seconds
-     * @return &GameObjecy
+     * @return &GameObject gameObject
      */
     int SummonGameObject(lua_State* L, WorldObject* obj)
     {
