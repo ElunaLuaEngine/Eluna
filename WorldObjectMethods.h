@@ -9,13 +9,22 @@
 
 namespace LuaWorldObject
 {
-    /* GETTERS */
+    /**
+     * Returns the name of the &WorldObject
+     *
+     * @return string name
+     */
     int GetName(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetName());
         return 1;
     }
 
+    /**
+     * Returns the current &Map object of the &WorldObject
+     *
+     * @return &Map mapObject
+     */
     int GetMap(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetMap());
@@ -23,6 +32,11 @@ namespace LuaWorldObject
     }
 
 #if (!defined(TBC) && !defined(CLASSIC))
+    /**
+     * Returns the current phase of the &WorldObject
+     *
+     * @return uint32 phase
+     */
     int GetPhaseMask(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetPhaseMask());
@@ -30,48 +44,88 @@ namespace LuaWorldObject
     }
 #endif
 
+    /**
+     * Returns the current instance id of the &WorldObject
+     *
+     * @return uint32 instanceId
+     */
     int GetInstanceId(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetInstanceId());
         return 1;
     }
 
+    /**
+     * Returns the current area id of the &WorldObject
+     *
+     * @return uint32 areaId
+     */
     int GetAreaId(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetAreaId());
         return 1;
     }
 
+    /**
+     * Returns the current zone id of the &WorldObject
+     *
+     * @return uint32 zoneId
+     */
     int GetZoneId(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetZoneId());
         return 1;
     }
 
+    /**
+     * Returns the current map id of the &WorldObject
+     *
+     * @return uint32 mapId
+     */
     int GetMapId(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetMapId());
         return 1;
     }
 
+    /**
+     * Returns the current X coordinate of the &WorldObject
+     *
+     * @return float x
+     */
     int GetX(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetPositionX());
         return 1;
     }
 
+    /**
+     * Returns the current Y coordinate of the &WorldObject
+     *
+     * @return float y
+     */
     int GetY(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetPositionY());
         return 1;
     }
 
+    /**
+     * Returns the current Z coordinate of the &WorldObject
+     *
+     * @return float z
+     */
     int GetZ(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetPositionZ());
         return 1;
     }
 
+    /**
+     * Returns the current orientation of the &WorldObject
+     *
+     * @return float orientation
+     */
     int GetO(lua_State* L, WorldObject* obj)
     {
         Eluna::Push(L, obj->GetOrientation());
@@ -95,6 +149,13 @@ namespace LuaWorldObject
         return 4;
     }
 
+    /**
+     * Returns the nearest &Player object in sight of the &WorldObject or within the given range
+     *
+     * @param float range = 533.33333 : optionally set range
+     *
+     * @return &Player nearestPlayer
+     */
     int GetNearestPlayer(lua_State* L, WorldObject* obj)
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
@@ -113,6 +174,14 @@ namespace LuaWorldObject
         return 1;
     }
 
+    /**
+     * Returns the nearest &GameObject object in sight of the &WorldObject or within the given range and/or with a specific entry id
+     *
+     * @param float range = 533.33333 : optionally set range
+     * @param uint32 entryId = 0 : optionally set entry id of game object to find
+     *
+     * @return &GameObject nearesGameObject
+     */
     int GetNearestGameObject(lua_State* L, WorldObject* obj)
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
@@ -132,6 +201,14 @@ namespace LuaWorldObject
         return 1;
     }
 
+    /**
+     * Returns the nearest &Creature object in sight of the &WorldObject or within the given range and/or with a specific entry id
+     *
+     * @param float range = 533.33333 : optionally set range
+     * @param uint32 entryId = 0 : optionally set entry id of creature to find
+     *
+     * @return &Creature nearesCreature
+     */
     int GetNearestCreature(lua_State* L, WorldObject* obj)
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
@@ -151,6 +228,13 @@ namespace LuaWorldObject
         return 1;
     }
 
+    /**
+     * Returns a table of @Player objects in sight of the &WorldObject or within the given range
+     *
+     * @param float range = 533.33333 : optionally set range
+     *
+     * @return table playersInRange
+     */
     int GetPlayersInRange(lua_State* L, WorldObject* obj)
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
@@ -180,6 +264,14 @@ namespace LuaWorldObject
         return 1;
     }
 
+    /**
+     * Returns a table of @Creature objects in sight of the &WorldObject or within the given range and/or with a specific entry id
+     *
+     * @param float range = 533.33333 : optionally set range
+     * @param uint32 entryId = 0 : optionally set entry id of creatures to find
+     *
+     * @return table creaturesInRange
+     */
     int GetCreaturesInRange(lua_State* L, WorldObject* obj)
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
@@ -210,6 +302,14 @@ namespace LuaWorldObject
         return 1;
     }
 
+    /**
+     * Returns a table of @GameObject objects in sight of the &WorldObject or within the given range and/or with a specific entry id
+     *
+     * @param float range = 533.33333 : optionally set range
+     * @param uint32 entryId = 0 : optionally set entry id of game objects to find
+     *
+     * @return table gameObjectsInRange
+     */
     int GetGameObjectsInRange(lua_State* L, WorldObject* obj)
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
@@ -294,6 +394,13 @@ namespace LuaWorldObject
         return 1;
     }
 
+    /**
+     * Returns a &WorldObject based on its guid
+     *
+     * @param uint64 guid
+     *
+     * @return &WorldObject nearestPlayer
+     */
     int GetWorldObject(lua_State* L, WorldObject* obj)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
@@ -378,6 +485,17 @@ namespace LuaWorldObject
         return 0;
     }
 
+    /**
+     * Summons a game object at specified location.
+     *
+     * @param uint32 entry : game object entry
+     * @param float x
+     * @param float y
+     * @param float z
+     * @param float o
+     * @param uint32 respawnDelay = 30 : respawn time in seconds
+     * @return &GameObjecy
+     */
     int SummonGameObject(lua_State* L, WorldObject* obj)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
