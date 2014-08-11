@@ -9,8 +9,13 @@
 
 namespace LuaMap
 {
-    /* BOOLEAN */
+    
 #ifndef CLASSIC
+    /**
+     * Returns 'true' if the &Map is an arena, false otherwise
+     *
+     * @return bool isArena
+     */
     int IsArena(lua_State* L, Map* map)
     {
         Eluna::Push(L, map->IsBattleArena());
@@ -18,6 +23,11 @@ namespace LuaMap
     }
 #endif
 
+    /**
+     * Returns 'true' if the &Map is a battleground, false otherwise
+     *
+     * @return bool isBattleGround
+     */
     int IsBattleground(lua_State* L, Map* map)
     {
 #ifndef TRINITY
@@ -28,12 +38,22 @@ namespace LuaMap
         return 1;
     }
 
+    /**
+     * Returns 'true' if the &Map is a dungeon, false otherwise
+     *
+     * @return bool isDungeon
+     */
     int IsDungeon(lua_State* L, Map* map)
     {
         Eluna::Push(L, map->IsDungeon());
         return 1;
     }
 
+    /**
+     * Returns 'true' if the &Map is empty, false otherwise
+     *
+     * @return bool isEmpty
+     */
     int IsEmpty(lua_State* L, Map* map)
     {
         Eluna::Push(L, map->isEmpty());
@@ -41,6 +61,11 @@ namespace LuaMap
     }
 
 #ifndef CLASSIC
+    /**
+     * Returns 'true' if the &Map is a heroic, false otherwise
+     *
+     * @return bool isHeroic
+     */
     int IsHeroic(lua_State* L, Map* map)
     {
         Eluna::Push(L, map->IsHeroic());
@@ -48,19 +73,35 @@ namespace LuaMap
     }
 #endif
 
+    /**
+     * Returns 'true' if the &Map is a raid, false otherwise
+     *
+     * @return bool isRaid
+     */
     int IsRaid(lua_State* L, Map* map)
     {
         Eluna::Push(L, map->IsRaid());
         return 1;
     }
 
-    /* GETTERS */
+    /**
+     * Returns the name of the &Map
+     *
+     * @return string mapName
+     */
     int GetName(lua_State* L, Map* map)
     {
         Eluna::Push(L, map->GetMapName());
         return 1;
     }
 
+    /**
+     * Returns the height of the &Map at the given X and Y coordinates
+     *
+     * @param float x
+     * @param float y
+     * @return float z
+     */
     int GetHeight(lua_State* L, Map* map)
     {
         float x = Eluna::CHECKVAL<float>(L, 2);
@@ -76,6 +117,11 @@ namespace LuaMap
         return 1;
     }
 
+    /**
+     * Returns the difficulty of the &Map
+     *
+     * @return int32 difficulty
+     */
     int GetDifficulty(lua_State* L, Map* map)
     {
 #ifndef CLASSIC
@@ -86,24 +132,48 @@ namespace LuaMap
         return 1;
     }
 
+    /**
+     * Returns the instance id of the &Map
+     *
+     * @return uint32 instanceId
+     */
     int GetInstanceId(lua_State* L, Map* map)
     {
         Eluna::Push(L, map->GetInstanceId());
         return 1;
     }
 
+    /**
+     * Returns the player count currently on the &Map
+     * Does not include gamemasters
+     *
+     * @return uint32 playerCount
+     */
     int GetPlayerCount(lua_State* L, Map* map)
     {
         Eluna::Push(L, map->GetPlayersCountExceptGMs());
         return 1;
     }
 
+    /**
+     * Returns the id of the &Map
+     *
+     * @return uint32 mapId
+     */
     int GetMapId(lua_State* L, Map* map)
     {
         Eluna::Push(L, map->GetId());
         return 1;
     }
 
+    /**
+     * Returns the area id of the &Map at the specified X, Y and Z coordinates
+     *
+     * @param float x
+     * @param float y
+     * @param float z
+     * @return uint32 areaId
+     */
     int GetAreaId(lua_State* L, Map* map)
     {
         float x = Eluna::CHECKVAL<float>(L, 2);
