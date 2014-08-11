@@ -41,7 +41,7 @@ def make_renderer(template_path, link_parser_factory):
         root = make_root(level)
 
         with open('build/' + output_path, 'w') as out:
-            out.write(template.render(static=static, root=root, **kwargs))
+            out.write(template.render(level=level, static=static, root=root, **kwargs))
 
     return inner
 

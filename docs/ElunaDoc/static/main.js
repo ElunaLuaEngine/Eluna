@@ -465,7 +465,7 @@
                     if (type === 'mod') {
                         output += item.path +
                             '::<a href="' + rootPath +
-                            item.path.replace(/::/g, '/') + '/' +
+                            item.path.replace(/::/g, '/') + // '/' +
                             name + '/index.html" class="' +
                             type + '">' + name + '</a>';
                     } else if (type === 'static' || type === 'reexport') {
