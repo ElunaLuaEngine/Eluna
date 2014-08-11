@@ -62,7 +62,7 @@
             {%- if current_method.parameters|length > 0 %}
             {%- for param in current_method.parameters %}
             <dl>
-                <dt><code>{{ param.data_type|escape|parse_data_type }} {{ param.name }} {{ param.default_value + ' ' if param.default_value }}</code></dt>
+                <dt><code>{{ param.data_type|escape|parse_data_type }} {{ param.name }} {{- ' (' + param.default_value + ')' if param.default_value }}</code></dt>
                 <dd class="docblock">{{ param.description|parse_links if param.description else '<em>See method description.</em>' }}</dd>
             </dl>
             {%- endfor %}

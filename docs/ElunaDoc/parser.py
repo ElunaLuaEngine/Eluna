@@ -43,9 +43,11 @@ class ParameterDoc(object):
                 self.description += '<p><em>Valid numbers</em>: all decimal numbers.</p>'
 
             self.data_type = 'number'
+
         elif self.data_type == 'bool':
             self.data_type = 'boolean'
-        elif self.data_type == 'uint64':
+
+        elif self.data_type == 'uint64' or self.data_type == 'int64':
             self.data_type = 'string'
 
 
@@ -108,16 +110,16 @@ class ClassParser(object):
     body_regex = re.compile(r"\s*\s?\*\s*(.*)")  # The "body", i.e. a * and optionally some descriptive text.
     # An extra optional space (\s?) was thrown in to make it different from `class_body_regex`.
 
-    param_regex = re.compile(r"""\s*\*\s@param\s # The @param tag starts with opt. whitespace followed by "* @param ".
-                                 ([&\w]+)\s(\w+) # The data type, a space, and the name of the param.
-                                 (?:\s=\s(.-))?  # The default value: a = surrounded by spaces, followed by text.
-                                 (?:\s:\s(.+))?  # The description: a colon surrounded by spaces, followed by text.""",
-                             re.X)
-
+    param_regex = re.compile(r"""\s*\*\s@param\s  # The @param tag starts with opt. whitespace followed by "* @param ".
+                                 ([&\w]+)\s(\w+)  # The data type, a space, and the name of the param.
+                                 (?:\s=\s(\w+))?  # The default value: a = surrounded by spaces, followed by text.
+                                 (?:\s:\s(.+))?   # The description: a colon surrounded by spaces, followed by text.
+                                 """, re.X)
     # This is the same as the @param tag, minus the default value part.
     return_regex = re.compile(r"""\s*\*\s@return\s
                                   ([&\w]+)\s(\w+)
-                                  (?:\s:\s(.+))?""", re.X)
+                                  (?:\s:\s(.+))?
+                                  """, re.X)
 
     comment_end_regex = re.compile(r"\s*\*/")  # The end of the comment portion, i.e. */
     end_regex = re.compile(r"\s*int\s(\w+)\s*\(")  # The end of the documentation, i.e. int MethodName(
