@@ -798,30 +798,30 @@ ElunaRegister<Creature> CreatureMethods[] =
 ElunaRegister<GameObject> GameObjectMethods[] =
 {
     // Getters
-    { "GetDisplayId", &LuaGameObject::GetDisplayId },         // :GetDisplayId()
-    { "GetGoState", &LuaGameObject::GetGoState },             // :GetGoState() - Returns state
-    { "GetLootState", &LuaGameObject::GetLootState },         // :GetLootState() - Returns loot state
+    { "GetDisplayId", &LuaGameObject::GetDisplayId },
+    { "GetGoState", &LuaGameObject::GetGoState },
+    { "GetLootState", &LuaGameObject::GetLootState },
 
     // Setters
     { "SetGoState", &LuaGameObject::SetGoState },
     { "SetLootState", &LuaGameObject::SetLootState },
 
     // Boolean
-    { "IsTransport", &LuaGameObject::IsTransport },           // :IsTransport()
-    // {"IsDestructible", &LuaGameObject::IsDestructible},  // :IsDestructible()
-    { "IsActive", &LuaGameObject::IsActive },                 // :IsActive()
-    { "HasQuest", &LuaGameObject::HasQuest },                 // :HasQuest(questId)
-    { "IsSpawned", &LuaGameObject::IsSpawned },               // :IsSpawned()
+    { "IsTransport", &LuaGameObject::IsTransport },
+    // {"IsDestructible", &LuaGameObject::IsDestructible},    // :IsDestructible()
+    { "IsActive", &LuaGameObject::IsActive },
+    { "HasQuest", &LuaGameObject::HasQuest },
+    { "IsSpawned", &LuaGameObject::IsSpawned },
 
     // Other
-    { "RegisterEvent", &LuaGameObject::RegisterEvent },       // :RegisterEvent(function, delay, calls) - The timer ticks if this gameobject is visible to someone. The function is called with arguments (eventid, delay, repeats, gameobject) after the time has passed if the gameobject exists. Returns EventId
-    { "RemoveEventById", &LuaGameObject::RemoveEventById },   // :RemoveEventById(eventID) - Removes a Registered (timed) event by it's ID.
-    { "RemoveEvents", &LuaGameObject::RemoveEvents },         // :RemoveEvents() - Removes all registered timed events
-    { "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },   // :RemoveFromWorld(del)
-    { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },   // :UseDoorOrButton(delay) - Activates/closes/opens after X delay UNDOCUMENTED
-    { "Despawn", &LuaGameObject::Despawn },                   // :Despawn([delay]) - Despawns the object after delay
-    { "Respawn", &LuaGameObject::Respawn },                   // :Respawn([delay]) - respawns the object after delay
-    { "SaveToDB", &LuaGameObject::SaveToDB },                 // :SaveToDB() - Saves to database
+    { "RegisterEvent", &LuaGameObject::RegisterEvent },
+    { "RemoveEventById", &LuaGameObject::RemoveEventById },
+    { "RemoveEvents", &LuaGameObject::RemoveEvents },
+    { "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },
+    { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },
+    { "Despawn", &LuaGameObject::Despawn },
+    { "Respawn", &LuaGameObject::Respawn },
+    { "SaveToDB", &LuaGameObject::SaveToDB },
 
     { NULL, NULL },
 };

@@ -9,7 +9,12 @@
 
 namespace LuaGameObject
 {
-    /* BOOLEAN */
+    /**
+     * Returns 'true' if the &GameObject has the specified quest
+     *
+     * @param uint32 questId : quest entry Id to check
+     * @return bool hasQuest
+     */
     int HasQuest(lua_State* L, GameObject* go)
     {
         uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
@@ -22,18 +27,33 @@ namespace LuaGameObject
         return 1;
     }
 
+    /**
+     * Returns 'true' if the &GameObject is spawned
+     *
+     * @return bool isSpawned
+     */
     int IsSpawned(lua_State* L, GameObject* go)
     {
         Eluna::Push(L, go->isSpawned());
         return 1;
     }
 
+    /**
+     * Returns 'true' if the &GameObject is a transport
+     *
+     * @return bool isTransport
+     */
     int IsTransport(lua_State* L, GameObject* go)
     {
         Eluna::Push(L, go->IsTransport());
         return 1;
     }
 
+    /**
+     * Returns 'true' if the &GameObject is active
+     *
+     * @return bool isActiveObject
+     */
     int IsActive(lua_State* L, GameObject* go)
     {
         Eluna::Push(L, go->isActiveObject());
@@ -46,26 +66,74 @@ namespace LuaGameObject
     return 1;
     }*/
 
-    /* GETTERS */
+    /**
+     * Returns display Id of the &GameObject
+     *
+     * @return uint32 displayId
+     */
     int GetDisplayId(lua_State* L, GameObject* go)
     {
         Eluna::Push(L, go->GetDisplayId());
         return 1;
     }
 
+    /**
+     * Returns the state of a &GameObject
+     * Below are client side GOStates off of 3.3.5a
+     *
+     * <pre>
+     * enum GOState
+     * {
+     *     GO_STATE_ACTIVE             = 0,                        // show in world as used and not reset (closed door open)
+     *     GO_STATE_READY              = 1,                        // show in world as ready (closed door close)
+     *     GO_STATE_ACTIVE_ALTERNATIVE = 2                         // show in world as used in alt way and not reset (closed door open by cannon fire)
+     *  };
+     * </pre>
+     *
+     * @return uint32 goState
+     */
     int GetGoState(lua_State* L, GameObject* go)
     {
         Eluna::Push(L, go->GetGoState());
         return 1;
     }
 
+    /**
+     * Returns the loot state of a &GameObject
+     * Below are Loot States off of 3.3.5a
+     *
+     * <pre>
+     * enum LootState
+     * {
+     *     GO_NOT_READY = 0,
+     *     GO_READY,                                               // can be ready but despawned, and then not possible activate until spawn
+     *     GO_ACTIVATED,
+     *     GO_JUST_DEACTIVATED
+     * };
+     * </pre>
+     *
+     * @return uint32 lootState
+     */
     int GetLootState(lua_State* L, GameObject* go)
     {
         Eluna::Push(L, go->getLootState());
         return 1;
     }
 
-    /* SETTERS */
+    /**
+     * Sets the state of a &GameObject
+     *
+     * <pre>
+     * enum GOState
+     * {
+     *     GO_STATE_ACTIVE             = 0,                        // show in world as used and not reset (closed door open)
+     *     GO_STATE_READY              = 1,                        // show in world as ready (closed door close)
+     *     GO_STATE_ACTIVE_ALTERNATIVE = 2                         // show in world as used in alt way and not reset (closed door open by cannon fire)
+     *  };
+     * </pre>
+     *
+     * @param uint32 state : all available go states can be seen above
+     */
     int SetGoState(lua_State* L, GameObject* go)
     {
         uint32 state = Eluna::CHECKVAL<uint32>(L, 2, 0);
@@ -80,6 +148,22 @@ namespace LuaGameObject
         return 0;
     }
 
+    /**
+     * Sets the loot state of a &GameObject
+     * Below are Loot States off of 3.3.5a
+     *
+     * <pre>
+     * enum LootState
+     * {
+     *     GO_NOT_READY = 0,
+     *     GO_READY,                                               // can be ready but despawned, and then not possible activate until spawn
+     *     GO_ACTIVATED,
+     *     GO_JUST_DEACTIVATED
+     * };
+     * </pre>
+     *
+     * @param uint32 state : all available loot states can be seen above
+     */
     int SetLootState(lua_State* L, GameObject* go)
     {
         uint32 state = Eluna::CHECKVAL<uint32>(L, 2, 0);
@@ -96,13 +180,21 @@ namespace LuaGameObject
         return 0;
     }
 
-    /* OTHER */
+    /**
+     * Saves &GameObject to the database
+     *
+     */
     int SaveToDB(lua_State* /*L*/, GameObject* go)
     {
         go->SaveToDB();
         return 0;
     }
 
+    /**
+     * Removes &GameObject from the world
+     *
+     * @param bool deleteFromDB : if true, it will delete the go from the database
+     */
     int RemoveFromWorld(lua_State* L, GameObject* go)
     {
         bool deldb = Eluna::CHECKVAL<bool>(L, 2, false);
@@ -112,6 +204,14 @@ namespace LuaGameObject
         return 0;
     }
 
+    /**
+     * Registers a event to the &GameObject
+     *
+     * @param function function : function to register the event with
+     * @param uint32 delay : set time in milliseconds for the event to trigger
+     * @param uint32 repeats : how many times for the event to repeat, 0 is infinite
+     * @return int32 functionReference
+     */
     int RegisterEvent(lua_State* L, GameObject* go)
     {
         luaL_checktype(L, 2, LUA_TFUNCTION);
@@ -126,6 +226,11 @@ namespace LuaGameObject
         return 1;
     }
 
+    /**
+     * Removes event from a &GameObject by the specified event Id
+     *
+     * @param int32 eventId : event Id to remove
+     */
     int RemoveEventById(lua_State* L, GameObject* go)
     {
         int eventId = Eluna::CHECKVAL<int>(L, 2);
@@ -133,12 +238,21 @@ namespace LuaGameObject
         return 0;
     }
 
+    /**
+     * Removes all events from a &GameObject
+     *
+     */
     int RemoveEvents(lua_State* /*L*/, GameObject* go)
     {
         sEluna->m_EventMgr->RemoveEvents(&go->m_Events);
         return 0;
     }
 
+    /**
+     * Changes the state of a &GameObject to a door or button
+     *
+     * @param uint32 delay : cooldown time to restore the go
+     */
     int UseDoorOrButton(lua_State* L, GameObject* go)
     {
         uint32 delay = Eluna::CHECKVAL<uint32>(L, 2, 0);
@@ -147,6 +261,11 @@ namespace LuaGameObject
         return 0;
     }
 
+    /**
+     * Despawns a &GameObject
+     *
+     * @param uint32 delay : time of despawn
+     */
     int Despawn(lua_State* L, GameObject* go)
     {
         uint32 delay = Eluna::CHECKVAL<uint32>(L, 2, 1);
@@ -158,6 +277,11 @@ namespace LuaGameObject
         return 0;
     }
 
+    /**
+     * Respawns a &GameObject
+     *
+     * @param uint32 delay : time of respawn
+     */
     int Respawn(lua_State* L, GameObject* go)
     {
         uint32 delay = Eluna::CHECKVAL<uint32>(L, 2, 1);
