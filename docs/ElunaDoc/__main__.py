@@ -90,42 +90,25 @@ if __name__ == '__main__':
                 method_names.append('&amp;' + class_.name + ':' + method.name)
 
         def link_parser(content):
-            # Split the content into small tokens.
-            tokens = content.split()
-            # The content will be reassembled from the parsed tokens.
-            content = ''
+            # Replace all occurrencies of &Class:Function and then &Class with a link to given func or class
 
-            for token in tokens:
-                # Ignore tokens that don't start with "&amp;".
-                if not token.startswith('&amp;'):
-                    content += token + ' '
-                    continue
+            for name in method_names:
+                # Take the "amp;" off the front of the method's name.
+                full_name = name[len('&amp;'):]
+                # Split "Class:Method" into "Class" and "Method".
+                class_name, method_name = full_name.split(':')
+                url = '{}{}/{}.html'.format(('../' * level), class_name, method_name)
+                # Replace occurrencies of &Class:Method with the url created
+                content = content.replace(name, '<a class="fn" href="{}">{}</a>'.format(url, full_name))
 
-                # Try to find a matching class.
-                for class_name in class_names:
-                    if token.startswith(class_name):
-                        # Take the "&amp;" off the front of the token and class's name.
-                        token = token[len('&amp;'):]
-                        class_name = class_name[len('&amp;'):]
-                        url = '{}{}/index.html'.format(('../' * level), class_name)
-                        token = '<a class="mod" href="{}">{}</a>'.format(url, token)
-                        break
+            for name in class_names:
+                # Take the "&amp;" off the front of the class's name.
+                class_name = name[len('&amp;'):]
+                url = '{}{}/index.html'.format(('../' * level), class_name)
+                # Replace occurrencies of &Class:Method with the url created
+                content = content.replace(name, '<a class="mod" href="{}">{}</a>'.format(url, class_name))
 
-                # No matching class, try to find a method.
-                else:
-                    for method_name in method_names:
-                        if token.startswith(method_name):
-                            # Take the "amp;" off the front of the token.
-                            full_name = token[len('&amp;'):]
-                            # Split "Class:Method" into "Class" and "Method".
-                            class_name, method_name = method_name.split(':')
-                            url = '{}{}/{}.html'.format(('../' * level), class_name, method_name)
-                            token = '<a class="fn" href="{}">{}</a>'.format(url, full_name)
-                            break
-
-                content += token + ' '
-
-            return content[:-1]  # Strip off the last space.
+            return content
 
         # Links to the "Programming in Lua" documentation for each Lua type.
         lua_type_documentation = {
