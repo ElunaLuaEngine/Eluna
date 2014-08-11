@@ -12,7 +12,7 @@ namespace LuaSpell
     /**
      * Returns 'true' if the &Spell is automatically repeating, false otherwise.
      *
-     * @return boolean isAutoRepeating
+     * @return bool isAutoRepeating
      */
     int IsAutoRepeat(lua_State* L, Spell* spell)
     {
