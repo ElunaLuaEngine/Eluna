@@ -433,6 +433,19 @@ namespace LuaWorldObject
         return 1;
     }
 
+    /**
+     * Get the distance from this &WorldObject to another &WorldObject, or from this &WorldObject to a point.
+     *
+     * @proto dist = (obj)
+     * @proto dist = (x, y, z)
+     *
+     * @param &WorldObject obj
+     * @param float x : the X-coordinate of the point
+     * @param float y : the Y-coordinate of the point
+     * @param float z : the Z-coordinate of the point
+     *
+     * @return float dist : the distance in yards
+     */
     int GetDistance(lua_State* L, WorldObject* obj)
     {
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);

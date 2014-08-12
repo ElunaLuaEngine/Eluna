@@ -40,20 +40,11 @@
         <h2 id="synopsis" class='section-header'>
             <a href="#synopsis">Synopsis</a>
         </h2>
+        {%- for prototype in current_method.prototypes %}
         <p>
-            <code>
-                {%- for returned in current_method.returned -%}
-                    {{ returned.name }} {{- ', ' if not loop.last }}
-                {%- endfor %}
-                {{- ' = ' if current_method.returned|length > 0 }}
-
-                {{- current_class.name -}} : {{- current_method.name -}} (
-
-                {%- for param in current_method.parameters -%}
-                    {{ param.name }} {{- ', ' if not loop.last }}
-                {%- endfor -%}
-            )</code>
+            <code>{{ prototype }}</code>
         </p>
+        {%- endfor %}
 
         <h2 id="arguments" class='section-header'>
             <a href="#arguments">Arguments</a>

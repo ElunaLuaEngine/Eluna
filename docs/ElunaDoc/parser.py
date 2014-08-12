@@ -53,9 +53,10 @@ class ParameterDoc(object):
 
 class MethodDoc(object):
     """The documentation data of an Eluna method."""
-    @params(self=object, name=unicode, description=unicode, parameters=[ParameterDoc], returned=[ParameterDoc])
-    def __init__(self, name, description, parameters, returned):
+    @params(self=object, name=unicode, description=unicode, prototypes=[unicode], parameters=[ParameterDoc], returned=[ParameterDoc])
+    def __init__(self, name, description, prototypes, parameters, returned):
         self.name = name
+        self.prototypes = prototypes
         self.parameters = parameters
         self.returned = returned
 
@@ -120,6 +121,11 @@ class ClassParser(object):
                                   ([&\w]+)\s(\w+)
                                   (?:\s:\s(.+))?
                                   """, re.X)
+    proto_regex = re.compile(r"""\s*\*\s@proto\s
+                                 ([\w\s,]+)?          # The list of arguments.
+                                 (?:=\s)?             # An equals sign and a space separate the args and returns.
+                                 (?:\(([\w\s,]+)\))?  # The list of return values, in parens.
+                                 """, re.X)
 
     comment_end_regex = re.compile(r"\s*\*/")  # The end of the comment portion, i.e. */
     end_regex = re.compile(r"\s*int\s(\w+)\s*\(")  # The end of the documentation, i.e. int MethodName(
@@ -144,6 +150,7 @@ class ClassParser(object):
         self.params = []
         self.returned = []
         self.method_name = None
+        self.prototypes = []
 
     def handle_class_body(self, match):
         text = match.group(1)
@@ -161,9 +168,33 @@ class ClassParser(object):
         data_type, name, description = match.group(1), match.group(2), match.group(3)
         self.returned.append(ParameterDoc(name, data_type, description))
 
+    def handle_proto(self, match):
+        return_values, parameters = match.group(1), match.group(2)
+        prototype = '{0}= {1}:{{0}}( {2} )'.format(return_values, self.class_name, parameters)
+        self.prototypes.append(prototype)
+
     def handle_end(self, match):
         self.method_name = match.group(1)
-        self.methods.append(MethodDoc(self.method_name, self.description, self.params, self.returned))
+
+        # If there's no prototype, make one with all params and returns.
+        if self.prototypes:
+            parameters = ', '.join([param.name for param in self.params])
+            # Only pad with spaces when there are no parameters.
+            if parameters != '':
+                parameters = ' ' + parameters + ' '
+
+            if self.returned:
+                return_values = ', '.join([param.name for param in self.returned])
+                prototype = '{0} = {1}:{2}({3})'.format(return_values, self.class_name, self.method_name, parameters)
+            else:
+                prototype = '{0}:{1}({2})'.format(self.class_name, self.method_name, parameters)
+
+            self.prototypes.append(prototype)
+        else:
+            # Format the method name into each prototype.
+            self.prototypes = [proto.format(self.method_name) for proto in self.prototypes]
+
+        self.methods.append(MethodDoc(self.method_name, self.description, self.prototypes, self.params, self.returned))
 
     # Table of which handler is used to handle each regular expressions.
     regex_handlers = {
@@ -174,6 +205,7 @@ class ClassParser(object):
         body_regex: handle_body,
         param_regex: handle_param,
         return_regex: handle_return,
+        proto_regex: handle_proto,
         comment_end_regex: None,
         end_regex: handle_end,
     }
@@ -185,9 +217,10 @@ class ClassParser(object):
         class_start_regex: [class_end_regex, class_body_regex],
         class_body_regex: [class_end_regex, class_body_regex],
         class_end_regex: [],
-        start_regex: [param_regex, return_regex, comment_end_regex, body_regex],
-        body_regex: [param_regex, return_regex, comment_end_regex, body_regex],
-        param_regex: [param_regex, return_regex, comment_end_regex],
+        start_regex: [param_regex, return_regex, proto_regex, comment_end_regex, body_regex],
+        body_regex: [param_regex, return_regex, proto_regex, comment_end_regex, body_regex],
+        proto_regex: [param_regex, return_regex, proto_regex, comment_end_regex, body_regex],
+        param_regex: [param_regex, return_regex, comment_end_regex, body_regex],
         return_regex: [return_regex, comment_end_regex],
         comment_end_regex: [end_regex],
         end_regex: [],
