@@ -887,8 +887,11 @@ void Eluna::OnMapChanged(Player* player)
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
 {
-    if (lang == LANG_ADDON && OnAddonMessage(pPlayer, type, msg, NULL, NULL, NULL, NULL))
+    if (lang == LANG_ADDON)
+    {
+        OnAddonMessage(pPlayer, type, msg, NULL, NULL, NULL, NULL);
         return true;
+    }
     bool result = true;
     EVENT_BEGIN(PlayerEventBindings, PLAYER_EVENT_ON_CHAT, return result);
     Push(L, pPlayer);
@@ -901,8 +904,10 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
         if (lua_isnoneornil(L, i))
             continue;
         if (lua_isstring(L, i))
+        {
             if (const char* c_str = CHECKVAL<const char*>(L, i, NULL))
                 msg = std::string(c_str);
+        }
         else if (lua_isboolean(L, i) && !CHECKVAL<bool>(L, i, true))
         {
             result = false;
@@ -915,8 +920,11 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Group* pGroup)
 {
-    if (lang == LANG_ADDON && OnAddonMessage(pPlayer, type, msg, NULL, NULL, pGroup, NULL))
+    if (lang == LANG_ADDON)
+    {
+        OnAddonMessage(pPlayer, type, msg, NULL, NULL, pGroup, NULL);
         return true;
+    }
     bool result = true;
     EVENT_BEGIN(PlayerEventBindings, PLAYER_EVENT_ON_GROUP_CHAT, return result);
     Push(L, pPlayer);
@@ -930,8 +938,10 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
         if (lua_isnoneornil(L, i))
             continue;
         if (lua_isstring(L, i))
+        {
             if (const char* c_str = CHECKVAL<const char*>(L, i, NULL))
                 msg = std::string(c_str);
+        }
         else if (lua_isboolean(L, i) && !CHECKVAL<bool>(L, i, true))
         {
             result = false;
@@ -944,8 +954,11 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Guild* pGuild)
 {
-    if (lang == LANG_ADDON && OnAddonMessage(pPlayer, type, msg, NULL, pGuild, NULL, NULL))
+    if (lang == LANG_ADDON)
+    {
+        OnAddonMessage(pPlayer, type, msg, NULL, pGuild, NULL, NULL);
         return true;
+    }
     bool result = true;
     EVENT_BEGIN(PlayerEventBindings, PLAYER_EVENT_ON_GUILD_CHAT, return result);
     Push(L, pPlayer);
@@ -959,8 +972,10 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
         if (lua_isnoneornil(L, i))
             continue;
         if (lua_isstring(L, i))
+        {
             if (const char* c_str = CHECKVAL<const char*>(L, i, NULL))
                 msg = std::string(c_str);
+        }
         else if (lua_isboolean(L, i) && !CHECKVAL<bool>(L, i, true))
         {
             result = false;
@@ -973,8 +988,11 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Channel* pChannel)
 {
-    if (lang == LANG_ADDON && OnAddonMessage(pPlayer, type, msg, NULL, NULL, NULL, pChannel))
+    if (lang == LANG_ADDON)
+    {
+        OnAddonMessage(pPlayer, type, msg, NULL, NULL, NULL, pChannel);
         return true;
+    }
     bool result = true;
     EVENT_BEGIN(PlayerEventBindings, PLAYER_EVENT_ON_CHANNEL_CHAT, return result);
     Push(L, pPlayer);
@@ -988,8 +1006,10 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
         if (lua_isnoneornil(L, i))
             continue;
         if (lua_isstring(L, i))
+        {
             if (const char* c_str = CHECKVAL<const char*>(L, i, NULL))
                 msg = std::string(c_str);
+        }
         else if (lua_isboolean(L, i) && !CHECKVAL<bool>(L, i, true))
         {
             result = false;
@@ -1002,8 +1022,11 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver)
 {
-    if (lang == LANG_ADDON && OnAddonMessage(pPlayer, type, msg, pReceiver, NULL, NULL, NULL))
+    if (lang == LANG_ADDON)
+    {
+        OnAddonMessage(pPlayer, type, msg, pReceiver, NULL, NULL, NULL);
         return true;
+    }
     bool result = true;
     EVENT_BEGIN(PlayerEventBindings, PLAYER_EVENT_ON_WHISPER, return result);
     Push(L, pPlayer);
@@ -1017,8 +1040,10 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
         if (lua_isnoneornil(L, i))
             continue;
         if (lua_isstring(L, i))
+        {
             if (const char* c_str = CHECKVAL<const char*>(L, i, NULL))
                 msg = std::string(c_str);
+        }
         else if (lua_isboolean(L, i) && !CHECKVAL<bool>(L, i, true))
         {
             result = false;
