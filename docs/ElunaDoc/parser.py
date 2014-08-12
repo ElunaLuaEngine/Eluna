@@ -177,7 +177,7 @@ class ClassParser(object):
         self.method_name = match.group(1)
 
         # If there's no prototype, make one with all params and returns.
-        if self.prototypes:
+        if not self.prototypes:
             parameters = ', '.join([param.name for param in self.params])
             # Only pad with spaces when there are no parameters.
             if parameters != '':
