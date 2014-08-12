@@ -9,7 +9,12 @@
 
 namespace LuaGroup
 {
-    /* BOOLEAN */
+    /**
+     * Returns 'true' if the player is the &Group leader
+     *
+     * @param uint64 guid : guid of a possible leader
+     * @return bool isLeader
+     */
     int IsLeader(lua_State* L, Group* group)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
@@ -17,24 +22,45 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Returns 'true' if the &Group is full
+     *
+     * @return bool isFull
+     */
     int IsFull(lua_State* L, Group* group)
     {
         Eluna::Push(L, group->IsFull());
         return 1;
     }
 
+    /**
+     * Returns 'true' if the &Group is a raid &Group
+     *
+     * @return bool isRaid
+     */
     int IsRaidGroup(lua_State* L, Group* group)
     {
         Eluna::Push(L, group->isRaidGroup());
         return 1;
     }
 
+    /**
+     * Returns 'true' if the &Group is a battleground &Group
+     *
+     * @return bool isBG
+     */
     int IsBGGroup(lua_State* L, Group* group)
     {
         Eluna::Push(L, group->isBGGroup());
         return 1;
     }
 
+    /**
+     * Returns 'true' if the player is a member of this &Group
+     *
+     * @param Player player : player to check
+     * @return bool isMember
+     */
     int IsMember(lua_State* L, Group* group)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
@@ -42,6 +68,12 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Returns 'true' if the player is an assistant of this &Group
+     *
+     * @param Player player : player to check
+     * @return bool isAssistant
+     */
     int IsAssistant(lua_State* L, Group* group)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
@@ -50,6 +82,13 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Returns 'true' if the players are in the same subgroup in this &Group
+     *
+     * @param Player player1 : first player to check
+     * @param Player player2 : second player to check
+     * @return bool sameSubGroup
+     */
     int SameSubGroup(lua_State* L, Group* group)
     {
         Player* player1 = Eluna::CHECKOBJ<Player>(L, 2);
@@ -58,6 +97,12 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Returns 'true' if the subgroup has free slots in this &Group
+     *
+     * @param uint8 subGroup : subGroup ID to check
+     * @return bool hasFreeSlot
+     */
     int HasFreeSlotSubGroup(lua_State* L, Group* group)
     {
         uint8 subGroup = Eluna::CHECKVAL<uint8>(L, 2);
@@ -65,6 +110,12 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Returns 'true' if the &Group invite was successful
+     *
+     * @param Player player : player to invite
+     * @return bool invited
+     */
     int AddInvite(lua_State* L, Group* group)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
@@ -85,7 +136,11 @@ namespace LuaGroup
     return 1;
     }*/
 
-    /* GETTERS */
+    /**
+     * Returns a table of the players in this &Group
+     *
+     * @return int table
+     */
     int GetMembers(lua_State* L, Group* group)
     {
         lua_newtable(L);
@@ -113,6 +168,11 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Returns &Group leader GUID
+     *
+     * @return uint64 leaderGUID
+     */
     int GetLeaderGUID(lua_State* L, Group* group)
     {
 #ifndef TRINITY
@@ -123,6 +183,11 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Finds and returns a &Group leader by their GUID
+     *
+     * @return Player leader
+     */
     int GetLeader(lua_State* L, Group* group)
     {
 #ifndef TRINITY
@@ -133,6 +198,11 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Returns the &Group's GUID
+     *
+     * @return uint64 groupGUID
+     */
     int GetGUID(lua_State* L, Group* group)
     {
 #ifdef CLASSIC
@@ -143,6 +213,12 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Returns a &Group member's GUID by their name
+     *
+     * @param const char* name : the player's name
+     * @return uint64 memberGUID
+     */
     int GetMemberGUID(lua_State* L, Group* group)
     {
         const char* name = Eluna::CHECKVAL<const char*>(L, 2);
@@ -154,12 +230,23 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Returns the member count of this &Group
+     *
+     * @return uint32 memberCount
+     */
     int GetMembersCount(lua_State* L, Group* group)
     {
         Eluna::Push(L, group->GetMembersCount());
         return 1;
     }
 
+    /**
+     * Returns the player's subgroup ID of this &Group
+     *
+     * @param Player player : the player to check
+     * @return uint8 subGroupID
+     */
     int GetMemberGroup(lua_State* L, Group* group)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
@@ -168,7 +255,11 @@ namespace LuaGroup
         return 1;
     }
 
-    /* OTHER */
+    /**
+     * Sets the leader of this &Group
+     *
+     * @param Player leader : the player leader to change
+     */
     int SetLeader(lua_State* L, Group* group)
     {
         Player* leader = Eluna::CHECKOBJ<Player>(L, 2);
@@ -177,7 +268,13 @@ namespace LuaGroup
         return 0;
     }
 
-    // SendPacket(packet, sendToPlayersInBattleground[, ignoreguid])
+    /**
+     * Sends a specified packet to this &Group
+     *
+     * @param WorldPacket data : the packet data
+     * @param bool ignorePlayersInBg : ignores players in a battleground
+     * @param uint64 ignore : ignore a player by their GUID
+     */
     int SendPacket(lua_State* L, Group* group)
     {
         WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
@@ -188,6 +285,23 @@ namespace LuaGroup
         return 0;
     }
 
+    /**
+     * Removes a member from this &Group and returns 'true' if successful
+     *
+     * <pre>
+     * enum RemoveMethod
+     * {
+     *     GROUP_REMOVEMETHOD_DEFAULT  = 0,
+     *     GROUP_REMOVEMETHOD_KICK     = 1,
+     *     GROUP_REMOVEMETHOD_LEAVE    = 2,
+     *     GROUP_REMOVEMETHOD_KICK_LFG = 3
+     * };
+     * </pre>
+     *
+     * @param Player player : the player to remove
+     * @param uint32 method : the remove method
+     * @return bool removed
+     */
     int RemoveMember(lua_State* L, Group* group)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
@@ -201,18 +315,32 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Disbands this &Group
+     *
+     */
     int Disband(lua_State* /*L*/, Group* group)
     {
         group->Disband();
         return 0;
     }
 
+    /**
+     * Converts this &Group to a raid &Group
+     *
+     */
     int ConvertToRaid(lua_State* /*L*/, Group* group)
     {
         group->ConvertToRaid();
         return 0;
     }
 
+    /**
+     * Sets the member's subGroup
+     *
+     * @param Player player : player to change
+     * @param uint8 groupID : the subGroup's ID
+     */
     int SetMembersGroup(lua_State* L, Group* group)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
@@ -222,6 +350,13 @@ namespace LuaGroup
         return 0;
     }
 
+    /**
+     * Sets the target icon of an object for the &Group
+     *
+     * @param uint8 icon : the icon (Skull, Square, etc)
+     * @param uint64 target : GUID of the icon target, 0 is to clear the icon
+     * @param uint64 setter : GUID of the icon setter
+     */
     int SetTargetIcon(lua_State* L, Group* group)
     {
         uint8 icon = Eluna::CHECKVAL<uint8>(L, 2);

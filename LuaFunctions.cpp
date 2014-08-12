@@ -977,38 +977,38 @@ ElunaRegister<Quest> QuestMethods[] =
 ElunaRegister<Group> GroupMethods[] =
 {
     // Getters
-    { "GetMembers", &LuaGroup::GetMembers },                      // :GetMembers() - returns a table the players in this group. (Online?)
+    { "GetMembers", &LuaGroup::GetMembers },
     { "GetLeaderGUID", &LuaGroup::GetLeaderGUID },
     { "GetLeader", &LuaGroup::GetLeader },
     { "GetGUID", &LuaGroup::GetGUID },
-    { "GetMemberGroup", &LuaGroup::GetMemberGroup },              // :GetMemberGroup(player) - Returns the player's subgroup ID
-    { "GetMemberGUID", &LuaGroup::GetMemberGUID },                // :GetMemberGUID("name") - Returns the member's GUID
-    { "GetMembersCount", &LuaGroup::GetMembersCount },            // :GetMembersCount() - Returns the member count of the group
+    { "GetMemberGroup", &LuaGroup::GetMemberGroup },
+    { "GetMemberGUID", &LuaGroup::GetMemberGUID },
+    { "GetMembersCount", &LuaGroup::GetMembersCount },
 
     // Setters
-    { "SetLeader", &LuaGroup::SetLeader },                     // :SetLeader(Player) - Sets the player as the new leader
-    { "SetMembersGroup", &LuaGroup::SetMembersGroup },         // :ChangeMembersGroup(player, subGroup) - Changes the member's subgroup
-    { "SetTargetIcon", &LuaGroup::SetTargetIcon },                // :SetTargetIcon(icon, targetguid[, setterguid]) - Sets target's icon for group. target 0 to clear.
+    { "SetLeader", &LuaGroup::SetLeader },
+    { "SetMembersGroup", &LuaGroup::SetMembersGroup },
+    { "SetTargetIcon", &LuaGroup::SetTargetIcon },
 
     // Boolean
-    { "IsLeader", &LuaGroup::IsLeader },                          // :IsLeader(GUID)
-    { "AddInvite", &LuaGroup::AddInvite },                        // :AddInvite(player) - Adds a an invite to player. Returns true if succesful
-    { "RemoveMember", &LuaGroup::RemoveMember },                  // :RemoveMember(player) - Removes player from group. Returns true on success
-    { "Disband", &LuaGroup::Disband },                            // :Disband() - Disbands the group
-    { "IsFull", &LuaGroup::IsFull },                              // :IsFull() - Returns true if the group is full
-    // {"IsLFGGroup", &LuaGroup::IsLFGGroup},                   // :IsLFGGroup() - Returns true if the group is an LFG group
-    { "IsRaidGroup", &LuaGroup::IsRaidGroup },                    // :IsRaidGroup() - Returns true if the group is a raid group
-    { "IsBGGroup", &LuaGroup::IsBGGroup },                        // :IsBGGroup() - Returns true if the group is a battleground group
-    // {"IsBFGroup", &LuaGroup::IsBFGroup},                     // :IsBFGroup() - Returns true if the group is a battlefield group
-    { "IsMember", &LuaGroup::IsMember },                          // :IsMember(player) - Returns true if the player is a member of the group
-    { "IsAssistant", &LuaGroup::IsAssistant },                    // :IsAssistant(player) - returns true if the player is an assistant in the group
-    { "SameSubGroup", &LuaGroup::SameSubGroup },                  // :SameSubGroup(player1, player2) - Returns true if the players are in the same subgroup in the group
-    { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },    // :HasFreeSlotSubGroup(subGroup) - Returns true if the subgroupID has free slots
+    { "IsLeader", &LuaGroup::IsLeader },
+    { "AddInvite", &LuaGroup::AddInvite },
+    { "RemoveMember", &LuaGroup::RemoveMember },
+    { "Disband", &LuaGroup::Disband },
+    { "IsFull", &LuaGroup::IsFull },
+    // {"IsLFGGroup", &LuaGroup::IsLFGGroup},                     // :IsLFGGroup() - Returns true if the group is an LFG group
+    { "IsRaidGroup", &LuaGroup::IsRaidGroup },
+    { "IsBGGroup", &LuaGroup::IsBGGroup },
+    // {"IsBFGroup", &LuaGroup::IsBFGroup},                       // :IsBFGroup() - Returns true if the group is a battlefield group
+    { "IsMember", &LuaGroup::IsMember },
+    { "IsAssistant", &LuaGroup::IsAssistant },
+    { "SameSubGroup", &LuaGroup::SameSubGroup },
+    { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },
 
     // Other
-    { "SendPacket", &LuaGroup::SendPacket },                      // :SendPacket(packet, sendToPlayersInBattleground[, ignoreguid]) - Sends a specified packet to the group with the choice (true/false) to send it to players in a battleground. Optionally ignores given player guid
-    // {"ConvertToLFG", &LuaGroup::ConvertToLFG},               // :ConvertToLFG() - Converts the group to an LFG group
-    { "ConvertToRaid", &LuaGroup::ConvertToRaid },                // :ConvertToRaid() - Converts the group to a raid group
+    { "SendPacket", &LuaGroup::SendPacket },
+    // {"ConvertToLFG", &LuaGroup::ConvertToLFG},                 // :ConvertToLFG() - Converts the group to an LFG group
+    { "ConvertToRaid", &LuaGroup::ConvertToRaid },
 
     { NULL, NULL },
 };
