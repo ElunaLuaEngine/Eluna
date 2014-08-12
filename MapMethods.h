@@ -133,7 +133,7 @@ namespace LuaMap
     }
 
     /**
-     * Returns the instance id of the &Map
+     * Returns the instance ID of the &Map
      *
      * @return uint32 instanceId
      */
@@ -156,7 +156,7 @@ namespace LuaMap
     }
 
     /**
-     * Returns the id of the &Map
+     * Returns the ID of the &Map
      *
      * @return uint32 mapId
      */
@@ -167,7 +167,7 @@ namespace LuaMap
     }
 
     /**
-     * Returns the area id of the &Map at the specified X, Y and Z coordinates
+     * Returns the area ID of the &Map at the specified X, Y and Z coordinates
      *
      * @param float x
      * @param float y
@@ -188,6 +188,11 @@ namespace LuaMap
         return 1;
     }
 
+    /**
+     * Returns a &WorldObject by it's guid from the map if it is spawned
+     *
+     * @param uint64 guid
+     */
     int GetWorldObject(lua_State* L, Map* map)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);

@@ -138,7 +138,7 @@ namespace LuaSpell
     }
 
     /**
-     * Sets the &Spell to automatically repeat:
+     * Sets the &Spell to automatically repeat.
      *
      * @param bool repeat : set variable to 'true' for spell to automatically repeat
      */

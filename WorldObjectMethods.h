@@ -45,7 +45,7 @@ namespace LuaWorldObject
 #endif
 
     /**
-     * Returns the current instance id of the &WorldObject
+     * Returns the current instance ID of the &WorldObject
      *
      * @return uint32 instanceId
      */
@@ -56,7 +56,7 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns the current area id of the &WorldObject
+     * Returns the current area ID of the &WorldObject
      *
      * @return uint32 areaId
      */
@@ -67,7 +67,7 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns the current zone id of the &WorldObject
+     * Returns the current zone ID of the &WorldObject
      *
      * @return uint32 zoneId
      */
@@ -78,7 +78,7 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns the current map id of the &WorldObject
+     * Returns the current map ID of the &WorldObject
      *
      * @return uint32 mapId
      */
@@ -124,7 +124,7 @@ namespace LuaWorldObject
     /**
      * Returns the current orientation of the &WorldObject
      *
-     * @return float orientation
+     * @return float orientation / facing
      */
     int GetO(lua_State* L, WorldObject* obj)
     {
@@ -133,7 +133,7 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns the coordinates and orientation / facing of the &WorldObject
+     * Returns the coordinates and orientation of the &WorldObject
      *
      * @return float x : x coordinate of the &WorldObject
      * @return float y : y coordinate of the &WorldObject
@@ -152,7 +152,7 @@ namespace LuaWorldObject
     /**
      * Returns the nearest &Player object in sight of the &WorldObject or within the given range
      *
-     * @param float range = 533.33333 : optionally set range
+     * @param float range = 533.33333 : optionally set range. Default range is grid size
      *
      * @return &Player nearestPlayer
      */
@@ -175,12 +175,12 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns the nearest &GameObject object in sight of the &WorldObject or within the given range and/or with a specific entry id
+     * Returns the nearest &GameObject object in sight of the &WorldObject or within the given range and/or with a specific entry ID
      *
-     * @param float range = 533.33333 : optionally set range
-     * @param uint32 entryId = 0 : optionally set entry id of game object to find
+     * @param float range = 533.33333 : optionally set range. Default range is grid size
+     * @param uint32 entryId = 0 : optionally set entry ID of game object to find
      *
-     * @return &GameObject nearesGameObject
+     * @return &GameObject nearestGameObject
      */
     int GetNearestGameObject(lua_State* L, WorldObject* obj)
     {
@@ -202,12 +202,12 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns the nearest &Creature object in sight of the &WorldObject or within the given range and/or with a specific entry id
+     * Returns the nearest &Creature object in sight of the &WorldObject or within the given range and/or with a specific entry ID
      *
-     * @param float range = 533.33333 : optionally set range
-     * @param uint32 entryId = 0 : optionally set entry id of creature to find
+     * @param float range = 533.33333 : optionally set range. Default range is grid size
+     * @param uint32 entryId = 0 : optionally set entry ID of creature to find
      *
-     * @return &Creature nearesCreature
+     * @return &Creature nearestCreature
      */
     int GetNearestCreature(lua_State* L, WorldObject* obj)
     {
@@ -229,11 +229,11 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns a table of @Player objects in sight of the &WorldObject or within the given range
+     * Returns a table of &Player objects in sight of the &WorldObject or within the given range
      *
-     * @param float range = 533.33333 : optionally set range
+     * @param float range = 533.33333 : optionally set range. Default range is grid size
      *
-     * @return table playersInRange
+     * @return table playersInRange : table of &Players
      */
     int GetPlayersInRange(lua_State* L, WorldObject* obj)
     {
@@ -265,12 +265,12 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns a table of @Creature objects in sight of the &WorldObject or within the given range and/or with a specific entry id
+     * Returns a table of &Creature objects in sight of the &WorldObject or within the given range and/or with a specific entry ID
      *
-     * @param float range = 533.33333 : optionally set range
-     * @param uint32 entryId = 0 : optionally set entry id of creatures to find
+     * @param float range = 533.33333 : optionally set range. Default range is grid size
+     * @param uint32 entryId = 0 : optionally set entry ID of creatures to find
      *
-     * @return table creaturesInRange
+     * @return table creaturesInRange : table of &Creatures
      */
     int GetCreaturesInRange(lua_State* L, WorldObject* obj)
     {
@@ -303,12 +303,12 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns a table of @GameObject objects in sight of the &WorldObject or within the given range and/or with a specific entry id
+     * Returns a table of &GameObject objects in sight of the &WorldObject or within the given range and/or with a specific entry ID
      *
-     * @param float range = 533.33333 : optionally set range
-     * @param uint32 entryId = 0 : optionally set entry id of game objects to find
+     * @param float range = 533.33333 : optionally set range. Default range is grid size
+     * @param uint32 entryId = 0 : optionally set entry ID of game objects to find
      *
-     * @return table gameObjectsInRange
+     * @return table gameObjectsInRange : table of &GameObjects
      */
     int GetGameObjectsInRange(lua_State* L, WorldObject* obj)
     {
@@ -340,66 +340,93 @@ namespace LuaWorldObject
         return 1;
     }
 
+    /**
+     * Returns nearest &WorldObject in sight of the &WorldObject.
+     * The distance, type, entry and hostility requirements the &WorldObject must match can be passed.
+     *
+     * @param float range = 533.33333 : optionally set range. Default range is grid size
+     * @param &TypeMask type = 0 : the &TypeMask that the &WorldObject must be. This can contain multiple types. 0 will be ingored
+     * @param uint32 entry = 0 : the entry of the &WorldObject, 0 will be ingored
+     * @param uint32 hostile = 0 : specifies whether the &WorldObject needs to be 1 hostile, 2 friendly or 0 either
+     *
+     * @return &WorldObject worldObject
+     */
     int GetNearObject(lua_State* L, WorldObject* obj)
     {
-        bool nearest = Eluna::CHECKVAL<bool>(L, 2, true);
-        float range = Eluna::CHECKVAL<float>(L, 3, SIZE_OF_GRIDS);
-        uint16 type = Eluna::CHECKVAL<uint16>(L, 4, 0); // TypeMask
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 5, 0);
-        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 6, 0); // 0 none, 1 hostile, 2 friendly
+        float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
+        uint16 type = Eluna::CHECKVAL<uint16>(L, 3, 0); // TypeMask
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 4, 0);
+        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 5, 0); // 0 none, 1 hostile, 2 friendly
 
         float x, y, z;
         obj->GetPosition(x, y, z);
-        ElunaUtil::WorldObjectInRangeCheck checker(nearest, obj, range, type, entry, hostile);
-        if (nearest)
-        {
-            WorldObject* target = NULL;
+        ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, type, entry, hostile);
+
+        WorldObject* target = NULL;
 #ifndef TRINITY
-            MaNGOS::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
-            Cell::VisitAllObjects(obj, searcher, range);
+        MaNGOS::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
+        Cell::VisitAllObjects(obj, searcher, range);
 #else
-            Trinity::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-            obj->VisitNearbyObject(range, searcher);
+        Trinity::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        obj->VisitNearbyObject(range, searcher);
 #endif
 
-            Eluna::Push(L, target);
-            return 1;
-        }
-        else
-        {
-            std::list<WorldObject*> list;
-#ifndef TRINITY
-            MaNGOS::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
-            Cell::VisitAllObjects(obj, searcher, range);
-#else
-            Trinity::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-            obj->VisitNearbyObject(range, searcher);
-#endif
-
-            lua_newtable(L);
-            int tbl = lua_gettop(L);
-            uint32 i = 0;
-
-            for (std::list<WorldObject*>::const_iterator it = list.begin(); it != list.end(); ++it)
-            {
-                Eluna::Push(L, ++i);
-                Eluna::Push(L, *it);
-                lua_settable(L, tbl);
-            }
-
-            lua_settop(L, tbl);
-            return 1;
-        }
-
+        Eluna::Push(L, target);
         return 1;
     }
 
     /**
-     * Returns a &WorldObject based on its guid
+    * Returns a table of &WorldObjects in sight of the &WorldObject.
+    * The distance, type, entry and hostility requirements the &WorldObject must match can be passed.
+    *
+    * @param float range = 533.33333 : optionally set range. Default range is grid size
+    * @param &TypeMask type = 0 : the &TypeMask that the &WorldObject must be. This can contain multiple types. 0 will be ingored
+    * @param uint32 entry = 0 : the entry of the &WorldObject, 0 will be ingored
+    * @param uint32 hostile = 0 : specifies whether the &WorldObject needs to be 1 hostile, 2 friendly or 0 either
+    *
+    * @return table worldObjectList : table of &WorldObjects
+    */
+    int GetNearObjects(lua_State* L, WorldObject* obj)
+    {
+        float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
+        uint16 type = Eluna::CHECKVAL<uint16>(L, 3, 0); // TypeMask
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 4, 0);
+        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 5, 0); // 0 none, 1 hostile, 2 friendly
+
+        float x, y, z;
+        obj->GetPosition(x, y, z);
+        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, type, entry, hostile);
+
+        std::list<WorldObject*> list;
+#ifndef TRINITY
+        MaNGOS::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
+        Cell::VisitAllObjects(obj, searcher, range);
+#else
+        Trinity::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        obj->VisitNearbyObject(range, searcher);
+#endif
+
+        lua_newtable(L);
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (std::list<WorldObject*>::const_iterator it = list.begin(); it != list.end(); ++it)
+        {
+            Eluna::Push(L, ++i);
+            Eluna::Push(L, *it);
+            lua_settable(L, tbl);
+        }
+
+        lua_settop(L, tbl);
+        return 1;
+    }
+
+    /**
+     * Returns a &WorldObject based on it's guid if it is spawned
      *
      * @param uint64 guid
      *
-     * @return &WorldObject nearestPlayer
+     * @return &WorldObject worldObject
      */
     int GetWorldObject(lua_State* L, WorldObject* obj)
     {
@@ -434,7 +461,7 @@ namespace LuaWorldObject
     }
 
     /**
-     * Get the distance from this &WorldObject to another &WorldObject, or from this &WorldObject to a point.
+     * Returns the distance from this &WorldObject to another &WorldObject, or from this &WorldObject to a point.
      *
      * @proto dist = (obj)
      * @proto dist = (x, y, z)
@@ -461,6 +488,18 @@ namespace LuaWorldObject
         return 1;
     }
 
+    /**
+    * Returns a point relative to the &WorldObject.
+    * With distance set to 1 and angle set to 0, this will return a point 1 yard in front of the &WorldObject
+    *
+    * @param &WorldObject object
+    * @param float distance : specifies the distance of the point from the &WorldObject in yards
+    * @param float angle : specifies the angle of the point relative to the orientation / facing of the &WorldObject in radians
+    *
+    * @return float x
+    * @return float y
+    * @return float z
+    */
     int GetRelativePoint(lua_State* L, WorldObject* obj)
     {
         float dist = Eluna::CHECKVAL<float>(L, 2);
@@ -475,6 +514,19 @@ namespace LuaWorldObject
         return 3;
     }
 
+    /**
+     * Returns the angle between this &WorldObject and another &WorldObject or a point.
+     * The angle is the angle between two points and orientation will be ignored.
+     *
+     * @proto dist = (obj)
+     * @proto dist = (x, y)
+     *
+     * @param &WorldObject object
+     * @param float x
+     * @param float y
+     *
+     * @return float angle : angle in radians in range 0..2*pi
+     */
     int GetAngle(lua_State* L, WorldObject* obj)
     {
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
@@ -490,7 +542,11 @@ namespace LuaWorldObject
         return 1;
     }
 
-    /* OTHER */
+    /**
+     * Sends a &WorldPacket to &Players in sight of the &WorldObject.
+     *
+     * @param &WorldPacket packet
+     */
     int SendPacket(lua_State* L, WorldObject* obj)
     {
         WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
@@ -499,9 +555,9 @@ namespace LuaWorldObject
     }
 
     /**
-     * Summons a game object at specified location.
+     * Spawns a &GameObject at specified location.
      *
-     * @param uint32 entry : game object entry
+     * @param uint32 entry : &GameObject entry ID
      * @param float x
      * @param float y
      * @param float z
@@ -528,14 +584,14 @@ namespace LuaWorldObject
     /**
      * Spawns the creature at specified location.
      *
-     * @param uint32 entry : creature entry
+     * @param uint32 entry : &Creature's entry ID
      * @param float x
      * @param float y
      * @param float z
      * @param float o
      * @param TempSummonType spawnType : defines how and when the creature despawns
      * @param uint32 despawnTimer : despawn time in seconds
-     * @return &Creature
+     * @return &Creature spawnedCreature
      */
     int SpawnCreature(lua_State* L, WorldObject* obj)
     {

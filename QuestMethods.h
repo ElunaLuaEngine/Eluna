@@ -82,7 +82,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns entry id of the &Quest.
+     * Returns entry ID of the &Quest.
      *
      * @return uint32 entryId
      */
@@ -115,7 +115,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns the next &Quest entry id.
+     * Returns the next &Quest entry ID.
      *
      * @return int32 entryId
      */

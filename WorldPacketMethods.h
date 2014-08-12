@@ -46,7 +46,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads an int8 value of the &WorldPacket specified.
+     * Reads and returns an int8 value from the &WorldPacket.
      *
      * @return int8 value
      */
@@ -59,7 +59,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads a uint8 value of the &WorldPacket specified.
+     * Reads and returns a uint8 value from the &WorldPacket.
      *
      * @return uint8 value
      */
@@ -72,7 +72,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads an int16 value of the &WorldPacket specified.
+     * Reads and returns an int16 value from the &WorldPacket.
      *
      * @return int16 value
      */
@@ -85,7 +85,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads a uint16 value of the &WorldPacket specified.
+     * Reads and returns a uint16 value from the &WorldPacket.
      *
      * @return uint16 value
      */
@@ -98,7 +98,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads an int32 value of the &WorldPacket specified.
+     * Reads and returns an int32 value from the &WorldPacket.
      *
      * @return int32 value
      */
@@ -111,7 +111,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads a uint32 value of the &WorldPacket specified.
+     * Reads and returns a uint32 value from the &WorldPacket.
      *
      * @return uint32 value
      */
@@ -124,7 +124,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads a float value of the &WorldPacket specified.
+     * Reads and returns a float value from the &WorldPacket.
      *
      * @return float value
      */
@@ -137,7 +137,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads a double value of the &WorldPacket specified.
+     * Reads and returns a double value from the &WorldPacket.
      *
      * @return double value
      */
@@ -150,7 +150,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads a uint64 value of the &WorldPacket specified.
+     * Reads and returns a uint64 value from the &WorldPacket.
      *
      * @return uint64 value : value returned as string
      */
@@ -163,7 +163,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads a string value of the &WorldPacket specified.
+     * Reads and returns a string value from the &WorldPacket.
      *
      * @return string value
      */
