@@ -10,7 +10,7 @@
 namespace LuaGroup
 {
     /**
-     * Returns 'true' if the player is the &Group leader
+     * Returns 'true' if the player is the [Group] leader
      *
      * @param uint64 guid : guid of a possible leader
      * @return bool isLeader
@@ -23,7 +23,7 @@ namespace LuaGroup
     }
 
     /**
-     * Returns 'true' if the &Group is full
+     * Returns 'true' if the [Group] is full
      *
      * @return bool isFull
      */
@@ -34,7 +34,7 @@ namespace LuaGroup
     }
 
     /**
-     * Returns 'true' if the &Group is a raid &Group
+     * Returns 'true' if the [Group] is a raid [Group]
      *
      * @return bool isRaid
      */
@@ -45,7 +45,7 @@ namespace LuaGroup
     }
 
     /**
-     * Returns 'true' if the &Group is a battleground &Group
+     * Returns 'true' if the [Group] is a battleground [Group]
      *
      * @return bool isBG
      */
@@ -56,9 +56,9 @@ namespace LuaGroup
     }
 
     /**
-     * Returns 'true' if the player is a member of this &Group
+     * Returns 'true' if the [Player] is a member of this [Group]
      *
-     * @param Player player : player to check
+     * @param [Player] player : [Player] to check
      * @return bool isMember
      */
     int IsMember(lua_State* L, Group* group)
@@ -69,9 +69,9 @@ namespace LuaGroup
     }
 
     /**
-     * Returns 'true' if the player is an assistant of this &Group
+     * Returns 'true' if the [Player] is an assistant of this [Group]
      *
-     * @param Player player : player to check
+     * @param [Player] player : [Player] to check
      * @return bool isAssistant
      */
     int IsAssistant(lua_State* L, Group* group)
@@ -83,10 +83,10 @@ namespace LuaGroup
     }
 
     /**
-     * Returns 'true' if the players are in the same subgroup in this &Group
+     * Returns 'true' if the [Player]s are in the same subgroup in this [Group]
      *
-     * @param Player player1 : first player to check
-     * @param Player player2 : second player to check
+     * @param [Player] player1 : first [Player] to check
+     * @param [Player] player2 : second [Player] to check
      * @return bool sameSubGroup
      */
     int SameSubGroup(lua_State* L, Group* group)
@@ -98,7 +98,7 @@ namespace LuaGroup
     }
 
     /**
-     * Returns 'true' if the subgroup has free slots in this &Group
+     * Returns 'true' if the subgroup has free slots in this [Group]
      *
      * @param uint8 subGroup : subGroup ID to check
      * @return bool hasFreeSlot
@@ -111,9 +111,9 @@ namespace LuaGroup
     }
 
     /**
-     * Returns 'true' if the &Group invite was successful
+     * Returns 'true' if the [Group] invite was successful
      *
-     * @param Player player : player to invite
+     * @param [Player] player : [Player] to invite
      * @return bool invited
      */
     int AddInvite(lua_State* L, Group* group)
@@ -137,9 +137,9 @@ namespace LuaGroup
     }*/
 
     /**
-     * Returns a table of the players in this &Group
+     * Returns a table with the [Player]s in this [Group]
      *
-     * @return int table
+     * @return table groupPlayers : table of [Player]s
      */
     int GetMembers(lua_State* L, Group* group)
     {
@@ -169,7 +169,7 @@ namespace LuaGroup
     }
 
     /**
-     * Returns &Group leader GUID
+     * Returns [Group] leader GUID
      *
      * @return uint64 leaderGUID
      */
@@ -184,9 +184,9 @@ namespace LuaGroup
     }
 
     /**
-     * Finds and returns a &Group leader by their GUID
+     * Finds and returns a [Group] leader by their GUID if logged in
      *
-     * @return Player leader
+     * @return [Player] leader
      */
     int GetLeader(lua_State* L, Group* group)
     {
@@ -199,7 +199,7 @@ namespace LuaGroup
     }
 
     /**
-     * Returns the &Group's GUID
+     * Returns the [Group]'s GUID
      *
      * @return uint64 groupGUID
      */
@@ -214,9 +214,9 @@ namespace LuaGroup
     }
 
     /**
-     * Returns a &Group member's GUID by their name
+     * Returns a [Group] member's GUID by their name
      *
-     * @param const char* name : the player's name
+     * @param string name : the [Player]'s name
      * @return uint64 memberGUID
      */
     int GetMemberGUID(lua_State* L, Group* group)
@@ -231,7 +231,7 @@ namespace LuaGroup
     }
 
     /**
-     * Returns the member count of this &Group
+     * Returns the member count of this [Group]
      *
      * @return uint32 memberCount
      */
@@ -242,9 +242,9 @@ namespace LuaGroup
     }
 
     /**
-     * Returns the player's subgroup ID of this &Group
+     * Returns the [Player]'s subgroup ID of this [Group]
      *
-     * @param Player player : the player to check
+     * @param [Player] player : the [Player] to check
      * @return uint8 subGroupID
      */
     int GetMemberGroup(lua_State* L, Group* group)
@@ -256,9 +256,9 @@ namespace LuaGroup
     }
 
     /**
-     * Sets the leader of this &Group
+     * Sets the leader of this [Group]
      *
-     * @param Player leader : the player leader to change
+     * @param [Player] leader : the [Player] leader to change
      */
     int SetLeader(lua_State* L, Group* group)
     {
@@ -269,11 +269,11 @@ namespace LuaGroup
     }
 
     /**
-     * Sends a specified packet to this &Group
+     * Sends a specified [WorldPacket] to this [Group]
      *
-     * @param WorldPacket data : the packet data
-     * @param bool ignorePlayersInBg : ignores players in a battleground
-     * @param uint64 ignore : ignore a player by their GUID
+     * @param [WorldPacket] packet : the [WorldPacket] to send
+     * @param bool ignorePlayersInBg : ignores [Player]s in a battleground
+     * @param uint64 ignore : ignore a [Player] by their GUID
      */
     int SendPacket(lua_State* L, Group* group)
     {
@@ -286,7 +286,7 @@ namespace LuaGroup
     }
 
     /**
-     * Removes a member from this &Group and returns 'true' if successful
+     * Removes a member from this [Group] and returns 'true' if successful
      *
      * <pre>
      * enum RemoveMethod
@@ -298,8 +298,8 @@ namespace LuaGroup
      * };
      * </pre>
      *
-     * @param Player player : the player to remove
-     * @param uint32 method : the remove method
+     * @param [Player] player : the [Player] to remove
+     * @param [RemoveMethod] method : method used to remove the player
      * @return bool removed
      */
     int RemoveMember(lua_State* L, Group* group)
@@ -316,7 +316,7 @@ namespace LuaGroup
     }
 
     /**
-     * Disbands this &Group
+     * Disbands this [Group]
      *
      */
     int Disband(lua_State* /*L*/, Group* group)
@@ -326,7 +326,7 @@ namespace LuaGroup
     }
 
     /**
-     * Converts this &Group to a raid &Group
+     * Converts this [Group] to a raid [Group]
      *
      */
     int ConvertToRaid(lua_State* /*L*/, Group* group)
@@ -338,7 +338,7 @@ namespace LuaGroup
     /**
      * Sets the member's subGroup
      *
-     * @param Player player : player to change
+     * @param [Player] player : [Player] to move
      * @param uint8 groupID : the subGroup's ID
      */
     int SetMembersGroup(lua_State* L, Group* group)
@@ -351,7 +351,7 @@ namespace LuaGroup
     }
 
     /**
-     * Sets the target icon of an object for the &Group
+     * Sets the target icon of an object for the [Group]
      *
      * @param uint8 icon : the icon (Skull, Square, etc)
      * @param uint64 target : GUID of the icon target, 0 is to clear the icon
