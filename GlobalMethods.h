@@ -678,12 +678,12 @@ namespace LuaGlobalFunctions
      * @param uint32 entry : entry ID of the [Creature] or [GameObject]
      * @param uint32 mapID : map ID to spawn the [Creature] or [GameObject] in
      * @param uint32 instance ID : instance to put the [Creature] or [GameObject] in, 1 is default
-     * @param float x : X coordinate of the [Creature] or [GameObject]
-     * @param float y : Y coordinate of the [Creature] or [GameObject]
-     * @param float z : Z coordinate of the [Creature] or [GameObject]
-     * @param float o : O facing/orientation of the [Creature] or [GameObject]
+     * @param float x : x coordinate of the [Creature] or [GameObject]
+     * @param float y : y coordinate of the [Creature] or [GameObject]
+     * @param float z : z coordinate of the [Creature] or [GameObject]
+     * @param float o : o facing/orientation of the [Creature] or [GameObject]
      * @param bool save : optional to save the [Creature] or [GameObject] to the database on spawn
-     * @param uint32 durorresptime : Despawn time of the [Creature] or [GameObject] if they aren't saved
+     * @param uint32 durorresptime : despawn time of the [Creature] or [GameObject] if they aren't saved
      * @param uint32 phase : phase to put the [Creature] or [GameObject] in
      * @return [WorldObject] worldObject : Returns [Creature] or [GameObject]
      */
