@@ -1362,15 +1362,15 @@ namespace LuaUnit
     }
 
     /**
-     * Casts the [Spell] at target [Unit] with modified basepoints or casters.
+     * Casts the [Spell] at target [Unit] with custom basepoints or casters.
      * See also [Unit:CastSpell].
      *
      * @param [Unit] target
      * @param uint32 spell
      * @param bool triggered = false
-     * @param int32 bp0 = nil : modifier for the base points of the [Spell]. If left as nil, no change is made
-     * @param int32 bp1 = nil : modifier for the base points of the [Spell]. If left as nil, no change is made
-     * @param int32 bp2 = nil : modifier for the base points of the [Spell]. If left as nil, no change is made
+     * @param int32 bp0 = nil : custom basepoints for [Spell] effect 1. If nil, no change is made
+     * @param int32 bp1 = nil : custom basepoints for [Spell] effect 2. If nil, no change is made
+     * @param int32 bp2 = nil : custom basepoints for [Spell] effect 3. If nil, no change is made
      * @param [Item] castItem = nil
      * @param uint64 originalCaster = 0
      */
