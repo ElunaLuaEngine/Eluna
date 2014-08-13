@@ -84,17 +84,17 @@ if __name__ == '__main__':
         method_names = []
 
         for class_ in classes:
-            class_names.append('&amp;' + class_.name)
+            class_names.append('[' + class_.name + ']')
 
             for method in class_.methods:
-                method_names.append('&amp;' + class_.name + ':' + method.name)
+                method_names.append('[' + class_.name + ':' + method.name + ']')
 
         def link_parser(content):
             # Replace all occurrencies of &Class:Function and then &Class with a link to given func or class
 
             for name in method_names:
-                # Take the "amp;" off the front of the method's name.
-                full_name = name[len('&amp;'):]
+                # Take the [] off the front of the method's name.
+                full_name = name[1:-1]
                 # Split "Class:Method" into "Class" and "Method".
                 class_name, method_name = full_name.split(':')
                 url = '{}{}/{}.html'.format(('../' * level), class_name, method_name)
@@ -102,8 +102,8 @@ if __name__ == '__main__':
                 content = content.replace(name, '<a class="fn" href="{}">{}</a>'.format(url, full_name))
 
             for name in class_names:
-                # Take the "&amp;" off the front of the class's name.
-                class_name = name[len('&amp;'):]
+                # Take the [] off the front of the class's name.
+                class_name = name[1:-1]
                 url = '{}{}/index.html'.format(('../' * level), class_name)
                 # Replace occurrencies of &Class:Method with the url created
                 content = content.replace(name, '<a class="mod" href="{}">{}</a>'.format(url, class_name))
@@ -128,7 +128,7 @@ if __name__ == '__main__':
 
             # Otherwise try to build a link to the proper page.
             if content in class_names:
-                class_name = content[len('&amp;'):]
+                class_name = content[1:-1]
                 url = '{}{}/index.html'.format(('../' * level), class_name)
                 return '<strong><a class="mod" href="{}">{}</a></strong>'.format(url, class_name)
 

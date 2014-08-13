@@ -10,7 +10,7 @@
 namespace LuaCorpse
 {
     /**
-     * Returns the &Corpse Owner GUID.
+     * Returns the [Corpse] Owner GUID.
      *
      * @return uint64 ownerGUID
      */
@@ -25,7 +25,7 @@ namespace LuaCorpse
     }
 
     /**
-     * Returns the ghost time of a &Corpse.
+     * Returns the ghost time of a [Corpse].
      *
      * @return uint32 ghostTime
      */
@@ -36,7 +36,7 @@ namespace LuaCorpse
     }
 
     /**
-     * Returns the CorpseType of a &Corpse.
+     * Returns the [CorpseType] of a [Corpse].
      *
      * <pre>
      * enum CorpseType
@@ -47,7 +47,7 @@ namespace LuaCorpse
      * };
      * </pre>
      *
-     * @return uint8 corpseType
+     * @return [CorpseType] corpseType
      */
     int GetType(lua_State* L, Corpse* corpse)
     {
@@ -56,7 +56,7 @@ namespace LuaCorpse
     }
 
     /**
-     * Resets the &Corpse ghost time.
+     * Resets the [Corpse] ghost time.
      *
      */
     int ResetGhostTime(lua_State* /*L*/, Corpse* corpse)
@@ -66,7 +66,7 @@ namespace LuaCorpse
     }
 
     /**
-     * Saves the &Corpse to the database.
+     * Saves the [Corpse] to the database.
      *
      */
     int SaveToDB(lua_State* /*L*/, Corpse* corpse)
@@ -76,7 +76,7 @@ namespace LuaCorpse
     }
 
     /**
-     * Deletes the &Corpse from the world.
+     * Deletes the [Corpse] from the world.
      *
      */
     int DeleteBonesFromWorld(lua_State* /*L*/, Corpse* corpse)

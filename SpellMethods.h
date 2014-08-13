@@ -10,7 +10,7 @@
 namespace LuaSpell
 {
     /**
-     * Returns 'true' if the &Spell is automatically repeating, false otherwise.
+     * Returns 'true' if the [Spell] is automatically repeating, false otherwise.
      *
      * @return bool isAutoRepeating
      */
@@ -21,9 +21,9 @@ namespace LuaSpell
     }
 
     /**
-     * Returns the &Unit that casted the &Spell.
+     * Returns the [Unit] that casted the [Spell].
      *
-     * @return &Unit caster
+     * @return [Unit] caster
      */
     int GetCaster(lua_State* L, Spell* spell)
     {
@@ -32,7 +32,7 @@ namespace LuaSpell
     }
 
     /**
-     * Returns the cast time of the &Spell.
+     * Returns the cast time of the [Spell].
      *
      * @return int32 castTime
      */
@@ -43,7 +43,7 @@ namespace LuaSpell
     }
 
     /**
-     * Returns the entry ID of the &Spell.
+     * Returns the entry ID of the [Spell].
      *
      * @return uint32 entryId
      */
@@ -54,7 +54,7 @@ namespace LuaSpell
     }
 
     /**
-     * Returns the power cost of the &Spell.
+     * Returns the power cost of the [Spell].
      *
      * @return uint32 powerCost
      */
@@ -65,7 +65,7 @@ namespace LuaSpell
     }
 
     /**
-     * Returns the spell duration of the &Spell.
+     * Returns the spell duration of the [Spell].
      *
      * @return int32 duration
      */
@@ -80,11 +80,11 @@ namespace LuaSpell
     }
 
     /**
-     * Returns the target destination coordinates of the &Spell.
+     * Returns the target destination coordinates of the [Spell].
      *
-     * @return float x : x coordinate of the &Spell
-     * @return float y : y coordinate of the &Spell
-     * @return float z : z coordinate of the &Spell
+     * @return float x : x coordinate of the [Spell]
+     * @return float y : y coordinate of the [Spell]
+     * @return float z : z coordinate of the [Spell]
      */
     int GetTargetDest(lua_State* L, Spell* spell)
     {
@@ -106,10 +106,10 @@ namespace LuaSpell
     }
 
     /**
-     * Returns the target &Object of the &Spell.
-     * Target can be any of the following &Object types: &Player, &Creature, &GameObject, &Item, &Corpse
+     * Returns the target [Object] of the [Spell].
+     * Target can be any of the following [Object] types: [Player], [Creature], [GameObject], [Item], [Corpse]
      *
-     * @return &Object target
+     * @return [Object] target
      */
     int GetTarget(lua_State* L, Spell* spell)
     {
@@ -138,7 +138,7 @@ namespace LuaSpell
     }
 
     /**
-     * Sets the &Spell to automatically repeat.
+     * Sets the [Spell] to automatically repeat.
      *
      * @param bool repeat : set variable to 'true' for spell to automatically repeat
      */
@@ -150,7 +150,7 @@ namespace LuaSpell
     }
 
     /**
-     * Casts the &Spell.
+     * Casts the [Spell].
      *
      * May need further documentation.
      */
@@ -162,7 +162,7 @@ namespace LuaSpell
     }
 
     /**
-     * Cancels the &Spell.
+     * Cancels the [Spell].
      *
      * May need further documentation.
      */
@@ -173,7 +173,7 @@ namespace LuaSpell
     }
 
     /**
-     * Finishes the &Spell.
+     * Finishes the [Spell].
      *
      * May need further documentation.
      */

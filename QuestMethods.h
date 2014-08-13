@@ -10,7 +10,7 @@
 namespace LuaQuest
 {
     /**
-     * Returns 'true' if the &Quest has the specified flag, false otherwise.
+     * Returns 'true' if the [Quest] has the specified flag, false otherwise.
      * Below flags are based off of 3.3.5a. Subject to change.
      *
      * <pre>
@@ -59,7 +59,7 @@ namespace LuaQuest
 
 #ifndef CLASSIC
     /**
-     * Returns 'true' if the &Quest is a daily quest, false otherwise.
+     * Returns 'true' if the [Quest] is a daily quest, false otherwise.
      *
      * @return bool isDaily
      */
@@ -71,7 +71,7 @@ namespace LuaQuest
 #endif
 
     /**
-     * Returns 'true' if the &Quest is repeatable, false otherwise.
+     * Returns 'true' if the [Quest] is repeatable, false otherwise.
      *
      * @return bool isRepeatable
      */
@@ -82,7 +82,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns entry ID of the &Quest.
+     * Returns entry ID of the [Quest].
      *
      * @return uint32 entryId
      */
@@ -93,7 +93,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns the &Quest's level.
+     * Returns the [Quest]'s level.
      *
      * @return uint32 level
      */
@@ -104,7 +104,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns the minimum level required to pick up the &Quest.
+     * Returns the minimum level required to pick up the [Quest].
      *
      * @return uint32 minLevel
      */
@@ -115,7 +115,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns the next &Quest entry ID.
+     * Returns the next [Quest] entry ID.
      *
      * @return int32 entryId
      */
@@ -126,7 +126,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns the previous &Quest entry ID.
+     * Returns the previous [Quest] entry ID.
      *
      * @return int32 entryId
      */
@@ -137,7 +137,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns the next &Quest entry ID in the specific &Quest chain.
+     * Returns the next [Quest] entry ID in the specific [Quest] chain.
      *
      * @return int32 entryId
      */
@@ -148,7 +148,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns the &Quest's flags.
+     * Returns the [Quest]'s flags.
      *
      * @return uint32 flags
      */
@@ -163,7 +163,7 @@ namespace LuaQuest
     }
 
     /**
-     * Returns the &Quest's type.
+     * Returns the [Quest]'s type.
      * 
      * TODO: Document types available.
      *

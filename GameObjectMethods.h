@@ -10,7 +10,7 @@
 namespace LuaGameObject
 {
     /**
-     * Returns 'true' if the &GameObject can give the specified &Quest
+     * Returns 'true' if the [GameObject] can give the specified [Quest]
      *
      * @param uint32 questId : quest entry Id to check
      * @return bool hasQuest
@@ -28,7 +28,7 @@ namespace LuaGameObject
     }
 
     /**
-     * Returns 'true' if the &GameObject is spawned
+     * Returns 'true' if the [GameObject] is spawned
      *
      * @return bool isSpawned
      */
@@ -39,7 +39,7 @@ namespace LuaGameObject
     }
 
     /**
-     * Returns 'true' if the &GameObject is a transport
+     * Returns 'true' if the [GameObject] is a transport
      *
      * @return bool isTransport
      */
@@ -50,7 +50,7 @@ namespace LuaGameObject
     }
 
     /**
-     * Returns 'true' if the &GameObject is active
+     * Returns 'true' if the [GameObject] is active
      *
      * @return bool isActive
      */
@@ -67,7 +67,7 @@ namespace LuaGameObject
     }*/
 
     /**
-     * Returns display ID of the &GameObject
+     * Returns display ID of the [GameObject]
      *
      * @return uint32 displayId
      */
@@ -78,8 +78,8 @@ namespace LuaGameObject
     }
 
     /**
-     * Returns the state of a &GameObject
-     * Below are client side GOStates off of 3.3.5a
+     * Returns the state of a [GameObject]
+     * Below are client side [GOState]s off of 3.3.5a
      *
      * <pre>
      * enum GOState
@@ -90,7 +90,7 @@ namespace LuaGameObject
      * };
      * </pre>
      *
-     * @return uint32 goState
+     * @return [GOState] goState
      */
     int GetGoState(lua_State* L, GameObject* go)
     {
@@ -99,8 +99,8 @@ namespace LuaGameObject
     }
 
     /**
-     * Returns the loot state of a &GameObject
-     * Below are Loot States off of 3.3.5a
+     * Returns the [LootState] of a [GameObject]
+     * Below are [LootState]s off of 3.3.5a
      *
      * <pre>
      * enum LootState
@@ -112,7 +112,7 @@ namespace LuaGameObject
      * };
      * </pre>
      *
-     * @return uint32 lootState
+     * @return [LootState] lootState
      */
     int GetLootState(lua_State* L, GameObject* go)
     {
@@ -121,7 +121,7 @@ namespace LuaGameObject
     }
 
     /**
-     * Sets the state of a &GameObject
+     * Sets the state of a [GameObject]
      *
      * <pre>
      * enum GOState
@@ -132,7 +132,7 @@ namespace LuaGameObject
      * };
      * </pre>
      *
-     * @param uint32 state : all available go states can be seen above
+     * @param [GOState] state : all available go states can be seen above
      */
     int SetGoState(lua_State* L, GameObject* go)
     {
@@ -149,8 +149,8 @@ namespace LuaGameObject
     }
 
     /**
-     * Sets the loot state of a &GameObject
-     * Below are Loot States off of 3.3.5a
+     * Sets the [LootState] of a [GameObject]
+     * Below are [LootState]s off of 3.3.5a
      *
      * <pre>
      * enum LootState
@@ -162,7 +162,7 @@ namespace LuaGameObject
      * };
      * </pre>
      *
-     * @param uint32 state : all available loot states can be seen above
+     * @param [LootState] state : all available loot states can be seen above
      */
     int SetLootState(lua_State* L, GameObject* go)
     {
@@ -181,7 +181,7 @@ namespace LuaGameObject
     }
 
     /**
-     * Saves &GameObject to the database
+     * Saves [GameObject] to the database
      *
      */
     int SaveToDB(lua_State* /*L*/, GameObject* go)
@@ -191,9 +191,9 @@ namespace LuaGameObject
     }
 
     /**
-     * Removes &GameObject from the world
+     * Removes [GameObject] from the world
      *
-     * @param bool deleteFromDB : if true, it will delete the &GameObject from the database
+     * @param bool deleteFromDB : if true, it will delete the [GameObject] from the database
      */
     int RemoveFromWorld(lua_State* L, GameObject* go)
     {
@@ -205,7 +205,7 @@ namespace LuaGameObject
     }
 
     /**
-     * Registers a timed event to the &GameObject
+     * Registers a timed event to the [GameObject]
      *
      * @param function function : function to trigger when the time has passed
      * @param uint32 delay : set time in milliseconds for the event to trigger
@@ -227,7 +227,7 @@ namespace LuaGameObject
     }
 
     /**
-     * Removes the timed event from a &GameObject by the specified event ID
+     * Removes the timed event from a [GameObject] by the specified event ID
      *
      * @param int32 eventId : event Id to remove
      */
@@ -239,7 +239,7 @@ namespace LuaGameObject
     }
 
     /**
-     * Removes all timed events from a &GameObject
+     * Removes all timed events from a [GameObject]
      *
      */
     int RemoveEvents(lua_State* /*L*/, GameObject* go)
@@ -249,9 +249,9 @@ namespace LuaGameObject
     }
 
     /**
-     * Changes uses a door or a button type &GameObject
+     * Changes uses a door or a button type [GameObject]
      *
-     * @param uint32 delay : cooldown time in seconds to restore the &GameObject back to normal
+     * @param uint32 delay : cooldown time in seconds to restore the [GameObject] back to normal
      */
     int UseDoorOrButton(lua_State* L, GameObject* go)
     {
@@ -262,7 +262,7 @@ namespace LuaGameObject
     }
 
     /**
-     * Despawns a &GameObject
+     * Despawns a [GameObject]
      *
      * @param uint32 delay : time in seconds to despawn
      */
@@ -278,7 +278,7 @@ namespace LuaGameObject
     }
 
     /**
-     * Respawns a &GameObject
+     * Respawns a [GameObject]
      *
      * @param uint32 delay : time of respawn in seconds
      */

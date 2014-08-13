@@ -1362,16 +1362,16 @@ namespace LuaUnit
     }
 
     /**
-     * Casts the spell at target with modified basepoints or casters.
-     * See also &Unit:CastSpell
+     * Casts the [Spell] at target [Unit] with modified basepoints or casters.
+     * See also [Unit:CastSpell].
      *
-     * @param &Unit target
+     * @param [Unit] target
      * @param uint32 spell
      * @param bool triggered = false
-     * @param int32 bp0 = nil : modifier for the base points of the spell. If left as nil, no change is made
-     * @param int32 bp1 = nil : modifier for the base points of the spell. If left as nil, no change is made
-     * @param int32 bp2 = nil : modifier for the base points of the spell. If left as nil, no change is made
-     * @param &Item castItem = nil
+     * @param int32 bp0 = nil : modifier for the base points of the [Spell]. If left as nil, no change is made
+     * @param int32 bp1 = nil : modifier for the base points of the [Spell]. If left as nil, no change is made
+     * @param int32 bp2 = nil : modifier for the base points of the [Spell]. If left as nil, no change is made
+     * @param [Item] castItem = nil
      * @param uint64 originalCaster = 0
      */
     int CastCustomSpell(lua_State* L, Unit* unit)
@@ -1379,11 +1379,11 @@ namespace LuaUnit
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
         uint32 spell = Eluna::CHECKVAL<uint32>(L, 3);
         bool triggered = Eluna::CHECKVAL<bool>(L, 4, false);
-        bool has_bp0 = lua_isnoneornil(L, 5);
+        bool has_bp0 = !lua_isnoneornil(L, 5);
         int32 bp0 = Eluna::CHECKVAL<int32>(L, 5, 0);
-        bool has_bp1 = lua_isnoneornil(L, 6);
+        bool has_bp1 = !lua_isnoneornil(L, 6);
         int32 bp1 = Eluna::CHECKVAL<int32>(L, 6, 0);
-        bool has_bp2 = lua_isnoneornil(L, 7);
+        bool has_bp2 = !lua_isnoneornil(L, 7);
         int32 bp2 = Eluna::CHECKVAL<int32>(L, 7, 0);
         Item* castItem = Eluna::CHECKOBJ<Item>(L, 8, false);
         uint64 originalCaster = Eluna::CHECKVAL<uint64>(L, 9, 0);
@@ -1620,7 +1620,7 @@ namespace LuaUnit
     }
 
     /**
-     * Adds threat to the &Unit from the victim.
+     * Adds threat to the [Unit] from the victim.
      *
      * <pre>
      * enum SpellSchoolMask
@@ -1636,9 +1636,9 @@ namespace LuaUnit
      * }
      * </pre>
      *
-     * @param &Unit victim : &Unit that caused the threat
+     * @param [Unit] victim : [Unit] that caused the threat
      * @param float threat : threat amount
-     * @param SpellSchoolMask schoolMask = 0 : spell school mask of the threat causer
+     * @param [SpellSchoolMask] schoolMask = 0 : [SpellSchoolMask] of the threat causer
      * @param uint32 spell = 0 : spell entry used for threat
      */
     int AddThreat(lua_State* L, Unit* unit)

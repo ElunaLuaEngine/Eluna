@@ -10,7 +10,7 @@
 namespace LuaWeather
 {
     /**
-     * Returns the zone id of the &Weather
+     * Returns the zone id of the [Weather]
      *
      * @return uint32 zoneId
      */
@@ -21,7 +21,7 @@ namespace LuaWeather
     }
 
     /**
-     * Sets the &Weather type based on &WeatherType and grade supplied.
+     * Sets the [Weather] type based on [WeatherType] and grade supplied.
      *
      * <pre>
      * enum WeatherType
@@ -35,8 +35,8 @@ namespace LuaWeather
      * };
      * </pre>
      *
-     * @param WeatherType type : the &WeatherType, see above available weather types
-     * @param float grade : the intensity/grade of the &Weather, ranges from 0 to 1
+     * @param WeatherType type : the [WeatherType], see above available weather types
+     * @param float grade : the intensity/grade of the [Weather], ranges from 0 to 1
      */
     int SetWeather(lua_State* L, Weather* weather)
     {
@@ -48,9 +48,9 @@ namespace LuaWeather
     }
 
     /**
-     * Sends a &Weather update to the &Player supplied.
+     * Sends a [Weather] update to the [Player] supplied.
      *
-     * @param &Player player
+     * @param [Player] player
      */
     int SendWeatherUpdateToPlayer(lua_State* L, Weather* weather)
     {
@@ -61,14 +61,14 @@ namespace LuaWeather
     }
 
     /**
-     * Regenerates the &Weather, causing it to change based on the below statistics.
+     * Regenerates the [Weather], causing it to change based on the below statistics.
      * 
      * * 30% chance of no change
-     * * 30% chance of &Weather getting better (if not fine) or changing &Weather type
-     * * 30% chance of &Weather getting worse (if not fine)
+     * * 30% chance of [Weather] getting better (if not fine) or changing [Weather] type
+     * * 30% chance of [Weather] getting worse (if not fine)
      * * 10% chance of radical change (if not fine)
      *
-     * @return bool changed : returns 'true' if &Weather changed
+     * @return bool changed : returns 'true' if [Weather] changed
      */
     int Regenerate(lua_State* L, Weather* weather)
     {
@@ -77,9 +77,9 @@ namespace LuaWeather
     }
 
     /**
-     * Sends a &Weather update to the all &Player in the zone.
+     * Sends a [Weather] update to the all [Player] in the zone.
      *
-     * @param bool changed : returns 'true' if weather changed for any &Player in the zone, 'false' if no &Player is within the zone
+     * @param bool changed : returns 'true' if weather changed for any [Player] in the zone, 'false' if no [Player] is within the zone
      */
     int UpdateWeather(lua_State* L, Weather* weather)
     {

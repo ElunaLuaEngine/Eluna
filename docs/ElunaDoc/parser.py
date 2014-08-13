@@ -111,14 +111,14 @@ class ClassParser(object):
     body_regex = re.compile(r"\s*\s?\*\s*(.*)")  # The "body", i.e. a * and optionally some descriptive text.
     # An extra optional space (\s?) was thrown in to make it different from `class_body_regex`.
 
-    param_regex = re.compile(r"""\s*\*\s@param\s  # The @param tag starts with opt. whitespace followed by "* @param ".
-                                 ([&\w]+)\s(\w+)  # The data type, a space, and the name of the param.
-                                 (?:\s=\s(\w+))?  # The default value: a = surrounded by spaces, followed by text.
-                                 (?:\s:\s(.+))?   # The description: a colon surrounded by spaces, followed by text.
+    param_regex = re.compile(r"""\s*\*\s@param\s    # The @param tag starts with opt. whitespace followed by "* @param ".
+                                 ([\[\]\w]+)\s(\w+) # The data type, a space, and the name of the param.
+                                 (?:\s=\s(\w+))?    # The default value: a = surrounded by spaces, followed by text.
+                                 (?:\s:\s(.+))?     # The description: a colon surrounded by spaces, followed by text.
                                  """, re.X)
     # This is the same as the @param tag, minus the default value part.
     return_regex = re.compile(r"""\s*\*\s@return\s
-                                  ([&\w]+)\s(\w+)
+                                  ([\[\]\w]+)\s(\w+)
                                   (?:\s:\s(.+))?
                                   """, re.X)
     proto_regex = re.compile(r"""\s*\*\s@proto\s
