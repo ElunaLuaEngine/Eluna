@@ -685,7 +685,7 @@ namespace LuaGlobalFunctions
      * @param bool save : optional to save the [Creature] or [GameObject] to the database on spawn
      * @param uint32 durorresptime : despawn time of the [Creature] or [GameObject] if they aren't saved
      * @param uint32 phase : phase to put the [Creature] or [GameObject] in
-     * @return [WorldObject] worldObject : Returns [Creature] or [GameObject]
+     * @return [WorldObject] worldObject : returns [Creature] or [GameObject]
      */
     int PerformIngameSpawn(lua_State* L)
     {
