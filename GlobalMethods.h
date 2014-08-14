@@ -10,9 +10,9 @@
 namespace LuaGlobalFunctions
 {
     /**
-     * Returns ElunaEngine name
+     * Returns lua engine name. Currently `ElunaEngine`
      *
-     * @return const char* name
+     * @return string engineName
      */
     int GetLuaEngine(lua_State* L)
     {
@@ -21,9 +21,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns Emulator name
+     * Returns emulator / core name.
+     * For example `MaNGOS`, `cMaNGOS` or `TrinityCore`
      *
-     * @return const char* name
+     * @return string coreName
      */
     int GetCoreName(lua_State* L)
     {
@@ -32,9 +33,13 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns Emulator version
+     * Returns emulator version
      *
-     * @return const char* version
+     * * For TrinityCore returns for example `2014-08-13 17:27:22 +0300`
+     * * For cMaNGOS returns for example `12708`
+     * * For MaNGOS returns for example `20002`
+     *
+     * @return string version
      */
     int GetCoreVersion(lua_State* L)
     {
@@ -43,9 +48,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns Emulator expansion
+     * Returns emulator expansion. Expansion is 0 for classic, 1 for TBC, 2 for WOTLK and 3 for cataclysm
      *
-     * @return int32 version
+     * @return int32 version : emulator expansion ID
      */
     int GetCoreExpansion(lua_State* L)
     {
@@ -79,7 +84,7 @@ namespace LuaGlobalFunctions
      * Finds and Returns [Player] by guid if found
      *
      * @param uint64 guid : guid of the [Player]
-     * @return [Quest] quest
+     * @return [Player] player
      */
     int GetPlayerByGUID(lua_State* L)
     {
@@ -91,8 +96,8 @@ namespace LuaGlobalFunctions
     /**
      * Finds and Returns [Player] by name if found
      *
-     * @param const char* name : name of the [Player]
-     * @return [Quest] quest
+     * @param string name : name of the [Player]
+     * @return [Player] player
      */
     int GetPlayerByName(lua_State* L)
     {
@@ -102,10 +107,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns game time
+     * Returns game time in seconds
      *
-     * @param uint32 time : game time
-     * @return uint32 time : also returns int32 if time < 0
+     * @return uint32 time
      */
     int GetGameTime(lua_State* L)
     {
@@ -120,8 +124,17 @@ namespace LuaGlobalFunctions
     /**
      * Returns a table with all the current [Player]s in the world
      *
-     * @param uint32 team : optional check team of the [Player], Alliance, Horde or Neutral (All)
-     * @param bool onlyGM : optional check if GM only
+     * <pre>
+     * enum TeamId
+     * {
+     *     TEAM_ALLIANCE = 0,
+     *     TEAM_HORDE = 1,
+     *     TEAM_NEUTRAL = 2
+     * };
+     * </pre>
+     *
+     * @param [TeamId] team = TEAM_NEUTRAL : optional check team of the [Player], Alliance, Horde or Neutral (All)
+     * @param bool onlyGM = false : optional check if GM only
      * @return table worldPlayers
      */
     int GetPlayersInWorld(lua_State* L)
@@ -159,9 +172,18 @@ namespace LuaGlobalFunctions
     /**
      * Returns a table with all the current [Player]s in a map
      *
-     * @param uint32 mapID : the [Map] entry ID
-     * @param uint32 instanceID : the instance ID to search in the map
-     * @param uint32 team : optional check team of the [Player], Alliance, Horde or Neutral (All)
+     * <pre>
+     * enum TeamId
+     * {
+     *     TEAM_ALLIANCE = 0,
+     *     TEAM_HORDE = 1,
+     *     TEAM_NEUTRAL = 2
+     * };
+     * </pre>
+     *
+     * @param uint32 mapId : the [Map] entry ID
+     * @param uint32 instanceId : the instance ID to search in the map
+     * @param [TeamId] team : optional check team of the [Player], Alliance, Horde or Neutral (All)
      * @return table mapPlayers
      */
     int GetPlayersInMap(lua_State* L)
@@ -204,7 +226,7 @@ namespace LuaGlobalFunctions
     /**
      * Returns [Guild] by name
      *
-     * @param const char* name : the name of a guild
+     * @param string name : the name of a guild
      * @return [Guild] guild
      */
     int GetGuildByName(lua_State* L)
@@ -217,8 +239,8 @@ namespace LuaGlobalFunctions
     /**
      * Returns [Map] by ID
      *
-     * @param uint32 mapid : the [Map] ID
-     * @param uint32 instance : instance ID to search
+     * @param uint32 mapId : the [Map] ID
+     * @param uint32 instanceId : instance ID to search, use 0 if not instance
      * @return [Map] map
      */
     int GetMapById(lua_State* L)
@@ -257,6 +279,8 @@ namespace LuaGlobalFunctions
 
     /**
      * Returns a [Player]'s GUID
+     * [Player] GUID consist of low GUID and type ID
+     * [Player] and [Creature] for example can have the same low GUID but not GUID.
      *
      * @param uint32 lowguid : low GUID of the [Player]
      * @return uint64 guid
@@ -270,6 +294,8 @@ namespace LuaGlobalFunctions
 
     /**
      * Returns an [Item]'s GUID
+     * [Item] GUID consist of low GUID and type ID
+     * [Player] and [Item] for example can have the same low GUID but not GUID.
      *
      * @param uint32 lowguid : low GUID of the [Item]
      * @return uint64 guid
@@ -283,8 +309,11 @@ namespace LuaGlobalFunctions
 
     /**
      * Returns a [GameObject]'s GUID
+     * [GameObject] GUID consist of entry ID, low GUID and type ID
+     * [Player] and [GameObject] for example can have the same low GUID but not GUID.
      *
      * @param uint32 lowguid : low GUID of the [GameObject]
+     * @param uint32 entry : entry ID of the [GameObject]
      * @return uint64 guid
      */
     int GetObjectGUID(lua_State* L)
@@ -296,9 +325,12 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns a [Unit]'s GUID
+     * Returns a [Creature]'s GUID.
+     * [Creature] GUID consist of entry ID, low GUID and type ID
+     * [Player] and [Creature] for example can have the same low GUID but not GUID.
      *
-     * @param uint32 lowguid : low GUID of the [Unit]
+     * @param uint32 lowguid : low GUID of the [Creature]
+     * @param uint32 entry : entry ID of the [Creature]
      * @return uint64 guid
      */
     int GetUnitGUID(lua_State* L)
@@ -310,10 +342,13 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns a [Unit]'s GUID
+     * Returns the low GUID from a GUID.
+     * Low GUID is an ID to distinct the objects of the same type.
+     * [Player] and [Creature] for example can have the same low GUID but not GUID.
+     * GUID consist of entry ID, low GUID and type ID
      *
-     * @param uint64 guid : guid of the [Object]
-     * @return uint32 lowguid
+     * @param uint64 guid : GUID of an [Object]
+     * @return uint32 lowguid : low GUID of the [Object]
      */
     int GetGUIDLow(lua_State* L)
     {
@@ -324,7 +359,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns an [Item]'s link in the chat
+     * Returns an [Item]'s chat link
      *
      * <pre>
      * enum Locales
@@ -340,8 +375,9 @@ namespace LuaGlobalFunctions
      *     LOCALE_ruRU = 8
      * };
      * </pre>
+     *
      * @param uint32 entry : entry ID of the [Item]
-     * @param int32 loc_idx : locale index
+     * @param int32 loc_idx = 0 : locale index, default is enUS
      * @return string itemLink
      */
     int GetItemLink(lua_State* L)
@@ -371,6 +407,14 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    /**
+     * Returns the type ID from a GUID.
+     * Type ID is different for each type ([Player], [Creature], [GameObject]...)
+     * GUID consist of entry ID, low GUID and type ID
+     *
+     * @param uint64 guid : GUID of an [Object]
+     * @return uint32 typeId : type ID of the [Object]
+     */
     int GetGUIDType(lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
@@ -378,6 +422,15 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    /**
+     * Returns the entry ID from a GUID.
+     * Entry ID is different for each [Creature] and [GameObject].
+     * [Item] GUIDs dont include the entry
+     * GUID consist of entry ID, low GUID and type ID
+     *
+     * @param uint64 guid : GUID of an [Creature] or [GameObject], otherwise returns 0
+     * @return uint32 entry : entry ID of the [Creature] or [GameObject]
+     */
     int GetGUIDEntry(lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
@@ -385,6 +438,13 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    /**
+     * Returns the area's or zone's name
+     *
+     * @param uint32 areaOrZoneId : area ID or zone ID
+     * @param uint32 locale_idx = 0 : locale to return the name in
+     * @return string areaOrZoneName
+     */
     int GetAreaName(lua_State* L)
     {
         uint32 areaOrZoneId = Eluna::CHECKVAL<uint32>(L, 1);
@@ -674,17 +734,17 @@ namespace LuaGlobalFunctions
     /**
      * Performs an ingame spawn and returns [Creature] or [GameObject] dependent on spawnType
      *
-     * @param int32 spawntype : type of object to spawn, 1 = [Creature], 2 = [GameObject]
+     * @param int32 spawnType : type of object to spawn, 1 = [Creature], 2 = [GameObject]
      * @param uint32 entry : entry ID of the [Creature] or [GameObject]
-     * @param uint32 mapID : map ID to spawn the [Creature] or [GameObject] in
-     * @param uint32 instance ID : instance to put the [Creature] or [GameObject] in, 1 is default
+     * @param uint32 mapId : map ID to spawn the [Creature] or [GameObject] in
+     * @param uint32 instanceId : instance ID to put the [Creature] or [GameObject] in. Non instance is 0
      * @param float x : x coordinate of the [Creature] or [GameObject]
      * @param float y : y coordinate of the [Creature] or [GameObject]
      * @param float z : z coordinate of the [Creature] or [GameObject]
      * @param float o : o facing/orientation of the [Creature] or [GameObject]
-     * @param bool save : optional to save the [Creature] or [GameObject] to the database on spawn
-     * @param uint32 durorresptime : despawn time of the [Creature] or [GameObject] if they aren't saved
-     * @param uint32 phase : phase to put the [Creature] or [GameObject] in
+     * @param bool save = false : optional to save the [Creature] or [GameObject] to the database
+     * @param uint32 durorresptime = 0 : despawn time of the [Creature] if it's not saved or respawn time of [GameObject]
+     * @param uint32 phase = 1 : phase to put the [Creature] or [GameObject] in
      * @return [WorldObject] worldObject : returns [Creature] or [GameObject]
      */
     int PerformIngameSpawn(lua_State* L)
