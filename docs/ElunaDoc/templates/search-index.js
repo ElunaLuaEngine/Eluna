@@ -1,17 +1,15 @@
 var searchIndex = {};
 
-//{%- for class in classes %}
+{% for class in classes -%}
 searchIndex["{{ class.name }}"] = {
     "items": [
-        [0, "", "{{ class.name }}", "{{ class.short_description|replace('\n', ' ')|replace('\"', '&#34;') }}"],
-        //{%- for method in class.methods %}
-        [3, "{{ method.name }}", "", "{{ method.short_description|replace('\n', ' ')|replace('\"', '&#34;') }}"],
-        //{%- endfor %}
+        [0, "", "{{ class.name }}", "{{ class.short_description|replace('\n', ' ')|replace('\"', '&#34;')|parse_links|replace('"', '\\"') }}"],
+        {%- for method in class.methods %}
+        [3, "{{ method.name }}", "", "{{ method.short_description|replace('\n', ' ')|replace('\"', '&#34;')|parse_links|replace('"', '\\"') }}"],
+        {%- endfor %}
     ],
-    "paths": [
-
-    ]
+    "paths": []
 };
-//{%- endfor %}
+{%- endfor %}
 
 initSearch(searchIndex);
