@@ -489,10 +489,8 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns a point relative to the [WorldObject].
-     * With distance set to 1 and angle set to 0, this will return a point 1 yard in front of the [WorldObject]
+     * Returns the x, y and z of a point dist away from the [WorldObject].
      *
-     * @param [WorldObject] object
      * @param float distance : specifies the distance of the point from the [WorldObject] in yards
      * @param float angle : specifies the angle of the point relative to the orientation / facing of the [WorldObject] in radians
      *
