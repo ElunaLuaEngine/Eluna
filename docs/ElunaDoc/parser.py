@@ -108,7 +108,7 @@ class ClassParser(object):
 
     # These are used to parse method documentation.
     start_regex = re.compile(r"\s*/\*\*")  # The start of documentation, i.e. /**
-    body_regex = re.compile(r"\s*\s?\*\s*(.*)")  # The "body", i.e. a * and optionally some descriptive text.
+    body_regex = re.compile(r"\s*\s?\*\s?(.*)")  # The "body", i.e. a * and optionally some descriptive text.
     # An extra optional space (\s?) was thrown in to make it different from `class_body_regex`.
 
     param_regex = re.compile(r"""\s*\*\s@param\s    # The @param tag starts with opt. whitespace followed by "* @param ".
