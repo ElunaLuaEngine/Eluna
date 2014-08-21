@@ -708,90 +708,103 @@ ElunaRegister<Player> PlayerMethods[] =
 ElunaRegister<Creature> CreatureMethods[] =
 {
     // Getters
-    { "GetAITarget", &LuaCreature::GetAITarget },                                     // :GetAITarget(type[, playeronly, position, distance, aura]) - Get an unit in threat list. type can be 0 (random), 1 (topaggro), 2 (botaggro), 3 (nearest), 4 (farthest). If for example type 1 is used and position is 4, the 5th top aggro is selected, 0 is the top aggro (default). For random target position means the amount of top targets to choose from. positive distance tells that target should be within given radius, negative means target shouldnt be inside given radius. positive aura means target needs to have the aura, negative means target should not have the aura
-    { "GetAITargets", &LuaCreature::GetAITargets },                                   // :GetAITargets() - Get units in threat list
-    { "GetAITargetsCount", &LuaCreature::GetAITargetsCount },                         // :GetAITargetsCount() - Get threat list size
-    { "GetHomePosition", &LuaCreature::GetHomePosition },                             // :GetHomePosition() - Returns x,y,z,o of spawn position
-    { "GetCorpseDelay", &LuaCreature::GetCorpseDelay },                               // :GetCorpseDelay() - Returns corpse delay
-    { "GetCreatureSpellCooldownDelay", &LuaCreature::GetCreatureSpellCooldownDelay }, // :GetCreatureSpellCooldownDelay(spellId) - Returns spell cooldown delay
-    { "GetScriptId", &LuaCreature::GetScriptId },                                     // :GetScriptId() - Returns creature's script ID
-    { "GetAIName", &LuaCreature::GetAIName },                                         // :GetAIName() - Returns creature's AI name
-    { "GetScriptName", &LuaCreature::GetScriptName },                                 // :GetScriptName() - Returns creature's script name
-    { "GetAttackDistance", &LuaCreature::GetAttackDistance },                         // :GetAttackDistance(unit) - Returns attack distance to unit
-    { "GetAggroRange", &LuaCreature::GetAggroRange },                                 // :GetAggroRange(unit) - Returns aggro distance to unit
-    { "GetDefaultMovementType", &LuaCreature::GetDefaultMovementType },               // :GetDefaultMovementType() - Returns default movement type
-    { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },                             // :GetRespawnDelay() - Returns respawn delay
-    { "GetRespawnRadius", &LuaCreature::GetRespawnRadius },                           // :GetRespawnRadius() - Returns respawn radius
-    // {"GetWaypointPath", &LuaCreature::GetWaypointPath},                          // :GetWaypointPath() - Returns waypoint path ID
-    // {"GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId},                // :GetCurrentWaypointId() - Returns waypoint ID
-    // {"GetLootMode", &LuaCreature::GetLootMode},                                  // :GetLootMode() - Returns loot mode
-    { "GetLootRecipient", &LuaCreature::GetLootRecipient },                           // :GetLootRecipient() - Returns loot receiver
-    { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },                 // :GetLootRecipientGroup() - Returns loot receiver group
-    { "GetNPCFlags", &LuaCreature::GetNPCFlags },                                     // :GetNPCFlags() - Returns NPC flags
+    { "GetAITarget", &LuaCreature::GetAITarget },
+    { "GetAITargets", &LuaCreature::GetAITargets },
+    { "GetAITargetsCount", &LuaCreature::GetAITargetsCount },
+    { "GetHomePosition", &LuaCreature::GetHomePosition },
+    { "GetCorpseDelay", &LuaCreature::GetCorpseDelay },
+    { "GetCreatureSpellCooldownDelay", &LuaCreature::GetCreatureSpellCooldownDelay },
+    { "GetScriptId", &LuaCreature::GetScriptId },
+    { "GetAIName", &LuaCreature::GetAIName },
+    { "GetScriptName", &LuaCreature::GetScriptName },
+    { "GetAttackDistance", &LuaCreature::GetAttackDistance },
+    { "GetAggroRange", &LuaCreature::GetAggroRange },
+    { "GetDefaultMovementType", &LuaCreature::GetDefaultMovementType },
+    { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },
+    { "GetWanderRadius", &LuaCreature::GetWanderRadius },
+#ifdef TRINITY
+    { "GetWaypointPath", &LuaCreature::GetWaypointPath },
+    { "GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId },
+    { "GetLootMode", &LuaCreature::GetLootMode },
+#endif
+    { "GetLootRecipient", &LuaCreature::GetLootRecipient },
+    { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },
+    { "GetNPCFlags", &LuaCreature::GetNPCFlags },
 #ifndef CATA
-    { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },                     // :GetShieldBlockValue() - Returns block value
+    { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
 #endif
 
     // Setters
-    { "SetHover", &LuaCreature::SetHover },                                   // :SetHover([enable]) - Sets hover on or off
-    // {"SetDisableGravity", &LuaCreature::SetDisableGravity},              // :SetDisableGravity([disable, packetOnly]) - Disables or enables gravity
-    { "SetAllowedCombat", &LuaCreature::SetAllowedCombat },                   // :SetAllowedCombat(allow) - Allows the creature to attack or not
-    { "SetNoCallAssistance", &LuaCreature::SetNoCallAssistance },             // :SetNoCallAssistance([noCall]) - Sets call assistance to false or true
-    { "SetNoSearchAssistance", &LuaCreature::SetNoSearchAssistance },         // :SetNoSearchAssistance([noSearch]) - Sets assistance searhing to false or true
-    { "SetDefaultMovementType", &LuaCreature::SetDefaultMovementType },       // :SetDefaultMovementType(type) - Sets default movement type
-    { "SetRespawnDelay", &LuaCreature::SetRespawnDelay },                     // :SetRespawnDelay(delay) - Sets the respawn delay
-    { "SetRespawnRadius", &LuaCreature::SetRespawnRadius },                   // :SetRespawnRadius(dist) - Sets the respawn radius
-    { "SetInCombatWithZone", &LuaCreature::SetInCombatWithZone },             // :SetInCombatWithZone() - Sets the creature in combat with everyone in zone
-    { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },   // :SetDisableReputationGain([disable]) - Disables or enables reputation gain from creature
-    // {"SetLootMode", &LuaCreature::SetLootMode},                          // :SetLootMode(lootMode) - Sets the lootmode
-    { "SetNPCFlags", &LuaCreature::SetNPCFlags },                             // :SetNPCFlags(flags) - Sets NPC flags
-    { "SetDeathState", &LuaCreature::SetDeathState },                         // :SetDeathState(value) - 0 = alive 1 = just died 2 = corpse 3 = dead
-    { "SetWalk", &LuaCreature::SetWalk },                                     // :SetWalk([enable]) - If false, creature runs, otherwise walks
+    { "SetHover", &LuaCreature::SetHover },
+#ifdef TRINITY
+     {"SetDisableGravity", &LuaCreature::SetDisableGravity },
+#endif
+    { "SetAggroEnabled", &LuaCreature::SetAggroEnabled },
+    { "SetNoCallAssistance", &LuaCreature::SetNoCallAssistance },
+    { "SetNoSearchAssistance", &LuaCreature::SetNoSearchAssistance },
+    { "SetDefaultMovementType", &LuaCreature::SetDefaultMovementType },
+    { "SetRespawnDelay", &LuaCreature::SetRespawnDelay },
+    { "SetWanderRadius", &LuaCreature::SetWanderRadius },
+    { "SetInCombatWithZone", &LuaCreature::SetInCombatWithZone },
+    { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
+#ifdef TRINITY
+    { "SetLootMode", &LuaCreature::SetLootMode },
+#endif
+    { "SetNPCFlags", &LuaCreature::SetNPCFlags },
+    { "SetDeathState", &LuaCreature::SetDeathState },
+    { "SetWalk", &LuaCreature::SetWalk },
 
     // Booleans
-    { "IsWorldBoss", &LuaCreature::IsWorldBoss },                                                 // :IsWorldBoss() - Returns true if the creature is a WorldBoss, false if not
-    { "IsRacialLeader", &LuaCreature::IsRacialLeader },                                           // :IsRacialLeader() - Returns true if the creature is a racial leader, false if not
-    { "IsCivilian", &LuaCreature::IsCivilian },                                                   // :IsCivilian() - Returns true if the creature is a civilian, false if not
-    // {"IsTrigger", &LuaCreature::IsTrigger},                                                  // :IsTrigger() - Returns true if the creature is a trigger, false if not
-    { "IsGuard", &LuaCreature::IsGuard },                                                         // :IsGuard() - Returns true if the creature is a guard, false if not
-    { "IsElite", &LuaCreature::IsElite },                                                         // :IsElite() - Returns true if the creature is an elite, false if not
-    { "IsInEvadeMode", &LuaCreature::IsInEvadeMode },                                             // :IsInEvadeMode() - Returns true if the creature is in evade mode, false if not
-    { "HasCategoryCooldown", &LuaCreature::HasCategoryCooldown },                                 // :HasCategoryCooldown(spellId) - Returns true if the creature has a cooldown for the spell's category
-    { "CanWalk", &LuaCreature::CanWalk },                                                         // :CanWalk() - Returns true if the creature can walk
-    { "CanSwim", &LuaCreature::CanSwim },                                                         // :CanSwim() - Returns true if the creature can swim
-    { "IsCombatAllowed", &LuaCreature::IsCombatAllowed },                                         // :IsCombatAllowed() - Returns true if the creature has combat allowed
-    // {"CanStartAttack", &LuaCreature::CanStartAttack},                                        // :CanStartAttack(unit[, force]) - Returns true if the creature can attack the unit
-    { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },                             // :HasSearchedAssistance() - Returns true if the creature has searched assistance
-    { "IsTappedBy", &LuaCreature::IsTappedBy },                                                   // :IsTappedBy(player)
-    { "HasLootRecipient", &LuaCreature::HasLootRecipient },                                       // :HasLootRecipient() - Returns true if the creature has a loot recipient
-    { "CanAssistTo", &LuaCreature::CanAssistTo },                                                 // :CanAssistTo(unit, enemy[, checkfaction]) - Returns true if the creature can assist unit with enemy
-    { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },                             // :IsTargetableForAttack([inversAlive]) - Returns true if the creature can be attacked
-    { "HasInvolvedQuest", &LuaCreature::HasInvolvedQuest },                                       // :HasInvolvedQuest(questId) - Returns true if the creature can finish the quest for players
-    { "IsRegeneratingHealth", &LuaCreature::IsRegeneratingHealth },                               // :IsRegeneratingHealth() - Returns true if the creature is regenerating health
-    { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },                       // :IsReputationGainDisabled() - Returns true if the creature has reputation gain disabled
-    // {"IsDamageEnoughForLootingAndReward", &LuaCreature::IsDamageEnoughForLootingAndReward},  // :IsDamageEnoughForLootingAndReward()
-    // {"HasLootMode", &LuaCreature::HasLootMode},
-    { "HasSpell", &LuaCreature::HasSpell },                                                       // :HasSpell(id)
-    { "HasQuest", &LuaCreature::HasQuest },                                                       // :HasQuest(id)
-    { "HasSpellCooldown", &LuaCreature::HasSpellCooldown },                                       // :HasSpellCooldown(spellId) - Returns true if the spell is on cooldown
-    { "CanFly", &LuaCreature::CanFly },                                                           // :CanFly() - Returns true if the creature can fly
+    { "IsWorldBoss", &LuaCreature::IsWorldBoss },
+    { "IsRacialLeader", &LuaCreature::IsRacialLeader },
+    { "IsCivilian", &LuaCreature::IsCivilian },
+#ifdef TRINITY
+    { "IsTrigger", &LuaCreature::IsTrigger },
+#endif
+    { "IsGuard", &LuaCreature::IsGuard },
+    { "IsElite", &LuaCreature::IsElite },
+    { "IsInEvadeMode", &LuaCreature::IsInEvadeMode },
+    { "HasCategoryCooldown", &LuaCreature::HasCategoryCooldown },
+    { "CanWalk", &LuaCreature::CanWalk },
+    { "CanSwim", &LuaCreature::CanSwim },
+    { "CanAggro", &LuaCreature::CanAggro },
+#ifdef TRINITY
+    { "CanStartAttack", &LuaCreature::CanStartAttack },
+#endif
+    { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },
+    { "IsTappedBy", &LuaCreature::IsTappedBy },
+    { "HasLootRecipient", &LuaCreature::HasLootRecipient },
+    { "CanAssistTo", &LuaCreature::CanAssistTo },
+    { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },
+    { "CanCompleteQuest", &LuaCreature::CanCompleteQuest },
+    { "CanRegenerateHealth", &LuaCreature::CanRegenerateHealth },
+    { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
+#ifdef TRINITY
+    { "IsDamageEnoughForLootingAndReward", &LuaCreature::IsDamageEnoughForLootingAndReward },
+    { "HasLootMode", &LuaCreature::HasLootMode },
+#endif
+    { "HasSpell", &LuaCreature::HasSpell },
+    { "HasQuest", &LuaCreature::HasQuest },
+    { "HasSpellCooldown", &LuaCreature::HasSpellCooldown },
+    { "CanFly", &LuaCreature::CanFly },
 
     // Other
-    { "FleeToGetAssistance", &LuaCreature::FleeToGetAssistance },     // :FleeToGetAssistance() - Creature flees for assistance
-    { "CallForHelp", &LuaCreature::CallForHelp },                     // :CallForHelp(radius) - Creature calls for help from units in radius
-    { "CallAssistance", &LuaCreature::CallAssistance },               // :CallAssistance() - Creature calls for assistance
-    { "RemoveCorpse", &LuaCreature::RemoveCorpse },                   // :RemoveCorpse([setSpawnTime]) - Removes corpse
-    { "DespawnOrUnsummon", &LuaCreature::DespawnOrUnsummon },         // :DespawnOrUnsummon([Delay]) - Despawns the creature after delay if given
-    { "Respawn", &LuaCreature::Respawn },                             // :Respawn([force]) - Respawns the creature
-    // {"AddLootMode", &LuaCreature::AddLootMode},                  // :AddLootMode(lootMode)
-    // {"SendCreatureTalk", &LuaCreature::SendCreatureTalk},        // :SendCreatureTalk(id, playerGUID) - Sends a chat message to a playerGUID (player) by id. Id can be found in creature_text under the 'group_id' column
-    { "AttackStart", &LuaCreature::AttackStart },                     // :AttackStart(target) - Creature attacks the specified target
-    // {"ResetLootMode", &LuaCreature::ResetLootMode},
-    // {"RemoveLootMode", &LuaCreature::RemoveLootMode},
-    { "SaveToDB", &LuaCreature::SaveToDB },                           // :SaveToDB() - Saves to database
-    { "SelectVictim", &LuaCreature::SelectVictim },                   // :SelectVictim() - Selects a victim
-    { "MoveWaypoint", &LuaCreature::MoveWaypoint },                   // :MoveWaypoint()
-    { "UpdateEntry", &LuaCreature::UpdateEntry },                     // :UpdateEntry(entry[, dataGuidLow]) - Sets the creature's data from the given entry and guid. Guid can be left out.
+    { "FleeToGetAssistance", &LuaCreature::FleeToGetAssistance },
+    { "CallForHelp", &LuaCreature::CallForHelp },
+    { "CallAssistance", &LuaCreature::CallAssistance },
+    { "RemoveCorpse", &LuaCreature::RemoveCorpse },
+    { "DespawnOrUnsummon", &LuaCreature::DespawnOrUnsummon },
+    { "Respawn", &LuaCreature::Respawn },
+    { "AttackStart", &LuaCreature::AttackStart },
+#ifdef TRINITY
+    {"AddLootMode", &LuaCreature::AddLootMode},
+    { "ResetLootMode", &LuaCreature::ResetLootMode },
+    { "RemoveLootMode", &LuaCreature::RemoveLootMode },
+#endif
+    { "SaveToDB", &LuaCreature::SaveToDB },
+    { "SelectVictim", &LuaCreature::SelectVictim },
+    { "MoveWaypoint", &LuaCreature::MoveWaypoint },
+    { "UpdateEntry", &LuaCreature::UpdateEntry },
 
     { NULL, NULL },
 };
