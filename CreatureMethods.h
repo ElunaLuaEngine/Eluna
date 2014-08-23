@@ -1,14 +1,16 @@
 /*
- * Copyright (C) 2010 - 2014 Eluna Lua Engine <http://emudevs.com/>
- * This program is free software licensed under GPL version 3
- * Please see the included DOCS/LICENSE.md for more information
- */
+* Copyright (C) 2010 - 2014 Eluna Lua Engine <http://emudevs.com/>
+* This program is free software licensed under GPL version 3
+* Please see the included DOCS/LICENSE.md for more information
+*/
 
 #ifndef CREATUREMETHODS_H
 #define CREATUREMETHODS_H
 
 /***
  * Non-[Player] controlled [Unit]s.
+ *
+ * Inherits [Object], [WorldObject], [Unit]
  */
 namespace LuaCreature
 {
@@ -43,10 +45,10 @@ namespace LuaCreature
     }
 
     /**
-     * Returns `true` if the [Creature] completes the [Quest] with the ID `quest_id`,
+     * Returns `true` if the [Creature] completes the [Quest] with the ID `questID`,
      *   and returns `false` otherwise.
      *
-     * @param uint32 questID: the ID of a [Quest]
+     * @param uint32 questID : the ID of a [Quest]
      * @return bool completesQuest
      */
     int CanCompleteQuest(lua_State* L, Creature* creature)
@@ -65,7 +67,7 @@ namespace LuaCreature
      * Returns `true` if the [Creature] can be targeted for attack,
      *   and returns `false` otherwise.
      *
-     * @param bool mustBeDead = false: if `true`, only returns `true` if the [Creature] is also dead. Otherwise, it must be alive.
+     * @param bool mustBeDead = false : if `true`, only returns `true` if the [Creature] is also dead. Otherwise, it must be alive.
      * @return bool targetable
      */
     int IsTargetableForAttack(lua_State* L, Creature* creature)
@@ -84,9 +86,9 @@ namespace LuaCreature
      * Returns `true` if the [Creature] can assist `friend` in combat against `enemy`,
      *   and returns `false` otherwise.
      *
-     * @param Unit friend: the Unit we will be assisting
-     * @param Unit enemy: the Unit that we would attack if we assist `friend`
-     * @param bool checkFaction = true: if `true`, the [Creature] must be the same faction as `friend` to assist
+     * @param Unit friend : the Unit we will be assisting
+     * @param Unit enemy : the Unit that we would attack if we assist `friend`
+     * @param bool checkFaction = true : if `true`, the [Creature] must be the same faction as `friend` to assist
      * @return bool canAssist
      */
     int CanAssistTo(lua_State* L, Creature* creature)
@@ -149,11 +151,16 @@ namespace LuaCreature
      * Returns `true` if the [Creature] can start attacking nearby hostile [Unit]s,
      *   and returns `false` otherwise.
      *
-     * @return bool canInitiateAttack
+     * @return bool canAggro
      */
     int CanAggro(lua_State* L, Creature* creature)
     {
-        Eluna::Push(L, creature->CanInitiateAttack());
+#ifdef TRINITY
+        Eluna::Push(L, !creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC));
+#else
+        // Eluna::Push(L, creature->CanInitiateAttack());
+        Eluna::Push(L, !creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE));
+#endif
         return 1;
     }
 
@@ -265,7 +272,7 @@ namespace LuaCreature
      * Returns `true` if the [Creature] cannot cast `spellId` due to a category cooldown,
      *   and returns `false` otherwise.
      *
-     * @param uint32 spellId: the ID of a [Spell]
+     * @param uint32 spellId : the ID of a [Spell]
      * @return bool hasCooldown
      */
     int HasCategoryCooldown(lua_State* L, Creature* creature)
@@ -280,7 +287,7 @@ namespace LuaCreature
      * Returns `true` if the [Creature] can cast `spellId` when mind-controlled,
      *   and returns `false` otherwise.
      *
-     * @param uint32 spellId: the ID of a [Spell]
+     * @param uint32 spellId : the ID of a [Spell]
      * @return bool hasSpell
      */
     int HasSpell(lua_State* L, Creature* creature)
@@ -295,7 +302,7 @@ namespace LuaCreature
      * Returns `true` if the [Creature] starts the [Quest] `questId`,
      *   and returns `false` otherwise.
      *
-     * @param uint32 questId: the ID of a [Quest]
+     * @param uint32 questId : the ID of a [Quest]
      * @return bool hasQuest
      */
     int HasQuest(lua_State* L, Creature* creature)
@@ -314,7 +321,7 @@ namespace LuaCreature
      * Returns `true` if the [Creature] has `spellId` on cooldown,
      *   and returns `false` otherwise.
      *
-     * @param uint32 spellId: the ID of a [Spell]
+     * @param uint32 spellId : the ID of a [Spell]
      * @return bool hasCooldown
      */
     int HasSpellCooldown(lua_State* L, Creature* creature)
@@ -338,6 +345,12 @@ namespace LuaCreature
     }
 
 #ifdef TRINITY
+    /**
+     * Returns `true` if the [Creature] is an invisible trigger,
+     *   and returns `false` otherwise.
+     *
+     * @return bool canFly
+     */
     int IsTrigger(lua_State* L, Creature* creature)
     {
         Eluna::Push(L, creature->IsTrigger());
@@ -376,7 +389,7 @@ namespace LuaCreature
      * This value does not usually change over a [Creature]'s lifespan,
      *   but can be modified by [Creature:SetRespawnDelay].
      *
-     * @return uint32 respawnDelay: the respawn delay, in seconds
+     * @return uint32 respawnDelay : the respawn delay, in seconds
      */
     int GetRespawnDelay(lua_State* L, Creature* creature)
     {
@@ -393,6 +406,34 @@ namespace LuaCreature
     int GetWanderRadius(lua_State* L, Creature* creature)
     {
         Eluna::Push(L, creature->GetRespawnRadius());
+        return 1;
+    }
+
+#ifdef TRINITY
+    /**
+     * Returns the current waypoint path ID of the [Creature].
+     *
+     * @return uint32 pathId
+     */
+    int GetWaypointPath(lua_State* L, Creature* creature)
+    {
+        Eluna::Push(L, creature->GetWaypointPath());
+        return 1;
+    }
+#endif
+
+    /**
+     * Returns the current waypoint ID of the [Creature].
+     *
+     * @return uint32 wpId
+     */
+    int GetCurrentWaypointId(lua_State* L, Creature* creature)
+    {
+#ifdef TRINITY
+        Eluna::Push(L, creature->GetCurrentWaypointID());
+#else
+        Eluna::Push(L, creature->GetMotionMaster()->getLastReachedWaypoint());
+#endif
         return 1;
     }
 
@@ -447,7 +488,7 @@ namespace LuaCreature
     /**
      * Returns the [Group] that can loot this [Creature].
      *
-     * @return Group lootRecipientGroup: the group or `nil`
+     * @return Group lootRecipientGroup : the group or `nil`
      */
     int GetLootRecipientGroup(lua_State* L, Creature* creature)
     {
@@ -462,7 +503,7 @@ namespace LuaCreature
     /**
      * Returns the [Player] that can loot this [Creature].
      *
-     * @return Player lootRecipient: the player or `nil`
+     * @return Player lootRecipient : the player or `nil`
      */
     int GetLootRecipient(lua_State* L, Creature* creature)
     {
@@ -475,7 +516,7 @@ namespace LuaCreature
      *
      * This is used by the core to apply C++ scripts to the Creature.
      *
-     * It is not used by Eluna.
+     * It is not used by Eluna. Eluna will override AI scripts.
      *
      * @return string scriptName
      */
@@ -488,9 +529,9 @@ namespace LuaCreature
     /**
      * Returns the [Creature]'s AI name.
      *
-     * This is used by the core to override the Creature's default AI.
+     * This is used by the core to assign the Creature's default AI.
      *
-     * If the Creature is scripted by Eluna, this field is overriden.
+     * If the Creature is scripted by Eluna, the AI is overriden.
      *
      * @return string AIName
      */
@@ -503,7 +544,7 @@ namespace LuaCreature
     /**
      * Returns the [Creature]'s script ID.
      *
-     * Every script name is assigned a unique ID by the core.
+     * Every C++ script name is assigned a unique ID by the core.
      *   This returns the ID for this [Creature]'s script name.
      *
      * @return uint32 scriptID
@@ -518,7 +559,7 @@ namespace LuaCreature
      * Returns the [Creature]'s cooldown for `spellID`.
      *
      * @param uint32 spellID
-     * @return uint32 cooldown: the cooldown, in milliseconds
+     * @return uint32 cooldown : the cooldown, in milliseconds
      */
     int GetCreatureSpellCooldownDelay(lua_State* L, Creature* creature)
     {
@@ -531,7 +572,7 @@ namespace LuaCreature
     /**
      * Returns the delay between when the [Creature] dies and when its body despawns.
      *
-     * @return uint32 corpseDelay: the delay, in seconds
+     * @return uint32 corpseDelay : the delay, in seconds
      */
     int GetCorpseDelay(lua_State* L, Creature* creature)
     {
@@ -574,12 +615,12 @@ namespace LuaCreature
      *
      *    target = creature:GetAITarget(4, true, 3, 50, 24328)
      *
-     * @param SelectAggroTarget targetType: how the threat list should be sorted
-     * @param bool playerOnly: if `true`, skips targets that aren't [Player]s
-     * @param uint32 position: if `targetType` is not random, used as an offset into the threat list
-     * @param float distance: if positive, the maximum distance for the target. If negative, the minimum distance
-     * @param int32 aura if positive, the target must have this [Aura]. If negative, the the target must not have this Aura
-     * @return Unit target: the target, or `nil`
+     * @param SelectAggroTarget targetType : how the threat list should be sorted
+     * @param bool playerOnly = false : if `true`, skips targets that aren't [Player]s
+     * @param uint32 position = 0 : used as an offset into the threat list. If `targetType` is random, used as the number of players from top of aggro to choose from
+     * @param float distance = 0.0 : if positive, the maximum distance for the target. If negative, the minimum distance
+     * @param int32 aura = 0 : if positive, the target must have this [Aura]. If negative, the the target must not have this Aura
+     * @return Unit target : the target, or `nil`
      */
     int GetAITarget(lua_State* L, Creature* creature)
     {
@@ -651,6 +692,8 @@ namespace LuaCreature
             std::list<Unit*>::const_iterator itr = targetList.begin();
             if (position)
                 std::advance(itr, urand(0, position));
+            else
+                std::advance(itr, urand(0, targetList.size()-1));
             Eluna::Push(L, *itr);
         }
         break;
@@ -760,6 +803,34 @@ namespace LuaCreature
         return 0;
     }
 
+
+    /**
+     * Makes the [Creature] able to fly if enabled.
+     *
+     * @param bool enable = true
+     */
+    int SetDisableGravity(lua_State* L, Creature* creature)
+    {
+        bool enable = Eluna::CHECKVAL<bool>(L, 2, true);
+
+#ifdef TRINITY
+        creature->SetDisableGravity(!enable);
+#else
+        creature->SetLevitate(enable);
+#endif
+        return 0;
+    }
+
+#ifdef TRINITY
+    int SetLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    {
+        uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);
+
+        creature->SetLootMode(lootMode);
+        return 0;
+    }
+#endif
+
     /**
      * Sets the [Creature]'s death state to `deathState`.
      *
@@ -780,7 +851,7 @@ namespace LuaCreature
     /**
      * Sets whether the [Creature] is currently walking or running.
      *
-     * @param bool enable: `true` to enable walking, `false` for running
+     * @param bool enable = true : `true` to enable walking, `false` for running
      */
     int SetWalk(lua_State* L, Creature* creature)           // TODO: Move same to Player ?
     {
@@ -793,20 +864,23 @@ namespace LuaCreature
     /**
      * Sets whether the [Creature] can be aggroed by movement or not.
      *
-     * @param bool allow: `true` to allow aggro, `false` to disable aggro
+     * @param bool allow = true : `true` to allow aggro, `false` to disable aggro
      */
     int SetAggroEnabled(lua_State* L, Creature* creature)
     {
-        bool allow = Eluna::CHECKVAL<bool>(L, 2);
+        bool allow = Eluna::CHECKVAL<bool>(L, 2, true);
 
+#ifdef TRINITY
         if (allow)
-        {
-            creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
-        }
+            creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
         else
-        {
+            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
+#else
+        if (allow)
+            creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+        else
             creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
-        }
+#endif
 
         return 0;
     }
@@ -814,7 +888,7 @@ namespace LuaCreature
     /**
      * Sets whether the [Creature] gives reputation or not.
      *
-     * @param bool disable: `true` to disable reputation, `false` to enable
+     * @param bool disable = true : `true` to disable reputation, `false` to enable
      */
     int SetDisableReputationGain(lua_State* L, Creature* creature)
     {
@@ -852,7 +926,7 @@ namespace LuaCreature
     /**
      * Sets the time it takes for the [Creature] to respawn when killed.
      *
-     * @param uint32 delay: the delay, in seconds
+     * @param uint32 delay : the delay, in seconds
      */
     int SetRespawnDelay(lua_State* L, Creature* creature)
     {
@@ -878,7 +952,7 @@ namespace LuaCreature
     /**
      * Sets whether the [Creature] can search for assistance at low health or not.
      *
-     * @param bool enable: `true` to disable searching, `false` to allow
+     * @param bool enable = true : `true` to disable searching, `false` to allow
      */
     int SetNoSearchAssistance(lua_State* L, Creature* creature)
     {
@@ -891,7 +965,7 @@ namespace LuaCreature
     /**
      * Sets whether the [Creature] can call nearby enemies for help in combat or not.
      *
-     * @param bool enable: `true` to disable calling for help, `false` to enable
+     * @param bool enable = true : `true` to disable calling for help, `false` to enable
      */
     int SetNoCallAssistance(lua_State* L, Creature* creature)
     {
@@ -902,18 +976,27 @@ namespace LuaCreature
     }
 
     /**
-     * Sets whether the creature is hovering or not.
+     * Sets whether the creature is hovering / levitating or not.
      *
-     * @param bool enable: `true` to enable hovering, `false` to disable
+     * @param bool enable = true : `true` to enable hovering, `false` to disable
      */
     int SetHover(lua_State* L, Creature* creature)
     {
         bool enable = Eluna::CHECKVAL<bool>(L, 2, true);
 
-#ifndef TRINITY
-        creature->SetLevitate(enable);
-#else
+#ifdef TRINITY
         creature->SetHover(enable);
+#else
+        // Copy paste from Aura::HandleAuraHover
+        // TODO: implement core side properly
+        WorldPacket data;
+        if (enable)
+            data.Initialize(SMSG_MOVE_SET_HOVER, 8 + 4);
+        else
+            data.Initialize(SMSG_MOVE_UNSET_HOVER, 8 + 4);
+        data << creature->GetPackGUID();
+        data << uint32(0);
+        creature->SendMessageToSet(&data, true);
 #endif
         return 0;
     }
@@ -922,6 +1005,8 @@ namespace LuaCreature
 
     /**
      * Despawn this [Creature].
+     *
+     * @param uint32 delay = 0 : dely to despawn in milliseconds
      */
     int DespawnOrUnsummon(lua_State* L, Creature* creature)
     {
@@ -1037,8 +1122,8 @@ namespace LuaCreature
     /**
      * Transform the [Creature] into another Creature.
      *
-     * @param uint32 entry: the Creature ID to transform into
-     * @param uint32 dataGUIDLow: use this Creature's model and equipment instead of the defaults
+     * @param uint32 entry : the Creature ID to transform into
+     * @param uint32 dataGUIDLow = 0 : use this Creature's model and equipment instead of the defaults
      */
     int UpdateEntry(lua_State* L, Creature* creature)
     {

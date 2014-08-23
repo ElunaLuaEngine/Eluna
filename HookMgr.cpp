@@ -1471,11 +1471,11 @@ struct ElunaCreatureAI : ScriptedAI
     void UpdateAI(uint32 diff) override
 #endif
     {
-#ifndef TRINITY
-        if (IsCombatMovement())
+#ifdef TRINITY
+        if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
             ScriptedAI::UpdateAI(diff);
 #else
-        if (!me->HasReactState(REACT_PASSIVE))
+        if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE))
             ScriptedAI::UpdateAI(diff);
 #endif
         ENTRY_BEGIN(CreatureEventBindings, me->GetEntry(), CREATURE_EVENT_ON_AIUPDATE, return);

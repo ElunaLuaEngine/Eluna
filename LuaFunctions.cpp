@@ -722,9 +722,9 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetDefaultMovementType", &LuaCreature::GetDefaultMovementType },
     { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },
     { "GetWanderRadius", &LuaCreature::GetWanderRadius },
+    { "GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId },
 #ifdef TRINITY
     { "GetWaypointPath", &LuaCreature::GetWaypointPath },
-    { "GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId },
     { "GetLootMode", &LuaCreature::GetLootMode },
 #endif
     { "GetLootRecipient", &LuaCreature::GetLootRecipient },
@@ -736,9 +736,7 @@ ElunaRegister<Creature> CreatureMethods[] =
 
     // Setters
     { "SetHover", &LuaCreature::SetHover },
-#ifdef TRINITY
-     {"SetDisableGravity", &LuaCreature::SetDisableGravity },
-#endif
+    { "SetDisableGravity", &LuaCreature::SetDisableGravity },
     { "SetAggroEnabled", &LuaCreature::SetAggroEnabled },
     { "SetNoCallAssistance", &LuaCreature::SetNoCallAssistance },
     { "SetNoSearchAssistance", &LuaCreature::SetNoSearchAssistance },
