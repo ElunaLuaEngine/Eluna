@@ -152,9 +152,9 @@ namespace LuaGlobalFunctions
             if (Player* player = it->second->GetPlayer())
             {
 #ifndef TRINITY
-                if (player->GetSession() && ((team >= TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster())))
+                if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
 #else
-                if (player->GetSession() && ((team >= TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster())))
+                if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
 #endif
                 {
                     ++i;
@@ -1262,7 +1262,6 @@ namespace LuaGlobalFunctions
                 item->SaveToDB();
 #else
                 item->SaveToDB(trans);
-                SQLTransaction trans = CharacterDatabase.BeginTransaction();
 #endif
                 draft.AddItem(item);
                 ++addedItems;

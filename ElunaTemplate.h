@@ -27,11 +27,13 @@ template<typename T>
 class ElunaTemplate
 {
 public:
-    static const char* tname;
-    static bool manageMemory;
+    static const char* tname = NULL;
+    static bool manageMemory = false;
 
     static int typeT(lua_State* L)
     {
+        ASSERT(tname);
+
         lua_pushstring(L, tname);
         return 1;
     }
@@ -42,6 +44,8 @@ public:
     // that will only be needed on lua side and will not be managed by TC/mangos/<core>
     static void Register(lua_State* L, const char* name, bool gc = false)
     {
+        ASSERT(!tname);
+
         tname = name;
         manageMemory = gc;
 
@@ -86,6 +90,8 @@ public:
     template<typename C>
     static void SetMethods(lua_State* L, ElunaRegister<C>* methodTable)
     {
+        ASSERT(tname);
+
         if (!methodTable)
             return;
 
@@ -120,6 +126,8 @@ public:
     // Remember special case ElunaTemplate<Vehicle>::gcT
     static int gcT(lua_State* L)
     {
+        ASSERT(tname);
+
         if (!manageMemory)
             return 0;
 
@@ -132,6 +140,8 @@ public:
 
     static int push(lua_State* L, T const* obj)
     {
+        ASSERT(tname);
+
         if (!obj)
         {
             lua_pushnil(L);
@@ -186,6 +196,8 @@ public:
 
     static T* check(lua_State* L, int narg, bool error = true)
     {
+        ASSERT(tname);
+
         T** ptrHold = static_cast<T**>(lua_touserdata(L, narg));
         if (!ptrHold)
         {
@@ -227,6 +239,8 @@ public:
 
     static int thunk(lua_State* L)
     {
+        ASSERT(tname);
+
         T* obj = Eluna::CHECKOBJ<T>(L, 1); // get self
         if (!obj)
             return 0;
@@ -245,6 +259,8 @@ public:
 
     static int tostringT(lua_State* L)
     {
+        ASSERT(tname);
+
         T* obj = Eluna::CHECKOBJ<T>(L, 1); // get self
         if (obj)
             lua_pushfstring(L, "%s: (%p)", tname, obj);
