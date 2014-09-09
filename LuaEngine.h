@@ -194,6 +194,7 @@ public:
     void OnQuestAbandon(Player* pPlayer, uint32 questId);
     InventoryResult OnCanUseItem(const Player* pPlayer, uint32 itemEntry);
     void OnLuaStateClose();
+    void OnLuaStateOpen();
     bool OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel);
 
     /* Item */

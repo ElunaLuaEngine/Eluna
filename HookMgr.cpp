@@ -116,6 +116,13 @@ void Eluna::OnLuaStateClose()
     ENDCALL();
 }
 
+void Eluna::OnLuaStateOpen()
+{
+    EVENT_BEGIN(ServerEventBindings, ELUNA_EVENT_ON_LUA_STATE_OPEN, return);
+    EVENT_EXECUTE(0);
+    ENDCALL();
+}
+
 // areatrigger
 bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
 {

@@ -124,6 +124,8 @@ playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)
 
     // run scripts
     RunScripts();
+
+    OnLuaStateOpen();
 }
 
 Eluna::~Eluna()
