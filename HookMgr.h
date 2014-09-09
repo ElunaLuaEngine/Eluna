@@ -61,7 +61,6 @@ namespace HookMgr
 
         // Eluna
         ELUNA_EVENT_ON_LUA_STATE_CLOSE          =     16,       // (event)
-        ELUNA_EVENT_ON_LUA_STATE_OPEN           =     33,       // (event) - Possibly change hook ID for increments? Not implemented on TC/Cmangos
 
         // Map
         MAP_EVENT_ON_CREATE                     =     17,       // (event, map)
@@ -89,6 +88,8 @@ namespace HookMgr
         
         WORLD_EVENT_ON_DELETE_CREATURE          =     31,       // (event, creature)
         WORLD_EVENT_ON_DELETE_GAMEOBJECT        =     32,       // (event, gameobject)
+        
+        ELUNA_EVENT_ON_LUA_STATE_OPEN           =     33,       // (event) - Possibly change hook ID for increments? Not implemented on TC/Cmangos
 
         SERVER_EVENT_COUNT
     };
