@@ -104,6 +104,7 @@ GameObjectEventBindings(new EntryBind<HookMgr::GameObjectEvents>("GameObjectEven
 GameObjectGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (gameobject)", *this)),
 ItemEventBindings(new EntryBind<HookMgr::ItemEvents>("ItemEvents", *this)),
 ItemGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (item)", *this)),
+BGEventBindings(new EntryBind<HookMgr::BGEvents>("BGEvents", *this)),
 playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)", *this))
 {
     // open base lua
@@ -151,6 +152,7 @@ Eluna::~Eluna()
     delete ItemEventBindings;
     delete ItemGossipBindings;
     delete playerGossipBindings;
+    delete BGEventBindings;
 
     // Must close lua state after deleting stores and mgr
     lua_close(L);
@@ -766,6 +768,21 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         if (evt < HookMgr::GOSSIP_EVENT_COUNT)
         {
             playerGossipBindings->Insert(id, evt, functionRef);
+            return;
+        }
+        break;
+
+    case HookMgr::REGTYPE_BG:
+        if (evt < HookMgr::BG_EVENT_COUNT)
+        {
+            if (!BattleGroundTypeId(id))
+            {
+                luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                luaL_error(L, "Couldn't find battleground with type (ID: %d)!", id);
+                return;
+            }
+
+            BGEventBindings->Insert(id, evt, functionRef);
             return;
         }
         break;

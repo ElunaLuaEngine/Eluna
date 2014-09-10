@@ -1932,3 +1932,13 @@ CreatureAI* Eluna::GetAI(Creature* creature)
         return NULL;
     return new ElunaCreatureAI(creature);
 }
+
+void Eluna::OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
+{
+    ENTRY_BEGIN(BGEventBindings, bg->GetTypeID(), BG_EVENT_ON_START, return);
+    Push(L, bg);
+    Push(L, bgId);
+    Push(L, instanceId);
+    ENTRY_EXECUTE(0);
+    ENDCALL();
+}

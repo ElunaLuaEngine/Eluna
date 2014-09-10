@@ -601,6 +601,17 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    int RegisterBGEvent(lua_State* L)
+    {
+        uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
+        luaL_checktype(L, 2, LUA_TFUNCTION);
+        lua_pushvalue(L, 2);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
+        if (functionRef > 0)
+            sEluna->Register(HookMgr::REGTYPE_BG, 0, ev, functionRef);
+        return 0;
+    }
+
     int ReloadEluna(lua_State* /*L*/)
     {
         Eluna::reload = true;
