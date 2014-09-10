@@ -775,13 +775,6 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
     case HookMgr::REGTYPE_BG:
         if (evt < HookMgr::BG_EVENT_COUNT)
         {
-            if (!BattleGroundTypeId(id))
-            {
-                luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-                luaL_error(L, "Couldn't find battleground with type (ID: %d)!", id);
-                return;
-            }
-
             BGEventBindings->Insert(id, evt, functionRef);
             return;
         }
