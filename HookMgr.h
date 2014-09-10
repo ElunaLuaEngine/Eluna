@@ -275,11 +275,13 @@ namespace HookMgr
         GOSSIP_EVENT_COUNT
     };
 
-    // RegisterBGEvent(map_id/entry, EventId, function)
+    // RegisterBGEvent(EventId, function)
     enum BGEvents
     {
         BG_EVENT_ON_START                               = 1,    // (event, bg, bgId, instanceId) - Needs to be added to TC
-        BG_EVENT_ON_END                                 = 2,    // (event, ???) - Needs to be added to TC
+        BG_EVENT_ON_END                                 = 2,    // (event, bg, bgId, instanceId, winner) - Needs to be added to TC
+        BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+        BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId) - Needs to be added to TC
         BG_EVENT_COUNT
     };
 };

@@ -96,6 +96,7 @@ PlayerEventBindings(new EventBind<HookMgr::PlayerEvents>("PlayerEvents", *this))
 GuildEventBindings(new EventBind<HookMgr::GuildEvents>("GuildEvents", *this)),
 GroupEventBindings(new EventBind<HookMgr::GroupEvents>("GroupEvents", *this)),
 VehicleEventBindings(new EventBind<HookMgr::VehicleEvents>("VehicleEvents", *this)),
+BGEventBindings(new EventBind<HookMgr::BGEvents>("BGEvents", *this)),
 
 PacketEventBindings(new EntryBind<HookMgr::PacketEvents>("PacketEvents", *this)),
 CreatureEventBindings(new EntryBind<HookMgr::CreatureEvents>("CreatureEvents", *this)),
@@ -104,7 +105,6 @@ GameObjectEventBindings(new EntryBind<HookMgr::GameObjectEvents>("GameObjectEven
 GameObjectGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (gameobject)", *this)),
 ItemEventBindings(new EntryBind<HookMgr::ItemEvents>("ItemEvents", *this)),
 ItemGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (item)", *this)),
-BGEventBindings(new EntryBind<HookMgr::BGEvents>("BGEvents", *this)),
 playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)", *this))
 {
     // open base lua
@@ -659,6 +659,14 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         }
         break;
 
+    case HookMgr::REGTYPE_BG:
+        if (evt < HookMgr::BG_EVENT_COUNT)
+        {
+            BGEventBindings->Insert(evt, functionRef);
+            return;
+        }
+        break;
+
     case HookMgr::REGTYPE_PACKET:
         if (evt < HookMgr::PACKET_EVENT_COUNT)
         {
@@ -768,14 +776,6 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         if (evt < HookMgr::GOSSIP_EVENT_COUNT)
         {
             playerGossipBindings->Insert(id, evt, functionRef);
-            return;
-        }
-        break;
-
-    case HookMgr::REGTYPE_BG:
-        if (evt < HookMgr::BG_EVENT_COUNT)
-        {
-            BGEventBindings->Insert(id, evt, functionRef);
             return;
         }
         break;
