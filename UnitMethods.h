@@ -656,39 +656,39 @@ namespace LuaUnit
         const char* str = NULL;
         switch (unit->getClass())
         {
-        case 1:
-            str = "Warrior";
-            break;
-        case 2:
-            str = "Paladin";
-            break;
-        case 3:
-            str = "Hunter";
-            break;
-        case 4:
-            str = "Rogue";
-            break;
-        case 5:
-            str = "Priest";
-            break;
-        case 6:
-            str = "Death Knight";
-            break;
-        case 7:
-            str = "Shaman";
-            break;
-        case 8:
-            str = "Mage";
-            break;
-        case 9:
-            str = "Warlock";
-            break;
-        case 11:
-            str = "Druid";
-            break;
-        default:
-            str = NULL;
-            break;
+            case 1:
+                str = "Warrior";
+                break;
+            case 2:
+                str = "Paladin";
+                break;
+            case 3:
+                str = "Hunter";
+                break;
+            case 4:
+                str = "Rogue";
+                break;
+            case 5:
+                str = "Priest";
+                break;
+            case 6:
+                str = "Death Knight";
+                break;
+            case 7:
+                str = "Shaman";
+                break;
+            case 8:
+                str = "Mage";
+                break;
+            case 9:
+                str = "Warlock";
+                break;
+            case 11:
+                str = "Druid";
+                break;
+            default:
+                str = NULL;
+                break;
         }
 
         Eluna::Push(L, str);
@@ -1422,20 +1422,20 @@ namespace LuaUnit
         bool delayed = Eluna::CHECKVAL<bool>(L, 3, true);
         switch (spellType)
         {
-        case 0:
-            spellType = CURRENT_MELEE_SPELL;
-            break;
-        case 1:
-            spellType = CURRENT_GENERIC_SPELL;
-            break;
-        case 2:
-            spellType = CURRENT_CHANNELED_SPELL;
-            break;
-        case 3:
-            spellType = CURRENT_AUTOREPEAT_SPELL;
-            break;
-        default:
-            return luaL_argerror(L, 2, "valid CurrentSpellTypes expected");
+            case 0:
+                spellType = CURRENT_MELEE_SPELL;
+                break;
+            case 1:
+                spellType = CURRENT_GENERIC_SPELL;
+                break;
+            case 2:
+                spellType = CURRENT_CHANNELED_SPELL;
+                break;
+            case 3:
+                spellType = CURRENT_AUTOREPEAT_SPELL;
+                break;
+            default:
+                return luaL_argerror(L, 2, "valid CurrentSpellTypes expected");
         }
 
         unit->InterruptSpell((CurrentSpellTypes)spellType, delayed);
@@ -1461,8 +1461,8 @@ namespace LuaUnit
             uint8 eff = spellInfo->Effect[i];
             if (eff >= TOTAL_SPELL_EFFECTS)
                 continue;
-            if (IsAreaAuraEffect(eff)           ||
-                eff == SPELL_EFFECT_APPLY_AURA  ||
+            if (IsAreaAuraEffect(eff) ||
+                eff == SPELL_EFFECT_APPLY_AURA ||
                 eff == SPELL_EFFECT_PERSISTENT_AREA_AURA)
             {
                 Aura* aur = CreateAura(spellInfo, SpellEffIndex(i), NULL, holder, target);
@@ -1514,33 +1514,6 @@ namespace LuaUnit
             unit->PlayDistanceSound(soundId, player);
         else
             unit->PlayDistanceSound(soundId);
-        return 0;
-    }
-
-    int RegisterEvent(lua_State* L, Unit* unit)
-    {
-        luaL_checktype(L, 2, LUA_TFUNCTION);
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 3);
-        uint32 repeats = Eluna::CHECKVAL<uint32>(L, 4);
-
-        lua_pushvalue(L, 2);
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        functionRef = sEluna->m_EventMgr->AddEvent(&unit->m_Events, functionRef, delay, repeats, unit);
-        if (functionRef)
-            Eluna::Push(L, functionRef);
-        return 1;
-    }
-
-    int RemoveEventById(lua_State* L, Unit* unit)
-    {
-        int eventId = Eluna::CHECKVAL<int>(L, 2);
-        sEluna->m_EventMgr->RemoveEvent(&unit->m_Events, eventId);
-        return 0;
-    }
-
-    int RemoveEvents(lua_State* /*L*/, Unit* unit)
-    {
-        sEluna->m_EventMgr->RemoveEvents(&unit->m_Events);
         return 0;
     }
 

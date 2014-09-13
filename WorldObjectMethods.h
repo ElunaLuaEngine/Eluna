@@ -435,26 +435,26 @@ namespace LuaWorldObject
 #ifndef TRINITY
         switch (GUID_HIPART(guid))
         {
-        case HIGHGUID_PLAYER:        Eluna::Push(L, obj->GetMap()->GetPlayer(ObjectGuid(guid))); break;
-        case HIGHGUID_TRANSPORT:
-        case HIGHGUID_MO_TRANSPORT:
-        case HIGHGUID_GAMEOBJECT:    Eluna::Push(L, obj->GetMap()->GetGameObject(ObjectGuid(guid))); break;
+            case HIGHGUID_PLAYER:        Eluna::Push(L, obj->GetMap()->GetPlayer(ObjectGuid(guid))); break;
+            case HIGHGUID_TRANSPORT:
+            case HIGHGUID_MO_TRANSPORT:
+            case HIGHGUID_GAMEOBJECT:    Eluna::Push(L, obj->GetMap()->GetGameObject(ObjectGuid(guid))); break;
 #if (!defined(TBC) && !defined(CLASSIC))
-        case HIGHGUID_VEHICLE:
+            case HIGHGUID_VEHICLE:
 #endif
-        case HIGHGUID_UNIT:
-        case HIGHGUID_PET:           Eluna::Push(L, obj->GetMap()->GetAnyTypeCreature(ObjectGuid(guid))); break;
+            case HIGHGUID_UNIT:
+            case HIGHGUID_PET:           Eluna::Push(L, obj->GetMap()->GetAnyTypeCreature(ObjectGuid(guid))); break;
         }
 #else
         switch (GUID_HIPART(guid))
         {
-        case HIGHGUID_PLAYER:        Eluna::Push(L, eObjectAccessor->GetPlayer(*obj, ObjectGuid(guid))); break;
-        case HIGHGUID_TRANSPORT:
-        case HIGHGUID_MO_TRANSPORT:
-        case HIGHGUID_GAMEOBJECT:    Eluna::Push(L, eObjectAccessor->GetGameObject(*obj, ObjectGuid(guid))); break;
-        case HIGHGUID_VEHICLE:
-        case HIGHGUID_UNIT:          Eluna::Push(L, eObjectAccessor->GetCreature(*obj, ObjectGuid(guid))); break;
-        case HIGHGUID_PET:           Eluna::Push(L, eObjectAccessor->GetPet(*obj, ObjectGuid(guid))); break;
+            case HIGHGUID_PLAYER:        Eluna::Push(L, eObjectAccessor->GetPlayer(*obj, ObjectGuid(guid))); break;
+            case HIGHGUID_TRANSPORT:
+            case HIGHGUID_MO_TRANSPORT:
+            case HIGHGUID_GAMEOBJECT:    Eluna::Push(L, eObjectAccessor->GetGameObject(*obj, ObjectGuid(guid))); break;
+            case HIGHGUID_VEHICLE:
+            case HIGHGUID_UNIT:          Eluna::Push(L, eObjectAccessor->GetCreature(*obj, ObjectGuid(guid))); break;
+            case HIGHGUID_PET:           Eluna::Push(L, eObjectAccessor->GetPet(*obj, ObjectGuid(guid))); break;
         }
 #endif
         return 1;
@@ -604,32 +604,83 @@ namespace LuaWorldObject
         TempSummonType type;
         switch (spawnType)
         {
-        case 1:
-            type = TEMPSUMMON_TIMED_OR_DEAD_DESPAWN;
-            break;
-        case 2:
-            type = TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN;
-            break;
-        case 3:
-            type = TEMPSUMMON_TIMED_DESPAWN;
-            break;
-        case 5:
-            type = TEMPSUMMON_CORPSE_DESPAWN;
-            break;
-        case 6:
-            type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
-            break;
-        case 7:
-            type = TEMPSUMMON_DEAD_DESPAWN;
-            break;
-        case 8:
-            type = TEMPSUMMON_MANUAL_DESPAWN;
-            break;
-        default:
-            return luaL_argerror(L, 7, "valid SpawnType expected");
+            case 1:
+                type = TEMPSUMMON_TIMED_OR_DEAD_DESPAWN;
+                break;
+            case 2:
+                type = TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN;
+                break;
+            case 3:
+                type = TEMPSUMMON_TIMED_DESPAWN;
+                break;
+            case 5:
+                type = TEMPSUMMON_CORPSE_DESPAWN;
+                break;
+            case 6:
+                type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
+                break;
+            case 7:
+                type = TEMPSUMMON_DEAD_DESPAWN;
+                break;
+            case 8:
+                type = TEMPSUMMON_MANUAL_DESPAWN;
+                break;
+            default:
+                return luaL_argerror(L, 7, "valid SpawnType expected");
         }
         Eluna::Push(L, obj->SummonCreature(entry, x, y, z, o, type, despawnTimer));
         return 1;
+    }
+
+    /**
+     * Registers a timed event to the [WorldObject]
+     * When the passed function is called, the parameters `(eventId, delay, repeats, worldobject)` are passed to it.
+     * Repeats will decrease on each call if the event does not repeat indefinitely
+     *
+     * Note that for [Creature] and [GameObject] the timed event timer ticks only if the creature is in sight of someone
+     * For all [WorldObject]s the timed events are removed when the object is destoryed. This means that for example a [Player]'s events are removed on logout.
+     *
+     * @param function function : function to trigger when the time has passed
+     * @param uint32 delay : set time in milliseconds for the event to trigger
+     * @param uint32 repeats : how many times for the event to repeat, 0 is infinite
+     * @return int eventId : unique ID for the timed event used to cancel it or nil
+     */
+    int RegisterEvent(lua_State* L, WorldObject* obj)
+    {
+        luaL_checktype(L, 2, LUA_TFUNCTION);
+        uint32 delay = Eluna::CHECKVAL<uint32>(L, 3);
+        uint32 repeats = Eluna::CHECKVAL<uint32>(L, 4);
+
+        lua_pushvalue(L, 2);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
+        if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
+        {
+            obj->elunaEvents.AddEvent(functionRef, delay, repeats);
+            Eluna::Push(L, functionRef);
+        }
+        return 1;
+    }
+
+    /**
+     * Removes the timed event from a [WorldObject] by the specified event ID
+     *
+     * @param int eventId : event Id to remove
+     */
+    int RemoveEventById(lua_State* L, WorldObject* obj)
+    {
+        int eventId = Eluna::CHECKVAL<int>(L, 2);
+        obj->elunaEvents.RemoveEvent(eventId);
+        return 0;
+    }
+
+    /**
+     * Removes all timed events from a [WorldObject]
+     *
+     */
+    int RemoveEvents(lua_State* /*L*/, WorldObject* obj)
+    {
+        obj->elunaEvents.RemoveEvents();
+        return 0;
     }
 };
 #endif

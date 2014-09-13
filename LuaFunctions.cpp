@@ -192,6 +192,9 @@ ElunaRegister<WorldObject> WorldObjectMethods[] =
     { "SummonGameObject", &LuaWorldObject::SummonGameObject },            // :SummonGameObject(entry, x, y, z, o[, respawnDelay]) - Spawns an object to location. Returns the object or nil
     { "SpawnCreature", &LuaWorldObject::SpawnCreature },                  // :SpawnCreature(entry, x, y, z, o[, spawnType, despawnDelay]) - Spawns a creature to location that despawns after given time (0 for infinite). Returns the creature or nil
     { "SendPacket", &LuaWorldObject::SendPacket },                        // :SendPacket(packet) - Sends a specified packet to everyone around
+    { "RegisterEvent", &LuaWorldObject::RegisterEvent },
+    { "RemoveEventById", &LuaWorldObject::RemoveEventById },
+    { "RemoveEvents", &LuaWorldObject::RemoveEvents },
 
     { NULL, NULL },
 };
@@ -321,7 +324,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "IsInAccessiblePlaceFor", &LuaUnit::IsInAccessiblePlaceFor },   // :IsInAccessiblePlaceFor(creature) - Returns if the unit is in an accessible place for the specified creature
     { "IsVendor", &LuaUnit::IsVendor },                               // :IsVendor() - Returns if the unit is a vendor or not
     { "IsWithinLoS", &LuaUnit::IsWithinLoS },                         // :IsWithinLoS(x, y, z)
-    {"IsRooted", &LuaUnit::IsRooted},                                 // :IsRooted()
+    { "IsRooted", &LuaUnit::IsRooted },                               // :IsRooted()
     { "IsFullHealth", &LuaUnit::IsFullHealth },                       // :IsFullHealth() - Returns if the unit is full health
     { "HasAura", &LuaUnit::HasAura },                                 // :HasAura(spellId) - Returns true if the unit has the aura from the spell
     { "IsStandState", &LuaUnit::IsStandState },                       // :IsStandState() - Returns true if the unit is standing
@@ -330,9 +333,6 @@ ElunaRegister<Unit> UnitMethods[] =
 #endif
 
     // Other
-    { "RegisterEvent", &LuaUnit::RegisterEvent },                     // :RegisterEvent(function, delay, repeats) - The timer ticks if this unit is visible to someone. The function is called with arguments (eventid, delay, repeats, unit) after the time has passed if the unit exists. Returns EventId
-    { "RemoveEventById", &LuaUnit::RemoveEventById },                 // :RemoveEventById(eventID) - Removes a Registered (timed) event by it's ID.
-    { "RemoveEvents", &LuaUnit::RemoveEvents },                       // :RemoveEvents() - Removes all registered timed events
     { "AddAura", &LuaUnit::AddAura },                                 // :AddAura(spellId, target) - Adds an aura to the specified target
     { "RemoveAura", &LuaUnit::RemoveAura },                           // :RemoveAura(spellId[, casterGUID]) - Removes an aura from the unit by the spellId, casterGUID(Original caster) is optional
     { "RemoveAllAuras", &LuaUnit::RemoveAllAuras },                   // :RemoveAllAuras() - Removes all the unit's auras
@@ -826,9 +826,6 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "IsSpawned", &LuaGameObject::IsSpawned },
 
     // Other
-    { "RegisterEvent", &LuaGameObject::RegisterEvent },
-    { "RemoveEventById", &LuaGameObject::RemoveEventById },
-    { "RemoveEvents", &LuaGameObject::RemoveEvents },
     { "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },
     { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },
     { "Despawn", &LuaGameObject::Despawn },

@@ -205,50 +205,6 @@ namespace LuaGameObject
     }
 
     /**
-     * Registers a timed event to the [GameObject]
-     *
-     * @param function function : function to trigger when the time has passed
-     * @param uint32 delay : set time in milliseconds for the event to trigger
-     * @param uint32 repeats : how many times for the event to repeat, 0 is infinite
-     * @return int32 eventId : unique ID for the timed event used to cancel it
-     */
-    int RegisterEvent(lua_State* L, GameObject* go)
-    {
-        luaL_checktype(L, 2, LUA_TFUNCTION);
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 3);
-        uint32 repeats = Eluna::CHECKVAL<uint32>(L, 4);
-
-        lua_pushvalue(L, 2);
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        functionRef = sEluna->m_EventMgr->AddEvent(&go->m_Events, functionRef, delay, repeats, go);
-        if (functionRef)
-            Eluna::Push(L, functionRef);
-        return 1;
-    }
-
-    /**
-     * Removes the timed event from a [GameObject] by the specified event ID
-     *
-     * @param int32 eventId : event Id to remove
-     */
-    int RemoveEventById(lua_State* L, GameObject* go)
-    {
-        int eventId = Eluna::CHECKVAL<int>(L, 2);
-        sEluna->m_EventMgr->RemoveEvent(&go->m_Events, eventId);
-        return 0;
-    }
-
-    /**
-     * Removes all timed events from a [GameObject]
-     *
-     */
-    int RemoveEvents(lua_State* /*L*/, GameObject* go)
-    {
-        sEluna->m_EventMgr->RemoveEvents(&go->m_Events);
-        return 0;
-    }
-
-    /**
      * Changes uses a door or a button type [GameObject]
      *
      * @param uint32 delay : cooldown time in seconds to restore the [GameObject] back to normal

@@ -12,9 +12,7 @@
 #include "ElunaTemplate.h"
 #include "ElunaUtility.h"
 
-// Some dummy includes containing BOOST_VERSION:
-// ObjectAccessor.h Config.h Log.h
-#ifdef BOOST_VERSION
+#ifdef USING_BOOST
 #include <boost/filesystem.hpp>
 #else
 #include <ace/ACE.h>
@@ -89,7 +87,7 @@ void Eluna::ReloadEluna()
 Eluna::Eluna():
 L(luaL_newstate()),
 
-m_EventMgr(new EventMgr(*this)),
+eventMgr(NULL),
 
 ServerEventBindings(new EventBind<HookMgr::ServerEvents>("ServerEvents", *this)),
 PlayerEventBindings(new EventBind<HookMgr::PlayerEvents>("PlayerEvents", *this)),
@@ -122,6 +120,10 @@ playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)
     ASSERT(!Eluna::GEluna);
     Eluna::GEluna = this;
 
+    // Set event manager. Must be after setting sEluna
+    eventMgr = new EventMgr();
+    eventMgr->globalProcessor = new ElunaEventProcessor(NULL);
+
     // run scripts
     RunScripts();
 
@@ -132,7 +134,7 @@ Eluna::~Eluna()
 {
     OnLuaStateClose();
 
-    delete m_EventMgr;
+    delete eventMgr;
 
     // Replace this with map remove if making multithread version
     Eluna::GEluna = NULL;
@@ -190,7 +192,7 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
 {
     ELUNA_LOG_DEBUG("[Eluna]: GetScripts from path `%s`", path.c_str());
 
-#ifdef BOOST_VERSION
+#ifdef USING_BOOST
     boost::filesystem::path someDir(path);
     boost::filesystem::directory_iterator end_iter;
 

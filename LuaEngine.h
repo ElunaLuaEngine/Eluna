@@ -108,7 +108,7 @@ public:
     lua_State* L;
     int userdata_table;
 
-    EventMgr* m_EventMgr;
+    EventMgr* eventMgr;
 
     EventBind<HookMgr::ServerEvents>*       ServerEventBindings;
     EventBind<HookMgr::PlayerEvents>*       PlayerEventBindings;

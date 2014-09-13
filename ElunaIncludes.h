@@ -120,3 +120,9 @@ enum SelectAggroTarget
     SELECT_TARGET_FARTHEST
 };
 #endif
+
+// Some dummy includes containing BOOST_VERSION:
+// ObjectAccessor.h Config.h Log.h
+#ifdef BOOST_VERSION
+#define USING_BOOST
+#endif

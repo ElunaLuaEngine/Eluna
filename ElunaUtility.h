@@ -43,6 +43,9 @@ typedef uint64 ObjectGuid;
 #ifndef UNORDERED_MAP
 #define UNORDERED_MAP std::unordered_map
 #endif
+#ifndef UNORDERED_SET
+#define UNORDERED_ET std::unordered_set
+#endif
 
 class Unit;
 class WorldObject;
@@ -90,6 +93,35 @@ namespace ElunaUtil
         uint32 i_hostile;
 
         WorldObjectInRangeCheck(WorldObjectInRangeCheck const&);
+    };
+
+    /*
+     * Usage:
+     * Inherit this class, then when needing lock, use
+     * ReadGuard lock(_lock);
+     * or
+     * WriteGuard lock(_lock);
+     * 
+     * The lock is automatically released at end of scope
+     */
+    class RWLockable
+    {
+    public:
+
+#ifdef USING_BOOST
+        typedef boost::shared_mutex LockType;
+        typedef boost::shared_lock<boost::shared_mutex> ReadGuard;
+        typedef boost::unique_lock<boost::shared_mutex> WriteGuard;
+#else
+        typedef ACE_RW_Thread_Mutex LockType;
+        typedef ACE_Read_Guard<LockType> ReadGuard;
+        typedef ACE_Write_Guard<LockType> WriteGuard;
+#endif
+
+        LockType& GetLock() { return _lock; }
+
+    private:
+        LockType _lock;
     };
 };
 

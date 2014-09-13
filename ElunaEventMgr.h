@@ -7,75 +7,82 @@
 #ifndef _ELUNA_EVENT_MGR_H
 #define _ELUNA_EVENT_MGR_H
 
+#include "ElunaUtility.h"
 #include "Common.h"
+#include <map>
+
 #ifdef TRINITY
-#include "EventProcessor.h"
+#include "Define.h"
 #else
-#include "Utilities/EventProcessor.h"
+#include "Platform/Define.h"
 #endif
 
-class Eluna;
 class EventMgr;
-class EventProcessor;
-class Object;
+class ElunaEventProcessor;
+class WorldObject;
 
-class LuaEvent : public BasicEvent
+class LuaEvent
 {
     friend class EventMgr;
+    friend class ElunaEventProcessor;
 
 public:
-    LuaEvent(Eluna& _E, EventProcessor* _events, int _funcRef, uint32 _delay, uint32 _calls, Object* _obj);
-    ~LuaEvent();
-
     // Should never execute on dead events
-    bool Execute(uint64 time, uint32 diff);
+    void Execute();
+    bool to_Abort;
 
 private:
-    Eluna& E;
-    EventProcessor* events; // Pointer to events (holds the timed event)
+    LuaEvent(ElunaEventProcessor* _events, int _funcRef, uint32 _delay, uint32 _calls);
+    ~LuaEvent();
+
+    ElunaEventProcessor* events; // Pointer to events (holds the timed event)
     int funcRef;    // Lua function reference ID, also used as event ID
     uint32 delay;   // Delay between event calls
     uint32 calls;   // Amount of calls to make, 0 for infinite
-    Object* obj;    // Object to push
 };
 
-class EventMgr
+class ElunaEventProcessor
+{
+    friend class LuaEvent;
+
+public:
+    typedef std::multimap<uint64, LuaEvent*> EventList;
+    typedef UNORDERED_MAP<int, LuaEvent*> EventMap;
+
+    ElunaEventProcessor(WorldObject* _obj);
+    ~ElunaEventProcessor();
+
+    void Update(uint32 diff);
+    // instantly removes all timed events
+    void RemoveEvents();
+    // set the event to be removed when executing
+    void RemoveEvent(int eventId);
+    void AddEvent(int funcRef, uint32 delay, uint32 repeats);
+    EventMap eventMap;
+
+private:
+    void AddEvent(LuaEvent* Event);
+    EventList eventList;
+    uint64 m_time;
+    WorldObject* obj;
+};
+
+class EventMgr : public ElunaUtil::RWLockable
 {
 public:
-    typedef std::set<LuaEvent*> EventSet;
-    typedef std::map<EventProcessor*, EventSet> EventMap;
-    Eluna& E;
+    typedef UNORDERED_SET<ElunaEventProcessor*> ProcessorSet;
+    ProcessorSet processors;
+    ElunaEventProcessor* globalProcessor;
 
-    EventMap LuaEvents; // LuaEvents[processor] = {LuaEvent, LuaEvent...}
-    EventProcessor GlobalEvents;
-
-    EventMgr(Eluna& _E);
+    EventMgr();
     ~EventMgr();
 
-    // Should be run on world tick
-    void Update(uint32 diff);
-
-    // Aborts all lua events
-    // void KillAllEvents(EventProcessor* events);
-
     // Remove all timed events
+    // Execute only in safe env
     void RemoveEvents();
 
-    // Remove timed events from processor
-    void RemoveEvents(EventProcessor* events);
-
-    // Adds a new event to the processor and returns the eventID or 0 (Never negative)
-    int AddEvent(EventProcessor* events, int funcRef, uint32 delay, uint32 calls, Object* obj = NULL);
-
-    // Finds the event that has the ID from events
-    LuaEvent* GetEvent(EventProcessor* events, int eventId);
-
-    // Remove the event with the eventId from processor
-    // Returns true if event is removed
-    // EventId is func ref
-    bool RemoveEvent(EventProcessor* events, int eventId);
-
     // Removes the eventId from all events
+    // Execute only in safe env
     void RemoveEvent(int eventId);
 };
 
