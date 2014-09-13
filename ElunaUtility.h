@@ -9,6 +9,8 @@
 
 #include "Common.h"
 #include "SharedDefines.h"
+#include <unordered_map>
+#include <unordered_set>
 #ifdef TRINITY
 #include "QueryResult.h"
 #ifdef CATA
@@ -17,6 +19,17 @@
 #else
 #include "ObjectGuid.h"
 #include "Database/QueryResult.h"
+#endif
+
+// Some dummy includes containing BOOST_VERSION:
+// ObjectAccessor.h Config.h Log.h
+#ifdef BOOST_VERSION
+#define USING_BOOST
+#endif
+
+#ifdef USING_BOOST
+#include <boost/thread/locks.hpp>
+#include <boost/thread/shared_mutex.hpp>
 #endif
 
 #ifdef TRINITY

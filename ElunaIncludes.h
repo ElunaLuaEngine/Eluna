@@ -7,7 +7,6 @@
 // Required
 #include "AccountMgr.h"
 #include "AuctionHouseMgr.h"
-#include "BattleGround/BattleGroundMgr.h"
 #include "Cell.h"
 #include "CellImpl.h"
 #include "Chat.h"
@@ -42,10 +41,12 @@
 #include "ScriptedCreature.h"
 #include "SpellInfo.h"
 #include "WeatherMgr.h"
+#include "Battleground.h"
 #else
 #include "Config/Config.h"
 #include "ReactorAI.h"
 #include "revision_nr.h"
+#include "BattleGround/BattleGroundMgr.h"
 #endif
 
 #if (!defined(TBC) && !defined(CLASSIC))
@@ -120,10 +121,4 @@ enum SelectAggroTarget
     SELECT_TARGET_NEAREST,
     SELECT_TARGET_FARTHEST
 };
-#endif
-
-// Some dummy includes containing BOOST_VERSION:
-// ObjectAccessor.h Config.h Log.h
-#ifdef BOOST_VERSION
-#define USING_BOOST
 #endif

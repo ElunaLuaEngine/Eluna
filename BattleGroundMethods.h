@@ -9,7 +9,6 @@
 
 namespace LuaBattleGround
 {
-#ifdef MANGOS // Currently only tested on Mangos. May need tweaking for TC
     /**
      * Returns the name of the [Battleground]
      * 
@@ -216,6 +215,5 @@ namespace LuaBattleGround
         Eluna::Push(L, bg->GetStatus());
         return 1;
     }
-#endif
 };
 #endif

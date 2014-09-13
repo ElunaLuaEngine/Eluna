@@ -27,6 +27,7 @@ extern "C"
 
 #ifdef TRINITY
 struct ItemTemplate;
+typedef BattlegroundTypeId BattleGroundTypeId;
 #else
 struct ItemPrototype;
 typedef ItemPrototype ItemTemplate;
@@ -38,7 +39,10 @@ typedef int Difficulty;
 
 struct AreaTriggerEntry;
 class AuctionHouseObject;
-class BattleGround;
+#ifdef TRINITY
+class Battleground;
+typedef Battleground BattleGround;
+#endif
 class Channel;
 class Corpse;
 class Creature;
