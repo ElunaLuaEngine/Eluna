@@ -1835,7 +1835,7 @@ bool Eluna::OnQuestComplete(Player* pPlayer, GameObject* pGameObject, Quest cons
 
 void Eluna::UpdateAI(GameObject* pGameObject, uint32 diff)
 {
-    pGameObject->elunaEvents.Update(diff);
+    pGameObject->elunaEvents->Update(diff);
     ENTRY_BEGIN(GameObjectEventBindings, pGameObject->GetEntry(), GAMEOBJECT_EVENT_ON_AIUPDATE, return);
     Push(L, pGameObject);
     Push(L, diff);
