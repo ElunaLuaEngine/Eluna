@@ -1934,3 +1934,44 @@ CreatureAI* Eluna::GetAI(Creature* creature)
         return NULL;
     return new ElunaCreatureAI(creature);
 }
+
+void Eluna::OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
+{
+    EVENT_BEGIN(BGEventBindings, BG_EVENT_ON_START, return);
+    Push(L, bg);
+    Push(L, bgId);
+    Push(L, instanceId);
+    EVENT_EXECUTE(0);
+    ENDCALL();
+}
+
+void Eluna::OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, Team winner)
+{
+    EVENT_BEGIN(BGEventBindings, BG_EVENT_ON_END, return);
+    Push(L, bg);
+    Push(L, bgId);
+    Push(L, instanceId);
+    Push(L, winner);
+    EVENT_EXECUTE(0);
+    ENDCALL();
+}
+
+void Eluna::OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
+{
+    EVENT_BEGIN(BGEventBindings, BG_EVENT_ON_CREATE, return);
+    Push(L, bg);
+    Push(L, bgId);
+    Push(L, instanceId);
+    EVENT_EXECUTE(0);
+    ENDCALL();
+}
+
+void Eluna::OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
+{
+    EVENT_BEGIN(BGEventBindings, BG_EVENT_ON_PRE_DESTROY, return);
+    Push(L, bg);
+    Push(L, bgId);
+    Push(L, instanceId);
+    EVENT_EXECUTE(0);
+    ENDCALL();
+}

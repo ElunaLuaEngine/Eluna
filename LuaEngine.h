@@ -38,6 +38,7 @@ typedef int Difficulty;
 
 struct AreaTriggerEntry;
 class AuctionHouseObject;
+class BattleGround;
 class Channel;
 class Corpse;
 class Creature;
@@ -115,6 +116,7 @@ public:
     EventBind<HookMgr::GuildEvents>*        GuildEventBindings;
     EventBind<HookMgr::GroupEvents>*        GroupEventBindings;
     EventBind<HookMgr::VehicleEvents>*      VehicleEventBindings;
+    EventBind<HookMgr::BGEvents>*           BGEventBindings;
 
     EntryBind<HookMgr::PacketEvents>*       PacketEventBindings;
     EntryBind<HookMgr::CreatureEvents>*     CreatureEventBindings;
@@ -344,6 +346,12 @@ public:
     void OnUpdate(uint32 diff);
     void OnStartup();
     void OnShutdown();
+
+    /* Battle Ground */
+    void OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
+    void OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, Team winner);
+    void OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
+    void OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
 };
 template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error);
 template<> Player* Eluna::CHECKOBJ<Player>(lua_State* L, int narg, bool error);

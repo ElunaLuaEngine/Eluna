@@ -94,6 +94,7 @@ PlayerEventBindings(new EventBind<HookMgr::PlayerEvents>("PlayerEvents", *this))
 GuildEventBindings(new EventBind<HookMgr::GuildEvents>("GuildEvents", *this)),
 GroupEventBindings(new EventBind<HookMgr::GroupEvents>("GroupEvents", *this)),
 VehicleEventBindings(new EventBind<HookMgr::VehicleEvents>("VehicleEvents", *this)),
+BGEventBindings(new EventBind<HookMgr::BGEvents>("BGEvents", *this)),
 
 PacketEventBindings(new EntryBind<HookMgr::PacketEvents>("PacketEvents", *this)),
 CreatureEventBindings(new EntryBind<HookMgr::CreatureEvents>("CreatureEvents", *this)),
@@ -153,6 +154,7 @@ Eluna::~Eluna()
     delete ItemEventBindings;
     delete ItemGossipBindings;
     delete playerGossipBindings;
+    delete BGEventBindings;
 
     // Must close lua state after deleting stores and mgr
     lua_close(L);
@@ -655,6 +657,14 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         if (evt < HookMgr::VEHICLE_EVENT_COUNT)
         {
             VehicleEventBindings->Insert(evt, functionRef);
+            return;
+        }
+        break;
+
+    case HookMgr::REGTYPE_BG:
+        if (evt < HookMgr::BG_EVENT_COUNT)
+        {
+            BGEventBindings->Insert(evt, functionRef);
             return;
         }
         break;

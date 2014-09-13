@@ -7,6 +7,7 @@
 // Required
 #include "AccountMgr.h"
 #include "AuctionHouseMgr.h"
+#include "BattleGround/BattleGroundMgr.h"
 #include "Cell.h"
 #include "CellImpl.h"
 #include "Chat.h"

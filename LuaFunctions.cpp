@@ -36,6 +36,7 @@ extern "C"
 #include "CorpseMethods.h"
 #include "WeatherMethods.h"
 #include "VehicleMethods.h"
+#include "BattleGroundMethods.h"
 
 void RegisterGlobals(lua_State* L)
 {
@@ -52,6 +53,7 @@ void RegisterGlobals(lua_State* L)
     lua_register(L, "RegisterItemEvent", &LuaGlobalFunctions::RegisterItemEvent);                           // RegisterItemEvent(entry, event, function)
     lua_register(L, "RegisterItemGossipEvent", &LuaGlobalFunctions::RegisterItemGossipEvent);               // RegisterItemGossipEvent(entry, event, function)
     lua_register(L, "RegisterPlayerGossipEvent", &LuaGlobalFunctions::RegisterPlayerGossipEvent);           // RegisterPlayerGossipEvent(menu_id, event, function)
+    lua_register(L, "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent);                               // RegisterBGEvent(event, function)
 
     // Getters
     lua_register(L, "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine);                                     // GetLuaEngine() - Returns ElunaEngine
@@ -1201,6 +1203,33 @@ ElunaRegister<AuctionHouseObject> AuctionMethods[] =
     { NULL, NULL }
 };
 
+ElunaRegister<BattleGround> BattleGroundMethods[] =
+{
+    // Getters
+    { "GetName", &LuaBattleGround::GetName },
+    { "GetAlivePlayersCountByTeam", &LuaBattleGround::GetAlivePlayersCountByTeam },
+    { "GetMap", &LuaBattleGround::GetMap },
+    { "GetBonusHonorFromKillCount", &LuaBattleGround::GetBonusHonorFromKillCount },
+    { "GetBracketId", &LuaBattleGround::GetBracketId },
+    { "GetEndTime", &LuaBattleGround::GetEndTime },
+    { "GetFreeSlotsForTeam", &LuaBattleGround::GetFreeSlotsForTeam },
+    { "GetInstanceId", &LuaBattleGround::GetInstanceId },
+    { "GetMapId", &LuaBattleGround::GetMapId },
+    { "GetTypeId", &LuaBattleGround::GetTypeId },
+    { "GetMaxLevel", &LuaBattleGround::GetMaxLevel },
+    { "GetMinLevel", &LuaBattleGround::GetMinLevel },
+    { "GetMaxPlayers", &LuaBattleGround::GetMaxPlayers },
+    { "GetMinPlayers", &LuaBattleGround::GetMinPlayers },
+    { "GetMaxPlayersPerTeam", &LuaBattleGround::GetMaxPlayersPerTeam },
+    { "GetMinPlayersPerTeam", &LuaBattleGround::GetMinPlayersPerTeam },
+    { "GetWinner", &LuaBattleGround::GetWinner },
+    { "GetStatus", &LuaBattleGround::GetStatus },
+
+    // Setters
+
+    { NULL, NULL }
+};
+
 template<typename T> const char* ElunaTemplate<T>::tname = NULL;
 template<typename T> bool ElunaTemplate<T>::manageMemory = false;
 #if (!defined(TBC) && !defined(CLASSIC))
@@ -1294,4 +1323,7 @@ void RegisterFunctions(lua_State* L)
 
     ElunaTemplate<QueryResult>::Register(L, "QueryResult", true);
     ElunaTemplate<QueryResult>::SetMethods(L, QueryMethods);
+
+    ElunaTemplate<BattleGround>::Register(L, "BattleGround");
+    ElunaTemplate<BattleGround>::SetMethods(L, BattleGroundMethods);
 }

@@ -24,6 +24,7 @@ namespace HookMgr
         REGTYPE_ITEM,
         REGTYPE_ITEM_GOSSIP,
         REGTYPE_PLAYER_GOSSIP,
+        REGTYPE_BG,
         REGTYPE_COUNT
     };
 
@@ -272,6 +273,16 @@ namespace HookMgr
         GOSSIP_EVENT_ON_HELLO                           = 1,    // (event, player, object) - Object is the Creature/GameObject/Item. For item gossip can return false to stop spell casting.
         GOSSIP_EVENT_ON_SELECT                          = 2,    // (event, player, object, sender, intid, code, menu_id) - Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip
         GOSSIP_EVENT_COUNT
+    };
+
+    // RegisterBGEvent(EventId, function)
+    enum BGEvents
+    {
+        BG_EVENT_ON_START                               = 1,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+        BG_EVENT_ON_END                                 = 2,    // (event, bg, bgId, instanceId, winner) - Needs to be added to TC
+        BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+        BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+        BG_EVENT_COUNT
     };
 };
 #endif
