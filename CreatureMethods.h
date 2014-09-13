@@ -606,6 +606,31 @@ namespace LuaCreature
     }
 
     /**
+     * Sets the position the [Creature] returns to when evading from combat
+     *   or respawning.
+     *
+     * @param float x
+     * @param float y
+     * @param float z
+     * @param float o
+     */
+    int SetHomePosition(lua_State* L, Creature* creature)
+    {
+        float x = Eluna::CHECKVAL<float>(L, 2);
+        float y = Eluna::CHECKVAL<float>(L, 3);
+        float z = Eluna::CHECKVAL<float>(L, 4);
+        float o = Eluna::CHECKVAL<float>(L, 5);
+
+#ifndef TRINITY
+        creature->SetRespawnCoord(x, y, z, o);
+#else
+        creature->SetHomePosition(x, y, z, o);
+#endif
+        
+        return 0;
+    }
+
+    /**
      * Returns a target from the [Creature]'s threat list based on the
      *   supplied arguments.
      *

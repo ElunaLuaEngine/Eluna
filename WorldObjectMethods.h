@@ -613,6 +613,13 @@ namespace LuaWorldObject
             case 3:
                 type = TEMPSUMMON_TIMED_DESPAWN;
                 break;
+            case 4:
+#ifdef TRINITY
+                type = TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT;
+#else
+                type = TEMPSUMMON_TIMED_OOC_DESPAWN;
+#endif
+                break;
             case 5:
                 type = TEMPSUMMON_CORPSE_DESPAWN;
                 break;
@@ -625,6 +632,14 @@ namespace LuaWorldObject
             case 8:
                 type = TEMPSUMMON_MANUAL_DESPAWN;
                 break;
+#ifndef TRINITY
+            case 9:
+                type = TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN;
+                break;
+            case 10:
+                type = TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN;
+                break;
+#endif
             default:
                 return luaL_argerror(L, 7, "valid SpawnType expected");
         }

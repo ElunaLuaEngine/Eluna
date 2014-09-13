@@ -1230,10 +1230,24 @@ namespace LuaGlobalFunctions
         uint32 senderGUIDLow = Eluna::CHECKVAL<uint32>(L, ++i, 0);
         uint32 stationary = Eluna::CHECKVAL<uint32>(L, ++i, MAIL_STATIONERY_DEFAULT);
         uint32 delay = Eluna::CHECKVAL<uint32>(L, ++i, 0);
+        uint32 money = Eluna::CHECKVAL<uint32>(L, ++i, 0);
+        uint32 cod = Eluna::CHECKVAL<uint32>(L, ++i, 0);
         int argAmount = lua_gettop(L);
 
         MailSender sender(MAIL_NORMAL, senderGUIDLow, (MailStationery)stationary);
         MailDraft draft(subject, text);
+
+#ifdef TRINITY
+        if (cod)
+            draft.AddCOD(cod);
+        if (money)
+            draft.AddMoney(money);
+#else
+        if (cod)
+            draft.SetCOD(cod);
+        if (money)
+            draft.SetMoney(money);
+#endif
 
 #ifdef TRINITY
         SQLTransaction trans = CharacterDatabase.BeginTransaction();
