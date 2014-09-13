@@ -44,7 +44,7 @@ typedef uint64 ObjectGuid;
 #define UNORDERED_MAP std::unordered_map
 #endif
 #ifndef UNORDERED_SET
-#define UNORDERED_ET std::unordered_set
+#define UNORDERED_SET std::unordered_set
 #endif
 
 class Unit;
