@@ -122,9 +122,9 @@ if (GetCoreExpansion() >= 2) then
     table.insert(T.Vehicle, "GetEntry")
 end
 
-T.QueryResult = {}
-table.insert(T.QueryResult, "GetColumnCount")
-table.insert(T.QueryResult, "GetRowCount")
+T.ElunaQuery = {}
+table.insert(T.ElunaQuery, "GetColumnCount")
+table.insert(T.ElunaQuery, "GetRowCount")
 
 T.WorldPacket = {}
 table.insert(T.WorldPacket, "GetSize")

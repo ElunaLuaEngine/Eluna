@@ -26,7 +26,7 @@ extern "C"
 #include "GroupMethods.h"
 #include "GuildMethods.h"
 #include "GameObjectMethods.h"
-#include "QueryMethods.h"
+#include "ElunaQueryMethods.h"
 #include "AuraMethods.h"
 #include "ItemMethods.h"
 #include "WorldPacketMethods.h"
@@ -1081,11 +1081,12 @@ ElunaRegister<Vehicle> VehicleMethods[] =
 #endif
 #endif
 
-ElunaRegister<QueryResult> QueryMethods[] =
+ElunaRegister<ElunaQuery> QueryMethods[] =
 {
     { "NextRow", &LuaQuery::NextRow },                        // :NextRow() - Advances to next rown in the query. Returns true if there is a next row, otherwise false
     { "GetColumnCount", &LuaQuery::GetColumnCount },          // :GetColumnCount() - Gets the column count of the query
     { "GetRowCount", &LuaQuery::GetRowCount },                // :GetRowCount() - Gets the row count of the query
+    { "GetRow", &LuaQuery::GetRow },
 
     { "GetBool", &LuaQuery::GetBool },                        // :GetBool(column) - returns a bool from a number column (for example tinyint)
     { "GetUInt8", &LuaQuery::GetUInt8 },                      // :GetUInt8(column) - returns the value of an unsigned tinyint column
@@ -1318,12 +1319,12 @@ void RegisterFunctions(lua_State* L)
     ElunaTemplate<AuctionHouseObject>::Register(L, "AuctionHouseObject");
     ElunaTemplate<AuctionHouseObject>::SetMethods(L, AuctionMethods);
 
+    ElunaTemplate<BattleGround>::Register(L, "BattleGround");
+    ElunaTemplate<BattleGround>::SetMethods(L, BattleGroundMethods);
+
     ElunaTemplate<WorldPacket>::Register(L, "WorldPacket", true);
     ElunaTemplate<WorldPacket>::SetMethods(L, PacketMethods);
 
-    ElunaTemplate<QueryResult>::Register(L, "QueryResult", true);
-    ElunaTemplate<QueryResult>::SetMethods(L, QueryMethods);
-
-    ElunaTemplate<BattleGround>::Register(L, "BattleGround");
-    ElunaTemplate<BattleGround>::SetMethods(L, BattleGroundMethods);
+    ElunaTemplate<ElunaQuery>::Register(L, "ElunaQuery", true);
+    ElunaTemplate<ElunaQuery>::SetMethods(L, QueryMethods);
 }
