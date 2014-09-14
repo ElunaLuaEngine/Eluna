@@ -9,8 +9,6 @@
 
 #include "Common.h"
 #include "SharedDefines.h"
-#include <unordered_map>
-#include <unordered_set>
 #ifdef TRINITY
 #include "QueryResult.h"
 #ifdef CATA
