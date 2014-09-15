@@ -9,8 +9,6 @@
 
 #include "Common.h"
 #include "SharedDefines.h"
-#include <unordered_map>
-#include <unordered_set>
 #ifdef TRINITY
 #include "QueryResult.h"
 #ifdef CATA
@@ -58,9 +56,11 @@ typedef QueryNamedResult ElunaQuery;
 #endif
 
 #ifndef UNORDERED_MAP
+#include <unordered_map>
 #define UNORDERED_MAP std::unordered_map
 #endif
 #ifndef UNORDERED_SET
+#include <unordered_set>
 #define UNORDERED_SET std::unordered_set
 #endif
 

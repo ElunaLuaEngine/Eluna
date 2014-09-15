@@ -1744,9 +1744,16 @@ namespace LuaPlayer
     {
         std::string text = Eluna::CHECKVAL<std::string>(L, 2);
         uint32 lang = Eluna::CHECKVAL<uint32>(L, 3);
+#ifdef TRINITY
+        Player* receiver = Eluna::CHECKOBJ<Player>(L, 4);
+#else
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 4);
-
+#endif
+#ifdef TRINITY
+        player->Whisper(text, (Language)lang, receiver);
+#else
         player->Whisper(text, lang, ObjectGuid(guid));
+#endif
         return 0;
     }
 
@@ -1762,8 +1769,11 @@ namespace LuaPlayer
     {
         std::string text = Eluna::CHECKVAL<std::string>(L, 2);
         uint32 lang = Eluna::CHECKVAL<uint32>(L, 3);
-
+#ifdef TRINITY
+        player->Yell(text, (Language)lang);
+#else
         player->Yell(text, lang);
+#endif
         return 0;
     }
 
@@ -1771,8 +1781,11 @@ namespace LuaPlayer
     {
         std::string text = Eluna::CHECKVAL<std::string>(L, 2);
         uint32 lang = Eluna::CHECKVAL<uint32>(L, 3);
-
+#ifdef TRINITY
+        player->Say(text, (Language)lang);
+#else
         player->Say(text, lang);
+#endif
         return 0;
     }
 
