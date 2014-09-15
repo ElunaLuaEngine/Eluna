@@ -340,7 +340,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "RemoveAllAuras", &LuaUnit::RemoveAllAuras },                   // :RemoveAllAuras() - Removes all the unit's auras
     { "ClearInCombat", &LuaUnit::ClearInCombat },                     // :ClearInCombat() - Clears the unit's combat list (unit will be out of combat), resets the timer to 0, etc
     { "DeMorph", &LuaUnit::DeMorph },                                 // :DeMorph() - Sets display back to native
-    { "SendUnitWhisper", &LuaUnit::SendUnitWhisper },                 // :SendUnitWhisper(msg, receiver[, bossWhisper]) - Sends a whisper to the receiver
+    { "SendUnitWhisper", &LuaUnit::SendUnitWhisper },                 // :SendUnitWhisper(msg, lang, receiver[, bossWhisper]) - Sends a whisper to the receiver
     { "SendUnitEmote", &LuaUnit::SendUnitEmote },                     // :SendUnitEmote(msg[, receiver, bossEmote]) - Sends a text emote
     { "SendUnitSay", &LuaUnit::SendUnitSay },                         // :SendUnitSay(msg, language) - Sends a "Say" message with the specified language (all languages: 0)
     { "SendUnitYell", &LuaUnit::SendUnitYell },                       // :SendUnitYell(msg, language) - Sends a "Yell" message with the specified language (all languages: 0)
@@ -632,7 +632,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "Say", &LuaPlayer::Say },                                                           // :Say(text, lang) - The player says the text
     { "Yell", &LuaPlayer::Yell },                                                         // :Yell(text, lang) - The player yells the text
     { "TextEmote", &LuaPlayer::TextEmote },                                               // :TextEmote(text) - The player does a textemote with the text
-    { "Whisper", &LuaPlayer::Whisper },                                                   // :Whisper(text, lang, receiverGuid) - The player whispers the text to the guid
+    { "Whisper", &LuaPlayer::Whisper },                                                   // :Whisper(text, lang, receiver) - The player whispers the text to the receiver
     { "CompleteQuest", &LuaPlayer::CompleteQuest },                                       // :CompleteQuest(entry) - Completes a quest by entry
     { "IncompleteQuest", &LuaPlayer::IncompleteQuest },                                   // :IncompleteQuest(entry) - Uncompletes the quest by entry for the player
     { "FailQuest", &LuaPlayer::FailQuest },                                               // :FailQuest(entry) - Player fails the quest entry
