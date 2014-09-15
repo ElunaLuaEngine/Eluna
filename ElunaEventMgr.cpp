@@ -51,9 +51,11 @@ ElunaEventProcessor::~ElunaEventProcessor()
     RemoveEvents();
 
     // In multithread get the object's map's lua state
-    Eluna* E = obj ? sEluna : sEluna;
-    EventMgr::WriteGuard lock(E->eventMgr->GetLock());
-    E->eventMgr->processors.erase(this);
+    if (Eluna* E = obj ? sEluna : sEluna)
+    {
+        EventMgr::WriteGuard lock(E->eventMgr->GetLock());
+        E->eventMgr->processors.erase(this);
+    }
 }
 
 void ElunaEventProcessor::Update(uint32 diff)
