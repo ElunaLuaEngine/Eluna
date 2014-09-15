@@ -1403,16 +1403,16 @@ bool Eluna::OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQu
     return true;
 }
 
-bool Eluna::OnQuestComplete(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
-{
-    ENTRY_BEGIN(CreatureEventBindings, pCreature->GetEntry(), CREATURE_EVENT_ON_QUEST_COMPLETE, return false);
-    Push(L, pPlayer);
-    Push(L, pCreature);
-    Push(L, pQuest);
-    ENTRY_EXECUTE(0);
-    ENDCALL();
-    return true;
-}
+//bool Eluna::OnQuestComplete(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+//{
+//    ENTRY_BEGIN(CreatureEventBindings, pCreature->GetEntry(), CREATURE_EVENT_ON_QUEST_COMPLETE, return false);
+//    Push(L, pPlayer);
+//    Push(L, pCreature);
+//    Push(L, pQuest);
+//    ENTRY_EXECUTE(0);
+//    ENDCALL();
+//    return true;
+//}
 
 bool Eluna::OnQuestReward(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
 {
@@ -1822,16 +1822,16 @@ bool Eluna::OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const*
     return true;
 }
 
-bool Eluna::OnQuestComplete(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest)
-{
-    ENTRY_BEGIN(GameObjectEventBindings, pGameObject->GetEntry(), GAMEOBJECT_EVENT_ON_QUEST_COMPLETE, return false);
-    Push(L, pPlayer);
-    Push(L, pGameObject);
-    Push(L, pQuest);
-    ENTRY_EXECUTE(0);
-    ENDCALL();
-    return true;
-}
+//bool Eluna::OnQuestComplete(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest)
+//{
+//    ENTRY_BEGIN(GameObjectEventBindings, pGameObject->GetEntry(), GAMEOBJECT_EVENT_ON_QUEST_COMPLETE, return false);
+//    Push(L, pPlayer);
+//    Push(L, pGameObject);
+//    Push(L, pQuest);
+//    ENTRY_EXECUTE(0);
+//    ENDCALL();
+//    return true;
+//}
 
 void Eluna::UpdateAI(GameObject* pGameObject, uint32 diff)
 {
