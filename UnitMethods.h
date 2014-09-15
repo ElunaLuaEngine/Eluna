@@ -1307,10 +1307,15 @@ namespace LuaUnit
     int SendUnitWhisper(lua_State* L, Unit* unit)
     {
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
-        Player* receiver = Eluna::CHECKOBJ<Player>(L, 3);
-        bool bossWhisper = Eluna::CHECKVAL<bool>(L, 4, false);
+        uint32 lang = Eluna::CHECKVAL<uint32>(L, 3);
+        Player* receiver = Eluna::CHECKOBJ<Player>(L, 4);
+        bool bossWhisper = Eluna::CHECKVAL<bool>(L, 5, false);
         if (std::string(msg).length() > 0)
+#ifdef TRINITY
+            unit->Whisper(msg, (Language)lang, receiver, bossWhisper);
+#else
             unit->MonsterWhisper(msg, receiver, bossWhisper);
+#endif
         return 0;
     }
 
@@ -1320,7 +1325,11 @@ namespace LuaUnit
         Unit* receiver = Eluna::CHECKOBJ<Unit>(L, 3, false);
         bool bossEmote = Eluna::CHECKVAL<bool>(L, 4, false);
         if (std::string(msg).length() > 0)
+#ifdef TRINITY
+            unit->TextEmote(msg, receiver, bossEmote);
+#else
             unit->MonsterTextEmote(msg, receiver, bossEmote);
+#endif
         return 0;
     }
 
@@ -1329,7 +1338,11 @@ namespace LuaUnit
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
         uint32 language = Eluna::CHECKVAL<uint32>(L, 3);
         if (std::string(msg).length() > 0)
+#ifdef TRINITY
+            unit->Say(msg, (Language)language, unit);
+#else
             unit->MonsterSay(msg, language, unit);
+#endif
         return 0;
     }
 
@@ -1338,7 +1351,11 @@ namespace LuaUnit
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
         uint32 language = Eluna::CHECKVAL<uint32>(L, 3);
         if (std::string(msg).length() > 0)
+#ifdef TRINITY
+            unit->Yell(msg, (Language)language, unit);
+#else
             unit->MonsterYell(msg, language, unit);
+#endif
         return 0;
     }
 
