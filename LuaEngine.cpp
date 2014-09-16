@@ -71,6 +71,9 @@ void Eluna::ReloadEluna()
     Uninitialize();
     Initialize();
 
+    // in multithread foreach: run scripts
+    sEluna->RunScripts();
+
 #ifdef TRINITY
     // Re initialize creature AI restoring C++ AI or applying lua AI
     {
@@ -124,11 +127,6 @@ playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)
     // Set event manager. Must be after setting sEluna
     eventMgr = new EventMgr();
     eventMgr->globalProcessor = new ElunaEventProcessor(NULL);
-
-    // run scripts
-    RunScripts();
-
-    OnLuaStateOpen();
 }
 
 Eluna::~Eluna()
@@ -304,6 +302,8 @@ void Eluna::RunScripts()
     lua_pop(L, 2);
 
     ELUNA_LOG_INFO("[Eluna]: Executed %u Lua scripts in %u ms", count, ElunaUtil::GetTimeDiff(oldMSTime));
+
+    OnLuaStateOpen();
 }
 
 void Eluna::RemoveRef(const void* obj)

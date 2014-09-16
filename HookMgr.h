@@ -61,8 +61,8 @@ namespace HookMgr
         WORLD_EVENT_ON_SHUTDOWN                 =     15,       // (event)
 
         // Eluna
-        ELUNA_EVENT_ON_LUA_STATE_CLOSE          =     16,       // (event)
-        ELUNA_EVENT_ON_LUA_STATE_OPEN           =     33,       // (event) - Possibly change hook ID for increments? Not implemented on TC/Cmangos
+        ELUNA_EVENT_ON_LUA_STATE_CLOSE          =     16,       // (event) - triggers just before shutting down eluna (on shutdown and restart)
+        ELUNA_EVENT_ON_LUA_STATE_OPEN           =     33,       // (event) - triggers after all scripts are loaded
 
         // Map
         MAP_EVENT_ON_CREATE                     =     17,       // (event, map)
