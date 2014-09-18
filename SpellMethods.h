@@ -152,7 +152,7 @@ namespace LuaSpell
     /**
      * Casts the [Spell].
      *
-     * @param bool skipCheck : skips initial checks to see if the [Spell] can be casted or not, this is optional
+     * @param bool skipCheck = false : skips initial checks to see if the [Spell] can be casted or not, this is optional
      */
     int Cast(lua_State* L, Spell* spell)
     {
