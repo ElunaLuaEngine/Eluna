@@ -152,11 +152,11 @@ namespace LuaSpell
     /**
      * Casts the [Spell].
      *
-     * May need further documentation.
+     * @param bool skipCheck : skips initial checks to see if the [Spell] can be casted or not, this is optional
      */
     int Cast(lua_State* L, Spell* spell)
     {
-        bool skipCheck = Eluna::CHECKVAL<bool>(L, 2);
+        bool skipCheck = Eluna::CHECKVAL<bool>(L, 2, false);
         spell->cast(skipCheck);
         return 0;
     }
@@ -164,7 +164,6 @@ namespace LuaSpell
     /**
      * Cancels the [Spell].
      *
-     * May need further documentation.
      */
     int Cancel(lua_State* /*L*/, Spell* spell)
     {
@@ -175,7 +174,6 @@ namespace LuaSpell
     /**
      * Finishes the [Spell].
      *
-     * May need further documentation.
      */
     int Finish(lua_State* /*L*/, Spell* spell)
     {

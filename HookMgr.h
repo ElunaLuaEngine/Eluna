@@ -50,7 +50,7 @@ namespace HookMgr
         SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN  =     6,       // Not Implemented
         SERVER_EVENT_ON_PACKET_SEND             =     7,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
 
-        // World 
+        // World
         WORLD_EVENT_ON_OPEN_STATE_CHANGE        =     8,        // (event, open) - Needs core support on Mangos
         WORLD_EVENT_ON_CONFIG_LOAD              =     9,        // (event, reload)
         // UNUSED                               =     10,
