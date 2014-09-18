@@ -2,12 +2,12 @@
 
 ## About
 
-Eluna is a Lua Engine for World of Warcraft emulators. Eluna is supporting MaNGOS and TrinityCore.
-We want to be the major Lua source for World of Warcraft emulation.<br />
-Follow us on our [Twitter](https://twitter.com/EmuDevs) page to view the latest news about EmuDevs and what's going on with Eluna.
+Eluna Lua Engine © is used for certain World of Warcraft emulators. Eluna supports MaNGOS, CMaNGOS, and TrinityCore.
+We're currently working hard to make Eluna better for our supporters.<br />
+Follow us on our [Twitter](https://twitter.com/EmuDevs) page to view the latest news about EmuDevs and what's going on with Eluna Lua Engine ©.
 
 If you're having trouble, post in Eluna's support here: [Eluna Support Forum](http://emudevs.com/forumdisplay.php/84-Support)<br />
-If you need help regarding methods, hooks and other wiki related documentation, go to [Eluna's Wiki](http://wiki.emudevs.com/doku.php?id=eluna).
+If you need help regarding methods, hooks and other wiki related documentation, go to [Eluna API](http://eluna.emudevs.com/).
 
 Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and use of Eluna. Please head over to their forums and show them some love!
 
@@ -28,9 +28,9 @@ Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and
 
 ## Links
 
-* [Eluna Wiki](http://wiki.emudevs.com/doku.php?id=eluna)
+* [Eluna API](http://eluna.emudevs.com/)
 * [Eluna Scripts](https://github.com/ElunaLuaEngine/Scripts)
-* [Eluna Support Forum](http://emudevs.com)
+* [Eluna Support Forum](http://emudevs.com/forumdisplay.php/84-Support)
 * [MaNGOS](http://getmangos.eu/)
 * [cMaNGOS](http://cmangos.net/)
 * [TrinityCore](http://www.trinitycore.org/)
