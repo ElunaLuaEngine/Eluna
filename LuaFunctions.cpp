@@ -56,66 +56,66 @@ void RegisterGlobals(lua_State* L)
     lua_register(L, "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent);                               // RegisterBGEvent(event, function)
 
     // Getters
-    lua_register(L, "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine);                                     // GetLuaEngine() - Returns ElunaEngine
-    lua_register(L, "GetCoreName", &LuaGlobalFunctions::GetCoreName);                                       // GetCoreName() - Returns core name
-    lua_register(L, "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion);                                 // GetCoreVersion() - Returns core version string
-    lua_register(L, "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion);                             // GetCoreExpansion() - Returns core expansion number (0 for classic, 1 for tbc, 2 for wotlk, 3 for cata), returns nil if not found.
-    lua_register(L, "GetQuest", &LuaGlobalFunctions::GetQuest);                                             // GetQuest(questId) - Returns quest object
-    lua_register(L, "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID);                               // GetPlayerByGUID(guid) - Returns player object by GUID
-    lua_register(L, "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName);                               // GetPlayerByName(name) - Returns player object by player name
-    lua_register(L, "GetGameTime", &LuaGlobalFunctions::GetGameTime);                                       // GetGameTime() - Returns game time
-    lua_register(L, "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld);                           // GetPlayersInWorld([team, onlyGM]) - Returns a table with all player objects. Team can be 0 for ally, 1 for horde and 2 for neutral
-    lua_register(L, "GetPlayersInMap", &LuaGlobalFunctions::GetPlayersInMap);                               // GetPlayersInWorld(mapId[, instanceId, team]) - Returns a table with all player objects in map. Team can be 0 for ally, 1 for horde and 2 for neutral
-    lua_register(L, "GetGuildByName", &LuaGlobalFunctions::GetGuildByName);                                 // GetGuildByName(name) - Returns guild object by the guild name
-    lua_register(L, "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID);                     // GetGuildByLeaderGUID(guid) - Returns guild by it's leader's guid
-    lua_register(L, "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount);                                 // GetPlayerCount() - Returns the server's player count
-    lua_register(L, "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID);                                   // GetPlayerGUID(lowguid) - Generates GUID (uint64) string from player lowguid UNDOCUMENTED
-    lua_register(L, "GetItemGUID", &LuaGlobalFunctions::GetItemGUID);                                       // GetItemGUID(lowguid) - Generates GUID (uint64) string from item lowguid UNDOCUMENTED
-    lua_register(L, "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID);                                   // GetObjectGUID(lowguid, entry) - Generates GUID (uint64) string from gameobject lowguid and entry UNDOCUMENTED
-    lua_register(L, "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID);                                       // GetUnitGUID(lowguid, entry) - Generates GUID (uint64) string from unit (creature) lowguid and entry UNDOCUMENTED
-    lua_register(L, "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow);                                         // GetGUIDLow(guid) - Returns GUIDLow (uint32) from guid (uint64 as string) UNDOCUMENTED
-    lua_register(L, "GetGUIDType", &LuaGlobalFunctions::GetGUIDType);                                       // GetGUIDType(guid) - Returns Type (uint32) from guid (uint64 as string) UNDOCUMENTED
-    lua_register(L, "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry);                                     // GetGUIDEntry(guid) - Returns Entry (uint32) from guid (uint64 as string), may be always 0 UNDOCUMENTED
-    lua_register(L, "GetAreaName", &LuaGlobalFunctions::GetAreaName);                                       // GetAreaName(area or zone ID[, locale]) - Returns area or zone (string) name by area or zone ID. Locale is optional (Default = 0 (enUS))
-    lua_register(L, "bit_not", &LuaGlobalFunctions::bit_not);                                               // bit_not(a) - Returns ~a UNDOCUMENTED
-    lua_register(L, "bit_xor", &LuaGlobalFunctions::bit_xor);                                               // bit_xor(a, b) - Returns a ^ b UNDOCUMENTED
-    lua_register(L, "bit_rshift", &LuaGlobalFunctions::bit_rshift);                                         // bit_rshift(a, b) - Returns a >> b UNDOCUMENTED
-    lua_register(L, "bit_lshift", &LuaGlobalFunctions::bit_lshift);                                         // bit_lshift(a, b) - Returns a << b UNDOCUMENTED
-    lua_register(L, "bit_or", &LuaGlobalFunctions::bit_or);                                                 // bit_or(a, b) - Returns a | b UNDOCUMENTED
-    lua_register(L, "bit_and", &LuaGlobalFunctions::bit_and);                                               // bit_and(a, b) - Returns a & b UNDOCUMENTED
-    lua_register(L, "GetItemLink", &LuaGlobalFunctions::GetItemLink);                                       // GetItemLink(entry[, localeIndex]) - Returns the shift clickable link of the item. Item name translated if translate available for provided locale index UNDOCUMENTED
-    lua_register(L, "GetMapById", &LuaGlobalFunctions::GetMapById);                                         // GetMapById(mapId, instance) - Returns map object of id specified. UNDOCUMENTED
+    lua_register(L, "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine);
+    lua_register(L, "GetCoreName", &LuaGlobalFunctions::GetCoreName);
+    lua_register(L, "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion);
+    lua_register(L, "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion);
+    lua_register(L, "GetQuest", &LuaGlobalFunctions::GetQuest);
+    lua_register(L, "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID);
+    lua_register(L, "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName);
+    lua_register(L, "GetGameTime", &LuaGlobalFunctions::GetGameTime);
+    lua_register(L, "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld);
+    lua_register(L, "GetPlayersInMap", &LuaGlobalFunctions::GetPlayersInMap);
+    lua_register(L, "GetGuildByName", &LuaGlobalFunctions::GetGuildByName);
+    lua_register(L, "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID);
+    lua_register(L, "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount);
+    lua_register(L, "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID);
+    lua_register(L, "GetItemGUID", &LuaGlobalFunctions::GetItemGUID);
+    lua_register(L, "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID);
+    lua_register(L, "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID);
+    lua_register(L, "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow);
+    lua_register(L, "GetGUIDType", &LuaGlobalFunctions::GetGUIDType);
+    lua_register(L, "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry);
+    lua_register(L, "GetAreaName", &LuaGlobalFunctions::GetAreaName);
+    lua_register(L, "bit_not", &LuaGlobalFunctions::bit_not);
+    lua_register(L, "bit_xor", &LuaGlobalFunctions::bit_xor);
+    lua_register(L, "bit_rshift", &LuaGlobalFunctions::bit_rshift);
+    lua_register(L, "bit_lshift", &LuaGlobalFunctions::bit_lshift);
+    lua_register(L, "bit_or", &LuaGlobalFunctions::bit_or);
+    lua_register(L, "bit_and", &LuaGlobalFunctions::bit_and);
+    lua_register(L, "GetItemLink", &LuaGlobalFunctions::GetItemLink);
+    lua_register(L, "GetMapById", &LuaGlobalFunctions::GetMapById);
 
     // Other
-    lua_register(L, "ReloadEluna", &LuaGlobalFunctions::ReloadEluna);                                       // ReloadEluna() - Reload's Eluna engine. Warning! Reloading should be used only for testing.
-    lua_register(L, "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage);                             // SendWorldMessage(msg) - Sends a broadcast message to everyone
-    lua_register(L, "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery);                                     // WorldDBQuery(sql) - Executes given SQL query to world database instantly and returns a QueryResult object
-    lua_register(L, "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute);                                 // WorldDBExecute(sql) - Executes given SQL query to world database (not instant)
-    lua_register(L, "CharDBQuery", &LuaGlobalFunctions::CharDBQuery);                                       // CharDBQuery(sql) - Executes given SQL query to character database instantly and returns a QueryResult object
-    lua_register(L, "CharDBExecute", &LuaGlobalFunctions::CharDBExecute);                                   // CharDBExecute(sql) - Executes given SQL query to character database (not instant)
-    lua_register(L, "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery);                                       // AuthDBQuery(sql) - Executes given SQL query to auth/logon database instantly and returns a QueryResult object
-    lua_register(L, "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute);                                   // AuthDBExecute(sql) - Executes given SQL query to auth/logon database (not instant)
-    lua_register(L, "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent);                                 // CreateLuaEvent(function, delay, calls) - Creates a global timed event. Returns Event ID. Calls set to 0 calls infinitely.
-    lua_register(L, "RemoveEventById", &LuaGlobalFunctions::RemoveEventById);                               // RemoveEventById(eventId, [all_events]) - Removes a global timed event by it's ID. If all_events is true, can remove any timed event by ID (unit, gameobject, global..)
-    lua_register(L, "RemoveEvents", &LuaGlobalFunctions::RemoveEvents);                                     // RemoveEvents([all_events]) - Removes all global timed events. Removes all timed events (unit, gameobject, global) if all_events is true
-    lua_register(L, "PerformIngameSpawn", &LuaGlobalFunctions::PerformIngameSpawn);                         // PerformIngameSpawn(spawntype, entry, mapid, instanceid, x, y, z, o[, save, DurOrResptime, phase]) - spawntype: 1 Creature, 2 Object. DurOrResptime is respawntime for gameobjects and despawntime for creatures if creature is not saved. Returns spawned creature/gameobject
-    lua_register(L, "CreatePacket", &LuaGlobalFunctions::CreatePacket);                                     // CreatePacket(opcode, size) - Creates a new packet object
-    lua_register(L, "AddVendorItem", &LuaGlobalFunctions::AddVendorItem);                                   // AddVendorItem(entry, itemId, maxcount, incrtime, extendedcost) - Adds an item to vendor entry.
-    lua_register(L, "VendorRemoveItem", &LuaGlobalFunctions::VendorRemoveItem);                             // VendorRemoveItem(entry, item) - Removes an item from vendor entry
-    lua_register(L, "VendorRemoveAllItems", &LuaGlobalFunctions::VendorRemoveAllItems);                     // VendorRemoveAllItems(entry) - Removes all items from vendor entry
-    lua_register(L, "Kick", &LuaGlobalFunctions::Kick);                                                     // Kick(player) - Kicks given player
-    lua_register(L, "Ban", &LuaGlobalFunctions::Ban);                                                       // Ban(banMode(integer), nameOrIP(string), duration(string), [reason(string), whoBanned(string)]) - Banmode: 0 account, 1 character, 2 IP
-    lua_register(L, "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers);                                 // SaveAllPlayers() - Saves all players
-    lua_register(L, "SendMail", &LuaGlobalFunctions::SendMail);                                             // SendMail(subject, text, receiverLowGUID[, senderLowGUID, stationary, delay, money, cod, itemEntry, itemAmount, itemEntry2, itemAmount2...]) - Sends a mail to player with lowguid. use nil to use default values on optional arguments. UNDOCUMENTED
-    lua_register(L, "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath);                                       // AddTaxiPath(pathTable, mountA, mountH[, price, pathId]) - Adds a new taxi path. Returns the path's ID. Will replace an existing path if pathId provided and already used. mountIDs are NPC entries. path table structure: T = {{map, x, y, z[, actionFlag, delay, arrivalEvId, departEvId]}, {...}, ...}
-    lua_register(L, "AddCorpse", &LuaGlobalFunctions::AddCorpse);                                           // AddCorpse(corpse) - Adds the player's corpse to the world. More specifically, the cell.
-    lua_register(L, "RemoveCorpse", &LuaGlobalFunctions::RemoveCorpse);                                     // RemoveCorpse(corpse) - Removes the player's corpse from the world.
-    lua_register(L, "ConvertCorpseForPlayer", &LuaGlobalFunctions::ConvertCorpseForPlayer);                 // ConvertCorpseFromPlayer(guid[, insignia]) - Converts the player's corpse to bones. Adding insignia for PvP is optional (true or false).
-    lua_register(L, "RemoveOldCorpses", &LuaGlobalFunctions::RemoveOldCorpses);                             // RemoveOldCorpses() - Converts (removes) old corpses that aren't bones.
-    lua_register(L, "FindWeather", &LuaGlobalFunctions::FindWeather);                                       // FindWeather(zoneId) - Finds the weather by zoneId and returns the weather
-    lua_register(L, "AddWeather", &LuaGlobalFunctions::AddWeather);                                         // AddWeather(zoneId) - Adds weather to the following zone, also returns weather
-    lua_register(L, "RemoveWeather", &LuaGlobalFunctions::RemoveWeather);                                   // RemoveWeather(zoneId) - Removes weather from a zone
-    lua_register(L, "SendFineWeatherToPlayer", &LuaGlobalFunctions::SendFineWeatherToPlayer);               // SendFineWeatherToPlayer(player) - Sends WEATHER_STATE_FINE weather to the
+    lua_register(L, "ReloadEluna", &LuaGlobalFunctions::ReloadEluna);
+    lua_register(L, "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage);
+    lua_register(L, "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery);
+    lua_register(L, "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute);
+    lua_register(L, "CharDBQuery", &LuaGlobalFunctions::CharDBQuery);
+    lua_register(L, "CharDBExecute", &LuaGlobalFunctions::CharDBExecute);
+    lua_register(L, "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery);
+    lua_register(L, "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute);
+    lua_register(L, "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent);
+    lua_register(L, "RemoveEventById", &LuaGlobalFunctions::RemoveEventById);
+    lua_register(L, "RemoveEvents", &LuaGlobalFunctions::RemoveEvents);
+    lua_register(L, "PerformIngameSpawn", &LuaGlobalFunctions::PerformIngameSpawn);
+    lua_register(L, "CreatePacket", &LuaGlobalFunctions::CreatePacket);
+    lua_register(L, "AddVendorItem", &LuaGlobalFunctions::AddVendorItem);
+    lua_register(L, "VendorRemoveItem", &LuaGlobalFunctions::VendorRemoveItem);
+    lua_register(L, "VendorRemoveAllItems", &LuaGlobalFunctions::VendorRemoveAllItems);
+    lua_register(L, "Kick", &LuaGlobalFunctions::Kick);
+    lua_register(L, "Ban", &LuaGlobalFunctions::Ban);
+    lua_register(L, "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers);
+    lua_register(L, "SendMail", &LuaGlobalFunctions::SendMail);
+    lua_register(L, "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath);
+    lua_register(L, "AddCorpse", &LuaGlobalFunctions::AddCorpse);
+    lua_register(L, "RemoveCorpse", &LuaGlobalFunctions::RemoveCorpse);
+    lua_register(L, "ConvertCorpseForPlayer", &LuaGlobalFunctions::ConvertCorpseForPlayer);
+    lua_register(L, "RemoveOldCorpses", &LuaGlobalFunctions::RemoveOldCorpses);
+    lua_register(L, "FindWeather", &LuaGlobalFunctions::FindWeather);
+    lua_register(L, "AddWeather", &LuaGlobalFunctions::AddWeather);
+    lua_register(L, "RemoveWeather", &LuaGlobalFunctions::RemoveWeather);
+    lua_register(L, "SendFineWeatherToPlayer", &LuaGlobalFunctions::SendFineWeatherToPlayer);
 }
 
 ElunaRegister<Object> ObjectMethods[] =

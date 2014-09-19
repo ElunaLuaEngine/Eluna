@@ -997,6 +997,12 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Executes world database sql [Query] instantly and returns QueryResult object
+     *
+     * @param string query : sql [Query] to run
+     * @return QueryResult result
+     */
     int WorldDBQuery(lua_State* L)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
@@ -1017,6 +1023,11 @@ namespace LuaGlobalFunctions
 		return 1;
     }
 
+    /**
+     * Executes a sql [Query] (not instantly) to your world database
+     *
+     * @param string query : sql [Query] to execute
+     */
     int WorldDBExecute(lua_State* L)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
@@ -1024,6 +1035,12 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Executes character database sql [Query] instantly and returns QueryResult object
+     *
+     * @param string query : sql [Query] to run
+     * @return [Query] result
+     */
     int CharDBQuery(lua_State* L)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
@@ -1044,6 +1061,11 @@ namespace LuaGlobalFunctions
 		return 1;
     }
 
+    /**
+     * Executes a [Query] (not instantly) to your character database
+     *
+     * @param string query : sql [Query] to execute
+     */
     int CharDBExecute(lua_State* L)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
@@ -1051,6 +1073,12 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Executes auth database sql [Query] instantly and returns QueryResult object
+     *
+     * @param string query : sql [Query] to run
+     * @return [Query] result
+     */
     int AuthDBQuery(lua_State* L)
     {
 		const char* query = Eluna::CHECKVAL<const char*>(L, 1);
@@ -1071,6 +1099,11 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    /**
+     * Executes a [Query] (not instantly ) to your auth database
+     *
+     * @param string query : sql [Query] to execute
+     */
     int AuthDBExecute(lua_State* L)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
@@ -1470,7 +1503,13 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-    // CreatePacket(opcode, size)
+    /**
+     * Creates a [WorldPacket]
+     *
+     * @param uint32 opcode : opcode to create
+     * @param uint32 size : size of opcode
+     * @return [WorldPacket] packet
+     */
     int CreatePacket(lua_State* L)
     {
         uint32 opcode = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1482,6 +1521,15 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    /**
+     * Adds an [Item] to a vendor
+     *
+     * @param uint32 entry : [Creature] entry Id
+     * @param uint32 item : [Item] entry Id
+     * @param int32 maxcount : max [Item] stack count
+     * @param uint32 incrtime : combined with maxcount, incrtime tells how often (in seconds) the vendor list is refreshed and the limited [Item] copies are restocked
+     * @param uint32 extendedcost : unique cost of an [Item], such as conquest points for example
+     */
     int AddVendorItem(lua_State* L)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1512,6 +1560,12 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Removes an [Item] from a vendor
+     *
+     * @param uint32 entry : [Creature] entry Id
+     * @param uint32 item : [Item] entry Id
+     */
     int VendorRemoveItem(lua_State* L)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1527,6 +1581,11 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Removes all [Item]s from a vendor
+     *
+     * @param uint32 entry : [Creature] entry Id
+     */
     int VendorRemoveAllItems(lua_State* L)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1545,6 +1604,11 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Kicks a [Player] from the server
+     *
+     * @param [Player] player : [Player] to kick
+     */
     int Kick(lua_State* L)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 1);
@@ -1552,6 +1616,24 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Ban's a [Player]'s account, character or IP
+     *
+     * <pre>
+     * enum BanMode
+     * {
+     *     BAN_ACCOUNT,
+     *     BAN_CHARACTER,
+     *     BAN_IP
+     * };
+     * </pre>
+     *
+     * @param int32 banMode : method of ban, refer to BanMode above
+     * @param string nameOrIP : name of the [Player] or IP of the [Player]
+     * @param uint32 duration : duration (in seconds) of the ban
+     * @param string reason = "" : ban reason, this is optional
+     * @param string whoBanned = "" : the [Player]'s name that banned the account, character or IP, this is optional
+     */
     int Ban(lua_State* L)
     {
         int banMode = Eluna::CHECKVAL<int>(L, 1);
@@ -1587,12 +1669,41 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Saves all [Player]s
+     *
+     */
     int SaveAllPlayers(lua_State* /*L*/)
     {
         eObjectAccessor->SaveAllPlayers();
         return 0;
     }
 
+    /**
+     * Sends mail to a [Player]
+     *
+     * <pre>
+     * enum MailStationery
+     * {
+     *     MAIL_STATIONERY_TEST = 1,
+     *     MAIL_STATIONERY_DEFAULT = 41,
+     *     MAIL_STATIONERY_GM = 61,
+     *     MAIL_STATIONERY_AUCTION = 62,
+     *     MAIL_STATIONERY_VAL = 64, // Valentine
+     *     MAIL_STATIONERY_CHR = 65, // Christmas
+     *     MAIL_STATIONERY_ORP = 67 // Orphan
+     * };
+     * </pre>
+     *
+     * @param string subject : title (subject) of the mail
+     * @param string text : contents of the mail
+     * @param uint32 receiverGUIDLow : low GUID of the receiver
+     * @param uint32 senderGUIDLow = 0 : low GUID of the sender, this is optional
+     * @param uint32 stationary = MAIL_STATIONERY_DEFAULT : type of mail that is being sent as, refer to MailStationery above, this is optional
+     * @param uint32 delay = 0 : mail send delay in milliseconds, this is optional
+     * @param uint32 money = 0 : money to send, this is optional
+     * @param uint32 cod = 0 : cod money amount, this is optional
+     */
     int SendMail(lua_State* L)
     {
         int i = 0;
@@ -1666,7 +1777,14 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
-    // bit_and(a, b)
+    /**
+     * Returns result
+     * Documentation will need to be changed
+     *
+     * @param uint32 a
+     * @param uint32 b
+     * @return uint32 val
+     */
     int bit_and(lua_State* L)
     {
         uint32 a = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1675,7 +1793,14 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-    // bit_or(a, b)
+    /**
+     * Returns result
+     * Documentation will need to be changed
+     *
+     * @param uint32 a
+     * @param uint32 b
+     * @return uint32 val
+     */
     int bit_or(lua_State* L)
     {
         uint32 a = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1684,7 +1809,14 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-    // bit_lshift(a, b)
+    /**
+     * Returns result
+     * Documentation will need to be changed
+     *
+     * @param uint32 a
+     * @param uint32 b
+     * @return uint32 val
+     */
     int bit_lshift(lua_State* L)
     {
         uint32 a = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1693,7 +1825,14 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-    // bit_rshift(a, b)
+    /**
+     * Returns result
+     * Documentation will need to be changed
+     *
+     * @param uint32 a
+     * @param uint32 b
+     * @return uint32 val
+     */
     int bit_rshift(lua_State* L)
     {
         uint32 a = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1702,7 +1841,14 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-    // bit_xor(a, b)
+    /**
+     * Returns result
+     * Documentation will need to be changed
+     *
+     * @param uint32 a
+     * @param uint32 b
+     * @return uint32 val
+     */
     int bit_xor(lua_State* L)
     {
         uint32 a = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1711,7 +1857,13 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-    // bit_not(a)
+    /**
+     * Returns result
+     * Documentation will need to be changed
+     *
+     * @param uint32 a
+     * @return uint32 val
+     */
     int bit_not(lua_State* L)
     {
         uint32 a = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1720,6 +1872,16 @@ namespace LuaGlobalFunctions
     }
 
     // AddTaxiPath(pathTable, mountA, mountH[, price, pathId])
+    /**
+     * Adds a taxi path to a specified map, also returns pathId
+     *
+     * @param table waypoints : waypoint table, goes by map, x, y, and z
+     * @param uint32 mountA : alliance [Creature] entry
+     * @param uint32 mountH : horde [Creature] entry
+     * @param uint32 price = 0 : price of the taxi path, this is optional
+     * @param uint32 pathId = 0 : path Id of the taxi path, this is optional
+     * @return uint32 pathId
+     */
     int AddTaxiPath(lua_State* L)
     {
         luaL_checktype(L, 1, LUA_TTABLE);
@@ -1817,6 +1979,11 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    /**
+     * Adds a [Corpse] to the world
+     *
+     * @param [Corpse] corpse : [Corpse] to add
+     */
     int AddCorpse(lua_State* L)
     {
         Corpse* corpse = Eluna::CHECKOBJ<Corpse>(L, 1);
@@ -1825,6 +1992,11 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Removes a [Corpse] from the world
+     *
+     * @param [Corpse] corpse : [Corpse] to remove
+     */
     int RemoveCorpse(lua_State* L)
     {
         Corpse* corpse = Eluna::CHECKOBJ<Corpse>(L, 1);
@@ -1832,6 +2004,13 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    /**
+     * Converts a [Corpse] by guid, also allows for insignia to be looted
+     *
+     * @param uint64 playerGUID : guid of the [Player]
+     * @param bool insignia = false : if true, it allows insignia to be looted
+     * @return [Corpse] corpse : returns converted [Corpse]
+     */
     int ConvertCorpseForPlayer(lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
@@ -1841,12 +2020,22 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Removes old [Corpse]s from the world
+     *
+     */
     int RemoveOldCorpses(lua_State* /*L*/)
     {
         eObjectAccessor->RemoveOldCorpses();
         return 0;
     }
 
+    /**
+     * Finds [Weather] in a zone, also returns [Weather]
+     *
+     * @param uint32 zoneId : zone Id to check for [Weather]
+     * @return [Weather] weather
+     */
     int FindWeather(lua_State* L)
     {
         uint32 zoneId = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1859,6 +2048,12 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    /**
+     * Adds [Weather] to a zone, also returns [Weather]
+     *
+     * @param uint32 zoneId : zone Id to add [Weather]
+     * @return [Weather] weather
+     */
     int AddWeather(lua_State* L)
     {
         uint32 zoneId = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1871,6 +2066,11 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    /**
+     * Removes [Weather] from a zone
+     *
+     * @param uint32 zoneId : zone Id to remove [Weather]
+     */
     int RemoveWeather(lua_State* L)
     {
         uint32 zoneId = Eluna::CHECKVAL<uint32>(L, 1);
@@ -1882,6 +2082,11 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Sends normal [Weather] to a [Player]
+     *
+     * @param [Player] player : [Player] to send the normal weather to
+     */
     int SendFineWeatherToPlayer(lua_State* L)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 1);
