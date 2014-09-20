@@ -9,13 +9,13 @@
 
 #include "Common.h"
 #include "SharedDefines.h"
+#include "ObjectGuid.h"
 #ifdef TRINITY
 #include "QueryResult.h"
 #ifdef CATA
 #include "Object.h"
 #endif
 #else
-#include "ObjectGuid.h"
 #include "Database/QueryResult.h"
 #endif
 
@@ -32,9 +32,6 @@
 
 #ifdef TRINITY
 typedef QueryResult ElunaQuery;
-#ifndef CATA
-typedef uint64 ObjectGuid;
-#endif
 #define ELUNA_LOG_INFO(...)     TC_LOG_INFO("eluna", __VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    TC_LOG_ERROR("eluna", __VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    TC_LOG_DEBUG("eluna", __VA_ARGS__);
