@@ -124,7 +124,7 @@ namespace ElunaUtil
      * ReadGuard lock(_lock);
      * or
      * WriteGuard lock(_lock);
-     * 
+     *
      * The lock is automatically released at end of scope
      */
     class RWLockable

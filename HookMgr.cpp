@@ -28,19 +28,19 @@ struct ScriptedAI;
 using namespace HookMgr;
 
 /*
-Call model for EventBind:
-
-// Begin the call if should
-EVENT_BEGIN(bindmap, eventid, return returnvalue);
-// push arguments
-Push(L, pPlayer);
-EVENT_EXECUTE(returnedargs);
-FOR_RET(iter)
-{
-// process returned arguments
-}
-ENDCALL();
-*/
+ * Call model for EventBind:
+ * 
+ * // Begin the call if should
+ * EVENT_BEGIN(bindmap, eventid, return returnvalue);
+ * // push arguments
+ * Push(L, pPlayer);
+ * EVENT_EXECUTE(returnedargs);
+ * FOR_RET(iter)
+ * {
+ *     // process returned arguments
+ * }
+ * ENDCALL();
+ */
 
 // RET is a return statement
 #define EVENT_BEGIN(BINDMAP, EVENT, RET) \
@@ -1456,11 +1456,11 @@ struct ElunaCreatureAI : ScriptedAI
 #define me  m_creature
 #endif
 
-    ElunaCreatureAI(Creature* creature): ScriptedAI(creature)
+    ElunaCreatureAI(Creature* creature) : ScriptedAI(creature)
     {
         JustRespawned();
     }
-    ~ElunaCreatureAI() {}
+    ~ElunaCreatureAI() { }
 
     //Called at World update tick
 #ifndef TRINITY

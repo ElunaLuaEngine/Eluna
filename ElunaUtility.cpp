@@ -27,7 +27,7 @@ uint32 ElunaUtil::GetTimeDiff(uint32 oldMSTime)
 #endif
 }
 
-ElunaUtil::ObjectGUIDCheck::ObjectGUIDCheck(ObjectGuid guid): _guid(guid)
+ElunaUtil::ObjectGUIDCheck::ObjectGUIDCheck(ObjectGuid guid) : _guid(guid)
 {
 }
 
@@ -36,7 +36,7 @@ bool ElunaUtil::ObjectGUIDCheck::operator()(WorldObject* object)
     return object->GET_GUID() == _guid;
 }
 
-ElunaUtil::ObjectDistanceOrderPred::ObjectDistanceOrderPred(WorldObject const* pRefObj, bool ascending): m_refObj(pRefObj), m_ascending(ascending)
+ElunaUtil::ObjectDistanceOrderPred::ObjectDistanceOrderPred(WorldObject const* pRefObj, bool ascending) : m_refObj(pRefObj), m_ascending(ascending)
 {
 }
 bool ElunaUtil::ObjectDistanceOrderPred::operator()(WorldObject const* pLeft, WorldObject const* pRight) const
@@ -45,7 +45,7 @@ bool ElunaUtil::ObjectDistanceOrderPred::operator()(WorldObject const* pLeft, Wo
 }
 
 ElunaUtil::WorldObjectInRangeCheck::WorldObjectInRangeCheck(bool nearest, WorldObject const* obj, float range,
-    uint16 typeMask, uint32 entry, uint32 hostile): i_nearest(nearest),
+    uint16 typeMask, uint32 entry, uint32 hostile) : i_nearest(nearest),
     i_obj(obj), i_range(range), i_typeMask(typeMask), i_entry(entry), i_hostile(hostile)
 {
 }

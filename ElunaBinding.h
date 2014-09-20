@@ -23,7 +23,7 @@ public:
     Eluna& E;
     const char* groupName;
 
-    ElunaBind(const char* bindGroupName, Eluna& _E): E(_E), groupName(bindGroupName)
+    ElunaBind(const char* bindGroupName, Eluna& _E) : E(_E), groupName(bindGroupName)
     {
     }
 
@@ -33,7 +33,7 @@ public:
     }
 
     // unregisters all registered functions and clears all registered events from the bindings
-    virtual void Clear() {};
+    virtual void Clear() { };
 };
 
 template<typename T>
@@ -43,7 +43,7 @@ public:
     typedef std::vector<int> ElunaBindingMap;
     typedef std::map<int, ElunaBindingMap> ElunaEntryMap;
 
-    EventBind(const char* bindGroupName, Eluna& _E): ElunaBind(bindGroupName, _E)
+    EventBind(const char* bindGroupName, Eluna& _E) : ElunaBind(bindGroupName, _E)
     {
     }
 
@@ -96,7 +96,7 @@ public:
     typedef std::map<int, int> ElunaBindingMap;
     typedef UNORDERED_MAP<uint32, ElunaBindingMap> ElunaEntryMap;
 
-    EntryBind(const char* bindGroupName, Eluna& _E): ElunaBind(bindGroupName, _E)
+    EntryBind(const char* bindGroupName, Eluna& _E) : ElunaBind(bindGroupName, _E)
     {
     }
 

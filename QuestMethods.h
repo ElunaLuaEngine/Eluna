@@ -38,7 +38,7 @@ namespace LuaQuest
      *     QUEST_FLAGS_DISPLAY_ITEM_IN_TRACKER = 0x20000,   // Displays usable item in quest tracker
      *     QUEST_FLAGS_OBJ_TEXT                = 0x40000,   // use Objective text as Complete text
      *     QUEST_FLAGS_AUTO_ACCEPT             = 0x80000,   // The client recognizes this flag as auto-accept. However, NONE of the current quests (3.3.5a) have this flag. Maybe blizz used to use it, or will use it in the future.
-     *     
+     *
      *     // ... 4.x added flags up to 0x80000000 - all unknown for now
      * };
      * </pre>
@@ -164,7 +164,7 @@ namespace LuaQuest
 
     /**
      * Returns the [Quest]'s type.
-     * 
+     *
      * TODO: Document types available.
      *
      * @return uint32 type

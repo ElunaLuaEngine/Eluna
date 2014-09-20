@@ -797,7 +797,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "Respawn", &LuaCreature::Respawn },
     { "AttackStart", &LuaCreature::AttackStart },
 #ifdef TRINITY
-    {"AddLootMode", &LuaCreature::AddLootMode},
+    { "AddLootMode", &LuaCreature::AddLootMode },
     { "ResetLootMode", &LuaCreature::ResetLootMode },
     { "RemoveLootMode", &LuaCreature::RemoveLootMode },
 #endif

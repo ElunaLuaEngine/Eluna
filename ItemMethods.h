@@ -137,12 +137,12 @@ namespace LuaItem
     }
 
     /*
-    int IsRefundExpired(lua_State* L, Item* item)// TODO: Implement core support
-    {
-        Eluna::Push(L, item->IsRefundExpired());
-        return 1;
-    }
-    */
+     * int IsRefundExpired(lua_State* L, Item* item)// TODO: Implement core support
+     * {
+     *     Eluna::Push(L, item->IsRefundExpired());
+     *     return 1;
+     * }
+     */
 
     /* GETTERS */
     int GetItemLink(lua_State* L, Item* item)

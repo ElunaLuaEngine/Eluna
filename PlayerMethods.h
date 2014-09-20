@@ -1176,14 +1176,14 @@ namespace LuaPlayer
         Gender gender;
         switch (_gender)
         {
-        case 0:
-            gender = GENDER_MALE;
-            break;
-        case 1:
-            gender = GENDER_FEMALE;
-            break;
-        default:
-            return luaL_argerror(L, 2, "valid Gender expected");
+            case 0:
+                gender = GENDER_MALE;
+                break;
+            case 1:
+                gender = GENDER_FEMALE;
+                break;
+            default:
+                return luaL_argerror(L, 2, "valid Gender expected");
         }
 
         player->SetByteValue(UNIT_FIELD_BYTES_0, 2, gender);

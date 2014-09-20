@@ -1008,19 +1008,19 @@ namespace LuaGlobalFunctions
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
 
 #ifdef TRINITY
-		ElunaQuery result = WorldDatabase.Query(query);
-		if (result)
-			Eluna::Push(L, new ElunaQuery(result));
-		else
-			Eluna::Push(L);
+        ElunaQuery result = WorldDatabase.Query(query);
+        if (result)
+            Eluna::Push(L, new ElunaQuery(result));
+        else
+            Eluna::Push(L);
 #else
-		ElunaQuery* result = WorldDatabase.QueryNamed(query);
-		if (result)
-			Eluna::Push(L, result);
-		else
-			Eluna::Push(L);
+        ElunaQuery* result = WorldDatabase.QueryNamed(query);
+        if (result)
+            Eluna::Push(L, result);
+        else
+            Eluna::Push(L);
 #endif
-		return 1;
+        return 1;
     }
 
     /**
@@ -1046,19 +1046,19 @@ namespace LuaGlobalFunctions
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
 
 #ifdef TRINITY
-		QueryResult result = CharacterDatabase.Query(query);
-		if (result)
-			Eluna::Push(L, new QueryResult(result));
-		else
-			Eluna::Push(L);
+        QueryResult result = CharacterDatabase.Query(query);
+        if (result)
+            Eluna::Push(L, new QueryResult(result));
+        else
+            Eluna::Push(L);
 #else
-		QueryNamedResult* result = CharacterDatabase.QueryNamed(query);
-		if (result)
-			Eluna::Push(L, result);
-		else
-			Eluna::Push(L);
+        QueryNamedResult* result = CharacterDatabase.QueryNamed(query);
+        if (result)
+            Eluna::Push(L, result);
+        else
+            Eluna::Push(L);
 #endif
-		return 1;
+        return 1;
     }
 
     /**
@@ -1081,20 +1081,20 @@ namespace LuaGlobalFunctions
      */
     int AuthDBQuery(lua_State* L)
     {
-		const char* query = Eluna::CHECKVAL<const char*>(L, 1);
+        const char* query = Eluna::CHECKVAL<const char*>(L, 1);
 
 #ifdef TRINITY
-		QueryResult result = LoginDatabase.Query(query);
-		if (result)
-			Eluna::Push(L, new QueryResult(result));
-		else
-			Eluna::Push(L);
+        QueryResult result = LoginDatabase.Query(query);
+        if (result)
+            Eluna::Push(L, new QueryResult(result));
+        else
+            Eluna::Push(L);
 #else
-		QueryNamedResult* result = LoginDatabase.QueryNamed(query);
-		if (result)
-			Eluna::Push(L, result);
-		else
-			Eluna::Push(L);
+        QueryNamedResult* result = LoginDatabase.QueryNamed(query);
+        if (result)
+            Eluna::Push(L, result);
+        else
+            Eluna::Push(L);
 #endif
         return 1;
     }

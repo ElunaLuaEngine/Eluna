@@ -11,7 +11,7 @@ namespace LuaBattleGround
 {
     /**
      * Returns the name of the [Battleground]
-     * 
+     *
      * @return string name
      */
     int GetName(lua_State* L, BattleGround* bg)

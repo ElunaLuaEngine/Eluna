@@ -62,7 +62,7 @@ namespace LuaWeather
 
     /**
      * Regenerates the [Weather], causing it to change based on the below statistics.
-     * 
+     *
      * * 30% chance of no change
      * * 30% chance of [Weather] getting better (if not fine) or changing [Weather] type
      * * 30% chance of [Weather] getting worse (if not fine)

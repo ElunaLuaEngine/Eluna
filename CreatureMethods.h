@@ -626,7 +626,7 @@ namespace LuaCreature
 #else
         creature->SetHomePosition(x, y, z, o);
 #endif
-        
+
         return 0;
     }
 
@@ -694,37 +694,37 @@ namespace LuaCreature
 
         switch (targetType)
         {
-        case SELECT_TARGET_NEAREST:
-        case SELECT_TARGET_TOPAGGRO:
-        {
-            std::list<Unit*>::const_iterator itr = targetList.begin();
-            if (position)
-                std::advance(itr, position);
-            Eluna::Push(L, *itr);
-        }
-        break;
-        case SELECT_TARGET_FARTHEST:
-        case SELECT_TARGET_BOTTOMAGGRO:
-        {
-            std::list<Unit*>::reverse_iterator ritr = targetList.rbegin();
-            if (position)
-                std::advance(ritr, position);
-            Eluna::Push(L, *ritr);
-        }
-        break;
-        case SELECT_TARGET_RANDOM:
-        {
-            std::list<Unit*>::const_iterator itr = targetList.begin();
-            if (position)
-                std::advance(itr, urand(0, position));
-            else
-                std::advance(itr, urand(0, targetList.size()-1));
-            Eluna::Push(L, *itr);
-        }
-        break;
-        default:
-            luaL_argerror(L, 2, "SelectAggroTarget expected");
-        break;
+            case SELECT_TARGET_NEAREST:
+            case SELECT_TARGET_TOPAGGRO:
+            {
+                std::list<Unit*>::const_iterator itr = targetList.begin();
+                if (position)
+                    std::advance(itr, position);
+                Eluna::Push(L, *itr);
+            }
+                break;
+            case SELECT_TARGET_FARTHEST:
+            case SELECT_TARGET_BOTTOMAGGRO:
+            {
+                std::list<Unit*>::reverse_iterator ritr = targetList.rbegin();
+                if (position)
+                    std::advance(ritr, position);
+                Eluna::Push(L, *ritr);
+            }
+                break;
+            case SELECT_TARGET_RANDOM:
+            {
+                std::list<Unit*>::const_iterator itr = targetList.begin();
+                if (position)
+                    std::advance(itr, urand(0, position));
+                else
+                    std::advance(itr, urand(0, targetList.size() - 1));
+                Eluna::Push(L, *itr);
+            }
+                break;
+            default:
+                luaL_argerror(L, 2, "SelectAggroTarget expected");
+                break;
         }
 
         return 1;
@@ -740,7 +740,7 @@ namespace LuaCreature
         lua_newtable(L);
         int tbl = lua_gettop(L);
         uint32 i = 0;
-        
+
 #ifdef MANGOS
         ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
 #else

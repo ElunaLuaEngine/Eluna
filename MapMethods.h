@@ -9,7 +9,7 @@
 
 namespace LuaMap
 {
-    
+
 #ifndef CLASSIC
     /**
      * Returns 'true' if the [Map] is an arena, false otherwise
@@ -202,29 +202,29 @@ namespace LuaMap
 #else
         switch (GUID_HIPART(guid))
         {
-        case HIGHGUID_PLAYER:
-            Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Player*)NULL));
-            break;
-        case HIGHGUID_TRANSPORT:
-        case HIGHGUID_MO_TRANSPORT:
-        case HIGHGUID_GAMEOBJECT:
-            Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (GameObject*)NULL));
-            break;
-        case HIGHGUID_VEHICLE:
-        case HIGHGUID_UNIT:
-            Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Creature*)NULL));
-            break;
-        case HIGHGUID_PET:
-            Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Pet*)NULL));
-            break;
-        case HIGHGUID_DYNAMICOBJECT:
-            Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (DynamicObject*)NULL));
-            break;
-        case HIGHGUID_CORPSE:
-            Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Corpse*)NULL));
-            break;
-        default:
-            break;
+            case HIGHGUID_PLAYER:
+                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Player*)NULL));
+                break;
+            case HIGHGUID_TRANSPORT:
+            case HIGHGUID_MO_TRANSPORT:
+            case HIGHGUID_GAMEOBJECT:
+                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (GameObject*)NULL));
+                break;
+            case HIGHGUID_VEHICLE:
+            case HIGHGUID_UNIT:
+                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Creature*)NULL));
+                break;
+            case HIGHGUID_PET:
+                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Pet*)NULL));
+                break;
+            case HIGHGUID_DYNAMICOBJECT:
+                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (DynamicObject*)NULL));
+                break;
+            case HIGHGUID_CORPSE:
+                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Corpse*)NULL));
+                break;
+            default:
+                break;
         }
 #endif
         return 1;
