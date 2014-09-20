@@ -422,49 +422,6 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns a [WorldObject] based on it's guid if it is spawned
-     *
-     * @param uint64 guid
-     *
-     * @return [WorldObject] worldObject
-     */
-    int GetWorldObject(lua_State* L, WorldObject* obj)
-    {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
-
-#ifndef TRINITY
-        switch (GUID_HIPART(guid))
-        {
-            case HIGHGUID_PLAYER:        Eluna::Push(L, obj->GetMap()->GetPlayer(ObjectGuid(guid))); break;
-            case HIGHGUID_TRANSPORT:
-            case HIGHGUID_MO_TRANSPORT:
-            case HIGHGUID_GAMEOBJECT:    Eluna::Push(L, obj->GetMap()->GetGameObject(ObjectGuid(guid))); break;
-#if (!defined(TBC) && !defined(CLASSIC))
-            case HIGHGUID_VEHICLE:
-#endif
-            case HIGHGUID_UNIT:
-            case HIGHGUID_PET:           Eluna::Push(L, obj->GetMap()->GetAnyTypeCreature(ObjectGuid(guid))); break;
-            default:
-                break;
-        }
-#else
-        switch (GUID_HIPART(guid))
-        {
-            case HIGHGUID_PLAYER:        Eluna::Push(L, eObjectAccessor->GetPlayer(*obj, ObjectGuid(guid))); break;
-            case HIGHGUID_TRANSPORT:
-            case HIGHGUID_MO_TRANSPORT:
-            case HIGHGUID_GAMEOBJECT:    Eluna::Push(L, eObjectAccessor->GetGameObject(*obj, ObjectGuid(guid))); break;
-            case HIGHGUID_VEHICLE:
-            case HIGHGUID_UNIT:          Eluna::Push(L, eObjectAccessor->GetCreature(*obj, ObjectGuid(guid))); break;
-            case HIGHGUID_PET:           Eluna::Push(L, eObjectAccessor->GetPet(*obj, ObjectGuid(guid))); break;
-            default:
-                break;
-        }
-#endif
-        return 1;
-    }
-
-    /**
      * Returns the distance from this [WorldObject] to another [WorldObject], or from this [WorldObject] to a point.
      *
      * @proto dist = (obj)

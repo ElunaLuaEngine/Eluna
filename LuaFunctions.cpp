@@ -185,7 +185,6 @@ ElunaRegister<WorldObject> WorldObjectMethods[] =
     { "GetNearestCreature", &LuaWorldObject::GetNearestCreature },        // :GetNearestCreature([range, entry]) - Returns nearest creature with given entry in sight or given range entry can be 0 or nil for any.
     { "GetNearObject", &LuaWorldObject::GetNearObject },
     { "GetNearObjects", &LuaWorldObject::GetNearObjects },
-    { "GetWorldObject", &LuaWorldObject::GetWorldObject },                // :GetWorldObject(guid) - Returns a world object (creature, player, gameobject) from the guid. The world object returned must be on the same map as the world object in the arguments.
     { "GetDistance", &LuaWorldObject::GetDistance },                      // :GetDistance(WorldObject or x, y, z) - Returns the distance between 2 objects or location
     { "GetRelativePoint", &LuaWorldObject::GetRelativePoint },            // :GetRelativePoint(dist, rad) - Returns the x, y and z of a point dist away from worldobject.
     { "GetAngle", &LuaWorldObject::GetAngle },                            // :GetAngle(WorldObject or x, y) - Returns angle between world object and target or x and y coords.
