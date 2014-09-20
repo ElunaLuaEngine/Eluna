@@ -444,6 +444,8 @@ namespace LuaWorldObject
 #endif
             case HIGHGUID_UNIT:
             case HIGHGUID_PET:           Eluna::Push(L, obj->GetMap()->GetAnyTypeCreature(ObjectGuid(guid))); break;
+            default:
+                break;
         }
 #else
         switch (GUID_HIPART(guid))
@@ -455,6 +457,8 @@ namespace LuaWorldObject
             case HIGHGUID_VEHICLE:
             case HIGHGUID_UNIT:          Eluna::Push(L, eObjectAccessor->GetCreature(*obj, ObjectGuid(guid))); break;
             case HIGHGUID_PET:           Eluna::Push(L, eObjectAccessor->GetPet(*obj, ObjectGuid(guid))); break;
+            default:
+                break;
         }
 #endif
         return 1;

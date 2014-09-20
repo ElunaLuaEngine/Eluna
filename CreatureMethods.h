@@ -1164,7 +1164,7 @@ namespace LuaCreature
     }
 
 #ifdef TRINITY
-    int ResetLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    int ResetLootMode(lua_State* /*L*/, Creature* creature) // TODO: Implement LootMode features
     {
         creature->ResetLootMode();
         return 0;
