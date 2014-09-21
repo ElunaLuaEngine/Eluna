@@ -46,7 +46,7 @@
 #include "Config/Config.h"
 #include "ReactorAI.h"
 #include "revision_nr.h"
-#include "BattleGround/BattleGroundMgr.h"
+#include "BattleGroundMgr.h"
 #endif
 
 #if (!defined(TBC) && !defined(CLASSIC))
