@@ -1972,10 +1972,23 @@ namespace LuaPlayer
     {
         uint32 itemId = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 itemCount = Eluna::CHECKVAL<uint32>(L, 3);
+
 #ifndef TRINITY
-        Eluna::Push(L, player->StoreNewItemInInventorySlot(itemId, itemCount) ? true : false);
+        Eluna::Push(L, player->StoreNewItemInInventorySlot(itemId, itemCount));
 #else
-        Eluna::Push(L, player->AddItem(itemId, itemCount));
+        uint32 noSpaceForCount = 0;
+        ItemPosCountVec dest;
+        InventoryResult msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, itemId, itemCount, &noSpaceForCount);
+        if (msg != EQUIP_ERR_OK)
+            itemCount -= noSpaceForCount;
+
+        if (itemCount == 0 || dest.empty())
+            return 1;
+
+        Item* item = player->StoreNewItem(dest, itemId, true, Item::GenerateItemRandomPropertyId(itemId));
+        if (item)
+            player->SendNewItem(item, itemCount, true, false);
+        Eluna::Push(L, item);
 #endif
         return 1;
     }
