@@ -25,7 +25,13 @@ include_directories(
   ${OPENSSL_INCLUDE_DIR}
 )
 
-if(${CMAKE_PROJECT_NAME} STREQUAL "Trinity")
+add_library(LuaEngine STATIC
+  ${LuaEngine_STAT_SRCS}
+  ${game_STAT_SRCS}
+  ${game_STAT_PCH_SRC}
+)
+
+if( ${CMAKE_PROJECT_NAME} STREQUAL "TrinityCore" )
   include_directories(
     ${CMAKE_SOURCE_DIR}/dep/recastnavigation/Detour
     ${CMAKE_SOURCE_DIR}/dep/recastnavigation/Detour/Include
@@ -127,36 +133,30 @@ if(${CMAKE_PROJECT_NAME} STREQUAL "Trinity")
     ${CMAKE_SOURCE_DIR}/src/server/scripts/PrecompiledHeaders
     ${Boost_LIBRARIES}
   )
-  
+
   find_package(Boost COMPONENTS system filesystem REQUIRED)
-  
+
   target_link_libraries(LuaEngine
     game
     ${Boost_LIBRARIES}
   )
 
   add_dependencies(LuaEngine game)
-elseif(${CMAKE_PROJECT_NAME} STREQUAL "MaNGOS")
+elseif( ${CMAKE_PROJECT_NAME} STREQUAL "MaNGOS" )
   include_directories(
     ${CMAKE_SOURCE_DIR}/src/shared
-	${CMAKE_SOURCE_DIR}/src/framework
-	${CMAKE_SOURCE_DIR}/src/framework/Platform
-	${CMAKE_SOURCE_DIR}/src/game/BattleGround
-	${CMAKE_SOURCE_DIR}/src/game/Server
-	${CMAKE_SOURCE_DIR}/src/game/vmap
-	${CMAKE_SOURCE_DIR}/src/game/MotionGenerators
-	${CMAKE_SOURCE_DIR}/src/game/Tools
-	${CMAKE_SOURCE_DIR}/src/game/References
-	${CMAKE_SOURCE_DIR}/src/game/WorldHandlers
-	${CMAKE_SOURCE_DIR}/src/game/Object
+    ${CMAKE_SOURCE_DIR}/src/framework
+    ${CMAKE_SOURCE_DIR}/src/framework/Platform
+    ${CMAKE_SOURCE_DIR}/src/game/BattleGround
+    ${CMAKE_SOURCE_DIR}/src/game/Server
+    ${CMAKE_SOURCE_DIR}/src/game/vmap
+    ${CMAKE_SOURCE_DIR}/src/game/MotionGenerators
+    ${CMAKE_SOURCE_DIR}/src/game/Tools
+    ${CMAKE_SOURCE_DIR}/src/game/References
+    ${CMAKE_SOURCE_DIR}/src/game/WorldHandlers
+    ${CMAKE_SOURCE_DIR}/src/game/Object
   )
 endif()
-
-add_library(LuaEngine STATIC 
-  ${LuaEngine_STAT_SRCS}
-  ${game_STAT_SRCS}
-  ${game_STAT_PCH_SRC}
-)
 
 #if( WIN32 )
 #  if ( MSVC )
