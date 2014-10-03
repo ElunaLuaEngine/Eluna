@@ -114,8 +114,6 @@ namespace ElunaUtil
         uint16 i_typeMask;
         uint32 i_entry;
         uint32 i_hostile;
-
-        WorldObjectInRangeCheck(WorldObjectInRangeCheck const&);
     };
 
     /*
