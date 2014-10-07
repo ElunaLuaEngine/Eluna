@@ -482,8 +482,8 @@ namespace LuaGlobalFunctions
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
-        luaL_checktype(L, 2, LUA_TFUNCTION);
-        lua_pushvalue(L, 2);
+        luaL_checktype(L, 3, LUA_TFUNCTION);
+        lua_pushvalue(L, 3);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef > 0)
             sEluna->Register(HookMgr::REGTYPE_PACKET, entry, ev, functionRef);
