@@ -142,6 +142,29 @@ if( ${CMAKE_PROJECT_NAME} STREQUAL "TrinityCore" )
   )
 
   add_dependencies(LuaEngine game)
+  
+  if( WIN32 )
+    if ( MSVC )
+      add_custom_command(TARGET LuaEngine
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/lua_scripts/extensions/
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/extensions ${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/lua_scripts/extensions/
+      )
+    elseif ( MINGW )
+      add_custom_command(TARGET LuaEngine
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/lua_scripts/extensions/
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/extensions ${CMAKE_BINARY_DIR}/bin/lua_scripts/extensions/
+      )
+    endif()
+  endif()
+  
+  if( UNIX )
+    install(DIRECTORY extensions DESTINATION bin/lua_scripts/)
+  elseif( WIN32 )
+    install(DIRECTORY extensions DESTINATION "${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/lua_scripts/")
+  endif()
+
 elseif( ${CMAKE_PROJECT_NAME} STREQUAL "MaNGOS" )
   include_directories(
     ${CMAKE_SOURCE_DIR}/src/shared
@@ -156,27 +179,23 @@ elseif( ${CMAKE_PROJECT_NAME} STREQUAL "MaNGOS" )
     ${CMAKE_SOURCE_DIR}/src/game/WorldHandlers
     ${CMAKE_SOURCE_DIR}/src/game/Object
   )
-endif()
-
-#if( WIN32 )
-#  if ( MSVC )
-#    add_custom_command(TARGET LuaEngine
-#      POST_BUILD
-#      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/lua_scripts/extensions/
-#      COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/extensions ${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/lua_scripts/extensions/
-#    )
-#  elseif ( MINGW )
-#    add_custom_command(TARGET LuaEngine
-#      POST_BUILD
-#      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/lua_scripts/extensions/
-#      COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/extensions ${CMAKE_BINARY_DIR}/bin/lua_scripts/extensions/
-#    )
-#  endif()
-#endif()
-
-if( UNIX )
-  install(DIRECTORY extensions DESTINATION bin/lua_scripts/)
-elseif( WIN32 )
+  
+  if( WIN32 )
+    if ( MSVC )
+      add_custom_command(TARGET LuaEngine
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/lua_scripts/extensions/"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/extensions" "${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/lua_scripts/extensions/"
+      )
+    elseif ( MINGW )
+      add_custom_command(TARGET LuaEngine
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/bin/lua_scripts/extensions/"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/extensions" "${CMAKE_BINARY_DIR}/bin/ua_scripts/extensions/"
+      )
+    endif()
+  endif()
+  
   install(DIRECTORY extensions DESTINATION "${BIN_DIR}/lua_scripts/")
-  #install(DIRECTORY extensions DESTINATION "${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/lua_scripts/")
+  
 endif()
