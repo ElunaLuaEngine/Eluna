@@ -55,6 +55,7 @@ if( ${CMAKE_PROJECT_NAME} STREQUAL "TrinityCore" )
     ${CMAKE_SOURCE_DIR}/src/server/shared/Policies
     ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
     ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
+    ${CMAKE_SOURCE_DIR}/src/server/ipc
     ${CMAKE_SOURCE_DIR}/src/server/collision
     ${CMAKE_SOURCE_DIR}/src/server/collision/Management
     ${CMAKE_SOURCE_DIR}/src/server/collision/Models
