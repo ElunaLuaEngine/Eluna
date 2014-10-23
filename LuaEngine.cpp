@@ -278,7 +278,7 @@ void Eluna::RunScripts()
         if (!lua_isnoneornil(L, -1))
         {
             lua_pop(L, 1);
-            ELUNA_LOG_DEBUG("[Eluna]: Extension was already loaded or required `%s`", it->filepath.c_str());
+            ELUNA_LOG_DEBUG("[Eluna]: `%s` was already loaded or required", it->filepath.c_str());
             continue;
         }
         lua_pop(L, 1);
@@ -296,7 +296,7 @@ void Eluna::RunScripts()
             ++count;
             continue;
         }
-        ELUNA_LOG_ERROR("[Eluna]: Error loading extension `%s`", it->filepath.c_str());
+        ELUNA_LOG_ERROR("[Eluna]: Error loading `%s`", it->filepath.c_str());
         report(L);
     }
     lua_pop(L, 2);
