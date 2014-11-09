@@ -178,9 +178,9 @@ void Eluna::AddScriptPath(std::string filename, std::string fullpath)
     filename = filename.substr(0, extDot);
 
     // check extension and add path to scripts to load
-    if (ext != ".lua" && ext != ".dll")
+    if (ext != ".lua" && ext != ".dll" && ext != ".ext")
         return;
-    bool extension = filename.find(".ext") != std::string::npos;
+    bool extension = ext == ".ext";
 
     LuaScript script;
     script.fileext = ext;
