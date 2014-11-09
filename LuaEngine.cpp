@@ -29,6 +29,7 @@ extern "C"
 Eluna::ScriptList Eluna::lua_scripts;
 Eluna::ScriptList Eluna::lua_extensions;
 std::string Eluna::lua_folderpath;
+std::string Eluna::lua_requirepath;
 Eluna* Eluna::GEluna = NULL;
 bool Eluna::reload = false;
 
@@ -48,8 +49,9 @@ void Eluna::Initialize()
             lua_folderpath.replace(0, 1, home);
 #endif
     ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", lua_folderpath.c_str());
-    // GetScripts(lua_folderpath + "/extensions", lua_extensions);
-    GetScripts(lua_folderpath, lua_scripts);
+    lua_requirepath = "";
+    GetScripts(lua_folderpath);
+    lua_requirepath.erase(lua_requirepath.end() - 1);
 
     ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size() + lua_extensions.size()), ElunaUtil::GetTimeDiff(oldMSTime));
 
@@ -120,6 +122,12 @@ playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)
     lua_setmetatable(L, -2);
     userdata_table = luaL_ref(L, LUA_REGISTRYINDEX);
 
+    // Set lua require folder paths (scripts folder structure)
+    lua_getglobal(L, "package");
+    lua_pushstring(L, lua_requirepath.c_str());
+    lua_setfield(L, -2, "path");
+    lua_pop(L, 1);
+
     // Replace this with map insert if making multithread version
     ASSERT(!Eluna::GEluna);
     Eluna::GEluna = this;
@@ -158,7 +166,7 @@ Eluna::~Eluna()
     lua_close(L);
 }
 
-void Eluna::AddScriptPath(std::string filename, std::string fullpath, ScriptList& scripts)
+void Eluna::AddScriptPath(std::string filename, std::string fullpath)
 {
     ELUNA_LOG_DEBUG("[Eluna]: AddScriptPath Checking file `%s`", fullpath.c_str());
 
@@ -170,25 +178,24 @@ void Eluna::AddScriptPath(std::string filename, std::string fullpath, ScriptList
     filename = filename.substr(0, extDot);
 
     // check extension and add path to scripts to load
-    bool luascript = ext == ".lua" || ext == ".dll";
-    bool extension = ext == ".ext" || (filename.length() >= 4 && filename.find_last_of("_ext") == filename.length() - 4);
-    if (!luascript && !extension)
+    if (ext != ".lua" && ext != ".dll")
         return;
+    bool extension = filename.find(".ext") != std::string::npos;
 
     LuaScript script;
     script.fileext = ext;
     script.filename = filename;
     script.filepath = fullpath;
-    script.modulepath = fullpath.substr(0, fullpath.length() - ext.length());
+    script.modulepath = fullpath.substr(0, fullpath.length() - filename.length() - ext.length());
     if (extension)
         lua_extensions.push_back(script);
     else
-        scripts.push_back(script);
-    ELUNA_LOG_DEBUG("[Eluna]: GetScripts add path `%s`", fullpath.c_str());
+        lua_scripts.push_back(script);
+    ELUNA_LOG_DEBUG("[Eluna]: AddScriptPath add path `%s`", fullpath.c_str());
 }
 
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
-void Eluna::GetScripts(std::string path, ScriptList& scripts)
+void Eluna::GetScripts(std::string path)
 {
     ELUNA_LOG_DEBUG("[Eluna]: GetScripts from path `%s`", path.c_str());
 
@@ -198,6 +205,11 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
 
     if (boost::filesystem::exists(someDir) && boost::filesystem::is_directory(someDir))
     {
+        lua_requirepath +=
+            path + "/?" +
+            ";" + path + "/?.lua" +
+            ";" + path + "/?.dll" + ";";
+
         for (boost::filesystem::directory_iterator dir_iter(someDir); dir_iter != end_iter; ++dir_iter)
         {
             std::string fullpath = dir_iter->path().generic_string();
@@ -205,7 +217,7 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
             // load subfolder
             if (boost::filesystem::is_directory(dir_iter->status()))
             {
-                GetScripts(fullpath, scripts);
+                GetScripts(fullpath);
                 continue;
             }
 
@@ -213,18 +225,19 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
             {
                 // was file, try add
                 std::string filename = dir_iter->path().filename().generic_string();
-                AddScriptPath(filename, fullpath, scripts);
+                AddScriptPath(filename, fullpath);
             }
         }
     }
 #else
     ACE_Dirent dir;
-    if (dir.open(path.c_str()) == -1)
-    {
-        ELUNA_LOG_ERROR("[Eluna]: Error No `%s` directory found, creating it", path.c_str());
-        ACE_OS::mkdir(path.c_str());
+    if (dir.open(path.c_str()) == -1) // Error opening directory, return
         return;
-    }
+
+    lua_requirepath +=
+        path + "?" +
+        ";" + path + "?.lua" +
+        ";" + path + "?.dll" + ";";
 
     ACE_DIRENT *directory = 0;
     while ((directory = dir.read()))
@@ -242,18 +255,18 @@ void Eluna::GetScripts(std::string path, ScriptList& scripts)
         // load subfolder
         if ((stat_buf.st_mode & S_IFMT) == (S_IFDIR))
         {
-            GetScripts(fullpath, scripts);
+            GetScripts(fullpath);
             continue;
         }
 
         // was file, try add
         std::string filename = directory->d_name;
-        AddScriptPath(filename, fullpath, scripts);
+        AddScriptPath(filename, fullpath);
     }
 #endif
 }
 
-static bool ScriptpathComparator(const LuaScript& first, const LuaScript& second)
+static bool ScriptPathComparator(const LuaScript& first, const LuaScript& second)
 {
     return first.filepath.compare(second.filepath) < 0;
 }
@@ -264,8 +277,8 @@ void Eluna::RunScripts()
     uint32 count = 0;
 
     ScriptList scripts;
-    lua_extensions.sort(ScriptpathComparator);
-    lua_scripts.sort(ScriptpathComparator);
+    lua_extensions.sort(ScriptPathComparator);
+    lua_scripts.sort(ScriptPathComparator);
     scripts.insert(scripts.end(), lua_extensions.begin(), lua_extensions.end());
     scripts.insert(scripts.end(), lua_scripts.begin(), lua_scripts.end());
 
@@ -274,7 +287,7 @@ void Eluna::RunScripts()
     int modules = lua_gettop(L);
     for (ScriptList::const_iterator it = scripts.begin(); it != scripts.end(); ++it)
     {
-        lua_getfield(L, modules, it->modulepath.c_str());
+        lua_getfield(L, modules, it->filename.c_str());
         if (!lua_isnoneornil(L, -1))
         {
             lua_pop(L, 1);
@@ -289,7 +302,7 @@ void Eluna::RunScripts()
                 lua_pop(L, 1);
                 Push(L, true);
             }
-            lua_setfield(L, modules, it->modulepath.c_str());
+            lua_setfield(L, modules, it->filename.c_str());
 
             // successfully loaded and ran file
             ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `%s`", it->filepath.c_str());

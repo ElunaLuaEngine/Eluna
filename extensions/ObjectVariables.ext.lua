@@ -4,6 +4,8 @@
 -- Please see the included DOCS/LICENSE.md for more information
 --
 
+-- filename.ext.lua files are loaded before normal .lua files
+
 local variableStores = {
     Map = {},
     Player = {},

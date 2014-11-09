@@ -4,7 +4,7 @@
 -- Please see the included DOCS/LICENSE.md for more information
 --
 
--- Set correct require paths
-package.path = package.path.."lua_scripts\\?;lua_scripts\\?.dll;lua_scripts\\?.lua"
+-- filename.ext.lua files are loaded before normal .lua files
+
 -- Randomize random
 math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6)))

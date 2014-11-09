@@ -137,13 +137,14 @@ public:
     static ScriptList lua_scripts;
     static ScriptList lua_extensions;
     static std::string lua_folderpath;
+    static std::string lua_requirepath;
     static void Initialize();
     static void Uninitialize();
     // Use Eluna::reload = true; instead.
     // This will be called on next update
     static void ReloadEluna();
-    static void GetScripts(std::string path, ScriptList& scripts);
-    static void AddScriptPath(std::string filename, std::string fullpath, ScriptList& scripts);
+    static void GetScripts(std::string path);
+    static void AddScriptPath(std::string filename, std::string fullpath);
 
     static void report(lua_State*);
     static void ExecuteCall(lua_State* L, int params, int res);
