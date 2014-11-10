@@ -350,7 +350,7 @@ void Eluna::ExecuteCall(lua_State* L, int params, int res)
     if (type != LUA_TFUNCTION)
     {
         lua_pop(L, params + 1);  // Cleanup the stack.
-        ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is a %s, not a function.", lua_typename(L, type));
+        ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is %s, not a function.", lua_typename(L, type));
         return;
     }
 
@@ -487,13 +487,13 @@ static int32 CheckIntegerRange(lua_State *L, int narg, int32 min, int32 max)
 
     if (value > max)
     {
-        snprintf(error_buffer, 64, "value must be less than %d", max);
+        snprintf(error_buffer, 64, "value must be less than or equal to %d", max);
         return luaL_argerror(L, narg, error_buffer);
     }
 
     if (value < min)
     {
-        snprintf(error_buffer, 64, "value must be greater than %d", min);
+        snprintf(error_buffer, 64, "value must be greater than or equal to %d", min);
         return luaL_argerror(L, narg, error_buffer);
     }
 
@@ -506,11 +506,11 @@ static uint32 CheckUnsignedRange(lua_State *L, int narg, uint32 max)
     char error_buffer[64];
 
     if (value < 0)
-        return luaL_argerror(L, narg, "value must be greater than 0");
+        return luaL_argerror(L, narg, "value must be greater than or equal to 0");
 
     if (value > max)
     {
-        snprintf(error_buffer, 64, "value must be less than %u", max);
+        snprintf(error_buffer, 64, "value must be less than or equal to %u", max);
         return luaL_argerror(L, narg, error_buffer);
     }
 
