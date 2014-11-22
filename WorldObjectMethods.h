@@ -658,5 +658,34 @@ namespace LuaWorldObject
         obj->elunaEvents->RemoveEvents();
         return 0;
     }
+
+    /**
+     * Returns true if the given [WorldObject] or coordinates are in the [WorldObject]'s line of sight
+     *
+     * @proto isInLoS = (worldobject)
+     * @proto isInLoS = (x, y, z)
+     *
+     * @param [WorldObject] worldobject
+     * @param float x
+     * @param float y
+     * @param float z
+     * @return bool isInLoS
+     */
+    int IsWithinLoS(lua_State* L, WorldObject* obj)
+    {
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
+
+        if (target)
+            Eluna::Push(L, obj->IsWithinLOSInMap(target));
+        else
+        {
+            float x = Eluna::CHECKVAL<float>(L, 2);
+            float y = Eluna::CHECKVAL<float>(L, 3);
+            float z = Eluna::CHECKVAL<float>(L, 4);
+            Eluna::Push(L, obj->IsWithinLOS(x, y, z));
+        }
+
+        return 1;
+    }
 };
 #endif

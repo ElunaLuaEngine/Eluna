@@ -145,26 +145,38 @@ namespace LuaItem
      */
 
     /* GETTERS */
+
+    /**
+     * Returns the chat link of the [Item]
+     *
+     * <pre>
+     * enum LocaleConstant
+     * {
+     *     LOCALE_enUS = 0,
+     *     LOCALE_koKR = 1,
+     *     LOCALE_frFR = 2,
+     *     LOCALE_deDE = 3,
+     *     LOCALE_zhCN = 4,
+     *     LOCALE_zhTW = 5,
+     *     LOCALE_esES = 6,
+     *     LOCALE_esMX = 7,
+     *     LOCALE_ruRU = 8
+     * };
+     * </pre>
+     *
+     * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the [Item]'s name in
+     * @return string itemLink
+     */
     int GetItemLink(lua_State* L, Item* item)
     {
-        // LOCALE_enUS = 0,
-        // LOCALE_koKR = 1,
-        // LOCALE_frFR = 2,
-        // LOCALE_deDE = 3,
-        // LOCALE_zhCN = 4,
-        // LOCALE_zhTW = 5,
-        // LOCALE_esES = 6,
-        // LOCALE_esMX = 7,
-        // LOCALE_ruRU = 8
-
-        int loc_idx = Eluna::CHECKVAL<int>(L, 2, DEFAULT_LOCALE);
-        if (loc_idx < 0 || loc_idx >= MAX_LOCALES)
+        uint8 locale = Eluna::CHECKVAL<uint8>(L, 2, DEFAULT_LOCALE);
+        if (locale >= TOTAL_LOCALES)
             return luaL_argerror(L, 2, "valid LocaleConstant expected");
 
         const ItemTemplate* temp = item->GetTemplate();
         std::string name = temp->Name1;
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(temp->ItemId))
-            ObjectMgr::GetLocaleString(il->Name, loc_idx, name);
+            ObjectMgr::GetLocaleString(il->Name, locale, name);
 
 #ifndef CLASSIC
         if (int32 itemRandPropId = item->GetItemRandomPropertyId())
@@ -192,7 +204,7 @@ namespace LuaItem
                 //if (!test.empty())
                 //{
                 name += ' ';
-                name += suffix[(name != temp->Name1) ? loc_idx : DEFAULT_LOCALE];
+                name += suffix[(name != temp->Name1) ? locale : DEFAULT_LOCALE];
                 /*}*/
             }
         }

@@ -126,6 +126,8 @@ playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)
     lua_getglobal(L, "package");
     lua_pushstring(L, lua_requirepath.c_str());
     lua_setfield(L, -2, "path");
+    lua_pushstring(L, ""); // erase cpath
+    lua_setfield(L, -2, "cpath");
     lua_pop(L, 1);
 
     // Replace this with map insert if making multithread version
@@ -206,13 +208,26 @@ void Eluna::GetScripts(std::string path)
     if (boost::filesystem::exists(someDir) && boost::filesystem::is_directory(someDir))
     {
         lua_requirepath +=
-            path + "/?" +
-            ";" + path + "/?.lua" +
-            ";" + path + "/?.dll" + ";";
+            path + "/?;" +
+            path + "/?.lua;" +
+            path + "/?.dll;" +
+            path + "/?.so;";
 
         for (boost::filesystem::directory_iterator dir_iter(someDir); dir_iter != end_iter; ++dir_iter)
         {
             std::string fullpath = dir_iter->path().generic_string();
+
+            // Check if file is hidden
+#ifdef WIN32
+            DWORD dwAttrib = GetFileAttributes(fullpath.c_str());
+            if (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_HIDDEN))
+                continue;
+#endif
+#ifdef UNIX
+            const char* name = dir_iter->path().filename().generic_string().c_str();
+            if (name != ".." || name != "." || name[0] == '.')
+                continue;
+#endif
 
             // load subfolder
             if (boost::filesystem::is_directory(dir_iter->status()))
@@ -235,9 +250,10 @@ void Eluna::GetScripts(std::string path)
         return;
 
     lua_requirepath +=
-        path + "?" +
-        ";" + path + "?.lua" +
-        ";" + path + "?.dll" + ";";
+        path + "/?;" +
+        path + "/?.lua;" +
+        path + "/?.dll;" +
+        path + "/?.so;";
 
     ACE_DIRENT *directory = 0;
     while ((directory = dir.read()))
@@ -247,6 +263,18 @@ void Eluna::GetScripts(std::string path)
             continue;
 
         std::string fullpath = path + "/" + directory->d_name;
+
+        // Check if file is hidden
+#ifdef WIN32
+        DWORD dwAttrib = GetFileAttributes(fullpath.c_str());
+        if (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_HIDDEN))
+            continue;
+#endif
+#ifdef UNIX
+        const char* name = directory->d_name.c_str();
+        if (name != ".." || name != "." || name[0] == '.')
+            continue;
+#endif
 
         ACE_stat stat_buf;
         if (ACE_OS::lstat(fullpath.c_str(), &stat_buf) == -1)
@@ -282,11 +310,21 @@ void Eluna::RunScripts()
     scripts.insert(scripts.end(), lua_extensions.begin(), lua_extensions.end());
     scripts.insert(scripts.end(), lua_scripts.begin(), lua_scripts.end());
 
+    UNORDERED_MAP<std::string, std::string> loaded; // filename, path
+
     lua_getglobal(L, "package");
     luaL_getsubtable(L, -1, "loaded");
     int modules = lua_gettop(L);
     for (ScriptList::const_iterator it = scripts.begin(); it != scripts.end(); ++it)
     {
+        // Check that no duplicate names exist
+        if (loaded.find(it->filename) != loaded.end())
+        {
+            ELUNA_LOG_ERROR("[Eluna]: Error loading `%s`. File with same name already loaded from `%s`, rename either file", it->filepath.c_str(), loaded[it->filename].c_str());
+            continue;
+        }
+        loaded[it->filename] = it->filepath;
+
         lua_getfield(L, modules, it->filename.c_str());
         if (!lua_isnoneornil(L, -1))
         {

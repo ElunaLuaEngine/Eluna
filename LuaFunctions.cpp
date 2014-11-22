@@ -86,6 +86,12 @@ void RegisterGlobals(lua_State* L)
     lua_register(L, "GetItemLink", &LuaGlobalFunctions::GetItemLink);
     lua_register(L, "GetMapById", &LuaGlobalFunctions::GetMapById);
 
+    // Boolean
+    lua_register(L, "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos);
+    lua_register(L, "IsEquipmentPos", &LuaGlobalFunctions::IsEquipmentPos);
+    lua_register(L, "IsBankPos", &LuaGlobalFunctions::IsBankPos);
+    lua_register(L, "IsBagPos", &LuaGlobalFunctions::IsBagPos);
+
     // Other
     lua_register(L, "ReloadEluna", &LuaGlobalFunctions::ReloadEluna);
     lua_register(L, "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage);
@@ -189,6 +195,9 @@ ElunaRegister<WorldObject> WorldObjectMethods[] =
     { "GetRelativePoint", &LuaWorldObject::GetRelativePoint },            // :GetRelativePoint(dist, rad) - Returns the x, y and z of a point dist away from worldobject.
     { "GetAngle", &LuaWorldObject::GetAngle },                            // :GetAngle(WorldObject or x, y) - Returns angle between world object and target or x and y coords.
 
+    // Boolean
+    { "IsWithinLoS", &LuaWorldObject::IsWithinLoS },
+
     // Other
     { "SummonGameObject", &LuaWorldObject::SummonGameObject },            // :SummonGameObject(entry, x, y, z, o[, respawnDelay]) - Spawns an object to location. Returns the object or nil
     { "SpawnCreature", &LuaWorldObject::SpawnCreature },                  // :SpawnCreature(entry, x, y, z, o[, spawnType, despawnDelay]) - Spawns a creature to location that despawns after given time (0 for infinite). Returns the creature or nil
@@ -216,7 +225,8 @@ ElunaRegister<Unit> UnitMethods[] =
     { "GetGender", &LuaUnit::GetGender },                                 // :GetGender() - returns the gender where male = 0 female = 1
     { "GetRace", &LuaUnit::GetRace },                                     // :GetRace()
     { "GetClass", &LuaUnit::GetClass },                                   // :GetClass()
-    { "GetClassAsString", &LuaUnit::GetClassAsString },                   // :GetClassAsString()
+    { "GetRaceAsString", &LuaUnit::GetRaceAsString },                     // :GetRaceAsString([locale])
+    { "GetClassAsString", &LuaUnit::GetClassAsString },                   // :GetClassAsString([locale])
     { "GetAura", &LuaUnit::GetAura },                                     // :GetAura(spellID) - returns aura object
     { "GetCombatTime", &LuaUnit::GetCombatTime },                         // :GetCombatTime() - Returns how long the unit has been in combat
     { "GetFaction", &LuaUnit::GetFaction },                               // :GetFaction() - Returns the unit's factionId
@@ -239,6 +249,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "GetControllerGUIDS", &LuaUnit::GetControllerGUIDS },               // :GetControllerGUIDS() - Returns the charmer, owner or unit's own GUID
     { "GetStandState", &LuaUnit::GetStandState },                         // :GetStandState() - Returns the unit's stand state
     { "GetVictim", &LuaUnit::GetVictim },                                 // :GetVictim() - Returns creature's current target
+    { "GetSpeed", &LuaUnit::GetSpeed },                                   // :GetSpeed(movementType) - Returns the unit's speed
     { "GetStat", &LuaUnit::GetStat },                                     // :GetStat(stat)
     { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },                 // :GetBaseSpellPower()
 #if (!defined(TBC) && !defined(CLASSIC))
@@ -324,7 +335,6 @@ ElunaRegister<Unit> UnitMethods[] =
     { "IsWithinDistInMap", &LuaUnit::IsWithinDistInMap },             // :IsWithinDistInMap(worldObject, radius) - Returns if the unit is within distance in map of the worldObject
     { "IsInAccessiblePlaceFor", &LuaUnit::IsInAccessiblePlaceFor },   // :IsInAccessiblePlaceFor(creature) - Returns if the unit is in an accessible place for the specified creature
     { "IsVendor", &LuaUnit::IsVendor },                               // :IsVendor() - Returns if the unit is a vendor or not
-    { "IsWithinLoS", &LuaUnit::IsWithinLoS },                         // :IsWithinLoS(x, y, z)
     { "IsRooted", &LuaUnit::IsRooted },                               // :IsRooted()
     { "IsFullHealth", &LuaUnit::IsFullHealth },                       // :IsFullHealth() - Returns if the unit is full health
     { "HasAura", &LuaUnit::HasAura },                                 // :HasAura(spellId) - Returns true if the unit has the aura from the spell
@@ -411,7 +421,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetPlayerIP", &LuaPlayer::GetPlayerIP },                                   // :GetPlayerIP() - Returns the player's IP Address
     { "GetLevelPlayedTime", &LuaPlayer::GetLevelPlayedTime },                     // :GetLevelPlayedTime() - Returns the player's played time at that level
     { "GetTotalPlayedTime", &LuaPlayer::GetTotalPlayedTime },                     // :GetTotalPlayedTime() - Returns the total played time of that player
-    { "GetItemByPos", &LuaPlayer::GetItemByPos },                                 // :GetItemByPos(bag, slot) - Returns item in given slot in a bag (bag: 19-22 slot : 0-35) or inventory (bag: -1 slot : 0-38)
+    { "GetItemByPos", &LuaPlayer::GetItemByPos },                                 // :GetItemByPos(bag, slot) - Returns item in given slot in a bag (bag: 19-22 slot: 0-35) or inventory (bag: 255 slot : 0-38)
     { "GetReputation", &LuaPlayer::GetReputation },                               // :GetReputation(faction) - Gets player's reputation with given faction
     { "GetItemByEntry", &LuaPlayer::GetItemByEntry },                             // :GetItemByEntry(entry) - Gets an item if the player has it
     { "GetEquippedItemBySlot", &LuaPlayer::GetEquippedItemBySlot },               // :GetEquippedItemBySlot(slotId) - Returns equipped item by slot
@@ -753,6 +763,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "SetDeathState", &LuaCreature::SetDeathState },
     { "SetWalk", &LuaCreature::SetWalk },
     { "SetHomePosition", &LuaCreature::SetHomePosition },
+    { "SetEquipmentSlots", &LuaCreature::SetEquipmentSlots },
 
     // Booleans
     { "IsWorldBoss", &LuaCreature::IsWorldBoss },

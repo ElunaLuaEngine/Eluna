@@ -834,15 +834,33 @@ namespace LuaPlayer
         return 1;
     }
 
+    /**
+     * Returns an item in given bag on given slot.
+     *
+     * <pre>
+     * Possible and most commonly used combinations:
+     *
+     * bag = 255
+     * slots 0-18 equipment
+     * slots 19-22 equipped bag slots
+     * slots 23-38 backpack
+     * slots 39-66 bank main slots
+     * slots 67-74 bank bag slots
+     * slots 86-117 keyring
+     *
+     * bag = 19-22
+     * slots 0-35 for equipped bags
+     *
+     * bag = 67-74
+     * slots 0-35 for bank bags
+     * </pre>
+     *
+     * @param uint8 bag : the bag the [Item] is in, you can get this with [Item:GetBagSlot]
+     * @param uint8 slot : the slot the [Item] is in within the bag, you can get this with [Item:GetSlot]
+     * @return [Item] item : [Item] or nil
+     */
     int GetItemByPos(lua_State* L, Player* player)
     {
-        /*
-        bag = -1 for inventory and backpack, 19-22 other bags
-        slots 0-18 equipment
-        slots 19-22 bags
-        slots 23-38 backpack
-        slots 0-35 other bags
-        */
         uint8 bag = Eluna::CHECKVAL<uint8>(L, 2);
         uint8 slot = Eluna::CHECKVAL<uint8>(L, 3);
 

@@ -37,16 +37,6 @@ namespace LuaUnit
         return 1;
     }
 
-    int IsWithinLoS(lua_State* L, Unit* unit)
-    {
-        float x = Eluna::CHECKVAL<float>(L, 2);
-        float y = Eluna::CHECKVAL<float>(L, 3);
-        float z = Eluna::CHECKVAL<float>(L, 4);
-
-        Eluna::Push(L, unit->IsWithinLOS(x, y, z));
-        return 1;
-    }
-
     int IsRooted(lua_State* L, Unit* unit)
     {
 #ifdef TRINITY
@@ -514,11 +504,28 @@ namespace LuaUnit
         return 1;
     }
 
+    /**
+     * Returns the currently casted [Spell] of given type or nil
+     *
+     * <pre>
+     * enum CurrentSpellTypes
+     * {
+     *     CURRENT_MELEE_SPELL             = 0,
+     *     CURRENT_GENERIC_SPELL           = 1,
+     *     CURRENT_CHANNELED_SPELL         = 2,
+     *     CURRENT_AUTOREPEAT_SPELL        = 3
+     * };
+     * </pre>
+     *
+     * @param [CurrentSpellTypes] spellType
+     * @return [Spell] castedSpell
+     */
     int GetCurrentSpell(lua_State* L, Unit* unit)
     {
         uint32 type = Eluna::CHECKVAL<uint32>(L, 2);
         if (type >= CURRENT_MAX_SPELL)
             return luaL_argerror(L, 2, "valid CurrentSpellTypes expected");
+
         Eluna::Push(L, unit->GetCurrentSpell(type));
         return 1;
     }
@@ -651,47 +658,73 @@ namespace LuaUnit
         return 1;
     }
 
+    /**
+     * Returns the [Unit]'s class' name in given or default locale or nil.
+     *
+     * <pre>
+     * enum LocaleConstant
+     * {
+     *     LOCALE_enUS = 0,
+     *     LOCALE_koKR = 1,
+     *     LOCALE_frFR = 2,
+     *     LOCALE_deDE = 3,
+     *     LOCALE_zhCN = 4,
+     *     LOCALE_zhTW = 5,
+     *     LOCALE_esES = 6,
+     *     LOCALE_esMX = 7,
+     *     LOCALE_ruRU = 8
+     * };
+     * </pre>
+     *
+     * @param [LocaleConstant] locale = DEFAULT_LOCALE
+     * @return string className : class name or nil
+     */
     int GetClassAsString(lua_State* L, Unit* unit)
     {
-        const char* str = NULL;
-        switch (unit->getClass())
-        {
-            case 1:
-                str = "Warrior";
-                break;
-            case 2:
-                str = "Paladin";
-                break;
-            case 3:
-                str = "Hunter";
-                break;
-            case 4:
-                str = "Rogue";
-                break;
-            case 5:
-                str = "Priest";
-                break;
-            case 6:
-                str = "Death Knight";
-                break;
-            case 7:
-                str = "Shaman";
-                break;
-            case 8:
-                str = "Mage";
-                break;
-            case 9:
-                str = "Warlock";
-                break;
-            case 11:
-                str = "Druid";
-                break;
-            default:
-                str = NULL;
-                break;
-        }
+        uint8 locale = Eluna::CHECKVAL<uint8>(L, 2, DEFAULT_LOCALE);
+        if (locale >= TOTAL_LOCALES)
+            return luaL_argerror(L, 2, "valid LocaleConstant expected");
 
-        Eluna::Push(L, str);
+        const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->getClass());
+        if (!entry)
+            return 1;
+
+        Eluna::Push(L, entry->name[locale]);
+        return 1;
+    }
+
+    /**
+     * Returns the [Unit]'s race's name in given or default locale or nil.
+     *
+     * <pre>
+     * enum LocaleConstant
+     * {
+     *     LOCALE_enUS = 0,
+     *     LOCALE_koKR = 1,
+     *     LOCALE_frFR = 2,
+     *     LOCALE_deDE = 3,
+     *     LOCALE_zhCN = 4,
+     *     LOCALE_zhTW = 5,
+     *     LOCALE_esES = 6,
+     *     LOCALE_esMX = 7,
+     *     LOCALE_ruRU = 8
+     * };
+     * </pre>
+     *
+     * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the race name in
+     * @return string raceName : race name or nil
+     */
+    int GetRaceAsString(lua_State* L, Unit* unit)
+    {
+        uint8 locale = Eluna::CHECKVAL<uint8>(L, 2, DEFAULT_LOCALE);
+        if (locale >= TOTAL_LOCALES)
+            return luaL_argerror(L, 2, "valid LocaleConstant expected");
+
+        const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->getRace());
+        if (!entry)
+            return 1;
+
+        Eluna::Push(L, entry->name[locale]);
         return 1;
     }
 
@@ -812,6 +845,41 @@ namespace LuaUnit
     }
 #endif
 
+    /**
+     * Returns the [Unit]'s speed of given [UnitMoveType].
+     *
+     * <pre>
+     * enum UnitMoveType
+     * {
+     *     MOVE_WALK           = 0,
+     *     MOVE_RUN            = 1,
+     *     MOVE_RUN_BACK       = 2,
+     *     MOVE_SWIM           = 3,
+     *     MOVE_SWIM_BACK      = 4,
+     *     MOVE_TURN_RATE      = 5,
+     *     MOVE_FLIGHT         = 6,
+     *     MOVE_FLIGHT_BACK    = 7,
+     *     MOVE_PITCH_RATE     = 8
+     * };
+     * </pre>
+     *
+     * @param [UnitMoveType] type
+     * @return float speed
+     */
+    int GetSpeed(lua_State* L, Unit* unit)
+    {
+        uint32 type = Eluna::CHECKVAL<uint32>(L, 2);
+        if (type >= MAX_MOVE_TYPE)
+            return luaL_argerror(L, 2, "valid UnitMoveType expected");
+
+#ifndef TRINITY
+        Eluna::Push(L, unit->GetSpeedRate((UnitMoveType)type));
+#else
+        Eluna::Push(L, unit->GetSpeed((UnitMoveType)type));
+#endif
+        return 1;
+    }
+
     /* SETTERS */
     int SetOwnerGUID(lua_State* L, Unit* unit)
     {
@@ -851,6 +919,29 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Sets the [Unit]'s speed of given [UnitMoveType] to given rate.
+     * If forced, packets sent to clients forcing the visual change.
+     *
+     * <pre>
+     * enum UnitMoveType
+     * {
+     *     MOVE_WALK           = 0,
+     *     MOVE_RUN            = 1,
+     *     MOVE_RUN_BACK       = 2,
+     *     MOVE_SWIM           = 3,
+     *     MOVE_SWIM_BACK      = 4,
+     *     MOVE_TURN_RATE      = 5,
+     *     MOVE_FLIGHT         = 6,
+     *     MOVE_FLIGHT_BACK    = 7,
+     *     MOVE_PITCH_RATE     = 8
+     * };
+     * </pre>
+     *
+     * @param [UnitMoveType] type
+     * @param float rate
+     * @param bool forced = false
+     */
     int SetSpeed(lua_State* L, Unit* unit)
     {
         uint32 type = Eluna::CHECKVAL<uint32>(L, 2);
@@ -1569,16 +1660,100 @@ namespace LuaUnit
         return 1;
     }
 
+    /**
+     * Makes the [Unit] damage the target [Unit]
+     *
+     * <pre>
+     * enum SpellSchools
+     * {
+     *     SPELL_SCHOOL_NORMAL  = 0,
+     *     SPELL_SCHOOL_HOLY    = 1,
+     *     SPELL_SCHOOL_FIRE    = 2,
+     *     SPELL_SCHOOL_NATURE  = 3,
+     *     SPELL_SCHOOL_FROST   = 4,
+     *     SPELL_SCHOOL_SHADOW  = 5,
+     *     SPELL_SCHOOL_ARCANE  = 6,
+     *     MAX_SPELL_SCHOOL     = 7
+     * };
+     * </pre>
+     *
+     * @param [Unit] target : [Unit] to damage
+     * @param uint32 damage : amount to damage
+     * @param bool durabilityloss = true : if false, the damage does not do durability damage
+     * @param [SpellSchools] school = MAX_SPELL_SCHOOL : school the damage is done in or MAX_SPELL_SCHOOL for direct damage
+     * @param uint32 spell = 0 : spell that inflicts the damage
+     */
     int DealDamage(lua_State* L, Unit* unit)
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
-        uint32 amount = Eluna::CHECKVAL<uint32>(L, 3);
+        uint32 damage = Eluna::CHECKVAL<uint32>(L, 3);
         bool durabilityloss = Eluna::CHECKVAL<bool>(L, 4, true);
+        uint32 school = Eluna::CHECKVAL<uint32>(L, 5, MAX_SPELL_SCHOOL);
+        uint32 spell = Eluna::CHECKVAL<uint32>(L, 6, 0);
+        if (school > MAX_SPELL_SCHOOL)
+            return luaL_argerror(L, 6, "valid SpellSchool expected");
 
-        unit->DealDamage(target, amount, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
+        // flat melee damage without resistence/etc reduction
+        if (school == MAX_SPELL_SCHOOL)
+        {
+            unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
+#ifdef TRINITY
+            unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_HIT, 0);
+#else
+            unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, 1, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
+#endif
+            return 0;
+        }
+
+        SpellSchoolMask schoolmask = SpellSchoolMask(1 << school);
+
+#ifdef TRINITY
+        if (Unit::IsDamageReducedByArmor(schoolmask))
+            damage = unit->CalcArmorReducedDamage(target, damage, NULL, BASE_ATTACK);
+#else
+        if (schoolmask & SPELL_SCHOOL_MASK_NORMAL)
+            damage = unit->CalcArmorReducedDamage(target, damage);
+#endif
+
+        // melee damage by specific school
+        if (!spell)
+        {
+            uint32 absorb = 0;
+            uint32 resist = 0;
+#ifdef TRINITY
+            unit->CalcAbsorbResist(target, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
+#else
+            target->CalculateDamageAbsorbAndResist(unit, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
+#endif
+
+            if (damage <= absorb + resist)
+                damage = 0;
+            else
+                damage -= absorb + resist;
+
+            unit->DealDamageMods(target, damage, &absorb);
+            unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
+#ifdef TRINITY
+            unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
+#else
+            unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, 1, schoolmask, damage, absorb, resist, VICTIMSTATE_NORMAL, 0);
+#endif
+            return 0;
+        }
+
+        // non-melee damage
+        unit->SpellNonMeleeDamageLog(target, spell, damage);
         return 0;
     }
 
+    /**
+     * Makes the [Unit] heal the target [Unit] with given spell
+     *
+     * @param [Unit] target : [Unit] to heal
+     * @param uint32 spell : spell that causes the healing
+     * @param uint32 amount : amount to heal
+     * @param bool critical = false : if true, heal is logged as critical
+     */
     int DealHeal(lua_State* L, Unit* unit)
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
@@ -1596,6 +1771,12 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Makes the [Unit] kill the target [Unit]
+     *
+     * @param [Unit] target : [Unit] to kill
+     * @param bool durLoss = true : when true, the target's items suffer durability loss
+     */
     int Kill(lua_State* L, Unit* unit)
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);

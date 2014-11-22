@@ -359,10 +359,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns an [Item]'s chat link
+     * Returns an item chat link for given entry
      *
      * <pre>
-     * enum Locales
+     * enum LocaleConstant
      * {
      *     LOCALE_enUS = 0,
      *     LOCALE_koKR = 1,
@@ -376,15 +376,15 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @param uint32 entry : entry ID of the [Item]
-     * @param int32 loc_idx = 0 : locale index, default is enUS
+     * @param uint32 entry : entry ID of an [Item]
+     * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the [Item] name in
      * @return string itemLink
      */
     int GetItemLink(lua_State* L)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
-        int loc_idx = Eluna::CHECKVAL<int>(L, 2, DEFAULT_LOCALE);
-        if (loc_idx < 0 || loc_idx >= MAX_LOCALES)
+        uint8 locale = Eluna::CHECKVAL<uint8>(L, 2, DEFAULT_LOCALE);
+        if (locale >= TOTAL_LOCALES)
             return luaL_argerror(L, 2, "valid LocaleConstant expected");
 
         const ItemTemplate* temp = eObjectMgr->GetItemTemplate(entry);
@@ -393,7 +393,7 @@ namespace LuaGlobalFunctions
 
         std::string name = temp->Name1;
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(entry))
-            ObjectMgr::GetLocaleString(il->Name, loc_idx, name);
+            ObjectMgr::GetLocaleString(il->Name, locale, name);
 
         std::ostringstream oss;
         oss << "|c" << std::hex << ItemQualityColors[temp->Quality] << std::dec <<
@@ -441,20 +441,35 @@ namespace LuaGlobalFunctions
     /**
      * Returns the area's or zone's name
      *
+     * <pre>
+     * enum LocaleConstant
+     * {
+     *     LOCALE_enUS = 0,
+     *     LOCALE_koKR = 1,
+     *     LOCALE_frFR = 2,
+     *     LOCALE_deDE = 3,
+     *     LOCALE_zhCN = 4,
+     *     LOCALE_zhTW = 5,
+     *     LOCALE_esES = 6,
+     *     LOCALE_esMX = 7,
+     *     LOCALE_ruRU = 8
+     * };
+     * </pre>
+     *
      * @param uint32 areaOrZoneId : area ID or zone ID
-     * @param uint32 locale_idx = 0 : locale to return the name in
+     * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the name in
      * @return string areaOrZoneName
      */
     int GetAreaName(lua_State* L)
     {
         uint32 areaOrZoneId = Eluna::CHECKVAL<uint32>(L, 1);
-        int locale = Eluna::CHECKVAL<int>(L, 2, DEFAULT_LOCALE);
-        if (locale < 0 || locale >= MAX_LOCALES)
-            return luaL_argerror(L, 2, "Invalid locale specified");
+        uint8 locale = Eluna::CHECKVAL<uint8>(L, 2, DEFAULT_LOCALE);
+        if (locale >= TOTAL_LOCALES)
+            return luaL_argerror(L, 2, "valid LocaleConstant expected");
 
         AreaTableEntry const* areaEntry = GetAreaEntryByAreaID(areaOrZoneId);
         if (!areaEntry)
-            return luaL_argerror(L, 1, "Invalid Area or Zone ID");
+            return luaL_argerror(L, 1, "valid Area or Zone ID expected");
 
         Eluna::Push(L, areaEntry->area_name[locale]);
         return 1;
@@ -1681,6 +1696,7 @@ namespace LuaGlobalFunctions
 
     /**
      * Sends mail to a [Player]
+     * There can be several item entry-amount pairs at the end of the function. There can be maximum of 12 different items.
      *
      * <pre>
      * enum MailStationery
@@ -1698,11 +1714,13 @@ namespace LuaGlobalFunctions
      * @param string subject : title (subject) of the mail
      * @param string text : contents of the mail
      * @param uint32 receiverGUIDLow : low GUID of the receiver
-     * @param uint32 senderGUIDLow = 0 : low GUID of the sender, this is optional
-     * @param uint32 stationary = MAIL_STATIONERY_DEFAULT : type of mail that is being sent as, refer to MailStationery above, this is optional
-     * @param uint32 delay = 0 : mail send delay in milliseconds, this is optional
-     * @param uint32 money = 0 : money to send, this is optional
-     * @param uint32 cod = 0 : cod money amount, this is optional
+     * @param uint32 senderGUIDLow = 0 : low GUID of the sender
+     * @param uint32 stationary = MAIL_STATIONERY_DEFAULT : type of mail that is being sent as, refer to MailStationery above
+     * @param uint32 delay = 0 : mail send delay in milliseconds
+     * @param uint32 money = 0 : money to send
+     * @param uint32 cod = 0 : cod money amount
+     * @param uint32 entry = 0 : entry of an [Item] to send with mail
+     * @param uint32 amount = 0 : amount of the [Item] to send with mail
      */
     int SendMail(lua_State* L)
     {
@@ -1778,12 +1796,11 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns result
-     * Documentation will need to be changed
+     * Returns the result of bitwise and: a & b
      *
      * @param uint32 a
      * @param uint32 b
-     * @return uint32 val
+     * @return uint32 result
      */
     int bit_and(lua_State* L)
     {
@@ -1794,12 +1811,11 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns result
-     * Documentation will need to be changed
+     * Returns the result of bitwise or: a | b
      *
      * @param uint32 a
      * @param uint32 b
-     * @return uint32 val
+     * @return uint32 result
      */
     int bit_or(lua_State* L)
     {
@@ -1810,12 +1826,11 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns result
-     * Documentation will need to be changed
+     * Returns the result of bitwise left shift: a << b
      *
      * @param uint32 a
      * @param uint32 b
-     * @return uint32 val
+     * @return uint32 result
      */
     int bit_lshift(lua_State* L)
     {
@@ -1826,12 +1841,11 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns result
-     * Documentation will need to be changed
+     * Returns the result of bitwise right shift: a >> b
      *
      * @param uint32 a
      * @param uint32 b
-     * @return uint32 val
+     * @return uint32 result
      */
     int bit_rshift(lua_State* L)
     {
@@ -1842,12 +1856,11 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns result
-     * Documentation will need to be changed
+     * Returns the result of bitwise xor: a ^ b
      *
      * @param uint32 a
      * @param uint32 b
-     * @return uint32 val
+     * @return uint32 result
      */
     int bit_xor(lua_State* L)
     {
@@ -1858,11 +1871,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns result
-     * Documentation will need to be changed
+     * Returns the result of bitwise not: ~a
      *
      * @param uint32 a
-     * @return uint32 val
+     * @return uint32 result
      */
     int bit_not(lua_State* L)
     {
@@ -1871,16 +1883,24 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-    // AddTaxiPath(pathTable, mountA, mountH[, price, pathId])
     /**
-     * Adds a taxi path to a specified map, also returns pathId
+     * Adds a taxi path to a specified map, returns the used pathId
+     * Related function: [Player:StartTaxi]
      *
-     * @param table waypoints : waypoint table, goes by map, x, y, and z
+     * <pre>
+     * -- Execute on startup
+     * local pathTable = {{mapid, x, y, z}, {mapid, x, y, z}}
+     * local path = AddTaxiPath(pathTable, 28135, 28135)
+     * -- Execute when the player should fly
+     * player:StartTaxi(path)
+     * </pre>
+     *
+     * @param table waypoints : table containing waypoints: {map, x, y, z[, actionFlag, delay]}
      * @param uint32 mountA : alliance [Creature] entry
      * @param uint32 mountH : horde [Creature] entry
-     * @param uint32 price = 0 : price of the taxi path, this is optional
-     * @param uint32 pathId = 0 : path Id of the taxi path, this is optional
-     * @return uint32 pathId
+     * @param uint32 price = 0 : price of the taxi path
+     * @param uint32 pathId = 0 : path Id of the taxi path
+     * @return uint32 actualPathId
      */
     int AddTaxiPath(lua_State* L)
     {
@@ -1927,8 +1947,8 @@ namespace LuaGlobalFunctions
             entry->y = Eluna::CHECKVAL<float>(L, start + 2);
             entry->z = Eluna::CHECKVAL<float>(L, start + 3);
             // optional
-            entry->actionFlag = Eluna::CHECKVAL<uint32>(L, start + 4);
-            entry->delay = Eluna::CHECKVAL<uint32>(L, start + 5);
+            entry->actionFlag = Eluna::CHECKVAL<uint32>(L, start + 4, 0);
+            entry->delay = Eluna::CHECKVAL<uint32>(L, start + 5, 0);
 
             nodes.push_back(*entry);
 
@@ -2096,6 +2116,142 @@ namespace LuaGlobalFunctions
         WeatherMgr::SendFineWeatherUpdateToPlayer(player);
 #endif
         return 0;
+    }
+
+    /**
+     * Returns true if the bag and slot is a valid inventory position, otherwise false
+     *
+     * <pre>
+     * Possible and most commonly used combinations:
+     *
+     * bag = 255
+     * slots 0-18 equipment
+     * slots 19-22 equipped bag slots
+     * slots 23-38 backpack
+     * slots 39-66 bank main slots
+     * slots 67-74 bank bag slots
+     * slots 86-117 keyring
+     *
+     * bag = 19-22
+     * slots 0-35 for equipped bags
+     *
+     * bag = 67-74
+     * slots 0-35 for bank bags
+     * </pre>
+     *
+     * @param uint8 bag : the bag the [Item] is in, you can get this with [Item:GetBagSlot]
+     * @param uint8 slot : the slot the [Item] is in within the bag, you can get this with [Item:GetSlot]
+     * @return bool isInventoryPos
+     */
+    int IsInventoryPos(lua_State* L)
+    {
+        uint8 bag = Eluna::CHECKVAL<uint8>(L, 1);
+        uint8 slot = Eluna::CHECKVAL<uint8>(L, 2);
+
+        Eluna::Push(L, Player::IsInventoryPos(bag, slot));
+        return 1;
+    }
+
+    /**
+     * Returns true if the bag and slot is a valid equipment position, otherwise false
+     *
+     * <pre>
+     * Possible and most commonly used combinations:
+     *
+     * bag = 255
+     * slots 0-18 equipment
+     * slots 19-22 equipped bag slots
+     * slots 23-38 backpack
+     * slots 39-66 bank main slots
+     * slots 67-74 bank bag slots
+     * slots 86-117 keyring
+     *
+     * bag = 19-22
+     * slots 0-35 for equipped bags
+     *
+     * bag = 67-74
+     * slots 0-35 for bank bags
+     * </pre>
+     *
+     * @param uint8 bag : the bag the [Item] is in, you can get this with [Item:GetBagSlot]
+     * @param uint8 slot : the slot the [Item] is in within the bag, you can get this with [Item:GetSlot]
+     * @return bool isEquipmentPosition
+     */
+    int IsEquipmentPos(lua_State* L)
+    {
+        uint8 bag = Eluna::CHECKVAL<uint8>(L, 1);
+        uint8 slot = Eluna::CHECKVAL<uint8>(L, 2);
+
+        Eluna::Push(L, Player::IsEquipmentPos(bag, slot));
+        return 1;
+    }
+
+    /**
+     * Returns true if the bag and slot is a valid bank position, otherwise false
+     *
+     * <pre>
+     * Possible and most commonly used combinations:
+     *
+     * bag = 255
+     * slots 0-18 equipment
+     * slots 19-22 equipped bag slots
+     * slots 23-38 backpack
+     * slots 39-66 bank main slots
+     * slots 67-74 bank bag slots
+     * slots 86-117 keyring
+     *
+     * bag = 19-22
+     * slots 0-35 for equipped bags
+     *
+     * bag = 67-74
+     * slots 0-35 for bank bags
+     * </pre>
+     *
+     * @param uint8 bag : the bag the [Item] is in, you can get this with [Item:GetBagSlot]
+     * @param uint8 slot : the slot the [Item] is in within the bag, you can get this with [Item:GetSlot]
+     * @return bool isBankPosition
+     */
+    int IsBankPos(lua_State* L)
+    {
+        uint8 bag = Eluna::CHECKVAL<uint8>(L, 1);
+        uint8 slot = Eluna::CHECKVAL<uint8>(L, 2);
+
+        Eluna::Push(L, Player::IsBankPos(bag, slot));
+        return 1;
+    }
+
+    /**
+     * Returns true if the bag and slot is a valid bag position, otherwise false
+     *
+     * <pre>
+     * Possible and most commonly used combinations:
+     *
+     * bag = 255
+     * slots 0-18 equipment
+     * slots 19-22 equipped bag slots
+     * slots 23-38 backpack
+     * slots 39-66 bank main slots
+     * slots 67-74 bank bag slots
+     * slots 86-117 keyring
+     *
+     * bag = 19-22
+     * slots 0-35 for equipped bags
+     *
+     * bag = 67-74
+     * slots 0-35 for bank bags
+     * </pre>
+     *
+     * @param uint8 bag : the bag the [Item] is in, you can get this with [Item:GetBagSlot]
+     * @param uint8 slot : the slot the [Item] is in within the bag, you can get this with [Item:GetSlot]
+     * @return bool isBagPosition
+     */
+    int IsBagPos(lua_State* L)
+    {
+        uint8 bag = Eluna::CHECKVAL<uint8>(L, 1);
+        uint8 slot = Eluna::CHECKVAL<uint8>(L, 2);
+
+        Eluna::Push(L, Player::IsBagPos((bag << 8) + slot));
+        return 1;
     }
 }
 #endif

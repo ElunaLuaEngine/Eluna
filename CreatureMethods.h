@@ -898,7 +898,32 @@ namespace LuaCreature
     }
 
     /**
-     * Sets whether the [Creature] can be aggroed by movement or not.
+     * Equips given [Item]s to the [Unit]. Using 0 removes the equipped [Item]
+     *
+     * @param uint32 main_hand : main hand [Item]'s entry
+     * @param uint32 off_hand : off hand [Item]'s entry
+     * @param uint32 ranged : ranged [Item]'s entry
+     */
+    int SetEquipmentSlots(lua_State* L, Creature* creature)
+    {
+        uint32 main_hand = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 off_hand = Eluna::CHECKVAL<uint32>(L, 3);
+        uint32 ranged = Eluna::CHECKVAL<uint32>(L, 4);
+
+#ifdef TRINITY
+        creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0, main_hand);
+        creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, off_hand);
+        creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, ranged);
+#else
+        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_0, main_hand);
+        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_1, off_hand);
+        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_2, ranged);
+#endif
+        return 0;
+    }
+
+    /**
+     * Sets whether the [Creature] can be aggroed.
      *
      * @param bool allow = true : `true` to allow aggro, `false` to disable aggro
      */

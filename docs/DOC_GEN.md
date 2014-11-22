@@ -110,3 +110,25 @@ codeblock
 
 *italic*
 **bold**
+
+###Types
+Here are some examples of possible types and most commonly used ones
+```
+string
+uint32
+uint16
+uint8
+int32
+int16
+int8
+double
+float
+[EnumName]
+[Player]
+[Creature]
+[GameObject]
+[Item]
+[Unit]
+[WorldObject]
+[Object]
+```

@@ -98,7 +98,7 @@ typedef ThreatContainer::StorageType ThreatList;
 #define eAccountMgr             (&sAccountMgr)
 #define eObjectAccessor         (&sObjectAccessor)
 #define SERVER_MSG_STRING       SERVER_MSG_CUSTOM
-#define MAX_LOCALES             MAX_LOCALE
+#define TOTAL_LOCALES           MAX_LOCALE
 #define DIALOG_STATUS_SCRIPTED_NO_STATUS    DIALOG_STATUS_UNDEFINED
 #define TARGETICONCOUNT         TARGET_ICON_COUNT
 #define MAX_TALENT_SPECS        MAX_TALENT_SPEC_COUNT
