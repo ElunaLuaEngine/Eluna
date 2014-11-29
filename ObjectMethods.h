@@ -10,219 +10,219 @@
 namespace LuaObject
 {
     /* BOOLEAN */
-    int HasFlag(lua_State* L, Object* obj)
+    int HasFlag(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint32 flag = Eluna::CHECKVAL<uint32>(L, 3);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        uint32 flag = Eluna::CHECKVAL<uint32>(E->L, 3);
 
-        Eluna::Push(L, obj->HasFlag(index, flag));
+        Eluna::Push(E->L, obj->HasFlag(index, flag));
         return 1;
     }
 
-    int IsInWorld(lua_State* L, Object* obj)
+    int IsInWorld(Eluna* E, Object* obj)
     {
-        Eluna::Push(L, obj->IsInWorld());
+        Eluna::Push(E->L, obj->IsInWorld());
         return 1;
     }
 
     /* GETTERS */
-    int GetInt32Value(lua_State* L, Object* obj)
+    int GetInt32Value(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        Eluna::Push(L, obj->GetInt32Value(index));
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        Eluna::Push(E->L, obj->GetInt32Value(index));
         return 1;
     }
 
-    int GetUInt32Value(lua_State* L, Object* obj)
+    int GetUInt32Value(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        Eluna::Push(L, obj->GetUInt32Value(index));
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        Eluna::Push(E->L, obj->GetUInt32Value(index));
         return 1;
     }
 
-    int GetFloatValue(lua_State* L, Object* obj)
+    int GetFloatValue(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        Eluna::Push(L, obj->GetFloatValue(index));
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        Eluna::Push(E->L, obj->GetFloatValue(index));
         return 1;
     }
 
-    int GetByteValue(lua_State* L, Object* obj)
+    int GetByteValue(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint8 offset = Eluna::CHECKVAL<uint8>(L, 3);
-        Eluna::Push(L, obj->GetByteValue(index, offset));
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        uint8 offset = Eluna::CHECKVAL<uint8>(E->L, 3);
+        Eluna::Push(E->L, obj->GetByteValue(index, offset));
         return 1;
     }
 
-    int GetUInt16Value(lua_State* L, Object* obj)
+    int GetUInt16Value(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint8 offset = Eluna::CHECKVAL<uint8>(L, 3);
-        Eluna::Push(L, obj->GetUInt16Value(index, offset));
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        uint8 offset = Eluna::CHECKVAL<uint8>(E->L, 3);
+        Eluna::Push(E->L, obj->GetUInt16Value(index, offset));
         return 1;
     }
 
-    int GetScale(lua_State* L, Object* obj)
+    int GetScale(Eluna* E, Object* obj)
     {
-        Eluna::Push(L, obj->GetObjectScale());
+        Eluna::Push(E->L, obj->GetObjectScale());
         return 1;
     }
 
-    int GetEntry(lua_State* L, Object* obj)
+    int GetEntry(Eluna* E, Object* obj)
     {
-        Eluna::Push(L, obj->GetEntry());
+        Eluna::Push(E->L, obj->GetEntry());
         return 1;
     }
 
-    int GetGUID(lua_State* L, Object* obj)
+    int GetGUID(Eluna* E, Object* obj)
     {
-        Eluna::Push(L, obj->GET_GUID());
+        Eluna::Push(E->L, obj->GET_GUID());
         return 1;
     }
 
-    int GetGUIDLow(lua_State* L, Object* obj)
+    int GetGUIDLow(Eluna* E, Object* obj)
     {
-        Eluna::Push(L, obj->GetGUIDLow());
+        Eluna::Push(E->L, obj->GetGUIDLow());
         return 1;
     }
 
-    int GetTypeId(lua_State* L, Object* obj)
+    int GetTypeId(Eluna* E, Object* obj)
     {
-        Eluna::Push(L, obj->GetTypeId());
+        Eluna::Push(E->L, obj->GetTypeId());
         return 1;
     }
 
-    int GetUInt64Value(lua_State* L, Object* obj)
+    int GetUInt64Value(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
         obj->GetUInt64Value(index);
         return 0;
     }
 
     /* SETTERS */
-    int SetFlag(lua_State* L, Object* obj)
+    int SetFlag(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint32 flag = Eluna::CHECKVAL<uint32>(L, 3);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        uint32 flag = Eluna::CHECKVAL<uint32>(E->L, 3);
 
         obj->SetFlag(index, flag);
         return 0;
     }
 
-    int SetInt32Value(lua_State* L, Object* obj)
+    int SetInt32Value(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        int32 value = Eluna::CHECKVAL<int32>(L, 3);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        int32 value = Eluna::CHECKVAL<int32>(E->L, 3);
         obj->SetInt32Value(index, value);
         return 0;
     }
 
-    int SetUInt32Value(lua_State* L, Object* obj)
+    int SetUInt32Value(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint32 value = Eluna::CHECKVAL<uint32>(L, 3);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        uint32 value = Eluna::CHECKVAL<uint32>(E->L, 3);
         obj->SetUInt32Value(index, value);
         return 0;
     }
 
-    int SetFloatValue(lua_State* L, Object* obj)
+    int SetFloatValue(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        float value = Eluna::CHECKVAL<float>(L, 3);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        float value = Eluna::CHECKVAL<float>(E->L, 3);
 
         obj->SetFloatValue(index, value);
         return 0;
     }
 
-    int SetByteValue(lua_State* L, Object* obj)
+    int SetByteValue(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint8 offset = Eluna::CHECKVAL<uint8>(L, 3);
-        uint8 value = Eluna::CHECKVAL<uint8>(L, 4);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        uint8 offset = Eluna::CHECKVAL<uint8>(E->L, 3);
+        uint8 value = Eluna::CHECKVAL<uint8>(E->L, 4);
         obj->SetByteValue(index, offset, value);
         return 0;
     }
 
-    int SetUInt16Value(lua_State* L, Object* obj)
+    int SetUInt16Value(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint8 offset = Eluna::CHECKVAL<uint8>(L, 3);
-        uint16 value = Eluna::CHECKVAL<uint16>(L, 4);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        uint8 offset = Eluna::CHECKVAL<uint8>(E->L, 3);
+        uint16 value = Eluna::CHECKVAL<uint16>(E->L, 4);
         obj->SetUInt16Value(index, offset, value);
         return 0;
     }
 
-    int SetInt16Value(lua_State* L, Object* obj)
+    int SetInt16Value(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint8 offset = Eluna::CHECKVAL<uint8>(L, 3);
-        int16 value = Eluna::CHECKVAL<int16>(L, 4);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        uint8 offset = Eluna::CHECKVAL<uint8>(E->L, 3);
+        int16 value = Eluna::CHECKVAL<int16>(E->L, 4);
         obj->SetInt16Value(index, offset, value);
         return 0;
     }
 
-    int SetScale(lua_State* L, Object* obj)
+    int SetScale(Eluna* E, Object* obj)
     {
-        float size = Eluna::CHECKVAL<float>(L, 2);
+        float size = Eluna::CHECKVAL<float>(E->L, 2);
 
         obj->SetObjectScale(size);
         return 0;
     }
 
-    int SetUInt64Value(lua_State* L, Object* obj)
+    int SetUInt64Value(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint64 value = Eluna::CHECKVAL<uint64>(L, 3);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        uint64 value = Eluna::CHECKVAL<uint64>(E->L, 3);
         obj->SetUInt64Value(index, value);
         return 0;
     }
 
     /* OTHER */
-    int RemoveFlag(lua_State* L, Object* obj)
+    int RemoveFlag(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint32 flag = Eluna::CHECKVAL<uint32>(L, 3);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        uint32 flag = Eluna::CHECKVAL<uint32>(E->L, 3);
 
         obj->RemoveFlag(index, flag);
         return 0;
     }
 
-    int UpdateUInt32Value(lua_State* L, Object* obj)
+    int UpdateUInt32Value(Eluna* E, Object* obj)
     {
-        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        uint32 value = Eluna::CHECKVAL<uint32>(L, 3);
+        uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
+        uint32 value = Eluna::CHECKVAL<uint32>(E->L, 3);
         obj->UpdateUInt32Value(index, value);
         return 0;
     }
 
-    int ToCorpse(lua_State* L, Object* obj)
+    int ToCorpse(Eluna* E, Object* obj)
     {
-        Eluna::Push(L, obj->ToCorpse());
+        Eluna::Push(E->L, obj->ToCorpse());
         return 1;
     }
 
-    int ToGameObject(lua_State* L, Object* obj)
+    int ToGameObject(Eluna* E, Object* obj)
     {
-        Eluna::Push(L, obj->ToGameObject());
+        Eluna::Push(E->L, obj->ToGameObject());
         return 1;
     }
 
-    int ToUnit(lua_State* L, Object* obj)
+    int ToUnit(Eluna* E, Object* obj)
     {
-        Eluna::Push(L, obj->ToUnit());
+        Eluna::Push(E->L, obj->ToUnit());
         return 1;
     }
 
-    int ToCreature(lua_State* L, Object* obj)
+    int ToCreature(Eluna* E, Object* obj)
     {
-        Eluna::Push(L, obj->ToCreature());
+        Eluna::Push(E->L, obj->ToCreature());
         return 1;
     }
 
-    int ToPlayer(lua_State* L, Object* obj)
+    int ToPlayer(Eluna* E, Object* obj)
     {
-        Eluna::Push(L, obj->ToPlayer());
+        Eluna::Push(E->L, obj->ToPlayer());
         return 1;
     }
 };

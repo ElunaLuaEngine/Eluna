@@ -46,13 +46,13 @@ namespace LuaQuest
      * @param uint32 flag : all available flags can be seen above
      * @return bool hasFlag
      */
-    int HasFlag(lua_State* L, Quest* quest)
+    int HasFlag(Eluna* E, Quest* quest)
     {
-        uint32 flag = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 flag = Eluna::CHECKVAL<uint32>(E->L, 2);
 #ifndef TRINITY
-        Eluna::Push(L, quest->HasQuestFlag((QuestFlags)flag));
+        Eluna::Push(E->L, quest->HasQuestFlag((QuestFlags)flag));
 #else
-        Eluna::Push(L, quest->HasFlag(flag));
+        Eluna::Push(E->L, quest->HasFlag(flag));
 #endif
         return 1;
     }
@@ -63,9 +63,9 @@ namespace LuaQuest
      *
      * @return bool isDaily
      */
-    int IsDaily(lua_State* L, Quest* quest)
+    int IsDaily(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->IsDaily());
+        Eluna::Push(E->L, quest->IsDaily());
         return 1;
     }
 #endif
@@ -75,9 +75,9 @@ namespace LuaQuest
      *
      * @return bool isRepeatable
      */
-    int IsRepeatable(lua_State* L, Quest* quest)
+    int IsRepeatable(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->IsRepeatable());
+        Eluna::Push(E->L, quest->IsRepeatable());
         return 1;
     }
 
@@ -86,9 +86,9 @@ namespace LuaQuest
      *
      * @return uint32 entryId
      */
-    int GetId(lua_State* L, Quest* quest)
+    int GetId(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetQuestId());
+        Eluna::Push(E->L, quest->GetQuestId());
         return 1;
     }
 
@@ -97,9 +97,9 @@ namespace LuaQuest
      *
      * @return uint32 level
      */
-    int GetLevel(lua_State* L, Quest* quest)
+    int GetLevel(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetQuestLevel());
+        Eluna::Push(E->L, quest->GetQuestLevel());
         return 1;
     }
 
@@ -108,9 +108,9 @@ namespace LuaQuest
      *
      * @return uint32 minLevel
      */
-    int GetMinLevel(lua_State* L, Quest* quest)
+    int GetMinLevel(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetMinLevel());
+        Eluna::Push(E->L, quest->GetMinLevel());
         return 1;
     }
 
@@ -119,9 +119,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetNextQuestId(lua_State* L, Quest* quest)
+    int GetNextQuestId(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetNextQuestId());
+        Eluna::Push(E->L, quest->GetNextQuestId());
         return 1;
     }
 
@@ -130,9 +130,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetPrevQuestId(lua_State* L, Quest* quest)
+    int GetPrevQuestId(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetPrevQuestId());
+        Eluna::Push(E->L, quest->GetPrevQuestId());
         return 1;
     }
 
@@ -141,9 +141,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetNextQuestInChain(lua_State* L, Quest* quest)
+    int GetNextQuestInChain(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetNextQuestInChain());
+        Eluna::Push(E->L, quest->GetNextQuestInChain());
         return 1;
     }
 
@@ -152,12 +152,12 @@ namespace LuaQuest
      *
      * @return uint32 flags
      */
-    int GetFlags(lua_State* L, Quest* quest)
+    int GetFlags(Eluna* E, Quest* quest)
     {
 #ifndef TRINITY
-        Eluna::Push(L, quest->GetQuestFlags());
+        Eluna::Push(E->L, quest->GetQuestFlags());
 #else
-        Eluna::Push(L, quest->GetFlags());
+        Eluna::Push(E->L, quest->GetFlags());
 #endif
         return 1;
     }
@@ -169,15 +169,15 @@ namespace LuaQuest
      *
      * @return uint32 type
      */
-    int GetType(lua_State* L, Quest* quest)
+    int GetType(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetType());
+        Eluna::Push(E->L, quest->GetType());
         return 1;
     }
 
-    /*int GetMaxLevel(lua_State* L, Quest* quest)
+    /*int GetMaxLevel(Eluna* E, Quest* quest)
     {
-    Eluna::Push(L, quest->GetMaxLevel());
+    Eluna::Push(E->L, quest->GetMaxLevel());
     return 1;
     }*/
 };

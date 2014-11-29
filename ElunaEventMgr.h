@@ -17,6 +17,7 @@
 #include "Platform/Define.h"
 #endif
 
+class Eluna;
 class EventMgr;
 class ElunaEventProcessor;
 class WorldObject;
@@ -49,7 +50,7 @@ public:
     typedef std::multimap<uint64, LuaEvent*> EventList;
     typedef UNORDERED_MAP<int, LuaEvent*> EventMap;
 
-    ElunaEventProcessor(WorldObject* _obj);
+    ElunaEventProcessor(Eluna** _E, WorldObject* _obj);
     ~ElunaEventProcessor();
 
     void Update(uint32 diff);
@@ -65,6 +66,7 @@ private:
     EventList eventList;
     uint64 m_time;
     WorldObject* obj;
+    Eluna** E;
 };
 
 class EventMgr : public ElunaUtil::RWLockable
@@ -73,8 +75,9 @@ public:
     typedef UNORDERED_SET<ElunaEventProcessor*> ProcessorSet;
     ProcessorSet processors;
     ElunaEventProcessor* globalProcessor;
+    Eluna** E;
 
-    EventMgr();
+    EventMgr(Eluna** _E);
     ~EventMgr();
 
     // Remove all timed events

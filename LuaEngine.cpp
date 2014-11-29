@@ -32,11 +32,14 @@ std::string Eluna::lua_folderpath;
 std::string Eluna::lua_requirepath;
 Eluna* Eluna::GEluna = NULL;
 bool Eluna::reload = false;
+bool Eluna::initialized = false;
 
-extern void RegisterFunctions(lua_State* L);
+extern void RegisterFunctions(Eluna* E);
 
 void Eluna::Initialize()
 {
+    ASSERT(!initialized);
+
     uint32 oldMSTime = ElunaUtil::GetCurrTime();
 
     lua_scripts.clear();
@@ -55,23 +58,40 @@ void Eluna::Initialize()
 
     ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size() + lua_extensions.size()), ElunaUtil::GetTimeDiff(oldMSTime));
 
+    initialized = true;
+
     // Create global eluna
-    new Eluna();
+    GEluna = new Eluna();
 }
 
 void Eluna::Uninitialize()
 {
+    ASSERT(initialized);
+
     delete GEluna;
     GEluna = NULL;
+
     lua_scripts.clear();
     lua_extensions.clear();
+
+    initialized = false;
 }
 
 void Eluna::ReloadEluna()
 {
     eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
+
+    EventMgr::ProcessorSet oldProcessors;
+    {
+        EventMgr::ReadGuard lock(sEluna->eventMgr->GetLock());
+        oldProcessors = sEluna->eventMgr->processors;
+    }
     Uninitialize();
     Initialize();
+    {
+        EventMgr::WriteGuard lock(sEluna->eventMgr->GetLock());
+        sEluna->eventMgr->processors.insert(oldProcessors.begin(), oldProcessors.end());
+    }
 
     // in multithread foreach: run scripts
     sEluna->RunScripts();
@@ -91,6 +111,8 @@ void Eluna::ReloadEluna()
 
 Eluna::Eluna() :
 L(luaL_newstate()),
+
+event_level(0),
 
 eventMgr(NULL),
 
@@ -112,7 +134,7 @@ playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)
 {
     // open base lua
     luaL_openlibs(L);
-    RegisterFunctions(L);
+    RegisterFunctions(this);
 
     // Create hidden table with weak values
     lua_newtable(L);
@@ -120,7 +142,7 @@ playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)
     lua_pushstring(L, "v");
     lua_setfield(L, -2, "__mode");
     lua_setmetatable(L, -2);
-    userdata_table = luaL_ref(L, LUA_REGISTRYINDEX);
+    lua_setglobal(L, ELUNA_OBJECT_STORE);
 
     // Set lua require folder paths (scripts folder structure)
     lua_getglobal(L, "package");
@@ -131,12 +153,11 @@ playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)
     lua_pop(L, 1);
 
     // Replace this with map insert if making multithread version
-    ASSERT(!Eluna::GEluna);
-    Eluna::GEluna = this;
+    //
 
     // Set event manager. Must be after setting sEluna
-    eventMgr = new EventMgr();
-    eventMgr->globalProcessor = new ElunaEventProcessor(NULL);
+    // on multithread have a map of state pointers and here insert this pointer to the map and then save a pointer of that pointer to the EventMgr
+    eventMgr = new EventMgr(&Eluna::GEluna);
 }
 
 Eluna::~Eluna()
@@ -144,9 +165,10 @@ Eluna::~Eluna()
     OnLuaStateClose();
 
     delete eventMgr;
+    eventMgr = NULL;
 
     // Replace this with map remove if making multithread version
-    Eluna::GEluna = NULL;
+    //
 
     delete ServerEventBindings;
     delete PlayerEventBindings;
@@ -163,6 +185,22 @@ Eluna::~Eluna()
     delete ItemGossipBindings;
     delete playerGossipBindings;
     delete BGEventBindings;
+
+    ServerEventBindings = NULL;
+    PlayerEventBindings = NULL;
+    GuildEventBindings = NULL;
+    GroupEventBindings = NULL;
+    VehicleEventBindings = NULL;
+
+    PacketEventBindings = NULL;
+    CreatureEventBindings = NULL;
+    CreatureGossipBindings = NULL;
+    GameObjectEventBindings = NULL;
+    GameObjectGossipBindings = NULL;
+    ItemEventBindings = NULL;
+    ItemGossipBindings = NULL;
+    playerGossipBindings = NULL;
+    BGEventBindings = NULL;
 
     // Must close lua state after deleting stores and mgr
     lua_close(L);
@@ -357,20 +395,19 @@ void Eluna::RunScripts()
     OnLuaStateOpen();
 }
 
-void Eluna::RemoveRef(const void* obj)
+void Eluna::InvalidateObjects()
 {
-    if (!sEluna)
-        return;
-    lua_rawgeti(sEluna->L, LUA_REGISTRYINDEX, sEluna->userdata_table);
-    lua_pushfstring(sEluna->L, "%p", obj);
-    lua_gettable(sEluna->L, -2);
-    if (!lua_isnoneornil(sEluna->L, -1))
+    lua_getglobal(L, ELUNA_OBJECT_STORE);
+    ASSERT(lua_istable(L, -1));
+
+    lua_pushnil(L);
+    while (lua_next(L, -2))
     {
-        lua_pushfstring(sEluna->L, "%p", obj);
-        lua_pushnil(sEluna->L);
-        lua_settable(sEluna->L, -4);
+        if (ElunaObject* elunaObj = CHECKOBJ<ElunaObject>(L, -1, false))
+            elunaObj->Invalidate();
+        lua_pop(L, 1);
     }
-    lua_pop(sEluna->L, 2);
+    lua_pop(L, 1);
 }
 
 void Eluna::report(lua_State* L)
@@ -380,7 +417,7 @@ void Eluna::report(lua_State* L)
     lua_pop(L, 1);
 }
 
-void Eluna::ExecuteCall(lua_State* L, int params, int res)
+void Eluna::ExecuteCall(int params, int res)
 {
     int top = lua_gettop(L);
     int type = lua_type(L, top - params);
@@ -392,8 +429,10 @@ void Eluna::ExecuteCall(lua_State* L, int params, int res)
         return;
     }
 
+    ++event_level;
     if (lua_pcall(L, params, res, 0))
         report(L);
+    --event_level;
 }
 
 void Eluna::Push(lua_State* L)
@@ -518,9 +557,9 @@ void Eluna::Push(lua_State* L, Object const* obj)
     }
 }
 
-static int32 CheckIntegerRange(lua_State *L, int narg, int32 min, int32 max)
+static int32 CheckIntegerRange(lua_State* L, int narg, int32 min, int32 max)
 {
-    int64 value = luaL_checknumber(L, narg);
+    int64 value = static_cast<int64>(luaL_checknumber(L, narg));
     char error_buffer[64];
 
     if (value > max)
@@ -535,12 +574,12 @@ static int32 CheckIntegerRange(lua_State *L, int narg, int32 min, int32 max)
         return luaL_argerror(L, narg, error_buffer);
     }
 
-    return value;
+    return static_cast<int32>(value);
 }
 
-static uint32 CheckUnsignedRange(lua_State *L, int narg, uint32 max)
+static uint32 CheckUnsignedRange(lua_State* L, int narg, uint32 max)
 {
-    int64 value = luaL_checknumber(L, narg);
+    int64 value = static_cast<int64>(luaL_checknumber(L, narg));
     char error_buffer[64];
 
     if (value < 0)
@@ -552,7 +591,7 @@ static uint32 CheckUnsignedRange(lua_State *L, int narg, uint32 max)
         return luaL_argerror(L, narg, error_buffer);
     }
 
-    return value;
+    return static_cast<uint32>(value);
 }
 
 template<> bool Eluna::CHECKVAL<bool>(lua_State* L, int narg)
@@ -626,11 +665,11 @@ template<> uint64 Eluna::CHECKVAL<uint64>(lua_State* L, int narg)
     return l;
 }
 
-#define TEST_OBJ(T, O, E, F)\
+#define TEST_OBJ(T, O, R, F)\
 {\
     if (!O || !O->F())\
     {\
-        if (E)\
+        if (R)\
         {\
             std::string errmsg(ElunaTemplate<T>::tname);\
             errmsg += " expected";\
@@ -667,6 +706,22 @@ template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error)
     TEST_OBJ(Corpse, obj, error, ToCorpse);
 }
 #undef TEST_OBJ
+
+template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* L, int narg, bool error)
+{
+    ElunaObject** ptrHold = static_cast<ElunaObject**>(lua_touserdata(L, narg));
+    if (!ptrHold)
+    {
+        if (error)
+        {
+            char buff[256];
+            snprintf(buff, 256, "Error fetching object index %i", narg);
+            luaL_argerror(L, narg, buff);
+        }
+        return NULL;
+    }
+    return *ptrHold;
+}
 
 // Saves the function reference ID given to the register type's store for given entry under the given event
 void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)

@@ -82,6 +82,7 @@ typedef VehicleInfo Vehicle;
 
 struct lua_State;
 class EventMgr;
+class ElunaObject;
 template<typename T>
 class ElunaTemplate;
 template<typename T>
@@ -97,6 +98,8 @@ struct LuaScript
     std::string modulepath;
 };
 
+#define ELUNA_OBJECT_STORE  "Eluna Object Store"
+
 class Eluna
 {
 private:
@@ -109,9 +112,10 @@ public:
 
     static Eluna* GEluna;
     static bool reload;
+    static bool initialized;
 
     lua_State* L;
-    int userdata_table;
+    uint32 event_level;
 
     EventMgr* eventMgr;
 
@@ -147,22 +151,22 @@ public:
     static void AddScriptPath(std::string filename, std::string fullpath);
 
     static void report(lua_State*);
-    static void ExecuteCall(lua_State* L, int params, int res);
+    void ExecuteCall(int params, int res);
     void Register(uint8 reg, uint32 id, uint32 evt, int func);
     void RunScripts();
-    static void RemoveRef(const void* obj);
+    void InvalidateObjects();
 
     // Pushes
-    static void Push(lua_State*); // nil
-    static void Push(lua_State*, const uint64);
-    static void Push(lua_State*, const int64);
-    static void Push(lua_State*, const uint32);
-    static void Push(lua_State*, const int32);
-    static void Push(lua_State*, const bool);
-    static void Push(lua_State*, const float);
-    static void Push(lua_State*, const double);
-    static void Push(lua_State*, const char*);
-    static void Push(lua_State*, const std::string);
+    static void Push(lua_State* L); // nil
+    static void Push(lua_State* L, const uint64);
+    static void Push(lua_State* L, const int64);
+    static void Push(lua_State* L, const uint32);
+    static void Push(lua_State* L, const int32);
+    static void Push(lua_State* L, const bool);
+    static void Push(lua_State* L, const float);
+    static void Push(lua_State* L, const double);
+    static void Push(lua_State* L, const char*);
+    static void Push(lua_State* L, const std::string);
     template<typename T> static void Push(lua_State* L, T const* ptr)
     {
         ElunaTemplate<T>::push(L, ptr);
@@ -185,9 +189,6 @@ public:
     }
 
     CreatureAI* GetAI(Creature* creature);
-#ifdef TRINITY
-    GameObjectAI* GetAI(GameObject* gameObject);
-#endif
 
     /* Custom */
     bool OnCommand(Player* player, const char* text);
@@ -223,6 +224,28 @@ public:
     bool OnQuestReward(Player* pPlayer, Creature* pCreature, Quest const* pQuest, uint32 opt);
     uint32 GetDialogStatus(Player* pPlayer, Creature* pCreature);
     void OnSummoned(Creature* creature, Unit* summoner);
+
+    void UpdateAI(Creature* me, const uint32 diff);
+    void EnterCombat(Creature* me, Unit* target);
+    void DamageTaken(Creature* me, Unit* attacker, uint32& damage); void JustDied(Creature* me, Unit* killer);
+    void KilledUnit(Creature* me, Unit* victim);
+    void JustSummoned(Creature* me, Creature* summon);
+    void SummonedCreatureDespawn(Creature* me, Creature* summon);
+    void MovementInform(Creature* me, uint32 type, uint32 id);
+    void AttackStart(Creature* me, Unit* target);
+    void EnterEvadeMode(Creature* me);
+    void AttackedBy(Creature* me, Unit* attacker);
+    void JustRespawned(Creature* me);
+    void JustReachedHome(Creature* me);
+    void ReceiveEmote(Creature* me, Player* player, uint32 emoteId);
+    void CorpseRemoved(Creature* me, uint32& respawnDelay);
+    void MoveInLineOfSight(Creature* me, Unit* who);
+    void On_Reset(Creature* me);
+    void SpellHit(Creature* me, Unit* caster, SpellInfo const* spell);
+    void SpellHitTarget(Creature* me, Unit* target, SpellInfo const* spell);
+    void SummonedCreatureDies(Creature* me, Creature* summon, Unit* killer);
+    void OwnerAttackedBy(Creature* me, Unit* attacker);
+    void OwnerAttacked(Creature* me, Unit* target);
 
     /* GameObject */
     bool OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, GameObject* pTarget);
@@ -361,7 +384,7 @@ template<> Player* Eluna::CHECKOBJ<Player>(lua_State* L, int narg, bool error);
 template<> Creature* Eluna::CHECKOBJ<Creature>(lua_State* L, int narg, bool error);
 template<> GameObject* Eluna::CHECKOBJ<GameObject>(lua_State* L, int narg, bool error);
 template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error);
+template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* L, int narg, bool error);
 
 #define sEluna Eluna::GEluna
-
 #endif

@@ -21,40 +21,42 @@ to_Abort(false), events(_events), funcRef(_funcRef), delay(_delay), calls(_calls
 
 LuaEvent::~LuaEvent()
 {
-    luaL_unref(sEluna->L, LUA_REGISTRYINDEX, funcRef); // Free lua function ref
+    luaL_unref((*events->E)->L, LUA_REGISTRYINDEX, funcRef); // Free lua function ref
 }
 
 void LuaEvent::Execute()
 {
     // In multithread get map from object and the map's lua state
-    lua_rawgeti(sEluna->L, LUA_REGISTRYINDEX, funcRef);
-    Eluna::Push(sEluna->L, funcRef);
-    Eluna::Push(sEluna->L, delay);
-    Eluna::Push(sEluna->L, calls);
+    lua_rawgeti((*events->E)->L, LUA_REGISTRYINDEX, funcRef);
+    Eluna::Push((*events->E)->L, funcRef);
+    Eluna::Push((*events->E)->L, delay);
+    Eluna::Push((*events->E)->L, calls);
     if (calls) // Must be before calling
         --calls;
-    Eluna::Push(sEluna->L, events->obj);
-    Eluna::ExecuteCall(sEluna->L, 4, 0);
+    Eluna::Push((*events->E)->L, events->obj);
+    (*events->E)->ExecuteCall(4, 0);
+
+    ASSERT(!(*events->E)->event_level);
+    (*events->E)->InvalidateObjects();
 }
 
-ElunaEventProcessor::ElunaEventProcessor(WorldObject* _obj) : m_time(0), obj(_obj)
+ElunaEventProcessor::ElunaEventProcessor(Eluna** _E, WorldObject* _obj) : m_time(0), obj(_obj), E(_E)
 {
-    // In multithread get the object's map's lua state
-    Eluna* E = obj ? sEluna : sEluna;
-
-    EventMgr::WriteGuard lock(E->eventMgr->GetLock());
-    E->eventMgr->processors.insert(this);
+    if (obj)
+    {
+        EventMgr::WriteGuard lock((*E)->eventMgr->GetLock());
+        (*E)->eventMgr->processors.insert(this);
+    }
 }
 
 ElunaEventProcessor::~ElunaEventProcessor()
 {
     RemoveEvents();
 
-    // In multithread get the object's map's lua state
-    if (Eluna* E = obj ? sEluna : sEluna)
+    if (obj)
     {
-        EventMgr::WriteGuard lock(E->eventMgr->GetLock());
-        E->eventMgr->processors.erase(this);
+        EventMgr::WriteGuard lock((*E)->eventMgr->GetLock());
+        (*E)->eventMgr->processors.erase(this);
     }
 }
 
@@ -117,7 +119,7 @@ void ElunaEventProcessor::AddEvent(int funcRef, uint32 delay, uint32 repeats)
     AddEvent(new LuaEvent(this, funcRef, delay, repeats));
 }
 
-EventMgr::EventMgr() : globalProcessor(NULL)
+EventMgr::EventMgr(Eluna** _E) : globalProcessor(new ElunaEventProcessor(_E, NULL)), E(_E)
 {
 }
 
@@ -125,6 +127,7 @@ EventMgr::~EventMgr()
 {
     RemoveEvents();
     delete globalProcessor;
+    globalProcessor = NULL;
 }
 
 void EventMgr::RemoveEvents()
