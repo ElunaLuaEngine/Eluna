@@ -138,7 +138,11 @@ namespace LuaAura
         int32 duration = Eluna::CHECKVAL<int32>(E->L, 2);
 #ifndef TRINITY
         aura->GetHolder()->SetAuraDuration(duration);
+#if (defined(TBC) || defined(CLASSIC))
+        aura->GetHolder()->UpdateAuraDuration();
+#else
         aura->GetHolder()->SendAuraUpdate(false);
+#endif
 #else
         aura->SetDuration(duration);
 #endif
@@ -158,7 +162,11 @@ namespace LuaAura
         int32 duration = Eluna::CHECKVAL<int32>(E->L, 2);
 #ifndef TRINITY
         aura->GetHolder()->SetAuraMaxDuration(duration);
+#if (defined(TBC) || defined(CLASSIC))
+        aura->GetHolder()->UpdateAuraDuration();
+#else
         aura->GetHolder()->SendAuraUpdate(false);
+#endif
 #else
         aura->SetMaxDuration(duration);
 #endif
