@@ -97,6 +97,7 @@ namespace LuaMap
 
     /**
      * Returns the height of the [Map] at the given X and Y coordinates
+     * In case of no height found nil is returned
      *
      * @param float x
      * @param float y

@@ -32,6 +32,8 @@ typedef BattlegroundTypeId BattleGroundTypeId;
 struct ItemPrototype;
 typedef ItemPrototype ItemTemplate;
 typedef SpellEffectIndex SpellEffIndex;
+struct SpellEntry;
+typedef SpellEntry SpellInfo;
 #ifdef CLASSIC
 typedef int Difficulty;
 #endif
