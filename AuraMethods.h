@@ -138,6 +138,7 @@ namespace LuaAura
         int32 duration = Eluna::CHECKVAL<int32>(E->L, 2);
 #ifndef TRINITY
         aura->GetHolder()->SetAuraDuration(duration);
+        aura->GetHolder()->SendAuraUpdate(false);
 #else
         aura->SetDuration(duration);
 #endif
@@ -157,6 +158,7 @@ namespace LuaAura
         int32 duration = Eluna::CHECKVAL<int32>(E->L, 2);
 #ifndef TRINITY
         aura->GetHolder()->SetAuraMaxDuration(duration);
+        aura->GetHolder()->SendAuraUpdate(false);
 #else
         aura->SetMaxDuration(duration);
 #endif
@@ -188,7 +190,7 @@ namespace LuaAura
     int Remove(Eluna* E, Aura* aura)
     {
 #ifndef TRINITY
-        aura->GetHolder()->RemoveAura(aura->GetEffIndex());
+        aura->GetTarget()->RemoveSpellAuraHolder(aura->GetHolder(), AURA_REMOVE_BY_CANCEL);
 #else
         aura->Remove();
 #endif
