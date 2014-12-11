@@ -85,6 +85,8 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "bit_and", &LuaGlobalFunctions::bit_and },
     { "GetItemLink", &LuaGlobalFunctions::GetItemLink },
     { "GetMapById", &LuaGlobalFunctions::GetMapById },
+    { "GetCurrTime", &LuaGlobalFunctions::GetCurrTime },
+    { "GetTimeDiff", &LuaGlobalFunctions::GetTimeDiff },
 
     // Boolean
     { "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },

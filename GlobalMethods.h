@@ -2254,5 +2254,30 @@ namespace LuaGlobalFunctions
         Eluna::Push(L, Player::IsBagPos((bag << 8) + slot));
         return 1;
     }
+
+    /**
+     * Returns current time in ms
+     *
+     * @return uint32 currTime
+     */
+    int GetCurrTime(Eluna* E)
+    {
+        Eluna::Push(E->L, ElunaUtil::GetCurrTime());
+        return 1;
+    }
+
+    /**
+     * Returns difference from a [Global:GetCurrTime] time to now
+     *
+     * @param uint32 oldTime
+     * @return uint32 timeDiff
+     */
+    int GetTimeDiff(Eluna* E)
+    {
+        uint32 oldtimems = Eluna::CHECKVAL<uint32>(E->L, 1);
+
+        Eluna::Push(E->L, ElunaUtil::GetTimeDiff(oldtimems));
+        return 1;
+    }
 }
 #endif
