@@ -1251,21 +1251,58 @@ ElunaRegister<BattleGround> BattleGroundMethods[] =
 
 template<typename T> const char* ElunaTemplate<T>::tname = NULL;
 template<typename T> bool ElunaTemplate<T>::manageMemory = false;
+
 #if (!defined(TBC) && !defined(CLASSIC))
 // fix compile error about accessing vehicle destructor
-template<> int ElunaTemplate<Vehicle>::gcT(lua_State* L)
+template<> int ElunaTemplate<Vehicle>::CollectGarbage(lua_State* L)
 {
     ASSERT(!manageMemory);
 
     // Get object pointer (and check type, no error)
-    ElunaObject** ptrHold = static_cast<ElunaObject**>(luaL_testudata(L, -1, tname));
-    if (ptrHold)
-    {
-        delete *ptrHold;
-    }
+    ElunaObject* obj = Eluna::CHECKOBJ<ElunaObject>(L, 1, false);
+    delete obj;
     return 0;
 }
 #endif
+
+// Template by Mud from http://stackoverflow.com/questions/4484437/lua-integer-type/4485511#4485511
+template<> int ElunaTemplate<uint64>::Add(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) + Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
+template<> int ElunaTemplate<uint64>::Substract(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) - Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
+template<> int ElunaTemplate<uint64>::Multiply(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) * Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
+template<> int ElunaTemplate<uint64>::Divide(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) / Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
+template<> int ElunaTemplate<uint64>::Mod(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) % Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
+template<> int ElunaTemplate<uint64>::Pow(lua_State* L) { Eluna::Push(L, pow(Eluna::CHECKVAL<uint64>(L, 1), Eluna::CHECKVAL<uint64>(L, 2))); return 1; }
+// template<> int ElunaTemplate<uint64>::UnaryMinus(lua_State* L) { Eluna::Push(L, -Eluna::CHECKVAL<uint64>(L, 1)); return 1; }
+template<> int ElunaTemplate<uint64>::Equal(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) == Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
+template<> int ElunaTemplate<uint64>::Less(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) < Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
+template<> int ElunaTemplate<uint64>::LessOrEqual(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) <= Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
+template<> int ElunaTemplate<uint64>::ToString(lua_State* L)
+{
+    uint64 l = Eluna::CHECKVAL<uint64>(L, 1);
+    std::ostringstream ss;
+    ss << l;
+    Eluna::Push(L, ss.str());
+    return 1;
+}
+
+template<> int ElunaTemplate<int64>::Add(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) + Eluna::CHECKVAL<int64>(L, 2)); return 1; }
+template<> int ElunaTemplate<int64>::Substract(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) - Eluna::CHECKVAL<int64>(L, 2)); return 1; }
+template<> int ElunaTemplate<int64>::Multiply(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) * Eluna::CHECKVAL<int64>(L, 2)); return 1; }
+template<> int ElunaTemplate<int64>::Divide(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) / Eluna::CHECKVAL<int64>(L, 2)); return 1; }
+template<> int ElunaTemplate<int64>::Mod(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) % Eluna::CHECKVAL<int64>(L, 2)); return 1; }
+template<> int ElunaTemplate<int64>::Pow(lua_State* L) { Eluna::Push(L, pow(Eluna::CHECKVAL<int64>(L, 1), Eluna::CHECKVAL<int64>(L, 2))); return 1; }
+template<> int ElunaTemplate<int64>::UnaryMinus(lua_State* L) { Eluna::Push(L, -Eluna::CHECKVAL<int64>(L, 1)); return 1; }
+template<> int ElunaTemplate<int64>::Equal(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) == Eluna::CHECKVAL<int64>(L, 2)); return 1; }
+template<> int ElunaTemplate<int64>::Less(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) < Eluna::CHECKVAL<int64>(L, 2)); return 1; }
+template<> int ElunaTemplate<int64>::LessOrEqual(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) <= Eluna::CHECKVAL<int64>(L, 2)); return 1; }
+template<> int ElunaTemplate<int64>::ToString(lua_State* L)
+{
+    int64 l = Eluna::CHECKVAL<int64>(L, 1);
+    std::ostringstream ss;
+    ss << l;
+    Eluna::Push(L, ss.str());
+    return 1;
+}
 
 void RegisterFunctions(Eluna* E)
 {
@@ -1348,4 +1385,8 @@ void RegisterFunctions(Eluna* E)
 
     ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery", true);
     ElunaTemplate<ElunaQuery>::SetMethods(E, QueryMethods);
+
+    ElunaTemplate<uint64>::Register(E, "uint64", true);
+
+    ElunaTemplate<int64>::Register(E, "int64", true);
 }

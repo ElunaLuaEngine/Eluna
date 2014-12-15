@@ -171,7 +171,7 @@ public:
     static void Push(lua_State* L, const std::string);
     template<typename T> static void Push(lua_State* L, T const* ptr)
     {
-        ElunaTemplate<T>::push(L, ptr);
+        ElunaTemplate<T>::Push(L, ptr);
     }
     static void Push(lua_State* L, Object const* obj);
     static void Push(lua_State* L, WorldObject const* obj);
@@ -187,8 +187,9 @@ public:
     }
     template<typename T> static T* CHECKOBJ(lua_State* L, int narg, bool error = true)
     {
-        return ElunaTemplate<T>::check(L, narg, error);
+        return ElunaTemplate<T>::Check(L, narg, error);
     }
+    static ElunaObject* CHECKTYPE(lua_State* L, int narg, const char *tname, bool error = true);
 
     CreatureAI* GetAI(Creature* creature);
 

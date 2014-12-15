@@ -22,8 +22,11 @@
 
 extern "C"
 {
+// Base lua libraries
 #include "lualib.h"
 #include "lauxlib.h"
+
+// Additional lua libraries
 };
 
 Eluna::ScriptList Eluna::lua_scripts;
@@ -132,8 +135,12 @@ ItemEventBindings(new EntryBind<HookMgr::ItemEvents>("ItemEvents", *this)),
 ItemGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (item)", *this)),
 playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)", *this))
 {
-    // open base lua
+    // open base lua libraries
     luaL_openlibs(L);
+
+    // open additional lua libraries
+
+    // Register methods and functions
     RegisterFunctions(this);
 
     // Create hidden table with weak values
@@ -443,16 +450,20 @@ void Eluna::Push(lua_State* L)
 }
 void Eluna::Push(lua_State* L, const uint64 l)
 {
-    std::ostringstream ss;
-    ss << l;
-    Push(L, ss.str());
+    ElunaTemplate<uint64>::Push(L, new uint64(l));
 }
 void Eluna::Push(lua_State* L, const int64 l)
 {
-    std::ostringstream ss;
-    ss << l;
-    Push(L, ss.str());
+    ElunaTemplate<int64>::Push(L, new int64(l));
 }
+//void Eluna::Push(lua_State* L, const time_t l)
+//{
+//    ElunaTemplate<uint64>::Push(L, new uint64(l));
+//}
+//void Eluna::Push(lua_State* L, const size_t l)
+//{
+//    ElunaTemplate<int64>::Push(L, new int64(l));
+//}
 void Eluna::Push(lua_State* L, const uint32 u)
 {
     lua_pushunsigned(L, u);
@@ -505,7 +516,7 @@ void Eluna::Push(lua_State* L, Unit const* unit)
             Push(L, unit->ToPlayer());
             break;
         default:
-            ElunaTemplate<Unit>::push(L, unit);
+            ElunaTemplate<Unit>::Push(L, unit);
     }
 }
 void Eluna::Push(lua_State* L, WorldObject const* obj)
@@ -530,7 +541,7 @@ void Eluna::Push(lua_State* L, WorldObject const* obj)
             Push(L, obj->ToCorpse());
             break;
         default:
-            ElunaTemplate<WorldObject>::push(L, obj);
+            ElunaTemplate<WorldObject>::Push(L, obj);
     }
 }
 void Eluna::Push(lua_State* L, Object const* obj)
@@ -555,7 +566,7 @@ void Eluna::Push(lua_State* L, Object const* obj)
             Push(L, obj->ToCorpse());
             break;
         default:
-            ElunaTemplate<Object>::push(L, obj);
+            ElunaTemplate<Object>::Push(L, obj);
     }
 }
 
@@ -642,30 +653,28 @@ template<> std::string Eluna::CHECKVAL<std::string>(lua_State* L, int narg)
 }
 template<> int64 Eluna::CHECKVAL<int64>(lua_State* L, int narg)
 {
-    const char* c_str = CHECKVAL<const char*>(L, narg, NULL);
-    if (!c_str)
-        return luaL_argerror(L, narg, "int64 (as string) expected");
-
-    int64 l = 0;
-    int parsed_count = sscanf(c_str, SI64FMTD, &l);
-    if (parsed_count != 1)
-        return luaL_argerror(L, narg, "int64 (as string) could not be converted");
-
-    return l;
+    if (lua_isnumber(L, narg))
+        return static_cast<int64>(CHECKVAL<double>(L, narg));
+    return *(Eluna::CHECKOBJ<int64>(L, narg, true));
 }
 template<> uint64 Eluna::CHECKVAL<uint64>(lua_State* L, int narg)
 {
-    const char* c_str = CHECKVAL<const char*>(L, narg, NULL);
-    if (!c_str)
-        return luaL_argerror(L, narg, "uint64 (as string) expected");
-
-    uint64 l = 0;
-    int parsed_count = sscanf(c_str, UI64FMTD, &l);
-    if (parsed_count != 1)
-        return luaL_argerror(L, narg, "uint64 (as string) could not be converted");
-
-    return l;
+    if (lua_isnumber(L, narg))
+        return static_cast<uint64>(CHECKVAL<uint32>(L, narg));
+    return *(Eluna::CHECKOBJ<uint64>(L, narg, true));
 }
+//template<> time_t Eluna::CHECKVAL<time_t>(lua_State* L, int narg)
+//{
+//    if (lua_isnumber(L, narg))
+//        return static_cast<time_t>(CHECKVAL<double>(L, narg));
+//    return static_cast<time_t>(*(Eluna::CHECKOBJ<int64>(L, narg, true)));
+//}
+//template<> size_t Eluna::CHECKVAL<size_t>(lua_State* L, int narg)
+//{
+//    if (lua_isnumber(L, narg))
+//        return static_cast<size_t>(CHECKVAL<uint32>(L, narg));
+//    return static_cast<size_t>(*(Eluna::CHECKOBJ<uint64>(L, narg, true)));
+//}
 
 #define TEST_OBJ(T, O, R, F)\
 {\
@@ -711,13 +720,39 @@ template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error)
 
 template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* L, int narg, bool error)
 {
-    ElunaObject** ptrHold = static_cast<ElunaObject**>(lua_touserdata(L, narg));
-    if (!ptrHold)
+    return CHECKTYPE(L, narg, NULL, error);
+}
+
+ElunaObject* Eluna::CHECKTYPE(lua_State* L, int narg, const char* tname, bool error)
+{
+    bool valid = false;
+    ElunaObject** ptrHold = NULL;
+
+    if (!tname)
+    {
+        valid = true;
+        ptrHold = static_cast<ElunaObject**>(lua_touserdata(L, narg));
+    }
+    else
+    {
+        if (lua_getmetatable(L, narg))
+        {
+            luaL_getmetatable(L, tname);
+            if (lua_rawequal(L, -1, -2) == 1)
+            {
+                valid = true;
+                ptrHold = static_cast<ElunaObject**>(lua_touserdata(L, narg));
+            }
+            lua_pop(L, 2);
+        }
+    }
+
+    if (!valid || !ptrHold)
     {
         if (error)
         {
             char buff[256];
-            snprintf(buff, 256, "Error fetching object index %i", narg);
+            snprintf(buff, 256, "bad argument : %s expected, got %s", tname ? tname : "userdata", luaL_typename(L, narg));
             luaL_argerror(L, narg, buff);
         }
         return NULL;
