@@ -2283,8 +2283,12 @@ namespace LuaGlobalFunctions
     std::string GetStackAsString(lua_State* L)
     {
         std::ostringstream oss;
-        for (int i = 1; i <= lua_gettop(L); ++i)
+        int top = lua_gettop(L);
+        for (int i = 1; i <= top; ++i)
+        {
             oss << luaL_tolstring(L, i, NULL);
+            lua_pop(L, 1);
+        }
         return oss.str();
     }
 
