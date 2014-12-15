@@ -44,7 +44,7 @@
 #include "revision.h"
 #else
 #include "Config/Config.h"
-#include "ReactorAI.h"
+#include "AggressorAI.h"
 #include "revision_nr.h"
 #include "BattleGroundMgr.h"
 #endif

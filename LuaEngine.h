@@ -227,27 +227,28 @@ public:
     uint32 GetDialogStatus(Player* pPlayer, Creature* pCreature);
     void OnSummoned(Creature* creature, Unit* summoner);
 
-    void UpdateAI(Creature* me, const uint32 diff);
-    void EnterCombat(Creature* me, Unit* target);
-    void DamageTaken(Creature* me, Unit* attacker, uint32& damage); void JustDied(Creature* me, Unit* killer);
-    void KilledUnit(Creature* me, Unit* victim);
-    void JustSummoned(Creature* me, Creature* summon);
-    void SummonedCreatureDespawn(Creature* me, Creature* summon);
-    void MovementInform(Creature* me, uint32 type, uint32 id);
-    void AttackStart(Creature* me, Unit* target);
-    void EnterEvadeMode(Creature* me);
-    void AttackedBy(Creature* me, Unit* attacker);
-    void JustRespawned(Creature* me);
-    void JustReachedHome(Creature* me);
-    void ReceiveEmote(Creature* me, Player* player, uint32 emoteId);
-    void CorpseRemoved(Creature* me, uint32& respawnDelay);
-    void MoveInLineOfSight(Creature* me, Unit* who);
+    bool UpdateAI(Creature* me, const uint32 diff);
+    bool EnterCombat(Creature* me, Unit* target);
+    bool DamageTaken(Creature* me, Unit* attacker, uint32& damage);
+    bool JustDied(Creature* me, Unit* killer);
+    bool KilledUnit(Creature* me, Unit* victim);
+    bool JustSummoned(Creature* me, Creature* summon);
+    bool SummonedCreatureDespawn(Creature* me, Creature* summon);
+    bool MovementInform(Creature* me, uint32 type, uint32 id);
+    bool AttackStart(Creature* me, Unit* target);
+    bool EnterEvadeMode(Creature* me);
+    bool AttackedBy(Creature* me, Unit* attacker);
+    bool JustRespawned(Creature* me);
+    bool JustReachedHome(Creature* me);
+    bool ReceiveEmote(Creature* me, Player* player, uint32 emoteId);
+    bool CorpseRemoved(Creature* me, uint32& respawnDelay);
+    bool MoveInLineOfSight(Creature* me, Unit* who);
+    bool SpellHit(Creature* me, Unit* caster, SpellInfo const* spell);
+    bool SpellHitTarget(Creature* me, Unit* target, SpellInfo const* spell);
+    bool SummonedCreatureDies(Creature* me, Creature* summon, Unit* killer);
+    bool OwnerAttackedBy(Creature* me, Unit* attacker);
+    bool OwnerAttacked(Creature* me, Unit* target);
     void On_Reset(Creature* me);
-    void SpellHit(Creature* me, Unit* caster, SpellInfo const* spell);
-    void SpellHitTarget(Creature* me, Unit* target, SpellInfo const* spell);
-    void SummonedCreatureDies(Creature* me, Creature* summon, Unit* killer);
-    void OwnerAttackedBy(Creature* me, Unit* attacker);
-    void OwnerAttacked(Creature* me, Unit* target);
 
     /* GameObject */
     bool OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, GameObject* pTarget);
