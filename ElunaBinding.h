@@ -93,7 +93,8 @@ template<typename T>
 class EntryBind : public ElunaBind
 {
 public:
-    typedef std::map<int, int> ElunaBindingMap;
+    typedef std::vector<int> FunctionRefVector;
+    typedef std::map<int, FunctionRefVector> ElunaBindingMap;
     typedef UNORDERED_MAP<uint32, ElunaBindingMap> ElunaEntryMap;
 
     EntryBind(const char* bindGroupName, Eluna& _E) : ElunaBind(bindGroupName, _E)
@@ -105,8 +106,12 @@ public:
     {
         for (ElunaEntryMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
         {
-            for (ElunaBindingMap::const_iterator it = itr->second.begin(); it != itr->second.end(); ++it)
-                luaL_unref(E.L, LUA_REGISTRYINDEX, it->second);
+            for (ElunaBindingMap::iterator it = itr->second.begin(); it != itr->second.end(); ++it)
+            {
+                for (FunctionRefVector::iterator i = it->second.begin(); i != it->second.end(); ++i)
+                    luaL_unref(E.L, LUA_REGISTRYINDEX, (*i));
+                it->second.clear();
+            }
             itr->second.clear();
         }
         Bindings.clear();
@@ -114,27 +119,7 @@ public:
 
     void Insert(uint32 entryId, int eventId, int funcRef) // Inserts a new registered event
     {
-        if (Bindings[entryId][eventId])
-        {
-            luaL_unref(E.L, LUA_REGISTRYINDEX, funcRef); // free the unused ref
-            luaL_error(E.L, "A function is already registered for entry (%d) event (%d)", entryId, eventId);
-        }
-        else
-            Bindings[entryId][eventId] = funcRef;
-    }
-
-    // Gets the function ref of an entry for an event
-    int GetBind(uint32 entryId, T eventId) const
-    {
-        if (Bindings.empty())
-            return 0;
-        ElunaEntryMap::const_iterator itr = Bindings.find(entryId);
-        if (itr == Bindings.end() || itr->second.empty())
-            return 0;
-        ElunaBindingMap::const_iterator itr2 = itr->second.find(eventId);
-        if (itr2 == itr->second.end())
-            return 0;
-        return itr2->second;
+        Bindings[entryId][eventId].push_back(funcRef);
     }
 
     // Gets the binding std::map containing all registered events with the function refs for the entry
@@ -150,14 +135,19 @@ public:
     }
 
     // Returns true if the entry has registered binds
-    bool HasBinds(uint32 entryId) const
+    bool HasEvents(uint32 entryId, int eventId) const
     {
         if (Bindings.empty())
             return false;
-        return Bindings.find(entryId) != Bindings.end();
+
+        ElunaEntryMap::const_iterator itr = Bindings.find(entryId);
+        if (itr == Bindings.end())
+            return false;
+
+        return itr->second.find(eventId) != itr->second.end();
     }
 
-    ElunaEntryMap Bindings; // Binding store Bindings[entryId][eventId] = funcRef;
+    ElunaEntryMap Bindings; // Binding store Bindings[entryId][eventId] = {funcRef};
 };
 
 #endif

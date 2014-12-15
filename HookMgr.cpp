@@ -29,7 +29,7 @@ using namespace HookMgr;
 
 /*
  * Call model for EventBind:
- * 
+ *
  * // Begin the call if should
  * EVENT_BEGIN(bindmap, eventid, return returnvalue);
  * // push arguments
@@ -78,22 +78,35 @@ using namespace HookMgr;
 
 // RET is a return statement
 #define ENTRY_BEGIN(BINDMAP, ENTRY, EVENT, RET) \
-    int _Luabind = this->BINDMAP->GetBind(ENTRY, EVENT); \
-    if (!_Luabind) \
+    if (!BINDMAP->HasEvents(ENTRY, EVENT)) \
         RET; \
     lua_State* L = this->L; \
     const char* _LuaBindType = this->BINDMAP->groupName; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
-    lua_rawgeti(L, LUA_REGISTRYINDEX, _Luabind); \
+    for (size_t i = 0; i < this->BINDMAP->Bindings[ENTRY][_LuaEvent].size(); ++i) \
+        lua_rawgeti(L, LUA_REGISTRYINDEX, (this->BINDMAP->Bindings[ENTRY][_LuaEvent][i])); \
     int _LuaFuncTop = lua_gettop(L); \
     int _LuaFuncCount = _LuaFuncTop-_LuaStackTop; \
     Eluna::Push(L, _LuaEvent);
 
 #define ENTRY_EXECUTE(RETVALS) \
     int _LuaReturnValues = RETVALS; \
-    int _LuaParams = lua_gettop(L) - _LuaStackTop - 1; \
-    Eluna::ExecuteCall(_LuaParams, _LuaReturnValues);
+    int _LuaParams = lua_gettop(L) - _LuaFuncTop; \
+    if (_LuaParams < 2) \
+    { \
+        ELUNA_LOG_ERROR("[Eluna]: Executing event %u for %s, params was %i. Report to devs", _LuaEvent, _LuaBindType, _LuaParams); \
+    } \
+    for (int j = _LuaFuncTop-_LuaStackTop; j > 0; --j) \
+    { \
+        for (int i = 0; i <= _LuaParams; ++i) \
+            lua_pushvalue(L, _LuaFuncTop+i); \
+        Eluna::ExecuteCall(_LuaParams, _LuaReturnValues); \
+        lua_remove(L, _LuaFuncTop--); \
+    } \
+    for (int i = _LuaParams; i > 0; --i) \
+        if (!lua_isnone(L, i)) \
+            lua_remove(L, i);
 
 #define FOR_RETS(IT) \
     for (int IT = _LuaStackTop + 1; IT <= lua_gettop(L); ++IT)
