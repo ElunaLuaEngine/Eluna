@@ -14,9 +14,9 @@ namespace LuaWeather
      *
      * @return uint32 zoneId
      */
-    int GetZoneId(Eluna* E, Weather* weather)
+    int GetZoneId(Eluna* /*E*/, lua_State* L, Weather* weather)
     {
-        Eluna::Push(E->L, weather->GetZone());
+        Eluna::Push(L, weather->GetZone());
         return 1;
     }
 
@@ -38,10 +38,10 @@ namespace LuaWeather
      * @param WeatherType type : the [WeatherType], see above available weather types
      * @param float grade : the intensity/grade of the [Weather], ranges from 0 to 1
      */
-    int SetWeather(Eluna* E, Weather* weather)
+    int SetWeather(Eluna* /*E*/, lua_State* L, Weather* weather)
     {
-        uint32 weatherType = Eluna::CHECKVAL<uint32>(E->L, 2);
-        float grade = Eluna::CHECKVAL<float>(E->L, 3);
+        uint32 weatherType = Eluna::CHECKVAL<uint32>(L, 2);
+        float grade = Eluna::CHECKVAL<float>(L, 3);
 
         weather->SetWeather((WeatherType)weatherType, grade);
         return 0;
@@ -52,9 +52,9 @@ namespace LuaWeather
      *
      * @param [Player] player
      */
-    int SendWeatherUpdateToPlayer(Eluna* E, Weather* weather)
+    int SendWeatherUpdateToPlayer(Eluna* /*E*/, lua_State* L, Weather* weather)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
 
         weather->SendWeatherUpdateToPlayer(player);
         return 0;
@@ -70,9 +70,9 @@ namespace LuaWeather
      *
      * @return bool changed : returns 'true' if [Weather] changed
      */
-    int Regenerate(Eluna* E, Weather* weather)
+    int Regenerate(Eluna* /*E*/, lua_State* L, Weather* weather)
     {
-        Eluna::Push(E->L, weather->ReGenerate());
+        Eluna::Push(L, weather->ReGenerate());
         return 1;
     }
 
@@ -81,9 +81,9 @@ namespace LuaWeather
      *
      * @param bool changed : returns 'true' if weather changed for any [Player] in the zone, 'false' if no [Player] is within the zone
      */
-    int UpdateWeather(Eluna* E, Weather* weather)
+    int UpdateWeather(Eluna* /*E*/, lua_State* L, Weather* weather)
     {
-        Eluna::Push(E->L, weather->UpdateWeather());
+        Eluna::Push(L, weather->UpdateWeather());
         return 1;
     }
 };

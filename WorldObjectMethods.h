@@ -14,9 +14,9 @@ namespace LuaWorldObject
      *
      * @return string name
      */
-    int GetName(Eluna* E, WorldObject* obj)
+    int GetName(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetName());
+        Eluna::Push(L, obj->GetName());
         return 1;
     }
 
@@ -25,9 +25,9 @@ namespace LuaWorldObject
      *
      * @return [Map] mapObject
      */
-    int GetMap(Eluna* E, WorldObject* obj)
+    int GetMap(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetMap());
+        Eluna::Push(L, obj->GetMap());
         return 1;
     }
 
@@ -37,9 +37,9 @@ namespace LuaWorldObject
      *
      * @return uint32 phase
      */
-    int GetPhaseMask(Eluna* E, WorldObject* obj)
+    int GetPhaseMask(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetPhaseMask());
+        Eluna::Push(L, obj->GetPhaseMask());
         return 1;
     }
 #endif
@@ -49,9 +49,9 @@ namespace LuaWorldObject
      *
      * @return uint32 instanceId
      */
-    int GetInstanceId(Eluna* E, WorldObject* obj)
+    int GetInstanceId(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetInstanceId());
+        Eluna::Push(L, obj->GetInstanceId());
         return 1;
     }
 
@@ -60,9 +60,9 @@ namespace LuaWorldObject
      *
      * @return uint32 areaId
      */
-    int GetAreaId(Eluna* E, WorldObject* obj)
+    int GetAreaId(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetAreaId());
+        Eluna::Push(L, obj->GetAreaId());
         return 1;
     }
 
@@ -71,9 +71,9 @@ namespace LuaWorldObject
      *
      * @return uint32 zoneId
      */
-    int GetZoneId(Eluna* E, WorldObject* obj)
+    int GetZoneId(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetZoneId());
+        Eluna::Push(L, obj->GetZoneId());
         return 1;
     }
 
@@ -82,9 +82,9 @@ namespace LuaWorldObject
      *
      * @return uint32 mapId
      */
-    int GetMapId(Eluna* E, WorldObject* obj)
+    int GetMapId(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetMapId());
+        Eluna::Push(L, obj->GetMapId());
         return 1;
     }
 
@@ -93,9 +93,9 @@ namespace LuaWorldObject
      *
      * @return float x
      */
-    int GetX(Eluna* E, WorldObject* obj)
+    int GetX(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetPositionX());
+        Eluna::Push(L, obj->GetPositionX());
         return 1;
     }
 
@@ -104,9 +104,9 @@ namespace LuaWorldObject
      *
      * @return float y
      */
-    int GetY(Eluna* E, WorldObject* obj)
+    int GetY(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetPositionY());
+        Eluna::Push(L, obj->GetPositionY());
         return 1;
     }
 
@@ -115,9 +115,9 @@ namespace LuaWorldObject
      *
      * @return float z
      */
-    int GetZ(Eluna* E, WorldObject* obj)
+    int GetZ(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetPositionZ());
+        Eluna::Push(L, obj->GetPositionZ());
         return 1;
     }
 
@@ -126,9 +126,9 @@ namespace LuaWorldObject
      *
      * @return float orientation / facing
      */
-    int GetO(Eluna* E, WorldObject* obj)
+    int GetO(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetOrientation());
+        Eluna::Push(L, obj->GetOrientation());
         return 1;
     }
 
@@ -140,12 +140,12 @@ namespace LuaWorldObject
      * @return float z : z coordinate (height) of the [WorldObject]
      * @return float o : facing / orientation of  the [WorldObject]
      */
-    int GetLocation(Eluna* E, WorldObject* obj)
+    int GetLocation(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        Eluna::Push(E->L, obj->GetPositionX());
-        Eluna::Push(E->L, obj->GetPositionY());
-        Eluna::Push(E->L, obj->GetPositionZ());
-        Eluna::Push(E->L, obj->GetOrientation());
+        Eluna::Push(L, obj->GetPositionX());
+        Eluna::Push(L, obj->GetPositionY());
+        Eluna::Push(L, obj->GetPositionZ());
+        Eluna::Push(L, obj->GetOrientation());
         return 4;
     }
 
@@ -156,9 +156,9 @@ namespace LuaWorldObject
      *
      * @return [Player] nearestPlayer
      */
-    int GetNearestPlayer(Eluna* E, WorldObject* obj)
+    int GetNearestPlayer(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        float range = Eluna::CHECKVAL<float>(E->L, 2, SIZE_OF_GRIDS);
+        float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
 
         Unit* target = NULL;
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER);
@@ -170,7 +170,7 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        Eluna::Push(E->L, target);
+        Eluna::Push(L, target);
         return 1;
     }
 
@@ -182,10 +182,10 @@ namespace LuaWorldObject
      *
      * @return [GameObject] nearestGameObject
      */
-    int GetNearestGameObject(Eluna* E, WorldObject* obj)
+    int GetNearestGameObject(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        float range = Eluna::CHECKVAL<float>(E->L, 2, SIZE_OF_GRIDS);
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 3, 0);
+        float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
         GameObject* target = NULL;
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry);
@@ -197,7 +197,7 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        Eluna::Push(E->L, target);
+        Eluna::Push(L, target);
         return 1;
     }
 
@@ -209,10 +209,10 @@ namespace LuaWorldObject
      *
      * @return [Creature] nearestCreature
      */
-    int GetNearestCreature(Eluna* E, WorldObject* obj)
+    int GetNearestCreature(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        float range = Eluna::CHECKVAL<float>(E->L, 2, SIZE_OF_GRIDS);
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 3, 0);
+        float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
         Creature* target = NULL;
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_UNIT, entry);
@@ -224,7 +224,7 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        Eluna::Push(E->L, target);
+        Eluna::Push(L, target);
         return 1;
     }
 
@@ -235,9 +235,9 @@ namespace LuaWorldObject
      *
      * @return table playersInRange : table of [Player]s
      */
-    int GetPlayersInRange(Eluna* E, WorldObject* obj)
+    int GetPlayersInRange(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        float range = Eluna::CHECKVAL<float>(E->L, 2, SIZE_OF_GRIDS);
+        float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
 
         std::list<Player*> list;
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_PLAYER);
@@ -249,18 +249,18 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(E->L);
-        int tbl = lua_gettop(E->L);
+        lua_newtable(L);
+        int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<Player*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(E->L, ++i);
-            Eluna::Push(E->L, *it);
-            lua_settable(E->L, tbl);
+            Eluna::Push(L, ++i);
+            Eluna::Push(L, *it);
+            lua_settable(L, tbl);
         }
 
-        lua_settop(E->L, tbl);
+        lua_settop(L, tbl);
         return 1;
     }
 
@@ -272,10 +272,10 @@ namespace LuaWorldObject
      *
      * @return table creaturesInRange : table of [Creature]s
      */
-    int GetCreaturesInRange(Eluna* E, WorldObject* obj)
+    int GetCreaturesInRange(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        float range = Eluna::CHECKVAL<float>(E->L, 2, SIZE_OF_GRIDS);
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 3, 0);
+        float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
         std::list<Creature*> list;
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry);
@@ -287,18 +287,18 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(E->L);
-        int tbl = lua_gettop(E->L);
+        lua_newtable(L);
+        int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<Creature*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(E->L, ++i);
-            Eluna::Push(E->L, *it);
-            lua_settable(E->L, tbl);
+            Eluna::Push(L, ++i);
+            Eluna::Push(L, *it);
+            lua_settable(L, tbl);
         }
 
-        lua_settop(E->L, tbl);
+        lua_settop(L, tbl);
         return 1;
     }
 
@@ -310,10 +310,10 @@ namespace LuaWorldObject
      *
      * @return table gameObjectsInRange : table of [GameObject]s
      */
-    int GetGameObjectsInRange(Eluna* E, WorldObject* obj)
+    int GetGameObjectsInRange(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        float range = Eluna::CHECKVAL<float>(E->L, 2, SIZE_OF_GRIDS);
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 3, 0);
+        float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
         std::list<GameObject*> list;
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_GAMEOBJECT, entry);
@@ -325,18 +325,18 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(E->L);
-        int tbl = lua_gettop(E->L);
+        lua_newtable(L);
+        int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<GameObject*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(E->L, ++i);
-            Eluna::Push(E->L, *it);
-            lua_settable(E->L, tbl);
+            Eluna::Push(L, ++i);
+            Eluna::Push(L, *it);
+            lua_settable(L, tbl);
         }
 
-        lua_settop(E->L, tbl);
+        lua_settop(L, tbl);
         return 1;
     }
 
@@ -351,12 +351,12 @@ namespace LuaWorldObject
      *
      * @return [WorldObject] worldObject
      */
-    int GetNearObject(Eluna* E, WorldObject* obj)
+    int GetNearObject(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        float range = Eluna::CHECKVAL<float>(E->L, 2, SIZE_OF_GRIDS);
-        uint16 type = Eluna::CHECKVAL<uint16>(E->L, 3, 0); // TypeMask
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 4, 0);
-        uint32 hostile = Eluna::CHECKVAL<uint32>(E->L, 5, 0); // 0 none, 1 hostile, 2 friendly
+        float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
+        uint16 type = Eluna::CHECKVAL<uint16>(L, 3, 0); // TypeMask
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 4, 0);
+        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 5, 0); // 0 none, 1 hostile, 2 friendly
 
         float x, y, z;
         obj->GetPosition(x, y, z);
@@ -371,7 +371,7 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        Eluna::Push(E->L, target);
+        Eluna::Push(L, target);
         return 1;
     }
 
@@ -386,12 +386,12 @@ namespace LuaWorldObject
      *
      * @return table worldObjectList : table of [WorldObject]s
      */
-    int GetNearObjects(Eluna* E, WorldObject* obj)
+    int GetNearObjects(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        float range = Eluna::CHECKVAL<float>(E->L, 2, SIZE_OF_GRIDS);
-        uint16 type = Eluna::CHECKVAL<uint16>(E->L, 3, 0); // TypeMask
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 4, 0);
-        uint32 hostile = Eluna::CHECKVAL<uint32>(E->L, 5, 0); // 0 none, 1 hostile, 2 friendly
+        float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
+        uint16 type = Eluna::CHECKVAL<uint16>(L, 3, 0); // TypeMask
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 4, 0);
+        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 5, 0); // 0 none, 1 hostile, 2 friendly
 
         float x, y, z;
         obj->GetPosition(x, y, z);
@@ -406,18 +406,18 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(E->L);
-        int tbl = lua_gettop(E->L);
+        lua_newtable(L);
+        int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<WorldObject*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(E->L, ++i);
-            Eluna::Push(E->L, *it);
-            lua_settable(E->L, tbl);
+            Eluna::Push(L, ++i);
+            Eluna::Push(L, *it);
+            lua_settable(L, tbl);
         }
 
-        lua_settop(E->L, tbl);
+        lua_settop(L, tbl);
         return 1;
     }
 
@@ -434,17 +434,17 @@ namespace LuaWorldObject
      *
      * @return float dist : the distance in yards
      */
-    int GetDistance(Eluna* E, WorldObject* obj)
+    int GetDistance(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(E->L, 2, false);
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
         if (target && target->IsInWorld())
-            Eluna::Push(E->L, obj->GetDistance(target));
+            Eluna::Push(L, obj->GetDistance(target));
         else
         {
-            float X = Eluna::CHECKVAL<float>(E->L, 2);
-            float Y = Eluna::CHECKVAL<float>(E->L, 3);
-            float Z = Eluna::CHECKVAL<float>(E->L, 4);
-            Eluna::Push(E->L, obj->GetDistance(X, Y, Z));
+            float X = Eluna::CHECKVAL<float>(L, 2);
+            float Y = Eluna::CHECKVAL<float>(L, 3);
+            float Z = Eluna::CHECKVAL<float>(L, 4);
+            Eluna::Push(L, obj->GetDistance(X, Y, Z));
         }
         return 1;
     }
@@ -459,17 +459,17 @@ namespace LuaWorldObject
      * @return float y
      * @return float z
      */
-    int GetRelativePoint(Eluna* E, WorldObject* obj)
+    int GetRelativePoint(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        float dist = Eluna::CHECKVAL<float>(E->L, 2);
-        float rad = Eluna::CHECKVAL<float>(E->L, 3);
+        float dist = Eluna::CHECKVAL<float>(L, 2);
+        float rad = Eluna::CHECKVAL<float>(L, 3);
 
         float x, y, z;
         obj->GetClosePoint(x, y, z, 0.0f, dist, rad);
 
-        Eluna::Push(E->L, x);
-        Eluna::Push(E->L, y);
-        Eluna::Push(E->L, z);
+        Eluna::Push(L, x);
+        Eluna::Push(L, y);
+        Eluna::Push(L, z);
         return 3;
     }
 
@@ -486,17 +486,17 @@ namespace LuaWorldObject
      *
      * @return float angle : angle in radians in range 0..2*pi
      */
-    int GetAngle(Eluna* E, WorldObject* obj)
+    int GetAngle(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(E->L, 2, false);
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
 
         if (target && target->IsInWorld())
-            Eluna::Push(E->L, obj->GetAngle(target));
+            Eluna::Push(L, obj->GetAngle(target));
         else
         {
-            float x = Eluna::CHECKVAL<float>(E->L, 2);
-            float y = Eluna::CHECKVAL<float>(E->L, 3);
-            Eluna::Push(E->L, obj->GetAngle(x, y));
+            float x = Eluna::CHECKVAL<float>(L, 2);
+            float y = Eluna::CHECKVAL<float>(L, 3);
+            Eluna::Push(L, obj->GetAngle(x, y));
         }
         return 1;
     }
@@ -506,9 +506,9 @@ namespace LuaWorldObject
      *
      * @param [WorldPacket] packet
      */
-    int SendPacket(Eluna* E, WorldObject* obj)
+    int SendPacket(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(E->L, 2);
+        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
         obj->SendMessageToSet(data, true);
         return 0;
     }
@@ -524,18 +524,18 @@ namespace LuaWorldObject
      * @param uint32 respawnDelay = 30 : respawn time in seconds
      * @return [GameObject] gameObject
      */
-    int SummonGameObject(Eluna* E, WorldObject* obj)
+    int SummonGameObject(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
-        float x = Eluna::CHECKVAL<float>(E->L, 3);
-        float y = Eluna::CHECKVAL<float>(E->L, 4);
-        float z = Eluna::CHECKVAL<float>(E->L, 5);
-        float o = Eluna::CHECKVAL<float>(E->L, 6);
-        uint32 respawnDelay = Eluna::CHECKVAL<uint32>(E->L, 7, 30);
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+        float x = Eluna::CHECKVAL<float>(L, 3);
+        float y = Eluna::CHECKVAL<float>(L, 4);
+        float z = Eluna::CHECKVAL<float>(L, 5);
+        float o = Eluna::CHECKVAL<float>(L, 6);
+        uint32 respawnDelay = Eluna::CHECKVAL<uint32>(L, 7, 30);
 #ifndef TRINITY
-        Eluna::Push(E->L, obj->SummonGameObject(entry, x, y, z, o, respawnDelay));
+        Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, respawnDelay));
 #else
-        Eluna::Push(E->L, obj->SummonGameObject(entry, x, y, z, o, 0, 0, 0, 0, respawnDelay));
+        Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, 0, 0, 0, 0, respawnDelay));
 #endif
         return 1;
     }
@@ -552,15 +552,15 @@ namespace LuaWorldObject
      * @param uint32 despawnTimer : despawn time in seconds
      * @return [Creature] spawnedCreature
      */
-    int SpawnCreature(Eluna* E, WorldObject* obj)
+    int SpawnCreature(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
-        float x = Eluna::CHECKVAL<float>(E->L, 3);
-        float y = Eluna::CHECKVAL<float>(E->L, 4);
-        float z = Eluna::CHECKVAL<float>(E->L, 5);
-        float o = Eluna::CHECKVAL<float>(E->L, 6);
-        uint32 spawnType = Eluna::CHECKVAL<uint32>(E->L, 7, 8);
-        uint32 despawnTimer = Eluna::CHECKVAL<uint32>(E->L, 8, 0);
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+        float x = Eluna::CHECKVAL<float>(L, 3);
+        float y = Eluna::CHECKVAL<float>(L, 4);
+        float z = Eluna::CHECKVAL<float>(L, 5);
+        float o = Eluna::CHECKVAL<float>(L, 6);
+        uint32 spawnType = Eluna::CHECKVAL<uint32>(L, 7, 8);
+        uint32 despawnTimer = Eluna::CHECKVAL<uint32>(L, 8, 0);
 
         TempSummonType type;
         switch (spawnType)
@@ -602,9 +602,9 @@ namespace LuaWorldObject
                 break;
 #endif
             default:
-                return luaL_argerror(E->L, 7, "valid SpawnType expected");
+                return luaL_argerror(L, 7, "valid SpawnType expected");
         }
-        Eluna::Push(E->L, obj->SummonCreature(entry, x, y, z, o, type, despawnTimer));
+        Eluna::Push(L, obj->SummonCreature(entry, x, y, z, o, type, despawnTimer));
         return 1;
     }
 
@@ -621,18 +621,18 @@ namespace LuaWorldObject
      * @param uint32 repeats : how many times for the event to repeat, 0 is infinite
      * @return int eventId : unique ID for the timed event used to cancel it or nil
      */
-    int RegisterEvent(Eluna* E, WorldObject* obj)
+    int RegisterEvent(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        luaL_checktype(E->L, 2, LUA_TFUNCTION);
-        uint32 delay = Eluna::CHECKVAL<uint32>(E->L, 3);
-        uint32 repeats = Eluna::CHECKVAL<uint32>(E->L, 4);
+        luaL_checktype(L, 2, LUA_TFUNCTION);
+        uint32 delay = Eluna::CHECKVAL<uint32>(L, 3);
+        uint32 repeats = Eluna::CHECKVAL<uint32>(L, 4);
 
-        lua_pushvalue(E->L, 2);
-        int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+        lua_pushvalue(L, 2);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
         {
             obj->elunaEvents->AddEvent(functionRef, delay, repeats);
-            Eluna::Push(E->L, functionRef);
+            Eluna::Push(L, functionRef);
         }
         return 1;
     }
@@ -642,9 +642,9 @@ namespace LuaWorldObject
      *
      * @param int eventId : event Id to remove
      */
-    int RemoveEventById(Eluna* E, WorldObject* obj)
+    int RemoveEventById(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        int eventId = Eluna::CHECKVAL<int>(E->L, 2);
+        int eventId = Eluna::CHECKVAL<int>(L, 2);
         obj->elunaEvents->RemoveEvent(eventId);
         return 0;
     }
@@ -653,7 +653,7 @@ namespace LuaWorldObject
      * Removes all timed events from a [WorldObject]
      *
      */
-    int RemoveEvents(Eluna* /*E*/, WorldObject* obj)
+    int RemoveEvents(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
         obj->elunaEvents->RemoveEvents();
         return 0;
@@ -671,18 +671,18 @@ namespace LuaWorldObject
      * @param float z
      * @return bool isInLoS
      */
-    int IsWithinLoS(Eluna* E, WorldObject* obj)
+    int IsWithinLoS(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(E->L, 2, false);
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
 
         if (target)
-            Eluna::Push(E->L, obj->IsWithinLOSInMap(target));
+            Eluna::Push(L, obj->IsWithinLOSInMap(target));
         else
         {
-            float x = Eluna::CHECKVAL<float>(E->L, 2);
-            float y = Eluna::CHECKVAL<float>(E->L, 3);
-            float z = Eluna::CHECKVAL<float>(E->L, 4);
-            Eluna::Push(E->L, obj->IsWithinLOS(x, y, z));
+            float x = Eluna::CHECKVAL<float>(L, 2);
+            float y = Eluna::CHECKVAL<float>(L, 3);
+            float z = Eluna::CHECKVAL<float>(L, 4);
+            Eluna::Push(L, obj->IsWithinLOS(x, y, z));
         }
 
         return 1;

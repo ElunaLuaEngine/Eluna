@@ -46,13 +46,13 @@ namespace LuaQuest
      * @param uint32 flag : all available flags can be seen above
      * @return bool hasFlag
      */
-    int HasFlag(Eluna* E, Quest* quest)
+    int HasFlag(Eluna* /*E*/, lua_State* L, Quest* quest)
     {
-        uint32 flag = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 flag = Eluna::CHECKVAL<uint32>(L, 2);
 #ifndef TRINITY
-        Eluna::Push(E->L, quest->HasQuestFlag((QuestFlags)flag));
+        Eluna::Push(L, quest->HasQuestFlag((QuestFlags)flag));
 #else
-        Eluna::Push(E->L, quest->HasFlag(flag));
+        Eluna::Push(L, quest->HasFlag(flag));
 #endif
         return 1;
     }
@@ -63,9 +63,9 @@ namespace LuaQuest
      *
      * @return bool isDaily
      */
-    int IsDaily(Eluna* E, Quest* quest)
+    int IsDaily(Eluna* /*E*/, lua_State* L, Quest* quest)
     {
-        Eluna::Push(E->L, quest->IsDaily());
+        Eluna::Push(L, quest->IsDaily());
         return 1;
     }
 #endif
@@ -75,9 +75,9 @@ namespace LuaQuest
      *
      * @return bool isRepeatable
      */
-    int IsRepeatable(Eluna* E, Quest* quest)
+    int IsRepeatable(Eluna* /*E*/, lua_State* L, Quest* quest)
     {
-        Eluna::Push(E->L, quest->IsRepeatable());
+        Eluna::Push(L, quest->IsRepeatable());
         return 1;
     }
 
@@ -86,9 +86,9 @@ namespace LuaQuest
      *
      * @return uint32 entryId
      */
-    int GetId(Eluna* E, Quest* quest)
+    int GetId(Eluna* /*E*/, lua_State* L, Quest* quest)
     {
-        Eluna::Push(E->L, quest->GetQuestId());
+        Eluna::Push(L, quest->GetQuestId());
         return 1;
     }
 
@@ -97,9 +97,9 @@ namespace LuaQuest
      *
      * @return uint32 level
      */
-    int GetLevel(Eluna* E, Quest* quest)
+    int GetLevel(Eluna* /*E*/, lua_State* L, Quest* quest)
     {
-        Eluna::Push(E->L, quest->GetQuestLevel());
+        Eluna::Push(L, quest->GetQuestLevel());
         return 1;
     }
 
@@ -108,9 +108,9 @@ namespace LuaQuest
      *
      * @return uint32 minLevel
      */
-    int GetMinLevel(Eluna* E, Quest* quest)
+    int GetMinLevel(Eluna* /*E*/, lua_State* L, Quest* quest)
     {
-        Eluna::Push(E->L, quest->GetMinLevel());
+        Eluna::Push(L, quest->GetMinLevel());
         return 1;
     }
 
@@ -119,9 +119,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetNextQuestId(Eluna* E, Quest* quest)
+    int GetNextQuestId(Eluna* /*E*/, lua_State* L, Quest* quest)
     {
-        Eluna::Push(E->L, quest->GetNextQuestId());
+        Eluna::Push(L, quest->GetNextQuestId());
         return 1;
     }
 
@@ -130,9 +130,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetPrevQuestId(Eluna* E, Quest* quest)
+    int GetPrevQuestId(Eluna* /*E*/, lua_State* L, Quest* quest)
     {
-        Eluna::Push(E->L, quest->GetPrevQuestId());
+        Eluna::Push(L, quest->GetPrevQuestId());
         return 1;
     }
 
@@ -141,9 +141,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetNextQuestInChain(Eluna* E, Quest* quest)
+    int GetNextQuestInChain(Eluna* /*E*/, lua_State* L, Quest* quest)
     {
-        Eluna::Push(E->L, quest->GetNextQuestInChain());
+        Eluna::Push(L, quest->GetNextQuestInChain());
         return 1;
     }
 
@@ -152,12 +152,12 @@ namespace LuaQuest
      *
      * @return uint32 flags
      */
-    int GetFlags(Eluna* E, Quest* quest)
+    int GetFlags(Eluna* /*E*/, lua_State* L, Quest* quest)
     {
 #ifndef TRINITY
-        Eluna::Push(E->L, quest->GetQuestFlags());
+        Eluna::Push(L, quest->GetQuestFlags());
 #else
-        Eluna::Push(E->L, quest->GetFlags());
+        Eluna::Push(L, quest->GetFlags());
 #endif
         return 1;
     }
@@ -169,15 +169,15 @@ namespace LuaQuest
      *
      * @return uint32 type
      */
-    int GetType(Eluna* E, Quest* quest)
+    int GetType(Eluna* /*E*/, lua_State* L, Quest* quest)
     {
-        Eluna::Push(E->L, quest->GetType());
+        Eluna::Push(L, quest->GetType());
         return 1;
     }
 
-    /*int GetMaxLevel(Eluna* E, Quest* quest)
+    /*int GetMaxLevel(Eluna* E, lua_State* L, Quest* quest)
     {
-    Eluna::Push(E->L, quest->GetMaxLevel());
+    Eluna::Push(L, quest->GetMaxLevel());
     return 1;
     }*/
 };

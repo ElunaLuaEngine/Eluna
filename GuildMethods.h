@@ -10,10 +10,10 @@
 namespace LuaGuild
 {
     /* GETTERS */
-    int GetMembers(Eluna* E, Guild* guild)
+    int GetMembers(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        lua_newtable(E->L);
-        int tbl = lua_gettop(E->L);
+        lua_newtable(L);
+        int tbl = lua_gettop(L);
         uint32 i = 0;
 
         SessionMap const& sessions = eWorld->GetAllSessions();
@@ -24,76 +24,76 @@ namespace LuaGuild
                 if (player->GetSession() && (player->GetGuildId() == guild->GetId()))
                 {
                     ++i;
-                    Eluna::Push(E->L, i);
-                    Eluna::Push(E->L, player);
-                    lua_settable(E->L, tbl);
+                    Eluna::Push(L, i);
+                    Eluna::Push(L, player);
+                    lua_settable(L, tbl);
                 }
             }
         }
 
-        lua_settop(E->L, tbl); // push table to top of stack
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
-    int GetMemberCount(Eluna* E, Guild* guild)
+    int GetMemberCount(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        Eluna::Push(E->L, guild->GetMemberSize());
+        Eluna::Push(L, guild->GetMemberSize());
         return 1;
     }
 
-    int GetLeader(Eluna* E, Guild* guild)
+    int GetLeader(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
 #ifndef TRINITY
-        Eluna::Push(E->L, eObjectAccessor->FindPlayer(guild->GetLeaderGuid()));
+        Eluna::Push(L, eObjectAccessor->FindPlayer(guild->GetLeaderGuid()));
 #else
-        Eluna::Push(E->L, eObjectAccessor->FindPlayer(guild->GetLeaderGUID()));
+        Eluna::Push(L, eObjectAccessor->FindPlayer(guild->GetLeaderGUID()));
 #endif
         return 1;
     }
 
-    int GetLeaderGUID(Eluna* E, Guild* guild)
+    int GetLeaderGUID(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
 #ifndef TRINITY
-        Eluna::Push(E->L, guild->GetLeaderGuid());
+        Eluna::Push(L, guild->GetLeaderGuid());
 #else
-        Eluna::Push(E->L, guild->GetLeaderGUID());
+        Eluna::Push(L, guild->GetLeaderGUID());
 #endif
         return 1;
     }
 
-    int GetId(Eluna* E, Guild* guild)
+    int GetId(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        Eluna::Push(E->L, guild->GetId());
+        Eluna::Push(L, guild->GetId());
         return 1;
     }
 
-    int GetName(Eluna* E, Guild* guild)
+    int GetName(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        Eluna::Push(E->L, guild->GetName());
+        Eluna::Push(L, guild->GetName());
         return 1;
     }
 
-    int GetMOTD(Eluna* E, Guild* guild)
+    int GetMOTD(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        Eluna::Push(E->L, guild->GetMOTD());
+        Eluna::Push(L, guild->GetMOTD());
         return 1;
     }
 
-    int GetInfo(Eluna* E, Guild* guild)
+    int GetInfo(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
 #ifndef TRINITY
-        Eluna::Push(E->L, guild->GetGINFO());
+        Eluna::Push(L, guild->GetGINFO());
 #else
-        Eluna::Push(E->L, guild->GetInfo());
+        Eluna::Push(L, guild->GetInfo());
 #endif
         return 1;
     }
 
     /* SETTERS */
 #ifndef CATA
-    int SetLeader(Eluna* E, Guild* guild)
+    int SetLeader(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
 
 #ifndef TRINITY
         guild->SetLeader(player->GET_GUID());
@@ -105,10 +105,10 @@ namespace LuaGuild
 #endif
 
 #ifndef CLASSIC
-    int SetBankTabText(Eluna* E, Guild* guild)
+    int SetBankTabText(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        uint8 tabId = Eluna::CHECKVAL<uint8>(E->L, 2);
-        const char* text = Eluna::CHECKVAL<const char*>(E->L, 3);
+        uint8 tabId = Eluna::CHECKVAL<uint8>(L, 2);
+        const char* text = Eluna::CHECKVAL<const char*>(L, 3);
 #ifndef TRINITY
         guild->SetGuildBankTabText(tabId, text);
 #else
@@ -120,43 +120,43 @@ namespace LuaGuild
 
     /* OTHER */
     // SendPacketToGuild(packet)
-    int SendPacket(Eluna* E, Guild* guild)
+    int SendPacket(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(E->L, 2);
+        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
 
         guild->BroadcastPacket(data);
         return 0;
     }
 
     // SendPacketToRankedInGuild(packet, rankId)
-    int SendPacketToRanked(Eluna* E, Guild* guild)
+    int SendPacketToRanked(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(E->L, 2);
-        uint8 ranked = Eluna::CHECKVAL<uint8>(E->L, 3);
+        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
+        uint8 ranked = Eluna::CHECKVAL<uint8>(L, 3);
 
         guild->BroadcastPacketToRank(data, ranked);
         return 0;
     }
 
-    int Disband(Eluna* /*E*/, Guild* guild)
+    int Disband(Eluna* /*E*/, lua_State* /*L*/, Guild* guild)
     {
         guild->Disband();
         return 0;
     }
 
-    int AddMember(Eluna* E, Guild* guild)
+    int AddMember(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
-        uint8 rankId = Eluna::CHECKVAL<uint8>(E->L, 3, GUILD_RANK_NONE);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        uint8 rankId = Eluna::CHECKVAL<uint8>(L, 3, GUILD_RANK_NONE);
 
         guild->AddMember(player->GET_GUID(), rankId);
         return 0;
     }
 
-    int DeleteMember(Eluna* E, Guild* guild)
+    int DeleteMember(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
-        bool isDisbanding = Eluna::CHECKVAL<bool>(E->L, 3, false);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        bool isDisbanding = Eluna::CHECKVAL<bool>(L, 3, false);
 
 #ifndef TRINITY
         guild->DelMember(player->GET_GUID(), isDisbanding);
@@ -166,10 +166,10 @@ namespace LuaGuild
         return 0;
     }
 
-    int SetMemberRank(Eluna* E, Guild* guild)
+    int SetMemberRank(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
-        uint8 newRank = Eluna::CHECKVAL<uint8>(E->L, 3);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        uint8 newRank = Eluna::CHECKVAL<uint8>(L, 3);
 
         guild->ChangeMemberRank(player->GET_GUID(), newRank);
         return 0;
@@ -177,10 +177,10 @@ namespace LuaGuild
 
 #ifndef CLASSIC
     // Move to Player methods
-    int WithdrawBankMoney(Eluna* E, Guild* guild)
+    int WithdrawBankMoney(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
-        uint32 money = Eluna::CHECKVAL<uint32>(E->L, 3);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        uint32 money = Eluna::CHECKVAL<uint32>(L, 3);
 #ifndef TRINITY
         if (guild->GetGuildBankMoney() < money)
             return 0;
@@ -192,10 +192,10 @@ namespace LuaGuild
     }
 
     // Move to Player methods
-    int DepositBankMoney(Eluna* E, Guild* guild)
+    int DepositBankMoney(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
-        uint32 money = Eluna::CHECKVAL<uint32>(E->L, 3);
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        uint32 money = Eluna::CHECKVAL<uint32>(L, 3);
 
 #ifndef TRINITY
         guild->SetBankMoney(guild->GetGuildBankMoney() + money);

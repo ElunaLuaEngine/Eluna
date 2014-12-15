@@ -22,7 +22,7 @@ public:
     struct ElunaRegister
     {
         const char* name;
-        int(*mfunc)(Eluna*);
+        int(*mfunc)(Eluna*, lua_State*);
     };
 
     static int thunk(lua_State* L)
@@ -30,7 +30,7 @@ public:
         ElunaRegister* l = static_cast<ElunaRegister*>(lua_touserdata(L, lua_upvalueindex(1)));
         Eluna* E = static_cast<Eluna*>(lua_touserdata(L, lua_upvalueindex(2)));
         int args = lua_gettop(L);
-        int expected = l->mfunc(E);
+        int expected = l->mfunc(E, L);
         args = lua_gettop(L) - args;
         if (args < 0 || args > expected) // Assert instead?
         {
@@ -105,7 +105,7 @@ template<typename T>
 struct ElunaRegister
 {
     const char* name;
-    int(*mfunc)(Eluna*, T*);
+    int(*mfunc)(Eluna*, lua_State*, T*);
 };
 
 template<typename T>
@@ -336,7 +336,7 @@ public:
         ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
         Eluna* E = static_cast<Eluna*>(lua_touserdata(L, lua_upvalueindex(2)));
         int top = lua_gettop(L);
-        int expected = l->mfunc(E, obj);
+        int expected = l->mfunc(E, L, obj);
         int args = lua_gettop(L) - top;
         if (args < 0 || args > expected) // Assert instead?
         {
