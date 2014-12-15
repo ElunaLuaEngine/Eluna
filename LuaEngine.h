@@ -384,10 +384,8 @@ public:
     void OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
 };
 template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error);
-template<> Player* Eluna::CHECKOBJ<Player>(lua_State* L, int narg, bool error);
-template<> Creature* Eluna::CHECKOBJ<Creature>(lua_State* L, int narg, bool error);
-template<> GameObject* Eluna::CHECKOBJ<GameObject>(lua_State* L, int narg, bool error);
-template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error);
+template<> Object* Eluna::CHECKOBJ<Object>(lua_State* L, int narg, bool error);
+template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* L, int narg, bool error);
 template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* L, int narg, bool error);
 
 #define sEluna Eluna::GEluna

@@ -676,47 +676,35 @@ template<> uint64 Eluna::CHECKVAL<uint64>(lua_State* L, int narg)
 //    return static_cast<size_t>(*(Eluna::CHECKOBJ<uint64>(L, narg, true)));
 //}
 
-#define TEST_OBJ(T, O, R, F)\
-{\
-    if (!O || !O->F())\
-    {\
-        if (R)\
-        {\
-            std::string errmsg(ElunaTemplate<T>::tname);\
-            errmsg += " expected";\
-            luaL_argerror(L, narg, errmsg.c_str());\
-        }\
-        return NULL;\
-    }\
-    return O->F();\
+template<> Object* Eluna::CHECKOBJ<Object>(lua_State* L, int narg, bool error)
+{
+    Object* obj = CHECKOBJ<WorldObject>(L, narg, false);
+    if (!obj)
+        obj = CHECKOBJ<Item>(L, narg, false);
+    if (!obj)
+        obj = ElunaTemplate<Object>::Check(L, narg, false);
+    return obj;
 }
-
+template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* L, int narg, bool error)
+{
+    WorldObject* obj = CHECKOBJ<Unit>(L, narg, false);
+    if (!obj)
+        obj = CHECKOBJ<GameObject>(L, narg, false);
+    if (!obj)
+        obj = CHECKOBJ<Corpse>(L, narg, false);
+    if (!obj)
+        obj = ElunaTemplate<WorldObject>::Check(L, narg, false);
+    return obj;
+}
 template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error)
 {
-    WorldObject* obj = CHECKOBJ<WorldObject>(L, narg, false);
-    TEST_OBJ(Unit, obj, error, ToUnit);
+    Unit* obj = CHECKOBJ<Player>(L, narg, false);
+    if (!obj)
+        obj = CHECKOBJ<Creature>(L, narg, false);
+    if (!obj)
+        obj = ElunaTemplate<Unit>::Check(L, narg, false);
+    return obj;
 }
-template<> Player* Eluna::CHECKOBJ<Player>(lua_State* L, int narg, bool error)
-{
-    WorldObject* obj = CHECKOBJ<WorldObject>(L, narg, false);
-    TEST_OBJ(Player, obj, error, ToPlayer);
-}
-template<> Creature* Eluna::CHECKOBJ<Creature>(lua_State* L, int narg, bool error)
-{
-    WorldObject* obj = CHECKOBJ<WorldObject>(L, narg, false);
-    TEST_OBJ(Creature, obj, error, ToCreature);
-}
-template<> GameObject* Eluna::CHECKOBJ<GameObject>(lua_State* L, int narg, bool error)
-{
-    WorldObject* obj = CHECKOBJ<WorldObject>(L, narg, false);
-    TEST_OBJ(GameObject, obj, error, ToGameObject);
-}
-template<> Corpse* Eluna::CHECKOBJ<Corpse>(lua_State* L, int narg, bool error)
-{
-    WorldObject* obj = CHECKOBJ<WorldObject>(L, narg, false);
-    TEST_OBJ(Corpse, obj, error, ToCorpse);
-}
-#undef TEST_OBJ
 
 template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* L, int narg, bool error)
 {
