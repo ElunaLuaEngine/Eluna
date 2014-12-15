@@ -1442,15 +1442,6 @@ uint32 Eluna::GetDialogStatus(Player* pPlayer, Creature* pCreature)
     return DIALOG_STATUS_SCRIPTED_NO_STATUS;
 }
 
-void Eluna::OnSummoned(Creature* pCreature, Unit* pSummoner)
-{
-    ENTRY_BEGIN(CreatureEventBindings, pCreature->GetEntry(), CREATURE_EVENT_ON_SUMMONED, return);
-    Push(L, pCreature);
-    Push(L, pSummoner);
-    ENTRY_EXECUTE(0);
-    ENDCALL();
-}
-
 void Eluna::OnAddToWorld(Creature* creature)
 {
     ENTRY_BEGIN(CreatureEventBindings, creature->GetEntry(), CREATURE_EVENT_ON_ADD, return);
@@ -1467,6 +1458,22 @@ void Eluna::OnRemoveFromWorld(Creature* creature)
     ENDCALL();
 }
 
+bool Eluna::OnSummoned(Creature* pCreature, Unit* pSummoner)
+{
+    bool result = false;
+    ENTRY_BEGIN(CreatureEventBindings, pCreature->GetEntry(), CREATURE_EVENT_ON_SUMMONED, return false);
+    Push(L, pCreature);
+    Push(L, pSummoner);
+    ENTRY_EXECUTE(1);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
+    }
+    ENDCALL();
+    return result;
+}
+
 bool Eluna::UpdateAI(Creature* me, const uint32 diff)
 {
     bool result = false;
@@ -1474,8 +1481,10 @@ bool Eluna::UpdateAI(Creature* me, const uint32 diff)
     Eluna::Push(L, me);
     Eluna::Push(L, diff);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1490,8 +1499,10 @@ bool Eluna::EnterCombat(Creature* me, Unit* target)
     Eluna::Push(L, me);
     Eluna::Push(L, target);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1526,8 +1537,10 @@ bool Eluna::JustDied(Creature* me, Unit* killer)
     Eluna::Push(L, me);
     Eluna::Push(L, killer);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1541,8 +1554,10 @@ bool Eluna::KilledUnit(Creature* me, Unit* victim)
     Eluna::Push(L, me);
     Eluna::Push(L, victim);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1556,8 +1571,10 @@ bool Eluna::JustSummoned(Creature* me, Creature* summon)
     Eluna::Push(L, me);
     Eluna::Push(L, summon);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1571,8 +1588,10 @@ bool Eluna::SummonedCreatureDespawn(Creature* me, Creature* summon)
     Eluna::Push(L, me);
     Eluna::Push(L, summon);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1587,8 +1606,10 @@ bool Eluna::MovementInform(Creature* me, uint32 type, uint32 id)
     Eluna::Push(L, type);
     Eluna::Push(L, id);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1602,8 +1623,10 @@ bool Eluna::AttackStart(Creature* me, Unit* target)
     Eluna::Push(L, me);
     Eluna::Push(L, target);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1617,8 +1640,10 @@ bool Eluna::EnterEvadeMode(Creature* me)
     ENTRY_BEGIN(CreatureEventBindings, me->GetEntry(), CREATURE_EVENT_ON_LEAVE_COMBAT, return false);
     Eluna::Push(L, me);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1632,8 +1657,10 @@ bool Eluna::AttackedBy(Creature* me, Unit* attacker)
     Eluna::Push(L, me);
     Eluna::Push(L, attacker);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1647,8 +1674,10 @@ bool Eluna::JustRespawned(Creature* me)
     ENTRY_BEGIN(CreatureEventBindings, me->GetEntry(), CREATURE_EVENT_ON_SPAWN, return false);
     Eluna::Push(L, me);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1661,8 +1690,10 @@ bool Eluna::JustReachedHome(Creature* me)
     ENTRY_BEGIN(CreatureEventBindings, me->GetEntry(), CREATURE_EVENT_ON_REACH_HOME, return false);
     Eluna::Push(L, me);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1677,8 +1708,10 @@ bool Eluna::ReceiveEmote(Creature* me, Player* player, uint32 emoteId)
     Eluna::Push(L, player);
     Eluna::Push(L, emoteId);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1710,8 +1743,10 @@ bool Eluna::MoveInLineOfSight(Creature* me, Unit* who)
     Eluna::Push(L, me);
     Eluna::Push(L, who);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1735,8 +1770,10 @@ bool Eluna::SpellHit(Creature* me, Unit* caster, SpellInfo const* spell)
     Eluna::Push(L, caster);
     Eluna::Push(L, spell->Id); // Pass spell object?
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1751,8 +1788,10 @@ bool Eluna::SpellHitTarget(Creature* me, Unit* target, SpellInfo const* spell)
     Eluna::Push(L, target);
     Eluna::Push(L, spell->Id); // Pass spell object?
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1768,8 +1807,10 @@ bool Eluna::SummonedCreatureDies(Creature* me, Creature* summon, Unit* killer)
     Eluna::Push(L, summon);
     Eluna::Push(L, killer);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1783,8 +1824,10 @@ bool Eluna::OwnerAttackedBy(Creature* me, Unit* attacker)
     Eluna::Push(L, me);
     Eluna::Push(L, attacker);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;
@@ -1798,8 +1841,10 @@ bool Eluna::OwnerAttacked(Creature* me, Unit* target)
     Eluna::Push(L, me);
     Eluna::Push(L, target);
     ENTRY_EXECUTE(1);
-    FOR_RETS(i) {
-        result = CHECKVAL<bool>(L, i, false);
+    FOR_RETS(i)
+    {
+        if (lua_isboolean(L, i))
+            result = CHECKVAL<bool>(L, i, false);
     }
     ENDCALL();
     return result;

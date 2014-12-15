@@ -45,6 +45,7 @@ private:
 class ElunaEventProcessor
 {
     friend class LuaEvent;
+    friend class EventMgr;
 
 public:
     typedef std::multimap<uint64, LuaEvent*> EventList;
@@ -54,7 +55,7 @@ public:
     ~ElunaEventProcessor();
 
     void Update(uint32 diff);
-    // instantly removes all timed events
+    // removes all timed events on next tick or at tick end
     void RemoveEvents();
     // set the event to be removed when executing
     void RemoveEvent(int eventId);
@@ -62,7 +63,9 @@ public:
     EventMap eventMap;
 
 private:
+    void RemoveEvents_internal();
     void AddEvent(LuaEvent* Event);
+    bool removeAllEvents;
     EventList eventList;
     uint64 m_time;
     WorldObject* obj;

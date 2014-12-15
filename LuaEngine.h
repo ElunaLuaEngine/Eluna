@@ -225,8 +225,8 @@ public:
     bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, Creature* pCreature, Quest const* pQuest, uint32 opt);
     uint32 GetDialogStatus(Player* pPlayer, Creature* pCreature);
-    void OnSummoned(Creature* creature, Unit* summoner);
 
+    bool OnSummoned(Creature* creature, Unit* summoner);
     bool UpdateAI(Creature* me, const uint32 diff);
     bool EnterCombat(Creature* me, Unit* target);
     bool DamageTaken(Creature* me, Unit* attacker, uint32& damage);

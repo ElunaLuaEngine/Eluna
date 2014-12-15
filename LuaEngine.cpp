@@ -248,6 +248,7 @@ void Eluna::GetScripts(std::string path)
         lua_requirepath +=
             path + "/?;" +
             path + "/?.lua;" +
+            path + "/?.ext;" +
             path + "/?.dll;" +
             path + "/?.so;";
 
@@ -290,6 +291,7 @@ void Eluna::GetScripts(std::string path)
     lua_requirepath +=
         path + "/?;" +
         path + "/?.lua;" +
+        path + "/?.ext;" +
         path + "/?.dll;" +
         path + "/?.so;";
 
@@ -373,7 +375,7 @@ void Eluna::RunScripts()
         lua_pop(L, 1);
         if (!luaL_loadfile(L, it->filepath.c_str()) && !lua_pcall(L, 0, 1, 0))
         {
-            if (!lua_toboolean(L, -1))
+            if (lua_isnoneornil(L, -1) || (lua_isboolean(L, -1) && !lua_toboolean(L, -1)))
             {
                 lua_pop(L, 1);
                 Push(L, true);

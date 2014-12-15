@@ -51,7 +51,7 @@ ElunaEventProcessor::ElunaEventProcessor(Eluna** _E, WorldObject* _obj) : m_time
 
 ElunaEventProcessor::~ElunaEventProcessor()
 {
-    RemoveEvents();
+    RemoveEvents_internal();
 
     if (obj)
     {
@@ -87,6 +87,12 @@ void ElunaEventProcessor::Update(uint32 diff)
 }
 
 void ElunaEventProcessor::RemoveEvents()
+{
+    for (EventList::iterator it = eventList.begin(); it != eventList.end(); ++it)
+        it->second->to_Abort = true;
+}
+
+void ElunaEventProcessor::RemoveEvents_internal()
 {
     //if (!final)
     //{
@@ -125,7 +131,13 @@ EventMgr::EventMgr(Eluna** _E) : globalProcessor(new ElunaEventProcessor(_E, NUL
 
 EventMgr::~EventMgr()
 {
-    RemoveEvents();
+    {
+        ReadGuard lock(GetLock());
+        if (!processors.empty())
+            for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
+                (*it)->RemoveEvents_internal();
+        globalProcessor->RemoveEvents_internal();
+    }
     delete globalProcessor;
     globalProcessor = NULL;
 }
