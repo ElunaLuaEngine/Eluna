@@ -2279,5 +2279,46 @@ namespace LuaGlobalFunctions
         Eluna::Push(E->L, ElunaUtil::GetTimeDiff(oldtimems));
         return 1;
     }
+
+    std::string GetStackAsString(Eluna* E)
+    {
+        std::ostringstream oss;
+        for (int i = 1; i <= lua_gettop(E->L); ++i)
+            oss << luaL_tolstring(E->L, i, NULL);
+        return oss.str();
+    }
+    
+    /**
+     * Prints given parameters to the info log
+     *
+     * @param ... variableArguments
+     */
+    int PrintInfo(Eluna* E)
+    {
+        ELUNA_LOG_INFO("%s", GetStackAsString(E).c_str());
+        return 0;
+    }
+
+    /**
+     * Prints given parameters to the error log
+     *
+     * @param ... variableArguments
+     */
+    int PrintError(Eluna* E)
+    {
+        ELUNA_LOG_ERROR("%s", GetStackAsString(E).c_str());
+        return 0;
+    }
+
+    /**
+     * Prints given parameters to the debug log
+     *
+     * @param ... variableArguments
+     */
+    int PrintDebug(Eluna* E)
+    {
+        ELUNA_LOG_DEBUG("%s", GetStackAsString(E).c_str());
+        return 0;
+    }
 }
 #endif

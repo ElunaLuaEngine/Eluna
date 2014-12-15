@@ -87,6 +87,9 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "GetMapById", &LuaGlobalFunctions::GetMapById },
     { "GetCurrTime", &LuaGlobalFunctions::GetCurrTime },
     { "GetTimeDiff", &LuaGlobalFunctions::GetTimeDiff },
+    { "PrintInfo", &LuaGlobalFunctions::PrintInfo },
+    { "PrintError", &LuaGlobalFunctions::PrintError },
+    { "PrintDebug", &LuaGlobalFunctions::PrintDebug },
 
     // Boolean
     { "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },
