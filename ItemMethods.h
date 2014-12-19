@@ -204,7 +204,7 @@ namespace LuaItem
                 //if (!test.empty())
                 //{
                 name += ' ';
-                name += suffix[(name != temp->Name1) ? locale : DEFAULT_LOCALE];
+                name += suffix[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
                 /*}*/
             }
         }

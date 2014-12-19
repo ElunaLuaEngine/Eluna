@@ -476,11 +476,11 @@ namespace LuaGlobalFunctions
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 3, LUA_TFUNCTION);
-        lua_pushvalue(L, 3);
         uint32 shots = Eluna::CHECKVAL<uint32>(L, 4, 0);
 
+        lua_pushvalue(L, 3);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (luaL_ref(L, LUA_REGISTRYINDEX) >= 0)
+        if (functionRef >= 0)
             E->Register(regtype, entry, ev, functionRef, shots);
         else
             luaL_argerror(L, 3, "unable to make a ref to function");
@@ -490,11 +490,11 @@ namespace LuaGlobalFunctions
     {
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
         luaL_checktype(L, 2, LUA_TFUNCTION);
-        lua_pushvalue(L, 2);
         uint32 shots = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
+        lua_pushvalue(L, 2);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (luaL_ref(L, LUA_REGISTRYINDEX) >= 0)
+        if (functionRef >= 0)
             E->Register(regtype, 0, ev, functionRef, shots);
         else
             luaL_argerror(L, 2, "unable to make a ref to function");
