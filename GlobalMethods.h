@@ -471,47 +471,33 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-    /**
-     * Registers a packet event
-     *
-     * <pre>
-     * enum PacketEvents
-     * {
-     *     PACKET_EVENT_ON_PACKET_RECEIVE          =     5,
-     *     PACKET_EVENT_ON_PACKET_RECEIVE_UNKNOWN  =     6,
-     *     PACKET_EVENT_ON_PACKET_SEND             =     7,
-     *
-     *     PACKET_EVENT_COUNT
-     * };
-     * </pre>
-     *
-     * @param uint32 entry : opcode
-     * @param uint32 event : packet event Id, refer to PacketEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param function function : function to register
-     */
-    int RegisterPacketEvent(Eluna* E, lua_State* L)
+    void RegisterEntryHelper(Eluna* E, lua_State* L, int regtype)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 shots;
-
-        if (lua_isfunction(L, 3)) // If the third argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 3);
-        }
-        else // Otherwise, shots is the third argument and the function must be the fourth.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 3);
-            luaL_checktype(L, 4, LUA_TFUNCTION);
-            lua_pushvalue(L, 4);
-        }
+        luaL_checktype(L, 3, LUA_TFUNCTION);
+        lua_pushvalue(L, 3);
+        uint32 shots = Eluna::CHECKVAL<uint32>(L, 4, 0);
 
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_PACKET, entry, ev, functionRef, shots);
-        return 0;
+        if (luaL_ref(L, LUA_REGISTRYINDEX) >= 0)
+            E->Register(regtype, entry, ev, functionRef, shots);
+        else
+            luaL_argerror(L, 3, "unable to make a ref to function");
+    }
+
+    void RegisterEventHelper(Eluna* E, lua_State* L, int regtype)
+    {
+        uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
+        luaL_checktype(L, 2, LUA_TFUNCTION);
+        lua_pushvalue(L, 2);
+        uint32 shots = Eluna::CHECKVAL<uint32>(L, 3, 0);
+
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
+        if (luaL_ref(L, LUA_REGISTRYINDEX) >= 0)
+            E->Register(regtype, 0, ev, functionRef, shots);
+        else
+            luaL_argerror(L, 2, "unable to make a ref to function");
     }
 
     /**
@@ -575,29 +561,12 @@ namespace LuaGlobalFunctions
      * </pre>
      *
      * @param uint32 event : server event Id, refer to ServerEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterServerEvent(Eluna* E, lua_State* L)
     {
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 shots;
-
-        if (lua_isfunction(L, 2)) // If the second argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 2);
-        }
-        else // Otherwise, shots is the second argument and the function must be the third.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 2);
-            luaL_checktype(L, 3, LUA_TFUNCTION);
-            lua_pushvalue(L, 3);
-        }
-
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_SERVER, 0, ev, functionRef, shots);
+        RegisterEventHelper(E, L, HookMgr::REGTYPE_SERVER);
         return 0;
     }
 
@@ -657,29 +626,12 @@ namespace LuaGlobalFunctions
      * </pre>
      *
      * @param uint32 event : [Player] event Id, refer to PlayerEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterPlayerEvent(Eluna* E, lua_State* L)
     {
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 shots;
-
-        if (lua_isfunction(L, 2)) // If the second argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 2);
-        }
-        else // Otherwise, shots is the second argument and the function must be the third.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 2);
-            luaL_checktype(L, 3, LUA_TFUNCTION);
-            lua_pushvalue(L, 3);
-        }
-
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_PLAYER, 0, ev, functionRef, shots);
+        RegisterEventHelper(E, L, HookMgr::REGTYPE_PLAYER);
         return 0;
     }
 
@@ -707,29 +659,12 @@ namespace LuaGlobalFunctions
      * </pre>
      *
      * @param uint32 event : [Guild] event Id, refer to GuildEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterGuildEvent(Eluna* E, lua_State* L)
     {
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 shots;
-
-        if (lua_isfunction(L, 2)) // If the second argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 2);
-        }
-        else // Otherwise, shots is the second argument and the function must be the third.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 2);
-            luaL_checktype(L, 3, LUA_TFUNCTION);
-            lua_pushvalue(L, 3);
-        }
-
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_GUILD, 0, ev, functionRef, shots);
+        RegisterEventHelper(E, L, HookMgr::REGTYPE_GUILD);
         return 0;
     }
 
@@ -752,29 +687,61 @@ namespace LuaGlobalFunctions
      * </pre>
      *
      * @param uint32 event : [Group] event Id, refer to GroupEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterGroupEvent(Eluna* E, lua_State* L)
     {
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 shots;
+        RegisterEventHelper(E, L, HookMgr::REGTYPE_GROUP);
+        return 0;
+    }
 
-        if (lua_isfunction(L, 2)) // If the second argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 2);
-        }
-        else // Otherwise, shots is the second argument and the function must be the third.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 2);
-            luaL_checktype(L, 3, LUA_TFUNCTION);
-            lua_pushvalue(L, 3);
-        }
+    /**
+     * Registers a [Battleground] event
+     *
+     * <pre>
+     * enum BGEvents
+     * {
+     *     BG_EVENT_ON_START                               = 1,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+     *     BG_EVENT_ON_END                                 = 2,    // (event, bg, bgId, instanceId, winner) - Needs to be added to TC
+     *     BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+     *     BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+     *     BG_EVENT_COUNT
+     * };
+     * </pre>
+     *
+     * @param uint32 event : [Battleground] event Id, refer to BGEvents above
+     * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+     */
+    int RegisterBGEvent(Eluna* E, lua_State* L)
+    {
+        RegisterEventHelper(E, L, HookMgr::REGTYPE_BG);
+        return 0;
+    }
 
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_GROUP, 0, ev, functionRef, shots);
+    /**
+     * Registers a packet event
+     *
+     * <pre>
+     * enum PacketEvents
+     * {
+     *     PACKET_EVENT_ON_PACKET_RECEIVE          =     5,
+     *     PACKET_EVENT_ON_PACKET_RECEIVE_UNKNOWN  =     6,
+     *     PACKET_EVENT_ON_PACKET_SEND             =     7,
+     *
+     *     PACKET_EVENT_COUNT
+     * };
+     * </pre>
+     *
+     * @param uint32 entry : opcode
+     * @param uint32 event : packet event Id, refer to PacketEvents above
+     * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+     */
+    int RegisterPacketEvent(Eluna* E, lua_State* L)
+    {
+        RegisterEntryHelper(E, L, HookMgr::REGTYPE_PACKET);
         return 0;
     }
 
@@ -792,30 +759,12 @@ namespace LuaGlobalFunctions
      *
      * @param uint32 menu_id : [Creature] entry Id
      * @param uint32 event : [Creature] gossip event Id, refer to GossipEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterCreatureGossipEvent(Eluna* E, lua_State* L)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 shots;
-
-        if (lua_isfunction(L, 3)) // If the third argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 3);
-        }
-        else // Otherwise, shots is the third argument and the function must be the fourth.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 3);
-            luaL_checktype(L, 4, LUA_TFUNCTION);
-            lua_pushvalue(L, 4);
-        }
-
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_CREATURE_GOSSIP, entry, ev, functionRef, shots);
+        RegisterEntryHelper(E, L, HookMgr::REGTYPE_CREATURE_GOSSIP);
         return 0;
     }
 
@@ -833,30 +782,12 @@ namespace LuaGlobalFunctions
      *
      * @param uint32 menu_id : [GameObject] entry Id
      * @param uint32 event : [GameObject] gossip event Id, refer to GossipEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterGameObjectGossipEvent(Eluna* E, lua_State* L)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 shots;
-
-        if (lua_isfunction(L, 3)) // If the third argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 3);
-        }
-        else // Otherwise, shots is the third argument and the function must be the fourth.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 3);
-            luaL_checktype(L, 4, LUA_TFUNCTION);
-            lua_pushvalue(L, 4);
-        }
-
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_GAMEOBJECT_GOSSIP, entry, ev, functionRef, shots);
+        RegisterEntryHelper(E, L, HookMgr::REGTYPE_GAMEOBJECT_GOSSIP);
         return 0;
     }
 
@@ -877,30 +808,12 @@ namespace LuaGlobalFunctions
      *
      * @param uint32 entry : [Item] entry Id
      * @param uint32 event : [Item] event Id, refer to ItemEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterItemEvent(Eluna* E, lua_State* L)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 shots;
-
-        if (lua_isfunction(L, 3)) // If the third argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 3);
-        }
-        else // Otherwise, shots is the third argument and the function must be the fourth.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 3);
-            luaL_checktype(L, 4, LUA_TFUNCTION);
-            lua_pushvalue(L, 4);
-        }
-
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_ITEM, entry, ev, functionRef, shots);
+        RegisterEntryHelper(E, L, HookMgr::REGTYPE_ITEM);
         return 0;
     }
 
@@ -918,30 +831,12 @@ namespace LuaGlobalFunctions
      *
      * @param uint32 entry : [Item] entry Id
      * @param uint32 event : [Item] gossip event Id, refer to GossipEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterItemGossipEvent(Eluna* E, lua_State* L)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 shots;
-
-        if (lua_isfunction(L, 3)) // If the third argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 3);
-        }
-        else // Otherwise, shots is the third argument and the function must be the fourth.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 3);
-            luaL_checktype(L, 4, LUA_TFUNCTION);
-            lua_pushvalue(L, 4);
-        }
-
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_ITEM_GOSSIP, entry, ev, functionRef, shots);
+        RegisterEntryHelper(E, L, HookMgr::REGTYPE_ITEM_GOSSIP);
         return 0;
     }
 
@@ -959,30 +854,12 @@ namespace LuaGlobalFunctions
      *
      * @param uint32 menu_id : [Player] gossip menu Id
      * @param uint32 event : [Player] gossip event Id, refer to GossipEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterPlayerGossipEvent(Eluna* E, lua_State* L)
     {
-        uint32 menu_id = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 shots;
-
-        if (lua_isfunction(L, 3)) // If the third argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 3);
-        }
-        else // Otherwise, shots is the third argument and the function must be the fourth.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 3);
-            luaL_checktype(L, 4, LUA_TFUNCTION);
-            lua_pushvalue(L, 4);
-        }
-
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_PLAYER_GOSSIP, menu_id, ev, functionRef, shots);
+        RegisterEntryHelper(E, L, HookMgr::REGTYPE_PLAYER_GOSSIP);
         return 0;
     }
 
@@ -1035,30 +912,12 @@ namespace LuaGlobalFunctions
      *
      * @param uint32 entry : [Creature] entry Id
      * @param uint32 event : [Creature] event Id, refer to CreatureEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterCreatureEvent(Eluna* E, lua_State* L)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 shots;
-
-        if (lua_isfunction(L, 3)) // If the third argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 3);
-        }
-        else // Otherwise, shots is the third argument and the function must be the fourth.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 3);
-            luaL_checktype(L, 4, LUA_TFUNCTION);
-            lua_pushvalue(L, 4);
-        }
-
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_CREATURE, entry, ev, functionRef, shots);
+        RegisterEntryHelper(E, L, HookMgr::REGTYPE_CREATURE);
         return 0;
     }
 
@@ -1087,71 +946,12 @@ namespace LuaGlobalFunctions
      *
      * @param uint32 entry : [GameObject] entry Id
      * @param uint32 event : [GameObject] event Id, refer to GameObjectEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterGameObjectEvent(Eluna* E, lua_State* L)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 shots;
-
-        if (lua_isfunction(L, 3)) // If the third argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 3);
-        }
-        else // Otherwise, shots is the third argument and the function must be the fourth.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 3);
-            luaL_checktype(L, 4, LUA_TFUNCTION);
-            lua_pushvalue(L, 4);
-        }
-
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_GAMEOBJECT, entry, ev, functionRef, shots);
-        return 0;
-    }
-
-    /**
-     * Registers a [Battleground] event
-     *
-     * <pre>
-     * enum BGEvents
-     * {
-     *     BG_EVENT_ON_START                               = 1,    // (event, bg, bgId, instanceId) - Needs to be added to TC
-     *     BG_EVENT_ON_END                                 = 2,    // (event, bg, bgId, instanceId, winner) - Needs to be added to TC
-     *     BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId) - Needs to be added to TC
-     *     BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId) - Needs to be added to TC
-     *     BG_EVENT_COUNT
-     * };
-     * </pre>
-     *
-     * @param uint32 event : [Battleground] event Id, refer to BGEvents above
-     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param function function : function to register
-     */
-    int RegisterBGEvent(Eluna* E, lua_State* L)
-    {
-        uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 shots;
-
-        if (lua_isfunction(L, 2)) // If the second argument is a function, set shots to 0 for backwards-compatibility.
-        {
-            shots = 0;
-            lua_pushvalue(L, 2);
-        }
-        else // Otherwise, shots is the second argument and the function must be the third.
-        {
-            shots = Eluna::CHECKVAL<uint32>(L, 2);
-            luaL_checktype(L, 3, LUA_TFUNCTION);
-            lua_pushvalue(L, 3);
-        }
-
-        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
-        if (functionRef > 0)
-            E->Register(HookMgr::REGTYPE_BG, 0, ev, functionRef, shots);
+        RegisterEntryHelper(E, L, HookMgr::REGTYPE_GAMEOBJECT);
         return 0;
     }
 
