@@ -30,7 +30,8 @@ public:
             functionReference(funcRef),
             isTemporary(shots != 0),
             remainingShots(shots)
-        {}
+        {
+        }
     };
     typedef std::vector<Binding> FunctionRefVector;
     typedef UNORDERED_MAP<int, FunctionRefVector> EventToFunctionsMap;
@@ -49,9 +50,6 @@ public:
 
     // unregisters all registered functions and clears all registered events from the bindings
     virtual void Clear() { };
-
-    // Updates the counters on all temporary bindings and erases them if the counter would reach 0.
-    virtual void UpdateTemporaryBindings() { };
 };
 
 template<typename T>
@@ -74,35 +72,29 @@ public:
         Bindings.clear();
     }
 
-    void UpdateTemporaryBindings() override
+    // Pushes the function references and updates the counters on the binds and erases them if the counter would reach 0
+    void PushFuncRefs(lua_State* L, int event_id)
     {
-        for (EventToFunctionsMap::iterator itr = Bindings.begin(); itr != Bindings.end();)
+        for (FunctionRefVector::iterator it = Bindings[event_id].begin(); it != Bindings[event_id].end();)
         {
-            for (FunctionRefVector::iterator it = itr->second.begin(); it != itr->second.end();)
-            {
-                Binding &b = (*it);
-                if (b.isTemporary && b.remainingShots == 0)
-                {
-                    luaL_unref(E.L, LUA_REGISTRYINDEX, b.functionReference);
-                    it = itr->second.erase(it);
-                }
-                else
-                {
-                    it++;
-                }
-            }
+            FunctionRefVector::iterator it_old = it++;
 
-            // If there are no more entries in the vector, erase the vector.
-            if (itr->second.empty())
+            lua_rawgeti(L, LUA_REGISTRYINDEX, (it_old->functionReference));
+
+            if (it_old->isTemporary)
             {
-                itr = Bindings.erase(itr);
-            }
-            else
-            {
-                itr++;
+                --it_old->remainingShots;
+                if (it_old->remainingShots == 0)
+                {
+                    luaL_unref(L, LUA_REGISTRYINDEX, it_old->functionReference);
+                    Bindings[event_id].erase(it_old);
+                }
             }
         }
-    }
+
+        if (Bindings[event_id].empty())
+            Bindings.erase(event_id);
+    };
 
     void Insert(int eventId, int funcRef, uint32 shots) // Inserts a new registered event
     {
@@ -148,48 +140,32 @@ public:
         Bindings.clear();
     }
 
-    void UpdateTemporaryBindings() override
+    // Pushes the function references and updates the counters on the binds and erases them if the counter would reach 0
+    void PushFuncRefs(lua_State* L, int event_id, uint32 entry)
     {
-        for (EntryToEventsMap::iterator itr = Bindings.begin(); itr != Bindings.end();)
+        for (FunctionRefVector::iterator it = Bindings[entry][event_id].begin(); it != Bindings[entry][event_id].end();)
         {
-            for (EventToFunctionsMap::iterator it = itr->second.begin(); it != itr->second.end();)
-            {
-                for (FunctionRefVector::iterator i = it->second.begin(); i != it->second.end();)
-                {
-                    Binding &b = (*i);
-                    if (b.isTemporary && b.remainingShots == 0)
-                    {
-                        luaL_unref(E.L, LUA_REGISTRYINDEX, b.functionReference);
-                        i = it->second.erase(i);
-                    }
-                    else
-                    {
-                        i++;
-                    }
-                }
+            FunctionRefVector::iterator it_old = it++;
 
-                // If there are no more entries in the vector, erase the vector.
-                if (it->second.empty())
-                {
-                    it = itr->second.erase(it);
-                }
-                else
-                {
-                    it++;
-                }
-            }
+            lua_rawgeti(L, LUA_REGISTRYINDEX, (it_old->functionReference));
 
-            // If there are no more vector in the map, erase the map.
-            if (itr->second.empty())
+            if (it_old->isTemporary)
             {
-                itr = Bindings.erase(itr);
-            }
-            else
-            {
-                itr++;
+                --it_old->remainingShots;
+                if (it_old->remainingShots == 0)
+                {
+                    luaL_unref(L, LUA_REGISTRYINDEX, it_old->functionReference);
+                    Bindings[entry][event_id].erase(it_old);
+                }
             }
         }
-    }
+
+        if (Bindings[entry][event_id].empty())
+            Bindings[entry].erase(event_id);
+
+        if (Bindings[entry].empty())
+            Bindings.erase(entry);
+    };
 
     void Insert(uint32 entryId, int eventId, int funcRef, uint32 shots) // Inserts a new registered event
     {
