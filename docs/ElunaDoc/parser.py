@@ -18,6 +18,8 @@ class ParameterDoc(object):
         'uint16': ('0', '65,535'),
         'int32': ('-2,147,483,647', '2,147,483,647'),
         'uint32': ('0', '4,294,967,295'),
+        'int64': ('-9,223,372,036,854,775,808', '9,223,372,036,854,775,807'),
+        'uint64': ('0', '18,446,744,073,709,551,615'),
     }
 
     @params(self=object, name=unicode, data_type=str, description=unicode, default_value=Nullable(unicode))
@@ -47,8 +49,8 @@ class ParameterDoc(object):
         elif self.data_type == 'bool':
             self.data_type = 'boolean'
 
-        elif self.data_type == 'uint64' or self.data_type == 'int64':
-            self.data_type = 'string'
+        elif self.data_type == 'int64' or self.data_type == 'uint64':
+            self.data_type = '[' + self.data_type + ']'
 
 
 class MethodDoc(object):
@@ -112,7 +114,7 @@ class ClassParser(object):
     # An extra optional space (\s?) was thrown in to make it different from `class_body_regex`.
 
     param_regex = re.compile(r"""\s*\*\s@param\s    # The @param tag starts with opt. whitespace followed by "* @param ".
-                                 ([\[\]\w]+)\s(\w+) # The data type, a space, and the name of the param.
+                                 ([^\s]+)\s(\w+) # The data type, a space, and the name of the param.
                                  (?:\s=\s(\w+))?    # The default value: a = surrounded by spaces, followed by text.
                                  (?:\s:\s(.+))?     # The description: a colon surrounded by spaces, followed by text.
                                  """, re.X)
@@ -183,11 +185,18 @@ class ClassParser(object):
             if parameters != '':
                 parameters = ' ' + parameters + ' '
 
-            if self.returned:
-                return_values = ', '.join([param.name for param in self.returned])
-                prototype = '{0} = {1}:{2}({3})'.format(return_values, self.class_name, self.method_name, parameters)
+            if self.class_name == 'Global':
+                if self.returned:
+                    return_values = ', '.join([param.name for param in self.returned])
+                    prototype = '{0} = {1}({2})'.format(return_values, self.method_name, parameters)
+                else:
+                    prototype = '{0}({1})'.format(self.method_name, parameters)
             else:
-                prototype = '{0}:{1}({2})'.format(self.class_name, self.method_name, parameters)
+                if self.returned:
+                    return_values = ', '.join([param.name for param in self.returned])
+                    prototype = '{0} = {1}:{2}({3})'.format(return_values, self.class_name, self.method_name, parameters)
+                else:
+                    prototype = '{0}:{1}({2})'.format(self.class_name, self.method_name, parameters)
 
             self.prototypes.append(prototype)
         else:

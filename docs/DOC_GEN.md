@@ -43,7 +43,10 @@ This is a template for a function that takes in different parameters. When defin
  *
  * @proto returnValue = (object)
  * @proto returnValue = (x, y, z)
- * @param Type paramName = defaultValue : parameter description
+ * @param [WorldObject] object = defaultValue : parameter description
+ * @param float x = defaultValue : parameter description
+ * @param float y = defaultValue : parameter description
+ * @param float z = defaultValue : parameter description
  * @return Type returnName : return value description
  */
 ```
