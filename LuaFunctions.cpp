@@ -127,6 +127,8 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "AddWeather", &LuaGlobalFunctions::AddWeather },
     { "RemoveWeather", &LuaGlobalFunctions::RemoveWeather },
     { "SendFineWeatherToPlayer", &LuaGlobalFunctions::SendFineWeatherToPlayer },
+    { "CreateInt64", &LuaGlobalFunctions::CreateLongLong },
+    { "CreateUint64", &LuaGlobalFunctions::CreateULongLong },
 
     { NULL, NULL },
 };
@@ -1266,38 +1268,46 @@ template<> int ElunaTemplate<Vehicle>::CollectGarbage(lua_State* L)
 #endif
 
 // Template by Mud from http://stackoverflow.com/questions/4484437/lua-integer-type/4485511#4485511
-template<> int ElunaTemplate<uint64>::Add(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) + Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
-template<> int ElunaTemplate<uint64>::Substract(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) - Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
-template<> int ElunaTemplate<uint64>::Multiply(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) * Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
-template<> int ElunaTemplate<uint64>::Divide(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) / Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
-template<> int ElunaTemplate<uint64>::Mod(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) % Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
-template<> int ElunaTemplate<uint64>::Pow(lua_State* L) { Eluna::Push(L, pow(Eluna::CHECKVAL<uint64>(L, 1), Eluna::CHECKVAL<uint64>(L, 2))); return 1; }
-// template<> int ElunaTemplate<uint64>::UnaryMinus(lua_State* L) { Eluna::Push(L, -Eluna::CHECKVAL<uint64>(L, 1)); return 1; }
-template<> int ElunaTemplate<uint64>::Equal(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) == Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
-template<> int ElunaTemplate<uint64>::Less(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) < Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
-template<> int ElunaTemplate<uint64>::LessOrEqual(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<uint64>(L, 1) <= Eluna::CHECKVAL<uint64>(L, 2)); return 1; }
-template<> int ElunaTemplate<uint64>::ToString(lua_State* L)
+template<> int ElunaTemplate<unsigned long long>::Add(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<unsigned long long>(L, 1) + Eluna::CHECKVAL<unsigned long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<unsigned long long>::Substract(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<unsigned long long>(L, 1) - Eluna::CHECKVAL<unsigned long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<unsigned long long>::Multiply(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<unsigned long long>(L, 1) * Eluna::CHECKVAL<unsigned long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<unsigned long long>::Divide(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<unsigned long long>(L, 1) / Eluna::CHECKVAL<unsigned long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<unsigned long long>::Mod(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<unsigned long long>(L, 1) % Eluna::CHECKVAL<unsigned long long>(L, 2)); return 1; }
+// template<> int ElunaTemplate<unsigned long long>::UnaryMinus(lua_State* L) { Eluna::Push(L, -Eluna::CHECKVAL<unsigned long long>(L, 1)); return 1; }
+template<> int ElunaTemplate<unsigned long long>::Equal(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<unsigned long long>(L, 1) == Eluna::CHECKVAL<unsigned long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<unsigned long long>::Less(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<unsigned long long>(L, 1) < Eluna::CHECKVAL<unsigned long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<unsigned long long>::LessOrEqual(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<unsigned long long>(L, 1) <= Eluna::CHECKVAL<unsigned long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<unsigned long long>::Pow(lua_State* L)
 {
-    uint64 l = Eluna::CHECKVAL<uint64>(L, 1);
+    Eluna::Push(L, static_cast<unsigned long long>(std::powl(static_cast<long double>(Eluna::CHECKVAL<unsigned long long>(L, 1)), static_cast<long double>(Eluna::CHECKVAL<unsigned long long>(L, 2)))));
+    return 1;
+}
+template<> int ElunaTemplate<unsigned long long>::ToString(lua_State* L)
+{
+    unsigned long long l = Eluna::CHECKVAL<unsigned long long>(L, 1);
     std::ostringstream ss;
     ss << l;
     Eluna::Push(L, ss.str());
     return 1;
 }
 
-template<> int ElunaTemplate<int64>::Add(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) + Eluna::CHECKVAL<int64>(L, 2)); return 1; }
-template<> int ElunaTemplate<int64>::Substract(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) - Eluna::CHECKVAL<int64>(L, 2)); return 1; }
-template<> int ElunaTemplate<int64>::Multiply(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) * Eluna::CHECKVAL<int64>(L, 2)); return 1; }
-template<> int ElunaTemplate<int64>::Divide(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) / Eluna::CHECKVAL<int64>(L, 2)); return 1; }
-template<> int ElunaTemplate<int64>::Mod(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) % Eluna::CHECKVAL<int64>(L, 2)); return 1; }
-template<> int ElunaTemplate<int64>::Pow(lua_State* L) { Eluna::Push(L, pow(Eluna::CHECKVAL<int64>(L, 1), Eluna::CHECKVAL<int64>(L, 2))); return 1; }
-template<> int ElunaTemplate<int64>::UnaryMinus(lua_State* L) { Eluna::Push(L, -Eluna::CHECKVAL<int64>(L, 1)); return 1; }
-template<> int ElunaTemplate<int64>::Equal(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) == Eluna::CHECKVAL<int64>(L, 2)); return 1; }
-template<> int ElunaTemplate<int64>::Less(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) < Eluna::CHECKVAL<int64>(L, 2)); return 1; }
-template<> int ElunaTemplate<int64>::LessOrEqual(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<int64>(L, 1) <= Eluna::CHECKVAL<int64>(L, 2)); return 1; }
-template<> int ElunaTemplate<int64>::ToString(lua_State* L)
+template<> int ElunaTemplate<long long>::Add(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<long long>(L, 1) + Eluna::CHECKVAL<long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<long long>::Substract(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<long long>(L, 1) - Eluna::CHECKVAL<long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<long long>::Multiply(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<long long>(L, 1) * Eluna::CHECKVAL<long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<long long>::Divide(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<long long>(L, 1) / Eluna::CHECKVAL<long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<long long>::Mod(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<long long>(L, 1) % Eluna::CHECKVAL<long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<long long>::UnaryMinus(lua_State* L) { Eluna::Push(L, -Eluna::CHECKVAL<long long>(L, 1)); return 1; }
+template<> int ElunaTemplate<long long>::Equal(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<long long>(L, 1) == Eluna::CHECKVAL<long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<long long>::Less(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<long long>(L, 1) < Eluna::CHECKVAL<long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<long long>::LessOrEqual(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<long long>(L, 1) <= Eluna::CHECKVAL<long long>(L, 2)); return 1; }
+template<> int ElunaTemplate<long long>::Pow(lua_State* L)
 {
-    int64 l = Eluna::CHECKVAL<int64>(L, 1);
+    Eluna::Push(L, static_cast<long long>(std::powl(static_cast<long double>(Eluna::CHECKVAL<long long>(L, 1)), static_cast<long double>(Eluna::CHECKVAL<long long>(L, 2)))));
+    return 1;
+}
+template<> int ElunaTemplate<long long>::ToString(lua_State* L)
+{
+    long long l = Eluna::CHECKVAL<long long>(L, 1);
     std::ostringstream ss;
     ss << l;
     Eluna::Push(L, ss.str());
@@ -1386,7 +1396,7 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery", true);
     ElunaTemplate<ElunaQuery>::SetMethods(E, QueryMethods);
 
-    ElunaTemplate<uint64>::Register(E, "uint64", true);
+    ElunaTemplate<long long>::Register(E, "long long", true);
 
-    ElunaTemplate<int64>::Register(E, "int64", true);
+    ElunaTemplate<unsigned long long>::Register(E, "unsigned long long", true);
 }

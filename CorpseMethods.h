@@ -31,7 +31,7 @@ namespace LuaCorpse
      */
     int GetGhostTime(Eluna* /*E*/, lua_State* L, Corpse* corpse)
     {
-        Eluna::Push(L, uint32(corpse->GetGhostTime()));
+        Eluna::Push(L, corpse->GetGhostTime());
         return 1;
     }
 

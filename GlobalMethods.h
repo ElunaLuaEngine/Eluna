@@ -113,11 +113,7 @@ namespace LuaGlobalFunctions
      */
     int GetGameTime(Eluna* /*E*/, lua_State* L)
     {
-        time_t time = eWorld->GetGameTime();
-        if (time < 0)
-            Eluna::Push(L, int32(time));
-        else
-            Eluna::Push(L, uint32(time));
+        Eluna::Push(L, eWorld->GetGameTime());
         return 1;
     }
 
@@ -1182,10 +1178,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes world database sql [Query] instantly and returns QueryResult object
+     * Executes an sql to your world database instantly and returns [ElunaQuery]
      *
-     * @param string query : sql [Query] to run
-     * @return QueryResult result
+     * @param string sql : sql to run
+     * @return [ElunaQuery] result
      */
     int WorldDBQuery(Eluna* /*E*/, lua_State* L)
     {
@@ -1208,9 +1204,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes a sql [Query] (not instantly) to your world database
+     * Executes an sql to your character database. The SQL is not ran instantly.
      *
-     * @param string query : sql [Query] to execute
+     * @param string sql : sql [ElunaQuery] to execute
      */
     int WorldDBExecute(Eluna* /*E*/, lua_State* L)
     {
@@ -1220,10 +1216,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes character database sql [Query] instantly and returns QueryResult object
+     * Executes an sql to your character database instantly and returns [ElunaQuery]
      *
-     * @param string query : sql [Query] to run
-     * @return [Query] result
+     * @param string sql : sql to run
+     * @return [ElunaQuery] result
      */
     int CharDBQuery(Eluna* /*E*/, lua_State* L)
     {
@@ -1246,9 +1242,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes a [Query] (not instantly) to your character database
+     * Executes an sql to your character database. The SQL is not ran instantly.
      *
-     * @param string query : sql [Query] to execute
+     * @param string sql : sql to run
      */
     int CharDBExecute(Eluna* /*E*/, lua_State* L)
     {
@@ -1258,10 +1254,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes auth database sql [Query] instantly and returns QueryResult object
+     * Executes an sql to your auth database instantly and returns [ElunaQuery]
      *
-     * @param string query : sql [Query] to run
-     * @return [Query] result
+     * @param string sql : sql to run
+     * @return [ElunaQuery] result
      */
     int AuthDBQuery(Eluna* /*E*/, lua_State* L)
     {
@@ -1284,9 +1280,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes a [Query] (not instantly ) to your auth database
+     * Executes an sql to your auth database. The SQL is not ran instantly.
      *
-     * @param string query : sql [Query] to execute
+     * @param string sql : sql to run
      */
     int AuthDBExecute(Eluna* /*E*/, lua_State* L)
     {
@@ -2492,6 +2488,64 @@ namespace LuaGlobalFunctions
     {
         ELUNA_LOG_DEBUG("%s", GetStackAsString(L).c_str());
         return 0;
+    }
+
+    /**
+     * Returns an object represeting long long.
+     * The value by default is 0, but can be initialized to a value by passing a number or long long as a string.
+     *
+     * @proto value = ()
+     * @proto value = (number)
+     * @proto value = (longlong)
+     * @proto value = (longlongstr)
+     * @param int32 number : regular lua number
+     * @param int64 longlong : a long long object
+     * @param string longlongstr : a long long as a string
+     * @return int64 value
+     */
+    int CreateLongLong(Eluna* /*E*/, lua_State* L)
+    {
+        long long init = 0;
+        if (lua_isstring(L, 1))
+        {
+            std::string str = Eluna::CHECKVAL<std::string>(L, 1);
+            if (sscanf(str.c_str(), SI64FMTD, &init) != 1)
+                return luaL_argerror(L, 1, "long long (as string) could not be converted");
+        }
+        else if (!lua_isnoneornil(L, 1))
+            init = Eluna::CHECKVAL<long long>(L, 1);
+
+        Eluna::Push(L, init);
+        return 1;
+    }
+
+    /**
+     * Returns an object represeting unsigned long long.
+     * The value by default is 0, but can be initialized to a value by passing a number or unsigned long long as a string.
+     *
+     * @proto value = ()
+     * @proto value = (number)
+     * @proto value = (ulonglong)
+     * @proto value = (ulonglongstr)
+     * @param uint32 number : regular lua number
+     * @param uint64 ulonglong : an unsigned long long object
+     * @param string ulonglongstr : an unsigned long long as a string
+     * @return uint64 value
+     */
+    int CreateULongLong(Eluna* /*E*/, lua_State* L)
+    {
+        unsigned long long init = 0;
+        if (lua_isstring(L, 1))
+        {
+            std::string str = Eluna::CHECKVAL<std::string>(L, 1);
+            if (sscanf(str.c_str(), UI64FMTD, &init) != 1)
+                return luaL_argerror(L, 1, "unsigned long long (as string) could not be converted");
+        }
+        else if (!lua_isnoneornil(L, 1))
+            init = Eluna::CHECKVAL<unsigned long long>(L, 1);
+
+        Eluna::Push(L, init);
+        return 1;
     }
 }
 #endif

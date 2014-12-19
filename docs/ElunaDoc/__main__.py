@@ -118,6 +118,7 @@ if __name__ == '__main__':
             'string': 'http://www.lua.org/pil/2.4.html',
             'table': 'http://www.lua.org/pil/2.5.html',
             'function': 'http://www.lua.org/pil/2.6.html',
+            '...': 'http://www.lua.org/pil/5.2.html',
         }
 
         def data_type_parser(content):
@@ -131,6 +132,8 @@ if __name__ == '__main__':
                 class_name = content[1:-1]
                 url = '{}{}/index.html'.format(('../' * level), class_name)
                 return '<strong><a class="mod" href="{}">{}</a></strong>'.format(url, class_name)
+
+            return content[1:-1]
 
         return link_parser, data_type_parser
 
