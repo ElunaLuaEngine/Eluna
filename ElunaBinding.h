@@ -20,6 +20,10 @@ extern "C"
 class ElunaBind
 {
 public:
+    typedef std::pair<int, uint32> FunctionRefCounterPair; // (function reference, remaining calls counter)
+    typedef std::vector<FunctionRefCounterPair> FunctionRefVector;
+    typedef UNORDERED_MAP<int, FunctionRefVector> EventToFunctionsMap;
+
     Eluna& E;
     const char* groupName;
 
@@ -34,15 +38,15 @@ public:
 
     // unregisters all registered functions and clears all registered events from the bindings
     virtual void Clear() { };
+
+    // Updates the counters on all temporary bindings and erases them if the counter would reach 0.
+    virtual void UpdateTemporaryBindings() { };
 };
 
 template<typename T>
 class EventBind : public ElunaBind
 {
 public:
-    typedef std::vector<int> ElunaBindingMap;
-    typedef std::map<int, ElunaBindingMap> ElunaEntryMap;
-
     EventBind(const char* bindGroupName, Eluna& _E) : ElunaBind(bindGroupName, _E)
     {
     }
@@ -50,30 +54,55 @@ public:
     // unregisters all registered functions and clears all registered events from the bind std::maps (reset)
     void Clear() override
     {
-        for (ElunaEntryMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
+        for (EventToFunctionsMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
         {
-            for (ElunaBindingMap::iterator it = itr->second.begin(); it != itr->second.end(); ++it)
-                luaL_unref(E.L, LUA_REGISTRYINDEX, (*it));
+            for (FunctionRefVector::iterator it = itr->second.begin(); it != itr->second.end(); ++it)
+                luaL_unref(E.L, LUA_REGISTRYINDEX, (*it).first);
             itr->second.clear();
         }
         Bindings.clear();
     }
 
-    void Insert(int eventId, int funcRef) // Inserts a new registered event
+    void UpdateTemporaryBindings() override
     {
-        Bindings[eventId].push_back(funcRef);
+        for (EventToFunctionsMap::iterator itr = Bindings.begin(); itr != Bindings.end();)
+        {
+            for (FunctionRefVector::iterator it = itr->second.begin(); it != itr->second.end();)
+            {
+                uint32 counter = (*it).second;
+
+                if (counter > 1)
+                {
+                    counter--;
+                    (*it).second = counter;
+                    it++;
+                }
+                else if (counter == 1)
+                {
+                    luaL_unref(E.L, LUA_REGISTRYINDEX, (*it).first);
+                    it = itr->second.erase(it);
+                }
+                else
+                {
+                    it++;
+                }
+            }
+
+            // If there are no more entries in the vector, erase the vector.
+            if (itr->second.empty())
+            {
+                itr = Bindings.erase(itr);
+            }
+            else
+            {
+                itr++;
+            }
+        }
     }
 
-    // Gets the binding std::map containing all registered events with the function refs for the entry
-    ElunaBindingMap* GetBindMap(T eventId)
+    void Insert(int eventId, int funcRef, uint32 shots) // Inserts a new registered event
     {
-        if (Bindings.empty())
-            return NULL;
-        ElunaEntryMap::iterator itr = Bindings.find(eventId);
-        if (itr == Bindings.end())
-            return NULL;
-
-        return &itr->second;
+        Bindings[eventId].push_back(std::make_pair(funcRef, shots));
     }
 
     // Checks if there are events for ID
@@ -86,16 +115,14 @@ public:
         return true;
     }
 
-    ElunaEntryMap Bindings; // Binding store Bindings[eventId] = {funcRef};
+    EventToFunctionsMap Bindings; // Binding store Bindings[eventId] = {(funcRef, counter)};
 };
 
 template<typename T>
 class EntryBind : public ElunaBind
 {
 public:
-    typedef std::vector<int> FunctionRefVector;
-    typedef std::map<int, FunctionRefVector> ElunaBindingMap;
-    typedef UNORDERED_MAP<uint32, ElunaBindingMap> ElunaEntryMap;
+    typedef UNORDERED_MAP<uint32, EventToFunctionsMap> EntryToEventsMap;
 
     EntryBind(const char* bindGroupName, Eluna& _E) : ElunaBind(bindGroupName, _E)
     {
@@ -104,12 +131,12 @@ public:
     // unregisters all registered functions and clears all registered events from the bindmap
     void Clear() override
     {
-        for (ElunaEntryMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
+        for (EntryToEventsMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
         {
-            for (ElunaBindingMap::iterator it = itr->second.begin(); it != itr->second.end(); ++it)
+            for (EventToFunctionsMap::iterator it = itr->second.begin(); it != itr->second.end(); ++it)
             {
                 for (FunctionRefVector::iterator i = it->second.begin(); i != it->second.end(); ++i)
-                    luaL_unref(E.L, LUA_REGISTRYINDEX, (*i));
+                    luaL_unref(E.L, LUA_REGISTRYINDEX, (*i).first);
                 it->second.clear();
             }
             itr->second.clear();
@@ -117,21 +144,58 @@ public:
         Bindings.clear();
     }
 
-    void Insert(uint32 entryId, int eventId, int funcRef) // Inserts a new registered event
+    void UpdateTemporaryBindings() override
     {
-        Bindings[entryId][eventId].push_back(funcRef);
+        for (EntryToEventsMap::iterator itr = Bindings.begin(); itr != Bindings.end();)
+        {
+            for (EventToFunctionsMap::iterator it = itr->second.begin(); it != itr->second.end();)
+            {
+                for (FunctionRefVector::iterator i = it->second.begin(); i != it->second.end();)
+                {
+                    uint32 counter = (*i).second;
+                    if (counter > 1)
+                    {
+                        counter--;
+                        (*i).second = counter;
+                        i++;
+                    }
+                    else if (counter == 1)
+                    {
+                        luaL_unref(E.L, LUA_REGISTRYINDEX, (*i).first);
+                        i = it->second.erase(i);
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+
+                // If there are no more entries in the vector, erase the vector.
+                if (it->second.empty())
+                {
+                    it = itr->second.erase(it);
+                }
+                else
+                {
+                    it++;
+                }
+            }
+
+            // If there are no more vector in the map, erase the map.
+            if (itr->second.empty())
+            {
+                itr = Bindings.erase(itr);
+            }
+            else
+            {
+                itr++;
+            }
+        }
     }
 
-    // Gets the binding std::map containing all registered events with the function refs for the entry
-    const ElunaBindingMap* GetBindMap(uint32 entryId) const
+    void Insert(uint32 entryId, int eventId, int funcRef, uint32 shots) // Inserts a new registered event
     {
-        if (Bindings.empty())
-            return NULL;
-        ElunaEntryMap::const_iterator itr = Bindings.find(entryId);
-        if (itr == Bindings.end())
-            return NULL;
-
-        return &itr->second;
+        Bindings[entryId][eventId].push_back(std::make_pair(funcRef, shots));
     }
 
     // Returns true if the entry has registered binds
@@ -140,14 +204,22 @@ public:
         if (Bindings.empty())
             return false;
 
-        ElunaEntryMap::const_iterator itr = Bindings.find(entryId);
+        EntryToEventsMap::const_iterator itr = Bindings.find(entryId);
         if (itr == Bindings.end())
             return false;
 
         return itr->second.find(eventId) != itr->second.end();
     }
 
-    ElunaEntryMap Bindings; // Binding store Bindings[entryId][eventId] = {funcRef};
+    bool HasEvents(uint32 entryId) const
+    {
+        if (Bindings.empty())
+            return false;
+
+        return Bindings.find(entryId) != Bindings.end();
+    }
+
+    EntryToEventsMap Bindings; // Binding store Bindings[entryId][eventId] = {(funcRef, counter)};
 };
 
 #endif

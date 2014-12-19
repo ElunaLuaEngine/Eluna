@@ -154,7 +154,7 @@ public:
 
     static void report(lua_State*);
     void ExecuteCall(int params, int res);
-    void Register(uint8 reg, uint32 id, uint32 evt, int func);
+    void Register(uint8 reg, uint32 id, uint32 evt, int func, uint32 shots);
     void RunScripts();
     void InvalidateObjects();
 

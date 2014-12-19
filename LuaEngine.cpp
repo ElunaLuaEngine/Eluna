@@ -749,14 +749,14 @@ ElunaObject* Eluna::CHECKTYPE(lua_State* L, int narg, const char* tname, bool er
 }
 
 // Saves the function reference ID given to the register type's store for given entry under the given event
-void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
+void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef, uint32 shots)
 {
     switch (regtype)
     {
         case HookMgr::REGTYPE_SERVER:
             if (evt < HookMgr::SERVER_EVENT_COUNT)
             {
-                ServerEventBindings->Insert(evt, functionRef);
+                ServerEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
@@ -764,7 +764,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         case HookMgr::REGTYPE_PLAYER:
             if (evt < HookMgr::PLAYER_EVENT_COUNT)
             {
-                PlayerEventBindings->Insert(evt, functionRef);
+                PlayerEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
@@ -772,7 +772,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         case HookMgr::REGTYPE_GUILD:
             if (evt < HookMgr::GUILD_EVENT_COUNT)
             {
-                GuildEventBindings->Insert(evt, functionRef);
+                GuildEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
@@ -780,7 +780,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         case HookMgr::REGTYPE_GROUP:
             if (evt < HookMgr::GROUP_EVENT_COUNT)
             {
-                GroupEventBindings->Insert(evt, functionRef);
+                GroupEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
@@ -788,7 +788,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         case HookMgr::REGTYPE_VEHICLE:
             if (evt < HookMgr::VEHICLE_EVENT_COUNT)
             {
-                VehicleEventBindings->Insert(evt, functionRef);
+                VehicleEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
@@ -796,7 +796,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         case HookMgr::REGTYPE_BG:
             if (evt < HookMgr::BG_EVENT_COUNT)
             {
-                BGEventBindings->Insert(evt, functionRef);
+                BGEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
@@ -811,7 +811,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
                     return;
                 }
 
-                PacketEventBindings->Insert(id, evt, functionRef);
+                PacketEventBindings->Insert(id, evt, functionRef, shots);
                 return;
             }
             break;
@@ -826,7 +826,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
                     return;
                 }
 
-                CreatureEventBindings->Insert(id, evt, functionRef);
+                CreatureEventBindings->Insert(id, evt, functionRef, shots);
                 return;
             }
             break;
@@ -841,7 +841,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
                     return;
                 }
 
-                CreatureGossipBindings->Insert(id, evt, functionRef);
+                CreatureGossipBindings->Insert(id, evt, functionRef, shots);
                 return;
             }
             break;
@@ -856,7 +856,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
                     return;
                 }
 
-                GameObjectEventBindings->Insert(id, evt, functionRef);
+                GameObjectEventBindings->Insert(id, evt, functionRef, shots);
                 return;
             }
             break;
@@ -871,7 +871,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
                     return;
                 }
 
-                GameObjectGossipBindings->Insert(id, evt, functionRef);
+                GameObjectGossipBindings->Insert(id, evt, functionRef, shots);
                 return;
             }
             break;
@@ -886,7 +886,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
                     return;
                 }
 
-                ItemEventBindings->Insert(id, evt, functionRef);
+                ItemEventBindings->Insert(id, evt, functionRef, shots);
                 return;
             }
             break;
@@ -901,7 +901,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
                     return;
                 }
 
-                ItemGossipBindings->Insert(id, evt, functionRef);
+                ItemGossipBindings->Insert(id, evt, functionRef, shots);
                 return;
             }
             break;
@@ -909,7 +909,7 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef)
         case HookMgr::REGTYPE_PLAYER_GOSSIP:
             if (evt < HookMgr::GOSSIP_EVENT_COUNT)
             {
-                playerGossipBindings->Insert(id, evt, functionRef);
+                playerGossipBindings->Insert(id, evt, functionRef, shots);
                 return;
             }
             break;

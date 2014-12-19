@@ -47,11 +47,12 @@ using namespace HookMgr;
     if (!BINDMAP->HasEvents(EVENT)) \
         RET; \
     lua_State* L = this->L; \
+    ElunaBind* _LuaBind = this->BINDMAP; \
     const char* _LuaBindType = this->BINDMAP->groupName; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
     for (size_t i = 0; i < this->BINDMAP->Bindings[_LuaEvent].size(); ++i) \
-        lua_rawgeti(L, LUA_REGISTRYINDEX, (this->BINDMAP->Bindings[_LuaEvent][i])); \
+        lua_rawgeti(L, LUA_REGISTRYINDEX, (this->BINDMAP->Bindings[_LuaEvent][i].first)); \
     int _LuaFuncTop = lua_gettop(L); \
     int _LuaFuncCount = _LuaFuncTop-_LuaStackTop; \
     Eluna::Push(L, _LuaEvent);
@@ -81,11 +82,12 @@ using namespace HookMgr;
     if (!BINDMAP->HasEvents(ENTRY, EVENT)) \
         RET; \
     lua_State* L = this->L; \
-    const char* _LuaBindType = this->BINDMAP->groupName; \
+    ElunaBind* _LuaBind = this->BINDMAP; \
+    const char* _LuaBindType = _LuaBind->groupName; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
     for (size_t i = 0; i < this->BINDMAP->Bindings[ENTRY][_LuaEvent].size(); ++i) \
-        lua_rawgeti(L, LUA_REGISTRYINDEX, (this->BINDMAP->Bindings[ENTRY][_LuaEvent][i])); \
+        lua_rawgeti(L, LUA_REGISTRYINDEX, (this->BINDMAP->Bindings[ENTRY][_LuaEvent][i].first)); \
     int _LuaFuncTop = lua_gettop(L); \
     int _LuaFuncCount = _LuaFuncTop-_LuaStackTop; \
     Eluna::Push(L, _LuaEvent);
@@ -121,6 +123,7 @@ using namespace HookMgr;
         ELUNA_LOG_ERROR("[Eluna]: Ending event %u for %s, stack top was %i and was supposed to be between %i and %i. Report to devs", _LuaEvent, _LuaBindType, lua_gettop(L), _LuaStackTop, _LuaStackTop + _LuaFuncCount * _LuaReturnValues); \
     } \
     lua_settop(L, _LuaStackTop); \
+    _LuaBind->UpdateTemporaryBindings(); \
     if (!this->event_level) \
         this->InvalidateObjects(); // Invalidate objects on outermost hook call
 
@@ -2204,7 +2207,7 @@ void Eluna::OnRemoveFromWorld(GameObject* gameobject)
 
 CreatureAI* Eluna::GetAI(Creature* creature)
 {
-    if (!CreatureEventBindings->GetBindMap(creature->GetEntry()))
+    if (!CreatureEventBindings->HasEvents(creature->GetEntry()))
         return NULL;
     return new ElunaCreatureAI(creature);
 }
