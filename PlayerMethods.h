@@ -1567,7 +1567,7 @@ namespace LuaPlayer
     int DurabilityRepairAll(Eluna* /*E*/, lua_State* L, Player* player)
     {
         bool cost = Eluna::CHECKVAL<bool>(L, 2, true);
-        float discountMod = Eluna::CHECKVAL<float>(L, 3);
+        float discountMod = Eluna::CHECKVAL<float>(L, 3, 1.0f);
         bool guildBank = Eluna::CHECKVAL<bool>(L, 4, false);
 
 #ifdef CLASSIC
