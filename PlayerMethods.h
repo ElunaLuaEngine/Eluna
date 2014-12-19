@@ -1317,7 +1317,7 @@ namespace LuaPlayer
 
     /* OTHER */
 #if (!defined(TBC) && !defined(CLASSIC))
-    int ResetPetTalents(Eluna* /*E*/, lua_State* L, Player* player)
+    int ResetPetTalents(Eluna* /*E*/, lua_State* /*L*/, Player* player)
     {
 #ifndef TRINITY
         Pet* pet = player->GetPet();
@@ -1331,7 +1331,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int ResetAchievements(Eluna* /*E*/, lua_State* L, Player* player)
+    int ResetAchievements(Eluna* /*E*/, lua_State* /*L*/, Player* player)
     {
 #ifndef TRINITY
         player->GetAchievementMgr().Reset();

@@ -1279,7 +1279,7 @@ template<> int ElunaTemplate<unsigned long long>::Less(lua_State* L) { Eluna::Pu
 template<> int ElunaTemplate<unsigned long long>::LessOrEqual(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<unsigned long long>(L, 1) <= Eluna::CHECKVAL<unsigned long long>(L, 2)); return 1; }
 template<> int ElunaTemplate<unsigned long long>::Pow(lua_State* L)
 {
-    Eluna::Push(L, static_cast<unsigned long long>(std::powl(static_cast<long double>(Eluna::CHECKVAL<unsigned long long>(L, 1)), static_cast<long double>(Eluna::CHECKVAL<unsigned long long>(L, 2)))));
+    Eluna::Push(L, static_cast<unsigned long long>(powl(static_cast<long double>(Eluna::CHECKVAL<unsigned long long>(L, 1)), static_cast<long double>(Eluna::CHECKVAL<unsigned long long>(L, 2)))));
     return 1;
 }
 template<> int ElunaTemplate<unsigned long long>::ToString(lua_State* L)
@@ -1302,7 +1302,7 @@ template<> int ElunaTemplate<long long>::Less(lua_State* L) { Eluna::Push(L, Elu
 template<> int ElunaTemplate<long long>::LessOrEqual(lua_State* L) { Eluna::Push(L, Eluna::CHECKVAL<long long>(L, 1) <= Eluna::CHECKVAL<long long>(L, 2)); return 1; }
 template<> int ElunaTemplate<long long>::Pow(lua_State* L)
 {
-    Eluna::Push(L, static_cast<long long>(std::powl(static_cast<long double>(Eluna::CHECKVAL<long long>(L, 1)), static_cast<long double>(Eluna::CHECKVAL<long long>(L, 2)))));
+    Eluna::Push(L, static_cast<long long>(powl(static_cast<long double>(Eluna::CHECKVAL<long long>(L, 1)), static_cast<long double>(Eluna::CHECKVAL<long long>(L, 2)))));
     return 1;
 }
 template<> int ElunaTemplate<long long>::ToString(lua_State* L)
