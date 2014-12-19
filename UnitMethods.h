@@ -1212,7 +1212,7 @@ namespace LuaUnit
     }*/
 
     /* OTHER */
-    int ClearThreatList(Eluna* /*E*/, lua_State* L, Unit* unit)
+    int ClearThreatList(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
 #ifdef MANGOS
         unit->GetThreatManager().clearReferences();
@@ -1230,7 +1230,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int Dismount(Eluna* /*E*/, lua_State* L, Unit* unit)
+    int Dismount(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         if (unit->IsMounted())
         {
@@ -1293,7 +1293,7 @@ namespace LuaUnit
     //     unit->GetMotionMaster()->Clear(); // all
     // }
 
-    int MoveStop(Eluna* /*E*/, lua_State* L, Unit* unit)
+    int MoveStop(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->StopMoving();
         return 0;
@@ -1313,7 +1313,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int MoveIdle(Eluna* /*E*/, lua_State* L, Unit* unit)
+    int MoveIdle(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->GetMotionMaster()->MoveIdle();
         return 0;
@@ -1332,7 +1332,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int MoveHome(Eluna* /*E*/, lua_State* L, Unit* unit)
+    int MoveHome(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->GetMotionMaster()->MoveTargetedHome();
         return 0;
@@ -1356,7 +1356,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int MoveConfused(Eluna* /*E*/, lua_State* L, Unit* unit)
+    int MoveConfused(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->GetMotionMaster()->MoveConfused();
         return 0;
@@ -1450,7 +1450,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int DeMorph(Eluna* /*E*/, lua_State* L, Unit* unit)
+    int DeMorph(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->DeMorph();
         return 0;
@@ -1511,7 +1511,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int ClearInCombat(Eluna* /*E*/, lua_State* L, Unit* unit)
+    int ClearInCombat(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->ClearInCombat();
         return 0;
@@ -1591,7 +1591,7 @@ namespace LuaUnit
         return 0;
     }
 
-    int RemoveAllAuras(Eluna* /*E*/, lua_State* L, Unit* unit)
+    int RemoveAllAuras(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->RemoveAllAuras();
         return 0;

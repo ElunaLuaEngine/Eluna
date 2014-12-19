@@ -2010,7 +2010,7 @@ namespace LuaGlobalFunctions
      * Removes old [Corpse]s from the world
      *
      */
-    int RemoveOldCorpses(Eluna* /*E*/, lua_State* L)
+    int RemoveOldCorpses(Eluna* /*E*/, lua_State* /*L*/)
     {
         eObjectAccessor->RemoveOldCorpses();
         return 0;

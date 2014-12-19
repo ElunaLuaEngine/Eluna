@@ -678,7 +678,7 @@ template<> Object* Eluna::CHECKOBJ<Object>(lua_State* L, int narg, bool error)
     if (!obj)
         obj = CHECKOBJ<Item>(L, narg, false);
     if (!obj)
-        obj = ElunaTemplate<Object>::Check(L, narg, false);
+        obj = ElunaTemplate<Object>::Check(L, narg, error);
     return obj;
 }
 template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* L, int narg, bool error)
@@ -689,7 +689,7 @@ template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* L, int narg, boo
     if (!obj)
         obj = CHECKOBJ<Corpse>(L, narg, false);
     if (!obj)
-        obj = ElunaTemplate<WorldObject>::Check(L, narg, false);
+        obj = ElunaTemplate<WorldObject>::Check(L, narg, error);
     return obj;
 }
 template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error)
@@ -698,7 +698,7 @@ template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error)
     if (!obj)
         obj = CHECKOBJ<Creature>(L, narg, false);
     if (!obj)
-        obj = ElunaTemplate<Unit>::Check(L, narg, false);
+        obj = ElunaTemplate<Unit>::Check(L, narg, error);
     return obj;
 }
 

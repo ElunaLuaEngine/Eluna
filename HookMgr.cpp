@@ -47,7 +47,6 @@ using namespace HookMgr;
     if (!BINDMAP->HasEvents(EVENT)) \
         RET; \
     lua_State* L = this->L; \
-    ElunaBind* _LuaBind = this->BINDMAP; \
     const char* _LuaBindType = this->BINDMAP->groupName; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
@@ -81,8 +80,7 @@ using namespace HookMgr;
     if (!BINDMAP->HasEvents(ENTRY, EVENT)) \
         RET; \
     lua_State* L = this->L; \
-    ElunaBind* _LuaBind = this->BINDMAP; \
-    const char* _LuaBindType = _LuaBind->groupName; \
+    const char* _LuaBindType = this->BINDMAP->groupName; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
     this->BINDMAP->PushFuncRefs(L, _LuaEvent, ENTRY); \
