@@ -57,7 +57,9 @@ void Eluna::Initialize()
     ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", lua_folderpath.c_str());
     lua_requirepath = "";
     GetScripts(lua_folderpath);
-    lua_requirepath.erase(lua_requirepath.end() - 1);
+    // Erase last ;
+    if (!lua_requirepath.empty())
+        lua_requirepath.erase(lua_requirepath.end() - 1);
 
     ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size() + lua_extensions.size()), ElunaUtil::GetTimeDiff(oldMSTime));
 
