@@ -880,6 +880,7 @@ namespace LuaUnit
         return 1;
     }
 
+#ifdef MANGOS
     /**
      * Returns the current movement type for this [Unit].
      *
@@ -908,7 +909,6 @@ namespace LuaUnit
      *
      * @return MovementGeneratorType movementType
      */
-#ifdef MANGOS
     int GetMovementType(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         Eluna::Push(L, unit->GetMotionMaster()->GetCurrentMovementGeneratorType());
