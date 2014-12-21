@@ -160,15 +160,17 @@ public:
 
     // Pushes
     static void Push(lua_State* L); // nil
-    static void Push(lua_State* L, const uint64);
-    static void Push(lua_State* L, const int64);
-    static void Push(lua_State* L, const uint32);
-    static void Push(lua_State* L, const int32);
+    static void Push(lua_State* L, const long long);
+    static void Push(lua_State* L, const unsigned long long);
+    static void Push(lua_State* L, const long);
+    static void Push(lua_State* L, const unsigned long);
+    static void Push(lua_State* L, const int);
+    static void Push(lua_State* L, const unsigned int);
     static void Push(lua_State* L, const bool);
     static void Push(lua_State* L, const float);
     static void Push(lua_State* L, const double);
+    static void Push(lua_State* L, const std::string&);
     static void Push(lua_State* L, const char*);
-    static void Push(lua_State* L, const std::string);
     template<typename T> static void Push(lua_State* L, T const* ptr)
     {
         ElunaTemplate<T>::Push(L, ptr);

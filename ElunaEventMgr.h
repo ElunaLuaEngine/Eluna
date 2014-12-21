@@ -65,7 +65,6 @@ public:
 private:
     void RemoveEvents_internal();
     void AddEvent(LuaEvent* Event);
-    bool removeAllEvents;
     EventList eventList;
     uint64 m_time;
     WorldObject* obj;

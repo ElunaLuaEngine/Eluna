@@ -653,7 +653,7 @@ namespace LuaWorldObject
      * Removes all timed events from a [WorldObject]
      *
      */
-    int RemoveEvents(Eluna* /*E*/, lua_State* L, WorldObject* obj)
+    int RemoveEvents(Eluna* /*E*/, lua_State* /*L*/, WorldObject* obj)
     {
         obj->elunaEvents->RemoveEvents();
         return 0;

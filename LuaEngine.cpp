@@ -450,29 +450,29 @@ void Eluna::Push(lua_State* L)
 {
     lua_pushnil(L);
 }
-void Eluna::Push(lua_State* L, const uint64 l)
+void Eluna::Push(lua_State* L, const long long l)
 {
-    ElunaTemplate<uint64>::Push(L, new uint64(l));
+    ElunaTemplate<long long>::Push(L, new long long(l));
 }
-void Eluna::Push(lua_State* L, const int64 l)
+void Eluna::Push(lua_State* L, const unsigned long long l)
 {
-    ElunaTemplate<int64>::Push(L, new int64(l));
+    ElunaTemplate<unsigned long long>::Push(L, new unsigned long long(l));
 }
-//void Eluna::Push(lua_State* L, const time_t l)
-//{
-//    ElunaTemplate<uint64>::Push(L, new uint64(l));
-//}
-//void Eluna::Push(lua_State* L, const size_t l)
-//{
-//    ElunaTemplate<int64>::Push(L, new int64(l));
-//}
-void Eluna::Push(lua_State* L, const uint32 u)
+void Eluna::Push(lua_State* L, const long l)
 {
-    lua_pushunsigned(L, u);
+    Push(L, static_cast<long long>(l));
 }
-void Eluna::Push(lua_State* L, const int32 i)
+void Eluna::Push(lua_State* L, const unsigned long l)
+{
+    Push(L, static_cast<unsigned long long>(l));
+}
+void Eluna::Push(lua_State* L, const int i)
 {
     lua_pushinteger(L, i);
+}
+void Eluna::Push(lua_State* L, const unsigned int u)
+{
+    lua_pushunsigned(L, u);
 }
 void Eluna::Push(lua_State* L, const double d)
 {
@@ -486,7 +486,7 @@ void Eluna::Push(lua_State* L, const bool b)
 {
     lua_pushboolean(L, b);
 }
-void Eluna::Push(lua_State* L, const std::string str)
+void Eluna::Push(lua_State* L, const std::string& str)
 {
     lua_pushstring(L, str.c_str());
 }
@@ -572,29 +572,29 @@ void Eluna::Push(lua_State* L, Object const* obj)
     }
 }
 
-static int32 CheckIntegerRange(lua_State* L, int narg, int32 min, int32 max)
+static int CheckIntegerRange(lua_State* L, int narg, int min, int max)
 {
-    int64 value = static_cast<int64>(luaL_checknumber(L, narg));
+    double value = luaL_checknumber(L, narg);
     char error_buffer[64];
 
     if (value > max)
     {
-        snprintf(error_buffer, 64, "value must be less than or equal to %d", max);
+        snprintf(error_buffer, 64, "value must be less than or equal to %i", max);
         return luaL_argerror(L, narg, error_buffer);
     }
 
     if (value < min)
     {
-        snprintf(error_buffer, 64, "value must be greater than or equal to %d", min);
+        snprintf(error_buffer, 64, "value must be greater than or equal to %i", min);
         return luaL_argerror(L, narg, error_buffer);
     }
 
-    return static_cast<int32>(value);
+    return static_cast<int>(value);
 }
 
-static uint32 CheckUnsignedRange(lua_State* L, int narg, uint32 max)
+static unsigned int CheckUnsignedRange(lua_State* L, int narg, unsigned int max)
 {
-    int64 value = static_cast<int64>(luaL_checknumber(L, narg));
+    double value = luaL_checknumber(L, narg);
     char error_buffer[64];
 
     if (value < 0)
@@ -606,7 +606,7 @@ static uint32 CheckUnsignedRange(lua_State* L, int narg, uint32 max)
         return luaL_argerror(L, narg, error_buffer);
     }
 
-    return static_cast<uint32>(value);
+    return static_cast<unsigned int>(value);
 }
 
 template<> bool Eluna::CHECKVAL<bool>(lua_State* L, int narg)
@@ -621,27 +621,27 @@ template<> double Eluna::CHECKVAL<double>(lua_State* L, int narg)
 {
     return luaL_checknumber(L, narg);
 }
-template<> int8 Eluna::CHECKVAL<int8>(lua_State* L, int narg)
+template<> signed char Eluna::CHECKVAL<signed char>(lua_State* L, int narg)
 {
     return CheckIntegerRange(L, narg, SCHAR_MIN, SCHAR_MAX);
 }
-template<> uint8 Eluna::CHECKVAL<uint8>(lua_State* L, int narg)
+template<> unsigned char Eluna::CHECKVAL<unsigned char>(lua_State* L, int narg)
 {
     return CheckUnsignedRange(L, narg, UCHAR_MAX);
 }
-template<> int16 Eluna::CHECKVAL<int16>(lua_State* L, int narg)
+template<> short Eluna::CHECKVAL<short>(lua_State* L, int narg)
 {
     return CheckIntegerRange(L, narg, SHRT_MIN, SHRT_MAX);
 }
-template<> uint16 Eluna::CHECKVAL<uint16>(lua_State* L, int narg)
+template<> unsigned short Eluna::CHECKVAL<unsigned short>(lua_State* L, int narg)
 {
     return CheckUnsignedRange(L, narg, USHRT_MAX);
 }
-template<> int32 Eluna::CHECKVAL<int32>(lua_State* L, int narg)
+template<> int Eluna::CHECKVAL<int>(lua_State* L, int narg)
 {
     return CheckIntegerRange(L, narg, INT_MIN, INT_MAX);
 }
-template<> uint32 Eluna::CHECKVAL<uint32>(lua_State* L, int narg)
+template<> unsigned int Eluna::CHECKVAL<unsigned int>(lua_State* L, int narg)
 {
     return CheckUnsignedRange(L, narg, UINT_MAX);
 }
@@ -653,30 +653,26 @@ template<> std::string Eluna::CHECKVAL<std::string>(lua_State* L, int narg)
 {
     return luaL_checkstring(L, narg);
 }
-template<> int64 Eluna::CHECKVAL<int64>(lua_State* L, int narg)
+template<> long long Eluna::CHECKVAL<long long>(lua_State* L, int narg)
 {
     if (lua_isnumber(L, narg))
-        return static_cast<int64>(CHECKVAL<double>(L, narg));
-    return *(Eluna::CHECKOBJ<int64>(L, narg, true));
+        return static_cast<long long>(CHECKVAL<double>(L, narg));
+    return *(Eluna::CHECKOBJ<long long>(L, narg, true));
 }
-template<> uint64 Eluna::CHECKVAL<uint64>(lua_State* L, int narg)
+template<> unsigned long long Eluna::CHECKVAL<unsigned long long>(lua_State* L, int narg)
 {
     if (lua_isnumber(L, narg))
-        return static_cast<uint64>(CHECKVAL<uint32>(L, narg));
-    return *(Eluna::CHECKOBJ<uint64>(L, narg, true));
+        return static_cast<unsigned long long>(CHECKVAL<uint32>(L, narg));
+    return *(Eluna::CHECKOBJ<unsigned long long>(L, narg, true));
 }
-//template<> time_t Eluna::CHECKVAL<time_t>(lua_State* L, int narg)
-//{
-//    if (lua_isnumber(L, narg))
-//        return static_cast<time_t>(CHECKVAL<double>(L, narg));
-//    return static_cast<time_t>(*(Eluna::CHECKOBJ<int64>(L, narg, true)));
-//}
-//template<> size_t Eluna::CHECKVAL<size_t>(lua_State* L, int narg)
-//{
-//    if (lua_isnumber(L, narg))
-//        return static_cast<size_t>(CHECKVAL<uint32>(L, narg));
-//    return static_cast<size_t>(*(Eluna::CHECKOBJ<uint64>(L, narg, true)));
-//}
+template<> long Eluna::CHECKVAL<long>(lua_State* L, int narg)
+{
+    return static_cast<long>(CHECKVAL<long long>(L, narg));
+}
+template<> unsigned long Eluna::CHECKVAL<unsigned long>(lua_State* L, int narg)
+{
+    return static_cast<unsigned long>(CHECKVAL<unsigned long long>(L, narg));
+}
 
 template<> Object* Eluna::CHECKOBJ<Object>(lua_State* L, int narg, bool error)
 {
@@ -684,7 +680,7 @@ template<> Object* Eluna::CHECKOBJ<Object>(lua_State* L, int narg, bool error)
     if (!obj)
         obj = CHECKOBJ<Item>(L, narg, false);
     if (!obj)
-        obj = ElunaTemplate<Object>::Check(L, narg, false);
+        obj = ElunaTemplate<Object>::Check(L, narg, error);
     return obj;
 }
 template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* L, int narg, bool error)
@@ -695,7 +691,7 @@ template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* L, int narg, boo
     if (!obj)
         obj = CHECKOBJ<Corpse>(L, narg, false);
     if (!obj)
-        obj = ElunaTemplate<WorldObject>::Check(L, narg, false);
+        obj = ElunaTemplate<WorldObject>::Check(L, narg, error);
     return obj;
 }
 template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error)
@@ -704,7 +700,7 @@ template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error)
     if (!obj)
         obj = CHECKOBJ<Creature>(L, narg, false);
     if (!obj)
-        obj = ElunaTemplate<Unit>::Check(L, narg, false);
+        obj = ElunaTemplate<Unit>::Check(L, narg, error);
     return obj;
 }
 

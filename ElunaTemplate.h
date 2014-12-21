@@ -425,19 +425,21 @@ public:
         return 1;
     }
 
-    static int Add(lua_State* L) { return 0; }
-    static int Substract(lua_State* L) { return 0; }
-    static int Multiply(lua_State* L) { return 0; }
-    static int Divide(lua_State* L) { return 0; }
-    static int Mod(lua_State* L) { return 0; }
-    static int Pow(lua_State* L) { return 0; }
-    static int UnaryMinus(lua_State* L) { return 0; }
-    static int Concat(lua_State* L) { return 0; }
-    static int Length(lua_State* L) { return 0; }
-    static int Equal(lua_State* L) { return 0; }
-    static int Less(lua_State* L) { return 0; }
-    static int LessOrEqual(lua_State* L) { return 0; }
-    static int Call(lua_State* L) { return 0; }
+    static int ArithmeticError(lua_State* L) { return luaL_error(L, "attempt to perform arithmetic on a %s value", tname); }
+    static int CompareError(lua_State* L) { return luaL_error(L, "attempt to compare %s", tname); }
+    static int Add(lua_State* L) { return ArithmeticError(L); }
+    static int Substract(lua_State* L) { return ArithmeticError(L); }
+    static int Multiply(lua_State* L) { return ArithmeticError(L); }
+    static int Divide(lua_State* L) { return ArithmeticError(L); }
+    static int Mod(lua_State* L) { return ArithmeticError(L); }
+    static int Pow(lua_State* L) { return ArithmeticError(L); }
+    static int UnaryMinus(lua_State* L) { return ArithmeticError(L); }
+    static int Concat(lua_State* L) { return luaL_error(L, "attempt to concatenate a %s value", tname); }
+    static int Length(lua_State* L) { return luaL_error(L, "attempt to get length of a %s value", tname); }
+    static int Equal(lua_State* L) { Eluna::Push(L, Eluna::CHECKOBJ<T>(L, 1) == Eluna::CHECKOBJ<T>(L, 2)); return 1; }
+    static int Less(lua_State* L) { return CompareError(L); }
+    static int LessOrEqual(lua_State* L) { return CompareError(L); }
+    static int Call(lua_State* L) { return luaL_error(L, "attempt to call a %s value", tname); }
 };
 //
 //template<typename T> const char* ElunaTemplate<T>::tname;
