@@ -265,6 +265,9 @@ ElunaRegister<Unit> UnitMethods[] =
     { "GetVehicleKit", &LuaUnit::GetVehicleKit },                         // :GetVehicleKit() - Gets unit's Vehicle kit if the unit is a vehicle
     // {"GetVehicle", &LuaUnit::GetVehicle},                            // :GetVehicle() - Gets the Vehicle kit of the vehicle the unit is on
 #endif
+#ifdef MANGOS
+    { "GetMovementType", &LuaUnit::GetMovementType },
+#endif
 
     // Setters
     { "SetFaction", &LuaUnit::SetFaction },                   // :SetFaction(factionId) - Sets the unit's faction
