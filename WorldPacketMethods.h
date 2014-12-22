@@ -7,6 +7,15 @@
 #ifndef WORLDPACKETMETHODS_H
 #define WORLDPACKETMETHODS_H
 
+/***
+ * A packet used to pass messages between the server and a client.
+ *
+ * Each packet has an opcode that determines the type of message being sent,
+ *   e.g. if a CMSG_LOGOUT_REQUEST packet is sent to the server,
+ *   the client has sent a message that its [Player] wants to logout.
+ *
+ * The packet can contain further data, the format of which depends on the opcode.
+ */
 namespace LuaPacket
 {
     /**
@@ -23,7 +32,7 @@ namespace LuaPacket
     /**
      * Returns the size of the [WorldPacket].
      *
-     * @return uint32 size : size of [WorldPacket]
+     * @return uint32 size
      */
     int GetSize(Eluna* /*E*/, lua_State* L, WorldPacket* packet)
     {
@@ -32,9 +41,9 @@ namespace LuaPacket
     }
 
     /**
-     * Sets the opcode of the [WorldPacket] by specifying an opcode.
+     * Sets the opcode of the [WorldPacket] to the specified opcode.
      *
-     * @param uint32 opcode : the opcode specified to be set for the [WorldPacket]
+     * @param uint32 opcode : see Opcodes.h for all known opcodes
      */
     int SetOpcode(Eluna* /*E*/, lua_State* L, WorldPacket* packet)
     {
@@ -46,7 +55,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads and returns an int8 value from the [WorldPacket].
+     * Reads and returns a signed 8-bit integer value from the [WorldPacket].
      *
      * @return int8 value
      */
@@ -59,7 +68,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads and returns a uint8 value from the [WorldPacket].
+     * Reads and returns an unsigned 8-bit integer value from the [WorldPacket].
      *
      * @return uint8 value
      */
@@ -72,7 +81,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads and returns an int16 value from the [WorldPacket].
+     * Reads and returns a signed 16-bit integer value from the [WorldPacket].
      *
      * @return int16 value
      */
@@ -85,7 +94,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads and returns a uint16 value from the [WorldPacket].
+     * Reads and returns an unsigned 16-bit integer value from the [WorldPacket].
      *
      * @return uint16 value
      */
@@ -98,7 +107,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads and returns an int32 value from the [WorldPacket].
+     * Reads and returns a signed 32-bit integer value from the [WorldPacket].
      *
      * @return int32 value
      */
@@ -111,7 +120,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads and returns a uint32 value from the [WorldPacket].
+     * Reads and returns an unsigned 32-bit integer value from the [WorldPacket].
      *
      * @return uint32 value
      */
@@ -124,7 +133,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads and returns a float value from the [WorldPacket].
+     * Reads and returns a single-precision floating-point value from the [WorldPacket].
      *
      * @return float value
      */
@@ -137,7 +146,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads and returns a double value from the [WorldPacket].
+     * Reads and returns a double-precision floating-point value from the [WorldPacket].
      *
      * @return double value
      */
@@ -150,7 +159,7 @@ namespace LuaPacket
     }
 
     /**
-     * Reads and returns a uint64 value from the [WorldPacket].
+     * Reads and returns an unsigned 64-bit integer value from the [WorldPacket].
      *
      * @return uint64 value : value returned as string
      */
@@ -176,7 +185,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes an uint64 value to the [WorldPacket].
+     * Writes an unsigned 64-bit integer value to the [WorldPacket].
      *
      * @param uint64 value : the value to be written to the [WorldPacket]
      */
@@ -200,7 +209,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes an int8 value to the [WorldPacket].
+     * Writes a signed 8-bit integer value to the [WorldPacket].
      *
      * @param int8 value : the int8 value to be written to the [WorldPacket]
      */
@@ -212,7 +221,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes an uint8 value to the [WorldPacket].
+     * Writes an unsigned 8-bit integer value to the [WorldPacket].
      *
      * @param uint8 value : the uint8 value to be written to the [WorldPacket]
      */
@@ -224,7 +233,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes an int16 value to the [WorldPacket].
+     * Writes a signed 16-bit integer value to the [WorldPacket].
      *
      * @param int16 value : the int16 value to be written to the [WorldPacket]
      */
@@ -236,7 +245,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes an uint16 value to the [WorldPacket].
+     * Writes an unsigned 16-bit integer value to the [WorldPacket].
      *
      * @param uint16 value : the uint16 value to be written to the [WorldPacket]
      */
@@ -248,7 +257,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes an int32 value to the [WorldPacket].
+     * Writes a signed 32-bit integer value to the [WorldPacket].
      *
      * @param int32 value : the int32 value to be written to the [WorldPacket]
      */
@@ -260,7 +269,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes an uint32 value to the [WorldPacket].
+     * Writes an unsigned 32-bit integer value to the [WorldPacket].
      *
      * @param uint32 value : the uint32 value to be written to the [WorldPacket]
      */
@@ -272,7 +281,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes a float value to the [WorldPacket].
+     * Writes a 32-bit floating-point value to the [WorldPacket].
      *
      * @param float value : the float value to be written to the [WorldPacket]
      */
@@ -284,7 +293,7 @@ namespace LuaPacket
     }
 
     /**
-     * Writes a double value to the [WorldPacket].
+     * Writes a 64-bit floating-point value to the [WorldPacket].
      *
      * @param double value : the double value to be written to the [WorldPacket]
      */
