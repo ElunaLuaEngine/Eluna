@@ -7,10 +7,15 @@
 #ifndef GLOBALMETHODS_H
 #define GLOBALMETHODS_H
 
+/***
+ * These functions can be used anywhere at any time, including at start-up.
+ */
 namespace LuaGlobalFunctions
 {
     /**
-     * Returns lua engine name. Currently `ElunaEngine`
+     * Returns Lua engine's name.
+     *
+     * Always returns "ElunaEngine" on Eluna.
      *
      * @return string engineName
      */
@@ -21,8 +26,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns emulator / core name.
-     * For example `MaNGOS`, `cMaNGOS` or `TrinityCore`
+     * Returns emulator's name.
+     *
+     * The result will be either `MaNGOS`, `cMaNGOS`, or `TrinityCore`.
      *
      * @return string coreName
      */
@@ -35,9 +41,8 @@ namespace LuaGlobalFunctions
     /**
      * Returns emulator version
      *
-     * * For TrinityCore returns for example `2014-08-13 17:27:22 +0300`
-     * * For cMaNGOS returns for example `12708`
-     * * For MaNGOS returns for example `20002`
+     * - For TrinityCore returns the date of the last revision, e.g. `2014-08-13 17:27:22 +0300`
+     * - For cMaNGOS/MaNGOS returns the revision number, e.g. `12708`
      *
      * @return string version
      */
@@ -48,9 +53,11 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns emulator expansion. Expansion is 0 for classic, 1 for TBC, 2 for WOTLK and 3 for cataclysm
+     * Returns emulator's supported expansion.
      *
-     * @return int32 version : emulator expansion ID
+     * Expansion is 0 for pre-TBC, 1 for TBC, 2 for WotLK, and 3 for Cataclysm.
+     *
+     * @return int32 expansion
      */
     int GetCoreExpansion(Eluna* /*E*/, lua_State* L)
     {
@@ -120,14 +127,12 @@ namespace LuaGlobalFunctions
     /**
      * Returns a table with all the current [Player]s in the world
      *
-     * <pre>
-     * enum TeamId
-     * {
-     *     TEAM_ALLIANCE = 0,
-     *     TEAM_HORDE = 1,
-     *     TEAM_NEUTRAL = 2
-     * };
-     * </pre>
+     *     enum TeamId
+     *     {
+     *         TEAM_ALLIANCE = 0,
+     *         TEAM_HORDE = 1,
+     *         TEAM_NEUTRAL = 2
+     *     };
      *
      * @param [TeamId] team = TEAM_NEUTRAL : optional check team of the [Player], Alliance, Horde or Neutral (All)
      * @param bool onlyGM = false : optional check if GM only
@@ -168,14 +173,12 @@ namespace LuaGlobalFunctions
     /**
      * Returns a table with all the current [Player]s in a map
      *
-     * <pre>
-     * enum TeamId
-     * {
-     *     TEAM_ALLIANCE = 0,
-     *     TEAM_HORDE = 1,
-     *     TEAM_NEUTRAL = 2
-     * };
-     * </pre>
+     *     enum TeamId
+     *     {
+     *         TEAM_ALLIANCE = 0,
+     *         TEAM_HORDE = 1,
+     *         TEAM_NEUTRAL = 2
+     *     };
      *
      * @param uint32 mapId : the [Map] entry ID
      * @param uint32 instanceId : the instance ID to search in the map
@@ -220,10 +223,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns [Guild] by name
+     * Returns a [Guild] by name.
      *
-     * @param string name : the name of a guild
-     * @return [Guild] guild
+     * @param string name
+     * @return [Guild] guild : the Guild, or `nil` if it doesn't exist
      */
     int GetGuildByName(Eluna* /*E*/, lua_State* L)
     {
@@ -233,16 +236,16 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns [Map] by ID
+     * Returns a [Map] by ID.
      *
-     * @param uint32 mapId : the [Map] ID
-     * @param uint32 instanceId : instance ID to search, use 0 if not instance
-     * @return [Map] map
+     * @param uint32 mapId : see [Map.dbc](https://github.com/cmangos/issues/wiki/Map.dbc)
+     * @param uint32 instanceId = 0 : required if the map is an instance, otherwise don't pass anything
+     * @return [Map] map : the Map, or `nil` if it doesn't exist
      */
     int GetMapById(Eluna* /*E*/, lua_State* L)
     {
         uint32 mapid = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 instance = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 instance = Eluna::CHECKVAL<uint32>(L, 2, 0);
 
         Eluna::Push(L, eMapMgr->FindMap(mapid, instance));
         return 1;
@@ -252,7 +255,7 @@ namespace LuaGlobalFunctions
      * Returns [Guild] by the leader's GUID
      *
      * @param uint64 guid : the guid of a [Guild] leader
-     * @return [Guild] guild
+     * @return [Guild] guild, or `nil` if it doesn't exist
      */
     int GetGuildByLeaderGUID(Eluna* /*E*/, lua_State* L)
     {
@@ -263,7 +266,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the amount of [Player]s in the world
+     * Returns the amount of [Player]s in the world.
      *
      * @return uint32 count
      */
@@ -274,8 +277,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns a [Player]'s GUID
+     * Builds a [Player]'s GUID
+     *
      * [Player] GUID consist of low GUID and type ID
+     *
      * [Player] and [Creature] for example can have the same low GUID but not GUID.
      *
      * @param uint32 lowguid : low GUID of the [Player]
@@ -289,7 +294,8 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns an [Item]'s GUID
+     * Builds an [Item]'s GUID.
+     *
      * [Item] GUID consist of low GUID and type ID
      * [Player] and [Item] for example can have the same low GUID but not GUID.
      *
@@ -304,9 +310,11 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns a [GameObject]'s GUID
-     * [GameObject] GUID consist of entry ID, low GUID and type ID
-     * [Player] and [GameObject] for example can have the same low GUID but not GUID.
+     * Builds a [GameObject]'s GUID.
+     *
+     * A GameObject's GUID consist of entry ID, low GUID and type ID
+     *
+     * A [Player] and GameObject for example can have the same low GUID but not GUID.
      *
      * @param uint32 lowguid : low GUID of the [GameObject]
      * @param uint32 entry : entry ID of the [GameObject]
@@ -321,8 +329,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns a [Creature]'s GUID.
+     * Builds a [Creature]'s GUID.
+     *
      * [Creature] GUID consist of entry ID, low GUID and type ID
+     *
      * [Player] and [Creature] for example can have the same low GUID but not GUID.
      *
      * @param uint32 lowguid : low GUID of the [Creature]
@@ -339,9 +349,13 @@ namespace LuaGlobalFunctions
 
     /**
      * Returns the low GUID from a GUID.
+     *
      * Low GUID is an ID to distinct the objects of the same type.
+     * Creatures in instances are also assigned new GUIDs when the Map is created.
+     *
      * [Player] and [Creature] for example can have the same low GUID but not GUID.
-     * GUID consist of entry ID, low GUID and type ID
+     *
+     * A GUID consists of a low GUID, type ID, and possibly an entry ID depending on the type ID.
      *
      * @param uint64 guid : GUID of an [Object]
      * @return uint32 lowguid : low GUID of the [Object]
@@ -355,22 +369,20 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns an item chat link for given entry
+     * Returns an chat link for an [Item].
      *
-     * <pre>
-     * enum LocaleConstant
-     * {
-     *     LOCALE_enUS = 0,
-     *     LOCALE_koKR = 1,
-     *     LOCALE_frFR = 2,
-     *     LOCALE_deDE = 3,
-     *     LOCALE_zhCN = 4,
-     *     LOCALE_zhTW = 5,
-     *     LOCALE_esES = 6,
-     *     LOCALE_esMX = 7,
-     *     LOCALE_ruRU = 8
-     * };
-     * </pre>
+     *     enum LocaleConstant
+     *     {
+     *         LOCALE_enUS = 0,
+     *         LOCALE_koKR = 1,
+     *         LOCALE_frFR = 2,
+     *         LOCALE_deDE = 3,
+     *         LOCALE_zhCN = 4,
+     *         LOCALE_zhTW = 5,
+     *         LOCALE_esES = 6,
+     *         LOCALE_esMX = 7,
+     *         LOCALE_ruRU = 8
+     *     };
      *
      * @param uint32 entry : entry ID of an [Item]
      * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the [Item] name in
@@ -405,8 +417,10 @@ namespace LuaGlobalFunctions
 
     /**
      * Returns the type ID from a GUID.
-     * Type ID is different for each type ([Player], [Creature], [GameObject]...)
-     * GUID consist of entry ID, low GUID and type ID
+     *
+     * Type ID is different for each type ([Player], [Creature], [GameObject], etc.).
+     *
+     * GUID consist of entry ID, low GUID, and type ID.
      *
      * @param uint64 guid : GUID of an [Object]
      * @return uint32 typeId : type ID of the [Object]
@@ -420,12 +434,11 @@ namespace LuaGlobalFunctions
 
     /**
      * Returns the entry ID from a GUID.
-     * Entry ID is different for each [Creature] and [GameObject].
-     * [Item] GUIDs dont include the entry
-     * GUID consist of entry ID, low GUID and type ID
      *
-     * @param uint64 guid : GUID of an [Creature] or [GameObject], otherwise returns 0
-     * @return uint32 entry : entry ID of the [Creature] or [GameObject]
+     * GUID consist of entry ID, low GUID, and type ID.
+     *
+     * @param uint64 guid : GUID of an [Creature] or [GameObject]
+     * @return uint32 entry : entry ID, or `0` if `guid` is not a [Creature] or [GameObject]
      */
     int GetGUIDEntry(Eluna* /*E*/, lua_State* L)
     {
@@ -435,22 +448,20 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the area's or zone's name
+     * Returns the area or zone's name.
      *
-     * <pre>
-     * enum LocaleConstant
-     * {
-     *     LOCALE_enUS = 0,
-     *     LOCALE_koKR = 1,
-     *     LOCALE_frFR = 2,
-     *     LOCALE_deDE = 3,
-     *     LOCALE_zhCN = 4,
-     *     LOCALE_zhTW = 5,
-     *     LOCALE_esES = 6,
-     *     LOCALE_esMX = 7,
-     *     LOCALE_ruRU = 8
-     * };
-     * </pre>
+     *     enum LocaleConstant
+     *     {
+     *         LOCALE_enUS = 0,
+     *         LOCALE_koKR = 1,
+     *         LOCALE_frFR = 2,
+     *         LOCALE_deDE = 3,
+     *         LOCALE_zhCN = 4,
+     *         LOCALE_zhTW = 5,
+     *         LOCALE_esES = 6,
+     *         LOCALE_esMX = 7,
+     *         LOCALE_ruRU = 8
+     *     };
      *
      * @param uint32 areaOrZoneId : area ID or zone ID
      * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the name in
@@ -471,7 +482,7 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-    void RegisterEntryHelper(Eluna* E, lua_State* L, int regtype)
+    static void RegisterEntryHelper(Eluna* E, lua_State* L, int regtype)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
@@ -486,7 +497,7 @@ namespace LuaGlobalFunctions
             luaL_argerror(L, 3, "unable to make a ref to function");
     }
 
-    void RegisterEventHelper(Eluna* E, lua_State* L, int regtype)
+    static void RegisterEventHelper(Eluna* E, lua_State* L, int regtype)
     {
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
         luaL_checktype(L, 2, LUA_TFUNCTION);
@@ -501,67 +512,65 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a server event
+     * Registers a server event handler.
      *
-     * <pre>
-     * enum ServerEvents
-     * {
-     *     // Server
-     *     SERVER_EVENT_ON_NETWORK_START           =     1,       // Not Implemented
-     *     SERVER_EVENT_ON_NETWORK_STOP            =     2,       // Not Implemented
-     *     SERVER_EVENT_ON_SOCKET_OPEN             =     3,       // Not Implemented
-     *     SERVER_EVENT_ON_SOCKET_CLOSE            =     4,       // Not Implemented
-     *     SERVER_EVENT_ON_PACKET_RECEIVE          =     5,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
-     *     SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN  =     6,       // Not Implemented
-     *     SERVER_EVENT_ON_PACKET_SEND             =     7,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
+     *     enum ServerEvents
+     *     {
+     *         // Server
+     *         SERVER_EVENT_ON_NETWORK_START           =     1,       // Not Implemented
+     *         SERVER_EVENT_ON_NETWORK_STOP            =     2,       // Not Implemented
+     *         SERVER_EVENT_ON_SOCKET_OPEN             =     3,       // Not Implemented
+     *         SERVER_EVENT_ON_SOCKET_CLOSE            =     4,       // Not Implemented
+     *         SERVER_EVENT_ON_PACKET_RECEIVE          =     5,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
+     *         SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN  =     6,       // Not Implemented
+     *         SERVER_EVENT_ON_PACKET_SEND             =     7,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
      *
-     *     // World
-     *     WORLD_EVENT_ON_OPEN_STATE_CHANGE        =     8,        // (event, open) - Needs core support on Mangos
-     *     WORLD_EVENT_ON_CONFIG_LOAD              =     9,        // (event, reload)
-     *     // UNUSED                               =     10,
-     *     WORLD_EVENT_ON_SHUTDOWN_INIT            =     11,       // (event, code, mask)
-     *     WORLD_EVENT_ON_SHUTDOWN_CANCEL          =     12,       // (event)
-     *     WORLD_EVENT_ON_UPDATE                   =     13,       // (event, diff)
-     *     WORLD_EVENT_ON_STARTUP                  =     14,       // (event)
-     *     WORLD_EVENT_ON_SHUTDOWN                 =     15,       // (event)
+     *         // World
+     *         WORLD_EVENT_ON_OPEN_STATE_CHANGE        =     8,        // (event, open) - Needs core support on Mangos
+     *         WORLD_EVENT_ON_CONFIG_LOAD              =     9,        // (event, reload)
+     *         // UNUSED                               =     10,
+     *         WORLD_EVENT_ON_SHUTDOWN_INIT            =     11,       // (event, code, mask)
+     *         WORLD_EVENT_ON_SHUTDOWN_CANCEL          =     12,       // (event)
+     *         WORLD_EVENT_ON_UPDATE                   =     13,       // (event, diff)
+     *         WORLD_EVENT_ON_STARTUP                  =     14,       // (event)
+     *         WORLD_EVENT_ON_SHUTDOWN                 =     15,       // (event)
      *
-     *     // Eluna
-     *     ELUNA_EVENT_ON_LUA_STATE_CLOSE          =     16,       // (event) - triggers just before shutting down eluna (on shutdown and restart)
-     *     ELUNA_EVENT_ON_LUA_STATE_OPEN           =     33,       // (event) - triggers after all scripts are loaded
+     *         // Eluna
+     *         ELUNA_EVENT_ON_LUA_STATE_CLOSE          =     16,       // (event) - triggers just before shutting down eluna (on shutdown and restart)
+     *         ELUNA_EVENT_ON_LUA_STATE_OPEN           =     33,       // (event) - triggers after all scripts are loaded
      *
-     *     // Map
-     *     MAP_EVENT_ON_CREATE                     =     17,       // (event, map)
-     *     MAP_EVENT_ON_DESTROY                    =     18,       // (event, map)
-     *     MAP_EVENT_ON_GRID_LOAD                  =     19,       // Not Implemented
-     *     MAP_EVENT_ON_GRID_UNLOAD                =     20,       // Not Implemented
-     *     MAP_EVENT_ON_PLAYER_ENTER               =     21,       // (event, map, player)
-     *     MAP_EVENT_ON_PLAYER_LEAVE               =     22,       // (event, map, player)
-     *     MAP_EVENT_ON_UPDATE                     =     23,       // (event, map, diff)
+     *         // Map
+     *         MAP_EVENT_ON_CREATE                     =     17,       // (event, map)
+     *         MAP_EVENT_ON_DESTROY                    =     18,       // (event, map)
+     *         MAP_EVENT_ON_GRID_LOAD                  =     19,       // Not Implemented
+     *         MAP_EVENT_ON_GRID_UNLOAD                =     20,       // Not Implemented
+     *         MAP_EVENT_ON_PLAYER_ENTER               =     21,       // (event, map, player)
+     *         MAP_EVENT_ON_PLAYER_LEAVE               =     22,       // (event, map, player)
+     *         MAP_EVENT_ON_UPDATE                     =     23,       // (event, map, diff)
      *
-     *     // Area trigger
-     *     TRIGGER_EVENT_ON_TRIGGER                =     24,       // (event, player, triggerId)
+     *         // Area trigger
+     *         TRIGGER_EVENT_ON_TRIGGER                =     24,       // (event, player, triggerId)
      *
-     *     // Weather
-     *     WEATHER_EVENT_ON_CHANGE                 =     25,       // (event, weather, state, grade)
+     *         // Weather
+     *         WEATHER_EVENT_ON_CHANGE                 =     25,       // (event, weather, state, grade)
      *
-     *     // Auction house
-     *     AUCTION_EVENT_ON_ADD                    =     26,       // (event, AHObject)
-     *     AUCTION_EVENT_ON_REMOVE                 =     27,       // (event, AHObject)
-     *     AUCTION_EVENT_ON_SUCCESSFUL             =     28,       // (event, AHObject) // Not Implemented
-     *     AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, AHObject) // Not Implemented
+     *         // Auction house
+     *         AUCTION_EVENT_ON_ADD                    =     26,       // (event, AHObject)
+     *         AUCTION_EVENT_ON_REMOVE                 =     27,       // (event, AHObject)
+     *         AUCTION_EVENT_ON_SUCCESSFUL             =     28,       // (event, AHObject) // Not Implemented
+     *         AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, AHObject) // Not Implemented
      *
-     *     // AddOns
-     *     ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel
+     *         // AddOns
+     *         ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel
      *
-     *     WORLD_EVENT_ON_DELETE_CREATURE          =     31,       // (event, creature)
-     *     WORLD_EVENT_ON_DELETE_GAMEOBJECT        =     32,       // (event, gameobject)
+     *         WORLD_EVENT_ON_DELETE_CREATURE          =     31,       // (event, creature)
+     *         WORLD_EVENT_ON_DELETE_GAMEOBJECT        =     32,       // (event, gameobject)
      *
-     *     SERVER_EVENT_COUNT
-     * };
-     * </pre>
+     *         SERVER_EVENT_COUNT
+     *     };
      *
-     * @param uint32 event : server event Id, refer to ServerEvents above
-     * @param function function : function to register
+     * @param uint32 event : server event ID, refer to ServerEvents above
+     * @param function function : function that will be called when the event occurs
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterServerEvent(Eluna* E, lua_State* L)
@@ -571,7 +580,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a [Player] event
+     * Registers a [Player] event handler.
      *
      * <pre>
      * enum PlayerEvents
@@ -636,7 +645,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a [Guild] event
+     * Registers a [Guild] event handler.
      *
      * <pre>
      * enum GuildEvents
@@ -669,7 +678,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a [Group] event
+     * Registers a [Group] event handler.
      *
      * <pre>
      * enum GroupEvents
@@ -697,7 +706,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a [Battleground] event
+     * Registers a [BattleGround] event handler.
      *
      * <pre>
      * enum BGEvents
@@ -721,7 +730,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a packet event
+     * Registers a [WorldPacket] event handler.
      *
      * <pre>
      * enum PacketEvents
@@ -746,7 +755,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a [Creature] gossip event
+     * Registers a [Creature] gossip event handler.
      *
      * <pre>
      * enum GossipEvents
@@ -769,7 +778,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a [GameObject] gossip event
+     * Registers a [GameObject] gossip event handler.
      *
      * <pre>
      * enum GossipEvents
@@ -792,7 +801,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers an [Item] event
+     * Registers an [Item] event handler.
      *
      * <pre>
      * enum ItemEvents
@@ -818,7 +827,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers an [Item] gossip event
+     * Registers an [Item] gossip event handler.
      *
      * <pre>
      * enum GossipEvents
@@ -841,7 +850,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a [Player] gossip event
+     * Registers a [Player] gossip event handler.
      *
      * <pre>
      * enum GossipEvents
@@ -864,7 +873,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a [Creature] event
+     * Registers a [Creature] event handler.
      *
      * <pre>
      * enum CreatureEvents
@@ -922,7 +931,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a [GameObject] event
+     * Registers a [GameObject] event handler.
      *
      * <pre>
      * enum GameObjectEvents
@@ -956,8 +965,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Reloads the Lua Engine
-     *
+     * Reloads the Lua engine.
      */
     int ReloadEluna(Eluna* /*E*/, lua_State* /*L*/)
     {
@@ -966,7 +974,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Sends a message to the world
+     * Sends a message to all [Player]s online.
      *
      * @param string message : message to send
      */
@@ -978,10 +986,13 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes an sql to your world database instantly and returns [ElunaQuery]
+     * Executes a SQL query on the world database and returns an [ElunaQuery].
      *
-     * @param string sql : sql to run
-     * @return [ElunaQuery] result
+     * The query is always executed synchronously
+     *   (i.e. when this function returns the query has already been executed).
+     *
+     * @param string sql : query to execute
+     * @return [ElunaQuery] results
      */
     int WorldDBQuery(Eluna* /*E*/, lua_State* L)
     {
@@ -1004,9 +1015,15 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes an sql to your character database. The SQL is not ran instantly.
+     * Executes a SQL query on the world database.
      *
-     * @param string sql : sql [ElunaQuery] to execute
+     * The query may be executed *asynchronously* (at a later, unpredictable time).
+     * If you need to execute the query synchronously, use [Global:WorldDBQuery] instead.
+     *
+     * Any results produced are ignored.
+     * If you need results from the query, use [Global:WorldDBQuery] instead.
+     *
+     * @param string sql : query to execute
      */
     int WorldDBExecute(Eluna* /*E*/, lua_State* L)
     {
@@ -1016,10 +1033,13 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes an sql to your character database instantly and returns [ElunaQuery]
+     * Executes a SQL query on the character database and returns an [ElunaQuery].
      *
-     * @param string sql : sql to run
-     * @return [ElunaQuery] result
+     * The query is always executed synchronously
+     *   (i.e. when this function returns the query has already been executed).
+     *
+     * @param string sql : query to execute
+     * @return [ElunaQuery] results
      */
     int CharDBQuery(Eluna* /*E*/, lua_State* L)
     {
@@ -1042,9 +1062,15 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes an sql to your character database. The SQL is not ran instantly.
+     * Executes a SQL query on the character database.
      *
-     * @param string sql : sql to run
+     * The query may be executed *asynchronously* (at a later, unpredictable time).
+     * If you need to execute the query synchronously, use [Global:WorldDBQuery] instead.
+     *
+     * Any results produced are ignored.
+     * If you need results from the query, use [Global:WorldDBQuery] instead.
+     *
+     * @param string sql : query to execute
      */
     int CharDBExecute(Eluna* /*E*/, lua_State* L)
     {
@@ -1054,10 +1080,13 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes an sql to your auth database instantly and returns [ElunaQuery]
+     * Executes a SQL query on the login database and returns an [ElunaQuery].
      *
-     * @param string sql : sql to run
-     * @return [ElunaQuery] result
+     * The query is always executed synchronously
+     *   (i.e. when this function returns the query has already been executed).
+     *
+     * @param string sql : query to execute
+     * @return [ElunaQuery] results
      */
     int AuthDBQuery(Eluna* /*E*/, lua_State* L)
     {
@@ -1080,9 +1109,15 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Executes an sql to your auth database. The SQL is not ran instantly.
+     * Executes a SQL query on the login database.
      *
-     * @param string sql : sql to run
+     * The query may be executed *asynchronously* (at a later, unpredictable time).
+     * If you need to execute the query synchronously, use [Global:WorldDBQuery] instead.
+     *
+     * Any results produced are ignored.
+     * If you need results from the query, use [Global:WorldDBQuery] instead.
+     *
+     * @param string sql : query to execute
      */
     int AuthDBExecute(Eluna* /*E*/, lua_State* L)
     {
@@ -1092,8 +1127,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a global timed event
+     * Registers a global timed event.
+     *
      * When the passed function is called, the parameters `(eventId, delay, repeats)` are passed to it.
+     *
      * Repeats will decrease on each call if the event does not repeat indefinitely
      *
      * @param function function : function to trigger when the time has passed
@@ -1118,7 +1155,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Removes a global timed event specified by the event ID
+     * Removes a global timed event specified by ID.
      *
      * @param int eventId : event Id to remove
      * @param bool all_Events = false : remove from all events, not just global
@@ -1137,7 +1174,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Removes all global timed events
+     * Removes all global timed events.
      *
      * @param bool all_Events = false : remove all events, not just global
      */
@@ -1154,7 +1191,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Performs an ingame spawn and returns [Creature] or [GameObject] dependent on spawnType
+     * Performs an in-game spawn and returns the [Creature] or [GameObject] spawned.
      *
      * @param int32 spawnType : type of object to spawn, 1 = [Creature], 2 = [GameObject]
      * @param uint32 entry : entry ID of the [Creature] or [GameObject]
@@ -1484,10 +1521,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Creates a [WorldPacket]
+     * Creates a [WorldPacket].
      *
-     * @param uint32 opcode : opcode to create
-     * @param uint32 size : size of opcode
+     * @param uint32 opcode : the opcode of the packet
+     * @param uint32 size : the size of the packet
      * @return [WorldPacket] packet
      */
     int CreatePacket(Eluna* /*E*/, lua_State* L)
@@ -1502,7 +1539,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Adds an [Item] to a vendor
+     * Adds an [Item] to a vendor and updates the world database.
      *
      * @param uint32 entry : [Creature] entry Id
      * @param uint32 item : [Item] entry Id
@@ -1541,7 +1578,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Removes an [Item] from a vendor
+     * Removes an [Item] from a vendor and updates the database.
      *
      * @param uint32 entry : [Creature] entry Id
      * @param uint32 item : [Item] entry Id
@@ -1562,7 +1599,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Removes all [Item]s from a vendor
+     * Removes all [Item]s from a vendor and updates the database.
      *
      * @param uint32 entry : [Creature] entry Id
      */
@@ -1585,7 +1622,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Kicks a [Player] from the server
+     * Kicks a [Player] from the server.
      *
      * @param [Player] player : [Player] to kick
      */
@@ -1599,14 +1636,12 @@ namespace LuaGlobalFunctions
     /**
      * Ban's a [Player]'s account, character or IP
      *
-     * <pre>
-     * enum BanMode
-     * {
-     *     BAN_ACCOUNT,
-     *     BAN_CHARACTER,
-     *     BAN_IP
-     * };
-     * </pre>
+     *     enum BanMode
+     *     {
+     *         BAN_ACCOUNT,
+     *         BAN_CHARACTER,
+     *         BAN_IP
+     *     };
      *
      * @param int32 banMode : method of ban, refer to BanMode above
      * @param string nameOrIP : name of the [Player] or IP of the [Player]
@@ -1650,8 +1685,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Saves all [Player]s
-     *
+     * Saves all [Player]s.
      */
     int SaveAllPlayers(Eluna* /*E*/, lua_State* /*L*/)
     {
@@ -1660,21 +1694,21 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Sends mail to a [Player]
-     * There can be several item entry-amount pairs at the end of the function. There can be maximum of 12 different items.
+     * Sends mail to a [Player].
      *
-     * <pre>
-     * enum MailStationery
-     * {
-     *     MAIL_STATIONERY_TEST = 1,
-     *     MAIL_STATIONERY_DEFAULT = 41,
-     *     MAIL_STATIONERY_GM = 61,
-     *     MAIL_STATIONERY_AUCTION = 62,
-     *     MAIL_STATIONERY_VAL = 64, // Valentine
-     *     MAIL_STATIONERY_CHR = 65, // Christmas
-     *     MAIL_STATIONERY_ORP = 67 // Orphan
-     * };
-     * </pre>
+     * There can be several item entry-amount pairs at the end of the function.
+     * There can be maximum of 12 different items.
+     *
+     *     enum MailStationery
+     *     {
+     *         MAIL_STATIONERY_TEST = 1,
+     *         MAIL_STATIONERY_DEFAULT = 41,
+     *         MAIL_STATIONERY_GM = 61,
+     *         MAIL_STATIONERY_AUCTION = 62,
+     *         MAIL_STATIONERY_VAL = 64, // Valentine
+     *         MAIL_STATIONERY_CHR = 65, // Christmas
+     *         MAIL_STATIONERY_ORP = 67 // Orphan
+     *     };
      *
      * @param string subject : title (subject) of the mail
      * @param string text : contents of the mail
@@ -1761,7 +1795,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the result of bitwise and: a & b
+     * Performs a bitwise AND (a & b).
      *
      * @param uint32 a
      * @param uint32 b
@@ -1776,7 +1810,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the result of bitwise or: a | b
+     * Performs a bitwise OR (a | b).
      *
      * @param uint32 a
      * @param uint32 b
@@ -1791,7 +1825,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the result of bitwise left shift: a << b
+     * Performs a bitwise left-shift (a << b).
      *
      * @param uint32 a
      * @param uint32 b
@@ -1806,7 +1840,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the result of bitwise right shift: a >> b
+     * Performs a bitwise right-shift (a >> b).
      *
      * @param uint32 a
      * @param uint32 b
@@ -1821,7 +1855,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the result of bitwise xor: a ^ b
+     * Performs a bitwise XOR (a ^ b).
      *
      * @param uint32 a
      * @param uint32 b
@@ -1836,7 +1870,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the result of bitwise not: ~a
+     * Performs a bitwise NOT (~a).
      *
      * @param uint32 a
      * @return uint32 result
@@ -1849,16 +1883,16 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Adds a taxi path to a specified map, returns the used pathId
+     * Adds a taxi path to a specified map, returns the used pathId.
+     *
      * Related function: [Player:StartTaxi]
      *
-     * <pre>
-     * -- Execute on startup
-     * local pathTable = {{mapid, x, y, z}, {mapid, x, y, z}}
-     * local path = AddTaxiPath(pathTable, 28135, 28135)
-     * -- Execute when the player should fly
-     * player:StartTaxi(path)
-     * </pre>
+     *     -- Execute on startup
+     *     local pathTable = {{mapid, x, y, z}, {mapid, x, y, z}}
+     *     local path = AddTaxiPath(pathTable, 28135, 28135)
+     *
+     *     -- Execute when the player should fly
+     *     player:StartTaxi(path)
      *
      * @param table waypoints : table containing waypoints: {map, x, y, z[, actionFlag, delay]}
      * @param uint32 mountA : alliance [Creature] entry
@@ -1965,7 +1999,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Adds a [Corpse] to the world
+     * Adds a [Corpse] to the world.
      *
      * @param [Corpse] corpse : [Corpse] to add
      */
@@ -1978,7 +2012,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Removes a [Corpse] from the world
+     * Removes a [Corpse] from the world.
      *
      * @param [Corpse] corpse : [Corpse] to remove
      */
@@ -1991,10 +2025,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Converts a [Corpse] by guid, also allows for insignia to be looted
+     * Converts a [Corpse] by GUID, and optionally allows for insignia to be looted.
      *
-     * @param uint64 playerGUID : guid of the [Player]
-     * @param bool insignia = false : if true, it allows insignia to be looted
+     * @param uint64 playerGUID : GUID of the [Player]
+     * @param bool insignia = false : if `true`, allow an insignia to be looted
      * @return [Corpse] corpse : returns converted [Corpse]
      */
     int ConvertCorpseForPlayer(Eluna* /*E*/, lua_State* L)
@@ -2007,8 +2041,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Removes old [Corpse]s from the world
-     *
+     * Removes old [Corpse]s from the world.
      */
     int RemoveOldCorpses(Eluna* /*E*/, lua_State* /*L*/)
     {
@@ -2017,7 +2050,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Finds [Weather] in a zone, also returns [Weather]
+     * Gets the [Weather] for a zone.
      *
      * @param uint32 zoneId : zone Id to check for [Weather]
      * @return [Weather] weather
@@ -2035,7 +2068,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Adds [Weather] to a zone, also returns [Weather]
+     * Adds weather to a zone and returns the new [Weather] object.
      *
      * @param uint32 zoneId : zone Id to add [Weather]
      * @return [Weather] weather
@@ -2053,7 +2086,7 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Removes [Weather] from a zone
+     * Removes [Weather] from a zone.
      *
      * @param uint32 zoneId : zone Id to remove [Weather]
      */
@@ -2069,7 +2102,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Sends normal [Weather] to a [Player]
+     * Sends a clear weather packet to a [Player].
+     *
+     * Does not affect other [Player]s in the same zone, or affect the zone.
      *
      * @param [Player] player : [Player] to send the normal weather to
      */
@@ -2085,25 +2120,26 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns true if the bag and slot is a valid inventory position, otherwise false
+     * Returns `true` if the bag and slot is a valid inventory position, otherwise `false`.
      *
-     * <pre>
-     * Possible and most commonly used combinations:
+     * Some commonly used combinations:
      *
-     * bag = 255
-     * slots 0-18 equipment
-     * slots 19-22 equipped bag slots
-     * slots 23-38 backpack
-     * slots 39-66 bank main slots
-     * slots 67-74 bank bag slots
-     * slots 86-117 keyring
+     * *Bag 255 (common character inventory)*
      *
-     * bag = 19-22
-     * slots 0-35 for equipped bags
+     * - Slots 0-18: equipment
+     * - Slots 19-22: bag slots
+     * - Slots 23-38: backpack
+     * - Slots 39-66: bank main slots
+     * - Slots 67-74: bank bag slots
+     * - Slots 86-117: keyring
      *
-     * bag = 67-74
-     * slots 0-35 for bank bags
-     * </pre>
+     * *Bags 19-22 (equipped bags)*
+     *
+     * - Slots 0-35
+     *
+     * *Bags 67-74 (bank bags)*
+     *
+     * - Slots 0-35
      *
      * @param uint8 bag : the bag the [Item] is in, you can get this with [Item:GetBagSlot]
      * @param uint8 slot : the slot the [Item] is in within the bag, you can get this with [Item:GetSlot]
@@ -2119,25 +2155,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns true if the bag and slot is a valid equipment position, otherwise false
+     * Returns `true` if the bag and slot is a valid equipment position, otherwise `false`.
      *
-     * <pre>
-     * Possible and most commonly used combinations:
-     *
-     * bag = 255
-     * slots 0-18 equipment
-     * slots 19-22 equipped bag slots
-     * slots 23-38 backpack
-     * slots 39-66 bank main slots
-     * slots 67-74 bank bag slots
-     * slots 86-117 keyring
-     *
-     * bag = 19-22
-     * slots 0-35 for equipped bags
-     *
-     * bag = 67-74
-     * slots 0-35 for bank bags
-     * </pre>
+     * See [Global:IsInventoryPos] for bag/slot combination examples.
      *
      * @param uint8 bag : the bag the [Item] is in, you can get this with [Item:GetBagSlot]
      * @param uint8 slot : the slot the [Item] is in within the bag, you can get this with [Item:GetSlot]
@@ -2153,25 +2173,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns true if the bag and slot is a valid bank position, otherwise false
+     * Returns `true` if the bag and slot is a valid bank position, otherwise `false`.
      *
-     * <pre>
-     * Possible and most commonly used combinations:
-     *
-     * bag = 255
-     * slots 0-18 equipment
-     * slots 19-22 equipped bag slots
-     * slots 23-38 backpack
-     * slots 39-66 bank main slots
-     * slots 67-74 bank bag slots
-     * slots 86-117 keyring
-     *
-     * bag = 19-22
-     * slots 0-35 for equipped bags
-     *
-     * bag = 67-74
-     * slots 0-35 for bank bags
-     * </pre>
+     * See [Global:IsInventoryPos] for bag/slot combination examples.
      *
      * @param uint8 bag : the bag the [Item] is in, you can get this with [Item:GetBagSlot]
      * @param uint8 slot : the slot the [Item] is in within the bag, you can get this with [Item:GetSlot]
@@ -2187,25 +2191,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns true if the bag and slot is a valid bag position, otherwise false
+     * Returns `true` if the bag and slot is a valid bag position, otherwise `false`.
      *
-     * <pre>
-     * Possible and most commonly used combinations:
-     *
-     * bag = 255
-     * slots 0-18 equipment
-     * slots 19-22 equipped bag slots
-     * slots 23-38 backpack
-     * slots 39-66 bank main slots
-     * slots 67-74 bank bag slots
-     * slots 86-117 keyring
-     *
-     * bag = 19-22
-     * slots 0-35 for equipped bags
-     *
-     * bag = 67-74
-     * slots 0-35 for bank bags
-     * </pre>
+     * See [Global:IsInventoryPos] for bag/slot combination examples.
      *
      * @param uint8 bag : the bag the [Item] is in, you can get this with [Item:GetBagSlot]
      * @param uint8 slot : the slot the [Item] is in within the bag, you can get this with [Item:GetSlot]
@@ -2221,9 +2209,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns current time in ms
+     * Returns the server's current time.
      *
-     * @return uint32 currTime
+     * @return uint32 currTime : the current time, in milliseconds
      */
     int GetCurrTime(Eluna* /*E*/, lua_State* L)
     {
@@ -2232,10 +2220,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns difference from a [Global:GetCurrTime] time to now
+     * Returns the difference between an old timestamp and the current time.
      *
-     * @param uint32 oldTime
-     * @return uint32 timeDiff
+     * @param uint32 oldTime : an old timestamp, in milliseconds
+     * @return uint32 timeDiff : the difference, in milliseconds
      */
     int GetTimeDiff(Eluna* /*E*/, lua_State* L)
     {
@@ -2245,7 +2233,7 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-    std::string GetStackAsString(lua_State* L)
+    static std::string GetStackAsString(lua_State* L)
     {
         std::ostringstream oss;
         int top = lua_gettop(L);
@@ -2258,9 +2246,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Prints given parameters to the info log
+     * Prints given parameters to the info log.
      *
-     * @param ... variableArguments
+     * @param ...
      */
     int PrintInfo(Eluna* /*E*/, lua_State* L)
     {
@@ -2269,9 +2257,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Prints given parameters to the error log
+     * Prints given parameters to the error log.
      *
-     * @param ... variableArguments
+     * @param ...
      */
     int PrintError(Eluna* /*E*/, lua_State* L)
     {
@@ -2280,9 +2268,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Prints given parameters to the debug log
+     * Prints given parameters to the debug log.
      *
-     * @param ... variableArguments
+     * @param ...
      */
     int PrintDebug(Eluna* /*E*/, lua_State* L)
     {
@@ -2291,16 +2279,17 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns an object represeting long long.
+     * Returns an object representing a `long long` (64-bit) value.
+     *
      * The value by default is 0, but can be initialized to a value by passing a number or long long as a string.
      *
      * @proto value = ()
-     * @proto value = (number)
-     * @proto value = (longlong)
-     * @proto value = (longlongstr)
-     * @param int32 number : regular lua number
-     * @param int64 longlong : a long long object
-     * @param string longlongstr : a long long as a string
+     * @proto value = (n)
+     * @proto value = (n_ll)
+     * @proto value = (n_str)
+     * @param int32 n
+     * @param int64 n_ll
+     * @param string n_str
      * @return int64 value
      */
     int CreateLongLong(Eluna* /*E*/, lua_State* L)
@@ -2320,16 +2309,17 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns an object represeting unsigned long long.
+     * Returns an object representing an `unsigned long long` (64-bit) value.
+     *
      * The value by default is 0, but can be initialized to a value by passing a number or unsigned long long as a string.
      *
      * @proto value = ()
-     * @proto value = (number)
-     * @proto value = (ulonglong)
-     * @proto value = (ulonglongstr)
-     * @param uint32 number : regular lua number
-     * @param uint64 ulonglong : an unsigned long long object
-     * @param string ulonglongstr : an unsigned long long as a string
+     * @proto value = (n)
+     * @proto value = (n_ull)
+     * @proto value = (n_str)
+     * @param uint32 n
+     * @param uint64 n_ull
+     * @param string n_str
      * @return uint64 value
      */
     int CreateULongLong(Eluna* /*E*/, lua_State* L)
