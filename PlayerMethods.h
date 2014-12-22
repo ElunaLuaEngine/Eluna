@@ -2956,7 +2956,7 @@ namespace LuaPlayer
     int GossipSendMenu(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 _npcText = Eluna::CHECKVAL<uint32>(L, 2);
-        WorldObject* sender = Eluna::CHECKOBJ<WorldObject>(L, 3);
+        Object* sender = Eluna::CHECKOBJ<Object>(L, 3);
         if (sender->GetTypeId() == TYPEID_PLAYER)
         {
             uint32 menu_id = Eluna::CHECKVAL<uint32>(L, 4);
