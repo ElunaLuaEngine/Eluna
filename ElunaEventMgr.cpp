@@ -53,7 +53,7 @@ ElunaEventProcessor::~ElunaEventProcessor()
 {
     RemoveEvents_internal();
 
-    if (obj)
+    if (obj && Eluna::initialized)
     {
         EventMgr::WriteGuard lock((*E)->eventMgr->GetLock());
         (*E)->eventMgr->processors.erase(this);
