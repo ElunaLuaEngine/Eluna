@@ -7,10 +7,13 @@
 #ifndef SPELLMETHODS_H
 #define SPELLMETHODS_H
 
+/***
+ * An instance of a spell, created when the spell is cast by a [Unit].
+ */
 namespace LuaSpell
 {
     /**
-     * Returns 'true' if the [Spell] is automatically repeating, false otherwise.
+     * Returns `true` if the [Spell] is automatically repeating, `false` otherwise.
      *
      * @return bool isAutoRepeating
      */
@@ -107,7 +110,13 @@ namespace LuaSpell
 
     /**
      * Returns the target [Object] of the [Spell].
-     * Target can be any of the following [Object] types: [Player], [Creature], [GameObject], [Item], [Corpse]
+     *
+     * The target can be any of the following [Object] types:
+     * - [Player]
+     * - [Creature]
+     * - [GameObject]
+     * - [Item]
+     * - [Corpse]
      *
      * @return [Object] target
      */
@@ -163,7 +172,6 @@ namespace LuaSpell
 
     /**
      * Cancels the [Spell].
-     *
      */
     int Cancel(Eluna* /*E*/, lua_State* /*L*/, Spell* spell)
     {
@@ -173,7 +181,6 @@ namespace LuaSpell
 
     /**
      * Finishes the [Spell].
-     *
      */
     int Finish(Eluna* /*E*/, lua_State* /*L*/, Spell* spell)
     {
