@@ -7,10 +7,13 @@
 #ifndef CORPSEMETHODS_H
 #define CORPSEMETHODS_H
 
+/***
+ * The remains of a [Player] that has died.
+ */
 namespace LuaCorpse
 {
     /**
-     * Returns the [Corpse] Owner GUID.
+     * Returns the GUID of the [Player] that left the [Corpse] behind.
      *
      * @return uint64 ownerGUID
      */
@@ -25,7 +28,7 @@ namespace LuaCorpse
     }
 
     /**
-     * Returns the ghost time of a [Corpse].
+     * Returns the time when the [Player] became a ghost and spawned this [Corpse].
      *
      * @return uint32 ghostTime
      */
@@ -38,14 +41,12 @@ namespace LuaCorpse
     /**
      * Returns the [CorpseType] of a [Corpse].
      *
-     * <pre>
-     * enum CorpseType
-     * {
-     *     CORPSE_BONES             = 0,
-     *     CORPSE_RESURRECTABLE_PVE = 1,
-     *     CORPSE_RESURRECTABLE_PVP = 2
-     * };
-     * </pre>
+     *     enum CorpseType
+     *     {
+     *         CORPSE_BONES             = 0,
+     *         CORPSE_RESURRECTABLE_PVE = 1,
+     *         CORPSE_RESURRECTABLE_PVP = 2
+     *     };
      *
      * @return [CorpseType] corpseType
      */
@@ -56,8 +57,9 @@ namespace LuaCorpse
     }
 
     /**
-     * Resets the [Corpse] ghost time.
+     * Sets the "ghost time" to the current time.
      *
+     * See [Corpse:GetGhostTime].
      */
     int ResetGhostTime(Eluna* /*E*/, lua_State* /*L*/, Corpse* corpse)
     {
@@ -67,7 +69,6 @@ namespace LuaCorpse
 
     /**
      * Saves the [Corpse] to the database.
-     *
      */
     int SaveToDB(Eluna* /*E*/, lua_State* /*L*/, Corpse* corpse)
     {
@@ -78,9 +79,15 @@ namespace LuaCorpse
     /**
      * Deletes the [Corpse] from the world.
      *
+     * If the [Corpse]'s type is not BONES then this does nothing.
      */
     int DeleteBonesFromWorld(Eluna* /*E*/, lua_State* /*L*/, Corpse* corpse)
     {
+        // Prevent a failed assertion.
+        if (corpse->GetType() != CORPSE_BONES)
+        {
+            return 0;
+        }
         corpse->DeleteBonesFromWorld();
         return 0;
     }
