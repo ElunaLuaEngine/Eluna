@@ -1123,7 +1123,6 @@ ElunaRegister<ElunaQuery> QueryMethods[] =
     { "GetFloat", &LuaQuery::GetFloat },                      // :GetFloat(column) - returns the value of a float column
     { "GetDouble", &LuaQuery::GetDouble },                    // :GetDouble(column) - returns the value of a double column
     { "GetString", &LuaQuery::GetString },                    // :GetString(column) - returns the value of a string column, always returns a string
-    { "GetCString", &LuaQuery::GetCString },                  // :GetCString(column) - returns the value of a string column, can return nil
     { "IsNull", &LuaQuery::IsNull },                          // :IsNull(column) - returns true if the column is null
 
     { NULL, NULL },
