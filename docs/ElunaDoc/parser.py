@@ -22,12 +22,17 @@ class ParameterDoc(object):
         'uint64': ('0', '18,446,744,073,709,551,615'),
     }
 
-    @params(self=object, name=unicode, data_type=str, description=unicode, default_value=Nullable(unicode))
+    @params(self=object, name=Nullable(unicode), data_type=str, description=unicode, default_value=Nullable(unicode))
     def __init__(self, name, data_type, description, default_value=None):
         """If `name` is not provided, the Parameter is a returned value instead of a parameter."""
         self.name = name
         self.data_type = data_type
         self.default_value = default_value
+
+        if self.data_type == '...':
+            self.name = '...'
+        else:
+            assert(self.name is not None)
 
         if description:
             # Capitalize the first letter, add a period, and parse as Markdown.
@@ -114,7 +119,7 @@ class ClassParser(object):
     # An extra optional space (\s?) was thrown in to make it different from `class_body_regex`.
 
     param_regex = re.compile(r"""\s*\*\s@param\s    # The @param tag starts with opt. whitespace followed by "* @param ".
-                                 ([^\s]+)\s(\w+) # The data type, a space, and the name of the param.
+                                 ([^\s]+)\s(\w+)?   # The data type, a space, and the name of the param.
                                  (?:\s=\s(\w+))?    # The default value: a = surrounded by spaces, followed by text.
                                  (?:\s:\s(.+))?     # The description: a colon surrounded by spaces, followed by text.
                                  """, re.X)
@@ -172,16 +177,15 @@ class ClassParser(object):
 
     def handle_proto(self, match):
         return_values, parameters = match.group(1), match.group(2)
-        prototype = '{0}= {1}:{{0}}( {2} )'.format(return_values, self.class_name, parameters)
+        parameters = ' '+parameters+' ' if parameters else ''
+        return_values = return_values + '= ' if return_values else ''
+        prototype = '{0}{1}:{{0}}({2})'.format(return_values, self.class_name, parameters)
         self.prototypes.append(prototype)
 
     def handle_end(self, match):
         self.method_name = match.group(1)
 
-        # If there's no prototype, make one with all params and returns.
-        if not self.prototypes:
-            parameters = ', '.join([param.name for param in self.params])
-            # Only pad with spaces when there are no parameters.
+        def make_prototype(parameters):
             if parameters != '':
                 parameters = ' ' + parameters + ' '
 
@@ -198,7 +202,37 @@ class ClassParser(object):
                 else:
                     prototype = '{0}:{1}({2})'.format(self.class_name, self.method_name, parameters)
 
-            self.prototypes.append(prototype)
+            return prototype
+
+        # If there's no prototype, make one with all params and returns.
+        if not self.prototypes:
+            # A list of all parameters with default values.
+            params_with_default = []
+            # The index of the last non-default parameter.
+            last_non_default_i = 0
+            # If False, a parameter WITHOUT a default value follows one WITH a default value.
+            # In this case, don't bother generating prototypes.
+            simple_order = True
+
+            for i, param in enumerate(self.params):
+                if param.default_value:
+                    params_with_default.append(param)
+                else:
+                    last_non_default_i = i
+                    if params_with_default:
+                        simple_order = False
+
+            if not params_with_default or not simple_order:
+                # Just generate one prototype with all the parameters.
+                parameters = ', '.join([param.name for param in self.params])
+                self.prototypes.append(make_prototype(parameters))
+            else:
+                # Generate a prototype for all the non-default parameters,
+                #   then one for each default parameter with all the previous parameters.
+                for i in range(last_non_default_i, len(self.params)):
+                    parameters = ', '.join([param.name for param in self.params[:i+1]])
+                    self.prototypes.append(make_prototype(parameters))
+
         else:
             # Format the method name into each prototype.
             self.prototypes = [proto.format(self.method_name) for proto in self.prototypes]
@@ -220,7 +254,7 @@ class ClassParser(object):
     }
 
     # Table of which regular expressions can follow the last handled regex.
-    # `doc_body_regex` must always come LAST when used, since it also matches param, return, and comment_end.
+    # `body_regex` must always come LAST when used, since it also matches param, return, and comment_end.
     next_regexes = {
         None: [class_start_regex, start_regex, end_regex],
         class_start_regex: [class_end_regex, class_body_regex],

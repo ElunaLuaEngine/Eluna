@@ -61,6 +61,10 @@
 typedef Opcodes                 OpcodesList;
 #endif
 
+/*
+ * Note: if you add or change a CORE_NAME #define,
+ *   please update LuaGlobalFunctions::GetCoreName docstring.
+ */
 #ifdef MANGOS
 #define CORE_NAME               "MaNGOS"
 #define CORE_VERSION            REVISION_NR

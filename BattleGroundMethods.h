@@ -7,10 +7,13 @@
 #ifndef BATTLEGROUNDMETHODS_H
 #define BATTLEGROUNDMETHODS_H
 
+/***
+ * Contains the state of a battleground, e.g. Warsong Gulch, Arathi Basin, etc.
+ */
 namespace LuaBattleGround
 {
     /**
-     * Returns the name of the [Battleground]
+     * Returns the name of the [BattleGround].
      *
      * @return string name
      */
@@ -21,7 +24,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the amount of alive players in the [Battleground] by the team ID.
+     * Returns the amount of alive players in the [BattleGround] by the team ID.
      *
      * @param uint32 team : team ID
      * @return uint32 count
@@ -35,7 +38,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the [Map] of the [Battleground].
+     * Returns the [Map] of the [BattleGround].
      *
      * @return [Map] map
      */
@@ -46,7 +49,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the bonus honor given by amount of kills in the specific [Battleground].
+     * Returns the bonus honor given by amount of kills in the specific [BattleGround].
      *
      * @param uint32 kills : amount of kills
      * @return uint32 bonusHonor
@@ -60,7 +63,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the bracket ID of the specific [Battleground].
+     * Returns the bracket ID of the specific [BattleGround].
      *
      * @return BattleGroundBracketId bracketId
      */
@@ -71,7 +74,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the end time of the [Battleground].
+     * Returns the end time of the [BattleGround].
      *
      * @return uint32 endTime
      */
@@ -86,7 +89,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the amount of free slots for the selected team in the specific [Battleground].
+     * Returns the amount of free slots for the selected team in the specific [BattleGround].
      *
      * @param uint32 team : team ID
      * @return uint32 freeSlots
@@ -100,7 +103,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the instance ID of the [Battleground].
+     * Returns the instance ID of the [BattleGround].
      *
      * @return uint32 instanceId
      */
@@ -111,7 +114,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the map ID of the [Battleground].
+     * Returns the map ID of the [BattleGround].
      *
      * @return uint32 mapId
      */
@@ -122,7 +125,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the type ID of the [Battleground].
+     * Returns the type ID of the [BattleGround].
      *
      * @return BattleGroundTypeId typeId
      */
@@ -133,7 +136,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the max allowed [Player] level of the specific [Battleground].
+     * Returns the max allowed [Player] level of the specific [BattleGround].
      *
      * @return uint32 maxLevel
      */
@@ -144,7 +147,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the minimum allowed [Player] level of the specific [Battleground].
+     * Returns the minimum allowed [Player] level of the specific [BattleGround].
      *
      * @return uint32 minLevel
      */
@@ -155,7 +158,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the maximum allowed [Player] count of the specific [Battleground].
+     * Returns the maximum allowed [Player] count of the specific [BattleGround].
      *
      * @return uint32 maxPlayerCount
      */
@@ -166,7 +169,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the minimum allowed [Player] count of the specific [Battleground].
+     * Returns the minimum allowed [Player] count of the specific [BattleGround].
      *
      * @return uint32 minPlayerCount
      */
@@ -177,7 +180,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the maximum allowed [Player] count per team of the specific [Battleground].
+     * Returns the maximum allowed [Player] count per team of the specific [BattleGround].
      *
      * @return uint32 maxTeamPlayerCount
      */
@@ -188,7 +191,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the minimum allowed [Player] count per team of the specific [Battleground].
+     * Returns the minimum allowed [Player] count per team of the specific [BattleGround].
      *
      * @return uint32 minTeamPlayerCount
      */
@@ -199,7 +202,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the winning team of the specific [Battleground].
+     * Returns the winning team of the specific [BattleGround].
      *
      * @return Team team
      */
@@ -210,7 +213,7 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the status of the specific [Battleground].
+     * Returns the status of the specific [BattleGround].
      *
      * @return BattleGroundStatus status
      */

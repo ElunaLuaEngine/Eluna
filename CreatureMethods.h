@@ -8,9 +8,9 @@
 #define CREATUREMETHODS_H
 
 /***
- * Non-[Player] controlled [Unit]s.
+ * Non-[Player] controlled [Unit]s (i.e. NPCs).
  *
- * Inherits [Object], [WorldObject], [Unit]
+ * Inherits all [Object], [WorldObject], and [Unit] methods.
  */
 namespace LuaCreature
 {
