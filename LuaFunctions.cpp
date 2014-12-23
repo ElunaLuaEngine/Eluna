@@ -55,6 +55,20 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "RegisterPlayerGossipEvent", &LuaGlobalFunctions::RegisterPlayerGossipEvent },           // RegisterPlayerGossipEvent(menu_id, event, function)
     { "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent },                               // RegisterBGEvent(event, function)
 
+    { "ClearBattleGroundEvents", &LuaGlobalFunctions::ClearBattleGroundEvents },
+    { "ClearCreatureEvents", &LuaGlobalFunctions::ClearCreatureEvents },
+    { "ClearCreatureGossipEvents", &LuaGlobalFunctions::ClearCreatureGossipEvents },
+    { "ClearGameObjectEvents", &LuaGlobalFunctions::ClearGameObjectEvents },
+    { "ClearGameObjectGossipEvents", &LuaGlobalFunctions::ClearGameObjectGossipEvents },
+    { "ClearGroupEvents", &LuaGlobalFunctions::ClearGroupEvents },
+    { "ClearGuildEvents", &LuaGlobalFunctions::ClearGuildEvents },
+    { "ClearItemEvents", &LuaGlobalFunctions::ClearItemEvents },
+    { "ClearItemGossipEvents", &LuaGlobalFunctions::ClearItemGossipEvents },
+    { "ClearPacketEvents", &LuaGlobalFunctions::ClearPacketEvents },
+    { "ClearPlayerEvents", &LuaGlobalFunctions::ClearPlayerEvents },
+    { "ClearPlayerGossipEvents", &LuaGlobalFunctions::ClearPlayerGossipEvents },
+    { "ClearServerEvents", &LuaGlobalFunctions::ClearServerEvents },
+
     // Getters
     { "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine },
     { "GetCoreName", &LuaGlobalFunctions::GetCoreName },
