@@ -132,7 +132,7 @@ public:
     // that will only be needed on lua side and will not be managed by TC/mangos/<core>
     static void Register(Eluna* E, const char* name, bool gc = false)
     {
-        ASSERT(!tname || name);
+        ASSERT(!tname && name);
 
         tname = name;
         manageMemory = gc;
@@ -441,40 +441,5 @@ public:
     static int LessOrEqual(lua_State* L) { return CompareError(L); }
     static int Call(lua_State* L) { return luaL_error(L, "attempt to call a %s value", tname); }
 };
-//
-//template<typename T> const char* ElunaTemplate<T>::tname;
-//template<typename T> bool ElunaTemplate<T>::manageMemory;
-
-#if (!defined(TBC) && !defined(CLASSIC))
-template<> int ElunaTemplate<Vehicle>::CollectGarbage(lua_State* L);
-#endif
-
-template<> int ElunaTemplate<uint32>::Add(lua_State* L);
-template<> int ElunaTemplate<uint32>::Substract(lua_State* L);
-template<> int ElunaTemplate<uint32>::Multiply(lua_State* L);
-template<> int ElunaTemplate<uint32>::Divide(lua_State* L);
-template<> int ElunaTemplate<uint32>::Mod(lua_State* L);
-template<> int ElunaTemplate<uint32>::Pow(lua_State* L);
-// template<> int ElunaTemplate<uint32>::UnaryMinus(lua_State* L);
-template<> int ElunaTemplate<uint32>::Concat(lua_State* L);
-template<> int ElunaTemplate<uint32>::Length(lua_State* L);
-template<> int ElunaTemplate<uint32>::Equal(lua_State* L);
-template<> int ElunaTemplate<uint32>::Less(lua_State* L);
-template<> int ElunaTemplate<uint32>::LessOrEqual(lua_State* L);
-template<> int ElunaTemplate<uint32>::Call(lua_State* L);
-
-template<> int ElunaTemplate<int32>::Add(lua_State* L);
-template<> int ElunaTemplate<int32>::Substract(lua_State* L);
-template<> int ElunaTemplate<int32>::Multiply(lua_State* L);
-template<> int ElunaTemplate<int32>::Divide(lua_State* L);
-template<> int ElunaTemplate<int32>::Mod(lua_State* L);
-template<> int ElunaTemplate<int32>::Pow(lua_State* L);
-template<> int ElunaTemplate<int32>::UnaryMinus(lua_State* L);
-template<> int ElunaTemplate<int32>::Concat(lua_State* L);
-template<> int ElunaTemplate<int32>::Length(lua_State* L);
-template<> int ElunaTemplate<int32>::Equal(lua_State* L);
-template<> int ElunaTemplate<int32>::Less(lua_State* L);
-template<> int ElunaTemplate<int32>::LessOrEqual(lua_State* L);
-template<> int ElunaTemplate<int32>::Call(lua_State* L);
 
 #endif
