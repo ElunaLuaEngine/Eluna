@@ -73,9 +73,10 @@ public:
     {
         for (EventToFunctionsMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
         {
-            for (FunctionRefVector::iterator it = itr->second.begin(); it != itr->second.end(); ++it)
+            FunctionRefVector& funcrefvec = itr->second;
+            for (FunctionRefVector::iterator it = funcrefvec.begin(); it != funcrefvec.end(); ++it)
                 delete *it;
-            itr->second.clear();
+            funcrefvec.clear();
         }
         Bindings.clear();
     }
@@ -145,13 +146,15 @@ public:
     {
         for (EntryToEventsMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
         {
-            for (EventToFunctionsMap::iterator it = itr->second.begin(); it != itr->second.end(); ++it)
+            EventToFunctionsMap& funcmap = itr->second;
+            for (EventToFunctionsMap::iterator it = funcmap.begin(); it != funcmap.end(); ++it)
             {
-                for (FunctionRefVector::iterator i = it->second.begin(); i != it->second.end(); ++i)
+                FunctionRefVector& funcrefvec = it->second;
+                for (FunctionRefVector::iterator i = funcrefvec.begin(); i != funcrefvec.end(); ++i)
                     delete *i;
-                it->second.clear();
+                funcrefvec.clear();
             }
-            itr->second.clear();
+            funcmap.clear();
         }
         Bindings.clear();
     }

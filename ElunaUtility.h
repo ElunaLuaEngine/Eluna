@@ -108,12 +108,12 @@ namespace ElunaUtil
         WorldObject const& GetFocusObject() const;
         bool operator()(WorldObject* u);
 
-        bool i_nearest;
         WorldObject const* i_obj;
+        uint32 i_hostile;
+        uint32 i_entry;
         float i_range;
         uint16 i_typeMask;
-        uint32 i_entry;
-        uint32 i_hostile;
+        bool i_nearest;
     };
 
     /*

@@ -46,7 +46,6 @@ using namespace HookMgr;
 #define EVENT_BEGIN(BINDMAP, EVENT, RET) \
     if (!BINDMAP->HasEvents(EVENT)) \
         RET; \
-    lua_State* L = this->L; \
     const char* _LuaBindType = this->BINDMAP->groupName; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
@@ -79,7 +78,6 @@ using namespace HookMgr;
 #define ENTRY_BEGIN(BINDMAP, ENTRY, EVENT, RET) \
     if (!BINDMAP->HasEvents(ENTRY, EVENT)) \
         RET; \
-    lua_State* L = this->L; \
     const char* _LuaBindType = this->BINDMAP->groupName; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
@@ -382,7 +380,7 @@ void Eluna::OnShutdown()
     ENDCALL();
 }
 
-void Eluna::HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, std::string code)
+void Eluna::HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code)
 {
     ENTRY_BEGIN(ItemGossipBindings, item->GetEntry(), GOSSIP_EVENT_ON_SELECT, return);
     pPlayer->PlayerTalkClass->ClearMenus();
@@ -398,7 +396,7 @@ void Eluna::HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender,
     ENDCALL();
 }
 
-void Eluna::HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, std::string code)
+void Eluna::HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code)
 {
     ENTRY_BEGIN(playerGossipBindings, menuId, GOSSIP_EVENT_ON_SELECT, return);
     pPlayer->PlayerTalkClass->ClearMenus();
@@ -744,7 +742,12 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
     EVENT_BEGIN(PlayerEventBindings, PLAYER_EVENT_ON_MONEY_CHANGE, return);
     Push(L, pPlayer);
     Push(L, amount);
-    EVENT_EXECUTE(0);
+    EVENT_EXECUTE(1);
+    FOR_RETS(i)
+    {
+        if (lua_isnumber(L, i))
+            amount = CHECKVAL<int32>(L, i, amount);
+    }
     ENDCALL();
 }
 
@@ -1180,24 +1183,34 @@ void Eluna::OnDisband(Guild* guild)
     ENDCALL();
 }
 
-void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32 &amount, bool isRepair) // isRepair not a part of Mangos, implement?
+void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair) // isRepair not a part of Mangos, implement?
 {
     EVENT_BEGIN(GuildEventBindings, GUILD_EVENT_ON_MONEY_WITHDRAW, return);
     Push(L, guild);
     Push(L, player);
     Push(L, amount);
     Push(L, isRepair); // isRepair not a part of Mangos, implement?
-    EVENT_EXECUTE(0);
+    EVENT_EXECUTE(1);
+    FOR_RETS(i)
+    {
+        if (lua_isnumber(L, i))
+            amount = CHECKVAL<uint32>(L, i, amount);
+    }
     ENDCALL();
 }
 
-void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32 &amount)
+void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
 {
     EVENT_BEGIN(GuildEventBindings, GUILD_EVENT_ON_MONEY_DEPOSIT, return);
     Push(L, guild);
     Push(L, player);
     Push(L, amount);
-    EVENT_EXECUTE(0);
+    EVENT_EXECUTE(1);
+    FOR_RETS(i)
+    {
+        if (lua_isnumber(L, i))
+            amount = CHECKVAL<uint32>(L, i, amount);
+    }
     ENDCALL();
 }
 

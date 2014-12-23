@@ -1532,7 +1532,7 @@ namespace LuaGlobalFunctions
     int CreatePacket(Eluna* /*E*/, lua_State* L)
     {
         uint32 opcode = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 size = Eluna::CHECKVAL<uint32>(L, 2);
+        size_t size = Eluna::CHECKVAL<size_t>(L, 2);
         if (opcode >= NUM_MSG_TYPES)
             return luaL_argerror(L, 1, "valid opcode expected");
 

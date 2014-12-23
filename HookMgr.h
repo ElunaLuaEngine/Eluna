@@ -110,7 +110,7 @@ namespace HookMgr
         PLAYER_EVENT_ON_DUEL_END                =     11,       // (event, winner, loser, type)
         PLAYER_EVENT_ON_GIVE_XP                 =     12,       // (event, player, amount, victim) - Can return new XP amount
         PLAYER_EVENT_ON_LEVEL_CHANGE            =     13,       // (event, player, oldLevel)
-        PLAYER_EVENT_ON_MONEY_CHANGE            =     14,       // (event, player, amount)
+        PLAYER_EVENT_ON_MONEY_CHANGE            =     14,       // (event, player, amount) - Can return new money amount
         PLAYER_EVENT_ON_REPUTATION_CHANGE       =     15,       // (event, player, factionId, standing, incremental) - Can return new standing
         PLAYER_EVENT_ON_TALENTS_CHANGE          =     16,       // (event, player, points)
         PLAYER_EVENT_ON_TALENTS_RESET           =     17,       // (event, player, noCost)
@@ -155,8 +155,8 @@ namespace HookMgr
         GUILD_EVENT_ON_INFO_CHANGE              =     4,       // (event, guild, newInfo)
         GUILD_EVENT_ON_CREATE                   =     5,       // (event, guild, leader, name)  // Not on TC
         GUILD_EVENT_ON_DISBAND                  =     6,       // (event, guild)
-        GUILD_EVENT_ON_MONEY_WITHDRAW           =     7,       // (event, guild, player, amount, isRepair)
-        GUILD_EVENT_ON_MONEY_DEPOSIT            =     8,       // (event, guild, player, amount)
+        GUILD_EVENT_ON_MONEY_WITHDRAW           =     7,       // (event, guild, player, amount, isRepair) - Can return new money amount
+        GUILD_EVENT_ON_MONEY_DEPOSIT            =     8,       // (event, guild, player, amount) - Can return new money amount
         GUILD_EVENT_ON_ITEM_MOVE                =     9,       // (event, guild, player, item, isSrcBank, srcContainer, srcSlotId, isDestBank, destContainer, destSlotId)   // TODO
         GUILD_EVENT_ON_EVENT                    =     10,      // (event, guild, eventType, plrGUIDLow1, plrGUIDLow2, newRank)  // TODO
         GUILD_EVENT_ON_BANK_EVENT               =     11,      // (event, guild, eventType, tabId, playerGUIDLow, itemOrMoney, itemStackCount, destTabId)

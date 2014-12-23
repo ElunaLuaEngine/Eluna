@@ -260,7 +260,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "GetUnfriendlyUnitsInRange", &LuaUnit::GetUnfriendlyUnitsInRange }, // :GetUnfriendlyUnitsInRange([range]) - Returns a list of unfriendly units in range, can return nil
     { "GetOwnerGUID", &LuaUnit::GetOwnerGUID },                           // :GetOwnerGUID() - Returns the UNIT_FIELD_SUMMONEDBY owner
     { "GetCreatorGUID", &LuaUnit::GetCreatorGUID },                       // :GetCreatorGUID() - Returns the UNIT_FIELD_CREATEDBY creator
-    { "GetMinionGUID", &LuaUnit::GetMinionGUID },                         // :GetMinionGUID() - Returns the UNIT_FIELD_SUMMON unit's minion GUID
+    { "GetMinionGUID", &LuaUnit::GetPetGUID },                            // :GetMinionGUID() - Decapreted. GetMinionGUID is same as GetPetGUID
     { "GetCharmerGUID", &LuaUnit::GetCharmerGUID },                       // :GetCharmerGUID() - Returns the UNIT_FIELD_CHARMEDBY charmer
     { "GetCharmGUID", &LuaUnit::GetCharmGUID },                           // :GetCharmGUID() - Returns the unit's UNIT_FIELD_CHARM guid
     { "GetPetGUID", &LuaUnit::GetPetGUID },                               // :GetPetGUID() - Returns the unit's pet GUID
@@ -313,7 +313,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "SetName", &LuaUnit::SetName },                         // :SetName(name) - Sets the unit's name
     { "SetSheath", &LuaUnit::SetSheath },                     // :SetSheath(SheathState) - Sets unit's sheathstate
     { "SetCreatorGUID", &LuaUnit::SetCreatorGUID },           // :SetOwnerGUID(uint64 ownerGUID) - Sets the owner's guid of a summoned creature, etc
-    { "SetMinionGUID", &LuaUnit::SetMinionGUID },             // :SetCreatorGUID(uint64 creatorGUID) - Sets the UNIT_FIELD_CREATEDBY creator's guid
+    { "SetMinionGUID", &LuaUnit::SetPetGUID },                // Decapreted. Same as SetPetGUID
     { "SetCharmerGUID", &LuaUnit::SetCharmerGUID },           // :SetCharmerGUID(uint64 ownerGUID) - Sets the UNIT_FIELD_CHARMEDBY charmer GUID
     { "SetPetGUID", &LuaUnit::SetPetGUID },                   // :SetPetGUID(uint64 guid) - Sets the pet's guid
 #if (!defined(TBC) && !defined(CLASSIC))

@@ -412,16 +412,6 @@ namespace LuaUnit
         return 1;
     }
 
-    int GetMinionGUID(Eluna* /*E*/, lua_State* L, Unit* unit)
-    {
-#ifndef TRINITY
-        Eluna::Push(L, unit->GetPetGuid());
-#else
-        Eluna::Push(L, unit->GetPetGUID());
-#endif
-        return 1;
-    }
-
     int GetCharmerGUID(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
 #ifndef TRINITY
@@ -1087,20 +1077,9 @@ namespace LuaUnit
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
 #ifndef TRINITY
-        unit->SetOwnerGuid(ObjectGuid(guid));
+        unit->SetCreatorGuid(ObjectGuid(guid));
 #else
-        unit->SetOwnerGUID(ObjectGuid(guid));
-#endif
-        return 0;
-    }
-
-    int SetMinionGUID(Eluna* /*E*/, lua_State* L, Unit* unit)
-    {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
-#ifndef TRINITY
-        unit->SetPetGuid(ObjectGuid(guid));
-#else
-        unit->SetMinionGUID(ObjectGuid(guid));
+        unit->SetCreatorGUID(ObjectGuid(guid));
 #endif
         return 0;
     }

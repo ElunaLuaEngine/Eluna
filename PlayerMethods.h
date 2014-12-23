@@ -1994,9 +1994,11 @@ namespace LuaPlayer
         uint32 muteseconds = Eluna::CHECKVAL<uint32>(L, 2);
         /*const char* reason = luaL_checkstring(E, 2);*/ // Mangos does not have a reason field in database.
 
-        uint64 muteTime = time(NULL) + muteseconds;
+        time_t muteTime = time(NULL) + muteseconds;
         player->GetSession()->m_muteTime = muteTime;
-        LoginDatabase.PExecute("UPDATE account SET mutetime = " UI64FMTD " WHERE id = '%u'", muteTime, player->GetSession()->GetAccountId());
+        std::ostringstream oss;
+        oss << "UPDATE account SET mutetime = " << muteTime << " WHERE id = " << player->GetSession()->GetAccountId();
+        LoginDatabase.PExecute("%s", oss.str().c_str());
         return 0;
     }
 

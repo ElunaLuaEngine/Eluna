@@ -150,48 +150,48 @@ public:
     // This will be called on next update
     static void ReloadEluna();
     static void GetScripts(std::string path);
-    static void AddScriptPath(std::string filename, std::string fullpath);
+    static void AddScriptPath(std::string filename, const std::string& fullpath);
 
-    static void report(lua_State*);
+    static void report(lua_State* luastate);
     void ExecuteCall(int params, int res);
     void Register(uint8 reg, uint32 id, uint32 evt, int func, uint32 shots);
     void RunScripts();
     void InvalidateObjects();
 
     // Pushes
-    static void Push(lua_State* L); // nil
-    static void Push(lua_State* L, const long long);
-    static void Push(lua_State* L, const unsigned long long);
-    static void Push(lua_State* L, const long);
-    static void Push(lua_State* L, const unsigned long);
-    static void Push(lua_State* L, const int);
-    static void Push(lua_State* L, const unsigned int);
-    static void Push(lua_State* L, const bool);
-    static void Push(lua_State* L, const float);
-    static void Push(lua_State* L, const double);
-    static void Push(lua_State* L, const std::string&);
-    static void Push(lua_State* L, const char*);
-    template<typename T> static void Push(lua_State* L, T const* ptr)
+    static void Push(lua_State* luastate); // nil
+    static void Push(lua_State* luastate, const long long);
+    static void Push(lua_State* luastate, const unsigned long long);
+    static void Push(lua_State* luastate, const long);
+    static void Push(lua_State* luastate, const unsigned long);
+    static void Push(lua_State* luastate, const int);
+    static void Push(lua_State* luastate, const unsigned int);
+    static void Push(lua_State* luastate, const bool);
+    static void Push(lua_State* luastate, const float);
+    static void Push(lua_State* luastate, const double);
+    static void Push(lua_State* luastate, const std::string&);
+    static void Push(lua_State* luastate, const char*);
+    template<typename T> static void Push(lua_State* luastate, T const* ptr)
     {
-        ElunaTemplate<T>::Push(L, ptr);
+        ElunaTemplate<T>::Push(luastate, ptr);
     }
-    static void Push(lua_State* L, Object const* obj);
-    static void Push(lua_State* L, WorldObject const* obj);
-    static void Push(lua_State* L, Unit const* unit);
-    static void Push(lua_State* L, Pet const* pet);
-    static void Push(lua_State* L, TempSummon const* summon);
+    static void Push(lua_State* luastate, Object const* obj);
+    static void Push(lua_State* luastate, WorldObject const* obj);
+    static void Push(lua_State* luastate, Unit const* unit);
+    static void Push(lua_State* luastate, Pet const* pet);
+    static void Push(lua_State* luastate, TempSummon const* summon);
 
     // Checks
-    template<typename T> static T CHECKVAL(lua_State* L, int narg);
-    template<typename T> static T CHECKVAL(lua_State* L, int narg, T def)
+    template<typename T> static T CHECKVAL(lua_State* luastate, int narg);
+    template<typename T> static T CHECKVAL(lua_State* luastate, int narg, T def)
     {
-        return lua_isnoneornil(L, narg) ? def : CHECKVAL<T>(L, narg);
+        return lua_isnoneornil(luastate, narg) ? def : CHECKVAL<T>(luastate, narg);
     }
-    template<typename T> static T* CHECKOBJ(lua_State* L, int narg, bool error = true)
+    template<typename T> static T* CHECKOBJ(lua_State* luastate, int narg, bool error = true)
     {
-        return ElunaTemplate<T>::Check(L, narg, error);
+        return ElunaTemplate<T>::Check(luastate, narg, error);
     }
-    static ElunaObject* CHECKTYPE(lua_State* L, int narg, const char *tname, bool error = true);
+    static ElunaObject* CHECKTYPE(lua_State* luastate, int narg, const char *tname, bool error = true);
 
     CreatureAI* GetAI(Creature* creature);
 
@@ -218,7 +218,7 @@ public:
     bool OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
     bool OnExpire(Player* pPlayer, ItemTemplate const* pProto);
     bool OnRemove(Player* pPlayer, Item* item);
-    void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, std::string code);
+    void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code);
 
     /* Creature */
     bool OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, Creature* pTarget);
@@ -311,7 +311,7 @@ public:
     void OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapid, bool permanent);
     void OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea);
     void OnMapChanged(Player* pPlayer);
-    void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, std::string code);
+    void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
 
 #ifndef CLASSIC
 #ifndef TBC
