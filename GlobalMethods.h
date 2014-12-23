@@ -7,6 +7,8 @@
 #ifndef GLOBALMETHODS_H
 #define GLOBALMETHODS_H
 
+#include "ElunaBinding.h"
+
 /***
  * These functions can be used anywhere at any time, including at start-up.
  */
@@ -719,7 +721,7 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @param uint32 event : [Battleground] event Id, refer to BGEvents above
+     * @param uint32 event : [BattleGround] event Id, refer to BGEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
@@ -2336,6 +2338,178 @@ namespace LuaGlobalFunctions
 
         Eluna::Push(L, init);
         return 1;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [BattleGround] event.
+     *
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterBGEvent]
+     */
+    int ClearBattleGroundEvents(Eluna* E, lua_State* L)
+    {
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 1);
+        E->BGEventBindings->Clear(event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Creature] event/entry combination.
+     *
+     * @param uint32 entry : the ID of a [Creature] whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterCreatureEvent]
+     */
+    int ClearCreatureEvents(Eluna* E, lua_State* L)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->CreatureEventBindings->Clear(entry, event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Creature] gossip event/entry combination.
+     *
+     * @param uint32 entry : the ID of a [Creature] whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterCreatureGossipEvent]
+     */
+    int ClearCreatureGossipEvents(Eluna* E, lua_State* L)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->CreatureGossipBindings->Clear(entry, event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [GameObject] event/entry combination.
+     *
+     * @param uint32 entry : the ID of a [GameObject] whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterGameObjectEvent]
+     */
+    int ClearGameObjectEvents(Eluna* E, lua_State* L)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->GameObjectEventBindings->Clear(entry, event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [GameObject] gossip event/entry combination.
+     *
+     * @param uint32 entry : the ID of a [GameObject] whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterGameObjectGossipEvent]
+     */
+    int ClearGameObjectGossipEvents(Eluna* E, lua_State* L)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->GameObjectGossipBindings->Clear(entry, event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Group] event.
+     *
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterGroupEvent]
+     */
+    int ClearGroupEvents(Eluna* E, lua_State* L)
+    {
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 1);
+        E->GroupEventBindings->Clear(event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Guild] event.
+     *
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterGuildEvent]
+     */
+    int ClearGuildEvents(Eluna* E, lua_State* L)
+    {
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 1);
+        E->GuildEventBindings->Clear(event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Item] event/entry combination.
+     *
+     * @param uint32 entry : the ID of an [Item] whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterItemEvent]
+     */
+    int ClearItemEvents(Eluna* E, lua_State* L)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->ItemEventBindings->Clear(entry, event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Item] gossip event/entry combination.
+     *
+     * @param uint32 entry : the ID of a [] whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterItemGossipEvent]
+     */
+    int ClearItemGossipEvents(Eluna* E, lua_State* L)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->ItemGossipBindings->Clear(entry, event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Packet] event/entry combination.
+     *
+     * @param uint32 entry : the ID of a [Packet] whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterPacketEvent]
+     */
+    int ClearPacketEvents(Eluna* E, lua_State* L)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->PacketEventBindings->Clear(entry, event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Player] event.
+     *
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterPlayerEvent]
+     */
+    int ClearPlayerEvents(Eluna* E, lua_State* L)
+    {
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 1);
+        E->PlayerEventBindings->Clear(event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Player] gossip event.
+     *
+     * @param uint32 entry : the ID of a [] whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterPlayerGossipEvent]
+     */
+    int ClearPlayerGossipEvents(Eluna* E, lua_State* L)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->playerGossipBindings->Clear(entry, event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular server event.
+     *
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterServerEvent]
+     */
+    int ClearServerEvents(Eluna* E, lua_State* L)
+    {
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 1);
+        E->ServerEventBindings->Clear(event_type);
+        return 0;
     }
 }
 #endif
