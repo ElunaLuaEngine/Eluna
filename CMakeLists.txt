@@ -9,7 +9,12 @@ if ( USE_COREPCH )
   include_directories(${CMAKE_SOURCE_DIR})
 endif ()
 
+# Iterates through all the source files and adds them to the solution
 file(GLOB sources_localdir *.cpp *.h)
+
+# Adds all the method headers to its own source group
+file(GLOB method_headers  *Methods.h)
+source_group("Methods" FILES ${method_headers})
 
 set(LuaEngine_STAT_SRCS
   ${LuaEngine_STAT_SRCS}
