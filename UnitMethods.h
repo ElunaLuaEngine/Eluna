@@ -1212,26 +1212,53 @@ namespace LuaUnit
     return 0;
     }*/
 
-    /*int SetRooted(Eluna* E, lua_State* L, Unit* unit)
+    /**
+     * Roots the [Unit] to the ground, if 'false' specified, unroots the [Unit].
+     *
+     * @param bool apply = true
+     */
+    int SetRooted(Eluna* E, lua_State* L, Unit* unit)
     {
-    bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
-    unit->SetControlled(apply, UNIT_STATE_ROOT);
-    return 0;
-    }*/
+        bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
+#ifndef TRINITY
+        unit->SetRoot(apply);
+#else
+        unit->SetControlled(apply, UNIT_STATE_ROOT);
+#endif
+        return 0;
+    }
 
-    /*int SetConfused(Eluna* E, lua_State* L, Unit* unit)
+    /**
+     * Confuses the [Unit], if 'false' specified, the [Unit] is no longer confused.
+     *
+     * @param bool apply = true
+     */
+    int SetConfused(Eluna* E, lua_State* L, Unit* unit)
     {
-    bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
-    unit->SetControlled(apply, UNIT_STATE_CONFUSED);
+        bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
+#ifndef TRINITY
+        unit->SetConfused(apply);
+#else
+        unit->SetControlled(apply, UNIT_STATE_CONFUSED);
+#endif
     return 0;
-    }*/
+    }
 
-    /*int SetFeared(Eluna* E, lua_State* L, Unit* unit)
+    /**
+     * Fears the [Unit], if 'false' specified, the [Unit] is no longer feared.
+     *
+     * @param bool apply = true
+     */
+    int SetFeared(Eluna* E, lua_State* L, Unit* unit)
     {
-    bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
-    unit->SetControlled(apply, UNIT_STATE_FLEEING);
-    return 0;
-    }*/
+        bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
+#ifndef TRINITY
+        unit->SetFeared(apply);
+#else
+        unit->SetControlled(apply, UNIT_STATE_FLEEING);
+#endif
+        return 0;
+    }
 
     /*int SetCanFly(Eluna* E, lua_State* L, Unit* unit)
     {
