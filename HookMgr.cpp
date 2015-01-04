@@ -46,6 +46,7 @@ using namespace HookMgr;
 #define EVENT_BEGIN(BINDMAP, EVENT, RET) \
     if (!BINDMAP->HasEvents(EVENT)) \
         RET; \
+    ELUNA_LOCK(this); \
     const char* _LuaBindType = this->BINDMAP->groupName; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
@@ -78,6 +79,7 @@ using namespace HookMgr;
 #define ENTRY_BEGIN(BINDMAP, ENTRY, EVENT, RET) \
     if (!BINDMAP->HasEvents(ENTRY, EVENT)) \
         RET; \
+    ELUNA_LOCK(this); \
     const char* _LuaBindType = this->BINDMAP->groupName; \
     uint32 _LuaEvent = EVENT; \
     int _LuaStackTop = lua_gettop(L); \
