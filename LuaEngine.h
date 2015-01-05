@@ -247,12 +247,7 @@ public:
     void Push(const double value)               { Push(L, value); ++push_counter; }
     void Push(const std::string& value)         { Push(L, value); ++push_counter; }
     void Push(const char* value)                { Push(L, value); ++push_counter; }
-    template<typename T> void Push(T const* ptr){ Push<T>(L, ptr); ++push_counter; }
-    void Push(Object const* obj)                { Push(L, obj); ++push_counter; }
-    void Push(WorldObject const* obj)           { Push(L, obj); ++push_counter; }
-    void Push(Unit const* unit)                 { Push(L, unit); ++push_counter; }
-    void Push(Pet const* pet)                   { Push(L, pet); ++push_counter; }
-    void Push(TempSummon const* summon)         { Push(L, summon); ++push_counter; }
+    template<typename T> void Push(T const* ptr){ Push(L, ptr); ++push_counter; }
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* luastate, int narg);

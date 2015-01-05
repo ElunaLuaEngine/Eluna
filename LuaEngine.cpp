@@ -432,19 +432,31 @@ void Eluna::report(lua_State* luastate)
 void Eluna::ExecuteCall(int params, int res)
 {
     int top = lua_gettop(L);
-    int type = lua_type(L, top - params);
 
+    // Expected: function, [parameters]
+    ASSERT(top > params);
+
+    // Check function type
+    int type = lua_type(L, top - params);
     if (type != LUA_TFUNCTION)
     {
-        lua_pop(L, params + 1);  // Cleanup the stack.
         ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is %s, not a function.", lua_typename(L, type));
-        return;
+        ASSERT(false);
     }
 
+    // Objects are invalidated when event level hits 0
     ++event_level;
-    if (lua_pcall(L, params, res, 0))
-        report(L);
+    int result = lua_pcall(L, params, res, 0);
     --event_level;
+
+    // lua_pcall returns 0 on success.
+    // On error we report errors and push nils for expected amount of returned values
+    if (result)
+    {
+        report(L);
+        for (int i = 0; i < res; ++i)
+            lua_pushnil(L);
+    }
 }
 
 void Eluna::Push(lua_State* luastate)

@@ -93,7 +93,7 @@ int Eluna::SetupStack(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings
     ASSERT(number_of_arguments == this->push_counter);
     // Stack: [arguments]
 
-    Push((int)event_id);
+    Push(event_id);
     this->push_counter = 0;
     ++number_of_arguments;
     // Stack: [arguments], event_id
@@ -143,7 +143,7 @@ void Eluna::ReplaceArgument(T value, uint8 index, uint8 number_of_arguments, uin
 int Eluna::CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results)
 {
     ++number_of_arguments; // Caller doesn't know about `event_id`.
-    ASSERT(number_of_functions > 0 && number_of_results >= 0);
+    ASSERT(number_of_functions > 0 && number_of_arguments > 0 && number_of_results >= 0);
     // Stack: event_id, [arguments], [functions]
 
     int functions_top        = lua_gettop(L);
@@ -208,6 +208,7 @@ template<typename T>
 bool Eluna::CallAllFunctionsBool(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, T event_id, uint32 entry, bool default_value)
 {
     bool result = default_value;
+    // Note: number_of_arguments here does not count in eventID, which is pushed in SetupStack
     int number_of_arguments = this->push_counter;
     // Stack: [arguments]
 
@@ -220,7 +221,7 @@ bool Eluna::CallAllFunctionsBool(EventBind<T>* event_bindings, EntryBind<T>* ent
         --number_of_functions;
         // Stack: event_id, [arguments], [functions - 1], result
 
-        if (lua_isboolean(L, r) && (bool)lua_toboolean(L, r) != default_value)
+        if (lua_isboolean(L, r) && (lua_toboolean(L, r) == 1) != default_value)
             result = !default_value;
 
         lua_pop(L, 1);
@@ -461,13 +462,13 @@ void Eluna::OnShutdownCancel()
 
 void Eluna::OnWorldUpdate(uint32 diff)
 {
-    ELUNA_LOCK(this);
     if (reload)
     {
         ReloadEluna();
         return;
     }
 
+    ELUNA_LOCK(this);
     eventMgr->globalProcessor->Update(diff);
 
     Push(diff);
