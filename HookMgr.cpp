@@ -117,6 +117,25 @@ int Eluna::SetupStack(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings
 }
 
 /*
+ * Replace one of the arguments pushed before `SetupStack` with a new value.
+ */
+template<typename T>
+void Eluna::ReplaceArgument(T value, uint8 index, uint8 number_of_arguments, uint8 number_of_results, uint8 remaining_functions)
+{
+    ASSERT(index <= number_of_arguments && index > 0);
+    // Stack: event_id, [arguments], [functions], [results]
+
+    int first_argument_index = lua_gettop(L) - number_of_results - remaining_functions - number_of_arguments + 1;
+    int argument_index = first_argument_index + index - 1;
+
+    Eluna::Push(L, value);
+    // Stack: event_id, [arguments], [functions], [results], value
+
+    lua_replace(L, argument_index);
+    // Stack: event_id, [arguments and value], [functions], [results]
+}
+
+/*
  * Call a single event handler that was put on the stack with `Setup` and removes it from the stack.
  *
  * The caller is responsible for keeping track of how many times this should be called.
@@ -795,7 +814,11 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
         int r = CallOneFunction(n--, 2, 1);
 
         if (lua_isnumber(L, r))
-            amount = CHECKVAL<uint32>(L, r);
+        {
+            amount = CHECKVAL<int32>(L, r);
+            // Update the stack for subsequent calls.
+            ReplaceArgument(amount, 2, 2, 1, n);
+        }
 
         lua_pop(L, 1);
     }
@@ -816,7 +839,11 @@ void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
         int r = CallOneFunction(n--, 3, 1);
 
         if (lua_isnumber(L, r))
-            amount = CHECKVAL<uint32>(L, r);
+        {
+            amount = CHECKVAL<int32>(L, r);
+            // Update the stack for subsequent calls.
+            ReplaceArgument(amount, 2, 3, 1, n);
+        }
 
         lua_pop(L, 1);
     }
@@ -838,7 +865,11 @@ void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standin
         int r = CallOneFunction(n--, 4, 1);
 
         if (lua_isnumber(L, r))
+        {
             standing = CHECKVAL<int32>(L, r);
+            // Update the stack for subsequent calls.
+            ReplaceArgument(standing, 3, 4, 1, n);
+        }
 
         lua_pop(L, 1);
     }
@@ -1221,7 +1252,11 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, b
         int r = CallOneFunction(n--, 4, 1);
 
         if (lua_isnumber(L, r))
+        {
             amount = CHECKVAL<uint32>(L, r);
+            // Update the stack for subsequent calls.
+            ReplaceArgument(amount, 3, 4, 1, n);
+        }
 
         lua_pop(L, 1);
     }
@@ -1242,7 +1277,11 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
         int r = CallOneFunction(n--, 3, 1);
 
         if (lua_isnumber(L, r))
+        {
             amount = CHECKVAL<uint32>(L, r);
+            // Update the stack for subsequent calls.
+            ReplaceArgument(amount, 3, 3, 1, n);
+        }
 
         lua_pop(L, 1);
     }
@@ -1518,7 +1557,11 @@ bool Eluna::DamageTaken(Creature* me, Unit* attacker, uint32& damage)
             result = true;
 
         if (lua_isnumber(L, r + 1))
+        {
             damage = Eluna::CHECKVAL<uint32>(L, r + 1);
+            // Update the stack for subsequent calls.
+            ReplaceArgument(damage, 3, 3, 2, n);
+        }
 
         lua_pop(L, 2);
     }
@@ -1645,7 +1688,11 @@ bool Eluna::CorpseRemoved(Creature* me, uint32& respawnDelay)
             result = true;
 
         if (lua_isnumber(L, r + 1))
+        {
             respawnDelay = Eluna::CHECKVAL<uint32>(L, r + 1);
+            // Update the stack for subsequent calls.
+            ReplaceArgument(respawnDelay, 2, 2, 2, n);
+        }
 
         lua_pop(L, 2);
     }
