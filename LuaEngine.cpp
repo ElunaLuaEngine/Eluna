@@ -118,6 +118,7 @@ Eluna::Eluna() :
 L(luaL_newstate()),
 
 event_level(0),
+push_counter(0),
 
 eventMgr(NULL),
 

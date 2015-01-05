@@ -109,6 +109,43 @@ private:
     Eluna(Eluna const&);
     Eluna& operator=(const Eluna&);
 
+    // Some helpers for hooks to call event handlers.
+    template<typename T> int SetupStack(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, T event_id, uint32 entry, int number_of_arguments);
+                         int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
+                         void CleanUpStack(int number_of_arguments);
+    template<typename T> void CallAllFunctions(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, T event_id, uint32 entry);
+    template<typename T> bool CallAllFunctionsBool(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, T event_id, uint32 entry, bool default_value);
+
+    // Convenient overloads for Setup. Use these in hooks instead of original.
+    template<typename T> int SetupStack(EventBind<T>* event_bindings, T event_id, int number_of_arguments)
+    {
+        return SetupStack(event_bindings, (EntryBind<T>*)NULL, event_id, 0, number_of_arguments);
+    }
+    template<typename T> int SetupStack(EntryBind<T>* entry_bindings, T event_id, uint32 entry, int number_of_arguments)
+    {
+        return SetupStack((EventBind<T>*)NULL, entry_bindings, event_id, entry, number_of_arguments);
+    }
+
+    // Convenient overloads for CallAllFunctions. Use these in hooks instead of original.
+    template<typename T> void CallAllFunctions(EventBind<T>* event_bindings, T event_id)
+    {
+        CallAllFunctions(event_bindings, (EntryBind<T>*)NULL, event_id, 0);
+    }
+    template<typename T> void CallAllFunctions(EntryBind<T>* entry_bindings, T event_id, uint32 entry)
+    {
+        CallAllFunctions((EventBind<T>*)NULL, entry_bindings, event_id, entry);
+    }
+
+    // Convenient overloads for CallAllFunctionsBool. Use these in hooks instead of original.
+    template<typename T> bool CallAllFunctionsBool(EventBind<T>* event_bindings, T event_id, bool default_value = false)
+    {
+        return CallAllFunctionsBool(event_bindings, (EntryBind<T>*)NULL, event_id, 0, default_value);
+    }
+    template<typename T> bool CallAllFunctionsBool(EntryBind<T>* entry_bindings, T event_id, uint32 entry, bool default_value = false)
+    {
+        return CallAllFunctionsBool((EventBind<T>*)NULL, entry_bindings, event_id, entry, default_value);
+    }
+
 public:
     typedef std::list<LuaScript> ScriptList;
 
@@ -168,7 +205,7 @@ public:
     void RunScripts();
     void InvalidateObjects();
 
-    // Pushes
+    // Static pushes, can be used by anything, including methods.
     static void Push(lua_State* luastate); // nil
     static void Push(lua_State* luastate, const long long);
     static void Push(lua_State* luastate, const unsigned long long);
@@ -190,6 +227,31 @@ public:
     static void Push(lua_State* luastate, Unit const* unit);
     static void Push(lua_State* luastate, Pet const* pet);
     static void Push(lua_State* luastate, TempSummon const* summon);
+
+    // When a hook pushes arguments to be passed to event handlers
+    //   this is used to keep track of how many arguments were pushed.
+    uint8 push_counter;
+
+    // Non-static pushes, to be used in hooks.
+    // These just call the correct static version with the main thread's Lua state.
+    void Push()                                 { Push(L); ++push_counter; }
+    void Push(const long long value)            { Push(L, value); ++push_counter; }
+    void Push(const unsigned long long value)   { Push(L, value); ++push_counter; }
+    void Push(const long value)                 { Push(L, value); ++push_counter; }
+    void Push(const unsigned long value)        { Push(L, value); ++push_counter; }
+    void Push(const int value)                  { Push(L, value); ++push_counter; }
+    void Push(const unsigned int value)         { Push(L, value); ++push_counter; }
+    void Push(const bool value)                 { Push(L, value); ++push_counter; }
+    void Push(const float value)                { Push(L, value); ++push_counter; }
+    void Push(const double value)               { Push(L, value); ++push_counter; }
+    void Push(const std::string& value)         { Push(L, value); ++push_counter; }
+    void Push(const char* value)                { Push(L, value); ++push_counter; }
+    template<typename T> void Push(T const* ptr){ Push<T>(L, ptr); ++push_counter; }
+    void Push(Object const* obj)                { Push(L, obj); ++push_counter; }
+    void Push(WorldObject const* obj)           { Push(L, obj); ++push_counter; }
+    void Push(Unit const* unit)                 { Push(L, unit); ++push_counter; }
+    void Push(Pet const* pet)                   { Push(L, pet); ++push_counter; }
+    void Push(TempSummon const* summon)         { Push(L, summon); ++push_counter; }
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* luastate, int narg);
