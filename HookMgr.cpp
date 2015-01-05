@@ -159,9 +159,10 @@ int Eluna::CallOneFunction(int number_of_functions, int number_of_arguments, int
     // Stack: event_id, [arguments], [functions], event_id, [arguments]
 
     ExecuteCall(number_of_arguments, number_of_results);
+    --functions_top;
     // Stack: event_id, [arguments], [functions - 1], [results]
 
-    return functions_top + 1; // Return the location of the first result.
+    return functions_top + 1; // Return the location of the first result (if any exist).
 }
 
 /*
