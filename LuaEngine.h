@@ -112,7 +112,7 @@ private:
     // Some helpers for hooks to call event handlers.
     template<typename T> int SetupStack(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, T event_id, uint32 entry, int number_of_arguments);
                          void CleanUpStack(int number_of_arguments);
-    template<typename T> void ReplaceArgument(T value, uint8 index, uint8 number_of_arguments, uint8 number_of_results, uint8 remaining_functions);
+    template<typename T> void ReplaceArgument(T value, uint8 index);
                          int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
     template<typename T> void CallAllFunctions(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, T event_id, uint32 entry);
     template<typename T> bool CallAllFunctionsBool(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, T event_id, uint32 entry, bool default_value);

@@ -120,18 +120,15 @@ int Eluna::SetupStack(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings
  * Replace one of the arguments pushed before `SetupStack` with a new value.
  */
 template<typename T>
-void Eluna::ReplaceArgument(T value, uint8 index, uint8 number_of_arguments, uint8 number_of_results, uint8 remaining_functions)
+void Eluna::ReplaceArgument(T value, uint8 index)
 {
-    ASSERT(index <= number_of_arguments && index > 0);
+    ASSERT(index < lua_gettop(L) && index > 0);
     // Stack: event_id, [arguments], [functions], [results]
-
-    int first_argument_index = lua_gettop(L) - number_of_results - remaining_functions - number_of_arguments + 1;
-    int argument_index = first_argument_index + index - 1;
 
     Eluna::Push(L, value);
     // Stack: event_id, [arguments], [functions], [results], value
 
-    lua_replace(L, argument_index);
+    lua_replace(L, index + 1);
     // Stack: event_id, [arguments and value], [functions], [results]
 }
 
@@ -809,6 +806,7 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
     ELUNA_LOCK(this);
     Push(pPlayer);
     Push(amount);
+    int amountIndex = lua_gettop(L);
     int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_MONEY_CHANGE, 2);
 
     while (n > 0)
@@ -819,7 +817,7 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
         {
             amount = CHECKVAL<int32>(L, r);
             // Update the stack for subsequent calls.
-            ReplaceArgument(amount, 2, 2, 1, n);
+            ReplaceArgument(amount, amountIndex);
         }
 
         lua_pop(L, 1);
@@ -834,6 +832,7 @@ void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
     Push(pPlayer);
     Push(amount);
     Push(pVictim);
+    int amountIndex = lua_gettop(L) - 1;
     int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_GIVE_XP, 3);
 
     while (n > 0)
@@ -844,7 +843,7 @@ void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
         {
             amount = CHECKVAL<int32>(L, r);
             // Update the stack for subsequent calls.
-            ReplaceArgument(amount, 2, 3, 1, n);
+            ReplaceArgument(amount, amountIndex);
         }
 
         lua_pop(L, 1);
@@ -860,6 +859,7 @@ void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standin
     Push(factionID);
     Push(standing);
     Push(incremental);
+    int standingIndex = lua_gettop(L) - 1;
     int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_REPUTATION_CHANGE, 4);
 
     while (n > 0)
@@ -870,7 +870,7 @@ void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standin
         {
             standing = CHECKVAL<int32>(L, r);
             // Update the stack for subsequent calls.
-            ReplaceArgument(standing, 3, 4, 1, n);
+            ReplaceArgument(standing, standingIndex);
         }
 
         lua_pop(L, 1);
@@ -1247,6 +1247,7 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, b
     Push(player);
     Push(amount);
     Push(isRepair); // isRepair not a part of Mangos, implement?
+    int amountIndex = lua_gettop(L) - 1;
     int n = SetupStack(GuildEventBindings, GUILD_EVENT_ON_MONEY_WITHDRAW, 4);
 
     while (n > 0)
@@ -1257,7 +1258,7 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, b
         {
             amount = CHECKVAL<uint32>(L, r);
             // Update the stack for subsequent calls.
-            ReplaceArgument(amount, 3, 4, 1, n);
+            ReplaceArgument(amount, amountIndex);
         }
 
         lua_pop(L, 1);
@@ -1272,6 +1273,7 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
     Push(guild);
     Push(player);
     Push(amount);
+    int amountIndex = lua_gettop(L);
     int n = SetupStack(GuildEventBindings, GUILD_EVENT_ON_MONEY_DEPOSIT, 3);
 
     while (n > 0)
@@ -1282,7 +1284,7 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
         {
             amount = CHECKVAL<uint32>(L, r);
             // Update the stack for subsequent calls.
-            ReplaceArgument(amount, 3, 3, 1, n);
+            ReplaceArgument(amount, amountIndex);
         }
 
         lua_pop(L, 1);
@@ -1549,6 +1551,7 @@ bool Eluna::DamageTaken(Creature* me, Unit* attacker, uint32& damage)
     Push(me);
     Push(attacker);
     Push(damage);
+    int damageIndex = lua_gettop(L);
     int n = SetupStack(CreatureEventBindings, CREATURE_EVENT_ON_DAMAGE_TAKEN, me->GetEntry(), 3);
 
     while (n > 0)
@@ -1562,7 +1565,7 @@ bool Eluna::DamageTaken(Creature* me, Unit* attacker, uint32& damage)
         {
             damage = Eluna::CHECKVAL<uint32>(L, r + 1);
             // Update the stack for subsequent calls.
-            ReplaceArgument(damage, 3, 3, 2, n);
+            ReplaceArgument(damage, damageIndex);
         }
 
         lua_pop(L, 2);
@@ -1680,6 +1683,7 @@ bool Eluna::CorpseRemoved(Creature* me, uint32& respawnDelay)
     bool result = false;
     Push(me);
     Push(respawnDelay);
+    int respawnDelayIndex = lua_gettop(L);
     int n = SetupStack(CreatureEventBindings, CREATURE_EVENT_ON_CORPSE_REMOVED, me->GetEntry(), 2);
 
     while (n > 0)
@@ -1693,7 +1697,7 @@ bool Eluna::CorpseRemoved(Creature* me, uint32& respawnDelay)
         {
             respawnDelay = Eluna::CHECKVAL<uint32>(L, r + 1);
             // Update the stack for subsequent calls.
-            ReplaceArgument(respawnDelay, 2, 2, 2, n);
+            ReplaceArgument(respawnDelay, respawnDelayIndex);
         }
 
         lua_pop(L, 2);
