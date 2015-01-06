@@ -17,7 +17,7 @@ extern "C"
 #include "lauxlib.h"
 };
 
-class ElunaBind
+class ElunaBind : public ElunaUtil::RWLockable
 {
 public:
     struct Binding
@@ -71,6 +71,8 @@ public:
     // unregisters all registered functions and clears all registered events from the bind std::maps (reset)
     void Clear() override
     {
+        WriteGuard guard(GetLock());
+
         for (EventToFunctionsMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
         {
             FunctionRefVector& funcrefvec = itr->second;
@@ -83,6 +85,8 @@ public:
 
     void Clear(uint32 event_id)
     {
+        WriteGuard guard(GetLock());
+
         for (FunctionRefVector::iterator itr = Bindings[event_id].begin(); itr != Bindings[event_id].end(); ++itr)
             delete *itr;
         Bindings[event_id].clear();
@@ -91,6 +95,8 @@ public:
     // Pushes the function references and updates the counters on the binds and erases them if the counter would reach 0
     void PushFuncRefs(lua_State* L, int event_id)
     {
+        WriteGuard guard(GetLock());
+
         for (FunctionRefVector::iterator it = Bindings[event_id].begin(); it != Bindings[event_id].end();)
         {
             FunctionRefVector::iterator it_old = it++;
@@ -115,12 +121,15 @@ public:
 
     void Insert(int eventId, int funcRef, uint32 shots) // Inserts a new registered event
     {
+        WriteGuard guard(GetLock());
         Bindings[eventId].push_back(new Binding(E, funcRef, shots));
     }
 
     // Checks if there are events for ID
-    bool HasEvents(T eventId) const
+    bool HasEvents(T eventId)
     {
+        ReadGuard guard(GetLock());
+
         if (Bindings.empty())
             return false;
         if (Bindings.find(eventId) == Bindings.end())
@@ -144,6 +153,8 @@ public:
     // unregisters all registered functions and clears all registered events from the bindmap
     void Clear() override
     {
+        WriteGuard guard(GetLock());
+
         for (EntryToEventsMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
         {
             EventToFunctionsMap& funcmap = itr->second;
@@ -161,6 +172,8 @@ public:
 
     void Clear(uint32 entry, uint32 event_id)
     {
+        WriteGuard guard(GetLock());
+
         for (FunctionRefVector::iterator itr = Bindings[entry][event_id].begin(); itr != Bindings[entry][event_id].end(); ++itr)
             delete *itr;
         Bindings[entry][event_id].clear();
@@ -169,6 +182,8 @@ public:
     // Pushes the function references and updates the counters on the binds and erases them if the counter would reach 0
     void PushFuncRefs(lua_State* L, int event_id, uint32 entry)
     {
+        WriteGuard guard(GetLock());
+
         for (FunctionRefVector::iterator it = Bindings[entry][event_id].begin(); it != Bindings[entry][event_id].end();)
         {
             FunctionRefVector::iterator it_old = it++;
@@ -196,12 +211,15 @@ public:
 
     void Insert(uint32 entryId, int eventId, int funcRef, uint32 shots) // Inserts a new registered event
     {
+        WriteGuard guard(GetLock());
         Bindings[entryId][eventId].push_back(new Binding(E, funcRef, shots));
     }
 
     // Returns true if the entry has registered binds
-    bool HasEvents(uint32 entryId, int eventId) const
+    bool HasEvents(T eventId, uint32 entryId)
     {
+        ReadGuard guard(GetLock());
+
         if (Bindings.empty())
             return false;
 
@@ -212,8 +230,10 @@ public:
         return itr->second.find(eventId) != itr->second.end();
     }
 
-    bool HasEvents(uint32 entryId) const
+    bool HasEvents(uint32 entryId)
     {
+        ReadGuard guard(GetLock());
+
         if (Bindings.empty())
             return false;
 
