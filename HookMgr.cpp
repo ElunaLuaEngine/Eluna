@@ -33,7 +33,7 @@ using namespace HookMgr;
  * A. If results will be IGNORED:
  *
  *     // Lock out any other threads.
- *     ELUNA_LOCK(this);
+ *     LOCK_ELUNA;
  *
  *     // Push extra arguments, if any.
  *     Push(a);
@@ -47,7 +47,7 @@ using namespace HookMgr;
  * B. If results will be USED:
  *
  *     // Lock out any other threads.
- *     ELUNA_LOCK(this);
+ *     LOCK_ELUNA;
  *
  *     // Push extra arguments, if any.
  *     Push(a);
@@ -237,20 +237,20 @@ bool Eluna::CallAllFunctionsBool(EventBind<T>* event_bindings, EntryBind<T>* ent
 
 void Eluna::OnLuaStateClose()
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     CallAllFunctions(ServerEventBindings, ELUNA_EVENT_ON_LUA_STATE_CLOSE);
 }
 
 void Eluna::OnLuaStateOpen()
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     CallAllFunctions(ServerEventBindings, ELUNA_EVENT_ON_LUA_STATE_OPEN);
 }
 
 // areatrigger
 bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pTrigger->id);
     return CallAllFunctionsBool(ServerEventBindings, TRIGGER_EVENT_ON_TRIGGER);
@@ -258,7 +258,7 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
 // weather
 void Eluna::OnChange(Weather* weather, WeatherState state, float grade)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(weather->GetZone());
     Push(state);
     Push(grade);
@@ -267,28 +267,28 @@ void Eluna::OnChange(Weather* weather, WeatherState state, float grade)
 // Auction House
 void Eluna::OnAdd(AuctionHouseObject* ah)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(ah);
     CallAllFunctions(ServerEventBindings, AUCTION_EVENT_ON_ADD);
 }
 
 void Eluna::OnRemove(AuctionHouseObject* ah)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(ah);
     CallAllFunctions(ServerEventBindings, AUCTION_EVENT_ON_REMOVE);
 }
 
 void Eluna::OnSuccessful(AuctionHouseObject* ah)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(ah);
     CallAllFunctions(ServerEventBindings, AUCTION_EVENT_ON_SUCCESSFUL);
 }
 
 void Eluna::OnExpire(AuctionHouseObject* ah)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(ah);
     CallAllFunctions(ServerEventBindings, AUCTION_EVENT_ON_EXPIRE);
 }
@@ -296,7 +296,7 @@ void Eluna::OnExpire(AuctionHouseObject* ah)
 // Packet
 bool Eluna::OnPacketSend(WorldSession* session, WorldPacket& packet)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     bool result = true;
     Player* player = NULL;
     if (session)
@@ -307,7 +307,7 @@ bool Eluna::OnPacketSend(WorldSession* session, WorldPacket& packet)
 }
 void Eluna::OnPacketSendAny(Player* player, WorldPacket& packet, bool& result)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(new WorldPacket(packet));
     Push(player);
     int n = SetupStack(ServerEventBindings, SERVER_EVENT_ON_PACKET_SEND, 2);
@@ -330,7 +330,7 @@ void Eluna::OnPacketSendAny(Player* player, WorldPacket& packet, bool& result)
 }
 void Eluna::OnPacketSendOne(Player* player, WorldPacket& packet, bool& result)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(new WorldPacket(packet));
     Push(player);
     int n = SetupStack(PacketEventBindings, PACKET_EVENT_ON_PACKET_SEND, OpcodesList(packet.GetOpcode()), 2);
@@ -354,7 +354,7 @@ void Eluna::OnPacketSendOne(Player* player, WorldPacket& packet, bool& result)
 
 bool Eluna::OnPacketReceive(WorldSession* session, WorldPacket& packet)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     bool result = true;
     Player* player = NULL;
     if (session)
@@ -365,7 +365,7 @@ bool Eluna::OnPacketReceive(WorldSession* session, WorldPacket& packet)
 }
 void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(new WorldPacket(packet));
     Push(player);
     int n = SetupStack(ServerEventBindings, SERVER_EVENT_ON_PACKET_RECEIVE, 2);
@@ -388,7 +388,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
 }
 void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(new WorldPacket(packet));
     Push(player);
     int n = SetupStack(PacketEventBindings, PACKET_EVENT_ON_PACKET_RECEIVE, OpcodesList(packet.GetOpcode()), 2);
@@ -413,7 +413,7 @@ void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result
 // AddOns
 bool Eluna::OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(sender);
     Push(type);
     const char* c_msg = msg.c_str();
@@ -435,21 +435,21 @@ bool Eluna::OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player
 
 void Eluna::OnOpenStateChange(bool open)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(open);
     CallAllFunctions(ServerEventBindings, WORLD_EVENT_ON_OPEN_STATE_CHANGE);
 }
 
 void Eluna::OnConfigLoad(bool reload)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(reload);
     CallAllFunctions(ServerEventBindings, WORLD_EVENT_ON_CONFIG_LOAD);
 }
 
 void Eluna::OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(code);
     Push(mask);
     CallAllFunctions(ServerEventBindings, WORLD_EVENT_ON_SHUTDOWN_INIT);
@@ -457,13 +457,13 @@ void Eluna::OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask)
 
 void Eluna::OnShutdownCancel()
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     CallAllFunctions(ServerEventBindings, WORLD_EVENT_ON_SHUTDOWN_CANCEL);
 }
 
 void Eluna::OnWorldUpdate(uint32 diff)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     if (reload)
     {
         ReloadEluna();
@@ -478,19 +478,19 @@ void Eluna::OnWorldUpdate(uint32 diff)
 
 void Eluna::OnStartup()
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     CallAllFunctions(ServerEventBindings, WORLD_EVENT_ON_STARTUP);
 }
 
 void Eluna::OnShutdown()
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     CallAllFunctions(ServerEventBindings, WORLD_EVENT_ON_SHUTDOWN);
 }
 
 void Eluna::HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     pPlayer->PlayerTalkClass->ClearMenus();
 
     Push(pPlayer);
@@ -507,7 +507,7 @@ void Eluna::HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender,
 
 void Eluna::HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     pPlayer->PlayerTalkClass->ClearMenus();
 
     Push(pPlayer); // receiver
@@ -525,7 +525,7 @@ void Eluna::HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 send
 // item
 bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pCaster);
     Push(spellId);
     Push(effIndex);
@@ -535,7 +535,7 @@ bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex,
 
 bool Eluna::OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pItem);
     Push(pQuest);
@@ -544,7 +544,7 @@ bool Eluna::OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest)
 
 bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     ObjectGuid guid = pItem->GET_GUID();
     bool castSpell = true;
 
@@ -575,7 +575,7 @@ bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 
 bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pItem);
 #ifndef TRINITY
@@ -609,7 +609,7 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
 
 bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& /*targets*/)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(pPlayer);
     Push(pItem);
@@ -618,7 +618,7 @@ bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& /
 
 bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pProto->ItemId);
     return CallAllFunctionsBool(ItemEventBindings, ITEM_EVENT_ON_EXPIRE, pProto->ItemId);
@@ -626,7 +626,7 @@ bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
 
 bool Eluna::OnRemove(Player* pPlayer, Item* item)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(item);
     return CallAllFunctionsBool(ItemEventBindings, ITEM_EVENT_ON_REMOVE, item->GetEntry());
@@ -635,7 +635,7 @@ bool Eluna::OnRemove(Player* pPlayer, Item* item)
 // Player
 bool Eluna::OnCommand(Player* player, const char* text)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     // If from console, player is NULL
     std::string fullcmd(text);
     if (!player || player->GetSession()->GetSecurity() >= SEC_ADMINISTRATOR)
@@ -666,7 +666,7 @@ bool Eluna::OnCommand(Player* player, const char* text)
 
 void Eluna::OnLootItem(Player* pPlayer, Item* pItem, uint32 count, uint64 guid)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pItem);
     Push(count);
@@ -676,7 +676,7 @@ void Eluna::OnLootItem(Player* pPlayer, Item* pItem, uint32 count, uint64 guid)
 
 void Eluna::OnLootMoney(Player* pPlayer, uint32 amount)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(amount);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LOOT_MONEY);
@@ -684,28 +684,28 @@ void Eluna::OnLootMoney(Player* pPlayer, uint32 amount)
 
 void Eluna::OnFirstLogin(Player* pPlayer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_FIRST_LOGIN);
 }
 
 void Eluna::OnRepop(Player* pPlayer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_REPOP);
 }
 
 void Eluna::OnResurrect(Player* pPlayer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_RESURRECT);
 }
 
 void Eluna::OnQuestAbandon(Player* pPlayer, uint32 questId)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(questId);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_QUEST_ABANDON);
@@ -713,7 +713,7 @@ void Eluna::OnQuestAbandon(Player* pPlayer, uint32 questId)
 
 void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pItem);
     Push(bag);
@@ -723,7 +723,7 @@ void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
 
 InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     InventoryResult result = EQUIP_ERR_OK;
     Push(pPlayer);
     Push(itemEntry);
@@ -744,7 +744,7 @@ InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
 }
 void Eluna::OnPlayerEnterCombat(Player* pPlayer, Unit* pEnemy)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pEnemy);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_ENTER_COMBAT);
@@ -752,14 +752,14 @@ void Eluna::OnPlayerEnterCombat(Player* pPlayer, Unit* pEnemy)
 
 void Eluna::OnPlayerLeaveCombat(Player* pPlayer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LEAVE_COMBAT);
 }
 
 void Eluna::OnPVPKill(Player* pKiller, Player* pKilled)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pKiller);
     Push(pKilled);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_KILL_PLAYER);
@@ -767,7 +767,7 @@ void Eluna::OnPVPKill(Player* pKiller, Player* pKilled)
 
 void Eluna::OnCreatureKill(Player* pKiller, Creature* pKilled)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pKiller);
     Push(pKilled);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_KILL_CREATURE);
@@ -775,7 +775,7 @@ void Eluna::OnCreatureKill(Player* pKiller, Creature* pKilled)
 
 void Eluna::OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pKiller);
     Push(pKilled);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_KILLED_BY_CREATURE);
@@ -783,7 +783,7 @@ void Eluna::OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled)
 
 void Eluna::OnLevelChanged(Player* pPlayer, uint8 oldLevel)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(oldLevel);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LEVEL_CHANGE);
@@ -791,7 +791,7 @@ void Eluna::OnLevelChanged(Player* pPlayer, uint8 oldLevel)
 
 void Eluna::OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(newPoints);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_TALENTS_CHANGE);
@@ -799,7 +799,7 @@ void Eluna::OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints)
 
 void Eluna::OnTalentsReset(Player* pPlayer, bool noCost)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(noCost);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_TALENTS_RESET);
@@ -807,7 +807,7 @@ void Eluna::OnTalentsReset(Player* pPlayer, bool noCost)
 
 void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(amount);
     int amountIndex = lua_gettop(L);
@@ -832,7 +832,7 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
 
 void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(amount);
     Push(pVictim);
@@ -858,7 +858,7 @@ void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
 
 void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standing, bool incremental)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(factionID);
     Push(standing);
@@ -885,7 +885,7 @@ void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standin
 
 void Eluna::OnDuelRequest(Player* pTarget, Player* pChallenger)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pTarget);
     Push(pChallenger);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_DUEL_REQUEST);
@@ -893,7 +893,7 @@ void Eluna::OnDuelRequest(Player* pTarget, Player* pChallenger)
 
 void Eluna::OnDuelStart(Player* pStarter, Player* pChallenger)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pStarter);
     Push(pChallenger);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_DUEL_START);
@@ -901,7 +901,7 @@ void Eluna::OnDuelStart(Player* pStarter, Player* pChallenger)
 
 void Eluna::OnDuelEnd(Player* pWinner, Player* pLoser, DuelCompleteType type)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pWinner);
     Push(pLoser);
     Push(type);
@@ -910,7 +910,7 @@ void Eluna::OnDuelEnd(Player* pWinner, Player* pLoser, DuelCompleteType type)
 
 void Eluna::OnEmote(Player* pPlayer, uint32 emote)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(emote);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_EMOTE);
@@ -918,7 +918,7 @@ void Eluna::OnEmote(Player* pPlayer, uint32 emote)
 
 void Eluna::OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint64 guid)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(textEmote);
     Push(emoteNum);
@@ -928,7 +928,7 @@ void Eluna::OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint
 
 void Eluna::OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pSpell);
     Push(skipCheck);
@@ -937,42 +937,42 @@ void Eluna::OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck)
 
 void Eluna::OnLogin(Player* pPlayer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LOGIN);
 }
 
 void Eluna::OnLogout(Player* pPlayer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LOGOUT);
 }
 
 void Eluna::OnCreate(Player* pPlayer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_CHARACTER_CREATE);
 }
 
 void Eluna::OnDelete(uint32 guidlow)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guidlow);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_CHARACTER_DELETE);
 }
 
 void Eluna::OnSave(Player* pPlayer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_SAVE);
 }
 
 void Eluna::OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapid, bool permanent)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(difficulty);
     Push(mapid);
@@ -982,7 +982,7 @@ void Eluna::OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapi
 
 void Eluna::OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(newZone);
     Push(newArea);
@@ -991,14 +991,14 @@ void Eluna::OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea)
 
 void Eluna::OnMapChanged(Player* player)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(player);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_MAP_CHANGE);
 }
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, NULL, NULL, NULL);
 
@@ -1028,7 +1028,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Group* pGroup)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, NULL, pGroup, NULL);
 
@@ -1059,7 +1059,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Guild* pGuild)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, pGuild, NULL, NULL);
 
@@ -1090,7 +1090,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Channel* pChannel)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, NULL, NULL, pChannel);
 
@@ -1121,7 +1121,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, pReceiver, NULL, NULL, NULL);
 
@@ -1155,21 +1155,21 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 // Vehicle
 void Eluna::OnInstall(Vehicle* vehicle)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(vehicle);
     CallAllFunctions(VehicleEventBindings, VEHICLE_EVENT_ON_INSTALL);
 }
 
 void Eluna::OnUninstall(Vehicle* vehicle)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(vehicle);
     CallAllFunctions(VehicleEventBindings, VEHICLE_EVENT_ON_UNINSTALL);
 }
 
 void Eluna::OnInstallAccessory(Vehicle* vehicle, Creature* accessory)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(vehicle);
     Push(accessory);
     CallAllFunctions(VehicleEventBindings, VEHICLE_EVENT_ON_INSTALL_ACCESSORY);
@@ -1177,7 +1177,7 @@ void Eluna::OnInstallAccessory(Vehicle* vehicle, Creature* accessory)
 
 void Eluna::OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(vehicle);
     Push(passenger);
     Push(seatId);
@@ -1186,7 +1186,7 @@ void Eluna::OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId)
 
 void Eluna::OnRemovePassenger(Vehicle* vehicle, Unit* passenger)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(vehicle);
     Push(passenger);
     CallAllFunctions(VehicleEventBindings, VEHICLE_EVENT_ON_REMOVE_PASSENGER);
@@ -1196,7 +1196,7 @@ void Eluna::OnRemovePassenger(Vehicle* vehicle, Unit* passenger)
 
 void Eluna::OnAddMember(Guild* guild, Player* player, uint32 plRank)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guild);
     Push(player);
     Push(plRank);
@@ -1205,7 +1205,7 @@ void Eluna::OnAddMember(Guild* guild, Player* player, uint32 plRank)
 
 void Eluna::OnRemoveMember(Guild* guild, Player* player, bool isDisbanding)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guild);
     Push(player);
     Push(isDisbanding);
@@ -1214,7 +1214,7 @@ void Eluna::OnRemoveMember(Guild* guild, Player* player, bool isDisbanding)
 
 void Eluna::OnMOTDChanged(Guild* guild, const std::string& newMotd)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guild);
     Push(newMotd);
     CallAllFunctions(GuildEventBindings, GUILD_EVENT_ON_MOTD_CHANGE);
@@ -1222,7 +1222,7 @@ void Eluna::OnMOTDChanged(Guild* guild, const std::string& newMotd)
 
 void Eluna::OnInfoChanged(Guild* guild, const std::string& newInfo)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guild);
     Push(newInfo);
     CallAllFunctions(GuildEventBindings, GUILD_EVENT_ON_INFO_CHANGE);
@@ -1230,7 +1230,7 @@ void Eluna::OnInfoChanged(Guild* guild, const std::string& newInfo)
 
 void Eluna::OnCreate(Guild* guild, Player* leader, const std::string& name)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guild);
     Push(leader);
     Push(name);
@@ -1239,14 +1239,14 @@ void Eluna::OnCreate(Guild* guild, Player* leader, const std::string& name)
 
 void Eluna::OnDisband(Guild* guild)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guild);
     CallAllFunctions(GuildEventBindings, GUILD_EVENT_ON_DISBAND);
 }
 
 void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair) // isRepair not a part of Mangos, implement?
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guild);
     Push(player);
     Push(amount);
@@ -1273,7 +1273,7 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, b
 
 void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guild);
     Push(player);
     Push(amount);
@@ -1300,7 +1300,7 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
 void Eluna::OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId,
     bool isDestBank, uint8 destContainer, uint8 destSlotId)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guild);
     Push(player);
     Push(pItem);
@@ -1315,7 +1315,7 @@ void Eluna::OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank
 
 void Eluna::OnEvent(Guild* guild, uint8 eventType, uint32 playerGuid1, uint32 playerGuid2, uint8 newRank)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guild);
     Push(eventType);
     Push(playerGuid1);
@@ -1326,7 +1326,7 @@ void Eluna::OnEvent(Guild* guild, uint8 eventType, uint32 playerGuid1, uint32 pl
 
 void Eluna::OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playerGuid, uint32 itemOrMoney, uint16 itemStackCount, uint8 destTabId)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(guild);
     Push(eventType);
     Push(tabId);
@@ -1339,7 +1339,7 @@ void Eluna::OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playe
 // Group
 void Eluna::OnAddMember(Group* group, uint64 guid)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(group);
     Push(guid);
     CallAllFunctions(GroupEventBindings, GROUP_EVENT_ON_MEMBER_ADD);
@@ -1347,7 +1347,7 @@ void Eluna::OnAddMember(Group* group, uint64 guid)
 
 void Eluna::OnInviteMember(Group* group, uint64 guid)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(group);
     Push(guid);
     CallAllFunctions(GroupEventBindings, GROUP_EVENT_ON_MEMBER_INVITE);
@@ -1355,7 +1355,7 @@ void Eluna::OnInviteMember(Group* group, uint64 guid)
 
 void Eluna::OnRemoveMember(Group* group, uint64 guid, uint8 method)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(group);
     Push(guid);
     Push(method);
@@ -1364,7 +1364,7 @@ void Eluna::OnRemoveMember(Group* group, uint64 guid, uint8 method)
 
 void Eluna::OnChangeLeader(Group* group, uint64 newLeaderGuid, uint64 oldLeaderGuid)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(group);
     Push(newLeaderGuid);
     Push(oldLeaderGuid);
@@ -1373,14 +1373,14 @@ void Eluna::OnChangeLeader(Group* group, uint64 newLeaderGuid, uint64 oldLeaderG
 
 void Eluna::OnDisband(Group* group)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(group);
     CallAllFunctions(GroupEventBindings, GROUP_EVENT_ON_DISBAND);
 }
 
 void Eluna::OnCreate(Group* group, uint64 leaderGuid, GroupType groupType)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(group);
     Push(leaderGuid);
     Push(groupType);
@@ -1390,33 +1390,33 @@ void Eluna::OnCreate(Group* group, uint64 leaderGuid, GroupType groupType)
 /* Map */
 void Eluna::OnCreate(Map* map)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(map);
     CallAllFunctions(ServerEventBindings, MAP_EVENT_ON_CREATE);
 }
 void Eluna::OnDestroy(Map* map)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(map);
     CallAllFunctions(ServerEventBindings, MAP_EVENT_ON_DESTROY);
 }
 void Eluna::OnPlayerEnter(Map* map, Player* player)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(map);
     Push(player);
     CallAllFunctions(ServerEventBindings, MAP_EVENT_ON_PLAYER_ENTER);
 }
 void Eluna::OnPlayerLeave(Map* map, Player* player)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(map);
     Push(player);
     CallAllFunctions(ServerEventBindings, MAP_EVENT_ON_PLAYER_LEAVE);
 }
 void Eluna::OnUpdate(Map* map, uint32 diff)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     // enable this for multithread
     // eventMgr->globalProcessor->Update(diff);
     Push(map);
@@ -1425,13 +1425,13 @@ void Eluna::OnUpdate(Map* map, uint32 diff)
 }
 void Eluna::OnRemove(GameObject* gameobject)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(gameobject);
     CallAllFunctions(ServerEventBindings, WORLD_EVENT_ON_DELETE_GAMEOBJECT);
 }
 void Eluna::OnRemove(Creature* creature)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(creature);
     CallAllFunctions(ServerEventBindings, WORLD_EVENT_ON_DELETE_CREATURE);
 }
@@ -1439,7 +1439,7 @@ void Eluna::OnRemove(Creature* creature)
 // creature
 bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, Creature* pTarget)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pCaster);
     Push(spellId);
     Push(effIndex);
@@ -1449,7 +1449,7 @@ bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex,
 
 bool Eluna::OnGossipHello(Player* pPlayer, Creature* pCreature)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(pPlayer);
     Push(pCreature);
@@ -1458,7 +1458,7 @@ bool Eluna::OnGossipHello(Player* pPlayer, Creature* pCreature)
 
 bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(pPlayer);
     Push(pCreature);
@@ -1469,7 +1469,7 @@ bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, 
 
 bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(pPlayer);
     Push(pCreature);
@@ -1481,7 +1481,7 @@ bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 send
 
 bool Eluna::OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pCreature);
     Push(pQuest);
@@ -1490,7 +1490,7 @@ bool Eluna::OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQu
 
 bool Eluna::OnQuestReward(Player* pPlayer, Creature* pCreature, Quest const* pQuest, uint32 opt)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pCreature);
     Push(pQuest);
@@ -1500,7 +1500,7 @@ bool Eluna::OnQuestReward(Player* pPlayer, Creature* pCreature, Quest const* pQu
 
 uint32 Eluna::GetDialogStatus(Player* pPlayer, Creature* pCreature)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pCreature);
     CallAllFunctions(CreatureEventBindings, CREATURE_EVENT_ON_DIALOG_STATUS, pCreature->GetEntry());
@@ -1509,21 +1509,21 @@ uint32 Eluna::GetDialogStatus(Player* pPlayer, Creature* pCreature)
 
 void Eluna::OnAddToWorld(Creature* creature)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(creature);
     CallAllFunctions(CreatureEventBindings, CREATURE_EVENT_ON_ADD, creature->GetEntry());
 }
 
 void Eluna::OnRemoveFromWorld(Creature* creature)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(creature);
     CallAllFunctions(CreatureEventBindings, CREATURE_EVENT_ON_REMOVE, creature->GetEntry());
 }
 
 bool Eluna::OnSummoned(Creature* pCreature, Unit* pSummoner)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pCreature);
     Push(pSummoner);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_SUMMONED, pCreature->GetEntry());
@@ -1531,7 +1531,7 @@ bool Eluna::OnSummoned(Creature* pCreature, Unit* pSummoner)
 
 bool Eluna::UpdateAI(Creature* me, const uint32 diff)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(diff);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_AIUPDATE, me->GetEntry());
@@ -1541,7 +1541,7 @@ bool Eluna::UpdateAI(Creature* me, const uint32 diff)
 //Called at creature aggro either by MoveInLOS or Attack Start
 bool Eluna::EnterCombat(Creature* me, Unit* target)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(target);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_ENTER_COMBAT, me->GetEntry());
@@ -1550,7 +1550,7 @@ bool Eluna::EnterCombat(Creature* me, Unit* target)
 // Called at any Damage from any attacker (before damage apply)
 bool Eluna::DamageTaken(Creature* me, Unit* attacker, uint32& damage)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     bool result = false;
     Push(me);
     Push(attacker);
@@ -1582,7 +1582,7 @@ bool Eluna::DamageTaken(Creature* me, Unit* attacker, uint32& damage)
 //Called at creature death
 bool Eluna::JustDied(Creature* me, Unit* killer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     On_Reset(me);
     Push(me);
     Push(killer);
@@ -1592,7 +1592,7 @@ bool Eluna::JustDied(Creature* me, Unit* killer)
 //Called at creature killing another unit
 bool Eluna::KilledUnit(Creature* me, Unit* victim)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(victim);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_TARGET_DIED, me->GetEntry());
@@ -1601,7 +1601,7 @@ bool Eluna::KilledUnit(Creature* me, Unit* victim)
 // Called when the creature summon successfully other creature
 bool Eluna::JustSummoned(Creature* me, Creature* summon)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(summon);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE, me->GetEntry());
@@ -1610,7 +1610,7 @@ bool Eluna::JustSummoned(Creature* me, Creature* summon)
 // Called when a summoned creature is despawned
 bool Eluna::SummonedCreatureDespawn(Creature* me, Creature* summon)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(summon);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN, me->GetEntry());
@@ -1619,7 +1619,7 @@ bool Eluna::SummonedCreatureDespawn(Creature* me, Creature* summon)
 //Called at waypoint reached or PointMovement end
 bool Eluna::MovementInform(Creature* me, uint32 type, uint32 id)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(type);
     Push(id);
@@ -1629,7 +1629,7 @@ bool Eluna::MovementInform(Creature* me, uint32 type, uint32 id)
 // Called before EnterCombat even before the creature is in combat.
 bool Eluna::AttackStart(Creature* me, Unit* target)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(target);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_PRE_COMBAT, me->GetEntry());
@@ -1638,7 +1638,7 @@ bool Eluna::AttackStart(Creature* me, Unit* target)
 // Called for reaction at stopping attack at no attackers or targets
 bool Eluna::EnterEvadeMode(Creature* me)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     On_Reset(me);
     Push(me);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_LEAVE_COMBAT, me->GetEntry());
@@ -1647,7 +1647,7 @@ bool Eluna::EnterEvadeMode(Creature* me)
 // Called when the creature is target of hostile action: swing, hostile spell landed, fear/etc)
 bool Eluna::AttackedBy(Creature* me, Unit* attacker)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(attacker);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_ATTACKED_AT, me->GetEntry());
@@ -1656,7 +1656,7 @@ bool Eluna::AttackedBy(Creature* me, Unit* attacker)
 // Called when creature is spawned or respawned (for reseting variables)
 bool Eluna::JustRespawned(Creature* me)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     On_Reset(me);
     Push(me);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_SPAWN, me->GetEntry());
@@ -1665,7 +1665,7 @@ bool Eluna::JustRespawned(Creature* me)
 // Called at reaching home after evade
 bool Eluna::JustReachedHome(Creature* me)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_REACH_HOME, me->GetEntry());
 }
@@ -1673,7 +1673,7 @@ bool Eluna::JustReachedHome(Creature* me)
 // Called at text emote receive from player
 bool Eluna::ReceiveEmote(Creature* me, Player* player, uint32 emoteId)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(player);
     Push(emoteId);
@@ -1683,7 +1683,7 @@ bool Eluna::ReceiveEmote(Creature* me, Player* player, uint32 emoteId)
 // called when the corpse of this creature gets removed
 bool Eluna::CorpseRemoved(Creature* me, uint32& respawnDelay)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     bool result = false;
     Push(me);
     Push(respawnDelay);
@@ -1713,7 +1713,7 @@ bool Eluna::CorpseRemoved(Creature* me, uint32& respawnDelay)
 
 bool Eluna::MoveInLineOfSight(Creature* me, Unit* who)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(who);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_MOVE_IN_LOS, me->GetEntry());
@@ -1722,7 +1722,7 @@ bool Eluna::MoveInLineOfSight(Creature* me, Unit* who)
 // Called on creature initial spawn, respawn, death, evade (leave combat)
 void Eluna::On_Reset(Creature* me) // Not an override, custom
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     CallAllFunctions(CreatureEventBindings, CREATURE_EVENT_ON_RESET, me->GetEntry());
 }
@@ -1730,7 +1730,7 @@ void Eluna::On_Reset(Creature* me) // Not an override, custom
 // Called when hit by a spell
 bool Eluna::SpellHit(Creature* me, Unit* caster, SpellInfo const* spell)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(caster);
     Push(spell->Id); // Pass spell object?
@@ -1740,7 +1740,7 @@ bool Eluna::SpellHit(Creature* me, Unit* caster, SpellInfo const* spell)
 // Called when spell hits a target
 bool Eluna::SpellHitTarget(Creature* me, Unit* target, SpellInfo const* spell)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(target);
     Push(spell->Id); // Pass spell object?
@@ -1751,7 +1751,7 @@ bool Eluna::SpellHitTarget(Creature* me, Unit* target, SpellInfo const* spell)
 
 bool Eluna::SummonedCreatureDies(Creature* me, Creature* summon, Unit* killer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(summon);
     Push(killer);
@@ -1761,7 +1761,7 @@ bool Eluna::SummonedCreatureDies(Creature* me, Creature* summon, Unit* killer)
 // Called when owner takes damage
 bool Eluna::OwnerAttackedBy(Creature* me, Unit* attacker)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(attacker);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_OWNER_ATTACKED_AT, me->GetEntry());
@@ -1770,7 +1770,7 @@ bool Eluna::OwnerAttackedBy(Creature* me, Unit* attacker)
 // Called when owner attacks something
 bool Eluna::OwnerAttacked(Creature* me, Unit* target)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(me);
     Push(target);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_OWNER_ATTACKED, me->GetEntry());
@@ -1973,7 +1973,7 @@ struct ElunaCreatureAI : ScriptedAI
 // gameobject
 bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, GameObject* pTarget)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pCaster);
     Push(spellId);
     Push(effIndex);
@@ -1983,7 +1983,7 @@ bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex,
 
 bool Eluna::OnGossipHello(Player* pPlayer, GameObject* pGameObject)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(pPlayer);
     Push(pGameObject);
@@ -1992,7 +1992,7 @@ bool Eluna::OnGossipHello(Player* pPlayer, GameObject* pGameObject)
 
 bool Eluna::OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(pPlayer);
     Push(pGameObject);
@@ -2003,7 +2003,7 @@ bool Eluna::OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 send
 
 bool Eluna::OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action, const char* code)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(pPlayer);
     Push(pGameObject);
@@ -2015,7 +2015,7 @@ bool Eluna::OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 
 
 bool Eluna::OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pGameObject);
     Push(pQuest);
@@ -2024,7 +2024,7 @@ bool Eluna::OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const*
 
 void Eluna::UpdateAI(GameObject* pGameObject, uint32 diff)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     pGameObject->elunaEvents->Update(diff);
     Push(pGameObject);
     Push(diff);
@@ -2033,7 +2033,7 @@ void Eluna::UpdateAI(GameObject* pGameObject, uint32 diff)
 
 bool Eluna::OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest, uint32 opt)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pGameObject);
     Push(pQuest);
@@ -2043,7 +2043,7 @@ bool Eluna::OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const*
 
 uint32 Eluna::GetDialogStatus(Player* pPlayer, GameObject* pGameObject)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pPlayer);
     Push(pGameObject);
     CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_DIALOG_STATUS, pGameObject->GetEntry());
@@ -2054,7 +2054,7 @@ uint32 Eluna::GetDialogStatus(Player* pPlayer, GameObject* pGameObject)
 #ifndef TBC
 void Eluna::OnDestroyed(GameObject* pGameObject, Player* pPlayer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pGameObject);
     Push(pPlayer);
     CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_DESTROYED, pGameObject->GetEntry());
@@ -2062,7 +2062,7 @@ void Eluna::OnDestroyed(GameObject* pGameObject, Player* pPlayer)
 
 void Eluna::OnDamaged(GameObject* pGameObject, Player* pPlayer)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pGameObject);
     Push(pPlayer);
     CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_DAMAGED, pGameObject->GetEntry());
@@ -2072,7 +2072,7 @@ void Eluna::OnDamaged(GameObject* pGameObject, Player* pPlayer)
 
 void Eluna::OnLootStateChanged(GameObject* pGameObject, uint32 state)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pGameObject);
     Push(state);
     CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE, pGameObject->GetEntry());
@@ -2080,7 +2080,7 @@ void Eluna::OnLootStateChanged(GameObject* pGameObject, uint32 state)
 
 void Eluna::OnGameObjectStateChanged(GameObject* pGameObject, uint32 state)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(pGameObject);
     Push(state);
     CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED, pGameObject->GetEntry());
@@ -2088,28 +2088,28 @@ void Eluna::OnGameObjectStateChanged(GameObject* pGameObject, uint32 state)
 
 void Eluna::OnSpawn(GameObject* gameobject)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(gameobject);
     CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_SPAWN, gameobject->GetEntry());
 }
 
 void Eluna::OnAddToWorld(GameObject* gameobject)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(gameobject);
     CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_ADD, gameobject->GetEntry());
 }
 
 void Eluna::OnRemoveFromWorld(GameObject* gameobject)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(gameobject);
     CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_REMOVE, gameobject->GetEntry());
 }
 
 CreatureAI* Eluna::GetAI(Creature* creature)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     if (!CreatureEventBindings->HasEvents(creature->GetEntry()))
         return NULL;
     return new ElunaCreatureAI(creature);
@@ -2117,7 +2117,7 @@ CreatureAI* Eluna::GetAI(Creature* creature)
 
 void Eluna::OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(bg);
     Push(bgId);
     Push(instanceId);
@@ -2126,7 +2126,7 @@ void Eluna::OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instance
 
 void Eluna::OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, Team winner)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(bg);
     Push(bgId);
     Push(instanceId);
@@ -2136,7 +2136,7 @@ void Eluna::OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId
 
 void Eluna::OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(bg);
     Push(bgId);
     Push(instanceId);
@@ -2145,7 +2145,7 @@ void Eluna::OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanc
 
 void Eluna::OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
 {
-    ELUNA_LOCK(this);
+    LOCK_ELUNA;
     Push(bg);
     Push(bgId);
     Push(instanceId);

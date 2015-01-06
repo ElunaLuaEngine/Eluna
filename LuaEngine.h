@@ -459,5 +459,5 @@ template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* L, int narg, boo
 template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* L, int narg, bool error);
 
 #define sEluna Eluna::GEluna
-#define ELUNA_LOCK(E) Eluna::Guard __guard(Eluna::lock);
+#define LOCK_ELUNA Eluna::Guard __guard(Eluna::lock)
 #endif

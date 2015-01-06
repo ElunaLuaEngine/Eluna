@@ -26,7 +26,7 @@ LuaEvent::~LuaEvent()
 
 void LuaEvent::Execute()
 {
-    ELUNA_LOCK(*events->E);
+    LOCK_ELUNA;
     // In multithread get map from object and the map's lua state
     lua_rawgeti((*events->E)->L, LUA_REGISTRYINDEX, funcRef);
     Eluna::Push((*events->E)->L, funcRef);
