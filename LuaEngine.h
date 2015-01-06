@@ -159,10 +159,10 @@ public:
     typedef std::lock_guard<LockType> ElunaGuard;
 #else
     typedef ACE_Recursive_Thread_Mutex LockType;
-    typedef ACE_Guard<LockType> ElunaGuard;
+    typedef ACE_Guard<LockType> Guard;
 #endif
 
-    LockType elunaLock;
+    static LockType lock;
 
     lua_State* L;
     uint32 event_level;
@@ -459,5 +459,5 @@ template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* L, int narg, boo
 template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* L, int narg, bool error);
 
 #define sEluna Eluna::GEluna
-#define ELUNA_LOCK(E) Eluna::ElunaGuard elunaGuard((E)->elunaLock);
+#define ELUNA_LOCK(E) Eluna::Guard __guard(Eluna::lock);
 #endif

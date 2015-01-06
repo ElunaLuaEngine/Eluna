@@ -463,13 +463,13 @@ void Eluna::OnShutdownCancel()
 
 void Eluna::OnWorldUpdate(uint32 diff)
 {
+    ELUNA_LOCK(this);
     if (reload)
     {
         ReloadEluna();
         return;
     }
 
-    ELUNA_LOCK(this);
     eventMgr->globalProcessor->Update(diff);
 
     Push(diff);

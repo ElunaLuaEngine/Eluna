@@ -36,6 +36,7 @@ std::string Eluna::lua_requirepath;
 Eluna* Eluna::GEluna = NULL;
 bool Eluna::reload = false;
 bool Eluna::initialized = false;
+Eluna::LockType Eluna::lock;
 
 extern void RegisterFunctions(Eluna* E);
 
