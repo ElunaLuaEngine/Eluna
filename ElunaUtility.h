@@ -119,9 +119,9 @@ namespace ElunaUtil
     /*
      * Usage:
      * Inherit this class, then when needing lock, use
-     * ReadGuard lock(_lock);
+     * ReadGuard guard(GetLock());
      * or
-     * WriteGuard lock(_lock);
+     * WriteGuard guard(GetLock());
      *
      * The lock is automatically released at end of scope
      */

@@ -89,13 +89,13 @@ void Eluna::ReloadEluna()
 
     EventMgr::ProcessorSet oldProcessors;
     {
-        EventMgr::ReadGuard lock(sEluna->eventMgr->GetLock());
+        EventMgr::ReadGuard guard(sEluna->eventMgr->GetLock());
         oldProcessors = sEluna->eventMgr->processors;
     }
     Uninitialize();
     Initialize();
     {
-        EventMgr::WriteGuard lock(sEluna->eventMgr->GetLock());
+        EventMgr::WriteGuard guard(sEluna->eventMgr->GetLock());
         sEluna->eventMgr->processors.insert(oldProcessors.begin(), oldProcessors.end());
     }
 

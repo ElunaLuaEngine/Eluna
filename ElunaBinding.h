@@ -17,7 +17,7 @@ extern "C"
 #include "lauxlib.h"
 };
 
-class ElunaBind
+class ElunaBind : public ElunaUtil::RWLockable
 {
 public:
     struct Binding
@@ -61,7 +61,7 @@ public:
 };
 
 template<typename T>
-class EventBind : public ElunaBind, public ElunaUtil::RWLockable
+class EventBind : public ElunaBind
 {
 public:
     EventBind(const char* bindGroupName, Eluna& _E) : ElunaBind(bindGroupName, _E)
@@ -141,7 +141,7 @@ public:
 };
 
 template<typename T>
-class EntryBind : public ElunaBind, public ElunaUtil::RWLockable
+class EntryBind : public ElunaBind
 {
 public:
     typedef UNORDERED_MAP<uint32, EventToFunctionsMap> EntryToEventsMap;

@@ -156,7 +156,7 @@ public:
 
 #ifdef TRINITY
     typedef std::recursive_mutex LockType;
-    typedef std::lock_guard<LockType> ElunaGuard;
+    typedef std::lock_guard<LockType> Guard;
 #else
     typedef ACE_Recursive_Thread_Mutex LockType;
     typedef ACE_Guard<LockType> Guard;

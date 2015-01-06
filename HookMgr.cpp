@@ -1190,11 +1190,11 @@ void Eluna::OnMapChanged(Player* player)
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_CHAT))
-        return true;
-
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, NULL, NULL, NULL);
+
+    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_CHAT))
+        return true;
 
     LOCK_ELUNA;
     bool result = true;
@@ -1223,11 +1223,11 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Group* pGroup)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_GROUP_CHAT))
-        return true;
-
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, NULL, pGroup, NULL);
+
+    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_GROUP_CHAT))
+        return true;
 
     LOCK_ELUNA;
     bool result = true;
@@ -1257,11 +1257,11 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Guild* pGuild)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_GUILD_CHAT))
-        return true;
-
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, pGuild, NULL, NULL);
+
+    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_GUILD_CHAT))
+        return true;
 
     LOCK_ELUNA;
     bool result = true;
@@ -1291,11 +1291,11 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Channel* pChannel)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_CHANNEL_CHAT))
-        return true;
-
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, NULL, NULL, pChannel);
+
+    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_CHANNEL_CHAT))
+        return true;
 
     LOCK_ELUNA;
     bool result = true;
@@ -1325,11 +1325,11 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_WHISPER))
-        return true;
-
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, pReceiver, NULL, NULL, NULL);
+
+    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_WHISPER))
+        return true;
 
     LOCK_ELUNA;
     bool result = true;

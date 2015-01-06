@@ -45,7 +45,7 @@ ElunaEventProcessor::ElunaEventProcessor(Eluna** _E, WorldObject* _obj) : m_time
 {
     if (obj)
     {
-        EventMgr::WriteGuard lock((*E)->eventMgr->GetLock());
+        EventMgr::WriteGuard guard((*E)->eventMgr->GetLock());
         (*E)->eventMgr->processors.insert(this);
     }
 }
@@ -56,7 +56,7 @@ ElunaEventProcessor::~ElunaEventProcessor()
 
     if (obj && Eluna::initialized)
     {
-        EventMgr::WriteGuard lock((*E)->eventMgr->GetLock());
+        EventMgr::WriteGuard guard((*E)->eventMgr->GetLock());
         (*E)->eventMgr->processors.erase(this);
     }
 }
@@ -133,7 +133,7 @@ EventMgr::EventMgr(Eluna** _E) : globalProcessor(new ElunaEventProcessor(_E, NUL
 EventMgr::~EventMgr()
 {
     {
-        ReadGuard lock(GetLock());
+        ReadGuard guard(GetLock());
         if (!processors.empty())
             for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
                 (*it)->RemoveEvents_internal();
@@ -145,7 +145,7 @@ EventMgr::~EventMgr()
 
 void EventMgr::RemoveEvents()
 {
-    ReadGuard lock(GetLock());
+    ReadGuard guard(GetLock());
     if (!processors.empty())
         for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
             (*it)->RemoveEvents();
@@ -154,7 +154,7 @@ void EventMgr::RemoveEvents()
 
 void EventMgr::RemoveEvent(int eventId)
 {
-    ReadGuard lock(GetLock());
+    ReadGuard guard(GetLock());
     if (!processors.empty())
         for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
             (*it)->RemoveEvent(eventId);
