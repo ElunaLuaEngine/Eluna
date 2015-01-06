@@ -168,8 +168,12 @@ int Eluna::CallOneFunction(int number_of_functions, int number_of_arguments, int
 void Eluna::CleanUpStack(int number_of_arguments)
 {
     // Stack: event_id, [arguments]
+
     lua_pop(L, number_of_arguments + 1); // Add 1 because the caller doesn't know about `event_id`.
     // Stack: (empty)
+
+    if (event_level == 0)
+        InvalidateObjects();
 }
 
 /*
