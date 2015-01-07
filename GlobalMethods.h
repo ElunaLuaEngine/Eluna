@@ -494,7 +494,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 3);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
-            E->Register(regtype, entry, ev, functionRef, shots);
+            E->Register(regtype, entry, 0, 0, ev, functionRef, shots);
         else
             luaL_argerror(L, 3, "unable to make a ref to function");
     }
@@ -508,9 +508,35 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 2);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
-            E->Register(regtype, 0, ev, functionRef, shots);
+            E->Register(regtype, 0, 0, 0, ev, functionRef, shots);
         else
             luaL_argerror(L, 2, "unable to make a ref to function");
+    }
+
+    static void RegisterGUIDHelper(Eluna* E, lua_State* L, int regtype)
+    {
+        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+        uint32 instanceId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 ev = Eluna::CHECKVAL<uint32>(L, 3);
+        luaL_checktype(L, 4, LUA_TFUNCTION);
+        uint32 shots = Eluna::CHECKVAL<uint32>(L, 5, 0);
+
+        lua_pushvalue(L, 4);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
+        if (functionRef >= 0)
+            E->Register(regtype, 0, guid, instanceId, ev, functionRef, shots);
+        else
+            luaL_argerror(L, 4, "unable to make a ref to function");
+    }
+
+    static void RegisterEntryOrGUIDHelper(Eluna* E, lua_State* L, int regtype)
+    {
+        if (lua_isnumber(L, 1))
+            RegisterEntryHelper(E, L, regtype);
+        else if (lua_isuserdata(L, 1))
+            RegisterGUIDHelper(E, L, regtype);
+        else
+            luaL_argerror(L, 1, "expected entry or WorldObject");
     }
 
     /**
@@ -921,14 +947,20 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @param uint32 entry : [Creature] entry Id
-     * @param uint32 event : [Creature] event Id, refer to CreatureEvents above
-     * @param function function : function to register
+     * @proto (entry, event, function)
+     * @proto (entry, event, function, shots)
+     * @proto (entry, guid, instance_id, function)
+     * @proto (entry, guid, instance_id, function, shots)
+     * @param uint32 entry : the ID of one or more [Creature]s
+     * @param uint64 guid : the GUID of a single [Creature]
+     * @param uint32 instance_id : the instance ID of a single [Creature]
+     * @param uint32 event : refer to CreatureEvents above
+     * @param function function : function that will be called when the event occurs
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterCreatureEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, HookMgr::REGTYPE_CREATURE);
+        RegisterEntryOrGUIDHelper(E, L, HookMgr::REGTYPE_CREATURE);
         return 0;
     }
 
@@ -2355,14 +2387,29 @@ namespace LuaGlobalFunctions
     /**
      * Unbinds all event handlers for a particular [Creature] event/entry combination.
      *
-     * @param uint32 entry : the ID of a [Creature] whose handlers will be cleared
+     * @proto (entry, event_type)
+     * @proto (guid, instance_id, event_type)
+     * @param uint32 entry : the ID of one or more [Creature]s whose handlers will be cleared
+     * @param uint64 guid : the GUID of a single [Creature] whose handlers will be cleared
+     * @param uint32 instance_id : the instance ID of a single [Creature] whose handlers will be cleared
      * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterCreatureEvent]
      */
     int ClearCreatureEvents(Eluna* E, lua_State* L)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
-        E->CreatureEventBindings->Clear(entry, event_type);
+        if (lua_isnumber(L, 1))
+        {
+            uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+            uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+            E->CreatureEventBindings->Clear(entry, event_type);
+        }
+        else
+        {
+            uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+            uint32 instanceId = Eluna::CHECKVAL<uint32>(L, 2);
+            uint32 event_type = Eluna::CHECKVAL<uint32>(L, 3);
+            E->CreatureUniqueBindings->Clear(guid, instanceId, event_type);
+        }
+
         return 0;
     }
 
