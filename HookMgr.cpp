@@ -1915,10 +1915,11 @@ bool Eluna::DamageTaken(Creature* me, Unit* attacker, uint32& damage)
 //Called at creature death
 bool Eluna::JustDied(Creature* me, Unit* killer)
 {
+    On_Reset(me);
+
     if (!CreatureEventBindings->HasEvents(CREATURE_EVENT_ON_DIED, me->GetEntry()))
         return false;
 
-    On_Reset(me);
     LOCK_ELUNA;
     Push(me);
     Push(killer);
@@ -1989,10 +1990,11 @@ bool Eluna::AttackStart(Creature* me, Unit* target)
 // Called for reaction at stopping attack at no attackers or targets
 bool Eluna::EnterEvadeMode(Creature* me)
 {
+    On_Reset(me);
+
     if (!CreatureEventBindings->HasEvents(CREATURE_EVENT_ON_LEAVE_COMBAT, me->GetEntry()))
         return false;
 
-    On_Reset(me);
     LOCK_ELUNA;
     Push(me);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_LEAVE_COMBAT, me->GetEntry());
@@ -2013,10 +2015,11 @@ bool Eluna::AttackedBy(Creature* me, Unit* attacker)
 // Called when creature is spawned or respawned (for reseting variables)
 bool Eluna::JustRespawned(Creature* me)
 {
+    On_Reset(me);
+
     if (!CreatureEventBindings->HasEvents(CREATURE_EVENT_ON_SPAWN, me->GetEntry()))
         return false;
 
-    On_Reset(me);
     LOCK_ELUNA;
     Push(me);
     return CallAllFunctionsBool(CreatureEventBindings, CREATURE_EVENT_ON_SPAWN, me->GetEntry());
