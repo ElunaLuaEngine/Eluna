@@ -513,7 +513,7 @@ namespace LuaGlobalFunctions
             luaL_argerror(L, 2, "unable to make a ref to function");
     }
 
-    static void RegisterGUIDHelper(Eluna* E, lua_State* L, int regtype)
+    static void RegisterUniqueHelper(Eluna* E, lua_State* L, int regtype)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
         uint32 instanceId = Eluna::CHECKVAL<uint32>(L, 2);
@@ -529,12 +529,12 @@ namespace LuaGlobalFunctions
             luaL_argerror(L, 4, "unable to make a ref to function");
     }
 
-    static void RegisterEntryOrGUIDHelper(Eluna* E, lua_State* L, int regtype)
+    static void RegisterEntryOrUniqueHelper(Eluna* E, lua_State* L, int regtype)
     {
         if (lua_isnumber(L, 1))
             RegisterEntryHelper(E, L, regtype);
         else if (lua_isuserdata(L, 1))
-            RegisterGUIDHelper(E, L, regtype);
+            RegisterUniqueHelper(E, L, regtype);
         else
             luaL_argerror(L, 1, "expected entry or WorldObject");
     }
@@ -960,7 +960,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterCreatureEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryOrGUIDHelper(E, L, HookMgr::REGTYPE_CREATURE);
+        RegisterEntryOrUniqueHelper(E, L, HookMgr::REGTYPE_CREATURE);
         return 0;
     }
 
