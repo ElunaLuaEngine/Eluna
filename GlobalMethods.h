@@ -949,8 +949,8 @@ namespace LuaGlobalFunctions
      *
      * @proto (entry, event, function)
      * @proto (entry, event, function, shots)
-     * @proto (entry, guid, instance_id, function)
-     * @proto (entry, guid, instance_id, function, shots)
+     * @proto (guid, instance_id, event, function)
+     * @proto (guid, instance_id, event, function, shots)
      * @param uint32 entry : the ID of one or more [Creature]s
      * @param uint64 guid : the GUID of a single [Creature]
      * @param uint32 instance_id : the instance ID of a single [Creature]
