@@ -2165,40 +2165,40 @@ bool Eluna::SpellHitTarget(Creature* me, Unit* target, SpellInfo const* spell)
 bool Eluna::SummonedCreatureDies(Creature* me, Creature* summon, Unit* killer)
 {
     if (!CreatureEventBindings->HasEvents(CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED, me->GetEntry()))
-        if (!CreatureUniqueBindings->HasEvents(CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED, me->GetObjectGuid()))
+        if (!CreatureUniqueBindings->HasEvents(CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED, me->GetObjectGuid(), me->GetInstanceId()))
             return false;
 
     LOCK_ELUNA;
     Push(me);
     Push(summon);
     Push(killer);
-    return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED, me->GetEntry(), me->GetObjectGuid());
+    return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED, me->GetEntry(), me->GetObjectGuid(), me->GetInstanceId());
 }
 
 // Called when owner takes damage
 bool Eluna::OwnerAttackedBy(Creature* me, Unit* attacker)
 {
     if (!CreatureEventBindings->HasEvents(CREATURE_EVENT_ON_OWNER_ATTACKED_AT, me->GetEntry()))
-        if (!CreatureUniqueBindings->HasEvents(CREATURE_EVENT_ON_OWNER_ATTACKED_AT, me->GetObjectGuid()))
+        if (!CreatureUniqueBindings->HasEvents(CREATURE_EVENT_ON_OWNER_ATTACKED_AT, me->GetObjectGuid(), me->GetInstanceId()))
             return false;
 
     LOCK_ELUNA;
     Push(me);
     Push(attacker);
-    return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, CREATURE_EVENT_ON_OWNER_ATTACKED_AT, me->GetEntry(), me->GetObjectGuid());
+    return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, CREATURE_EVENT_ON_OWNER_ATTACKED_AT, me->GetEntry(), me->GetObjectGuid(), me->GetInstanceId());
 }
 
 // Called when owner attacks something
 bool Eluna::OwnerAttacked(Creature* me, Unit* target)
 {
     if (!CreatureEventBindings->HasEvents(CREATURE_EVENT_ON_OWNER_ATTACKED, me->GetEntry()))
-        if (!CreatureUniqueBindings->HasEvents(CREATURE_EVENT_ON_OWNER_ATTACKED, me->GetObjectGuid()))
+        if (!CreatureUniqueBindings->HasEvents(CREATURE_EVENT_ON_OWNER_ATTACKED, me->GetObjectGuid(), me->GetInstanceId()))
             return false;
 
     LOCK_ELUNA;
     Push(me);
     Push(target);
-    return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, CREATURE_EVENT_ON_OWNER_ATTACKED, me->GetEntry(), me->GetObjectGuid());
+    return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, CREATURE_EVENT_ON_OWNER_ATTACKED, me->GetEntry(), me->GetObjectGuid(), me->GetInstanceId());
 }
 #endif
 
