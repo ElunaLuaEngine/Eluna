@@ -536,7 +536,7 @@ namespace LuaGlobalFunctions
         else if (lua_isuserdata(L, 1))
             RegisterUniqueHelper(E, L, regtype);
         else
-            luaL_argerror(L, 1, "expected entry or WorldObject");
+            luaL_argerror(L, 1, "expected entry or GUID");
     }
 
     /**
