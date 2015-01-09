@@ -354,7 +354,7 @@ void Eluna::OnPacketSendAny(Player* player, WorldPacket& packet, bool& result)
             result = false;
 
         if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, true))
+            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
                 packet = *data;
 
         lua_pop(L, 2);
@@ -380,7 +380,7 @@ void Eluna::OnPacketSendOne(Player* player, WorldPacket& packet, bool& result)
             result = false;
 
         if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, true))
+            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
                 packet = *data;
 
         lua_pop(L, 2);
@@ -417,7 +417,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
             result = false;
 
         if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, true))
+            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
                 packet = *data;
 
         lua_pop(L, 2);
@@ -443,39 +443,13 @@ void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result
             result = false;
 
         if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, true))
+            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
                 packet = *data;
 
         lua_pop(L, 2);
     }
 
     CleanUpStack(2);
-}
-
-// AddOns
-bool Eluna::OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel)
-{
-    if (!ServerEventBindings->HasEvents(ADDON_EVENT_ON_MESSAGE))
-        return true;
-
-    LOCK_ELUNA;
-    Push(sender);
-    Push(type);
-    const char* c_msg = msg.c_str();
-    Push(strtok((char*)c_msg, "\t")); // prefix
-    Push(strtok(NULL, "")); // msg
-    if (receiver)
-        Push(receiver);
-    else if (guild)
-        Push(guild);
-    else if (group)
-        Push(group);
-    else if (channel)
-        Push(channel->GetChannelId());
-    else
-        Push();
-
-    return CallAllFunctionsBool(ServerEventBindings, ADDON_EVENT_ON_MESSAGE, true);
 }
 
 void Eluna::OnOpenStateChange(bool open)
@@ -626,13 +600,13 @@ bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
     ObjectGuid guid = pItem->GET_GUID();
     bool castSpell = true;
 
-    if (OnItemUse(pPlayer, pItem, targets))
+    if (!OnItemUse(pPlayer, pItem, targets))
         castSpell = false;
 
     pItem = pPlayer->GetItemByGuid(guid);
     if (pItem)
     {
-        if (OnItemGossip(pPlayer, pItem, targets))
+        if (!OnItemGossip(pPlayer, pItem, targets))
             castSpell = false;
         pItem = pPlayer->GetItemByGuid(guid);
     }
@@ -654,7 +628,7 @@ bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 {
     if (!ItemEventBindings->HasEvents(ITEM_EVENT_ON_USE, pItem->GetEntry()))
-        return false;
+        return true;
 
     LOCK_ELUNA;
     Push(pPlayer);
@@ -685,19 +659,19 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
         Push();
 #endif
 
-    return CallAllFunctionsBool(ItemEventBindings, ITEM_EVENT_ON_USE, pItem->GetEntry());
+    return CallAllFunctionsBool(ItemEventBindings, ITEM_EVENT_ON_USE, pItem->GetEntry(), true);
 }
 
 bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& /*targets*/)
 {
     if (!ItemGossipBindings->HasEvents(GOSSIP_EVENT_ON_HELLO, pItem->GetEntry()))
-        return false;
+        return true;
 
     LOCK_ELUNA;
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(pPlayer);
     Push(pItem);
-    return CallAllFunctionsBool(ItemGossipBindings, GOSSIP_EVENT_ON_HELLO, pItem->GetEntry());
+    return CallAllFunctionsBool(ItemGossipBindings, GOSSIP_EVENT_ON_HELLO, pItem->GetEntry(), true);
 }
 
 bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
@@ -992,7 +966,7 @@ void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<int32>(L, r);
+            amount = CHECKVAL<uint32>(L, r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }
@@ -1186,6 +1160,32 @@ void Eluna::OnMapChanged(Player* player)
     LOCK_ELUNA;
     Push(player);
     CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_MAP_CHANGE);
+}
+
+// AddOns
+bool Eluna::OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel)
+{
+    if (!ServerEventBindings->HasEvents(ADDON_EVENT_ON_MESSAGE))
+        return true;
+
+    LOCK_ELUNA;
+    Push(sender);
+    Push(type);
+    const char* c_msg = msg.c_str();
+    Push(strtok((char*)c_msg, "\t")); // prefix
+    Push(strtok(NULL, "")); // msg
+    if (receiver)
+        Push(receiver);
+    else if (guild)
+        Push(guild);
+    else if (group)
+        Push(group);
+    else if (channel)
+        Push(channel->GetChannelId());
+    else
+        Push();
+
+    return CallAllFunctionsBool(ServerEventBindings, ADDON_EVENT_ON_MESSAGE, true);
 }
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
@@ -1753,7 +1753,7 @@ bool Eluna::OnGossipHello(Player* pPlayer, Creature* pCreature)
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(pPlayer);
     Push(pCreature);
-    return CallAllFunctionsBool(CreatureGossipBindings, GOSSIP_EVENT_ON_HELLO, pCreature->GetEntry());
+    return CallAllFunctionsBool(CreatureGossipBindings, GOSSIP_EVENT_ON_HELLO, pCreature->GetEntry(), true);
 }
 
 bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
@@ -1767,7 +1767,7 @@ bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, 
     Push(pCreature);
     Push(sender);
     Push(action);
-    return CallAllFunctionsBool(CreatureGossipBindings, GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry());
+    return CallAllFunctionsBool(CreatureGossipBindings, GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry(), true);
 }
 
 bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code)
@@ -1782,7 +1782,7 @@ bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 send
     Push(sender);
     Push(action);
     Push(code);
-    return CallAllFunctionsBool(CreatureGossipBindings, GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry());
+    return CallAllFunctionsBool(CreatureGossipBindings, GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry(), true);
 }
 
 bool Eluna::OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
@@ -2386,7 +2386,7 @@ bool Eluna::OnGossipHello(Player* pPlayer, GameObject* pGameObject)
     pPlayer->PlayerTalkClass->ClearMenus();
     Push(pPlayer);
     Push(pGameObject);
-    return CallAllFunctionsBool(GameObjectGossipBindings, GOSSIP_EVENT_ON_HELLO, pGameObject->GetEntry());
+    return CallAllFunctionsBool(GameObjectGossipBindings, GOSSIP_EVENT_ON_HELLO, pGameObject->GetEntry(), true);
 }
 
 bool Eluna::OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action)
@@ -2400,7 +2400,7 @@ bool Eluna::OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 send
     Push(pGameObject);
     Push(sender);
     Push(action);
-    return CallAllFunctionsBool(GameObjectGossipBindings, GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry());
+    return CallAllFunctionsBool(GameObjectGossipBindings, GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry(), true);
 }
 
 bool Eluna::OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action, const char* code)
@@ -2415,7 +2415,7 @@ bool Eluna::OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 
     Push(sender);
     Push(action);
     Push(code);
-    return CallAllFunctionsBool(GameObjectGossipBindings, GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry());
+    return CallAllFunctionsBool(GameObjectGossipBindings, GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry(), true);
 }
 
 bool Eluna::OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest)

@@ -31,9 +31,9 @@ namespace HookMgr
     // RegisterPacketEvent(Opcode, event, function)
     enum PacketEvents
     {
-        PACKET_EVENT_ON_PACKET_RECEIVE          =     5,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
+        PACKET_EVENT_ON_PACKET_RECEIVE          =     5,       // (event, packet, player) - Player only if accessible. Can return false, newPacket
         PACKET_EVENT_ON_PACKET_RECEIVE_UNKNOWN  =     6,       // Not Implemented
-        PACKET_EVENT_ON_PACKET_SEND             =     7,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
+        PACKET_EVENT_ON_PACKET_SEND             =     7,       // (event, packet, player) - Player only if accessible. Can return false, newPacket
 
         PACKET_EVENT_COUNT
     };
@@ -46,9 +46,9 @@ namespace HookMgr
         SERVER_EVENT_ON_NETWORK_STOP            =     2,       // Not Implemented
         SERVER_EVENT_ON_SOCKET_OPEN             =     3,       // Not Implemented
         SERVER_EVENT_ON_SOCKET_CLOSE            =     4,       // Not Implemented
-        SERVER_EVENT_ON_PACKET_RECEIVE          =     5,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
+        SERVER_EVENT_ON_PACKET_RECEIVE          =     5,       // (event, packet, player) - Player only if accessible. Can return false, newPacket
         SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN  =     6,       // Not Implemented
-        SERVER_EVENT_ON_PACKET_SEND             =     7,       // (event, packet, player) - Player only if accessible. Can return false or a new packet
+        SERVER_EVENT_ON_PACKET_SEND             =     7,       // (event, packet, player) - Player only if accessible. Can return false, newPacket
 
         // World
         WORLD_EVENT_ON_OPEN_STATE_CHANGE        =     8,        // (event, open) - Needs core support on Mangos
@@ -62,7 +62,6 @@ namespace HookMgr
 
         // Eluna
         ELUNA_EVENT_ON_LUA_STATE_CLOSE          =     16,       // (event) - triggers just before shutting down eluna (on shutdown and restart)
-        ELUNA_EVENT_ON_LUA_STATE_OPEN           =     33,       // (event) - triggers after all scripts are loaded
 
         // Map
         MAP_EVENT_ON_CREATE                     =     17,       // (event, map)
@@ -74,7 +73,7 @@ namespace HookMgr
         MAP_EVENT_ON_UPDATE                     =     23,       // (event, map, diff)
 
         // Area trigger
-        TRIGGER_EVENT_ON_TRIGGER                =     24,       // (event, player, triggerId)
+        TRIGGER_EVENT_ON_TRIGGER                =     24,       // (event, player, triggerId) - Can return true
 
         // Weather
         WEATHER_EVENT_ON_CHANGE                 =     25,       // (event, weather, state, grade)
@@ -86,10 +85,13 @@ namespace HookMgr
         AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, AHObject) // Not Implemented
 
 	    // AddOns
-        ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel
+        ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel. Can return false
         
         WORLD_EVENT_ON_DELETE_CREATURE          =     31,       // (event, creature)
         WORLD_EVENT_ON_DELETE_GAMEOBJECT        =     32,       // (event, gameobject)
+
+        // Eluna
+        ELUNA_EVENT_ON_LUA_STATE_OPEN           =     33,       // (event) - triggers after all scripts are loaded
 
         SERVER_EVENT_COUNT
     };
@@ -114,11 +116,11 @@ namespace HookMgr
         PLAYER_EVENT_ON_REPUTATION_CHANGE       =     15,       // (event, player, factionId, standing, incremental) - Can return new standing
         PLAYER_EVENT_ON_TALENTS_CHANGE          =     16,       // (event, player, points)
         PLAYER_EVENT_ON_TALENTS_RESET           =     17,       // (event, player, noCost)
-        PLAYER_EVENT_ON_CHAT                    =     18,       // (event, player, msg, Type, lang) - Can return false or new msg
-        PLAYER_EVENT_ON_WHISPER                 =     19,       // (event, player, msg, Type, lang, receiver) - Can return false or new msg
-        PLAYER_EVENT_ON_GROUP_CHAT              =     20,       // (event, player, msg, Type, lang, group) - Can return false or new msg
-        PLAYER_EVENT_ON_GUILD_CHAT              =     21,       // (event, player, msg, Type, lang, guild) - Can return false or new msg
-        PLAYER_EVENT_ON_CHANNEL_CHAT            =     22,       // (event, player, msg, Type, lang, channel) - Can return false or new msg
+        PLAYER_EVENT_ON_CHAT                    =     18,       // (event, player, msg, Type, lang) - Can return false, newMessage
+        PLAYER_EVENT_ON_WHISPER                 =     19,       // (event, player, msg, Type, lang, receiver) - Can return false, newMessage
+        PLAYER_EVENT_ON_GROUP_CHAT              =     20,       // (event, player, msg, Type, lang, group) - Can return false, newMessage
+        PLAYER_EVENT_ON_GUILD_CHAT              =     21,       // (event, player, msg, Type, lang, guild) - Can return false, newMessage
+        PLAYER_EVENT_ON_CHANNEL_CHAT            =     22,       // (event, player, msg, Type, lang, channel) - Can return false, newMessage
         PLAYER_EVENT_ON_EMOTE                   =     23,       // (event, player, emote) - Not triggered on any known emote
         PLAYER_EVENT_ON_TEXT_EMOTE              =     24,       // (event, player, textEmote, emoteNum, guid)
         PLAYER_EVENT_ON_SAVE                    =     25,       // (event, player)
@@ -129,7 +131,7 @@ namespace HookMgr
         // Custom
         PLAYER_EVENT_ON_EQUIP                   =     29,       // (event, player, item, bag, slot)
         PLAYER_EVENT_ON_FIRST_LOGIN             =     30,       // (event, player)
-        PLAYER_EVENT_ON_CAN_USE_ITEM            =     31,       // (event, player, itemEntry)
+        PLAYER_EVENT_ON_CAN_USE_ITEM            =     31,       // (event, player, itemEntry) - Can return InventoryResult
         PLAYER_EVENT_ON_LOOT_ITEM               =     32,       // (event, player, item, count)
         PLAYER_EVENT_ON_ENTER_COMBAT            =     33,       // (event, player, enemy)
         PLAYER_EVENT_ON_LEAVE_COMBAT            =     34,       // (event, player)
@@ -194,40 +196,40 @@ namespace HookMgr
     // RegisterCreatureEvent(entry, EventId, function)
     enum CreatureEvents
     {
-        CREATURE_EVENT_ON_ENTER_COMBAT                    = 1,  // (event, creature, target)
-        CREATURE_EVENT_ON_LEAVE_COMBAT                    = 2,  // (event, creature)
-        CREATURE_EVENT_ON_TARGET_DIED                     = 3,  // (event, creature, victim)
-        CREATURE_EVENT_ON_DIED                            = 4,  // (event, creature, killer)
-        CREATURE_EVENT_ON_SPAWN                           = 5,  // (event, creature)
-        CREATURE_EVENT_ON_REACH_WP                        = 6,  // (event, creature, type, id)
-        CREATURE_EVENT_ON_AIUPDATE                        = 7,  // (event, creature, diff)
-        CREATURE_EVENT_ON_RECEIVE_EMOTE                   = 8,  // (event, creature, player, emoteid)
+        CREATURE_EVENT_ON_ENTER_COMBAT                    = 1,  // (event, creature, target) - Can return true to stop normal action
+        CREATURE_EVENT_ON_LEAVE_COMBAT                    = 2,  // (event, creature) - Can return true to stop normal action
+        CREATURE_EVENT_ON_TARGET_DIED                     = 3,  // (event, creature, victim) - Can return true to stop normal action
+        CREATURE_EVENT_ON_DIED                            = 4,  // (event, creature, killer) - Can return true to stop normal action
+        CREATURE_EVENT_ON_SPAWN                           = 5,  // (event, creature) - Can return true to stop normal action
+        CREATURE_EVENT_ON_REACH_WP                        = 6,  // (event, creature, type, id) - Can return true to stop normal action
+        CREATURE_EVENT_ON_AIUPDATE                        = 7,  // (event, creature, diff) - Can return true to stop normal action
+        CREATURE_EVENT_ON_RECEIVE_EMOTE                   = 8,  // (event, creature, player, emoteid) - Can return true to stop normal action
         CREATURE_EVENT_ON_DAMAGE_TAKEN                    = 9,  // (event, creature, attacker, damage) - Can return new damage
-        CREATURE_EVENT_ON_PRE_COMBAT                      = 10, // (event, creature, target)
-        CREATURE_EVENT_ON_ATTACKED_AT                     = 11, // (event, creature, attacker)
-        CREATURE_EVENT_ON_OWNER_ATTACKED                  = 12, // (event, creature, target)    // Not on mangos
-        CREATURE_EVENT_ON_OWNER_ATTACKED_AT               = 13, // (event, creature, attacker)  // Not on mangos
-        CREATURE_EVENT_ON_HIT_BY_SPELL                    = 14, // (event, creature, caster, spellid)
-        CREATURE_EVENT_ON_SPELL_HIT_TARGET                = 15, // (event, creature, target, spellid)
+        CREATURE_EVENT_ON_PRE_COMBAT                      = 10, // (event, creature, target) - Can return true to stop normal action
+        CREATURE_EVENT_ON_ATTACKED_AT                     = 11, // (event, creature, attacker) - Can return true to stop normal action
+        CREATURE_EVENT_ON_OWNER_ATTACKED                  = 12, // (event, creature, target) - Can return true to stop normal action            // Not on mangos
+        CREATURE_EVENT_ON_OWNER_ATTACKED_AT               = 13, // (event, creature, attacker) - Can return true to stop normal action          // Not on mangos
+        CREATURE_EVENT_ON_HIT_BY_SPELL                    = 14, // (event, creature, caster, spellid) - Can return true to stop normal action
+        CREATURE_EVENT_ON_SPELL_HIT_TARGET                = 15, // (event, creature, target, spellid) - Can return true to stop normal action
         // UNUSED                                         = 16, // (event, creature)
         // UNUSED                                         = 17, // (event, creature)
         // UNUSED                                         = 18, // (event, creature)
-        CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE          = 19, // (event, creature, summon)
-        CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN       = 20, // (event, creature, summon)
-        CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED          = 21, // (event, creature, summon, killer)    // Not on mangos
-        CREATURE_EVENT_ON_SUMMONED                        = 22, // (event, creature, summoner)
+        CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE          = 19, // (event, creature, summon) - Can return true to stop normal action
+        CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN       = 20, // (event, creature, summon) - Can return true to stop normal action
+        CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED          = 21, // (event, creature, summon, killer) - Can return true to stop normal action    // Not on mangos
+        CREATURE_EVENT_ON_SUMMONED                        = 22, // (event, creature, summoner) - Can return true to stop normal action
         CREATURE_EVENT_ON_RESET                           = 23, // (event, creature)
-        CREATURE_EVENT_ON_REACH_HOME                      = 24, // (event, creature)
+        CREATURE_EVENT_ON_REACH_HOME                      = 24, // (event, creature) - Can return true to stop normal action
         // UNUSED                                         = 25, // (event, creature)
-        CREATURE_EVENT_ON_CORPSE_REMOVED                  = 26, // (event, creature, respawndelay) - Can return new respawndelay
-        CREATURE_EVENT_ON_MOVE_IN_LOS                     = 27, // (event, creature, unit) - Does not actually check LOS. Just uses the sight range
+        CREATURE_EVENT_ON_CORPSE_REMOVED                  = 26, // (event, creature, respawndelay) - Can return true, newRespawnDelay
+        CREATURE_EVENT_ON_MOVE_IN_LOS                     = 27, // (event, creature, unit) - Can return true to stop normal action. Does not actually check LOS, just uses the sight range
         // UNUSED                                         = 28, // (event, creature)
         // UNUSED                                         = 29, // (event, creature)
-        CREATURE_EVENT_ON_DUMMY_EFFECT                    = 30, // (event, caster, spellid, effindex, creature)
-        CREATURE_EVENT_ON_QUEST_ACCEPT                    = 31, // (event, player, creature, quest)
+        CREATURE_EVENT_ON_DUMMY_EFFECT                    = 30, // (event, caster, spellid, effindex, creature) - Can return true
+        CREATURE_EVENT_ON_QUEST_ACCEPT                    = 31, // (event, player, creature, quest) - Can return true
         // UNUSED                                         = 32, // (event, creature)
         // UNUSED                                         = 33, // (event, creature)
-        CREATURE_EVENT_ON_QUEST_REWARD                    = 34, // (event, player, creature, quest, opt)
+        CREATURE_EVENT_ON_QUEST_REWARD                    = 34, // (event, player, creature, quest, opt) - Can return true
         CREATURE_EVENT_ON_DIALOG_STATUS                   = 35, // (event, player, creature)
         CREATURE_EVENT_ON_ADD                             = 36, // (event, creature)
         CREATURE_EVENT_ON_REMOVE                          = 37, // (event, creature)
@@ -239,9 +241,9 @@ namespace HookMgr
     {
         GAMEOBJECT_EVENT_ON_AIUPDATE                    = 1,    // (event, go, diff)
         GAMEOBJECT_EVENT_ON_SPAWN                       = 2,    // (event, go)
-        GAMEOBJECT_EVENT_ON_DUMMY_EFFECT                = 3,    // (event, caster, spellid, effindex, go)
-        GAMEOBJECT_EVENT_ON_QUEST_ACCEPT                = 4,    // (event, player, go, quest)
-        GAMEOBJECT_EVENT_ON_QUEST_REWARD                = 5,    // (event, player, go, quest, opt)
+        GAMEOBJECT_EVENT_ON_DUMMY_EFFECT                = 3,    // (event, caster, spellid, effindex, go) - Can return true
+        GAMEOBJECT_EVENT_ON_QUEST_ACCEPT                = 4,    // (event, player, go, quest) - Can return true
+        GAMEOBJECT_EVENT_ON_QUEST_REWARD                = 5,    // (event, player, go, quest, opt) - Can return true
         GAMEOBJECT_EVENT_ON_DIALOG_STATUS               = 6,    // (event, player, go)
         GAMEOBJECT_EVENT_ON_DESTROYED                   = 7,    // (event, go, player)
         GAMEOBJECT_EVENT_ON_DAMAGED                     = 8,    // (event, go, player)
@@ -256,11 +258,11 @@ namespace HookMgr
     // RegisterItemEvent(entry, EventId, function)
     enum ItemEvents
     {
-        ITEM_EVENT_ON_DUMMY_EFFECT                      = 1,    // (event, caster, spellid, effindex, item)
+        ITEM_EVENT_ON_DUMMY_EFFECT                      = 1,    // (event, caster, spellid, effindex, item) - Can return true
         ITEM_EVENT_ON_USE                               = 2,    // (event, player, item, target) - Can return false to stop the spell casting
-        ITEM_EVENT_ON_QUEST_ACCEPT                      = 3,    // (event, player, item, quest)
-        ITEM_EVENT_ON_EXPIRE                            = 4,    // (event, player, itemid)
-        ITEM_EVENT_ON_REMOVE                            = 5,    // (event, player, item)
+        ITEM_EVENT_ON_QUEST_ACCEPT                      = 3,    // (event, player, item, quest) - Can return true
+        ITEM_EVENT_ON_EXPIRE                            = 4,    // (event, player, itemid) - Can return true
+        ITEM_EVENT_ON_REMOVE                            = 5,    // (event, player, item) - Can return true
         ITEM_EVENT_COUNT
     };
 
@@ -270,8 +272,8 @@ namespace HookMgr
     // RegisterPlayerGossipEvent(menu_id, EventId, function)
     enum GossipEvents
     {
-        GOSSIP_EVENT_ON_HELLO                           = 1,    // (event, player, object) - Object is the Creature/GameObject/Item. For item gossip can return false to stop spell casting.
-        GOSSIP_EVENT_ON_SELECT                          = 2,    // (event, player, object, sender, intid, code, menu_id) - Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip
+        GOSSIP_EVENT_ON_HELLO                           = 1,    // (event, player, object) - Object is the Creature/GameObject/Item. Can return false to do default action. For item gossip can return false to stop spell casting.
+        GOSSIP_EVENT_ON_SELECT                          = 2,    // (event, player, object, sender, intid, code, menu_id) - Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action.
         GOSSIP_EVENT_COUNT
     };
 
