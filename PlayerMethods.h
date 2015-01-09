@@ -1127,20 +1127,6 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns a [Player]s [Item] object by entry ID specified
-     *
-     * @param uint32 entryId
-     * @return [Item] item
-     */
-    int GetItemByEntry(Eluna* /*E*/, lua_State* L, Player* player)
-    {
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
-
-        Eluna::Push(L, player->GetItemByEntry(entry));
-        return 1;
-    }
-
-    /**
      * Returns a [Player]s [Item] object by gear slot specified
      *
      * @param uint8 slot
@@ -1229,6 +1215,38 @@ namespace LuaPlayer
         uint8 slot = Eluna::CHECKVAL<uint8>(L, 3);
 
         Eluna::Push(L, player->GetItemByPos(bag, slot));
+        return 1;
+    }
+
+    /**
+     * Returns an [Item] from the player by guid.
+     *
+     * The item can be equipped, in bags or in bank.
+     *
+     * @param uint64 guid : an item guid
+     * @return [Item] item
+     */
+    int GetItemByGUID(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+
+        Eluna::Push(L, player->GetItemByGuid(ObjectGuid(guid)));
+        return 1;
+    }
+
+    /**
+     * Returns an [Item] from the player by entry.
+     *
+     * The item can be equipped, in bags or in bank.
+     *
+     * @param uint32 entryId
+     * @return [Item] item
+     */
+    int GetItemByEntry(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+
+        Eluna::Push(L, player->GetItemByEntry(entry));
         return 1;
     }
 
