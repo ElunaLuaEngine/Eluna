@@ -529,16 +529,6 @@ namespace LuaGlobalFunctions
             luaL_argerror(L, 4, "unable to make a ref to function");
     }
 
-    static void RegisterEntryOrUniqueHelper(Eluna* E, lua_State* L, int regtype)
-    {
-        if (lua_isnumber(L, 1))
-            RegisterEntryHelper(E, L, regtype);
-        else if (lua_isuserdata(L, 1))
-            RegisterUniqueHelper(E, L, regtype);
-        else
-            luaL_argerror(L, 1, "expected entry or GUID");
-    }
-
     /**
      * Registers a server event handler.
      *
@@ -947,20 +937,73 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (entry, event, function)
-     * @proto (entry, event, function, shots)
-     * @proto (guid, instance_id, event, function)
-     * @proto (guid, instance_id, event, function, shots)
      * @param uint32 entry : the ID of one or more [Creature]s
-     * @param uint64 guid : the GUID of a single [Creature]
-     * @param uint32 instance_id : the instance ID of a single [Creature]
      * @param uint32 event : refer to CreatureEvents above
      * @param function function : function that will be called when the event occurs
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
     int RegisterCreatureEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryOrUniqueHelper(E, L, HookMgr::REGTYPE_CREATURE);
+        RegisterEntryHelper(E, L, HookMgr::REGTYPE_CREATURE);
+        return 0;
+    }
+
+    /**
+    * Registers a [Creature] event handler for a *single* [Creature].
+    *
+    * <pre>
+    * enum CreatureEvents
+    * {
+    *     CREATURE_EVENT_ON_ENTER_COMBAT                    = 1,  // (event, creature, target)
+    *     CREATURE_EVENT_ON_LEAVE_COMBAT                    = 2,  // (event, creature)
+    *     CREATURE_EVENT_ON_TARGET_DIED                     = 3,  // (event, creature, victim)
+    *     CREATURE_EVENT_ON_DIED                            = 4,  // (event, creature, killer)
+    *     CREATURE_EVENT_ON_SPAWN                           = 5,  // (event, creature)
+    *     CREATURE_EVENT_ON_REACH_WP                        = 6,  // (event, creature, type, id)
+    *     CREATURE_EVENT_ON_AIUPDATE                        = 7,  // (event, creature, diff)
+    *     CREATURE_EVENT_ON_RECEIVE_EMOTE                   = 8,  // (event, creature, player, emoteid)
+    *     CREATURE_EVENT_ON_DAMAGE_TAKEN                    = 9,  // (event, creature, attacker, damage) - Can return new damage
+    *     CREATURE_EVENT_ON_PRE_COMBAT                      = 10, // (event, creature, target)
+    *     CREATURE_EVENT_ON_ATTACKED_AT                     = 11, // (event, creature, attacker)
+    *     CREATURE_EVENT_ON_OWNER_ATTACKED                  = 12, // (event, creature, target)    // Not on mangos
+    *     CREATURE_EVENT_ON_OWNER_ATTACKED_AT               = 13, // (event, creature, attacker)  // Not on mangos
+    *     CREATURE_EVENT_ON_HIT_BY_SPELL                    = 14, // (event, creature, caster, spellid)
+    *     CREATURE_EVENT_ON_SPELL_HIT_TARGET                = 15, // (event, creature, target, spellid)
+    *     // UNUSED                                         = 16, // (event, creature)
+    *     // UNUSED                                         = 17, // (event, creature)
+    *     // UNUSED                                         = 18, // (event, creature)
+    *     CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE          = 19, // (event, creature, summon)
+    *     CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN       = 20, // (event, creature, summon)
+    *     CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED          = 21, // (event, creature, summon, killer)    // Not on mangos
+    *     CREATURE_EVENT_ON_SUMMONED                        = 22, // (event, creature, summoner)
+    *     CREATURE_EVENT_ON_RESET                           = 23, // (event, creature)
+    *     CREATURE_EVENT_ON_REACH_HOME                      = 24, // (event, creature)
+    *     // UNUSED                                         = 25, // (event, creature)
+    *     CREATURE_EVENT_ON_CORPSE_REMOVED                  = 26, // (event, creature, respawndelay) - Can return new respawndelay
+    *     CREATURE_EVENT_ON_MOVE_IN_LOS                     = 27, // (event, creature, unit) - Does not actually check LOS. Just uses the sight range
+    *     // UNUSED                                         = 28, // (event, creature)
+    *     // UNUSED                                         = 29, // (event, creature)
+    *     CREATURE_EVENT_ON_DUMMY_EFFECT                    = 30, // (event, caster, spellid, effindex, creature)
+    *     CREATURE_EVENT_ON_QUEST_ACCEPT                    = 31, // (event, player, creature, quest)
+    *     // UNUSED                                         = 32, // (event, creature)
+    *     // UNUSED                                         = 33, // (event, creature)
+    *     CREATURE_EVENT_ON_QUEST_REWARD                    = 34, // (event, player, creature, quest, opt)
+    *     CREATURE_EVENT_ON_DIALOG_STATUS                   = 35, // (event, player, creature)
+    *     CREATURE_EVENT_ON_ADD                             = 36, // (event, creature)
+    *     CREATURE_EVENT_ON_REMOVE                          = 37, // (event, creature)
+    *     CREATURE_EVENT_COUNT
+    * };
+    * </pre>
+    *
+    * @param uint64 guid : the GUID of a single [Creature]
+    * @param uint32 instance_id : the instance ID of a single [Creature]
+    * @param uint32 event : refer to CreatureEvents above
+    * @param function function : function that will be called when the event occurs
+    * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+    */
+    int RegisterUniqueCreatureEvent(Eluna* E, lua_State* L)
+    {
+        RegisterUniqueHelper(E, L, HookMgr::REGTYPE_CREATURE);
         return 0;
     }
 
@@ -2387,29 +2430,30 @@ namespace LuaGlobalFunctions
     /**
      * Unbinds all event handlers for a particular [Creature] event/entry combination.
      *
-     * @proto (entry, event_type)
-     * @proto (guid, instance_id, event_type)
      * @param uint32 entry : the ID of one or more [Creature]s whose handlers will be cleared
-     * @param uint64 guid : the GUID of a single [Creature] whose handlers will be cleared
-     * @param uint32 instance_id : the instance ID of a single [Creature] whose handlers will be cleared
      * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterCreatureEvent]
      */
     int ClearCreatureEvents(Eluna* E, lua_State* L)
     {
-        if (lua_isnumber(L, 1))
-        {
-            uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
-            E->CreatureEventBindings->Clear(entry, event_type);
-        }
-        else
-        {
-            uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-            uint32 instanceId = Eluna::CHECKVAL<uint32>(L, 2);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(L, 3);
-            E->CreatureUniqueBindings->Clear(guid, instanceId, event_type);
-        }
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->CreatureEventBindings->Clear(entry, event_type);
+        return 0;
+    }
 
+    /**
+     * Unbinds all event handlers for a particular [Creature] and event combination.
+     *
+     * @param uint64 guid : the GUID of a single [Creature] whose handlers will be cleared
+     * @param uint32 instance_id : the instance ID of a single [Creature] whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterCreatureEvent]
+     */
+    int ClearUniqueCreatureEvents(Eluna* E, lua_State* L)
+    {
+        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
+        uint32 instanceId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 3);
+        E->CreatureUniqueBindings->Clear(guid, instanceId, event_type);
         return 0;
     }
 
