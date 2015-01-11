@@ -396,7 +396,7 @@ public:
     bool OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger);
 
     /* Weather */
-    void OnChange(Weather* weather, WeatherState state, float grade);
+    void OnChange(Weather* weather, uint32 zone, WeatherState state, float grade);
 
     /* Auction House */
     void OnAdd(AuctionHouseObject* auctionHouse);

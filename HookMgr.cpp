@@ -273,13 +273,13 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
     return CallAllFunctionsBool(ServerEventBindings, TRIGGER_EVENT_ON_TRIGGER);
 }
 // weather
-void Eluna::OnChange(Weather* weather, WeatherState state, float grade)
+void Eluna::OnChange(Weather* weather, uint32 zone, WeatherState state, float grade)
 {
     if (!ServerEventBindings->HasEvents(WEATHER_EVENT_ON_CHANGE))
         return;
 
     LOCK_ELUNA;
-    Push(weather->GetZone());
+    Push(zone);
     Push(state);
     Push(grade);
     CallAllFunctions(ServerEventBindings, WEATHER_EVENT_ON_CHANGE);
