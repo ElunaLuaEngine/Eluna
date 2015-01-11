@@ -137,7 +137,9 @@ GameObjectEventBindings(new EntryBind<HookMgr::GameObjectEvents>("GameObjectEven
 GameObjectGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (gameobject)", *this)),
 ItemEventBindings(new EntryBind<HookMgr::ItemEvents>("ItemEvents", *this)),
 ItemGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (item)", *this)),
-playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)", *this))
+playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)", *this)),
+
+CreatureUniqueBindings(new UniqueBind<HookMgr::CreatureEvents>("CreatureEvents", *this))
 {
     // open base lua libraries
     luaL_openlibs(L);
@@ -761,7 +763,7 @@ ElunaObject* Eluna::CHECKTYPE(lua_State* luastate, int narg, const char* tname, 
 }
 
 // Saves the function reference ID given to the register type's store for given entry under the given event
-void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef, uint32 shots)
+void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, uint32 evt, int functionRef, uint32 shots)
 {
     switch (regtype)
     {
@@ -831,14 +833,22 @@ void Eluna::Register(uint8 regtype, uint32 id, uint32 evt, int functionRef, uint
         case HookMgr::REGTYPE_CREATURE:
             if (evt < HookMgr::CREATURE_EVENT_COUNT)
             {
-                if (!eObjectMgr->GetCreatureTemplate(id))
+                if (id != 0)
                 {
-                    luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-                    luaL_error(L, "Couldn't find a creature with (ID: %d)!", id);
-                    return;
-                }
+                    if (!eObjectMgr->GetCreatureTemplate(id))
+                    {
+                        luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                        luaL_error(L, "Couldn't find a creature with (ID: %d)!", id);
+                        return;
+                    }
 
-                CreatureEventBindings->Insert(id, evt, functionRef, shots);
+                    CreatureEventBindings->Insert(id, evt, functionRef, shots);
+                }
+                else
+                {
+                    ASSERT(guid != 0);
+                    CreatureUniqueBindings->Insert(guid, instanceId, evt, functionRef, shots);
+                }
                 return;
             }
             break;
