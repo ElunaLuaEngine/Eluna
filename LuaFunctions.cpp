@@ -34,7 +34,6 @@ extern "C"
 #include "QuestMethods.h"
 #include "MapMethods.h"
 #include "CorpseMethods.h"
-#include "WeatherMethods.h"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
 
@@ -139,10 +138,6 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "RemoveCorpse", &LuaGlobalFunctions::RemoveCorpse },
     { "ConvertCorpseForPlayer", &LuaGlobalFunctions::ConvertCorpseForPlayer },
     { "RemoveOldCorpses", &LuaGlobalFunctions::RemoveOldCorpses },
-    { "FindWeather", &LuaGlobalFunctions::FindWeather },
-    { "AddWeather", &LuaGlobalFunctions::AddWeather },
-    { "RemoveWeather", &LuaGlobalFunctions::RemoveWeather },
-    { "SendFineWeatherToPlayer", &LuaGlobalFunctions::SendFineWeatherToPlayer },
     { "CreateInt64", &LuaGlobalFunctions::CreateLongLong },
     { "CreateUint64", &LuaGlobalFunctions::CreateULongLong },
 
@@ -1192,6 +1187,9 @@ ElunaRegister<Map> MapMethods[] =
     { "GetHeight", &LuaMap::GetHeight },                      // :GetHeight(x, y[, phasemask]) - Returns ground Z coordinate. UNDOCUMENTED
     { "GetWorldObject", &LuaMap::GetWorldObject },            // :GetWorldObject(guid) - Returns a worldobject (player, creature, gameobject..) from the map by it's guid
 
+    // Setters
+    { "SetWeather", &LuaMap::SetWeather },
+
     // Booleans
 #ifndef CLASSIC
     { "IsArena", &LuaMap::IsArena },                          // :IsArena() - Returns the true if the map is an arena, else false UNDOCUMENTED
@@ -1215,24 +1213,6 @@ ElunaRegister<Corpse> CorpseMethods[] =
     { "ResetGhostTime", &LuaCorpse::ResetGhostTime },
     { "SaveToDB", &LuaCorpse::SaveToDB },
     { "DeleteBonesFromWorld", &LuaCorpse::DeleteBonesFromWorld },
-
-    { NULL, NULL }
-};
-
-ElunaRegister<Weather> WeatherMethods[] =
-{
-    // Getters
-    { "GetZoneId", &LuaWeather::GetZoneId },
-
-    // Setters
-    { "SetWeather", &LuaWeather::SetWeather },
-
-    // Boolean
-    { "Regenerate", &LuaWeather::Regenerate },
-    { "UpdateWeather", &LuaWeather::UpdateWeather },
-
-    // Other
-    { "SendWeatherUpdateToPlayer", &LuaWeather::SendWeatherUpdateToPlayer },
 
     { NULL, NULL }
 };
@@ -1398,9 +1378,6 @@ void RegisterFunctions(Eluna* E)
 
     ElunaTemplate<Map>::Register(E, "Map");
     ElunaTemplate<Map>::SetMethods(E, MapMethods);
-
-    ElunaTemplate<Weather>::Register(E, "Weather");
-    ElunaTemplate<Weather>::SetMethods(E, WeatherMethods);
 
     ElunaTemplate<AuctionHouseObject>::Register(E, "AuctionHouseObject");
     ElunaTemplate<AuctionHouseObject>::SetMethods(E, AuctionMethods);

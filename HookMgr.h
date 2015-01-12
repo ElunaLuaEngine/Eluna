@@ -76,7 +76,7 @@ namespace HookMgr
         TRIGGER_EVENT_ON_TRIGGER                =     24,       // (event, player, triggerId) - Can return true
 
         // Weather
-        WEATHER_EVENT_ON_CHANGE                 =     25,       // (event, weather, state, grade)
+        WEATHER_EVENT_ON_CHANGE                 =     25,       // (event, zoneId, state, grade)
 
         // Auction house
         AUCTION_EVENT_ON_ADD                    =     26,       // (event, AHObject)

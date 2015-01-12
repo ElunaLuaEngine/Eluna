@@ -235,5 +235,47 @@ namespace LuaMap
 #endif
         return 1;
     }
+
+    /**
+     * Sets the [Weather] type based on [WeatherType] and grade supplied.
+     *
+     *     enum WeatherType
+     *     {
+     *         WEATHER_TYPE_FINE       = 0,
+     *         WEATHER_TYPE_RAIN       = 1,
+     *         WEATHER_TYPE_SNOW       = 2,
+     *         WEATHER_TYPE_STORM      = 3,
+     *         WEATHER_TYPE_THUNDERS   = 86,
+     *         WEATHER_TYPE_BLACKRAIN  = 90
+     *     };
+     *
+     * @param uint32 zone : id of the zone to set the weather for
+     * @param [WeatherType] type : the [WeatherType], see above available weather types
+     * @param float grade : the intensity/grade of the [Weather], ranges from 0 to 1
+     */
+    int SetWeather(Eluna* /*E*/, lua_State* L, Map* map)
+    {
+        uint32 zoneId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 weatherType = Eluna::CHECKVAL<uint32>(L, 3);
+        float grade = Eluna::CHECKVAL<float>(L, 4);
+
+#if (defined(CMANGOS) && defined(WOTLK))
+        if (Weather::IsValidWeatherType(weatherType))
+            map->SetWeather(zoneId, (WeatherType)weatherType, grade, false);
+#else
+#ifdef TRINITY
+        Weather* weather = WeatherMgr::FindWeather(zoneId);
+        if (!weather)
+            weather = WeatherMgr::AddWeather(zoneId);
+#else
+        Weather* weather = eWorld->FindWeather(zoneId);
+        if (!weather)
+            weather = eWorld->AddWeather(zoneId);
+#endif
+        if (weather)
+            weather->SetWeather((WeatherType)weatherType, grade);
+#endif
+        return 0;
+    }
 };
 #endif
