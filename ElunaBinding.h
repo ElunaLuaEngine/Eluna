@@ -135,6 +135,9 @@ public:
     {
         ReadGuard guard(GetLock());
 
+        if (!E.IsEnabled())
+            return false;
+
         if (Bindings.empty())
             return false;
         if (Bindings.find(eventId) == Bindings.end())
@@ -238,6 +241,9 @@ public:
     bool HasEvents(uint32 entryId)
     {
         ReadGuard guard(GetLock());
+
+        if (!E.IsEnabled())
+            return false;
 
         if (Bindings.empty())
             return false;

@@ -9,13 +9,34 @@
 
 #include "Hooks.h"
 #include "HookHelpers.h"
-#include "ElunaTemplate.h"
 #include "LuaEngine.h"
 #include "ElunaBinding.h"
-#include "ElunaTemplate.h" // Needed to be able to push AuctionHouseObjects.
+#include "ElunaTemplate.h"
 #include "ElunaEventMgr.h"
+#include "ElunaIncludes.h"
 
 using namespace Hooks;
+
+void Eluna::OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj)
+{
+    LOCK_ELUNA;
+    ASSERT(!event_level);
+
+    // Get function
+    lua_rawgeti(L, LUA_REGISTRYINDEX, funcRef);
+
+    // Push parameters
+    Push(L, funcRef);
+    Push(L, delay);
+    Push(L, calls);
+    Push(L, obj);
+
+    // Call function
+    ExecuteCall(4, 0);
+
+    ASSERT(!event_level);
+    InvalidateObjects();
+}
 
 void Eluna::OnLuaStateClose()
 {
@@ -273,12 +294,10 @@ void Eluna::OnShutdownCancel()
 
 void Eluna::OnWorldUpdate(uint32 diff)
 {
-    LOCK_ELUNA;
-
-    if (reload)
     {
-        ReloadEluna();
-        return;
+        LOCK_ELUNA;
+        if (reload)
+            _ReloadEluna();
     }
 
     eventMgr->globalProcessor->Update(diff);
@@ -286,6 +305,7 @@ void Eluna::OnWorldUpdate(uint32 diff)
     if (!ServerEventBindings->HasEvents(WORLD_EVENT_ON_UPDATE))
         return;
 
+    LOCK_ELUNA;
     Push(diff);
     CallAllFunctions(ServerEventBindings, WORLD_EVENT_ON_UPDATE);
 }
