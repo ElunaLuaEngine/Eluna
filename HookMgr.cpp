@@ -2577,6 +2577,17 @@ void Eluna::OnRemoveFromWorld(GameObject* gameobject)
     CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_REMOVE, gameobject->GetEntry());
 }
 
+bool Eluna::OnGameObjectUse(Player* pPlayer, GameObject* pGameObject)
+{
+    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_USE, pGameObject->GetEntry()))
+        return false;
+
+    LOCK_ELUNA;
+    Push(pGameObject);
+    Push(pPlayer);
+    return CallAllFunctionsBool(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_USE, pGameObject->GetEntry());
+}
+
 CreatureAI* Eluna::GetAI(Creature* creature)
 {
     if (!CreatureEventBindings->HasEvents(creature->GetEntry()) && !CreatureUniqueBindings->HasEvents(creature->GET_GUID(), creature->GetInstanceId()))
