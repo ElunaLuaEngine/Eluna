@@ -11,9 +11,9 @@
 #include "HookHelpers.h"
 #include "LuaEngine.h"
 #include "ElunaBinding.h"
-#include "ElunaTemplate.h"
 #include "ElunaEventMgr.h"
 #include "ElunaIncludes.h"
+#include "ElunaTemplate.h"
 
 using namespace Hooks;
 
