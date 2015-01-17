@@ -523,7 +523,7 @@ namespace LuaUnit
     int GetStandState(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         Eluna::Push(L, unit->getStandState());
-        return 0;
+        return 1;
     }
 
     int GetDisplayId(Eluna* /*E*/, lua_State* L, Unit* unit)
