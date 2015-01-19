@@ -56,6 +56,9 @@ class GameObjectAI;
 #endif
 class Guild;
 class Group;
+#ifndef TRINITY
+class InstanceData;
+#endif
 class Item;
 class Pet;
 class Player;
@@ -91,7 +94,7 @@ class ElunaTemplate;
 template<typename T>
 class EventBind;
 template<typename T>
-class EntryBind;
+class IDBind;
 template<typename T>
 class UniqueBind;
 
@@ -164,53 +167,53 @@ private:
 
     // Some helpers for hooks to call event handlers.
     // The bodies of the templates are in HookHelpers.h, so if you want to use them you need to #include "HookHelpers.h".
-    template<typename T> int SetupStack(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments);
+    template<typename T> int SetupStack(EventBind<T>* event_bindings, IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments);
                          int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
                          void CleanUpStack(int number_of_arguments);
     template<typename T> void ReplaceArgument(T value, uint8 index);
-    template<typename T> void CallAllFunctions(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId);
-    template<typename T> bool CallAllFunctionsBool(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, bool default_value);
+    template<typename T> void CallAllFunctions(EventBind<T>* event_bindings, IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId);
+    template<typename T> bool CallAllFunctionsBool(EventBind<T>* event_bindings, IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, bool default_value);
 
     // Convenient overloads for Setup. Use these in hooks instead of original.
     template<typename T> int SetupStack(EventBind<T>* event_bindings, T event_id, int number_of_arguments)
     {
-        return SetupStack(event_bindings, (EntryBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0, number_of_arguments);
+        return SetupStack(event_bindings, (IDBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0, number_of_arguments);
     }
-    template<typename T> int SetupStack(EntryBind<T>* entry_bindings, T event_id, uint32 entry, int number_of_arguments)
+    template<typename T> int SetupStack(IDBind<T>* id_bindings, T event_id, uint32 entry, int number_of_arguments)
     {
-        return SetupStack((EventBind<T>*)NULL, entry_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0, number_of_arguments);
+        return SetupStack((EventBind<T>*)NULL, id_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0, number_of_arguments);
     }
-    template<typename T> int SetupStack(EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments)
+    template<typename T> int SetupStack(IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments)
     {
-        return SetupStack((EventBind<T>*)NULL, entry_bindings, guid_bindings, event_id, entry, guid, instanceId, number_of_arguments);
+        return SetupStack((EventBind<T>*)NULL, id_bindings, guid_bindings, event_id, entry, guid, instanceId, number_of_arguments);
     }
 
     // Convenient overloads for CallAllFunctions. Use these in hooks instead of original.
     template<typename T> void CallAllFunctions(EventBind<T>* event_bindings, T event_id)
     {
-        CallAllFunctions(event_bindings, (EntryBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0);
+        CallAllFunctions(event_bindings, (IDBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0);
     }
-    template<typename T> void CallAllFunctions(EntryBind<T>* entry_bindings, T event_id, uint32 entry)
+    template<typename T> void CallAllFunctions(IDBind<T>* id_bindings, T event_id, uint32 entry)
     {
-        CallAllFunctions((EventBind<T>*)NULL, entry_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0);
+        CallAllFunctions((EventBind<T>*)NULL, id_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0);
     }
-    template<typename T> void CallAllFunctions(EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId)
+    template<typename T> void CallAllFunctions(IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId)
     {
-        CallAllFunctions((EventBind<T>*)NULL, entry_bindings, guid_bindings, event_id, entry, guid, instanceId);
+        CallAllFunctions((EventBind<T>*)NULL, id_bindings, guid_bindings, event_id, entry, guid, instanceId);
     }
 
     // Convenient overloads for CallAllFunctionsBool. Use these in hooks instead of original.
     template<typename T> bool CallAllFunctionsBool(EventBind<T>* event_bindings, T event_id, bool default_value = false)
     {
-        return CallAllFunctionsBool(event_bindings, (EntryBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0, default_value);
+        return CallAllFunctionsBool(event_bindings, (IDBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0, default_value);
     }
-    template<typename T> bool CallAllFunctionsBool(EntryBind<T>* entry_bindings, T event_id, uint32 entry, bool default_value = false)
+    template<typename T> bool CallAllFunctionsBool(IDBind<T>* id_bindings, T event_id, uint32 entry, bool default_value = false)
     {
-        return CallAllFunctionsBool((EventBind<T>*)NULL, entry_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0, default_value);
+        return CallAllFunctionsBool((EventBind<T>*)NULL, id_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0, default_value);
     }
-    template<typename T> bool CallAllFunctionsBool(EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, bool default_value = false)
+    template<typename T> bool CallAllFunctionsBool(IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, bool default_value = false)
     {
-        return CallAllFunctionsBool((EventBind<T>*)NULL, entry_bindings, guid_bindings, event_id, entry, guid, instanceId, default_value);
+        return CallAllFunctionsBool((EventBind<T>*)NULL, id_bindings, guid_bindings, event_id, entry, guid, instanceId, default_value);
     }
 
 public:
@@ -226,14 +229,14 @@ public:
     EventBind<Hooks::VehicleEvents>*    VehicleEventBindings;
     EventBind<Hooks::BGEvents>*         BGEventBindings;
 
-    EntryBind<Hooks::PacketEvents>*     PacketEventBindings;
-    EntryBind<Hooks::CreatureEvents>*   CreatureEventBindings;
-    EntryBind<Hooks::GossipEvents>*     CreatureGossipBindings;
-    EntryBind<Hooks::GameObjectEvents>* GameObjectEventBindings;
-    EntryBind<Hooks::GossipEvents>*     GameObjectGossipBindings;
-    EntryBind<Hooks::ItemEvents>*       ItemEventBindings;
-    EntryBind<Hooks::GossipEvents>*     ItemGossipBindings;
-    EntryBind<Hooks::GossipEvents>*     playerGossipBindings;
+    IDBind<Hooks::PacketEvents>*        PacketEventBindings;
+    IDBind<Hooks::CreatureEvents>*      CreatureEventBindings;
+    IDBind<Hooks::GossipEvents>*        CreatureGossipBindings;
+    IDBind<Hooks::GameObjectEvents>*    GameObjectEventBindings;
+    IDBind<Hooks::GossipEvents>*        GameObjectGossipBindings;
+    IDBind<Hooks::ItemEvents>*          ItemEventBindings;
+    IDBind<Hooks::GossipEvents>*        ItemGossipBindings;
+    IDBind<Hooks::GossipEvents>*        playerGossipBindings;
 
     UniqueBind<Hooks::CreatureEvents>*  CreatureUniqueBindings;
 
@@ -304,6 +307,9 @@ public:
     static ElunaObject* CHECKTYPE(lua_State* luastate, int narg, const char *tname, bool error = true);
 
     CreatureAI* GetAI(Creature* creature);
+#ifndef TRINITY
+    InstanceData* GetInstanceData(Map* map);
+#endif
 
     /* Custom */
     void OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj);

@@ -84,6 +84,8 @@ namespace Hooks
         REGTYPE_ITEM_GOSSIP,
         REGTYPE_PLAYER_GOSSIP,
         REGTYPE_BG,
+        REGTYPE_MAP,
+        REGTYPE_INSTANCE,
         REGTYPE_COUNT
     };
 
@@ -331,6 +333,11 @@ namespace Hooks
         BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId) - Needs to be added to TC
         BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId) - Needs to be added to TC
         BG_EVENT_COUNT
+    };
+
+    enum MapEvents
+    {
+        MAP_EVENT_COUNT
     };
 };
 

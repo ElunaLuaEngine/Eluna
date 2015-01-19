@@ -235,14 +235,14 @@ void Eluna::CreateBindStores()
     VehicleEventBindings = new EventBind<Hooks::VehicleEvents>("VehicleEvents", *this);
     BGEventBindings = new EventBind<Hooks::BGEvents>("BGEvents", *this);
 
-    PacketEventBindings = new EntryBind<Hooks::PacketEvents>("PacketEvents", *this);
-    CreatureEventBindings = new EntryBind<Hooks::CreatureEvents>("CreatureEvents", *this);
-    CreatureGossipBindings = new EntryBind<Hooks::GossipEvents>("GossipEvents (creature)", *this);
-    GameObjectEventBindings = new EntryBind<Hooks::GameObjectEvents>("GameObjectEvents", *this);
-    GameObjectGossipBindings = new EntryBind<Hooks::GossipEvents>("GossipEvents (gameobject)", *this);
-    ItemEventBindings = new EntryBind<Hooks::ItemEvents>("ItemEvents", *this);
-    ItemGossipBindings = new EntryBind<Hooks::GossipEvents>("GossipEvents (item)", *this);
-    playerGossipBindings = new EntryBind<Hooks::GossipEvents>("GossipEvents (player)", *this);
+    PacketEventBindings = new IDBind<Hooks::PacketEvents>("PacketEvents", *this);
+    CreatureEventBindings = new IDBind<Hooks::CreatureEvents>("CreatureEvents", *this);
+    CreatureGossipBindings = new IDBind<Hooks::GossipEvents>("GossipEvents (creature)", *this);
+    GameObjectEventBindings = new IDBind<Hooks::GameObjectEvents>("GameObjectEvents", *this);
+    GameObjectGossipBindings = new IDBind<Hooks::GossipEvents>("GossipEvents (gameobject)", *this);
+    ItemEventBindings = new IDBind<Hooks::ItemEvents>("ItemEvents", *this);
+    ItemGossipBindings = new IDBind<Hooks::GossipEvents>("GossipEvents (item)", *this);
+    playerGossipBindings = new IDBind<Hooks::GossipEvents>("GossipEvents (player)", *this);
 
     CreatureUniqueBindings = new UniqueBind<Hooks::CreatureEvents>("CreatureEvents (unique)", *this);
 }
@@ -264,6 +264,8 @@ void Eluna::DestroyBindStores()
     delete ItemGossipBindings;
     delete playerGossipBindings;
     delete BGEventBindings;
+    delete MapEventBindings;
+    delete InstanceEventBindings;
 
     delete CreatureUniqueBindings;
 
@@ -282,6 +284,8 @@ void Eluna::DestroyBindStores()
     ItemGossipBindings = NULL;
     playerGossipBindings = NULL;
     BGEventBindings = NULL;
+    MapEventBindings = NULL;
+    InstanceEventBindings = NULL;
 
     CreatureUniqueBindings = NULL;
 }
@@ -1076,6 +1080,20 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
             if (evt < Hooks::GOSSIP_EVENT_COUNT)
             {
                 playerGossipBindings->Insert(id, evt, functionRef, shots);
+                return;
+            }
+            break;
+        case HookMgr::REGTYPE_MAP:
+            if (evt < HookMgr::MAP_EVENT_COUNT)
+            {
+                MapEventBindings->Insert(id, evt, functionRef, shots);
+                return;
+            }
+            break;
+        case HookMgr::REGTYPE_INSTANCE:
+            if (evt < HookMgr::MAP_EVENT_COUNT)
+            {
+                InstanceEventBindings->Insert(id, evt, functionRef, shots);
                 return;
             }
             break;

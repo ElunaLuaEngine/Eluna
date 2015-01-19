@@ -499,7 +499,7 @@ namespace LuaGlobalFunctions
 
     static void RegisterEntryHelper(Eluna* E, lua_State* L, int regtype)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 id = Eluna::CHECKVAL<uint32>(L, 1);
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 3, LUA_TFUNCTION);
         uint32 shots = Eluna::CHECKVAL<uint32>(L, 4, 0);
@@ -507,7 +507,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 3);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
-            E->Register(regtype, entry, 0, 0, ev, functionRef, shots);
+            E->Register(regtype, id, 0, 0, ev, functionRef, shots);
         else
             luaL_argerror(L, 3, "unable to make a ref to function");
     }
@@ -877,6 +877,46 @@ namespace LuaGlobalFunctions
     int RegisterItemGossipEvent(Eluna* E, lua_State* L)
     {
         RegisterEntryHelper(E, L, Hooks::REGTYPE_ITEM_GOSSIP);
+        return 0;
+    }
+
+    /**
+     * Registers a [Map] event handler for all instance of a [Map].
+     *
+     * <pre>
+     * enum MapEvents
+     * {
+     * };
+     * </pre>
+     *
+     * @param uint32 map_id : ID of a [Map]
+     * @param uint32 event : [Map] event ID, refer to MapEvents above
+     * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+     */
+    int RegisterMapEvent(Eluna* E, lua_State* L)
+    {
+        RegisterEntryHelper(E, L, HookMgr::REGTYPE_MAP);
+        return 0;
+    }
+
+    /**
+     * Registers a [Map] event handler for one instance of a [Map].
+     *
+     * <pre>
+     * enum MapEvents
+     * {
+     * };
+     * </pre>
+     *
+     * @param uint32 instance_id : ID of an instance of a [Map]
+     * @param uint32 event : [Map] event ID, refer to MapEvents above
+     * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+     */
+    int RegisterMapInstanceEvent(Eluna* E, lua_State* L)
+    {
+        RegisterEntryHelper(E, L, HookMgr::REGTYPE_INSTANCE);
         return 0;
     }
 

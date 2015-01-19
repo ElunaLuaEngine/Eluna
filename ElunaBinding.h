@@ -149,12 +149,12 @@ public:
 };
 
 template<typename T>
-class EntryBind : public ElunaBind
+class IDBind : public ElunaBind
 {
 public:
     typedef UNORDERED_MAP<uint32, EventToFunctionsMap> EntryToEventsMap;
 
-    EntryBind(const char* bindGroupName, Eluna& _E) : ElunaBind(bindGroupName, _E)
+    IDBind(const char* bindGroupName, Eluna& _E) : ElunaBind(bindGroupName, _E)
     {
     }
 
@@ -178,21 +178,21 @@ public:
         Bindings.clear();
     }
 
-    void Clear(uint32 entry, uint32 event_id)
+    void Clear(uint32 id, uint32 event_id)
     {
         WriteGuard guard(GetLock());
 
-        for (FunctionRefVector::iterator itr = Bindings[entry][event_id].begin(); itr != Bindings[entry][event_id].end(); ++itr)
+        for (FunctionRefVector::iterator itr = Bindings[id][event_id].begin(); itr != Bindings[id][event_id].end(); ++itr)
             delete *itr;
-        Bindings[entry][event_id].clear();
+        Bindings[id][event_id].clear();
     }
 
     // Pushes the function references and updates the counters on the binds and erases them if the counter would reach 0
-    void PushFuncRefs(lua_State* L, int event_id, uint32 entry)
+    void PushFuncRefs(lua_State* L, int event_id, uint32 id)
     {
         WriteGuard guard(GetLock());
 
-        for (FunctionRefVector::iterator it = Bindings[entry][event_id].begin(); it != Bindings[entry][event_id].end();)
+        for (FunctionRefVector::iterator it = Bindings[id][event_id].begin(); it != Bindings[id][event_id].end();)
         {
             FunctionRefVector::iterator it_old = it++;
             Binding* binding = (*it_old);
@@ -205,40 +205,40 @@ public:
                 if (binding->remainingShots == 0)
                 {
                     delete binding;
-                    Bindings[entry][event_id].erase(it_old);
+                    Bindings[id][event_id].erase(it_old);
                 }
             }
         }
 
-        if (Bindings[entry][event_id].empty())
-            Bindings[entry].erase(event_id);
+        if (Bindings[id][event_id].empty())
+            Bindings[id].erase(event_id);
 
-        if (Bindings[entry].empty())
-            Bindings.erase(entry);
+        if (Bindings[id].empty())
+            Bindings.erase(id);
     };
 
-    void Insert(uint32 entryId, int eventId, int funcRef, uint32 shots) // Inserts a new registered event
+    void Insert(uint32 id, int eventId, int funcRef, uint32 shots) // Inserts a new registered event
     {
         WriteGuard guard(GetLock());
-        Bindings[entryId][eventId].push_back(new Binding(E, funcRef, shots));
+        Bindings[id][eventId].push_back(new Binding(E, funcRef, shots));
     }
 
     // Returns true if the entry has registered binds
-    bool HasEvents(T eventId, uint32 entryId)
+    bool HasEvents(T eventId, uint32 id)
     {
         ReadGuard guard(GetLock());
 
         if (Bindings.empty())
             return false;
 
-        EntryToEventsMap::const_iterator itr = Bindings.find(entryId);
+        EntryToEventsMap::const_iterator itr = Bindings.find(id);
         if (itr == Bindings.end())
             return false;
 
         return itr->second.find(eventId) != itr->second.end();
     }
 
-    bool HasEvents(uint32 entryId)
+    bool HasEvents(uint32 id)
     {
         ReadGuard guard(GetLock());
 
@@ -248,10 +248,10 @@ public:
         if (Bindings.empty())
             return false;
 
-        return Bindings.find(entryId) != Bindings.end();
+        return Bindings.find(id) != Bindings.end();
     }
 
-    EntryToEventsMap Bindings; // Binding store Bindings[entryId][eventId] = {(funcRef, counter)};
+    EntryToEventsMap Bindings; // Binding store Bindings[id][eventId] = {(funcRef, counter)};
 };
 
 template<typename T>
