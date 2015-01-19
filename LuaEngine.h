@@ -18,7 +18,7 @@
 #endif
 #include "Weather.h"
 #include "World.h"
-#include "HookMgr.h"
+#include "Hooks.h"
 
 extern "C"
 {
@@ -112,6 +112,7 @@ private:
     Eluna& operator=(const Eluna&);
 
     // Some helpers for hooks to call event handlers.
+    // The bodies of the templates are in HookHelpers.h, so if you want to use them you need to #include "HookHelpers.h".
     template<typename T> int SetupStack(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments);
                          int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
                          void CleanUpStack(int number_of_arguments);
@@ -183,23 +184,23 @@ public:
 
     EventMgr* eventMgr;
 
-    EventBind<HookMgr::ServerEvents>*       ServerEventBindings;
-    EventBind<HookMgr::PlayerEvents>*       PlayerEventBindings;
-    EventBind<HookMgr::GuildEvents>*        GuildEventBindings;
-    EventBind<HookMgr::GroupEvents>*        GroupEventBindings;
-    EventBind<HookMgr::VehicleEvents>*      VehicleEventBindings;
-    EventBind<HookMgr::BGEvents>*           BGEventBindings;
+    EventBind<Hooks::ServerEvents>*     ServerEventBindings;
+    EventBind<Hooks::PlayerEvents>*     PlayerEventBindings;
+    EventBind<Hooks::GuildEvents>*      GuildEventBindings;
+    EventBind<Hooks::GroupEvents>*      GroupEventBindings;
+    EventBind<Hooks::VehicleEvents>*    VehicleEventBindings;
+    EventBind<Hooks::BGEvents>*         BGEventBindings;
 
-    EntryBind<HookMgr::PacketEvents>*       PacketEventBindings;
-    EntryBind<HookMgr::CreatureEvents>*     CreatureEventBindings;
-    EntryBind<HookMgr::GossipEvents>*       CreatureGossipBindings;
-    EntryBind<HookMgr::GameObjectEvents>*   GameObjectEventBindings;
-    EntryBind<HookMgr::GossipEvents>*       GameObjectGossipBindings;
-    EntryBind<HookMgr::ItemEvents>*         ItemEventBindings;
-    EntryBind<HookMgr::GossipEvents>*       ItemGossipBindings;
-    EntryBind<HookMgr::GossipEvents>*       playerGossipBindings;
+    EntryBind<Hooks::PacketEvents>*     PacketEventBindings;
+    EntryBind<Hooks::CreatureEvents>*   CreatureEventBindings;
+    EntryBind<Hooks::GossipEvents>*     CreatureGossipBindings;
+    EntryBind<Hooks::GameObjectEvents>* GameObjectEventBindings;
+    EntryBind<Hooks::GossipEvents>*     GameObjectGossipBindings;
+    EntryBind<Hooks::ItemEvents>*       ItemEventBindings;
+    EntryBind<Hooks::GossipEvents>*     ItemGossipBindings;
+    EntryBind<Hooks::GossipEvents>*     playerGossipBindings;
 
-    UniqueBind<HookMgr::CreatureEvents>*    CreatureUniqueBindings;
+    UniqueBind<Hooks::CreatureEvents>*  CreatureUniqueBindings;
 
     Eluna();
     ~Eluna();
@@ -235,15 +236,17 @@ public:
     static void Push(lua_State* luastate, const double);
     static void Push(lua_State* luastate, const std::string&);
     static void Push(lua_State* luastate, const char*);
-    template<typename T> static void Push(lua_State* luastate, T const* ptr)
-    {
-        ElunaTemplate<T>::Push(luastate, ptr);
-    }
     static void Push(lua_State* luastate, Object const* obj);
     static void Push(lua_State* luastate, WorldObject const* obj);
     static void Push(lua_State* luastate, Unit const* unit);
     static void Push(lua_State* luastate, Pet const* pet);
     static void Push(lua_State* luastate, TempSummon const* summon);
+
+    template<typename T>
+    static void Push(lua_State* luastate, T const* ptr)
+    {
+        ElunaTemplate<T>::Push(luastate, ptr);
+    }
 
     // When a hook pushes arguments to be passed to event handlers
     //   this is used to keep track of how many arguments were pushed.
@@ -263,7 +266,8 @@ public:
     void Push(const double value)               { Push(L, value); ++push_counter; }
     void Push(const std::string& value)         { Push(L, value); ++push_counter; }
     void Push(const char* value)                { Push(L, value); ++push_counter; }
-    template<typename T> void Push(T const* ptr){ Push(L, ptr); ++push_counter; }
+    template<typename T>
+    void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* luastate, int narg);
