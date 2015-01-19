@@ -4,6 +4,9 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
+#ifndef _ELUNA_INCLUDES_H
+#define _ELUNA_INCLUDES_H
+
 // Required
 #include "AccountMgr.h"
 #include "AuctionHouseMgr.h"
@@ -126,4 +129,6 @@ enum SelectAggroTarget
     SELECT_TARGET_NEAREST,
     SELECT_TARGET_FARTHEST
 };
-#endif
+#endif // TRINITY
+
+#endif // _ELUNA_INCLUDES_H
