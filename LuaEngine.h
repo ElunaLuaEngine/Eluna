@@ -19,6 +19,7 @@
 #include "Weather.h"
 #include "World.h"
 #include "Hooks.h"
+#include "ElunaUtility.h"
 
 extern "C"
 {
@@ -56,6 +57,13 @@ class GameObjectAI;
 #endif
 class Guild;
 class Group;
+#ifdef TRINITY
+class InstanceScript;
+typedef InstanceScript InstanceData;
+#else
+class InstanceData;
+#endif
+class ElunaInstanceAI;
 class Item;
 class Pet;
 class Player;
@@ -136,6 +144,11 @@ private:
     uint8 push_counter;
     bool enabled;
 
+    // Map from instance ID -> Lua table ref
+    std::unordered_map<uint32, int> instanceDataRefs;
+    // Map from map ID -> Lua table ref
+    std::unordered_map<uint32, int> continentDataRefs;
+
     Eluna();
     ~Eluna();
 
@@ -184,6 +197,23 @@ private:
         return CallAllFunctionsBool<K, K>(bindings, NULL, key, key, default_value);
     }
 
+    // Non-static pushes, to be used in hooks.
+    // These just call the correct static version with the main thread's Lua state.
+    void Push()                                 { Push(L); ++push_counter; }
+    void Push(const long long value)            { Push(L, value); ++push_counter; }
+    void Push(const unsigned long long value)   { Push(L, value); ++push_counter; }
+    void Push(const long value)                 { Push(L, value); ++push_counter; }
+    void Push(const unsigned long value)        { Push(L, value); ++push_counter; }
+    void Push(const int value)                  { Push(L, value); ++push_counter; }
+    void Push(const unsigned int value)         { Push(L, value); ++push_counter; }
+    void Push(const bool value)                 { Push(L, value); ++push_counter; }
+    void Push(const float value)                { Push(L, value); ++push_counter; }
+    void Push(const double value)               { Push(L, value); ++push_counter; }
+    void Push(const std::string& value)         { Push(L, value); ++push_counter; }
+    void Push(const char* value)                { Push(L, value); ++push_counter; }
+    template<typename T>
+    void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
+
 public:
     static Eluna* GEluna;
 
@@ -205,6 +235,8 @@ public:
     BindingMap< EntryKey<Hooks::ItemEvents> >*       ItemEventBindings;
     BindingMap< EntryKey<Hooks::GossipEvents> >*     ItemGossipBindings;
     BindingMap< EntryKey<Hooks::GossipEvents> >*     PlayerGossipBindings;
+    BindingMap< EntryKey<Hooks::InstanceEvents> >*   MapEventBindings;
+    BindingMap< EntryKey<Hooks::InstanceEvents> >*   InstanceEventBindings;
 
     BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >*  CreatureUniqueBindings;
 
@@ -239,28 +271,35 @@ public:
         ElunaTemplate<T>::Push(luastate, ptr);
     }
 
+    /*
+     * Returns `true` if Eluna has instance data for `map`.
+     */
+    bool HasInstanceData(Map const* map);
+
+    /*
+     * Use the top element of the stack as the instance data table for `map`,
+     *   then pops it off the stack.
+     */
+    void CreateInstanceData(Map const* map);
+
+    /*
+     * Retrieve the instance data for the `Map` scripted by `ai` and push it
+     *   onto the stack.
+     *
+     * An `ElunaInstanceAI` is needed because the instance data might
+     *   not exist (i.e. Eluna has been reloaded).
+     *
+     * In that case, the AI is "reloaded" (new instance data table is created
+     *   and loaded with the last known save state, and `Load`/`Initialize`
+     *   hooks are called).
+     */
+    void PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCounter = true);
+
     void RunScripts();
     bool ShouldReload() const { return reload; }
     bool IsEnabled() const { return enabled && IsInitialized(); }
     bool HasLuaState() const { return L != NULL; }
     int Register(lua_State* L, uint8 reg, uint32 entry, uint64 guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
-
-    // Non-static pushes, to be used in hooks.
-    // These just call the correct static version with the main thread's Lua state.
-    void Push()                                 { Push(L); ++push_counter; }
-    void Push(const long long value)            { Push(L, value); ++push_counter; }
-    void Push(const unsigned long long value)   { Push(L, value); ++push_counter; }
-    void Push(const long value)                 { Push(L, value); ++push_counter; }
-    void Push(const unsigned long value)        { Push(L, value); ++push_counter; }
-    void Push(const int value)                  { Push(L, value); ++push_counter; }
-    void Push(const unsigned int value)         { Push(L, value); ++push_counter; }
-    void Push(const bool value)                 { Push(L, value); ++push_counter; }
-    void Push(const float value)                { Push(L, value); ++push_counter; }
-    void Push(const double value)               { Push(L, value); ++push_counter; }
-    void Push(const std::string& value)         { Push(L, value); ++push_counter; }
-    void Push(const char* value)                { Push(L, value); ++push_counter; }
-    template<typename T>
-    void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* luastate, int narg);
@@ -275,6 +314,8 @@ public:
     static ElunaObject* CHECKTYPE(lua_State* luastate, int narg, const char *tname, bool error = true);
 
     CreatureAI* GetAI(Creature* creature);
+    InstanceData* GetInstanceData(Map* map);
+    void FreeInstanceId(uint32 instanceId);
 
     /* Custom */
     void OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj);
@@ -453,6 +494,15 @@ public:
     void OnRemoveFromWorld(GameObject* gameobject);
     void OnRemove(Creature* creature);
     void OnRemove(GameObject* gameobject);
+
+    /* Instance */
+    void OnInitialize(ElunaInstanceAI* ai);
+    void OnLoad(ElunaInstanceAI* ai);
+    void OnUpdateInstance(ElunaInstanceAI* ai, uint32 diff);
+    void OnPlayerEnterInstance(ElunaInstanceAI* ai, Player* player);
+    void OnCreatureCreate(ElunaInstanceAI* ai, Creature* creature);
+    void OnGameObjectCreate(ElunaInstanceAI* ai, GameObject* gameobject);
+    bool OnCheckEncounterInProgress(ElunaInstanceAI* ai);
 
     /* World */
     void OnOpenStateChange(bool open);

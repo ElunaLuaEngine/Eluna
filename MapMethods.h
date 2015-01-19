@@ -7,6 +7,8 @@
 #ifndef MAPMETHODS_H
 #define MAPMETHODS_H
 
+#include "ElunaInstanceAI.h"
+
 /***
  * A game map, e.g. Azeroth, Eastern Kingdoms, the Molten Core, etc.
  *
@@ -271,6 +273,51 @@ namespace LuaMap
         if (Weather::IsValidWeatherType(weatherType))
             map->SetWeather(zoneId, (WeatherType)weatherType, grade, false);
 #endif
+        return 0;
+    }
+
+    /**
+     * Gets the instance data table for the [Map], if it exists.
+     *
+     * The instance must be scripted using Eluna for this to succeed.
+     * If the instance is scripted in C++ this will return `nil`.
+     *
+     * @return table instance_data : instance data table, or `nil`
+     */
+    int GetInstanceData(Eluna* E, lua_State* L, Map* map)
+    {
+#ifdef TRINITY
+        ElunaInstanceAI* iAI = NULL;
+        if (InstanceMap* inst = map->ToInstanceMap())
+            iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
+#else
+        ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData());
+#endif
+
+        if (iAI)
+            sEluna->PushInstanceData(L, iAI, false);
+        else
+            Eluna::Push(L); // nil
+
+        return 1;
+    }
+
+    /**
+     * Saves the [Map]'s instance data to the database.
+     */
+    int SaveInstanceData(Eluna* E, lua_State* L, Map* map)
+    {
+#ifdef TRINITY
+        ElunaInstanceAI* iAI = NULL;
+        if (InstanceMap* inst = map->ToInstanceMap())
+            iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
+#else
+        ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData());
+#endif
+
+        if (iAI)
+            iAI->SaveToDB();
+
         return 0;
     }
 };
