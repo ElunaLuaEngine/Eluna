@@ -9,6 +9,7 @@
 
 #include "Hooks.h"
 #include "HookHelpers.h"
+#include "ElunaTemplate.h"
 #include "LuaEngine.h"
 #include "ElunaBinding.h"
 #include "ElunaTemplate.h" // Needed to be able to push AuctionHouseObjects.

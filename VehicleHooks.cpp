@@ -12,6 +12,7 @@
 
 #include "Hooks.h"
 #include "HookHelpers.h"
+#include "ElunaTemplate.h"
 #include "LuaEngine.h"
 #include "ElunaBinding.h"
 
