@@ -232,12 +232,13 @@ struct EventKey
  *   (CreatureEvents, GameObjectEvents, etc.).
  */
 template <typename T>
-struct EntryKey : public EventKey<T>
+struct EntryKey
 {
+    T event_id;
     uint32 entry;
 
-    EntryKey(T event_type, uint32 entry) :
-        EventKey<T>(event_type),
+    EntryKey(T event_id, uint32 entry) :
+        event_id(event_id),
         entry(entry)
     {}
 };
@@ -247,13 +248,14 @@ struct EntryKey : public EventKey<T>
  *   (currently just CreatureEvents).
  */
 template <typename T>
-struct UniqueObjectKey : public EventKey<T>
+struct UniqueObjectKey
 {
+    T event_id;
     uint64 guid;
     uint32 instance_id;
 
-    UniqueObjectKey(T event_type, uint64 guid, uint32 instance_id) :
-        EventKey<T>(event_type),
+    UniqueObjectKey(T event_id, uint64 guid, uint32 instance_id) :
+        event_id(event_id),
         guid(guid),
         instance_id(instance_id)
     {}
