@@ -9,12 +9,25 @@
 
 #include "Hooks.h"
 #include "HookHelpers.h"
-#include "ElunaTemplate.h"
 #include "LuaEngine.h"
 #include "ElunaBinding.h"
 #include "ElunaIncludes.h"
+#include "ElunaTemplate.h"
 
 using namespace Hooks;
+
+void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, uint32 spellid)
+{
+    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_LEARN_TALENTS))
+        return;
+
+    LOCK_ELUNA;
+    Push(pPlayer);
+    Push(talentId);
+    Push(talentRank);
+    Push(spellid);
+    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LEARN_TALENTS);
+}
 
 void Eluna::HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code)
 {

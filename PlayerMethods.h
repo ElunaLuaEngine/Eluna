@@ -2925,6 +2925,21 @@ namespace LuaPlayer
     }
 
     /**
+     * Learn the [Player] the [Talent] specified by talent_id and talentRank
+     *
+     * @param uint32 talent_id
+     * @param uint32 talentRank
+     */
+    int LearnTalent(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        uint32 id = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 rank = Eluna::CHECKVAL<uint32>(L, 3);
+
+        player->LearnTalent(id, rank);
+        return 0;
+    }
+
+    /**
      * Resurrects the [Player]
      *
      * @param float healthPercent = 100.0f
