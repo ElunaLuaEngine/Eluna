@@ -22,29 +22,20 @@ class EventMgr;
 class ElunaEventProcessor;
 class WorldObject;
 
-class LuaEvent
+struct LuaEvent
 {
-    friend class EventMgr;
-    friend class ElunaEventProcessor;
-
-public:
-    // Should never execute on dead events
-    void Execute();
-    bool to_Abort;
-
-private:
-    LuaEvent(ElunaEventProcessor* _events, int _funcRef, uint32 _delay, uint32 _calls);
-    ~LuaEvent();
-
-    ElunaEventProcessor* events; // Pointer to events (holds the timed event)
-    int funcRef;    // Lua function reference ID, also used as event ID
+    LuaEvent(int _funcRef, uint32 _delay, uint32 _repeats) :
+        delay(_delay), repeats(_repeats), funcRef(_funcRef), abort(false)
+    {
+    }
     uint32 delay;   // Delay between event calls
-    uint32 calls;   // Amount of calls to make, 0 for infinite
+    uint32 repeats; // Amount of repeats to make, 0 for infinite
+    int funcRef;    // Lua function reference ID, also used as event ID
+    bool abort;     // True if aborted and should not execute anymore
 };
 
 class ElunaEventProcessor
 {
-    friend class LuaEvent;
     friend class EventMgr;
 
 public:
@@ -64,7 +55,8 @@ public:
 
 private:
     void RemoveEvents_internal();
-    void AddEvent(LuaEvent* Event);
+    void AddEvent(LuaEvent* luaEvent);
+    void RemoveEvent(LuaEvent* luaEvent);
     EventList eventList;
     uint64 m_time;
     WorldObject* obj;

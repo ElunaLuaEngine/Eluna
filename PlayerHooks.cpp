@@ -75,7 +75,7 @@ bool Eluna::OnCommand(Player* player, const char* text)
                 std::transform(eluna.begin(), eluna.end(), eluna.begin(), ::tolower);
                 if (std::string("eluna").find(eluna) == 0)
                 {
-                    Eluna::reload = true;
+                    ReloadEluna();
                     return false;
                 }
             }

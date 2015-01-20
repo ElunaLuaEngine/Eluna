@@ -8,3 +8,7 @@
 
 -- Randomize random
 math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6)))
+
+-- Set debug.traceback to use StackTracePlus to print full stack trace
+local trace = require("StackTracePlus")
+debug.traceback = trace.stacktrace
