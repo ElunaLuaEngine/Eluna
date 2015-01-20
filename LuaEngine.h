@@ -159,7 +159,7 @@ private:
     static void AddScriptPath(std::string filename, const std::string& fullpath);
 
     static int StackTrace(lua_State *_L);
-    static void Eluna::Report(lua_State* _L);
+    static void Report(lua_State* _L);
 
     // Some helpers for hooks to call event handlers.
     // The bodies of the templates are in HookHelpers.h, so if you want to use them you need to #include "HookHelpers.h".

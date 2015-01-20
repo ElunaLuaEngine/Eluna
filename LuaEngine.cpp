@@ -564,7 +564,7 @@ bool Eluna::ExecuteCall(int params, int res)
         ASSERT(false); // stack probably corrupt
     }
 
-    bool usetrace = eConfigMgr->GetBoolDefault("Eluna.TraceBack", true);
+    bool usetrace = eConfigMgr->GetBoolDefault("Eluna.TraceBack", false);
     if (usetrace)
     {
         lua_pushcfunction(L, &StackTrace);
