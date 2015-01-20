@@ -7,14 +7,14 @@
 #ifndef _VEHICLE_HOOKS_H
 #define _VEHICLE_HOOKS_H
 
-#ifndef CLASSIC
-#ifndef TBC
-
 #include "Hooks.h"
 #include "HookHelpers.h"
 #include "LuaEngine.h"
 #include "ElunaBinding.h"
 #include "ElunaTemplate.h"
+
+#ifndef CLASSIC
+#ifndef TBC
 
 using namespace Hooks;
 
