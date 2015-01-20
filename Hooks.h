@@ -1,13 +1,72 @@
 /*
-* Copyright (C) 2010 - 2015 Eluna Lua Engine <http://emudevs.com/>
-* This program is free software licensed under GPL version 3
-* Please see the included DOCS/LICENSE.md for more information
-*/
+ * Copyright (C) 2010 - 2015 Eluna Lua Engine <http://emudevs.com/>
+ * This program is free software licensed under GPL version 3
+ * Please see the included DOCS/LICENSE.md for more information
+ */
 
-#ifndef LUAHOOKS_H
-#define LUAHOOKS_H
+#ifndef _HOOKS_H
+#define _HOOKS_H
 
-namespace HookMgr
+/*
+ * A hook should be written in one of the following forms:
+ *
+ * A. If results will be IGNORED:
+ *
+ *     // Return early if there are no bindings.
+ *     if (!WhateverBindings->HasEvents(SOME_EVENT_TYPE))
+ *         return;
+ *
+ *     // Lock out any other threads.
+ *     LOCK_ELUNA;
+ *
+ *     // Push extra arguments, if any.
+ *     Push(a);
+ *     Push(b);
+ *     Push(c);
+ *
+ *     // Call all event handlers.
+ *     CallAllFunctions(WhateverBindings, SOME_EVENT_TYPE);
+ *
+ *
+ * B. If results will be USED:
+ *
+ *     // Return early if there are no bindings.
+ *     if (!WhateverBindings->HasEvents(SOME_EVENT_TYPE))
+ *          return;
+ *
+ *     // Lock out any other threads.
+ *     LOCK_ELUNA;
+ *
+ *     // Push extra arguments, if any.
+ *     Push(a);
+ *     Push(b);
+ *     Push(c);
+ *
+ *     // Setup the stack and get the number of functions pushed.
+ *     // Last argument is 3 because we did 3 Pushes.
+ *     int n = SetupStack(WhateverBindings, SOME_EVENT_TYPE, 3);
+ *
+ *     // Call each event handler in order and check results.
+ *     while (n > 0)
+ *     {
+ *         // Call an event handler and decrement the function counter afterward.
+ *         // Second-last argument is 3 because we did 3 Pushes.
+ *         // Last argument is 2 because we want 2 results.
+ *         int r = CallOneFunction(n--, 3, 2);
+ *
+ *         // Results can be popped using `r`.
+ *         int first = CHECKVAL<int>(L, r + 0);
+ *         int second = CHECKVAL<int>(L, r + 1);
+ *
+ *         // Pop the results off the stack.
+ *         lua_pop(L, 2);
+ *     }
+ *
+ *     // Clean-up the stack. Argument is 3 because we did 3 Pushes.
+ *     CleanUpStack(3);
+ */
+
+namespace Hooks
 {
     enum RegisterTypes
     {
@@ -28,7 +87,6 @@ namespace HookMgr
         REGTYPE_COUNT
     };
 
-    // RegisterPacketEvent(Opcode, event, function)
     enum PacketEvents
     {
         PACKET_EVENT_ON_PACKET_RECEIVE          =     5,       // (event, packet, player) - Player only if accessible. Can return false, newPacket
@@ -38,7 +96,6 @@ namespace HookMgr
         PACKET_EVENT_COUNT
     };
 
-    // RegisterServerEvent(EventId, function)
     enum ServerEvents
     {
         // Server
@@ -96,7 +153,6 @@ namespace HookMgr
         SERVER_EVENT_COUNT
     };
 
-    // RegisterPlayerEvent(eventId, function)
     enum PlayerEvents
     {
         PLAYER_EVENT_ON_CHARACTER_CREATE        =     1,        // (event, player)
@@ -147,7 +203,6 @@ namespace HookMgr
         PLAYER_EVENT_COUNT
     };
 
-    // RegisterGuildEvent(eventId, function)
     enum GuildEvents
     {
         // Guild
@@ -166,7 +221,6 @@ namespace HookMgr
         GUILD_EVENT_COUNT
     };
 
-    // RegisterGroupEvent(eventId, function)
     enum GroupEvents
     {
         // Group
@@ -180,7 +234,6 @@ namespace HookMgr
         GROUP_EVENT_COUNT
     };
 
-    // RegisterVehicleEvent(eventId, function)
     enum VehicleEvents
     {
         VEHICLE_EVENT_ON_INSTALL                =     1,    // (event, vehicle)
@@ -193,7 +246,6 @@ namespace HookMgr
         VEHICLE_EVENT_COUNT
     };
 
-    // RegisterCreatureEvent(entry, EventId, function)
     enum CreatureEvents
     {
         CREATURE_EVENT_ON_ENTER_COMBAT                    = 1,  // (event, creature, target) - Can return true to stop normal action
@@ -236,7 +288,6 @@ namespace HookMgr
         CREATURE_EVENT_COUNT
     };
 
-    // RegisterGameObjectEvent(entry, EventId, function)
     enum GameObjectEvents
     {
         GAMEOBJECT_EVENT_ON_AIUPDATE                    = 1,    // (event, go, diff)
@@ -256,7 +307,6 @@ namespace HookMgr
         GAMEOBJECT_EVENT_COUNT
     };
 
-    // RegisterItemEvent(entry, EventId, function)
     enum ItemEvents
     {
         ITEM_EVENT_ON_DUMMY_EFFECT                      = 1,    // (event, caster, spellid, effindex, item) - Can return true
@@ -267,10 +317,6 @@ namespace HookMgr
         ITEM_EVENT_COUNT
     };
 
-    // RegisterCreatureGossipEvent(entry, EventId, function)
-    // RegisterGameObjectGossipEvent(entry, EventId, function)
-    // RegisterItemGossipEvent(entry, EventId, function)
-    // RegisterPlayerGossipEvent(menu_id, EventId, function)
     enum GossipEvents
     {
         GOSSIP_EVENT_ON_HELLO                           = 1,    // (event, player, object) - Object is the Creature/GameObject/Item. Can return false to do default action. For item gossip can return false to stop spell casting.
@@ -278,7 +324,6 @@ namespace HookMgr
         GOSSIP_EVENT_COUNT
     };
 
-    // RegisterBGEvent(EventId, function)
     enum BGEvents
     {
         BG_EVENT_ON_START                               = 1,    // (event, bg, bgId, instanceId) - Needs to be added to TC
@@ -288,4 +333,5 @@ namespace HookMgr
         BG_EVENT_COUNT
     };
 };
-#endif
+
+#endif // _HOOKS_H

@@ -593,7 +593,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterServerEvent(Eluna* E, lua_State* L)
     {
-        RegisterEventHelper(E, L, HookMgr::REGTYPE_SERVER);
+        RegisterEventHelper(E, L, Hooks::REGTYPE_SERVER);
         return 0;
     }
 
@@ -658,7 +658,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterPlayerEvent(Eluna* E, lua_State* L)
     {
-        RegisterEventHelper(E, L, HookMgr::REGTYPE_PLAYER);
+        RegisterEventHelper(E, L, Hooks::REGTYPE_PLAYER);
         return 0;
     }
 
@@ -691,7 +691,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterGuildEvent(Eluna* E, lua_State* L)
     {
-        RegisterEventHelper(E, L, HookMgr::REGTYPE_GUILD);
+        RegisterEventHelper(E, L, Hooks::REGTYPE_GUILD);
         return 0;
     }
 
@@ -719,7 +719,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterGroupEvent(Eluna* E, lua_State* L)
     {
-        RegisterEventHelper(E, L, HookMgr::REGTYPE_GROUP);
+        RegisterEventHelper(E, L, Hooks::REGTYPE_GROUP);
         return 0;
     }
 
@@ -743,7 +743,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterBGEvent(Eluna* E, lua_State* L)
     {
-        RegisterEventHelper(E, L, HookMgr::REGTYPE_BG);
+        RegisterEventHelper(E, L, Hooks::REGTYPE_BG);
         return 0;
     }
 
@@ -768,7 +768,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterPacketEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, HookMgr::REGTYPE_PACKET);
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_PACKET);
         return 0;
     }
 
@@ -791,7 +791,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterCreatureGossipEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, HookMgr::REGTYPE_CREATURE_GOSSIP);
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_CREATURE_GOSSIP);
         return 0;
     }
 
@@ -814,7 +814,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterGameObjectGossipEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, HookMgr::REGTYPE_GAMEOBJECT_GOSSIP);
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_GAMEOBJECT_GOSSIP);
         return 0;
     }
 
@@ -840,7 +840,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterItemEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, HookMgr::REGTYPE_ITEM);
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_ITEM);
         return 0;
     }
 
@@ -863,7 +863,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterItemGossipEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, HookMgr::REGTYPE_ITEM_GOSSIP);
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_ITEM_GOSSIP);
         return 0;
     }
 
@@ -886,7 +886,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterPlayerGossipEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, HookMgr::REGTYPE_PLAYER_GOSSIP);
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_PLAYER_GOSSIP);
         return 0;
     }
 
@@ -944,7 +944,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterCreatureEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, HookMgr::REGTYPE_CREATURE);
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_CREATURE);
         return 0;
     }
 
@@ -1003,7 +1003,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterUniqueCreatureEvent(Eluna* E, lua_State* L)
     {
-        RegisterUniqueHelper(E, L, HookMgr::REGTYPE_CREATURE);
+        RegisterUniqueHelper(E, L, Hooks::REGTYPE_CREATURE);
         return 0;
     }
 
@@ -1037,7 +1037,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterGameObjectEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, HookMgr::REGTYPE_GAMEOBJECT);
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_GAMEOBJECT);
         return 0;
     }
 

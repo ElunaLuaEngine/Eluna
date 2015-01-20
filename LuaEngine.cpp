@@ -4,13 +4,14 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#include "HookMgr.h"
+#include "Hooks.h"
 #include "LuaEngine.h"
 #include "ElunaBinding.h"
 #include "ElunaEventMgr.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
 #include "ElunaUtility.h"
+#include "ElunaCreatureAI.h"
 
 #ifdef USING_BOOST
 #include <boost/filesystem.hpp>
@@ -123,23 +124,23 @@ push_counter(0),
 
 eventMgr(NULL),
 
-ServerEventBindings(new EventBind<HookMgr::ServerEvents>("ServerEvents", *this)),
-PlayerEventBindings(new EventBind<HookMgr::PlayerEvents>("PlayerEvents", *this)),
-GuildEventBindings(new EventBind<HookMgr::GuildEvents>("GuildEvents", *this)),
-GroupEventBindings(new EventBind<HookMgr::GroupEvents>("GroupEvents", *this)),
-VehicleEventBindings(new EventBind<HookMgr::VehicleEvents>("VehicleEvents", *this)),
-BGEventBindings(new EventBind<HookMgr::BGEvents>("BGEvents", *this)),
+ServerEventBindings(new EventBind<Hooks::ServerEvents>("ServerEvents", *this)),
+PlayerEventBindings(new EventBind<Hooks::PlayerEvents>("PlayerEvents", *this)),
+GuildEventBindings(new EventBind<Hooks::GuildEvents>("GuildEvents", *this)),
+GroupEventBindings(new EventBind<Hooks::GroupEvents>("GroupEvents", *this)),
+VehicleEventBindings(new EventBind<Hooks::VehicleEvents>("VehicleEvents", *this)),
+BGEventBindings(new EventBind<Hooks::BGEvents>("BGEvents", *this)),
 
-PacketEventBindings(new EntryBind<HookMgr::PacketEvents>("PacketEvents", *this)),
-CreatureEventBindings(new EntryBind<HookMgr::CreatureEvents>("CreatureEvents", *this)),
-CreatureGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (creature)", *this)),
-GameObjectEventBindings(new EntryBind<HookMgr::GameObjectEvents>("GameObjectEvents", *this)),
-GameObjectGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (gameobject)", *this)),
-ItemEventBindings(new EntryBind<HookMgr::ItemEvents>("ItemEvents", *this)),
-ItemGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (item)", *this)),
-playerGossipBindings(new EntryBind<HookMgr::GossipEvents>("GossipEvents (player)", *this)),
+PacketEventBindings(new EntryBind<Hooks::PacketEvents>("PacketEvents", *this)),
+CreatureEventBindings(new EntryBind<Hooks::CreatureEvents>("CreatureEvents", *this)),
+CreatureGossipBindings(new EntryBind<Hooks::GossipEvents>("GossipEvents (creature)", *this)),
+GameObjectEventBindings(new EntryBind<Hooks::GameObjectEvents>("GameObjectEvents", *this)),
+GameObjectGossipBindings(new EntryBind<Hooks::GossipEvents>("GossipEvents (gameobject)", *this)),
+ItemEventBindings(new EntryBind<Hooks::ItemEvents>("ItemEvents", *this)),
+ItemGossipBindings(new EntryBind<Hooks::GossipEvents>("GossipEvents (item)", *this)),
+playerGossipBindings(new EntryBind<Hooks::GossipEvents>("GossipEvents (player)", *this)),
 
-CreatureUniqueBindings(new UniqueBind<HookMgr::CreatureEvents>("CreatureEvents", *this))
+CreatureUniqueBindings(new UniqueBind<Hooks::CreatureEvents>("CreatureEvents", *this))
 {
     // open base lua libraries
     luaL_openlibs(L);
@@ -767,56 +768,56 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
 {
     switch (regtype)
     {
-        case HookMgr::REGTYPE_SERVER:
-            if (evt < HookMgr::SERVER_EVENT_COUNT)
+        case Hooks::REGTYPE_SERVER:
+            if (evt < Hooks::SERVER_EVENT_COUNT)
             {
                 ServerEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
 
-        case HookMgr::REGTYPE_PLAYER:
-            if (evt < HookMgr::PLAYER_EVENT_COUNT)
+        case Hooks::REGTYPE_PLAYER:
+            if (evt < Hooks::PLAYER_EVENT_COUNT)
             {
                 PlayerEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
 
-        case HookMgr::REGTYPE_GUILD:
-            if (evt < HookMgr::GUILD_EVENT_COUNT)
+        case Hooks::REGTYPE_GUILD:
+            if (evt < Hooks::GUILD_EVENT_COUNT)
             {
                 GuildEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
 
-        case HookMgr::REGTYPE_GROUP:
-            if (evt < HookMgr::GROUP_EVENT_COUNT)
+        case Hooks::REGTYPE_GROUP:
+            if (evt < Hooks::GROUP_EVENT_COUNT)
             {
                 GroupEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
 
-        case HookMgr::REGTYPE_VEHICLE:
-            if (evt < HookMgr::VEHICLE_EVENT_COUNT)
+        case Hooks::REGTYPE_VEHICLE:
+            if (evt < Hooks::VEHICLE_EVENT_COUNT)
             {
                 VehicleEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
 
-        case HookMgr::REGTYPE_BG:
-            if (evt < HookMgr::BG_EVENT_COUNT)
+        case Hooks::REGTYPE_BG:
+            if (evt < Hooks::BG_EVENT_COUNT)
             {
                 BGEventBindings->Insert(evt, functionRef, shots);
                 return;
             }
             break;
 
-        case HookMgr::REGTYPE_PACKET:
-            if (evt < HookMgr::PACKET_EVENT_COUNT)
+        case Hooks::REGTYPE_PACKET:
+            if (evt < Hooks::PACKET_EVENT_COUNT)
             {
                 if (id >= NUM_MSG_TYPES)
                 {
@@ -830,8 +831,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
             }
             break;
 
-        case HookMgr::REGTYPE_CREATURE:
-            if (evt < HookMgr::CREATURE_EVENT_COUNT)
+        case Hooks::REGTYPE_CREATURE:
+            if (evt < Hooks::CREATURE_EVENT_COUNT)
             {
                 if (id != 0)
                 {
@@ -853,8 +854,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
             }
             break;
 
-        case HookMgr::REGTYPE_CREATURE_GOSSIP:
-            if (evt < HookMgr::GOSSIP_EVENT_COUNT)
+        case Hooks::REGTYPE_CREATURE_GOSSIP:
+            if (evt < Hooks::GOSSIP_EVENT_COUNT)
             {
                 if (!eObjectMgr->GetCreatureTemplate(id))
                 {
@@ -868,8 +869,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
             }
             break;
 
-        case HookMgr::REGTYPE_GAMEOBJECT:
-            if (evt < HookMgr::GAMEOBJECT_EVENT_COUNT)
+        case Hooks::REGTYPE_GAMEOBJECT:
+            if (evt < Hooks::GAMEOBJECT_EVENT_COUNT)
             {
                 if (!eObjectMgr->GetGameObjectTemplate(id))
                 {
@@ -883,8 +884,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
             }
             break;
 
-        case HookMgr::REGTYPE_GAMEOBJECT_GOSSIP:
-            if (evt < HookMgr::GOSSIP_EVENT_COUNT)
+        case Hooks::REGTYPE_GAMEOBJECT_GOSSIP:
+            if (evt < Hooks::GOSSIP_EVENT_COUNT)
             {
                 if (!eObjectMgr->GetGameObjectTemplate(id))
                 {
@@ -898,8 +899,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
             }
             break;
 
-        case HookMgr::REGTYPE_ITEM:
-            if (evt < HookMgr::ITEM_EVENT_COUNT)
+        case Hooks::REGTYPE_ITEM:
+            if (evt < Hooks::ITEM_EVENT_COUNT)
             {
                 if (!eObjectMgr->GetItemTemplate(id))
                 {
@@ -913,8 +914,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
             }
             break;
 
-        case HookMgr::REGTYPE_ITEM_GOSSIP:
-            if (evt < HookMgr::GOSSIP_EVENT_COUNT)
+        case Hooks::REGTYPE_ITEM_GOSSIP:
+            if (evt < Hooks::GOSSIP_EVENT_COUNT)
             {
                 if (!eObjectMgr->GetItemTemplate(id))
                 {
@@ -928,8 +929,8 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
             }
             break;
 
-        case HookMgr::REGTYPE_PLAYER_GOSSIP:
-            if (evt < HookMgr::GOSSIP_EVENT_COUNT)
+        case Hooks::REGTYPE_PLAYER_GOSSIP:
+            if (evt < Hooks::GOSSIP_EVENT_COUNT)
             {
                 playerGossipBindings->Insert(id, evt, functionRef, shots);
                 return;
@@ -938,4 +939,57 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     luaL_error(L, "Unknown event type (regtype %d, id %d, event %d)", regtype, id, evt);
+}
+
+/*
+ * Cleans up the stack, effectively undoing all Push calls and the Setup call.
+ */
+void Eluna::CleanUpStack(int number_of_arguments)
+{
+    // Stack: event_id, [arguments]
+
+    lua_pop(L, number_of_arguments + 1); // Add 1 because the caller doesn't know about `event_id`.
+    // Stack: (empty)
+
+    if (event_level == 0)
+        InvalidateObjects();
+}
+
+/*
+ * Call a single event handler that was put on the stack with `Setup` and removes it from the stack.
+ *
+ * The caller is responsible for keeping track of how many times this should be called.
+ */
+int Eluna::CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results)
+{
+    ++number_of_arguments; // Caller doesn't know about `event_id`.
+    ASSERT(number_of_functions > 0 && number_of_arguments > 0 && number_of_results >= 0);
+    // Stack: event_id, [arguments], [functions]
+
+    int functions_top        = lua_gettop(L);
+    int first_function_index = functions_top - number_of_functions + 1;
+    int arguments_top        = first_function_index - 1;
+    int first_argument_index = arguments_top - number_of_arguments + 1;
+
+    // Copy the arguments from the bottom of the stack to the top.
+    for (int argument_index = first_argument_index; argument_index <= arguments_top; ++argument_index)
+    {
+        lua_pushvalue(L, argument_index);
+    }
+    // Stack: event_id, [arguments], [functions], event_id, [arguments]
+
+    ExecuteCall(number_of_arguments, number_of_results);
+    --functions_top;
+    // Stack: event_id, [arguments], [functions - 1], [results]
+
+    return functions_top + 1; // Return the location of the first result (if any exist).
+}
+
+CreatureAI* Eluna::GetAI(Creature* creature)
+{
+    if (CreatureEventBindings->HasEvents(creature->GetEntry()) ||
+        CreatureUniqueBindings->HasEvents(creature->GET_GUID(), creature->GetInstanceId()))
+        return new ElunaCreatureAI(creature);
+
+    return NULL;
 }
