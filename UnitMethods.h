@@ -1220,7 +1220,7 @@ namespace LuaUnit
 #else
         unit->SetControlled(apply, UNIT_STATE_CONFUSED);
 #endif
-    return 0;
+        return 0;
     }
 
     /**
@@ -1699,7 +1699,7 @@ namespace LuaUnit
         float o = Eluna::CHECKVAL<float>(L, 5);
 
         unit->NearTeleportTo(x, y, z, o);
-        return 1;
+        return 0;
     }
 
     /**

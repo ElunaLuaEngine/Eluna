@@ -235,7 +235,7 @@ namespace LuaPlayer
         bool honorable = Eluna::CHECKVAL<bool>(L, 2, true);
 
         Eluna::Push(L, player->GetHonorStoredKills(honorable));
-        return 0;
+        return 1;
     }
 
     int GetRankPoints(Eluna* /*E*/, lua_State* L, Player* player)
