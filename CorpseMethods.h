@@ -85,9 +85,7 @@ namespace LuaCorpse
     {
         // Prevent a failed assertion.
         if (corpse->GetType() != CORPSE_BONES)
-        {
             return 0;
-        }
         corpse->DeleteBonesFromWorld();
         return 0;
     }

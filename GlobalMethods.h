@@ -2098,7 +2098,7 @@ namespace LuaGlobalFunctions
         Corpse* corpse = Eluna::CHECKOBJ<Corpse>(L, 1);
         eObjectAccessor->RemoveCorpse(corpse);
         Eluna::CHECKOBJ<ElunaObject>(L, 1)->Invalidate();
-        return 1;
+        return 0;
     }
 
     /**
@@ -2114,7 +2114,7 @@ namespace LuaGlobalFunctions
         bool insignia = Eluna::CHECKVAL<bool>(L, 2, false);
 
         Eluna::Push(L, eObjectAccessor->ConvertCorpseForPlayer(ObjectGuid(guid), insignia));
-        return 0;
+        return 1;
     }
 
     /**
