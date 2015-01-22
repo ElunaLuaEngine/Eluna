@@ -19,6 +19,7 @@
 #include "Weather.h"
 #include "World.h"
 #include "Hooks.h"
+#include "ElunaUtility.h"
 
 extern "C"
 {
@@ -141,6 +142,9 @@ private:
     uint8 push_counter;
     bool enabled;
 
+    // Map from instance ID -> Lua table ref
+    UNORDERED_MAP<uint32, int> instanceDataRefs;
+
     Eluna();
     ~Eluna();
 
@@ -216,6 +220,30 @@ private:
         return CallAllFunctionsBool((EventBind<T>*)NULL, id_bindings, guid_bindings, event_id, entry, guid, instanceId, default_value);
     }
 
+    // Non-static pushes, to be used in hooks.
+    // These just call the correct static version with the main thread's Lua state.
+    void Push()                                 { Push(L); ++push_counter; }
+    void Push(const long long value)            { Push(L, value); ++push_counter; }
+    void Push(const unsigned long long value)   { Push(L, value); ++push_counter; }
+    void Push(const long value)                 { Push(L, value); ++push_counter; }
+    void Push(const unsigned long value)        { Push(L, value); ++push_counter; }
+    void Push(const int value)                  { Push(L, value); ++push_counter; }
+    void Push(const unsigned int value)         { Push(L, value); ++push_counter; }
+    void Push(const bool value)                 { Push(L, value); ++push_counter; }
+    void Push(const float value)                { Push(L, value); ++push_counter; }
+    void Push(const double value)               { Push(L, value); ++push_counter; }
+    void Push(const std::string& value)         { Push(L, value); ++push_counter; }
+    void Push(const char* value)                { Push(L, value); ++push_counter; }
+    template<typename T>
+    void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
+
+    void PushInstanceData(Map const* map)
+    {
+        ASSERT(instanceDataRefs.count(map->GetInstanceId()) != 0);
+        lua_rawgeti(L, LUA_REGISTRYINDEX, instanceDataRefs[map->GetInstanceId()]);
+        ++push_counter;
+    }
+
 public:
     static Eluna* GEluna;
 
@@ -237,6 +265,8 @@ public:
     IDBind<Hooks::ItemEvents>*          ItemEventBindings;
     IDBind<Hooks::GossipEvents>*        ItemGossipBindings;
     IDBind<Hooks::GossipEvents>*        playerGossipBindings;
+    IDBind<Hooks::InstanceEvents>*           MapEventBindings;
+    IDBind<Hooks::InstanceEvents>*           InstanceEventBindings;
 
     UniqueBind<Hooks::CreatureEvents>*  CreatureUniqueBindings;
 
@@ -276,23 +306,6 @@ public:
     bool IsEnabled() const { return enabled && IsInitialized(); }
     bool HasLuaState() const { return L != NULL; }
     void Register(uint8 reg, uint32 id, uint64 guid, uint32 instanceId, uint32 evt, int func, uint32 shots);
-
-    // Non-static pushes, to be used in hooks.
-    // These just call the correct static version with the main thread's Lua state.
-    void Push()                                 { Push(L); ++push_counter; }
-    void Push(const long long value)            { Push(L, value); ++push_counter; }
-    void Push(const unsigned long long value)   { Push(L, value); ++push_counter; }
-    void Push(const long value)                 { Push(L, value); ++push_counter; }
-    void Push(const unsigned long value)        { Push(L, value); ++push_counter; }
-    void Push(const int value)                  { Push(L, value); ++push_counter; }
-    void Push(const unsigned int value)         { Push(L, value); ++push_counter; }
-    void Push(const bool value)                 { Push(L, value); ++push_counter; }
-    void Push(const float value)                { Push(L, value); ++push_counter; }
-    void Push(const double value)               { Push(L, value); ++push_counter; }
-    void Push(const std::string& value)         { Push(L, value); ++push_counter; }
-    void Push(const char* value)                { Push(L, value); ++push_counter; }
-    template<typename T>
-    void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* luastate, int narg);
@@ -488,6 +501,21 @@ public:
     void OnRemoveFromWorld(GameObject* gameobject);
     void OnRemove(Creature* creature);
     void OnRemove(GameObject* gameobject);
+
+    /* Instance */
+    void OnInitialize(Map* map);
+    void OnLoad(Map* map);
+    void OnUpdateInstance(Map* map, uint32 diff);
+    void OnPlayerEnterInstance(Map* map, Player* player);
+    void OnPlayerDeath(Map* map, Player* player);
+    void OnPlayerLeaveInstance(Map* map, Player* player);
+    void OnCreatureCreate(Map* map, Creature* creature);
+    void OnCreatureEnterCombat(Map* map, Creature* creature);
+    void OnCreatureEvade(Map* map, Creature* creature);
+    void OnCreatureDeath(Map* map, Creature* creature);
+    void OnGameObjectCreate(Map* map, GameObject* gameobject);
+    bool OnCheckEncounterInProgress(Map* map);
+    bool OnCheckCondition(Map* map, Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType);
 
     /* World */
     void OnOpenStateChange(bool open);

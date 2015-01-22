@@ -12,6 +12,7 @@
 #include "ElunaTemplate.h"
 #include "ElunaUtility.h"
 #include "ElunaCreatureAI.h"
+#include "ElunaInstanceData.h"
 
 #ifdef USING_BOOST
 #include <boost/filesystem.hpp>
@@ -243,6 +244,8 @@ void Eluna::CreateBindStores()
     ItemEventBindings = new IDBind<Hooks::ItemEvents>("ItemEvents", *this);
     ItemGossipBindings = new IDBind<Hooks::GossipEvents>("GossipEvents (item)", *this);
     playerGossipBindings = new IDBind<Hooks::GossipEvents>("GossipEvents (player)", *this);
+    MapEventBindings = new IDBind<Hooks::InstanceEvents>("MapEvents (all instances)", *this);
+    InstanceEventBindings = new IDBind<Hooks::InstanceEvents>("MapEvents (one instance)", *this);
 
     CreatureUniqueBindings = new UniqueBind<Hooks::CreatureEvents>("CreatureEvents (unique)", *this);
 }
@@ -1083,15 +1086,15 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
                 return;
             }
             break;
-        case HookMgr::REGTYPE_MAP:
-            if (evt < HookMgr::MAP_EVENT_COUNT)
+        case Hooks::REGTYPE_MAP:
+            if (evt < Hooks::INSTANCE_EVENT_COUNT)
             {
                 MapEventBindings->Insert(id, evt, functionRef, shots);
                 return;
             }
             break;
-        case HookMgr::REGTYPE_INSTANCE:
-            if (evt < HookMgr::MAP_EVENT_COUNT)
+        case Hooks::REGTYPE_INSTANCE:
+            if (evt < Hooks::INSTANCE_EVENT_COUNT)
             {
                 InstanceEventBindings->Insert(id, evt, functionRef, shots);
                 return;
@@ -1151,6 +1154,15 @@ CreatureAI* Eluna::GetAI(Creature* creature)
     if (CreatureEventBindings->HasEvents(creature->GetEntry()) ||
         CreatureUniqueBindings->HasEvents(creature->GET_GUID(), creature->GetInstanceId()))
         return new ElunaCreatureAI(creature);
+
+    return NULL;
+}
+
+InstanceData* Eluna::GetInstanceData(Map* map)
+{
+    if (MapEventBindings->HasEvents(map->GetId()) ||
+        InstanceEventBindings->HasEvents(map->GetInstanceId()))
+        return new ElunaInstanceData(map);
 
     return NULL;
 }

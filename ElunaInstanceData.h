@@ -7,14 +7,10 @@
 #ifndef _ELUNA_INSTANCE_DATA_H
 #define _ELUNA_INSTANCE_DATA_H
 
-#ifndef TRINITY
 #include "LuaEngine.h"
-#include "InstanceData.h"
 
-extern "C"
-{
-#include "lauxlib.h"
-}
+#ifndef TRINITY
+#include "InstanceData.h"
 
 class ElunaInstanceData : public InstanceData
 {
@@ -22,60 +18,91 @@ public:
     ElunaInstanceData(Map* map) : InstanceData(map) {}
 
     // On creation, NOT load.
-    void Initialize() {}
+    void Initialize()
+    {
+        sEluna->OnInitialize(instance);
+    }
 
     // On load
-    void Load(const char* /*data*/) {}
+    void Load(const char* data)
+    {
+        Initialize();
+        sEluna->OnLoad(instance);
+    }
 
     // When save is needed, this function generates the data
-    const char* Save() const { return ""; }
+    const char* Save() const
+    {
+        return "";
+    }
 
     // Called every map update
-    void Update(uint32 /*diff*/) {}
+    void Update(uint32 diff)
+    {
+        sEluna->OnUpdateInstance(instance, diff);
+    }
 
     // This is to prevent players from entering during boss encounters.
-    bool IsEncounterInProgress() const { return false; };
+    bool IsEncounterInProgress() const
+    {
+        return sEluna->OnCheckEncounterInProgress(instance);
+    }
 
     // Called when a player successfully enters the instance (after really added to map)
-    void OnPlayerEnter(Player*) {}
+    void OnPlayerEnter(Player* player)
+    {
+        sEluna->OnPlayerEnterInstance(instance, player);
+    }
 
     // Called when a player dies inside instance
-    void OnPlayerDeath(Player*) {}
+    void OnPlayerDeath(Player* player)
+    {
+        sEluna->OnPlayerDeath(instance, player);
+    }
 
     // Called when a player leaves the instance (before really removed from map (or possibly world))
-    void OnPlayerLeave(Player*) {}
+    void OnPlayerLeave(Player* player)
+    {
+        sEluna->OnPlayerLeaveInstance(instance, player);
+    }
 
     // Called when a gameobject is created
-    void OnObjectCreate(GameObject*) {}
+    void OnObjectCreate(GameObject* gameobject)
+    {
+        sEluna->OnGameObjectCreate(instance, gameobject);
+    }
 
     // called on creature creation
-    void OnCreatureCreate(Creature* /*creature*/) {}
+    void OnCreatureCreate(Creature* creature)
+    {
+        sEluna->OnCreatureCreate(instance, creature);
+    }
 
     // called on creature enter combat
-    void OnCreatureEnterCombat(Creature* /*creature*/) {}
+    void OnCreatureEnterCombat(Creature* creature)
+    {
+        sEluna->OnCreatureEnterCombat(instance, creature);
+    }
 
     // called on creature evade
-    void OnCreatureEvade(Creature* /*creature*/) {}
+    void OnCreatureEvade(Creature* creature)
+    {
+        sEluna->OnCreatureEvade(instance, creature);
+    }
 
     // called on creature death
-    void OnCreatureDeath(Creature* /*creature*/) {}
-
-    // All-purpose data storage 64 bit
-    uint64 GetData64(uint32 /*Data*/) const { return 0; }
-    void SetData64(uint32 /*Data*/, uint64 /*Value*/) { }
-
-    // Guid data storage (wrapper for set/get from uint64 storage
-    ObjectGuid GetGuid(uint32 dataIdx) const { return ObjectGuid(GetData64(dataIdx)); }
-    void SetGuid(uint32 dataIdx, ObjectGuid value) { SetData64(dataIdx, value.GetRawValue()); }
-
-    // All-purpose data storage 32 bit
-    uint32 GetData(uint32 /*Type*/) const { return 0; }
-    void SetData(uint32 /*Type*/, uint32 /*Data*/) {}
+    void OnCreatureDeath(Creature* creature)
+    {
+        sEluna->OnCreatureDeath(instance, creature);
+    }
 
     // Condition criteria additional requirements check
     // This is used for such things are heroic loot
     // See ObjectMgr.h enum ConditionSource for possible values of conditionSourceType
-    bool CheckConditionCriteriaMeet(Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType) const { return false; }
+    bool CheckConditionCriteriaMeet(Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType) const
+    {
+        return sEluna->OnCheckCondition(instance, source, instance_condition_id, conditionSource, conditionSourceType);
+    }
 };
 
 #endif // TRINITY

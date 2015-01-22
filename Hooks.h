@@ -335,9 +335,22 @@ namespace Hooks
         BG_EVENT_COUNT
     };
 
-    enum MapEvents
+    enum InstanceEvents
     {
-        MAP_EVENT_COUNT
+        INSTANCE_EVENT_ON_INITIALIZE                    = 1,    // (event, instance_data, map)
+        INSTANCE_EVENT_ON_LOAD                          = 2,    // (event, instance_data, map)
+        INSTANCE_EVENT_ON_UPDATE                        = 3,    // (event, instance_data, map, diff)
+        INSTANCE_EVENT_ON_PLAYER_ENTER                  = 4,    // (event, instance_data, map, player)
+        INSTANCE_EVENT_ON_PLAYER_DEATH                  = 5,    // (event, instance_data, map, player)
+        INSTANCE_EVENT_ON_PLAYER_LEAVE                  = 6,    // (event, instance_data, map, player)
+        INSTANCE_EVENT_ON_CREATURE_CREATE               = 7,    // (event, instance_data, map, creature)
+        INSTANCE_EVENT_ON_CREATURE_ENTER_COMBAT         = 8,    // (event, instance_data, map, creature)
+        INSTANCE_EVENT_ON_CREATURE_EVADE                = 9,    // (event, instance_data, map, creature)
+        INSTANCE_EVENT_ON_CREATURE_DEATH                = 10,   // (event, instance_data, map, creature)
+        INSTANCE_EVENT_ON_GAMEOBJECT_CREATE             = 11,   // (event, instance_data, map, go)
+        INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS   = 12,   // (event, instance_data, map)
+        INSTANCE_EVENT_ON_CHECK_CONDITION               = 13,   // (event, instance_data, map, player, condition, source, source_type)
+        INSTANCE_EVENT_COUNT
     };
 };
 

@@ -884,8 +884,22 @@ namespace LuaGlobalFunctions
      * Registers a [Map] event handler for all instance of a [Map].
      *
      * <pre>
-     * enum MapEvents
+     * enum InstanceEvents
      * {
+     *     INSTANCE_EVENT_ON_INITIALIZE                    = 1,    // (event, instance_data, map)
+     *     INSTANCE_EVENT_ON_LOAD                          = 2,    // (event, instance_data, map)
+     *     INSTANCE_EVENT_ON_UPDATE                        = 3,    // (event, instance_data, map, diff)
+     *     INSTANCE_EVENT_ON_PLAYER_ENTER                  = 4,    // (event, instance_data, map, player)
+     *     INSTANCE_EVENT_ON_PLAYER_DEATH                  = 5,    // (event, instance_data, map, player)
+     *     INSTANCE_EVENT_ON_PLAYER_LEAVE                  = 6,    // (event, instance_data, map, player)
+     *     INSTANCE_EVENT_ON_CREATURE_CREATE               = 7,    // (event, instance_data, map, creature)
+     *     INSTANCE_EVENT_ON_CREATURE_ENTER_COMBAT         = 8,    // (event, instance_data, map, creature)
+     *     INSTANCE_EVENT_ON_CREATURE_EVADE                = 9,    // (event, instance_data, map, creature)
+     *     INSTANCE_EVENT_ON_CREATURE_DEATH                = 10,   // (event, instance_data, map, creature)
+     *     INSTANCE_EVENT_ON_GAMEOBJECT_CREATE             = 11,   // (event, instance_data, map, go)
+     *     INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS   = 12,   // (event, instance_data, map)
+     *     INSTANCE_EVENT_ON_CHECK_CONDITION               = 13,   // (event, instance_data, map, player, condition, source, source_type)
+     *     INSTANCE_EVENT_COUNT
      * };
      * </pre>
      *
@@ -896,7 +910,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterMapEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, HookMgr::REGTYPE_MAP);
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_MAP);
         return 0;
     }
 
@@ -904,8 +918,22 @@ namespace LuaGlobalFunctions
      * Registers a [Map] event handler for one instance of a [Map].
      *
      * <pre>
-     * enum MapEvents
+     * enum InstanceEvents
      * {
+     *     INSTANCE_EVENT_ON_INITIALIZE                    = 1,    // (event, instance_data, map)
+     *     INSTANCE_EVENT_ON_LOAD                          = 2,    // (event, instance_data, map)
+     *     INSTANCE_EVENT_ON_UPDATE                        = 3,    // (event, instance_data, map, diff)
+     *     INSTANCE_EVENT_ON_PLAYER_ENTER                  = 4,    // (event, instance_data, map, player)
+     *     INSTANCE_EVENT_ON_PLAYER_DEATH                  = 5,    // (event, instance_data, map, player)
+     *     INSTANCE_EVENT_ON_PLAYER_LEAVE                  = 6,    // (event, instance_data, map, player)
+     *     INSTANCE_EVENT_ON_CREATURE_CREATE               = 7,    // (event, instance_data, map, creature)
+     *     INSTANCE_EVENT_ON_CREATURE_ENTER_COMBAT         = 8,    // (event, instance_data, map, creature)
+     *     INSTANCE_EVENT_ON_CREATURE_EVADE                = 9,    // (event, instance_data, map, creature)
+     *     INSTANCE_EVENT_ON_CREATURE_DEATH                = 10,   // (event, instance_data, map, creature)
+     *     INSTANCE_EVENT_ON_GAMEOBJECT_CREATE             = 11,   // (event, instance_data, map, go)
+     *     INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS   = 12,   // (event, instance_data, map)
+     *     INSTANCE_EVENT_ON_CHECK_CONDITION               = 13,   // (event, instance_data, map, player, condition, source, source_type)
+     *     INSTANCE_EVENT_COUNT
      * };
      * </pre>
      *
@@ -914,9 +942,9 @@ namespace LuaGlobalFunctions
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
-    int RegisterMapInstanceEvent(Eluna* E, lua_State* L)
+    int RegisterInstanceEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, HookMgr::REGTYPE_INSTANCE);
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_INSTANCE);
         return 0;
     }
 
