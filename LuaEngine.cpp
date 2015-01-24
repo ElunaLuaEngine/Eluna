@@ -656,11 +656,11 @@ void Eluna::Push(lua_State* luastate, const char* str)
 }
 void Eluna::Push(lua_State* luastate, Pet const* pet)
 {
-    Push(luastate, pet->ToCreature());
+    Push<Creature>(luastate, pet);
 }
 void Eluna::Push(lua_State* luastate, TempSummon const* summon)
 {
-    Push(luastate, summon->ToCreature());
+    Push<Creature>(luastate, summon);
 }
 void Eluna::Push(lua_State* luastate, Unit const* unit)
 {

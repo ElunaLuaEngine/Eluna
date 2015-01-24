@@ -1986,6 +1986,7 @@ namespace LuaGlobalFunctions
         uint32 price = Eluna::CHECKVAL<uint32>(L, 4, 0);
         uint32 pathId = Eluna::CHECKVAL<uint32>(L, 5, 0);
         lua_pushvalue(L, 1);
+        // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}
 
         std::list<TaxiPathNodeEntry> nodes;
 
@@ -1993,53 +1994,57 @@ namespace LuaGlobalFunctions
         int end = start;
 
         Eluna::Push(L);
+        // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, nil
         while (lua_next(L, -2) != 0)
         {
+            // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, key, value
             luaL_checktype(L, -1, LUA_TTABLE);
             Eluna::Push(L);
+            // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, key, value, nil
             while (lua_next(L, -2) != 0)
             {
+                // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, key, value, key2, value2
                 lua_insert(L, end++);
+                // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, value2, key, value, key2
             }
+            // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, value2, key, value
             if (start == end)
                 continue;
             if (end - start < 4) // no mandatory args, dont add
-            {
-                while (end != start)
-                    if (!lua_isnone(L, --end))
-                        lua_remove(L, end);
-                continue;
-            }
+                return luaL_argerror(L, 1, "all waypoints do not have mandatory arguments");
 
             while (end - start < 8) // fill optional args with 0
             {
                 Eluna::Push(L, 0);
                 lua_insert(L, end++);
+                // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, node, key, value
             }
-            TaxiPathNodeEntry* entry = new TaxiPathNodeEntry();
+            TaxiPathNodeEntry entry;
             // mandatory
-            entry->mapid = Eluna::CHECKVAL<uint32>(L, start);
-            entry->x = Eluna::CHECKVAL<float>(L, start + 1);
-            entry->y = Eluna::CHECKVAL<float>(L, start + 2);
-            entry->z = Eluna::CHECKVAL<float>(L, start + 3);
+            entry.mapid = Eluna::CHECKVAL<uint32>(L, start);
+            entry.x = Eluna::CHECKVAL<float>(L, start + 1);
+            entry.y = Eluna::CHECKVAL<float>(L, start + 2);
+            entry.z = Eluna::CHECKVAL<float>(L, start + 3);
             // optional
-            entry->actionFlag = Eluna::CHECKVAL<uint32>(L, start + 4, 0);
-            entry->delay = Eluna::CHECKVAL<uint32>(L, start + 5, 0);
+            entry.actionFlag = Eluna::CHECKVAL<uint32>(L, start + 4, 0);
+            entry.delay = Eluna::CHECKVAL<uint32>(L, start + 5, 0);
 
-            nodes.push_back(*entry);
+            nodes.push_back(entry);
 
             while (end != start) // remove args
                 if (!lua_isnone(L, --end))
                     lua_remove(L, end);
+            // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, key, value
 
             lua_pop(L, 1);
+            // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, key
         }
+        // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}
+        lua_pop(L, 1);
+        // Stack: {nodes}, mountA, mountH, price, pathid
 
         if (nodes.size() < 2)
-        {
-            Eluna::Push(L);
             return 1;
-        }
         if (!pathId)
             pathId = sTaxiPathNodesByPath.size();
         if (sTaxiPathNodesByPath.size() <= pathId)
@@ -2049,9 +2054,9 @@ namespace LuaGlobalFunctions
         static uint32 nodeId = 500;
         uint32 startNode = nodeId;
         uint32 index = 0;
-        for (std::list<TaxiPathNodeEntry>::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
+        for (std::list<TaxiPathNodeEntry>::iterator it = nodes.begin(); it != nodes.end(); ++it)
         {
-            TaxiPathNodeEntry entry = *it;
+            TaxiPathNodeEntry& entry = *it;
             entry.path = pathId;
             TaxiNodesEntry* nodeEntry = new TaxiNodesEntry();
             nodeEntry->ID = index;
@@ -2063,14 +2068,17 @@ namespace LuaGlobalFunctions
             nodeEntry->z = entry.z;
             sTaxiNodesStore.SetEntry(nodeId, nodeEntry);
             entry.index = nodeId++;
-            sTaxiPathNodesByPath[pathId].set(index++, TaxiPathNodePtr(new TaxiPathNodeEntry(entry)));
+            sTaxiPathNodesByPath[pathId].set(index++, new TaxiPathNodeEntry(entry));
         }
         if (startNode >= nodeId)
-        {
-            Eluna::Push(L);
             return 1;
-        }
         sTaxiPathSetBySource[startNode][nodeId - 1] = TaxiPathBySourceAndDestination(pathId, price);
+        TaxiPathEntry* pathEntry = new TaxiPathEntry();
+        pathEntry->from = startNode;
+        pathEntry->to = nodeId - 1;
+        pathEntry->ID = pathId;
+        pathEntry->price = price;
+        sTaxiPathStore.SetEntry(pathId, pathEntry);
         Eluna::Push(L, pathId);
         return 1;
     }

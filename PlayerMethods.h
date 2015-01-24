@@ -3027,19 +3027,7 @@ namespace LuaPlayer
     {
         uint32 pathId = Eluna::CHECKVAL<uint32>(L, 2);
 
-        if (pathId >= sTaxiPathNodesByPath.size())
-            return 0;
-
-        TaxiPathNodeList const& path = sTaxiPathNodesByPath[pathId];
-        if (path.size() < 2)
-            return 0;
-
-        std::vector<uint32> nodes;
-        nodes.resize(2);
-        nodes[0] = path[0].index;
-        nodes[1] = path[path.size() - 1].index;
-
-        player->ActivateTaxiPathTo(nodes);
+        player->ActivateTaxiPathTo(pathId);
         return 0;
     }
 
