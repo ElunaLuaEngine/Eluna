@@ -442,7 +442,7 @@ public:
     void OnChange(Weather* weather, uint32 zone, WeatherState state, float grade);
 
     /* Auction House */
-    void OnAdd(AuctionHouseEntry const* auctionHouseEntry, Player* pPlayer, Item* pItem, uint32 buyout, uint32 etime);
+    void OnAdd(AuctionHouseEntry const* auctionHouseEntry, Player* pPlayer, Item* pItem, uint32 bid, uint32 buyout, uint32 etime);
     void OnRemove(AuctionHouseEntry const* auctionHouseEntry, Player* pPlayer, Item* pItem);
     void OnSuccessful(AuctionHouseEntry const* auctionHouseEntry);
     void OnExpire(AuctionHouseEntry const* auctionHouseEntry);

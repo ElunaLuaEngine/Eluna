@@ -82,7 +82,7 @@ void Eluna::OnChange(Weather* weather, uint32 zone, WeatherState state, float gr
 }
 
 // Auction House
-void Eluna::OnAdd(AuctionHouseEntry const* auctionHouseEntry, Player* pPlayer, Item* pItem, uint32 buyout, uint32 etime)
+void Eluna::OnAdd(AuctionHouseEntry const* auctionHouseEntry, Player* pPlayer, Item* pItem, uint32 bid, uint32 buyout, uint32 etime)
 {
     if (!ServerEventBindings->HasEvents(AUCTION_EVENT_ON_ADD))
         return;
@@ -91,6 +91,7 @@ void Eluna::OnAdd(AuctionHouseEntry const* auctionHouseEntry, Player* pPlayer, I
     Push(auctionHouseEntry);
     Push(pPlayer);
     Push(pItem);
+    Push(bid);
     Push(buyout);
     Push(etime);
     CallAllFunctions(ServerEventBindings, AUCTION_EVENT_ON_ADD);
