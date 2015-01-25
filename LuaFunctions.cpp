@@ -1218,7 +1218,7 @@ ElunaRegister<Corpse> CorpseMethods[] =
     { NULL, NULL }
 };
 
-ElunaRegister<AuctionHouseObject> AuctionMethods[] =
+ElunaRegister<AuctionHouseEntry> AuctionMethods[] =
 {
     { NULL, NULL }
 };
@@ -1380,8 +1380,8 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<Map>::Register(E, "Map");
     ElunaTemplate<Map>::SetMethods(E, MapMethods);
 
-    ElunaTemplate<AuctionHouseObject>::Register(E, "AuctionHouseObject");
-    ElunaTemplate<AuctionHouseObject>::SetMethods(E, AuctionMethods);
+    ElunaTemplate<AuctionHouseEntry>::Register(E, "AuctionHouseEntry");
+    ElunaTemplate<AuctionHouseEntry>::SetMethods(E, AuctionMethods);
 
     ElunaTemplate<BattleGround>::Register(E, "BattleGround");
     ElunaTemplate<BattleGround>::SetMethods(E, BattleGroundMethods);
