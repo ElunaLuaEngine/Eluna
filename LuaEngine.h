@@ -442,10 +442,10 @@ public:
     void OnChange(Weather* weather, uint32 zone, WeatherState state, float grade);
 
     /* Auction House */
-    void OnAdd(AuctionHouseObject* auctionHouse);
-    void OnRemove(AuctionHouseObject* auctionHouse);
-    void OnSuccessful(AuctionHouseObject* auctionHouse);
-    void OnExpire(AuctionHouseObject* auctionHouse);
+    void OnAdd(AuctionHouseEntry const* auctionHouseEntry, Player* pPlayer, Item* pItem, uint32 bid, uint32 buyout, uint32 etime);
+    void OnRemove(AuctionHouseEntry const* auctionHouseEntry, Player* pPlayer, Item* pItem);
+    void OnSuccessful(AuctionHouseEntry const* auctionHouseEntry);
+    void OnExpire(AuctionHouseEntry const* auctionHouseEntry);
 
     /* Guild */
     void OnAddMember(Guild* guild, Player* player, uint32 plRank);
