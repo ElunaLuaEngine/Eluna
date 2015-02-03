@@ -59,6 +59,7 @@ class Guild;
 class Group;
 #ifndef TRINITY
 class InstanceData;
+class ElunaInstanceAI;
 #endif
 class Item;
 class Pet;
@@ -237,13 +238,6 @@ private:
     template<typename T>
     void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
 
-    void PushInstanceData(Map const* map)
-    {
-        ASSERT(instanceDataRefs.count(map->GetInstanceId()) != 0);
-        lua_rawgeti(L, LUA_REGISTRYINDEX, instanceDataRefs[map->GetInstanceId()]);
-        ++push_counter;
-    }
-
 public:
     static Eluna* GEluna;
 
@@ -300,6 +294,32 @@ public:
     {
         ElunaTemplate<T>::Push(luastate, ptr);
     }
+
+#ifndef TRINITY
+    /*
+     * Returns `true` if Eluna has instance data for `map`.
+     */
+    bool HasInstanceData(Map const* map);
+
+    /*
+     * Use the top element of the stack as the instance data table for `map`,
+     *   then pops it off the stack.
+     */
+    void CreateInstanceData(Map const* map);
+
+    /*
+     * Retrieve the instance data for the `Map` scripted by `ai` and push it
+     *   onto the stack.
+     *
+     * An `ElunaInstanceAI` is needed because the instance data might
+     *   not exist (i.e. Eluna has been reloaded).
+     *
+     * In that case, the AI is "reloaded" (new instance data table is created
+     *   and loaded with the last known save state, and `Load`/`Initialize`
+     *   hooks are called).
+     */
+    void PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter = true);
+#endif
 
     void RunScripts();
     bool ShouldReload() const { return reload; }
@@ -503,19 +523,19 @@ public:
     void OnRemove(GameObject* gameobject);
 
     /* Instance */
-    void OnInitialize(Map* map);
-    void OnLoad(Map* map);
-    void OnUpdateInstance(Map* map, uint32 diff);
-    void OnPlayerEnterInstance(Map* map, Player* player);
-    void OnPlayerDeath(Map* map, Player* player);
-    void OnPlayerLeaveInstance(Map* map, Player* player);
-    void OnCreatureCreate(Map* map, Creature* creature);
-    void OnCreatureEnterCombat(Map* map, Creature* creature);
-    void OnCreatureEvade(Map* map, Creature* creature);
-    void OnCreatureDeath(Map* map, Creature* creature);
-    void OnGameObjectCreate(Map* map, GameObject* gameobject);
-    bool OnCheckEncounterInProgress(Map* map);
-    bool OnCheckCondition(Map* map, Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType);
+    void OnInitialize(ElunaInstanceAI* iAI);
+    void OnLoad(ElunaInstanceAI* iAI);
+    void OnUpdateInstance(ElunaInstanceAI* iAI, uint32 diff);
+    void OnPlayerEnterInstance(ElunaInstanceAI* iAI, Player* player);
+    void OnPlayerDeath(ElunaInstanceAI* iAI, Player* player);
+    void OnPlayerLeaveInstance(ElunaInstanceAI* iAI, Player* player);
+    void OnCreatureCreate(ElunaInstanceAI* iAI, Creature* creature);
+    void OnCreatureEnterCombat(ElunaInstanceAI* iAI, Creature* creature);
+    void OnCreatureEvade(ElunaInstanceAI* iAI, Creature* creature);
+    void OnCreatureDeath(ElunaInstanceAI* iAI, Creature* creature);
+    void OnGameObjectCreate(ElunaInstanceAI* iAI, GameObject* gameobject);
+    bool OnCheckEncounterInProgress(ElunaInstanceAI* iAI);
+    bool OnCheckCondition(ElunaInstanceAI* iAI, Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType);
 
     /* World */
     void OnOpenStateChange(bool open);

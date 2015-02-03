@@ -12,7 +12,7 @@
 #include "ElunaTemplate.h"
 #include "ElunaUtility.h"
 #include "ElunaCreatureAI.h"
-#include "ElunaInstanceData.h"
+#include "ElunaInstanceAI.h"
 
 #ifdef USING_BOOST
 #include <boost/filesystem.hpp>
@@ -152,6 +152,8 @@ GameObjectGossipBindings(NULL),
 ItemEventBindings(NULL),
 ItemGossipBindings(NULL),
 playerGossipBindings(NULL),
+MapEventBindings(NULL),
+InstanceEventBindings(NULL),
 
 CreatureUniqueBindings(NULL)
 {
@@ -185,6 +187,8 @@ void Eluna::CloseLua()
     if (L)
         lua_close(L);
     L = NULL;
+
+    instanceDataRefs.clear();
 }
 
 void Eluna::OpenLua()
@@ -1162,7 +1166,38 @@ InstanceData* Eluna::GetInstanceData(Map* map)
 {
     if (MapEventBindings->HasEvents(map->GetId()) ||
         InstanceEventBindings->HasEvents(map->GetInstanceId()))
-        return new ElunaInstanceData(map);
+        return new ElunaInstanceAI(map);
 
     return NULL;
+}
+
+bool Eluna::HasInstanceData(Map const* map)
+{
+    return instanceDataRefs.count(map->GetInstanceId()) != 0;
+}
+
+void Eluna::CreateInstanceData(Map const* map)
+{
+    ASSERT(lua_istable(L, -1));
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    instanceDataRefs[map->GetInstanceId()] = ref;
+}
+
+void Eluna::PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter)
+{
+    // Check if the instance data is missing (i.e. someone reloaded Eluna).
+    if (!HasInstanceData(ai->instance))
+        ai->Reload();
+
+    // Get the instance data table from the registry.
+    lua_rawgeti(L, LUA_REGISTRYINDEX, instanceDataRefs[ai->instance->GetInstanceId()]);
+    ASSERT(lua_istable(L, -1));
+
+    // Set the "map" field to a fresh reference of the instance Map.
+    Eluna::Push(L, "map");
+    Eluna::Push(L, ai->instance);
+    lua_rawset(L, -3);
+
+    if (incrementCounter)
+        ++push_counter;
 }
