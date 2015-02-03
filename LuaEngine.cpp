@@ -1171,6 +1171,7 @@ InstanceData* Eluna::GetInstanceData(Map* map)
     return NULL;
 }
 
+#ifndef TRINITY
 bool Eluna::HasInstanceData(Map const* map)
 {
     return instanceDataRefs.count(map->GetInstanceId()) != 0;
@@ -1201,3 +1202,4 @@ void Eluna::PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter)
     if (incrementCounter)
         ++push_counter;
 }
+#endif

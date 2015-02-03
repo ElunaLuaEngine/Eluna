@@ -7,6 +7,8 @@
 #ifndef _INSTANCE_HOOKS_H
 #define _INSTANCE_HOOKS_H
 
+#ifndef TRINITY
+
 #include "Hooks.h"
 #include "HookHelpers.h"
 #include "LuaEngine.h"
@@ -270,4 +272,5 @@ bool Eluna::OnCheckCondition(ElunaInstanceAI* ai, Player const* source, uint32 i
     return ret1 || ret2;
 }
 
+#endif // TRINITY
 #endif // _INSTANCE_HOOKS_H
