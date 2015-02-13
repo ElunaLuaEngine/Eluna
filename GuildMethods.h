@@ -22,9 +22,13 @@ namespace LuaGuild
         uint32 i = 0;
 
         {
+#ifdef TRINITY
+            boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+#else
             HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
-            HashMapHolder<Player>::MapType& m = eObjectAccessor->GetPlayers();
-            for (HashMapHolder<Player>::MapType::iterator it = m.begin(); it != m.end(); ++it)
+#endif
+            const HashMapHolder<Player>::MapType& m = eObjectAccessor->GetPlayers();
+            for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
             {
                 if (Player* player = it->second)
                 {
