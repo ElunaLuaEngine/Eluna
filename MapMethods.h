@@ -259,7 +259,7 @@ namespace LuaMap
         uint32 weatherType = Eluna::CHECKVAL<uint32>(L, 3);
         float grade = Eluna::CHECKVAL<float>(L, 4);
 
-#if (defined(CMANGOS) && defined(WOTLK))
+#if ((defined(CMANGOS) || defined(MANGOS)) && defined(WOTLK))
         if (Weather::IsValidWeatherType(weatherType))
             map->SetWeather(zoneId, (WeatherType)weatherType, grade, false);
 #else

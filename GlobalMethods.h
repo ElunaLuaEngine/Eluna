@@ -149,21 +149,24 @@ namespace LuaGlobalFunctions
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
-        SessionMap const& sessions = eWorld->GetAllSessions();
-        for (SessionMap::const_iterator it = sessions.begin(); it != sessions.end(); ++it)
         {
-            if (Player* player = it->second->GetPlayer())
+            HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
+            HashMapHolder<Player>::MapType& m = eObjectAccessor->GetPlayers();
+            for (HashMapHolder<Player>::MapType::iterator it = m.begin(); it != m.end(); ++it)
             {
-#ifndef TRINITY
-                if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
-#else
-                if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
-#endif
+                if (Player* player = it->second)
                 {
-                    ++i;
-                    Eluna::Push(L, i);
-                    Eluna::Push(L, player);
-                    lua_settable(L, tbl);
+#ifndef TRINITY
+                    if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
+#else
+                    if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
+#endif
+                    {
+                        ++i;
+                        Eluna::Push(L, i);
+                        Eluna::Push(L, player);
+                        lua_settable(L, tbl);
+                    }
                 }
             }
         }
