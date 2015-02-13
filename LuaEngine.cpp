@@ -343,7 +343,7 @@ void Eluna::GetScripts(std::string path)
                 continue;
 #endif
 #ifdef UNIX
-            const char* name = dir_iter->path().filename().generic_string().c_str();
+            std::string name = dir_iter->path().filename().generic_string().c_str();
             if (name != ".." || name != "." || name[0] == '.')
                 continue;
 #endif
@@ -391,7 +391,7 @@ void Eluna::GetScripts(std::string path)
             continue;
 #endif
 #ifdef UNIX
-        const char* name = directory->d_name.c_str();
+        std::string name = directory->d_name.c_str();
         if (name != ".." || name != "." || name[0] == '.')
             continue;
 #endif
@@ -755,13 +755,13 @@ static int CheckIntegerRange(lua_State* luastate, int narg, int min, int max)
 static unsigned int CheckUnsignedRange(lua_State* luastate, int narg, unsigned int max)
 {
     double value = luaL_checknumber(luastate, narg);
-    char error_buffer[64];
 
     if (value < 0)
         return luaL_argerror(luastate, narg, "value must be greater than or equal to 0");
 
     if (value > max)
     {
+        char error_buffer[64];
         snprintf(error_buffer, 64, "value must be less than or equal to %u", max);
         return luaL_argerror(luastate, narg, error_buffer);
     }
