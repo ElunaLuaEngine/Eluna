@@ -82,50 +82,95 @@ void Eluna::OnChange(Weather* weather, uint32 zone, WeatherState state, float gr
 }
 
 // Auction House
-void Eluna::OnAdd(AuctionHouseEntry const* auctionHouseEntry, Player* pPlayer, Item* pItem, uint32 bid, uint32 buyout, uint32 etime)
+void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
     if (!ServerEventBindings->HasEvents(AUCTION_EVENT_ON_ADD))
         return;
 
+    Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+    Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+
+    if (!owner || !item)
+        return;
+
     LOCK_ELUNA;
-    Push(auctionHouseEntry);
-    Push(pPlayer);
-    Push(pItem);
-    Push(bid);
-    Push(buyout);
-    Push(etime);
+    Push(entry->Id);
+    Push(owner);
+    Push(item);
+    Push(entry->expire_time);
+    Push(entry->buyout);
+    Push(entry->startbid);
+    Push(entry->bid);
+    Push(entry->bidder);
     CallAllFunctions(ServerEventBindings, AUCTION_EVENT_ON_ADD);
 }
 
-void Eluna::OnRemove(AuctionHouseEntry const* auctionHouseEntry, Player* pPlayer, Item* pItem)
+void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
     if (!ServerEventBindings->HasEvents(AUCTION_EVENT_ON_REMOVE))
         return;
 
+    Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+    Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+
+    if (!owner || !item)
+        return;
+
     LOCK_ELUNA;
-    Push(auctionHouseEntry);
-    Push(pPlayer);
-    Push(pItem);
+    Push(entry->Id);
+    Push(owner);
+    Push(item);
+    Push(entry->expire_time);
+    Push(entry->buyout);
+    Push(entry->startbid);
+    Push(entry->bid);
+    Push(entry->bidder);
     CallAllFunctions(ServerEventBindings, AUCTION_EVENT_ON_REMOVE);
 }
 
-void Eluna::OnSuccessful(AuctionHouseEntry const* auctionHouseEntry)
+void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
     if (!ServerEventBindings->HasEvents(AUCTION_EVENT_ON_SUCCESSFUL))
         return;
 
+    Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+    Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+
+    if (!owner || !item)
+        return;
+
     LOCK_ELUNA;
-    Push(auctionHouseEntry);
+    Push(entry->Id);
+    Push(owner);
+    Push(item);
+    Push(entry->expire_time);
+    Push(entry->buyout);
+    Push(entry->startbid);
+    Push(entry->bid);
+    Push(entry->bidder);
     CallAllFunctions(ServerEventBindings, AUCTION_EVENT_ON_SUCCESSFUL);
 }
 
-void Eluna::OnExpire(AuctionHouseEntry const* auctionHouseEntry)
+void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
     if (!ServerEventBindings->HasEvents(AUCTION_EVENT_ON_EXPIRE))
         return;
 
+    Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+    Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+
+    if (!owner || !item)
+        return;
+
     LOCK_ELUNA;
-    Push(auctionHouseEntry);
+    Push(entry->Id);
+    Push(owner);
+    Push(item);
+    Push(entry->expire_time);
+    Push(entry->buyout);
+    Push(entry->startbid);
+    Push(entry->bid);
+    Push(entry->bidder);
     CallAllFunctions(ServerEventBindings, AUCTION_EVENT_ON_EXPIRE);
 }
 
