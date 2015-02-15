@@ -260,6 +260,20 @@ namespace LuaObject
     }
 
     /**
+     * Sets the data at the specified index to the given value, converted to an unsigned 32-bit integer.
+     *
+     * @param uint16 index
+     * @param uint32 value
+     */
+    int UpdateUInt32Value(Eluna* /*E*/, lua_State* L, Object* obj)
+    {
+        uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
+        uint32 value = Eluna::CHECKVAL<uint32>(L, 3);
+        obj->UpdateUInt32Value(index, value);
+        return 0;
+    }
+
+    /**
      * Sets the data at the specified index to the given value, converted to a single-precision floating point value.
      *
      * @param uint16 index
