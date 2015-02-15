@@ -645,7 +645,7 @@ namespace LuaWorldObject
     int RemoveEventById(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
         int eventId = Eluna::CHECKVAL<int>(L, 2);
-        obj->elunaEvents->RemoveEvent(eventId);
+        obj->elunaEvents->SetState(eventId, LUAEVENT_STATE_ABORT);
         return 0;
     }
 
@@ -655,7 +655,7 @@ namespace LuaWorldObject
      */
     int RemoveEvents(Eluna* /*E*/, lua_State* /*L*/, WorldObject* obj)
     {
-        obj->elunaEvents->RemoveEvents();
+        obj->elunaEvents->SetStates(LUAEVENT_STATE_ABORT);
         return 0;
     }
 

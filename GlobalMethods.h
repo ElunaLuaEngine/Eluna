@@ -1244,9 +1244,9 @@ namespace LuaGlobalFunctions
 
         // not thread safe
         if (all_Events)
-            E->eventMgr->RemoveEvent(eventId);
+            E->eventMgr->SetState(eventId, LUAEVENT_STATE_ABORT);
         else
-            E->eventMgr->globalProcessor->RemoveEvent(eventId);
+            E->eventMgr->globalProcessor->SetState(eventId, LUAEVENT_STATE_ABORT);
         return 0;
     }
 
@@ -1261,9 +1261,9 @@ namespace LuaGlobalFunctions
 
         // not thread safe
         if (all_Events)
-            E->eventMgr->RemoveEvents();
+            E->eventMgr->SetStates(LUAEVENT_STATE_ABORT);
         else
-            E->eventMgr->globalProcessor->RemoveEvents();
+            E->eventMgr->globalProcessor->SetStates(LUAEVENT_STATE_ABORT);
         return 0;
     }
 

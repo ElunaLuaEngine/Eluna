@@ -41,9 +41,11 @@ void ElunaEventProcessor::Update(uint32 diff)
     {
         LuaEvent* luaEvent = it->second;
         eventList.erase(it);
-        eventMap.erase(luaEvent->funcRef);
 
-        if (!luaEvent->abort)
+        if (luaEvent->state != LUAEVENT_STATE_ERASE)
+            eventMap.erase(luaEvent->funcRef);
+
+        if (luaEvent->state == LUAEVENT_STATE_RUN)
         {
             bool remove = luaEvent->repeats == 1;
             if (!remove)
@@ -61,10 +63,12 @@ void ElunaEventProcessor::Update(uint32 diff)
     }
 }
 
-void ElunaEventProcessor::RemoveEvents()
+void ElunaEventProcessor::SetStates(LuaEventState state)
 {
     for (EventList::iterator it = eventList.begin(); it != eventList.end(); ++it)
-        it->second->abort = true;
+        it->second->SetState(state);
+    if (state == LUAEVENT_STATE_ERASE)
+        eventMap.clear();
 }
 
 void ElunaEventProcessor::RemoveEvents_internal()
@@ -83,10 +87,12 @@ void ElunaEventProcessor::RemoveEvents_internal()
     eventMap.clear();
 }
 
-void ElunaEventProcessor::RemoveEvent(int eventId)
+void ElunaEventProcessor::SetState(int eventId, LuaEventState state)
 {
     if (eventMap.find(eventId) != eventMap.end())
-        eventMap[eventId]->abort = true;
+        eventMap[eventId]->SetState(state);
+    if (state == LUAEVENT_STATE_ERASE)
+        eventMap.erase(eventId);
 }
 
 void ElunaEventProcessor::AddEvent(LuaEvent* luaEvent)
@@ -102,8 +108,11 @@ void ElunaEventProcessor::AddEvent(int funcRef, uint32 delay, uint32 repeats)
 
 void ElunaEventProcessor::RemoveEvent(LuaEvent* luaEvent)
 {
-    // Free lua function ref
-    luaL_unref((*E)->L, LUA_REGISTRYINDEX, luaEvent->funcRef);
+    if (luaEvent->state != LUAEVENT_STATE_ERASE && Eluna::IsInitialized())
+    {
+        // Free lua function ref
+        luaL_unref((*E)->L, LUA_REGISTRYINDEX, luaEvent->funcRef);
+    }
     delete luaEvent;
 }
 
@@ -124,20 +133,20 @@ EventMgr::~EventMgr()
     globalProcessor = NULL;
 }
 
-void EventMgr::RemoveEvents()
+void EventMgr::SetStates(LuaEventState state)
 {
     ReadGuard guard(GetLock());
     if (!processors.empty())
         for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
-            (*it)->RemoveEvents();
-    globalProcessor->RemoveEvents();
+            (*it)->SetStates(state);
+    globalProcessor->SetStates(state);
 }
 
-void EventMgr::RemoveEvent(int eventId)
+void EventMgr::SetState(int eventId, LuaEventState state)
 {
     ReadGuard guard(GetLock());
     if (!processors.empty())
         for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
-            (*it)->RemoveEvent(eventId);
-    globalProcessor->RemoveEvent(eventId);
+            (*it)->SetState(eventId, state);
+    globalProcessor->SetState(eventId, state);
 }
