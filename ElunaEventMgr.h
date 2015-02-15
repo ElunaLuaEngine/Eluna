@@ -22,16 +22,30 @@ class EventMgr;
 class ElunaEventProcessor;
 class WorldObject;
 
+enum LuaEventState
+{
+    LUAEVENT_STATE_RUN,    // On next call run the function normally
+    LUAEVENT_STATE_ABORT,  // On next call unregisters reffed function and erases the data
+    LUAEVENT_STATE_ERASE,  // On next call just erases the data
+};
+
 struct LuaEvent
 {
     LuaEvent(int _funcRef, uint32 _delay, uint32 _repeats) :
-        delay(_delay), repeats(_repeats), funcRef(_funcRef), abort(false)
+        delay(_delay), repeats(_repeats), funcRef(_funcRef), state(LUAEVENT_STATE_RUN)
     {
     }
+
+    void SetState(LuaEventState _state)
+    {
+        if (state != LUAEVENT_STATE_ERASE)
+            state = _state;
+    }
+
     uint32 delay;   // Delay between event calls
     uint32 repeats; // Amount of repeats to make, 0 for infinite
     int funcRef;    // Lua function reference ID, also used as event ID
-    bool abort;     // True if aborted and should not execute anymore
+    LuaEventState state;    // State for next call
 };
 
 class ElunaEventProcessor
@@ -47,9 +61,9 @@ public:
 
     void Update(uint32 diff);
     // removes all timed events on next tick or at tick end
-    void RemoveEvents();
+    void SetStates(LuaEventState state);
     // set the event to be removed when executing
-    void RemoveEvent(int eventId);
+    void SetState(int eventId, LuaEventState state);
     void AddEvent(int funcRef, uint32 delay, uint32 repeats);
     EventMap eventMap;
 
@@ -74,13 +88,13 @@ public:
     EventMgr(Eluna** _E);
     ~EventMgr();
 
-    // Remove all timed events
+    // Set the state of all timed events
     // Execute only in safe env
-    void RemoveEvents();
+    void SetStates(LuaEventState state);
 
-    // Removes the eventId from all events
+    // Sets the eventId's state in all processors
     // Execute only in safe env
-    void RemoveEvent(int eventId);
+    void SetState(int eventId, LuaEventState state);
 };
 
 #endif

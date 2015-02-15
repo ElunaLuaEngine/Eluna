@@ -101,7 +101,7 @@ void Eluna::_ReloadEluna()
     eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
 
     // Remove all timed events
-    sEluna->eventMgr->RemoveEvents();
+    sEluna->eventMgr->SetStates(LUAEVENT_STATE_ERASE);
 
     // Close lua
     sEluna->CloseLua();
