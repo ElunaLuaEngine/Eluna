@@ -88,7 +88,14 @@ void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
         return;
 
     Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+#ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+    uint32 expiretime = entry->expire_time;
+#else
+    Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
+    uint32 expiretime = entry->expireTime;
+#endif
+
 
     if (!owner || !item)
         return;
@@ -97,7 +104,7 @@ void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     Push(entry->Id);
     Push(owner);
     Push(item);
-    Push(entry->expire_time);
+    Push(expiretime);
     Push(entry->buyout);
     Push(entry->startbid);
     Push(entry->bid);
@@ -111,7 +118,14 @@ void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
         return;
 
     Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+#ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+    uint32 expiretime = entry->expire_time;
+#else
+    Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
+    uint32 expiretime = entry->expireTime;
+#endif
+
 
     if (!owner || !item)
         return;
@@ -120,7 +134,7 @@ void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     Push(entry->Id);
     Push(owner);
     Push(item);
-    Push(entry->expire_time);
+    Push(expiretime);
     Push(entry->buyout);
     Push(entry->startbid);
     Push(entry->bid);
@@ -134,7 +148,14 @@ void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
         return;
 
     Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+#ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+    uint32 expiretime = entry->expire_time;
+#else
+    Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
+    uint32 expiretime = entry->expireTime;
+#endif
+
 
     if (!owner || !item)
         return;
@@ -143,7 +164,7 @@ void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     Push(entry->Id);
     Push(owner);
     Push(item);
-    Push(entry->expire_time);
+    Push(expiretime);
     Push(entry->buyout);
     Push(entry->startbid);
     Push(entry->bid);
@@ -157,7 +178,14 @@ void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
         return;
 
     Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+#ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+    uint32 expiretime = entry->expire_time;
+#else
+    Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
+    uint32 expiretime = entry->expireTime;
+#endif
+
 
     if (!owner || !item)
         return;
@@ -166,7 +194,7 @@ void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     Push(entry->Id);
     Push(owner);
     Push(item);
-    Push(entry->expire_time);
+    Push(expiretime);
     Push(entry->buyout);
     Push(entry->startbid);
     Push(entry->bid);
