@@ -2195,6 +2195,22 @@ namespace LuaPlayer
 #endif
         return 0;
     }
+    
+    int UnbindAllInstances(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
+        {
+            Player::BoundInstancesMap& binds = player->GetBoundInstances(Difficulty(i));
+            for (Player::BoundInstancesMap::iterator itr = binds.begin(); itr != binds.end();)
+            {
+                if (itr->first != player->GetMapId())
+                    player->UnbindInstance(itr, Difficulty(i));
+                else
+                    ++itr;
+            }
+        }
+        return 0;
+    }
 
     /**
      * Unbinds the [Player] from his instances except the one he currently is in.
