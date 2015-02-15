@@ -21,17 +21,24 @@ namespace LuaGuild
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
-        SessionMap const& sessions = eWorld->GetAllSessions();
-        for (SessionMap::const_iterator it = sessions.begin(); it != sessions.end(); ++it)
         {
-            if (Player* player = it->second->GetPlayer())
+#ifdef TRINITY
+            boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+#else
+            HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
+#endif
+            const HashMapHolder<Player>::MapType& m = eObjectAccessor->GetPlayers();
+            for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
             {
-                if (player->GetSession() && (player->GetGuildId() == guild->GetId()))
+                if (Player* player = it->second)
                 {
-                    ++i;
-                    Eluna::Push(L, i);
-                    Eluna::Push(L, player);
-                    lua_settable(L, tbl);
+                    if (player->GetSession() && (player->GetGuildId() == guild->GetId()))
+                    {
+                        ++i;
+                        Eluna::Push(L, i);
+                        Eluna::Push(L, player);
+                        lua_settable(L, tbl);
+                    }
                 }
             }
         }

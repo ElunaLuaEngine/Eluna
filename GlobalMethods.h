@@ -149,21 +149,28 @@ namespace LuaGlobalFunctions
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
-        SessionMap const& sessions = eWorld->GetAllSessions();
-        for (SessionMap::const_iterator it = sessions.begin(); it != sessions.end(); ++it)
         {
-            if (Player* player = it->second->GetPlayer())
-            {
-#ifndef TRINITY
-                if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
+#ifdef TRINITY
+            boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
 #else
-                if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
+            HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
 #endif
+            const HashMapHolder<Player>::MapType& m = eObjectAccessor->GetPlayers();
+            for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
+            {
+                if (Player* player = it->second)
                 {
-                    ++i;
-                    Eluna::Push(L, i);
-                    Eluna::Push(L, player);
-                    lua_settable(L, tbl);
+#ifndef TRINITY
+                    if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
+#else
+                    if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
+#endif
+                    {
+                        ++i;
+                        Eluna::Push(L, i);
+                        Eluna::Push(L, player);
+                        lua_settable(L, tbl);
+                    }
                 }
             }
         }
