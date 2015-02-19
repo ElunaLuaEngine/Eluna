@@ -524,19 +524,19 @@ public:
 
 #ifndef TRINITY
     /* Instance */
-    void OnInitialize(ElunaInstanceAI* iAI);
-    void OnLoad(ElunaInstanceAI* iAI);
-    void OnUpdateInstance(ElunaInstanceAI* iAI, uint32 diff);
-    void OnPlayerEnterInstance(ElunaInstanceAI* iAI, Player* player);
-    void OnPlayerDeath(ElunaInstanceAI* iAI, Player* player);
-    void OnPlayerLeaveInstance(ElunaInstanceAI* iAI, Player* player);
-    void OnCreatureCreate(ElunaInstanceAI* iAI, Creature* creature);
-    void OnCreatureEnterCombat(ElunaInstanceAI* iAI, Creature* creature);
-    void OnCreatureEvade(ElunaInstanceAI* iAI, Creature* creature);
-    void OnCreatureDeath(ElunaInstanceAI* iAI, Creature* creature);
-    void OnGameObjectCreate(ElunaInstanceAI* iAI, GameObject* gameobject);
-    bool OnCheckEncounterInProgress(ElunaInstanceAI* iAI);
-    bool OnCheckCondition(ElunaInstanceAI* iAI, Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType);
+    void OnInitialize(ElunaInstanceAI* ai);
+    void OnLoad(ElunaInstanceAI* ai);
+    void OnUpdateInstance(ElunaInstanceAI* ai, uint32 diff);
+    void OnPlayerEnterInstance(ElunaInstanceAI* ai, Player* player);
+    void OnPlayerDeath(ElunaInstanceAI* ai, Player* player);
+    void OnPlayerLeaveInstance(ElunaInstanceAI* ai, Player* player);
+    void OnCreatureCreate(ElunaInstanceAI* ai, Creature* creature);
+    void OnCreatureEnterCombat(ElunaInstanceAI* ai, Creature* creature);
+    void OnCreatureEvade(ElunaInstanceAI* ai, Creature* creature);
+    void OnCreatureDeath(ElunaInstanceAI* ai, Creature* creature);
+    void OnGameObjectCreate(ElunaInstanceAI* ai, GameObject* gameobject);
+    bool OnCheckEncounterInProgress(ElunaInstanceAI* ai);
+    bool OnCheckCondition(ElunaInstanceAI* ai, Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType);
 #endif
 
     /* World */

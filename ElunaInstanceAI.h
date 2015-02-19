@@ -12,6 +12,21 @@
 #ifndef TRINITY
 #include "InstanceData.h"
 
+
+/*
+ * When `Save` is called, the string returned is not freed, so it
+ *   cannot be dynamically allocated.
+ *
+ * Instead I just reserve a buffer that's `MAX_SAVE_DATA` big and
+ *   return a pointer to it.
+ *
+ * I have assumed 1 kiB is enough, if you need to save more data
+ *   than the buffer can hold, just make this constant larger.
+ *   (1 kiB is enough for 100's of fields).
+ */
+#define MAX_SAVE_DATA 1024
+
+
 /*
  * This class is a small wrapper around `InstanceData`,
  *   allowing instances to be scripted with Eluna.
@@ -55,51 +70,22 @@ class ElunaInstanceAI : public InstanceData
 private:
     // The last save data to pass through this class,
     //   either through `Load` or `Save`.
-    std::string lastSaveData;
+    char lastSaveData[MAX_SAVE_DATA];
 
 public:
-    ElunaInstanceAI(Map* map) : InstanceData(map), lastSaveData() {}
-
-    void Initialize() override
+    ElunaInstanceAI(Map* map) : InstanceData(map)
     {
-        LOCK_ELUNA;
-
-        // We might have instance data if this method was called from `Load`.
-        if (!sEluna->HasInstanceData(instance))
-        {
-            // Create a new table for instance data.
-            lua_State* L = sEluna->L;
-            lua_newtable(L);
-            sEluna->CreateInstanceData(instance);
-        }
-       
-        sEluna->OnInitialize(this);
+        memset(lastSaveData, 0, MAX_SAVE_DATA);
     }
+
+    void Initialize() override;
 
     /*
      * These are responsible for serializing/deserializing the instance's
      *   data table to/from the core.
      */
-    void Load(const char* data) override
-    {
-        LOCK_ELUNA;
-
-        if (data)
-            lastSaveData = data;
-
-        Initialize();
-        sEluna->OnLoad(this);
-    }
-
-    const char* Save() const override
-    {
-        return lastSaveData.c_str();
-    }
-
-    static int SaveFromLua(Eluna* E, lua_State* L, ElunaInstanceAI* iAI)
-    {
-        return 0;
-    }
+    void Load(const char* data) override;
+    const char* Save() const override;
 
     /*
      * These methods are just thin wrappers around Eluna.
@@ -162,89 +148,11 @@ public:
     /*
      * These methods allow non-Lua scripts (e.g. DB, C++) to get/set instance data.
      */
-    uint32 GetData(uint32 key) const override
-    {
-        LOCK_ELUNA;
-        lua_State* L = sEluna->L;
-        // Stack: (empty)
+    uint32 GetData(uint32 key) const override;
+    void SetData(uint32 key, uint32 value) override;
 
-        sEluna->PushInstanceData(const_cast<ElunaInstanceAI*>(this), false);
-        // Stack: instance_data
-
-        Eluna::Push(L, key);
-        // Stack: instance_data, key
-
-        lua_gettable(L, -2);
-        // Stack: instance_data, value
-
-        uint32 value = Eluna::CHECKVAL<uint32>(L, -1, 0);
-        lua_pop(L, 2);
-        // Stack: (empty)
-
-        return value;
-    }
-
-    void SetData(uint32 key, uint32 value) override
-    {
-        LOCK_ELUNA;
-        lua_State* L = sEluna->L;
-        // Stack: (empty)
-
-        sEluna->PushInstanceData(this, false);
-        // Stack: instance_data
-
-        Eluna::Push(L, key);
-        Eluna::Push(L, value);
-        // Stack: instance_data, key, value
-
-        lua_settable(L, -3);
-        // Stack: instance_data
-
-        lua_pop(L, 1);
-        // Stack: (empty)
-    }
-
-    uint64 GetData64(uint32 key) const override
-    {
-        LOCK_ELUNA;
-        lua_State* L = sEluna->L;
-        // Stack: (empty)
-
-        sEluna->PushInstanceData(const_cast<ElunaInstanceAI*>(this), false);
-        // Stack: instance_data
-
-        Eluna::Push(L, key);
-        // Stack: instance_data, key
-
-        lua_gettable(L, -2);
-        // Stack: instance_data, value
-
-        uint64 value = Eluna::CHECKVAL<uint64>(L, -1, 0);
-        lua_pop(L, 2);
-        // Stack: (empty)
-
-        return value;
-    }
-
-    void SetData64(uint32 key, uint64 value) override
-    {
-        LOCK_ELUNA;
-        lua_State* L = sEluna->L;
-        // Stack: (empty)
-
-        sEluna->PushInstanceData(this, false);
-        // Stack: instance_data
-
-        Eluna::Push(L, key);
-        Eluna::Push(L, value);
-        // Stack: instance_data, key, value
-
-        lua_settable(L, -3);
-        // Stack: instance_data
-
-        lua_pop(L, 1);
-        // Stack: (empty)
-    }
+    uint64 GetData64(uint32 key) const override;
+    void SetData64(uint32 key, uint64 value) override;
 
     /*
      * Calls `Load` with the last save data that was passed to
