@@ -4,6 +4,7 @@
  * Please see the included DOCS/LICENSE.md for more information
  */
 
+// TRINITY USERS: Do not compile this file!
 
 #include "ElunaInstanceAI.h"
 #include "ElunaUtility.h"
@@ -30,11 +31,18 @@ void ElunaInstanceAI::Load(const char* data)
 {
     LOCK_ELUNA;
 
+    // If we get passed NULL (i.e. `Reload` was called) then use
+    //   the last known save data (or maybe just an empty string).
     if (!data)
+    {
         data = lastSaveData;
-    else
+    }
+    else // Otherwise, copy the new data into our buffer.
+    {
         strcpy(lastSaveData, data);
+    }
 
+    // Don't bother trying to decode an empty string.
     if (strlen(data) > 0)
     {
         size_t decodedLength;
@@ -43,23 +51,35 @@ void ElunaInstanceAI::Load(const char* data)
         if (decodedData)
         {
             lua_State* L = sEluna->L;
+            // Stack: (empty)
+
             lua_pushcfunction(L, mar_decode);
             lua_pushlstring(L, (const char*)decodedData, decodedLength);
+            // Stack: mar_decode, decoded_data
 
             // Call `mar_decode` and check for success.
             if (lua_pcall(L, 1, 1, 0) == 0)
             {
+                // Stack: data
                 // Only use the data if it's a table.
                 if (lua_istable(L, -1))
                 {
                     sEluna->CreateInstanceData(instance);
+                    // Stack: (empty)
                     sEluna->OnLoad(this);
                 }
                 else
+                {
                     lua_pop(L, 1);
+                    // Stack: (empty)
+                }
             }
             else
+            {
+                // Stack: error_message
                 lua_pop(L, 1);
+                // Stack: (empty)
+            }
 
             free((void*)decodedData);
         }
@@ -72,6 +92,8 @@ const char* ElunaInstanceAI::Save() const
 {
     LOCK_ELUNA;
     lua_State* L = sEluna->L;
+    // Stack: (empty)
+
     /*
      * Need to cheat because this method actually does modify this instance,
      *   even though it's declared as `const`.
@@ -83,19 +105,24 @@ const char* ElunaInstanceAI::Save() const
 
     lua_pushcfunction(L, mar_encode);
     sEluna->PushInstanceData(self, false);
+    // Stack: mar_encode, instance_data
 
     if (lua_pcall(L, 1, 1, 0) != 0)
     {
-        sLog.outBasic("Error while saving: %s", lua_tostring(L, -1));
+        // Stack: error_message
+        sLog.outError("Error while saving: %s", lua_tostring(L, -1));
         lua_pop(L, 1);
         return NULL;
     }
 
+    // Stack: data
     size_t dataLength;
     const unsigned char* data = (const unsigned char*)lua_tolstring(L, -1, &dataLength);
     ElunaUtil::EncodeData(data, dataLength, self->lastSaveData, MAX_SAVE_DATA);
 
     lua_pop(L, 1);
+    // Stack: (empty)
+
     return lastSaveData;
 }
 

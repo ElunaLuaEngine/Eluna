@@ -259,8 +259,8 @@ public:
     IDBind<Hooks::ItemEvents>*          ItemEventBindings;
     IDBind<Hooks::GossipEvents>*        ItemGossipBindings;
     IDBind<Hooks::GossipEvents>*        playerGossipBindings;
-    IDBind<Hooks::InstanceEvents>*           MapEventBindings;
-    IDBind<Hooks::InstanceEvents>*           InstanceEventBindings;
+    IDBind<Hooks::InstanceEvents>*      MapEventBindings;
+    IDBind<Hooks::InstanceEvents>*      InstanceEventBindings;
 
     UniqueBind<Hooks::CreatureEvents>*  CreatureUniqueBindings;
 

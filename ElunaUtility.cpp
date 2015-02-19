@@ -99,7 +99,7 @@ static int mod_table[] = {0, 2, 1};
 
 static void build_decoding_table()
 {
-    decoding_table = (char*)malloc(256);
+    decoding_table = (char*)calloc(256, sizeof(char));
 
     for (int i = 0; i < 64; i++)
         decoding_table[(unsigned char)encoding_table[i]] = i;
@@ -109,7 +109,7 @@ void ElunaUtil::EncodeData(const unsigned char* data, size_t input_length, char*
 {
     size_t output_length = 4 * ((input_length + 2) / 3);
 
-    if (output_length > max_length)
+    if ((output_length + 1) > max_length) // + 1 for the NUL terminator.
     {
         sLog.outError("Could not save instance data, too much data (%u bytes)", output_length);
         return;
@@ -144,6 +144,16 @@ unsigned char* ElunaUtil::DecodeData(const char *data, size_t *output_length)
 
     if (input_length % 4 != 0)
         return NULL;
+
+    // Make sure there's no invalid characters in the data.
+    for (int i = 0; i < input_length; ++i)
+    {
+        unsigned char byte = data[i];
+
+        // Every invalid character (and 'A') will map to 0 (due to `calloc`).
+        if (decoding_table[byte] == 0 && byte != 'A')
+            return NULL;
+    }
 
     *output_length = input_length / 4 * 3;
     if (data[input_length - 1] == '=') (*output_length)--;

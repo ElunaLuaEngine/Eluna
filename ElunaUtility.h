@@ -148,14 +148,15 @@ namespace ElunaUtil
     /*
      * Encodes `data` in Base-64 and store the result in `buffer`.
      *
-     * Returns `false` on success, `true` on error
-     * (not enough room in `buffer` to store the result).
+     * If the resulting string's length would be > `max_length`,
+     *   encoding is aborted and `buffer` is left unmodified.
      */
     void EncodeData(const unsigned char* data, size_t input_length, char* buffer, int max_length);
+
     /*
      * Decodes `data` from Base-64 and returns a pointer to the result, or `NULL` on error.
      *
-     * The returned result buffer must be free'd by the caller.
+     * The returned result buffer must be `free`d by the caller.
      */
     unsigned char* DecodeData(const char* data, size_t *output_length);
 };

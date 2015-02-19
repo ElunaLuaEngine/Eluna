@@ -88,6 +88,26 @@ public:
     const char* Save() const override;
 
     /*
+     * Calls `Load` with the last save data that was passed to
+     * or from Eluna.
+     *
+     * See: big documentation blurb at the top of this class.
+     */
+    void Reload()
+    {
+        Load(NULL);
+    }
+
+    /*
+     * These methods allow non-Lua scripts (e.g. DB, C++) to get/set instance data.
+     */
+    uint32 GetData(uint32 key) const override;
+    void SetData(uint32 key, uint32 value) override;
+
+    uint64 GetData64(uint32 key) const override;
+    void SetData64(uint32 key, uint64 value) override;
+
+    /*
      * These methods are just thin wrappers around Eluna.
      */
     void Update(uint32 diff) override
@@ -143,26 +163,6 @@ public:
     bool CheckConditionCriteriaMeet(Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType) const override
     {
         return sEluna->OnCheckCondition(const_cast<ElunaInstanceAI*>(this), source, instance_condition_id, conditionSource, conditionSourceType);
-    }
-
-    /*
-     * These methods allow non-Lua scripts (e.g. DB, C++) to get/set instance data.
-     */
-    uint32 GetData(uint32 key) const override;
-    void SetData(uint32 key, uint32 value) override;
-
-    uint64 GetData64(uint32 key) const override;
-    void SetData64(uint32 key, uint64 value) override;
-
-    /*
-     * Calls `Load` with the last save data that was passed to
-     * or from Eluna.
-     *
-     * See: big documentation blurb at the top of this class.
-     */
-    void Reload()
-    {
-        Load(NULL);
     }
 };
 
