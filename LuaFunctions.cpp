@@ -71,6 +71,8 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "ClearPlayerEvents", &LuaGlobalFunctions::ClearPlayerEvents },
     { "ClearPlayerGossipEvents", &LuaGlobalFunctions::ClearPlayerGossipEvents },
     { "ClearServerEvents", &LuaGlobalFunctions::ClearServerEvents },
+    { "ClearMapEvents", &LuaGlobalFunctions::ClearMapEvents },
+    { "ClearInstanceEvents", &LuaGlobalFunctions::ClearInstanceEvents },
 
     // Getters
     { "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine },

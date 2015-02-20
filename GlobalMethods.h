@@ -2861,5 +2861,33 @@ namespace LuaGlobalFunctions
         }
         return 0;
     }
+
+    /**
+     * Unbinds all event handlers for a particular [Map] event.
+     *
+     * @param uint32 map_id : the ID of a [Map] whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterMapEvent]
+     */
+    int ClearMapEvents(Eluna* E, lua_State* L)
+    {
+        uint32 map_id = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->MapEventBindings->Clear(map_id, event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Map] instance event.
+     *
+     * @param uint32 instance_id : the ID of a [Map] instance whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterInstanceEvent]
+     */
+    int ClearInstanceEvents(Eluna* E, lua_State* L)
+    {
+        uint32 instance_id = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->InstanceEventBindings->Clear(instance_id, event_type);
+        return 0;
+    }
 }
 #endif
