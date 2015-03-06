@@ -422,7 +422,9 @@ namespace LuaWorldObject
     }
 
     /**
-     * Returns the distance from this [WorldObject] to another [WorldObject], or from this [WorldObject] to a point.
+     * Returns the distance from this [WorldObject] to another [WorldObject], or from this [WorldObject] to a point in 3d space.
+     *
+     * The function takes into account the given object sizes. See also [WorldObject:GetExactDistance], [WorldObject:GetDistance2d]
      *
      * @proto dist = (obj)
      * @proto dist = (x, y, z)
@@ -445,6 +447,92 @@ namespace LuaWorldObject
             float Y = Eluna::CHECKVAL<float>(L, 3);
             float Z = Eluna::CHECKVAL<float>(L, 4);
             Eluna::Push(L, obj->GetDistance(X, Y, Z));
+        }
+        return 1;
+    }
+
+    /**
+     * Returns the distance from this [WorldObject] to another [WorldObject], or from this [WorldObject] to a point in 3d space.
+     *
+     * The function does not take into account the given object sizes, which means only the object coordinates are compared. See also [WorldObject:GetDistance], [WorldObject:GetDistance2d]
+     *
+     * @proto dist = (obj)
+     * @proto dist = (x, y, z)
+     *
+     * @param [WorldObject] obj
+     * @param float x : the X-coordinate of the point
+     * @param float y : the Y-coordinate of the point
+     * @param float z : the Z-coordinate of the point
+     *
+     * @return float dist : the distance in yards
+     */
+    int GetExactDistance(Eluna* /*E*/, lua_State* L, WorldObject* obj)
+    {
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
+        if (target && target->IsInWorld())
+            Eluna::Push(L, obj->GetExactDist(target));
+        else
+        {
+            float X = Eluna::CHECKVAL<float>(L, 2);
+            float Y = Eluna::CHECKVAL<float>(L, 3);
+            float Z = Eluna::CHECKVAL<float>(L, 4);
+            Eluna::Push(L, obj->GetExactDist(X, Y, Z));
+        }
+        return 1;
+    }
+
+    /**
+     * Returns the distance from this [WorldObject] to another [WorldObject], or from this [WorldObject] to a point in 2d space.
+     *
+     * The function takes into account the given object sizes. See also [WorldObject:GetDistance], [WorldObject:GetExactDistance2d]
+     *
+     * @proto dist = (obj)
+     * @proto dist = (x, y)
+     *
+     * @param [WorldObject] obj
+     * @param float x : the X-coordinate of the point
+     * @param float y : the Y-coordinate of the point
+     *
+     * @return float dist : the distance in yards
+     */
+    int GetDistance2d(Eluna* /*E*/, lua_State* L, WorldObject* obj)
+    {
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
+        if (target && target->IsInWorld())
+            Eluna::Push(L, obj->GetDistance2d(target));
+        else
+        {
+            float X = Eluna::CHECKVAL<float>(L, 2);
+            float Y = Eluna::CHECKVAL<float>(L, 3);
+            Eluna::Push(L, obj->GetDistance2d(X, Y));
+        }
+        return 1;
+    }
+
+    /**
+     * Returns the distance from this [WorldObject] to another [WorldObject], or from this [WorldObject] to a point in 2d space.
+     *
+     * The function does not take into account the given object sizes, which means only the object coordinates are compared. See also [WorldObject:GetDistance], [WorldObject:GetDistance2d]
+     *
+     * @proto dist = (obj)
+     * @proto dist = (x, y)
+     *
+     * @param [WorldObject] obj
+     * @param float x : the X-coordinate of the point
+     * @param float y : the Y-coordinate of the point
+     *
+     * @return float dist : the distance in yards
+     */
+    int GetExactDistance2d(Eluna* /*E*/, lua_State* L, WorldObject* obj)
+    {
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
+        if (target && target->IsInWorld())
+            Eluna::Push(L, obj->GetExactDist2d(target));
+        else
+        {
+            float X = Eluna::CHECKVAL<float>(L, 2);
+            float Y = Eluna::CHECKVAL<float>(L, 3);
+            Eluna::Push(L, obj->GetExactDist2d(X, Y));
         }
         return 1;
     }
@@ -475,6 +563,7 @@ namespace LuaWorldObject
 
     /**
      * Returns the angle between this [WorldObject] and another [WorldObject] or a point.
+     *
      * The angle is the angle between two points and orientation will be ignored.
      *
      * @proto dist = (obj)
