@@ -549,7 +549,7 @@ namespace LuaWorldObject
      * @param float z
      * @param float o
      * @param [TempSummonType] spawnType = 8 : defines how and when the creature despawns
-     * @param uint32 despawnTimer = 0 : despawn time in seconds
+     * @param uint32 despawnTimer = 0 : despawn time in milliseconds
      * @return [Creature] spawnedCreature
      */
     int SpawnCreature(Eluna* /*E*/, lua_State* L, WorldObject* obj)
