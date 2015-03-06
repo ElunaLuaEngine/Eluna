@@ -8,9 +8,11 @@
 #define _ELUNA_INSTANCE_DATA_H
 
 #include "LuaEngine.h"
-
-#ifndef TRINITY
+#ifdef TRINITY
+#include "InstanceScript.h"
+#else
 #include "InstanceData.h"
+#endif
 
 
 /*
@@ -85,7 +87,13 @@ public:
      *   data table to/from the core.
      */
     void Load(const char* data) override;
+#ifdef TRINITY
+    std::string GetSaveData() override;
+    const char* Save() const;
+#else
     const char* Save() const override;
+#endif
+
 
     /*
      * Calls `Load` with the last save data that was passed to
@@ -125,17 +133,11 @@ public:
         sEluna->OnPlayerEnterInstance(this, player);
     }
 
-    void OnPlayerDeath(Player* player) override
-    {
-        sEluna->OnPlayerDeath(this, player);
-    }
-
-    void OnPlayerLeave(Player* player) override
-    {
-        sEluna->OnPlayerLeaveInstance(this, player);
-    }
-
+#ifdef TRINITY
+    void OnGameObjectCreate(GameObject* gameobject) override
+#else
     void OnObjectCreate(GameObject* gameobject) override
+#endif
     {
         sEluna->OnGameObjectCreate(this, gameobject);
     }
@@ -144,27 +146,6 @@ public:
     {
         sEluna->OnCreatureCreate(this, creature);
     }
-
-    void OnCreatureEnterCombat(Creature* creature) override
-    {
-        sEluna->OnCreatureEnterCombat(this, creature);
-    }
-
-    void OnCreatureEvade(Creature* creature) override
-    {
-        sEluna->OnCreatureEvade(this, creature);
-    }
-
-    void OnCreatureDeath(Creature* creature) override
-    {
-        sEluna->OnCreatureDeath(this, creature);
-    }
-
-    bool CheckConditionCriteriaMeet(Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType) const override
-    {
-        return sEluna->OnCheckCondition(const_cast<ElunaInstanceAI*>(this), source, instance_condition_id, conditionSource, conditionSourceType);
-    }
 };
 
-#endif // TRINITY
 #endif // _ELUNA_INSTANCE_DATA_H

@@ -151,7 +151,7 @@ namespace ElunaUtil
      * If the resulting string's length would be > `max_length`,
      *   encoding is aborted and `buffer` is left unmodified.
      */
-    void EncodeData(const unsigned char* data, size_t input_length, char* buffer, int max_length);
+    void EncodeData(const unsigned char* data, size_t input_length, char* buffer, size_t max_length);
 
     /*
      * Decodes `data` from Base-64 and returns a pointer to the result, or `NULL` on error.

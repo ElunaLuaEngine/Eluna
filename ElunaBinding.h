@@ -178,6 +178,20 @@ public:
         Bindings.clear();
     }
 
+    void Clear(uint32 id)
+    {
+        WriteGuard guard(GetLock());
+
+        for (EventToFunctionsMap::iterator it = Bindings[id].begin(); it != Bindings[id].end(); ++it)
+        {
+            FunctionRefVector& funcrefvec = it->second;
+            for (FunctionRefVector::iterator i = funcrefvec.begin(); i != funcrefvec.end(); ++i)
+                delete *i;
+            funcrefvec.clear();
+        }
+        Bindings[id].clear();
+    }
+
     void Clear(uint32 id, uint32 event_id)
     {
         WriteGuard guard(GetLock());
@@ -258,8 +272,8 @@ template<typename T>
 class UniqueBind : public ElunaBind
 {
 public:
-    typedef UNORDERED_MAP<uint32, EventToFunctionsMap> InstanceToEventsMap;
-    typedef UNORDERED_MAP<uint64, InstanceToEventsMap> GUIDToInstancesMap;
+    typedef UNORDERED_MAP<uint64, EventToFunctionsMap> GUIDToEventsMap;
+    typedef UNORDERED_MAP<uint32, GUIDToEventsMap> InstanceToGUIDsMap;
 
     UniqueBind(const char* bindGroupName, Eluna& _E) : ElunaBind(bindGroupName, _E)
     {
@@ -270,10 +284,10 @@ public:
     {
         WriteGuard guard(GetLock());
 
-        for (GUIDToInstancesMap::iterator iter = Bindings.begin(); iter != Bindings.end(); ++iter)
+        for (InstanceToGUIDsMap::iterator iter = Bindings.begin(); iter != Bindings.end(); ++iter)
         {
-            InstanceToEventsMap& eventsMap = iter->second;
-            for (InstanceToEventsMap::iterator itr = eventsMap.begin(); itr != eventsMap.end(); ++itr)
+            GUIDToEventsMap& eventsMap = iter->second;
+            for (GUIDToEventsMap::iterator itr = eventsMap.begin(); itr != eventsMap.end(); ++itr)
             {
                 EventToFunctionsMap& funcmap = itr->second;
                 for (EventToFunctionsMap::iterator it = funcmap.begin(); it != funcmap.end(); ++it)
@@ -290,10 +304,29 @@ public:
         Bindings.clear();
     }
 
+    void Clear(uint32 instanceId)
+    {
+        WriteGuard guard(GetLock());
+
+        for (GUIDToEventsMap::iterator itr = Bindings[instanceId].begin(); itr != Bindings[instanceId].end(); ++itr)
+        {
+            EventToFunctionsMap& funcmap = itr->second;
+            for (EventToFunctionsMap::iterator it = funcmap.begin(); it != funcmap.end(); ++it)
+            {
+                FunctionRefVector& funcrefvec = it->second;
+                for (FunctionRefVector::iterator i = funcrefvec.begin(); i != funcrefvec.end(); ++i)
+                    delete *i;
+                funcrefvec.clear();
+            }
+            funcmap.clear();
+        }
+        Bindings[instanceId].clear();
+    }
+
     void Clear(uint64 guid, uint32 instanceId, uint32 event_id)
     {
         WriteGuard guard(GetLock());
-        FunctionRefVector& v = Bindings[guid][instanceId][event_id];
+        FunctionRefVector& v = Bindings[instanceId][guid][event_id];
 
         for (FunctionRefVector::iterator itr = v.begin(); itr != v.end(); ++itr)
             delete *itr;
@@ -304,7 +337,7 @@ public:
     void PushFuncRefs(lua_State* L, int event_id, uint64 guid, uint32 instanceId)
     {
         WriteGuard guard(GetLock());
-        FunctionRefVector& v = Bindings[guid][instanceId][event_id];
+        FunctionRefVector& v = Bindings[instanceId][guid][event_id];
 
         for (FunctionRefVector::iterator it = v.begin(); it != v.end();)
         {
@@ -324,20 +357,20 @@ public:
             }
         }
 
-        if (Bindings[guid][instanceId][event_id].empty())
-            Bindings[guid][instanceId].erase(event_id);
+        if (Bindings[instanceId][guid][event_id].empty())
+            Bindings[instanceId][guid].erase(event_id);
 
-        if (Bindings[guid][instanceId].empty())
-            Bindings[guid].erase(instanceId);
+        if (Bindings[instanceId][guid].empty())
+            Bindings[instanceId].erase(guid);
 
-        if (Bindings[guid].empty())
-            Bindings.erase(guid);
+        if (Bindings[instanceId].empty())
+            Bindings.erase(instanceId);
     };
 
     void Insert(uint64 guid, uint32 instanceId, int eventId, int funcRef, uint32 shots) // Inserts a new registered event
     {
         WriteGuard guard(GetLock());
-        Bindings[guid][instanceId][eventId].push_back(new Binding(E, funcRef, shots));
+        Bindings[instanceId][guid][eventId].push_back(new Binding(E, funcRef, shots));
     }
 
     // Returns true if the entry has registered binds
@@ -348,11 +381,11 @@ public:
         if (Bindings.empty())
             return false;
 
-        GUIDToInstancesMap::const_iterator itr = Bindings.find(guid);
+        InstanceToGUIDsMap::const_iterator itr = Bindings.find(instanceId);
         if (itr == Bindings.end())
             return false;
 
-        InstanceToEventsMap::const_iterator it = itr->second.find(instanceId);
+        GUIDToEventsMap::const_iterator it = itr->second.find(guid);
         if (it == itr->second.end())
             return false;
 
@@ -366,14 +399,24 @@ public:
         if (Bindings.empty())
             return false;
 
-        GUIDToInstancesMap::const_iterator itr = Bindings.find(guid);
+        InstanceToGUIDsMap::const_iterator itr = Bindings.find(instanceId);
         if (itr == Bindings.end())
             return false;
 
-        return itr->second.find(instanceId) != itr->second.end();
+        return itr->second.find(guid) != itr->second.end();
     }
 
-    GUIDToInstancesMap Bindings; // Binding store Bindings[guid][instanceId][eventId] = {(funcRef, counter)};
+    bool HasEvents(uint32 instanceId)
+    {
+        ReadGuard guard(GetLock());
+
+        if (Bindings.empty())
+            return false;
+
+        return Bindings.find(instanceId) != Bindings.end();
+    }
+
+    InstanceToGUIDsMap Bindings; // Binding store Bindings[instanceId][guid][eventId] = {(funcRef, counter)};
 };
 
 #endif

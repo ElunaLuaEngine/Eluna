@@ -47,6 +47,12 @@ void Eluna::Initialize()
     LOCK_ELUNA;
     ASSERT(!IsInitialized());
 
+#ifdef TRINITY
+    // For instance data the data column needs to be able to hold more than 255 characters (tinytext)
+    // so we change it to TEXT automatically on startup
+    CharacterDatabase.DirectExecute("ALTER TABLE `instance` CHANGE COLUMN `data` `data` TEXT NOT NULL");
+#endif
+
     LoadScriptPaths();
 
     // Must be before creating GEluna
@@ -1171,7 +1177,6 @@ InstanceData* Eluna::GetInstanceData(Map* map)
     return NULL;
 }
 
-#ifndef TRINITY
 bool Eluna::HasInstanceData(Map const* map)
 {
     return instanceDataRefs.count(map->GetInstanceId()) != 0;
@@ -1182,6 +1187,27 @@ void Eluna::CreateInstanceData(Map const* map)
     ASSERT(lua_istable(L, -1));
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
     instanceDataRefs[map->GetInstanceId()] = ref;
+}
+
+/*
+* Unrefs the instanceId related events and data
+* Does all required actions for when an instance is freed.
+*/
+void Eluna::FreeInstanceId(uint32 instanceId)
+{
+    LOCK_ELUNA;
+
+    if (CreatureUniqueBindings->HasEvents(instanceId))
+        CreatureUniqueBindings->Clear(instanceId);
+
+    if (InstanceEventBindings->HasEvents(instanceId))
+        InstanceEventBindings->Clear(instanceId);
+
+    if (instanceDataRefs.find(instanceId) != instanceDataRefs.end())
+    {
+        luaL_unref(L, LUA_REGISTRYINDEX, instanceDataRefs[instanceId]);
+        instanceDataRefs.erase(instanceId);
+    }
 }
 
 void Eluna::PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter)
@@ -1202,4 +1228,3 @@ void Eluna::PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter)
     if (incrementCounter)
         ++push_counter;
 }
-#endif

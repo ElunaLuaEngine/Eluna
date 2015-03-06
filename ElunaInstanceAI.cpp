@@ -31,6 +31,14 @@ void ElunaInstanceAI::Load(const char* data)
 {
     LOCK_ELUNA;
 
+#ifndef TRINITY
+    // Trinity and MaNGOS based call the Initialize differently.
+    // On MaNGOS based Initialize is called when loading is not called
+    // On Trinity Initialize is called when the instance script is generated no matter if loading happens
+    // Calling initialize before loading on mangos makes initialize called in any case on both cores.
+    Initialize();
+#endif
+
     // If we get passed NULL (i.e. `Reload` was called) then use
     //   the last known save data (or maybe just an empty string).
     if (!data)
@@ -43,7 +51,7 @@ void ElunaInstanceAI::Load(const char* data)
     }
 
     // Don't bother trying to decode an empty string.
-    if (strlen(data) > 0)
+    if (data[0] != '\0')
     {
         size_t decodedLength;
         const unsigned char* decodedData = ElunaUtil::DecodeData(data, &decodedLength);
@@ -77,6 +85,7 @@ void ElunaInstanceAI::Load(const char* data)
             else
             {
                 // Stack: error_message
+                ELUNA_LOG_ERROR("Error while loading: %s", lua_tostring(L, -1));
                 lua_pop(L, 1);
                 // Stack: (empty)
             }
@@ -84,8 +93,12 @@ void ElunaInstanceAI::Load(const char* data)
             free((void*)decodedData);
         }
     }
+}
 
-    Initialize();
+// Simply calls Save, since the functions are a bit different in name and data types on different cores
+std::string ElunaInstanceAI::GetSaveData()
+{
+    return Save();
 }
 
 const char* ElunaInstanceAI::Save() const
@@ -110,7 +123,7 @@ const char* ElunaInstanceAI::Save() const
     if (lua_pcall(L, 1, 1, 0) != 0)
     {
         // Stack: error_message
-        sLog.outError("Error while saving: %s", lua_tostring(L, -1));
+        ELUNA_LOG_ERROR("Error while saving: %s", lua_tostring(L, -1));
         lua_pop(L, 1);
         return NULL;
     }

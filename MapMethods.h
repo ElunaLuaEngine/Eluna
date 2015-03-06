@@ -284,7 +284,15 @@ namespace LuaMap
      */
     int GetInstanceData(Eluna* E, lua_State* L, Map* map)
     {
-        if (ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData()))
+#ifdef TRINITY
+        ElunaInstanceAI* iAI = NULL;
+        if (InstanceMap* inst = map->ToInstanceMap())
+            iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
+#else
+        ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData());
+#endif
+
+        if (iAI)
         {
             sEluna->PushInstanceData(iAI, false);
         }
@@ -297,9 +305,17 @@ namespace LuaMap
      */
     int SaveInstanceData(Eluna* E, lua_State* L, Map* map)
     {
-        if (InstanceData* data = map->GetInstanceData())
+#ifdef TRINITY
+        ElunaInstanceAI* iAI = NULL;
+        if (InstanceMap* inst = map->ToInstanceMap())
+            iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
+#else
+        ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData());
+#endif
+
+        if (iAI)
         {
-            data->SaveToDB();
+            iAI->SaveToDB();
         }
 
         return 0;

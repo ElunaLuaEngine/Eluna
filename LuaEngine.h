@@ -57,10 +57,13 @@ class GameObjectAI;
 #endif
 class Guild;
 class Group;
-#ifndef TRINITY
+#ifdef TRINITY
+class InstanceScript;
+typedef InstanceScript InstanceData;
+#else
 class InstanceData;
-class ElunaInstanceAI;
 #endif
+class ElunaInstanceAI;
 class Item;
 class Pet;
 class Player;
@@ -295,7 +298,6 @@ public:
         ElunaTemplate<T>::Push(luastate, ptr);
     }
 
-#ifndef TRINITY
     /*
      * Returns `true` if Eluna has instance data for `map`.
      */
@@ -319,7 +321,6 @@ public:
      *   hooks are called).
      */
     void PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter = true);
-#endif
 
     void RunScripts();
     bool ShouldReload() const { return reload; }
@@ -340,9 +341,8 @@ public:
     static ElunaObject* CHECKTYPE(lua_State* luastate, int narg, const char *tname, bool error = true);
 
     CreatureAI* GetAI(Creature* creature);
-#ifndef TRINITY
     InstanceData* GetInstanceData(Map* map);
-#endif
+    void FreeInstanceId(uint32 instanceId);
 
     /* Custom */
     void OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj);
@@ -522,22 +522,14 @@ public:
     void OnRemove(Creature* creature);
     void OnRemove(GameObject* gameobject);
 
-#ifndef TRINITY
     /* Instance */
     void OnInitialize(ElunaInstanceAI* ai);
     void OnLoad(ElunaInstanceAI* ai);
     void OnUpdateInstance(ElunaInstanceAI* ai, uint32 diff);
     void OnPlayerEnterInstance(ElunaInstanceAI* ai, Player* player);
-    void OnPlayerDeath(ElunaInstanceAI* ai, Player* player);
-    void OnPlayerLeaveInstance(ElunaInstanceAI* ai, Player* player);
     void OnCreatureCreate(ElunaInstanceAI* ai, Creature* creature);
-    void OnCreatureEnterCombat(ElunaInstanceAI* ai, Creature* creature);
-    void OnCreatureEvade(ElunaInstanceAI* ai, Creature* creature);
-    void OnCreatureDeath(ElunaInstanceAI* ai, Creature* creature);
     void OnGameObjectCreate(ElunaInstanceAI* ai, GameObject* gameobject);
     bool OnCheckEncounterInProgress(ElunaInstanceAI* ai);
-    bool OnCheckCondition(ElunaInstanceAI* ai, Player const* source, uint32 instance_condition_id, WorldObject const* conditionSource, uint32 conditionSourceType);
-#endif
 
     /* World */
     void OnOpenStateChange(bool open);
