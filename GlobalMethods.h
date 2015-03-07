@@ -92,7 +92,7 @@ namespace LuaGlobalFunctions
     /**
      * Finds and Returns [Player] by guid if found
      *
-     * @param uint64 guid : guid of the [Player]
+     * @param uint64 guid : guid of the [Player], you can get it with [Object:GetGUID]
      * @return [Player] player
      */
     int GetPlayerByGUID(Eluna* /*E*/, lua_State* L)
@@ -359,12 +359,18 @@ namespace LuaGlobalFunctions
     /**
      * Returns the low GUID from a GUID.
      *
+     * A GUID consists of a low GUID, type ID, and possibly an entry ID depending on the type ID.
+     *
      * Low GUID is an ID to distinct the objects of the same type.
-     * Creatures in instances are also assigned new GUIDs when the Map is created.
      *
      * [Player] and [Creature] for example can have the same low GUID but not GUID.
-     *
-     * A GUID consists of a low GUID, type ID, and possibly an entry ID depending on the type ID.
+     * 
+     * On TrinityCore all low GUIDs are different for all objects of the same type.
+     * For example creatures in instances are assigned new GUIDs when the Map is created.
+     * 
+     * On MaNGOS and cMaNGOS low GUIDs are unique only on the same map.
+     * For example creatures in instances use the same low GUID assigned for that spawn in the database.
+     * This is why to identify a creature you have to know the instanceId and low GUID. See [Map:GetIntstanceId]
      *
      * @param uint64 guid : GUID of an [Object]
      * @return uint32 lowguid : low GUID of the [Object]
