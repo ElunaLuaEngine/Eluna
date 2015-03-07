@@ -2326,7 +2326,9 @@ namespace LuaGlobalFunctions
         if (lua_isstring(L, 1))
         {
             std::string str = Eluna::CHECKVAL<std::string>(L, 1);
-            if (sscanf(str.c_str(), SI64FMTD, &init) != 1)
+            std::istringstream iss(str);
+            iss >> init;
+            if (iss.bad())
                 return luaL_argerror(L, 1, "long long (as string) could not be converted");
         }
         else if (!lua_isnoneornil(L, 1))
@@ -2356,7 +2358,9 @@ namespace LuaGlobalFunctions
         if (lua_isstring(L, 1))
         {
             std::string str = Eluna::CHECKVAL<std::string>(L, 1);
-            if (sscanf(str.c_str(), UI64FMTD, &init) != 1)
+            std::istringstream iss(str);
+            iss >> init;
+            if (iss.bad())
                 return luaL_argerror(L, 1, "unsigned long long (as string) could not be converted");
         }
         else if (!lua_isnoneornil(L, 1))
