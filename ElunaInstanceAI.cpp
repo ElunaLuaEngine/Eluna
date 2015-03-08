@@ -95,12 +95,6 @@ void ElunaInstanceAI::Load(const char* data)
     }
 }
 
-// Simply calls Save, since the functions are a bit different in name and data types on different cores
-std::string ElunaInstanceAI::GetSaveData()
-{
-    return Save();
-}
-
 const char* ElunaInstanceAI::Save() const
 {
     LOCK_ELUNA;

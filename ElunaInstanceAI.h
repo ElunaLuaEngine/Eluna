@@ -88,7 +88,11 @@ public:
      */
     void Load(const char* data) override;
 #ifdef TRINITY
-    std::string GetSaveData() override;
+    // Simply calls Save, since the functions are a bit different in name and data types on different cores
+    std::string GetSaveData() override
+    {
+        return Save();
+    }
     const char* Save() const;
 #else
     const char* Save() const override;
