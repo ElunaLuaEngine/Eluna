@@ -130,11 +130,11 @@ namespace ElunaUtil
     public:
 
 #ifdef USING_BOOST
-        typedef boost::shared_mutex LockType;
+        typedef boost::recursive_mutex LockType;
         typedef boost::shared_lock<boost::shared_mutex> ReadGuard;
         typedef boost::unique_lock<boost::shared_mutex> WriteGuard;
 #else
-        typedef ACE_RW_Thread_Mutex LockType;
+        typedef ACE_Recursive_Thread_Mutex LockType;
         typedef ACE_Read_Guard<LockType> ReadGuard;
         typedef ACE_Write_Guard<LockType> WriteGuard;
 #endif

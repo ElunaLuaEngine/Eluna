@@ -30,19 +30,24 @@ public:
         int functionReference;
         bool isTemporary;
         uint32 remainingShots;
+        int cancelCallbackRef; // Reference to a callback that will cancel this binding, or 0.
         Eluna& E;
 
-        Binding(Eluna& _E, int funcRef, uint32 shots) :
+        Binding(Eluna& _E, int funcRef, uint32 shots, int cancelCallbackRef) :
             functionReference(funcRef),
-            isTemporary(shots != 0),
+            isTemporary(shots != 0 && cancelCallbackRef == 0),
             remainingShots(shots),
+            cancelCallbackRef(cancelCallbackRef),
             E(_E)
         {
         }
 
-        // Remove our function from the registry when the Binding is deleted.
         ~Binding()
         {
+            // Remove our function and cancel callback from the registry when the Binding is deleted.
+            if (cancelCallbackRef > 0)
+                luaL_unref(E.L, LUA_REGISTRYINDEX, cancelCallbackRef);
+
             luaL_unref(E.L, LUA_REGISTRYINDEX, functionReference);
         }
     };
@@ -63,6 +68,8 @@ public:
 
     // unregisters all registered functions and clears all registered events from the bindings
     virtual void Clear() { };
+
+    virtual void ClearOne(int ref, uint32 event_id, uint32 entry, uint64 guid) = 0;
 };
 
 template<typename T>
@@ -81,8 +88,27 @@ public:
         for (EventToFunctionsMap::iterator itr = Bindings.begin(); itr != Bindings.end(); ++itr)
         {
             FunctionRefVector& funcrefvec = itr->second;
+            std::vector<int> cancelRefVector;
+
             for (FunctionRefVector::iterator it = funcrefvec.begin(); it != funcrefvec.end(); ++it)
-                delete *it;
+            {
+                Binding* binding = (*it);
+
+                // Can't call the callback now, since it might modify `v` and crash the server.
+                // Just add the ref to a list and call them all after this loop.
+                if (binding->cancelCallbackRef)
+                    cancelRefVector.push_back(binding->cancelCallbackRef);
+                else
+                    delete binding; // Don't bother removing from list, clear is called at end anyway.
+            }
+
+            // Call all of the cancel callbacks for bindings with cancel callbacks.
+            for (std::vector<int>::iterator i = cancelRefVector.begin(); i != cancelRefVector.end(); ++i)
+            {
+                lua_rawgeti(E.L, LUA_REGISTRYINDEX, (*i));
+                lua_call(E.L, 0, 0);
+            }
+
             funcrefvec.clear();
         }
         Bindings.clear();
@@ -91,10 +117,51 @@ public:
     void Clear(uint32 event_id)
     {
         WriteGuard guard(GetLock());
+        FunctionRefVector& v = Bindings[event_id];
+        std::vector<int> cancelRefVector;
 
-        for (FunctionRefVector::iterator itr = Bindings[event_id].begin(); itr != Bindings[event_id].end(); ++itr)
-            delete *itr;
-        Bindings[event_id].clear();
+        for (FunctionRefVector::iterator itr = v.begin(); itr != v.end(); ++itr)
+        {
+            Binding* binding = (*itr);
+
+            // Can't call the callback now, since it might modify `v` and crash the server.
+            // Just add the ref to a list and call them all after this loop.
+            if (binding->cancelCallbackRef)
+                cancelRefVector.push_back(binding->cancelCallbackRef);
+            else
+                delete binding; // Don't bother removing from list, clear is called at end anyway.
+        }
+
+        // Call all of the cancel callbacks for bindings with cancel callbacks.
+        for (std::vector<int>::iterator i = cancelRefVector.begin(); i != cancelRefVector.end(); ++i)
+        {
+            lua_rawgeti(E.L, LUA_REGISTRYINDEX, (*i));
+            lua_call(E.L, 0, 0);
+        }
+
+        v.clear();
+    }
+
+    void ClearOne(int ref, uint32 event_id, uint32 entry, uint64 guid) override
+    {
+        ASSERT(entry == 0 && guid == 0);
+        WriteGuard guard(GetLock());
+
+        FunctionRefVector& funcrefvec = Bindings[event_id];
+
+        for (FunctionRefVector::iterator i = funcrefvec.begin(); i != funcrefvec.end(); ++i)
+        {
+            Binding* binding = (*i);
+
+            if (binding->functionReference == ref)
+            {
+                i = funcrefvec.erase(i);
+                delete binding;
+                return;
+            }
+        }
+
+        ASSERT(false && "tried to clear function ref that doesn't exist");
     }
 
     // Pushes the function references and updates the counters on the binds and erases them if the counter would reach 0
@@ -111,6 +178,9 @@ public:
 
             if (binding->isTemporary)
             {
+                // Bad things will happen if there's a cancel callback (due to ref reuse).
+                ASSERT(binding->cancelCallbackRef == 0);
+
                 binding->remainingShots--;
                 if (binding->remainingShots == 0)
                 {
@@ -124,10 +194,10 @@ public:
             Bindings.erase(event_id);
     };
 
-    void Insert(int eventId, int funcRef, uint32 shots) // Inserts a new registered event
+    void Insert(int eventId, int funcRef, uint32 shots, int callbackRef = 0) // Inserts a new registered event
     {
         WriteGuard guard(GetLock());
-        Bindings[eventId].push_back(new Binding(E, funcRef, shots));
+        Bindings[eventId].push_back(new Binding(E, funcRef, shots, callbackRef));
     }
 
     // Checks if there are events for ID
@@ -169,8 +239,27 @@ public:
             for (EventToFunctionsMap::iterator it = funcmap.begin(); it != funcmap.end(); ++it)
             {
                 FunctionRefVector& funcrefvec = it->second;
+                std::vector<int> cancelRefVector;
+
                 for (FunctionRefVector::iterator i = funcrefvec.begin(); i != funcrefvec.end(); ++i)
-                    delete *i;
+                {
+                    Binding* binding = (*i);
+
+                    // Can't call the callback now, since it might modify `v` and crash the server.
+                    // Just add the ref to a list and call them all after this loop.
+                    if (binding->cancelCallbackRef)
+                        cancelRefVector.push_back(binding->cancelCallbackRef);
+                    else
+                        delete binding; // Don't bother removing from list, clear is called at end anyway.
+                }
+
+                // Call all of the cancel callbacks for bindings with cancel callbacks.
+                for (std::vector<int>::iterator i = cancelRefVector.begin(); i != cancelRefVector.end(); ++i)
+                {
+                    lua_rawgeti(E.L, LUA_REGISTRYINDEX, (*i));
+                    lua_call(E.L, 0, 0);
+                }
+
                 funcrefvec.clear();
             }
             funcmap.clear();
@@ -181,10 +270,51 @@ public:
     void Clear(uint32 entry, uint32 event_id)
     {
         WriteGuard guard(GetLock());
+        FunctionRefVector& v = Bindings[entry][event_id];
+        std::vector<int> cancelRefVector;
 
-        for (FunctionRefVector::iterator itr = Bindings[entry][event_id].begin(); itr != Bindings[entry][event_id].end(); ++itr)
-            delete *itr;
-        Bindings[entry][event_id].clear();
+        for (FunctionRefVector::iterator itr = v.begin(); itr != v.end(); ++itr)
+        {
+            Binding* binding = (*itr);
+
+            // Can't call the callback now, since it might modify `v` and crash the server.
+            // Just add the ref to a list and call them all after this loop.
+            if (binding->cancelCallbackRef)
+                cancelRefVector.push_back(binding->cancelCallbackRef);
+            else
+                delete binding; // Don't bother removing from list, clear is called at end anyway.
+        }
+
+        // Call all of the cancel callbacks for bindings with cancel callbacks.
+        for (std::vector<int>::iterator i = cancelRefVector.begin(); i != cancelRefVector.end(); ++i)
+        {
+            lua_rawgeti(E.L, LUA_REGISTRYINDEX, (*i));
+            lua_call(E.L, 0, 0);
+        }
+
+        v.clear();
+    }
+
+    void ClearOne(int ref, uint32 event_id, uint32 entry, uint64 guid) override
+    {
+        ASSERT(entry != 0 && guid == 0);
+        WriteGuard guard(GetLock());
+
+        FunctionRefVector& funcrefvec = Bindings[entry][event_id];
+
+        for (FunctionRefVector::iterator i = funcrefvec.begin(); i != funcrefvec.end(); ++i)
+        {
+            Binding* binding = (*i);
+
+            if (binding->functionReference == ref)
+            {
+                i = funcrefvec.erase(i);
+                delete binding;
+                return;
+            }
+        }
+
+        ASSERT(false && "tried to clear function ref that doesn't exist");
     }
 
     // Pushes the function references and updates the counters on the binds and erases them if the counter would reach 0
@@ -201,6 +331,9 @@ public:
 
             if (binding->isTemporary)
             {
+                // Bad things will happen if there's a cancel callback (due to ref reuse).
+                ASSERT(binding->cancelCallbackRef == 0);
+
                 binding->remainingShots--;
                 if (binding->remainingShots == 0)
                 {
@@ -217,10 +350,10 @@ public:
             Bindings.erase(entry);
     };
 
-    void Insert(uint32 entryId, int eventId, int funcRef, uint32 shots) // Inserts a new registered event
+    void Insert(uint32 entryId, int eventId, int funcRef, uint32 shots, int callbackRef = 0) // Inserts a new registered event
     {
         WriteGuard guard(GetLock());
-        Bindings[entryId][eventId].push_back(new Binding(E, funcRef, shots));
+        Bindings[entryId][eventId].push_back(new Binding(E, funcRef, shots, callbackRef));
     }
 
     // Returns true if the entry has registered binds
@@ -279,8 +412,26 @@ public:
                 for (EventToFunctionsMap::iterator it = funcmap.begin(); it != funcmap.end(); ++it)
                 {
                     FunctionRefVector& funcrefvec = it->second;
+                    std::vector<int> cancelRefVector;
+
                     for (FunctionRefVector::iterator i = funcrefvec.begin(); i != funcrefvec.end(); ++i)
-                        delete *i;
+                    {
+                        Binding* binding = (*i);
+
+                        // Can't call the callback now, since it might modify `v` and crash the server.
+                        // Just add the ref to a list and call them all after this loop.
+                        if (binding->cancelCallbackRef)
+                            cancelRefVector.push_back(binding->cancelCallbackRef);
+                        else
+                            delete binding; // Don't bother removing from list, clear is called at end anyway.
+                    }
+
+                    // Call all of the cancel callbacks for bindings with cancel callbacks.
+                    for (std::vector<int>::iterator i = cancelRefVector.begin(); i != cancelRefVector.end(); ++i)
+                    {
+                        lua_rawgeti(E.L, LUA_REGISTRYINDEX, (*i));
+                        lua_call(E.L, 0, 0);
+                    }
                     funcrefvec.clear();
                 }
                 funcmap.clear();
@@ -294,10 +445,50 @@ public:
     {
         WriteGuard guard(GetLock());
         FunctionRefVector& v = Bindings[guid][instanceId][event_id];
+        std::vector<int> cancelRefVector;
 
         for (FunctionRefVector::iterator itr = v.begin(); itr != v.end(); ++itr)
-            delete *itr;
+        {
+            Binding* binding = (*itr);
+
+            // Can't call the callback now, since it might modify `v` and crash the server.
+            // Just add the ref to a list and call them all after this loop.
+            if (binding->cancelCallbackRef)
+                cancelRefVector.push_back(binding->cancelCallbackRef);
+            else
+                delete binding; // Don't bother removing from list, clear is called at end anyway.
+        }
+
+        // Call all of the cancel callbacks for bindings with cancel callbacks.
+        for (std::vector<int>::iterator i = cancelRefVector.begin(); i != cancelRefVector.end(); ++i)
+        {
+            lua_rawgeti(E.L, LUA_REGISTRYINDEX, (*i));
+            lua_call(E.L, 0, 0);
+        }
+
         v.clear();
+    }
+
+    void ClearOne(int ref, uint32 event_id, uint32 instance_id, uint64 guid) override
+    {
+        ASSERT(guid != 0);
+        WriteGuard guard(GetLock());
+
+        FunctionRefVector& funcrefvec = Bindings[guid][instance_id][event_id];
+
+        for (FunctionRefVector::iterator i = funcrefvec.begin(); i != funcrefvec.end(); ++i)
+        {
+            Binding* binding = (*i);
+
+            if (binding->functionReference == ref)
+            {
+                i = funcrefvec.erase(i);
+                delete binding;
+                return;
+            }
+        }
+
+        ASSERT(false && "tried to clear function ref that doesn't exist");
     }
 
     // Pushes the function references and updates the counters on the binds and erases them if the counter would reach 0
@@ -315,6 +506,9 @@ public:
 
             if (binding->isTemporary)
             {
+                // Bad things will happen if there's a cancel callback (due to ref reuse).
+                ASSERT(binding->cancelCallbackRef == 0);
+
                 binding->remainingShots--;
                 if (binding->remainingShots == 0)
                 {
@@ -334,10 +528,10 @@ public:
             Bindings.erase(guid);
     };
 
-    void Insert(uint64 guid, uint32 instanceId, int eventId, int funcRef, uint32 shots) // Inserts a new registered event
+    void Insert(uint64 guid, uint32 instanceId, int eventId, int funcRef, uint32 shots, int callbackRef = 0) // Inserts a new registered event
     {
         WriteGuard guard(GetLock());
-        Bindings[guid][instanceId][eventId].push_back(new Binding(E, funcRef, shots));
+        Bindings[guid][instanceId][eventId].push_back(new Binding(E, funcRef, shots, callbackRef));
     }
 
     // Returns true if the entry has registered binds
