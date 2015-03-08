@@ -468,16 +468,25 @@ namespace LuaWorldObject
      */
     int GetExactDistance(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
+        float x, y, z;
+        obj->GetPosition(x, y, z);
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
         if (target && target->IsInWorld())
-            Eluna::Push(L, obj->GetExactDist(target));
+        {
+            float x2, y2, z2;
+            target->GetPosition(x2, y2, z2);
+            x -= x2;
+            y -= y2;
+            z -= z2;
+        }
         else
         {
-            float X = Eluna::CHECKVAL<float>(L, 2);
-            float Y = Eluna::CHECKVAL<float>(L, 3);
-            float Z = Eluna::CHECKVAL<float>(L, 4);
-            Eluna::Push(L, obj->GetExactDist(X, Y, Z));
+            x -= Eluna::CHECKVAL<float>(L, 2);
+            y -= Eluna::CHECKVAL<float>(L, 3);
+            z -= Eluna::CHECKVAL<float>(L, 4);
         }
+
+        Eluna::Push(L, std::sqrt(x*x + y*y + z*z));
         return 1;
     }
 
@@ -525,15 +534,23 @@ namespace LuaWorldObject
      */
     int GetExactDistance2d(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
+        float x, y, z;
+        obj->GetPosition(x, y, z);
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
         if (target && target->IsInWorld())
-            Eluna::Push(L, obj->GetExactDist2d(target));
+        {
+            float x2, y2, z2;
+            target->GetPosition(x2, y2, z2);
+            x -= x2;
+            y -= y2;
+        }
         else
         {
-            float X = Eluna::CHECKVAL<float>(L, 2);
-            float Y = Eluna::CHECKVAL<float>(L, 3);
-            Eluna::Push(L, obj->GetExactDist2d(X, Y));
+            x -= Eluna::CHECKVAL<float>(L, 2);
+            y -= Eluna::CHECKVAL<float>(L, 3);
         }
+
+        Eluna::Push(L, std::sqrt(x*x + y*y));
         return 1;
     }
 
