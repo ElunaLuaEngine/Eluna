@@ -179,7 +179,12 @@ class ClassParser(object):
         return_values, parameters = match.group(1), match.group(2)
         parameters = ' '+parameters+' ' if parameters else ''
         return_values = return_values + '= ' if return_values else ''
-        prototype = '{0}{1}:{{0}}({2})'.format(return_values, self.class_name, parameters)
+
+        if self.class_name == 'Global':
+            prototype = '{0}{{0}}({1})'.format(return_values, parameters)
+        else:
+            prototype = '{0}{1}:{{0}}({2})'.format(return_values, self.class_name, parameters)
+
         self.prototypes.append(prototype)
 
     def handle_end(self, match):
