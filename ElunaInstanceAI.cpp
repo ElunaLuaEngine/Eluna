@@ -30,6 +30,7 @@ void ElunaInstanceAI::Initialize()
 void ElunaInstanceAI::Load(const char* data)
 {
     LOCK_ELUNA;
+    canSave = false;
 
 #ifndef TRINITY
     // Trinity and MaNGOS based call the Initialize differently.
@@ -43,11 +44,11 @@ void ElunaInstanceAI::Load(const char* data)
     //   the last known save data (or maybe just an empty string).
     if (!data)
     {
-        data = lastSaveData;
+        data = lastSaveData.c_str();
     }
     else // Otherwise, copy the new data into our buffer.
     {
-        strcpy(lastSaveData, data);
+        lastSaveData.assign(data);
     }
 
     // Don't bother trying to decode an empty string.
@@ -74,6 +75,7 @@ void ElunaInstanceAI::Load(const char* data)
                 {
                     sEluna->CreateInstanceData(instance);
                     // Stack: (empty)
+                    canSave = true; // Allow saving again.
                     sEluna->OnLoad(this);
                 }
                 else
@@ -90,13 +92,17 @@ void ElunaInstanceAI::Load(const char* data)
                 // Stack: (empty)
             }
 
-            free((void*)decodedData);
+            delete[] decodedData;
         }
     }
 }
 
 const char* ElunaInstanceAI::Save() const
 {
+    // If we're still loading, don't overwrite what we're trying to load.
+    if (!canSave)
+        return NULL;
+
     LOCK_ELUNA;
     lua_State* L = sEluna->L;
     // Stack: (empty)
@@ -130,7 +136,7 @@ const char* ElunaInstanceAI::Save() const
     lua_pop(L, 1);
     // Stack: (empty)
 
-    return lastSaveData;
+    return lastSaveData.c_str();
 }
 
 uint32 ElunaInstanceAI::GetData(uint32 key) const

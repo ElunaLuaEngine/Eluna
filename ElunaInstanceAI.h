@@ -72,12 +72,16 @@ class ElunaInstanceAI : public InstanceData
 private:
     // The last save data to pass through this class,
     //   either through `Load` or `Save`.
-    char lastSaveData[MAX_SAVE_DATA];
+    std::string lastSaveData;
+
+    // Used to prevent saving this AI while it's still loading,
+    //   effectively nuking the data that's supposed to be loaded.
+    // Set to `false` while loading, `true` otherwise.
+    bool canSave;
 
 public:
-    ElunaInstanceAI(Map* map) : InstanceData(map)
+    ElunaInstanceAI(Map* map) : InstanceData(map), canSave(true)
     {
-        memset(lastSaveData, 0, MAX_SAVE_DATA);
     }
 
     void Initialize() override;

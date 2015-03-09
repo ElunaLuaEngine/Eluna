@@ -105,9 +105,10 @@ static void build_decoding_table()
         decoding_table[(unsigned char)encoding_table[i]] = i;
 }
 
-void ElunaUtil::EncodeData(const unsigned char* data, size_t input_length, char* buffer, size_t max_length)
+void ElunaUtil::EncodeData(const unsigned char* data, size_t input_length, std::string& output, size_t max_length)
 {
     size_t output_length = 4 * ((input_length + 2) / 3);
+    char* buffer = new char[output_length];
 
     if ((output_length + 1) > max_length) // + 1 for the NUL terminator.
     {
@@ -132,7 +133,8 @@ void ElunaUtil::EncodeData(const unsigned char* data, size_t input_length, char*
     for (int i = 0; i < mod_table[input_length % 3]; i++)
         buffer[output_length - 1 - i] = '=';
 
-    buffer[output_length] = '\0';
+    output.assign(buffer, output_length); // Need length because `buffer` is not terminated!
+    delete[] buffer;
 }
 
 unsigned char* ElunaUtil::DecodeData(const char *data, size_t *output_length)
@@ -159,7 +161,7 @@ unsigned char* ElunaUtil::DecodeData(const char *data, size_t *output_length)
     if (data[input_length - 1] == '=') (*output_length)--;
     if (data[input_length - 2] == '=') (*output_length)--;
 
-    unsigned char *decoded_data = (unsigned char*)calloc(*output_length, sizeof(unsigned char));
+    unsigned char *decoded_data = new unsigned char[*output_length];
     if (!decoded_data)
         return NULL;
 

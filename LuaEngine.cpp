@@ -1185,8 +1185,16 @@ bool Eluna::HasInstanceData(Map const* map)
 void Eluna::CreateInstanceData(Map const* map)
 {
     ASSERT(lua_istable(L, -1));
+    uint32 instanceId = map->GetInstanceId();
+
+    // If there's another table that was already stored for the instance, unref it.
+    if (instanceDataRefs.count(instanceId) > 0)
+    {
+        luaL_unref(L, LUA_REGISTRYINDEX, instanceDataRefs[instanceId]);
+    }
+
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
-    instanceDataRefs[map->GetInstanceId()] = ref;
+    instanceDataRefs[instanceId] = ref;
 }
 
 /*
