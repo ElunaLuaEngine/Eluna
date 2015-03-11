@@ -1,4 +1,4 @@
-![logo](https://dl.dropbox.com/u/98478761/eluna-DBCA-Designs.png)
+[![Eluna](https://dl.dropbox.com/u/98478761/eluna-DBCA-Designs.png)](https://github.com/ElunaLuaEngine/Eluna)
 
 ## About
 
@@ -13,9 +13,9 @@ Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and
 
 ## Source
 
-* [Installation & Updating](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/INSTALL.md)
-* [Function & method documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/LuaFunctions.cpp)
-* [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/HookMgr.h)
+* [Installation](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/INSTALL.md)
+* [Function documentation](http://eluna.emudevs.com/) - [source](https://github.com/ElunaLuaEngine/Eluna/blob/master/LuaFunctions.cpp)
+* [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/Hooks.h)
 
 [![Build Status](https://travis-ci.org/mangoszero/server.png?branch=master)](https://travis-ci.org/mangoszero/server) [Official Mangos Zero w/ Eluna](https://github.com/mangoszero/server)<br />
 <br />
