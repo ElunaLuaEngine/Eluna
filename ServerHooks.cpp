@@ -376,7 +376,7 @@ void Eluna::OnWorldUpdate(uint32 diff)
 {
     {
         LOCK_ELUNA;
-        if (reload)
+        if (ShouldReload())
             _ReloadEluna();
     }
 

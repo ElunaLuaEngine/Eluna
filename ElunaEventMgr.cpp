@@ -108,7 +108,8 @@ void ElunaEventProcessor::AddEvent(int funcRef, uint32 delay, uint32 repeats)
 
 void ElunaEventProcessor::RemoveEvent(LuaEvent* luaEvent)
 {
-    if (luaEvent->state != LUAEVENT_STATE_ERASE && Eluna::IsInitialized())
+    // Unreference if should and if Eluna was not yet uninitialized and if the lua state still exists
+    if (luaEvent->state != LUAEVENT_STATE_ERASE && Eluna::IsInitialized() && (*E)->HasLuaState())
     {
         // Free lua function ref
         luaL_unref((*E)->L, LUA_REGISTRYINDEX, luaEvent->funcRef);
