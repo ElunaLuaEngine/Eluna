@@ -271,7 +271,7 @@ public:
     void RunScripts();
     bool ShouldReload() const { return reload; }
     bool IsEnabled() const { return enabled && IsInitialized(); }
-    bool HasLuaState() const { return L; }
+    bool HasLuaState() const { return L != NULL; }
     void Register(uint8 reg, uint32 id, uint64 guid, uint32 instanceId, uint32 evt, int func, uint32 shots);
 
     // Non-static pushes, to be used in hooks.
