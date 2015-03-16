@@ -3,7 +3,7 @@ Eluna is already merged with official MaNGOS by default
 
 #Merging Eluna with TC
 ```
-git clone https://github.com/TrinityCore/TrinityCore.git
+git clone https://github.com/TrinityCore/TrinityCore.git -b3.3.5
 cd TrinityCore
 git pull --recurse-submodules https://github.com/ElunaLuaEngine/ElunaTrinityWotlk.git
 ```
