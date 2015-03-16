@@ -259,19 +259,19 @@ namespace LuaMap
         uint32 weatherType = Eluna::CHECKVAL<uint32>(L, 3);
         float grade = Eluna::CHECKVAL<float>(L, 4);
 
-#if ((defined(CMANGOS) || defined(MANGOS)) && defined(WOTLK))
-        if (Weather::IsValidWeatherType(weatherType))
-            map->SetWeather(zoneId, (WeatherType)weatherType, grade, false);
-#else
-#ifdef TRINITY
+#if defined(TRINITY)
         Weather* weather = WeatherMgr::FindWeather(zoneId);
         if (!weather)
             weather = WeatherMgr::AddWeather(zoneId);
+        if (weather)
+            weather->SetWeather((WeatherType)weatherType, grade);
+#elif defined(CMANGOS) || defined(WOTLK)
+        if (Weather::IsValidWeatherType(weatherType))
+            map->SetWeather(zoneId, (WeatherType)weatherType, grade, false);
 #else
         Weather* weather = eWorld->FindWeather(zoneId);
         if (!weather)
             weather = eWorld->AddWeather(zoneId);
-#endif
         if (weather)
             weather->SetWeather((WeatherType)weatherType, grade);
 #endif
