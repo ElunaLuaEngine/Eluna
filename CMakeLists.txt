@@ -174,6 +174,10 @@ if( ${CMAKE_PROJECT_NAME} STREQUAL "TrinityCore" )
 elseif( ${CMAKE_PROJECT_NAME} STREQUAL "MaNGOS" )
   include_directories(
     ${CMAKE_SOURCE_DIR}/src/shared
+    ${CMAKE_SOURCE_DIR}/src/shared/Common
+    ${CMAKE_SOURCE_DIR}/src/shared/Utilities
+    ${CMAKE_SOURCE_DIR}/src/shared/Log
+    ${CMAKE_SOURCE_DIR}/src/shared/DataStores
     ${CMAKE_SOURCE_DIR}/src/framework
     ${CMAKE_SOURCE_DIR}/src/framework/Platform
     ${CMAKE_SOURCE_DIR}/src/game/BattleGround
