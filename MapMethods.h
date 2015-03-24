@@ -265,15 +265,9 @@ namespace LuaMap
             weather = WeatherMgr::AddWeather(zoneId);
         if (weather)
             weather->SetWeather((WeatherType)weatherType, grade);
-#elif defined(CMANGOS) || defined(WOTLK)
+#else
         if (Weather::IsValidWeatherType(weatherType))
             map->SetWeather(zoneId, (WeatherType)weatherType, grade, false);
-#else
-        Weather* weather = eWorld->FindWeather(zoneId);
-        if (!weather)
-            weather = eWorld->AddWeather(zoneId);
-        if (weather)
-            weather->SetWeather((WeatherType)weatherType, grade);
 #endif
         return 0;
     }
