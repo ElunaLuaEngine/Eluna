@@ -48,8 +48,13 @@
 #else
 #include "Config/Config.h"
 #include "AggressorAI.h"
-#include "revision_nr.h"
 #include "BattleGroundMgr.h"
+#endif
+
+#ifdef MANGOS
+#include "revision.h"
+#elif CMANGOS
+#include "revision_nr.h"
 #endif
 
 #if (!defined(TBC) && !defined(CLASSIC))
