@@ -53,7 +53,7 @@
 
 #ifdef MANGOS
 #include "revision.h"
-#elif CMANGOS
+#elif defined(CMANGOS)
 #include "revision_nr.h"
 #endif
 

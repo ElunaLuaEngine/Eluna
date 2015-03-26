@@ -1741,9 +1741,9 @@ namespace LuaUnit
             unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
 #ifdef TRINITY
             unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_HIT, 0);
-#elif MANGOS
+#elif defined(MANGOS)
             unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, 1, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
-#elif CMANGOS
+#elif defined(CMANGOS)
             unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
 #endif
             return 0;
@@ -1779,9 +1779,9 @@ namespace LuaUnit
             unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
 #ifdef TRINITY
             unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
-#elif MANGOS
+#elif defined(MANGOS)
             unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, 1, schoolmask, damage, absorb, resist, VICTIMSTATE_NORMAL, 0);
-#elif CMANGOS
+#elif defined(CMANGOS)
             unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, schoolmask, damage, absorb, resist, VICTIMSTATE_NORMAL, 0);
 #endif
             return 0;
