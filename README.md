@@ -17,7 +17,7 @@ Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and
 * [Function documentation](http://eluna.emudevs.com/) - [source](https://github.com/ElunaLuaEngine/Eluna/blob/master/LuaFunctions.cpp)
 * [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/Hooks.h)
 
-[![Build Status](https://travis-ci.org/mangoszero/server.png?branch=master)](https://travis-ci.org/mangoszero/server) [Official Mangos Zero w/ Eluna](https://github.com/mangoszero/server)<br />
+[![Build Status](https://api.travis-ci.org/mangoszero/server.svg)](https://travis-ci.org/mangoszero/server) [Official Mangos Zero w/ Eluna](https://github.com/mangoszero/server)<br />
 <br />
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk)<br />
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata) [Eluna TrinityCore Cataclysm](https://github.com/ElunaLuaEngine/ElunaTrinityCata)<br />
