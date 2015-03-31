@@ -184,6 +184,7 @@ elseif( ${CMAKE_PROJECT_NAME} STREQUAL "MaNGOS" )
     ${CMAKE_SOURCE_DIR}/src/game/BattleGround
     ${CMAKE_SOURCE_DIR}/src/game/Server
     ${CMAKE_SOURCE_DIR}/src/game/vmap
+    ${CMAKE_SOURCE_DIR}/src/game/Maps
     ${CMAKE_SOURCE_DIR}/src/game/MotionGenerators
     ${CMAKE_SOURCE_DIR}/src/game/Tools
     ${CMAKE_SOURCE_DIR}/src/game/References
