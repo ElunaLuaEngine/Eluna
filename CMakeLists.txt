@@ -173,6 +173,7 @@ if( ${CMAKE_PROJECT_NAME} STREQUAL "TrinityCore" )
 
 elseif( ${CMAKE_PROJECT_NAME} STREQUAL "MaNGOS" )
   include_directories(
+    ${CMAKE_SOURCE_DIR}/dep/g3dlite
     ${CMAKE_SOURCE_DIR}/src/shared
     ${CMAKE_SOURCE_DIR}/src/shared/Common
     ${CMAKE_SOURCE_DIR}/src/shared/Utilities
