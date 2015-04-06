@@ -855,6 +855,8 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "GetDisplayId", &LuaGameObject::GetDisplayId },
     { "GetGoState", &LuaGameObject::GetGoState },
     { "GetLootState", &LuaGameObject::GetLootState },
+    { "GetLootRecipient", &LuaGameObject::GetLootRecipient },
+    { "GetLootRecipientGroup", &LuaGameObject::GetLootRecipientGroup },
 
     // Setters
     { "SetGoState", &LuaGameObject::SetGoState },
