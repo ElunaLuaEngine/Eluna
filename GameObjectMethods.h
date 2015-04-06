@@ -119,6 +119,17 @@ namespace LuaGameObject
         Eluna::Push(L, go->getLootState());
         return 1;
     }
+	
+	/**
+     * Returns the [Player] that looted a [GameObject]
+     *
+     * @return [Player] player
+     */
+    int GetLootRecipient(Eluna* /*E*/, lua_State* L, GameObject* go)
+    {
+        Eluna::Push(L, go->GetLootRecipient());
+        return 1;
+    }
 
     /**
      * Sets the state of a [GameObject]
