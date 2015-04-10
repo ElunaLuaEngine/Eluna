@@ -138,7 +138,11 @@ namespace LuaGameObject
      */
     int GetLootRecipientGroup(Eluna* /*E*/, lua_State* L, GameObject* go)
     {
+#ifdef MANGOS
+        Eluna::Push(L, go->GetGroupLootRecipient());
+#else
         Eluna::Push(L, go->GetLootRecipientGroup());
+#endif
         return 1;
     }
 
