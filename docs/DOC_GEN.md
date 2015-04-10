@@ -1,24 +1,26 @@
 # Documentation generation
+Eluna uses a custom made documentation generator to create it's [web documentation](http://eluna.emudevs.com/).  
+The generator is written in python by Patman. It works by parsing Eluna's source files for comments and then generates the HTML and javascript for the documentation based on them.
 
-## Setting up
+This page guides you through generating the web documentation locally and explains the standards of the documentation comments for you to help us improve our documentation. To contribute with your documentation changes, create a [pull request](https://help.github.com/articles/using-pull-requests/)
+
+# Generating locally
 - install [python](https://www.python.org/)(2)
   - when installing, tick to install the path variable
-  - may need restart after for installation to properly take effect
+  - you may need restart afterwards for the installation to properly take effect
 - install a package manager like [pip](https://pip.pypa.io/en/latest/)
-  - if installed pip and doesnt work, restart or try easy_install command
+  - if you installed pip and it does not work, restart or try easy_install command
 - install the dependencies with manager
   - [Jinja2](https://pypi.python.org/pypi/Jinja2)
   - [typedecorator](https://pypi.python.org/pypi/typedecorator)
   - [markdown](https://pypi.python.org/pypi/Markdown)
-
-## Generating
 - Run in cmd `python -m ElunaDoc` when at `\LuaEngine\docs\`
 
-## Documenting
-You can document functions in the Eluna source code. For examples, simply open a method header file with docs.
+# Documenting
+You can document functions in the Eluna source code. To find examples simply open a method header file like `PlayerMethods.h` and see the comments.
 
-### Template
-Here are basic templates for a function. When defining a parameter or a return value, the type and value name are mandatory, unless the parameter type is ... (for variable arguments; don't include a name in this case).
+## Templates
+Here are some basic templates for a function documentation. When defining a parameter or a return value the type and value name are mandatory, unless the parameter type is `...`, which is used for variable arguments; do not include a name in this case.
 
 ```c++
 /**
@@ -54,7 +56,7 @@ This is a template for a function that takes in different parameters. When defin
  */
 ```
 
-### Standard
+## Standard
 A documentation comment block will always start with `/**` and end with `*/`.
 All lines start with `*` character followed by one space before any content.
 
@@ -92,7 +94,7 @@ Use correct indentation with documentation comments.
 */
 ```
 
-### Markdown
+## Markdown
 You can use [markdown](http://pythonhosted.org//Markdown/) in your descriptions.
 For syntax see http://daringfireball.net/projects/markdown/syntax and http://pythonhosted.org//Markdown/#differences
 
@@ -104,9 +106,11 @@ For syntax see http://daringfireball.net/projects/markdown/syntax and http://pyt
  * - list item
  * - list item
  *
+ *
  *     // Codeblock
  *     // Code goes here.
  *     // Note the 4-space indent.
+ *
  *
  * `code line`
  *
@@ -115,7 +119,7 @@ For syntax see http://daringfireball.net/projects/markdown/syntax and http://pyt
  */
 ```
 
-**Produces:**
+**The above markdown code produces the output below:**
 
 Description.
 
@@ -123,23 +127,27 @@ Description.
 - list item
 - list item
 
+
     // Codeblock
     // Code goes here.
     // Note the 4-space indent.
+
 
 `code line`
 
 *italic*
 **bold**
 
-### Types
+## Types
 Here are some examples of possible types and most commonly used ones:
 
 ```
 string
+uint64
 uint32
 uint16
 uint8
+int64
 int32
 int16
 int8

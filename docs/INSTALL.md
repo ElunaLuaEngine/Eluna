@@ -1,34 +1,35 @@
-#Installation
+#Installing and updating
+This page will help you get a cMaNGOS and a TrinityCore source with Eluna.  
+To get a MaNGOS source with Eluna head over to [their forum](http://getmangos.eu/) for the core installation and updating instructions.
 
-0. Since TrinityCore uses boost and our file loader uses boost file system, you need boost filesystem. On windows this should be available with the default package, __but on linux__ you may need to install it: `sudo apt-get install libboost-filesystem-dev`
+If you are having trouble with the installation or updating the core source, head over to our [support forum](../README.md#links).  
+If you are looking for a way to merge eluna with a fork of the official repositories see [merging](MERGING.md).
 
-1. Get the core:<br/>
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk)<br />
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata) [Eluna TrinityCore Cataclysm](https://github.com/ElunaLuaEngine/ElunaTrinityCata)<br />
-<br />
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic) [Eluna cMaNGOS Classic](https://github.com/ElunaLuaEngine/ElunaMangosClassic)<br />
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc) [Eluna cMaNGOS TBC](https://github.com/ElunaLuaEngine/ElunaMangosTbc)<br />
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk) [Eluna cMaNGOS WotLK](https://github.com/ElunaLuaEngine/ElunaMangosWotlk)
+###Requirements and dependencies:
+Currently there are no additional requirements apart from the normal core requirements.
+See you desired core's documentation and installation instructions for it's requirements and dependencies.
 
-2. Open `git bash` and do<br />
-`git submodule init`<br />
-`git submodule update`<br />
-<br />
-If you really dont get how to use git bash (and do try!), you can navigate to the LuaEngine folder and clone [the eluna repository](https://github.com/ElunaLuaEngine/Eluna) there. This is not suggested though.
+###Installation
+1. Open [git bash](http://git-scm.com/) and navigate to where you want the core source
+2. Choose the git address of your desired core and patch below and clone the core with `git clone <address>`.  
+For example `git clone https://github.com/ElunaLuaEngine/ElunaTrinityWotlk.git`
+  * TrinityCore WoTLK: `https://github.com/ElunaLuaEngine/ElunaTrinityWotlk.git`
+  * TrinityCore Cataclysm: `https://github.com/ElunaLuaEngine/ElunaTrinityCata.git`
+  * cMaNGOS Classic: `https://github.com/ElunaLuaEngine/ElunaMangosClassic.git`
+  * cMaNGOS TBC: `https://github.com/ElunaLuaEngine/ElunaMangosTbc.git`
+  * cMaNGOS WoTLK: `https://github.com/ElunaLuaEngine/ElunaMangosWotlk.git`
+3. Navigate to the newly created source folder with `git bash`
+4. Use the git command `git submodule init` followed by `git submodule update`
+  * If you really do not get how to use git bash (and do try!) you can navigate to the `LuaEngine` folder and clone the [eluna repository](https://github.com/ElunaLuaEngine/Eluna) there. This is not recommended though.
+4. Continue compiling the core normally using the official instructions
+  * [TrinityCore](http://collab.kpsn.org/display/tc/Installation+Guide)
+  * [cMaNGOS](https://github.com/cmangos/issues/wiki/Installation-Instructions)
 
-3. Compile the core normally:<br />
-[TrinityCore](http://collab.kpsn.org/display/tc/TrinityCore+Home)<br />
-[cMaNGOS](https://github.com/cmangos/issues/wiki/Installation-Instructions)
-
-#Updating
-1. When updating you should take up the `commit hash` you are on, just in case.
-You can get it from git with `git log` for example.
-You should take note what are the newest SQL updates in `sql/updates/*` folders.
-2. Use `git pull` to get the newest source changes.
-3. Then use `git submodule init` `git submodule update` to update Eluna from github.
-4. Try compiling and if you encounter errors, report to [support](https://github.com/ElunaLuaEngine/Eluna#links) or [issues](https://github.com/ElunaLuaEngine/Eluna/issues).
-You can revert back to the old sources by using `git reset --hard 000000` `git submodule update`, where 000000 is the `commit hash`.
-5. If the compiling was successful, you should update your database if needed.
-You can do this by running all **new** SQL files in `sql/updates/*`.
-You need to see your notes from before pulling the updates or you can use the old commit hash to see on github what were the last files you ran.
-An easy way is to just look at the created/modified date on the files.
+###Updating
+Updating is essentially handled in the same manner as you would normally update the core and database.  
+To get the newest core sourcecode open `git bash` and navigate to your local source folder.
+Then execute use `git pull` followed by `git submodule init` and `git submodule update`.  
+After updating the source you need to recompile the core normally. Simply use `CMake` if needed and compile.  
+To update the databases refer to the core's or database's official updating documents:
+  *  [TrinityCore](http://collab.kpsn.org/display/tc/Databases+Installation)
+  *  [cMaNGOS](https://github.com/cmangos/issues/wiki/Installation-Instructions)
