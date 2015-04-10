@@ -127,11 +127,11 @@ Description.
 - list item
 - list item
 
-
-    // Codeblock
-    // Code goes here.
-    // Note the 4-space indent.
-
+```
+// Codeblock
+// Code goes here.
+// Note the 4-space indent.
+```
 
 `code line`
 
