@@ -8,7 +8,8 @@ You can contribute to Eluna in various ways:
 * Create and improve Lua scripts, systems, releases and guides: [Eluna forum section](https://emudevs.com/forumdisplay.php/15-Eluna-Lua-Engine-%C2%A9)
 
 ###Features and documentation
-To contribute to the source code and documentation within it, create a pull request for our github repository:  
+To contribute to the source code and documentation within it, create a pull request for our github repository:
+
 1. [Set up git](https://help.github.com/articles/set-up-git/)
 2. [Fork](https://help.github.com/articles/fork-a-repo/) our repository: [Eluna repository](https://github.com/ElunaLuaEngine/Eluna)
 3. Create a branch: `git checkout -b mybranch`
