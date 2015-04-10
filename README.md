@@ -2,7 +2,7 @@
 
 ##About
 
-Eluna Lua Engine &copy; is lua engine embedded to World of Warcraft emulators. Eluna supports MaNGOS, CMaNGOS, and TrinityCore.
+Eluna Lua Engine &copy; is a lua engine embedded to World of Warcraft emulators. Eluna supports MaNGOS, CMaNGOS and TrinityCore.
 We are currently working hard to make Eluna better from inside and outside.  
 Follow us on [EmuDevs Twitter](https://twitter.com/EmuDevs) page to view the latest news about EmuDevs and about what is going on with Eluna Lua Engine &copy;.
 
@@ -18,7 +18,7 @@ Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and
  * [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/Hooks.h)
  * [Lua reference manual](http://www.lua.org/manual/5.2/)
 
-* [Contributing](CONTRIBUTING.md)
+* [Contributing](docs/CONTRIBUTING.md)
 * [Support forum](https://emudevs.com/forumdisplay.php/279-Eluna-Support)
 * [Example scripts](https://github.com/ElunaLuaEngine/Scripts)
 * [Guides, releases and news](https://emudevs.com/forumdisplay.php/15-Eluna-Lua-Engine-%C2%A9)
@@ -42,7 +42,7 @@ Core forks with required modifications for Eluna:
 * [MaNGOS](http://getmangos.eu/)
 * [cMaNGOS](http://cmangos.net/)
 * [TrinityCore](http://www.trinitycore.org/)
-* [Lua's site](http://www.lua.org/)
+* [Lua.org](http://www.lua.org/)
 * [License](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/LICENSE.md)
 
 ##Team
