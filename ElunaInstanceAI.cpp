@@ -15,14 +15,12 @@ void ElunaInstanceAI::Initialize()
 {
     LOCK_ELUNA;
 
-    // We might have instance data if this method was called from `Load`.
-    if (!sEluna->HasInstanceData(instance))
-    {
-        // Create a new table for instance data.
-        lua_State* L = sEluna->L;
-        lua_newtable(L);
-        sEluna->CreateInstanceData(instance);
-    }
+    ASSERT(!sEluna->HasInstanceData(instance))
+
+    // Create a new table for instance data.
+    lua_State* L = sEluna->L;
+    lua_newtable(L);
+    sEluna->CreateInstanceData(instance);
 
     sEluna->OnInitialize(this);
 }
@@ -30,15 +28,6 @@ void ElunaInstanceAI::Initialize()
 void ElunaInstanceAI::Load(const char* data)
 {
     LOCK_ELUNA;
-    canSave = false;
-
-#ifndef TRINITY
-    // Trinity and MaNGOS based call the Initialize differently.
-    // On MaNGOS based Initialize is called when loading is not called
-    // On Trinity Initialize is called when the instance script is generated no matter if loading happens
-    // Calling initialize before loading on mangos makes initialize called in any case on both cores.
-    Initialize();
-#endif
 
     // If we get passed NULL (i.e. `Reload` was called) then use
     //   the last known save data (or maybe just an empty string).
@@ -51,58 +40,64 @@ void ElunaInstanceAI::Load(const char* data)
         lastSaveData.assign(data);
     }
 
-    // Don't bother trying to decode an empty string.
-    if (data[0] != '\0')
+    if (data[0] == '\0')
     {
-        size_t decodedLength;
-        const unsigned char* decodedData = ElunaUtil::DecodeData(data, &decodedLength);
+        ASSERT(!sEluna->HasInstanceData(instance))
 
-        if (decodedData)
+        // Create a new table for instance data.
+        lua_State* L = sEluna->L;
+        lua_newtable(L);
+        sEluna->CreateInstanceData(instance);
+
+        sEluna->OnLoad(this);
+        // Stack: (empty)
+        return;
+    }
+
+    size_t decodedLength;
+    const unsigned char* decodedData = ElunaUtil::DecodeData(data, &decodedLength);
+
+    if (decodedData)
+    {
+        lua_State* L = sEluna->L;
+        // Stack: (empty)
+
+        lua_pushcfunction(L, mar_decode);
+        lua_pushlstring(L, (const char*)decodedData, decodedLength);
+        // Stack: mar_decode, decoded_data
+
+        // Call `mar_decode` and check for success.
+        if (lua_pcall(L, 1, 1, 0) == 0)
         {
-            lua_State* L = sEluna->L;
-            // Stack: (empty)
-
-            lua_pushcfunction(L, mar_decode);
-            lua_pushlstring(L, (const char*)decodedData, decodedLength);
-            // Stack: mar_decode, decoded_data
-
-            // Call `mar_decode` and check for success.
-            if (lua_pcall(L, 1, 1, 0) == 0)
+            // Stack: data
+            // Only use the data if it's a table.
+            if (lua_istable(L, -1))
             {
-                // Stack: data
-                // Only use the data if it's a table.
-                if (lua_istable(L, -1))
-                {
-                    sEluna->CreateInstanceData(instance);
-                    // Stack: (empty)
-                    canSave = true; // Allow saving again.
-                    sEluna->OnLoad(this);
-                }
-                else
-                {
-                    lua_pop(L, 1);
-                    // Stack: (empty)
-                }
+                sEluna->CreateInstanceData(instance);
+                // Stack: (empty)
+                sEluna->OnLoad(this);
+                // WARNING! lastSaveData might be different after `OnLoad` if the Lua code saved data.
             }
             else
             {
-                // Stack: error_message
-                ELUNA_LOG_ERROR("Error while loading: %s", lua_tostring(L, -1));
                 lua_pop(L, 1);
                 // Stack: (empty)
             }
-
-            delete[] decodedData;
         }
+        else
+        {
+            // Stack: error_message
+            ELUNA_LOG_ERROR("Error while loading: %s", lua_tostring(L, -1));
+            lua_pop(L, 1);
+            // Stack: (empty)
+        }
+
+        delete[] decodedData;
     }
 }
 
 const char* ElunaInstanceAI::Save() const
 {
-    // If we're still loading, don't overwrite what we're trying to load.
-    if (!canSave)
-        return NULL;
-
     LOCK_ELUNA;
     lua_State* L = sEluna->L;
     // Stack: (empty)
@@ -112,7 +107,7 @@ const char* ElunaInstanceAI::Save() const
      *   even though it's declared as `const`.
      *
      * Declaring virtual methods as `const` is BAD!
-     * Don't dictate to children that their method must be pure.
+     * Don't dictate to children that their methods must be pure.
      */
     ElunaInstanceAI* self = const_cast<ElunaInstanceAI*>(this);
 
