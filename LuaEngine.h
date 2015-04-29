@@ -148,6 +148,8 @@ private:
 
     // Map from instance ID -> Lua table ref
     UNORDERED_MAP<uint32, int> instanceDataRefs;
+    // Map from map ID -> Lua table ref
+    UNORDERED_MAP<uint32, int> continentDataRefs;
 
     Eluna();
     ~Eluna();

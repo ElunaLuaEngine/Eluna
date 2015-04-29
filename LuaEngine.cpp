@@ -195,6 +195,7 @@ void Eluna::CloseLua()
     L = NULL;
 
     instanceDataRefs.clear();
+    continentDataRefs.clear();
 }
 
 void Eluna::OpenLua()
@@ -1179,28 +1180,47 @@ InstanceData* Eluna::GetInstanceData(Map* map)
 
 bool Eluna::HasInstanceData(Map const* map)
 {
-    return instanceDataRefs.count(map->GetInstanceId()) != 0;
+    if (map->IsContinent())
+        return continentDataRefs.count(map->GetId()) != 0;
+    else
+        return instanceDataRefs.count(map->GetInstanceId()) != 0;
 }
 
 void Eluna::CreateInstanceData(Map const* map)
 {
     ASSERT(lua_istable(L, -1));
-    uint32 instanceId = map->GetInstanceId();
-
-    // If there's another table that was already stored for the instance, unref it.
-    if (instanceDataRefs.count(instanceId) > 0)
-    {
-        luaL_unref(L, LUA_REGISTRYINDEX, instanceDataRefs[instanceId]);
-    }
-
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
-    instanceDataRefs[instanceId] = ref;
+
+    if (map->IsContinent())
+    {
+        uint32 mapId = map->GetId();
+
+        // If there's another table that was already stored for the map, unref it.
+        if (continentDataRefs.count(mapId) > 0)
+        {
+            luaL_unref(L, LUA_REGISTRYINDEX, continentDataRefs[mapId]);
+        }
+
+        continentDataRefs[mapId] = ref;
+    }
+    else
+    {
+        uint32 instanceId = map->GetInstanceId();
+
+        // If there's another table that was already stored for the instance, unref it.
+        if (instanceDataRefs.count(instanceId) > 0)
+        {
+            luaL_unref(L, LUA_REGISTRYINDEX, instanceDataRefs[instanceId]);
+        }
+
+        instanceDataRefs[instanceId] = ref;
+    }
 }
 
 /*
-* Unrefs the instanceId related events and data
-* Does all required actions for when an instance is freed.
-*/
+ * Unrefs the instanceId related events and data
+ * Does all required actions for when an instance is freed.
+ */
 void Eluna::FreeInstanceId(uint32 instanceId)
 {
     LOCK_ELUNA;
@@ -1225,7 +1245,11 @@ void Eluna::PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter)
         ai->Reload();
 
     // Get the instance data table from the registry.
-    lua_rawgeti(L, LUA_REGISTRYINDEX, instanceDataRefs[ai->instance->GetInstanceId()]);
+    if (ai->instance->IsContinent())
+        lua_rawgeti(L, LUA_REGISTRYINDEX, continentDataRefs[ai->instance->GetId()]);
+    else
+        lua_rawgeti(L, LUA_REGISTRYINDEX, instanceDataRefs[ai->instance->GetInstanceId()]);
+
     ASSERT(lua_istable(L, -1));
 
     // Set the "map" field to a fresh reference of the instance Map.
