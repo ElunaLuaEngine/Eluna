@@ -12,7 +12,7 @@ namespace LuaPlayer
     /* BOOLEAN */
 #if (!defined(TBC) && !defined(CLASSIC))
     /**
-     * Returns 'true' if the [Player] can Titan Grip, 'false' otherwise
+     * Returns 'true' if the [Player] can Titan Grip, 'false' otherwise.
      *
      * @return bool canTitanGrip
      */
@@ -23,7 +23,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has a talent by ID in specified talent tree, 'false' otherwise
+     * Returns 'true' if the [Player] has a talent by ID in specified talent tree, 'false' otherwise.
      *
      * @param uint32 talentId : talent ID to check
      * @param uint8 spec : specified talent tree
@@ -40,7 +40,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has completed the specified achievement, 'false' otherwise
+     * Returns 'true' if the [Player] has completed the specified achievement, 'false' otherwise.
      *
      * @param uint32 achievementId
      * @return bool hasAchieved
@@ -58,7 +58,7 @@ namespace LuaPlayer
 #endif
 
     /**
-     * Returns 'true' if the [Player] has an active [Quest] by specific ID, 'false' otherwise
+     * Returns 'true' if the [Player] has an active [Quest] by specific ID, 'false' otherwise.
      *
      * @param uint32 questId
      * @return bool hasQuest
@@ -72,7 +72,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has a skill by specific ID, 'false' otherwise
+     * Returns 'true' if the [Player] has a skill by specific ID, 'false' otherwise.
      *
      * @param uint32 skill
      * @return bool hasSkill
@@ -86,7 +86,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has a [Spell] by specific ID, 'false' otherwise
+     * Returns 'true' if the [Player] has a [Spell] by specific ID, 'false' otherwise.
      *
      * @param uint32 spellId
      * @return bool hasSpell
@@ -117,7 +117,7 @@ namespace LuaPlayer
 
 #ifndef CLASSIC
     /**
-     * Returns 'true' if the [Player] has a title by specific ID, 'false' otherwise
+     * Returns 'true' if the [Player] has a title by specific ID, 'false' otherwise.
      *
      * @param uint32 titleId
      * @return bool hasTitle
@@ -131,7 +131,15 @@ namespace LuaPlayer
         return 1;
     }
 #endif
-
+    
+    /**
+     * Returns 'true' if the [Player] has the given amount of item entry specified, 'false' otherwise.
+     *
+     * @param uint32 itemId : entry of the item
+     * @param uint32 count = 1 : amount of items the player needs should have
+     * @param bool check_bank = false : determines if the item can be in player bank
+     * @return bool hasItem
+     */
     int HasItem(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 itemId = Eluna::CHECKVAL<uint32>(L, 2);
@@ -140,7 +148,13 @@ namespace LuaPlayer
         Eluna::Push(L, player->HasItemCount(itemId, count, check_bank));
         return 1;
     }
-
+    
+    /**
+     * Returns 'true' if the [Player] has a quest for the item entry specified, 'false' otherwise.
+     *
+     * @param uint32 entry : entry of the item
+     * @return bool hasQuest
+     */
     int HasQuestForItem(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
@@ -148,26 +162,35 @@ namespace LuaPlayer
         Eluna::Push(L, player->HasQuestForItem(entry));
         return 1;
     }
-
+    
+    /**
+     * Returns 'true' if the [Player] can use the item or item entry specified, 'false' otherwise.
+     *
+     * @proto canUse = (item)
+     * @proto canUse = (entry)
+     * @param [Item] item : an instance of an item
+     * @param uint32 entry : entry of the item
+     * @return bool canUse
+     */
     int CanUseItem(Eluna* /*E*/, lua_State* L, Player* player)
     {
         Item* item = Eluna::CHECKOBJ<Item>(L, 2, false);
         if (item)
-            Eluna::Push(L, player->CanUseItem(item));
+            Eluna::Push(L, player->CanUseItem(item) == EQUIP_ERR_OK);
         else
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
             const ItemTemplate* temp = eObjectMgr->GetItemTemplate(entry);
             if (temp)
-                Eluna::Push(L, player->CanUseItem(temp));
+                Eluna::Push(L, player->CanUseItem(temp) == EQUIP_ERR_OK);
             else
-                Eluna::Push(L, EQUIP_ERR_ITEM_NOT_FOUND);
+                Eluna::Push(L, false);
         }
         return 1;
     }
 
     /**
-     * Returns 'true' if the [Spell] specified by ID is currently on cooldown for the [Player], 'false' otherwise
+     * Returns 'true' if the [Spell] specified by ID is currently on cooldown for the [Player], 'false' otherwise.
      *
      * @param uint32 spellId
      * @return bool hasSpellCooldown
@@ -181,7 +204,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] can share [Quest] specified by ID, 'false' otherwise
+     * Returns 'true' if the [Player] can share [Quest] specified by ID, 'false' otherwise.
      *
      * @param uint32 entryId
      * @return bool hasSpellCooldown
@@ -195,7 +218,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] can currently communicate through chat, 'false' otherwise
+     * Returns 'true' if the [Player] can currently communicate through chat, 'false' otherwise.
      *
      * @return bool canSpeak
      */
@@ -206,7 +229,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has permission to uninvite others from the current group, 'false' otherwise
+     * Returns 'true' if the [Player] has permission to uninvite others from the current group, 'false' otherwise.
      *
      * @return bool canUninviteFromGroup
      */
@@ -218,7 +241,7 @@ namespace LuaPlayer
 
 #ifndef CLASSIC
     /**
-     * Returns 'true' if the [Player] can fly, 'false' otherwise
+     * Returns 'true' if the [Player] can fly, 'false' otherwise.
      *
      * @return bool canFly
      */
@@ -252,7 +275,7 @@ namespace LuaPlayer
 #endif
 
     /**
-     * Returns 'true' if the [Player] is currently in water, 'false' otherwise
+     * Returns 'true' if the [Player] is currently in water, 'false' otherwise.
      *
      * @return bool isInWater
      */
@@ -263,7 +286,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently moving, 'false' otherwise
+     * Returns 'true' if the [Player] is currently moving, 'false' otherwise.
      *
      * @return bool isMoving
      */
@@ -304,7 +327,7 @@ namespace LuaPlayer
 
 #ifndef CLASSIC
     /**
-     * Returns 'true' if the [Player] is currently flying, 'false' otherwise
+     * Returns 'true' if the [Player] is currently flying, 'false' otherwise.
      *
      * @return bool isFlying
      */
@@ -316,7 +339,7 @@ namespace LuaPlayer
 #endif
 
     /**
-     * Returns 'true' if the [Player] is in a [Group], 'false' otherwise
+     * Returns 'true' if the [Player] is in a [Group], 'false' otherwise.
      *
      * @return bool isInGroup
      */
@@ -327,7 +350,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is in a [Guild], 'false' otherwise
+     * Returns 'true' if the [Player] is in a [Guild], 'false' otherwise.
      *
      * @return bool isInGuild
      */
@@ -338,7 +361,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is a Game Master, 'false' otherwise
+     * Returns 'true' if the [Player] is a Game Master, 'false' otherwise.
      *
      * Note: This is only true when GM tag is activated! For alternative see [Player:GetGMRank]
      *
@@ -356,7 +379,7 @@ namespace LuaPlayer
 
 #ifndef CLASSIC
     /**
-     * Returns 'true' if the [Player] is in an arena team specified by type, 'false' otherwise
+     * Returns 'true' if the [Player] is in an arena team specified by type, 'false' otherwise.
      *
      * @param uint32 type
      * @return bool isInArenaTeam
@@ -373,7 +396,7 @@ namespace LuaPlayer
 #endif
 
     /**
-     * Returns 'true' if the [Player] is a part of the Horde faction, 'false' otherwise
+     * Returns 'true' if the [Player] is a part of the Horde faction, 'false' otherwise.
      *
      * @return bool isHorde
      */
@@ -384,9 +407,9 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is a part of the Alliance faction, 'false' otherwise
+     * Returns 'true' if the [Player] is a part of the Alliance faction, 'false' otherwise.
      *
-     * @return bool isHorde
+     * @return bool isAlliance
      */
     int IsAlliance(Eluna* /*E*/, lua_State* L, Player* player)
     {
@@ -395,7 +418,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is 'Do Not Disturb' flagged, 'false' otherwise
+     * Returns 'true' if the [Player] is 'Do Not Disturb' flagged, 'false' otherwise.
      *
      * @return bool isDND
      */
@@ -406,7 +429,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is 'Away From Keyboard' flagged, 'false' otherwise
+     * Returns 'true' if the [Player] is 'Away From Keyboard' flagged, 'false' otherwise.
      *
      * @return bool isAFK
      */
@@ -417,7 +440,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently falling, 'false' otherwise
+     * Returns 'true' if the [Player] is currently falling, 'false' otherwise.
      *
      * @return bool isFalling
      */
@@ -435,7 +458,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently in the same raid as another [Player] by object, 'false' otherwise
+     * Returns 'true' if the [Player] is currently in the same raid as another [Player] by object, 'false' otherwise.
      *
      * @param [Player] player
      * @return bool isInSameRaidWith
@@ -448,7 +471,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently in the same [Group] as another [Player] by object, 'false' otherwise
+     * Returns 'true' if the [Player] is currently in the same [Group] as another [Player] by object, 'false' otherwise.
      *
      * @param [Player] player
      * @return bool isInSameGroupWith
@@ -461,7 +484,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is eligible for Honor or XP gain by [Unit] specified, 'false' otherwise
+     * Returns 'true' if the [Player] is eligible for Honor or XP gain by [Unit] specified, 'false' otherwise.
      *
      * @param [Unit] unit
      * @return bool isHonorOrXPTarget
@@ -475,7 +498,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] can see anoter [Player] specified by object, 'false' otherwise
+     * Returns 'true' if the [Player] can see anoter [Player] specified by object, 'false' otherwise.
      *
      * @param [Player] player
      * @return bool isVisibleForPlayer
@@ -495,7 +518,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has taxi cheat activated, 'false' otherwise
+     * Returns 'true' if the [Player] has taxi cheat activated, 'false' otherwise.
      *
      * @return bool isTaxiCheater
      */
@@ -516,7 +539,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is accepting whispers, 'false' otherwise
+     * Returns 'true' if the [Player] is accepting whispers, 'false' otherwise.
      *
      * @return bool isAcceptingWhispers
      */
@@ -527,7 +550,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently rested, 'false' otherwise
+     * Returns 'true' if the [Player] is currently rested, 'false' otherwise.
      *
      * @return bool isRested
      */
@@ -538,7 +561,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently in a [BattleGround] queue, 'false' otherwise
+     * Returns 'true' if the [Player] is currently in a [BattleGround] queue, 'false' otherwise.
      *
      * @return bool inBattlegroundQueue
      */
@@ -554,7 +577,7 @@ namespace LuaPlayer
 
 #ifndef CLASSIC
     /**
-     * Returns 'true' if the [Player] is currently in an arena, 'false' otherwise
+     * Returns 'true' if the [Player] is currently in an arena, 'false' otherwise.
      *
      * @return bool inArena
      */
@@ -566,7 +589,7 @@ namespace LuaPlayer
 #endif
 
     /**
-     * Returns 'true' if the [Player] is currently in a [BattleGround], 'false' otherwise
+     * Returns 'true' if the [Player] is currently in a [BattleGround], 'false' otherwise.
      *
      * @return bool inBattleGround
      */
@@ -581,7 +604,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] can block incomming attacks, 'false' otherwise
+     * Returns 'true' if the [Player] can block incomming attacks, 'false' otherwise.
      *
      * @return bool canBlock
      */
@@ -592,7 +615,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] can parry incomming attacks, 'false' otherwise
+     * Returns 'true' if the [Player] can parry incomming attacks, 'false' otherwise.
      *
      * @return bool canParry
      */
@@ -687,6 +710,11 @@ namespace LuaPlayer
 #endif
 
 #ifdef WOTLK
+    /**
+     * Returns the normal phase of the player instead of the actual phase possibly containing GM phase
+     *
+     * @return uint32 phasemask
+     */
     int GetPhaseMaskForSpawn(Eluna* /*E*/, lua_State* L, Player* player)
     {
         Eluna::Push(L, player->GetPhaseMaskForSpawn());
@@ -1086,7 +1114,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player]s [Quest] specified by entry ID has been rewarded, 'false' otherwise
+     * Returns 'true' if the [Player]s [Quest] specified by entry ID has been rewarded, 'false' otherwise.
      *
      * @param uint32 questId
      * @return bool questRewardStatus
@@ -1249,7 +1277,12 @@ namespace LuaPlayer
         Eluna::Push(L, player->GetItemByEntry(entry));
         return 1;
     }
-
+    
+    /**
+     * Returns the database textID of the [WorldObject]'s gossip header text for the [Player]
+     *
+     * @return uint32 textId : key to npc_text database table
+     */
     int GetGossipTextId(Eluna* /*E*/, lua_State* L, Player* player)
     {
         WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(L, 2);
@@ -1315,12 +1348,19 @@ namespace LuaPlayer
         Eluna::Push(L, player->GetTeamId());
         return 1;
     }
-
+    
+    /**
+     * Returns amount of the specified [Item] the [Player] has.
+     *
+     * @param uint32 entry : entry of the item
+     * @param bool checkinBank = false : also counts the items in player's bank if true
+     * @return uint32 itemamount
+     */
     int GetItemCount(Eluna* /*E*/, lua_State* L, Player* player)
     {
-        int id = Eluna::CHECKVAL<int>(L, 2);
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
         bool checkinBank = Eluna::CHECKVAL<bool>(L, 3, false);
-        Eluna::Push(L, player->GetItemCount(id, checkinBank));
+        Eluna::Push(L, player->GetItemCount(entry, checkinBank));
         return 1;
     }
 
@@ -1472,6 +1512,12 @@ namespace LuaPlayer
     }*/
 
     /* SETTERS */
+    
+    /**
+     * Locks the player controls and disallows all movement and casting.
+     *
+     * @param bool apply = true : lock if true and unlock if false
+     */
     int SetPlayerLock(Eluna* /*E*/, lua_State* L, Player* player)
     {
         bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
@@ -1927,7 +1973,12 @@ namespace LuaPlayer
         return 0;
     }
 #endif
-
+    
+    /**
+     * Shows the mailbox window to the player from specified guid.
+     *
+     * @param uint64 guid = playerguid : guid of the mailbox window sender
+     */
     int SendShowMailBox(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2, player->GET_GUID());
@@ -1980,7 +2031,18 @@ namespace LuaPlayer
         player->SaveToDB();
         return 0;
     }
-
+    
+    /**
+     * Sends a summon request popup for the given [Player] to the given location
+     *
+     * @param [Player] target : player to summon
+     * @param uint32 map
+     * @param float x
+     * @param float y
+     * @param float z
+     * @param uint32 zoneId
+     * @param uint32 delay = 2*MINUTE : time for the popup to be available for the target in milliseconds
+     */
     int SummonPlayer(Eluna* /*E*/, lua_State* L, Player* player)
     {
         Player* target = Eluna::CHECKOBJ<Player>(L, 2);
@@ -1988,8 +2050,8 @@ namespace LuaPlayer
         float x = Eluna::CHECKVAL<float>(L, 4);
         float y = Eluna::CHECKVAL<float>(L, 5);
         float z = Eluna::CHECKVAL<float>(L, 6);
-        float zoneId = Eluna::CHECKVAL<float>(L, 7);
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 8, 0);
+        uint32 zoneId = Eluna::CHECKVAL<uint32>(L, 7);
+        uint32 delay = Eluna::CHECKVAL<uint32>(L, 8, MAX_PLAYER_SUMMON_DELAY * IN_MILLISECONDS);
         if (!MapManager::IsValidMapCoord(map, x, y, z))
             return 0;
 
@@ -1997,7 +2059,7 @@ namespace LuaPlayer
         WorldPacket data(SMSG_SUMMON_REQUEST, 8 + 4 + 4);
         data << uint64(player->GetGUIDLow());
         data << uint32(zoneId);
-        data << uint32(delay ? delay* IN_MILLISECONDS : MAX_PLAYER_SUMMON_DELAY * IN_MILLISECONDS);
+        data << uint32(delay);
         target->GetSession()->SendPacket(&data);
         return 0;
     }
@@ -2097,7 +2159,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Sends a bank window to the [Player] from the [WorldObject] specified
+     * Sends a bank window to the [Player] from the [WorldObject] specified.
      *
      * @param [WorldObject] sender
      */
@@ -2108,7 +2170,12 @@ namespace LuaPlayer
         player->GetSession()->SendShowBank(obj->GET_GUID());
         return 0;
     }
-
+    
+    /**
+     * Sends a vendor window to the [Player] from the [WorldObject] specified.
+     *
+     * @param [WorldObject] sender
+     */
     int SendListInventory(Eluna* /*E*/, lua_State* L, Player* player)
     {
         WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(L, 2);
@@ -2562,7 +2629,17 @@ namespace LuaPlayer
         player->ToggleAFK();
         return 0;
     }
-
+    
+    /**
+     * Equips the given item or item entry to the given slot. Returns the equipped item or nil.
+     *
+     * @proto equippedItem = (item, slot)
+     * @proto equippedItem = (entry, slot)
+     * @param [Item] item : item to equip
+     * @param uint32 entry : entry of the item to equip
+     * @param uint32 slot : equipment slot to equip the item to
+     * @return [Item] equippedItem : item or nil if equipping failed
+     */
     int EquipItem(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint16 dest = 0;
@@ -2599,9 +2676,20 @@ namespace LuaPlayer
         }
 
         Eluna::Push(L, player->EquipItem(dest, item, true));
+        player->AutoUnequipOffhandIfNeed();
         return 1;
     }
-
+    
+    /**
+     * Returns true if the player can equip the given [Item] or item entry to the given slot, false otherwise.
+     *
+     * @proto canEquip = (item, slot)
+     * @proto canEquip = (entry, slot)
+     * @param [Item] item : item to equip
+     * @param uint32 entry : entry of the item to equip
+     * @param uint32 slot : equipment slot to test
+     * @return bool canEquip
+     */
     int CanEquipItem(Eluna* /*E*/, lua_State* L, Player* player)
     {
         Item* item = Eluna::CHECKOBJ<Item>(L, 2, false);
@@ -2748,11 +2836,18 @@ namespace LuaPlayer
         player->SetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS, currentKills + val);
         return 0;
     }
-
+    
+    /**
+     * Adds the given amount of the specified item entry to the player.
+     *
+     * @param uint32 entry : entry of the item to add
+     * @param uint32 itemCount = 1 : amount of the item to add
+     * @return [Item] item : the item that was added or nil
+     */
     int AddItem(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 itemId = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 itemCount = Eluna::CHECKVAL<uint32>(L, 3);
+        uint32 itemCount = Eluna::CHECKVAL<uint32>(L, 3, 1);
 
 #ifndef TRINITY
         Eluna::Push(L, player->StoreNewItemInInventorySlot(itemId, itemCount));
@@ -2773,7 +2868,17 @@ namespace LuaPlayer
 #endif
         return 1;
     }
-
+    
+    /**
+     * Removes the given amount of the specified [Item] from the player.
+     *
+     * @proto item = (item, itemCount)
+     * @proto item = (entry, itemCount)
+     * @param [Item] item : item to remove
+     * @param uint32 entry : entry of the item to remove
+     * @param uint32 itemCount = 1 : amount of the item to add
+     * @return [Item] item : the item that was added or nil
+     */
     int RemoveItem(Eluna* /*E*/, lua_State* L, Player* player)
     {
         Item* item = Eluna::CHECKOBJ<Item>(L, 2, false);
@@ -2916,13 +3021,6 @@ namespace LuaPlayer
         return 0;
     }
 
-    int SendVendorWindow(Eluna* /*E*/, lua_State* L, Player* player)
-    {
-        Unit* sendTo = Eluna::CHECKOBJ<Unit>(L, 2);
-        player->GetSession()->SendListInventory(sendTo->GET_GUID());
-        return 0;
-    }
-
     /**
      * Kicks the [Player] from the server
      */
@@ -2935,7 +3033,7 @@ namespace LuaPlayer
     /**
      * Adds or subtracts from the [Player]s money in copper
      *
-     * @param int32 copperAmt
+     * @param int32 copperAmt : negative to remove, positive to add
      */
     int ModifyMoney(Eluna* /*E*/, lua_State* L, Player* player)
     {
@@ -2978,7 +3076,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Resurrects the [Player]
+     * Resurrects the [Player].
      *
      * @param float healthPercent = 100.0f
      * @param bool ressSickness = false
@@ -2992,6 +3090,24 @@ namespace LuaPlayer
         return 0;
     }
 
+    /**
+     * Adds a new item to the gossip menu shown to the [Player] on next call to [Player:GossipSendMenu].
+     *
+     * sender and intid are numbers which are passed directly to the gossip selection handler. Internally they are partly used for the database gossip handling.  
+     * code specifies whether to show a box to insert text to. The player inserted text is passed to the gossip selection handler.  
+     * money specifies an amount of money the player needs to have to click the option. An error message is shown if the player doesn't have enough money.  
+     * Note that the money amount is only checked client side and is not removed from the player either. You will need to check again in your code before taking action.
+     *
+     * See also: [Player:GossipSendMenu], [Player:GossipAddQuests], [Player:GossipComplete], [Player:GossipClearMenu]
+     *
+     * @param uint32 icon : number that specifies used icon
+     * @param string msg : label on the gossip item
+     * @param uint32 sender : number passed to gossip handlers
+     * @param uint32 intid : number passed to gossip handlers
+     * @param uint32 code = false : show text input on click if true
+     * @param string popup = nil : if non empty string, a popup with given text shown on click
+     * @param uint32 money = 0 : required money in copper
+     */
     int GossipMenuAddItem(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 _icon = Eluna::CHECKVAL<uint32>(L, 2);
@@ -3014,7 +3130,9 @@ namespace LuaPlayer
     }
 
     /**
-     * Closes the [Player]s currently open Gossip Menu
+     * Closes the [Player]s currently open Gossip Menu.
+     *
+     * See also: [Player:GossipMenuAddItem], [Player:GossipAddQuests], [Player:GossipSendMenu], [Player:GossipClearMenu]
      */
     int GossipComplete(Eluna* /*E*/, lua_State* /*L*/, Player* player)
     {
@@ -3026,23 +3144,34 @@ namespace LuaPlayer
         return 0;
     }
 
+    /**
+     * Sends the current gossip items of the player to him as a gossip menu with header text from the given textId.
+     *
+     * See also: [Player:GossipMenuAddItem], [Player:GossipAddQuests], [Player:GossipComplete], [Player:GossipClearMenu]
+     *
+     * @param uint32 npc_text : entry ID of a header text in npc_text database table, common default is 100
+     * @param [Object] sender : object acting as the source of the sent gossip menu
+     */
     int GossipSendMenu(Eluna* /*E*/, lua_State* L, Player* player)
     {
-        uint32 _npcText = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 npc_text = Eluna::CHECKVAL<uint32>(L, 2);
         Object* sender = Eluna::CHECKOBJ<Object>(L, 3);
         if (sender->GetTypeId() == TYPEID_PLAYER)
         {
             uint32 menu_id = Eluna::CHECKVAL<uint32>(L, 4);
             player->PlayerTalkClass->GetGossipMenu().SetMenuId(menu_id);
         }
-        player->PlayerTalkClass->SendGossipMenu(_npcText, sender->GET_GUID());
+        player->PlayerTalkClass->SendGossipMenu(npc_text, sender->GET_GUID());
         return 0;
     }
 
     /**
-     * Clears the [Player]s currently open Gossip Menu
+     * Clears the [Player]s current gossip item list.
+     *
+     * See also: [Player:GossipMenuAddItem], [Player:GossipSendMenu], [Player:GossipAddQuests], [Player:GossipComplete]
      * 
-     *     Note: This is ONLY needed when a [Player] is the sender of a Gossip Menu
+     *     Note: This is needed when you show a gossip menu without using gossip hello or select hooks which do this automatically.
+     *     Usually this is needed when using [Player] is the sender of a Gossip Menu.
      */
     int GossipClearMenu(Eluna* /*E*/, lua_State* /*L*/, Player* player)
     {
@@ -3061,6 +3190,11 @@ namespace LuaPlayer
         return 0;
     }
 
+    /**
+     * Attempts to start the taxi/flying to the given pathID
+     *
+     * @param uint32 pathId : pathId from DBC or [Global:AddTaxiPath]
+     */
     int StartTaxi(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 pathId = Eluna::CHECKVAL<uint32>(L, 2);
@@ -3089,6 +3223,11 @@ namespace LuaPlayer
         return 0;
     }
 
+    /**
+     * Adds the gossip items to the [Player]'s gossip for the quests the given [WorldObject] can offer to the player.
+     *
+     * @param [WorldObject] source : a questgiver with quests
+     */
     int GossipAddQuests(Eluna* /*E*/, lua_State* L, Player* player)
     {
         WorldObject* source = Eluna::CHECKOBJ<WorldObject>(L, 2);
@@ -3106,16 +3245,22 @@ namespace LuaPlayer
         return 0;
     }
 
+    /**
+     * Shows a quest accepting window to the [Player] for the given quest.
+     *
+     * @param uint32 questId : entry of a quest
+     * @param bool activateAccept = true : auto finish the quest
+     */
     int SendQuestTemplate(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
-        bool activeAccept = Eluna::CHECKVAL<bool>(L, 3, true);
+        bool activateAccept = Eluna::CHECKVAL<bool>(L, 3, true);
 
         Quest const* quest = eObjectMgr->GetQuestTemplate(questId);
         if (!quest)
             return 0;
 
-        player->PlayerTalkClass->SendQuestGiverQuestDetails(quest, player->GET_GUID(), activeAccept);
+        player->PlayerTalkClass->SendQuestGiverQuestDetails(quest, player->GET_GUID(), activateAccept);
         return 0;
     }
 
