@@ -138,10 +138,10 @@ namespace LuaGameObject
      */
     int GetLootRecipientGroup(Eluna* /*E*/, lua_State* L, GameObject* go)
     {
-#ifdef MANGOS
-        Eluna::Push(L, go->GetGroupLootRecipient());
-#else
+#ifdef TRINITY
         Eluna::Push(L, go->GetLootRecipientGroup());
+#else
+        Eluna::Push(L, go->GetGroupLootRecipient());
 #endif
         return 1;
     }
