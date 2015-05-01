@@ -131,7 +131,7 @@ void ElunaUtil::EncodeData(const unsigned char* data, size_t input_length, std::
 
 unsigned char* ElunaUtil::DecodeData(const char *data, size_t *output_length)
 {
-    if (decoding_table == NULL)
+    if (decoding_table['B'] == 0)
         build_decoding_table();
 
     size_t input_length = strlen(data);
