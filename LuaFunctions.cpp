@@ -576,6 +576,7 @@ ElunaRegister<Player> PlayerMethods[] =
 #ifndef CLASSIC
     { "IsInArenaTeam", &LuaPlayer::IsInArenaTeam },                                       // :IsInArenaTeam(type) - type : 0 = 2v2, 1 = 3v3, 2 = 5v5
 #endif
+    { "CanCompleteQuest", &LuaPlayer::CanCompleteQuest },
     { "CanEquipItem", &LuaPlayer::CanEquipItem },                                         // :CanEquipItem(entry/item, slot) - Returns true if the player can equip given item/item entry
     { "IsFalling", &LuaPlayer::IsFalling },                                               // :IsFalling() - Returns true if the unit is falling
     { "ToggleAFK", &LuaPlayer::ToggleAFK },                                               // :ToggleAFK() - Toggles AFK state for player
@@ -661,7 +662,6 @@ ElunaRegister<Player> PlayerMethods[] =
     { "ResetSpellCooldown", &LuaPlayer::ResetSpellCooldown },                             // :ResetSpellCooldown(spellId, update(bool~optional)) - Resets cooldown of the specified spellId. If update is true, it will send WorldPacket SMSG_CLEAR_COOLDOWN to the player, else it will just clear the spellId from m_spellCooldowns. This is true by default
     { "ResetTypeCooldowns", &LuaPlayer::ResetTypeCooldowns },                             // :ResetTypeCooldowns(category, update(bool~optional)) - Resets all cooldowns for the spell category(type). If update is true, it will send WorldPacket SMSG_CLEAR_COOLDOWN to the player, else it will just clear the spellId from m_spellCooldowns. This is true by default
     { "ResetAllCooldowns", &LuaPlayer::ResetAllCooldowns },                               // :ResetAllCooldowns() - Resets all spell cooldowns
-    { "GiveLevel", &LuaPlayer::GiveLevel },                                               // :GiveLevel(level) - Gives levels to the player
     { "GiveXP", &LuaPlayer::GiveXP },                                                     // :GiveXP(xp[, victim, pureXP, triggerHook]) - Gives XP to the player. If pure is false, bonuses are count in. If triggerHook is false, GiveXp hook is not triggered.
     // {"RemovePet", &LuaPlayer::RemovePet},                                            // :RemovePet([mode, returnreagent]) - Removes the player's pet. Mode determines if the pet is saved and how
     // {"SummonPet", &LuaPlayer::SummonPet},                                            // :SummonPet(entry, x, y, z, o, petType, despwtime) - Summons a pet for the player
@@ -672,6 +672,8 @@ ElunaRegister<Player> PlayerMethods[] =
     { "CompleteQuest", &LuaPlayer::CompleteQuest },                                       // :CompleteQuest(entry) - Completes a quest by entry
     { "IncompleteQuest", &LuaPlayer::IncompleteQuest },                                   // :IncompleteQuest(entry) - Uncompletes the quest by entry for the player
     { "FailQuest", &LuaPlayer::FailQuest },                                               // :FailQuest(entry) - Player fails the quest entry
+    { "AddQuest", &LuaPlayer::AddQuest },
+    { "RemoveQuest", &LuaPlayer::RemoveQuest },
     // {"RemoveActiveQuest", &LuaPlayer::RemoveActiveQuest},                            // :RemoveActiveQuest(entry) - Removes an active quest
     // {"RemoveRewardedQuest", &LuaPlayer::RemoveRewardedQuest},                        // :RemoveRewardedQuest(entry) - Removes a rewarded quest
     { "AreaExploredOrEventHappens", &LuaPlayer::AreaExploredOrEventHappens },             // :AreaExploredOrEventHappens(questId) - Satisfies an area or event requrement for the questId
@@ -721,7 +723,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SendTabardVendorActivate", &LuaPlayer::SendTabardVendorActivate },                 // :SendTabardVendorActivate(WorldObject) - Sends tabard vendor window from object to player
     { "SendSpiritResurrect", &LuaPlayer::SendSpiritResurrect },                           // :SendSpiritResurrect() - Sends resurrect window to player
     { "SendTaxiMenu", &LuaPlayer::SendTaxiMenu },                                         // :SendTaxiMenu(creature) - Sends flight window to player from creature
-    { "RewardQuest", &LuaPlayer::RewardQuest },                                           // :RewardQuest(entry) - Gives quest rewards for the player
+    { "RewardQuest", &LuaPlayer::RewardQuest },
     { "SendAuctionMenu", &LuaPlayer::SendAuctionMenu },                                   // :SendAuctionMenu(unit) - Sends auction window to player. Auction house is sent by object.
     { "SendShowMailBox", &LuaPlayer::SendShowMailBox },                                   // :SendShowMailBox([mailboxguid]) - Sends the mail window to player from the mailbox gameobject. The guid is required on patches below wotlk.
     { "StartTaxi", &LuaPlayer::StartTaxi },                                               // :StartTaxi(pathId) - player starts the given flight path

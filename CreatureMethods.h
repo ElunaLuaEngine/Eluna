@@ -634,29 +634,27 @@ namespace LuaCreature
      * Returns a target from the [Creature]'s threat list based on the
      *   supplied arguments.
      *
-     * <pre>
-     * enum SelectAggroTarget
-     * {
-     *     SELECT_TARGET_RANDOM = 0,  //Just selects a random target
-     *     SELECT_TARGET_TOPAGGRO,    //Selects targets from top aggro to bottom
-     *     SELECT_TARGET_BOTTOMAGGRO, //Selects targets from bottom aggro to top
-     *     SELECT_TARGET_NEAREST,
-     *     SELECT_TARGET_FARTHEST
-     * };
-     * </pre>
+     *     enum SelectAggroTarget
+     *     {
+     *         SELECT_TARGET_RANDOM = 0,  //Just selects a random target
+     *         SELECT_TARGET_TOPAGGRO,    //Selects targets from top aggro to bottom
+     *         SELECT_TARGET_BOTTOMAGGRO, //Selects targets from bottom aggro to top
+     *         SELECT_TARGET_NEAREST,
+     *         SELECT_TARGET_FARTHEST
+     *     };
      *
      * For example, if you wanted to select the third-farthest [Player]
      *   within 50 yards that has the [Aura] "Corrupted Blood" (ID 24328),
      *   you could use this function like so:
      *
-     *    target = creature:GetAITarget(4, true, 3, 50, 24328)
+     *     target = creature:GetAITarget(4, true, 3, 50, 24328)
      *
-     * @param SelectAggroTarget targetType : how the threat list should be sorted
+     * @param [SelectAggroTarget] targetType : how the threat list should be sorted
      * @param bool playerOnly = false : if `true`, skips targets that aren't [Player]s
      * @param uint32 position = 0 : used as an offset into the threat list. If `targetType` is random, used as the number of players from top of aggro to choose from
      * @param float distance = 0.0 : if positive, the maximum distance for the target. If negative, the minimum distance
      * @param int32 aura = 0 : if positive, the target must have this [Aura]. If negative, the the target must not have this Aura
-     * @return Unit target : the target, or `nil`
+     * @return [Unit] target : the target, or `nil`
      */
     int GetAITarget(Eluna* /*E*/, lua_State* L, Creature* creature)
     {

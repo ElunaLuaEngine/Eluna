@@ -1431,8 +1431,23 @@ namespace LuaUnit
      */
     int SetLevel(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
-        uint8 newLevel = Eluna::CHECKVAL<uint8>(L, 2);
-        unit->SetLevel(newLevel);
+        uint8 newlevel = Eluna::CHECKVAL<uint8>(L, 2);
+
+        if (newlevel < 1)
+            return 0;
+
+        if (newlevel > STRONG_MAX_LEVEL)
+            newlevel = STRONG_MAX_LEVEL;
+
+        if (Player* player = unit->ToPlayer())
+        {
+            player->GiveLevel(newlevel);
+            player->InitTalentForLevel();
+            player->SetUInt32Value(PLAYER_XP, 0);
+        }
+        else
+            unit->SetLevel(newlevel);
+
         return 0;
     }
 

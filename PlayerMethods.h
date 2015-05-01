@@ -396,6 +396,20 @@ namespace LuaPlayer
 #endif
 
     /**
+     * Returns 'true' if the [Player] satisfies all requirements to complete the quest entry.
+     *
+     * @param uint32 entry
+     * @return bool canComplete
+     */
+    int CanCompleteQuest(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+
+        Eluna::Push(L, player->CanCompleteQuest(entry));
+        return 1;
+    }
+
+    /**
      * Returns 'true' if the [Player] is a part of the Horde faction, 'false' otherwise.
      *
      * @return bool isHorde
@@ -1191,19 +1205,6 @@ namespace LuaPlayer
     {
         Eluna::Push(L, player->GetRestBonus());
         return 1;
-    }
-
-    /**
-     * Give the amount of levels specified to the [Player]
-     *
-     * @param uint8 levelAmt
-     */
-    int GiveLevel(Eluna* /*E*/, lua_State* L, Player* player)
-    {
-        uint8 level = Eluna::CHECKVAL<uint8>(L, 2);
-
-        player->GiveLevel(level);
-        return 0;
     }
 
     int GetChatTag(Eluna* /*E*/, lua_State* L, Player* player)
@@ -2088,13 +2089,22 @@ namespace LuaPlayer
         return 0;
     }
 
+    /**
+     * Rewards the given quest entry for the [Player] if he has completed it.
+     *
+     * @param uint32 entry : quest entry
+     */
     int RewardQuest(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
 
         Quest const* quest = eObjectMgr->GetQuestTemplate(entry);
-        if (quest)
-            player->RewardQuest(quest, 0, player);
+
+        // If player doesn't have the quest
+        if (!quest || player->GetQuestStatus(entry) != QUEST_STATUS_COMPLETE)
+            return 0;
+
+        player->RewardQuest(quest, 0, player);
         return 0;
     }
 
@@ -2511,9 +2521,9 @@ namespace LuaPlayer
     }
 
     /**
-     * Forces a [Player]s [Quest] by entry ID to fail
+     * Sets the given quest entry failed for the [Player].
      *
-     * @param uint32 entryId
+     * @param uint32 entry : quest entry
      */
     int FailQuest(Eluna* /*E*/, lua_State* L, Player* player)
     {
@@ -2524,9 +2534,9 @@ namespace LuaPlayer
     }
 
     /**
-     * Flags a [Player]s [Quest] by entry ID as incomplete
+     * Sets the given quest entry incomplete for the [Player].
      *
-     * @param uint32 entryId
+     * @param uint32 entry : quest entry
      */
     int IncompleteQuest(Eluna* /*E*/, lua_State* L, Player* player)
     {
@@ -2537,15 +2547,226 @@ namespace LuaPlayer
     }
 
     /**
-     * Completes a [Player]s [Quest] by entry ID
+     * Completes the given quest entry for the [Player] and tries to satisfy all quest requirements.
      *
-     * @param uint32 entryId
+     * The player should have the quest to complete it.
+     *
+     * @param uint32 entry : quest entry
      */
     int CompleteQuest(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
 
+        Quest const* quest = eObjectMgr->GetQuestTemplate(entry);
+
+        // If player doesn't have the quest
+        if (!quest || player->GetQuestStatus(entry) == QUEST_STATUS_NONE)
+            return 0;
+
+        // Add quest items for quests that require items
+        for (uint8 x = 0; x < QUEST_ITEM_OBJECTIVES_COUNT; ++x)
+        {
+#ifdef TRINITY
+            uint32 id = quest->RequiredItemId[x];
+            uint32 count = quest->RequiredItemCount[x];
+#else
+            uint32 id = quest->ReqItemId[x];
+            uint32 count = quest->ReqItemCount[x];
+#endif
+
+            if (!id || !count)
+                continue;
+
+            uint32 curItemCount = player->GetItemCount(id, true);
+
+            ItemPosCountVec dest;
+            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, id, count - curItemCount);
+            if (msg == EQUIP_ERR_OK)
+            {
+                Item* item = player->StoreNewItem(dest, id, true);
+                player->SendNewItem(item, count - curItemCount, true, false);
+            }
+        }
+
+        // All creature/GO slain/cast (not required, but otherwise it will display "Creature slain 0/10")
+        for (uint8 i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
+        {
+#ifdef TRINITY
+            int32 creature = quest->RequiredNpcOrGo[i];
+            uint32 creatureCount = quest->RequiredNpcOrGoCount[i];
+
+            if (creature > 0)
+            {
+                if (CreatureTemplate const* creatureInfo = sObjectMgr->GetCreatureTemplate(creature))
+                    for (uint16 z = 0; z < creatureCount; ++z)
+                        player->KilledMonster(creatureInfo, ObjectGuid::Empty);
+            }
+            else if (creature < 0)
+                for (uint16 z = 0; z < creatureCount; ++z)
+                    player->KillCreditGO(creature);
+#else
+            int32 creature = quest->ReqCreatureOrGOId[i];
+            uint32 creaturecount = quest->ReqCreatureOrGOCount[i];
+
+            if (uint32 spell_id = quest->ReqSpell[i])
+            {
+                for (uint16 z = 0; z < creaturecount; ++z)
+                    player->CastedCreatureOrGO(creature, ObjectGuid(), spell_id);
+            }
+            else if (creature > 0)
+            {
+                if (CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(creature))
+                    for (uint16 z = 0; z < creaturecount; ++z)
+                        player->KilledMonster(cInfo, ObjectGuid());
+            }
+            else if (creature < 0)
+            {
+                for (uint16 z = 0; z < creaturecount; ++z)
+                    player->CastedCreatureOrGO(-creature, ObjectGuid(), 0);
+            }
+#endif
+        }
+
+
+        // If the quest requires reputation to complete
+        if (uint32 repFaction = quest->GetRepObjectiveFaction())
+        {
+            uint32 repValue = quest->GetRepObjectiveValue();
+            uint32 curRep = player->GetReputationMgr().GetReputation(repFaction);
+            if (curRep < repValue)
+                if (FactionEntry const* factionEntry = sFactionStore.LookupEntry(repFaction))
+                    player->GetReputationMgr().SetReputation(factionEntry, repValue);
+        }
+
+#ifdef TRINITY
+        // If the quest requires a SECOND reputation to complete
+        if (uint32 repFaction = quest->GetRepObjectiveFaction2())
+        {
+            uint32 repValue2 = quest->GetRepObjectiveValue2();
+            uint32 curRep = player->GetReputationMgr().GetReputation(repFaction);
+            if (curRep < repValue2)
+                if (FactionEntry const* factionEntry = sFactionStore.LookupEntry(repFaction))
+                    player->GetReputationMgr().SetReputation(factionEntry, repValue2);
+        }
+#endif
+
+        // If the quest requires money
+        int32 ReqOrRewMoney = quest->GetRewOrReqMoney();
+        if (ReqOrRewMoney < 0)
+            player->ModifyMoney(-ReqOrRewMoney);
+
+#ifdef TRINITY
+        if (sWorld->getBoolConfig(CONFIG_QUEST_ENABLE_QUEST_TRACKER)) // check if Quest Tracker is enabled
+        {
+            // prepare Quest Tracker datas
+            PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_QUEST_TRACK_GM_COMPLETE);
+            stmt->setUInt32(0, quest->GetQuestId());
+            stmt->setUInt32(1, player->GetGUIDLow());
+
+            // add to Quest Tracker
+            CharacterDatabase.Execute(stmt);
+        }
+#endif
+
         player->CompleteQuest(entry);
+        return 0;
+    }
+
+    /**
+     * Tries to add the given quest entry for the [Player].
+     *
+     * @param uint32 entry : quest entry
+     */
+    int AddQuest(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+
+        Quest const* quest = eObjectMgr->GetQuestTemplate(entry);
+
+        if (!quest)
+            return 0;
+
+#ifdef TRINITY
+        // check item starting quest (it can work incorrectly if added without item in inventory)
+        ItemTemplateContainer const* itc = sObjectMgr->GetItemTemplateStore();
+        ItemTemplateContainer::const_iterator result = find_if(itc->begin(), itc->end(), Finder<uint32, ItemTemplate>(entry, &ItemTemplate::StartQuest));
+
+        if (result != itc->end())
+            return 0;
+
+        // ok, normal (creature/GO starting) quest
+        if (player->CanAddQuest(quest, true))
+            player->AddQuestAndCheckCompletion(quest, NULL);
+#else
+        // check item starting quest (it can work incorrectly if added without item in inventory)
+        for (uint32 id = 0; id < sItemStorage.GetMaxEntry(); ++id)
+        {
+            ItemPrototype const* pProto = sItemStorage.LookupEntry<ItemPrototype>(id);
+            if (!pProto)
+                continue;
+
+            if (pProto->StartQuest == entry)
+                return 0;
+        }
+
+        // ok, normal (creature/GO starting) quest
+        if (player->CanAddQuest(quest, true))
+        {
+            player->AddQuest(quest, NULL);
+
+            if (player->CanCompleteQuest(entry))
+                player->CompleteQuest(entry);
+        }
+#endif
+
+        return 0;
+    }
+
+    /**
+     * Tries to add the given quest entry for the [Player].
+     *
+     * @param uint32 entry : quest entry
+     */
+    int RemoveQuest(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+
+        Quest const* quest = eObjectMgr->GetQuestTemplate(entry);
+
+        if (!quest)
+            return 0;
+
+        // remove all quest entries for 'entry' from quest log
+        for (uint8 slot = 0; slot < MAX_QUEST_LOG_SIZE; ++slot)
+        {
+            uint32 logQuest = player->GetQuestSlotQuestId(slot);
+            if (logQuest == entry)
+            {
+                player->SetQuestSlot(slot, 0);
+
+                // we ignore unequippable quest items in this case, its' still be equipped
+                player->TakeQuestSourceItem(logQuest, false);
+
+#ifdef TRINITY
+                if (quest->HasFlag(QUEST_FLAGS_FLAGS_PVP))
+                {
+                    player->pvpInfo.IsHostile = player->pvpInfo.IsInHostileArea || player->HasPvPForcingQuest();
+                    player->UpdatePvPState();
+                }
+#endif
+            }
+        }
+
+#ifdef TRINITY
+        player->RemoveActiveQuest(entry, false);
+        player->RemoveRewardedQuest(entry);
+#else
+        // set quest status to not started (will updated in DB at next save)
+        player->SetQuestStatus(entry, QUEST_STATUS_NONE);
+
+        // reset rewarded for restart repeatable quest
+        player->getQuestStatusMap()[entry].m_rewarded = false;
+#endif
         return 0;
     }
 
