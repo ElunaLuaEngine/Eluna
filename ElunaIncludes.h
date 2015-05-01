@@ -49,6 +49,7 @@
 #include "Config/Config.h"
 #include "AggressorAI.h"
 #include "BattleGroundMgr.h"
+#include "SQLStorages.h"
 #endif
 
 #ifdef MANGOS
