@@ -2,7 +2,7 @@
 This page will help you get a cMaNGOS and a TrinityCore source with Eluna.  
 To get a MaNGOS source with Eluna head over to [their forum](http://getmangos.eu/) for the core installation and updating instructions.
 
-If you are having trouble with the installation or updating the core source, head over to our [support forum](../README.md#links).  
+If you are having trouble with the installation or updating the core source, head over to our [support forum](../README.md#documentation).  
 If you are looking for a way to merge eluna with a fork of the official repositories see [merging](MERGING.md).
 
 ###Requirements and dependencies:

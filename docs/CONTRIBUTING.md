@@ -5,7 +5,7 @@ You can contribute to Eluna in various ways:
 * Improve our documentation: [Documentation generation](DOC_GEN.md)
 * Create new features or enhance old features: [Eluna source](https://github.com/ElunaLuaEngine/Eluna)
 * Notify us about your concerns, problems and needs regarding Eluna: [Issue tracker](https://github.com/ElunaLuaEngine/Eluna/issues)
-* Create and improve Lua scripts, systems, releases and guides: [Eluna forum section](https://emudevs.com/forumdisplay.php/15-Eluna-Lua-Engine-%C2%A9)
+* Create and improve Lua scripts, systems, releases and guides: [Eluna forum section](http://emudevs.com/forumdisplay.php/15-Eluna-Lua-Engine-%C2%A9)
 
 ###Features and documentation
 To contribute to the source code and documentation within it, create a pull request for our github repository:

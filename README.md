@@ -6,7 +6,7 @@ Eluna Lua Engine &copy; is a lua engine embedded to World of Warcraft emulators.
 We are currently working hard to make Eluna better from inside and outside.  
 Follow us on [EmuDevs Twitter](https://twitter.com/EmuDevs) page to view the latest news about EmuDevs and about what is going on with Eluna Lua Engine &copy;.
 
-If you are having trouble with installation or scripts, post in [Eluna Support Forum](https://emudevs.com/forumdisplay.php/279-Eluna-Support)  
+If you are having trouble with installation or scripts, post in [Eluna Support Forum](http://emudevs.com/forumdisplay.php/279-Eluna-Support)  
 For documentation and reference see [Eluna API](http://eluna.emudevs.com/) and [Lua reference manual](http://www.lua.org/manual/5.2/).
 
 Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and use of Eluna. Please head over to their forums and show them some love!
@@ -19,9 +19,9 @@ Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and
  * [Lua reference manual](http://www.lua.org/manual/5.2/)
 
 * [Contributing](docs/CONTRIBUTING.md)
-* [Support forum](https://emudevs.com/forumdisplay.php/279-Eluna-Support)
+* [Support forum](http://emudevs.com/forumdisplay.php/279-Eluna-Support)
 * [Example scripts](https://github.com/ElunaLuaEngine/Scripts)
-* [Guides, releases and news](https://emudevs.com/forumdisplay.php/15-Eluna-Lua-Engine-%C2%A9)
+* [Guides, releases and news](http://emudevs.com/forumdisplay.php/15-Eluna-Lua-Engine-%C2%A9)
 
 
 ##Source
