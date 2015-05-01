@@ -2723,7 +2723,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Tries to add the given quest entry for the [Player].
+     * Removes the given quest entry from the [Player].
      *
      * @param uint32 entry : quest entry
      */
