@@ -146,17 +146,14 @@ namespace ElunaUtil
     };
 
     /*
-     * Encodes `data` in Base-64 and store the result in `buffer`.
-     *
-     * If the resulting string's length would be > `max_length`,
-     *   encoding is aborted and `buffer` is left unmodified.
+     * Encodes `data` in Base-64 and store the result in `output`.
      */
-    void EncodeData(const unsigned char* data, size_t input_length, std::string& output, size_t max_length);
+    void EncodeData(const unsigned char* data, size_t input_length, std::string& output);
 
     /*
      * Decodes `data` from Base-64 and returns a pointer to the result, or `NULL` on error.
      *
-     * The returned result buffer must be `free`d by the caller.
+     * The returned result buffer must be `delete[]`ed by the caller.
      */
     unsigned char* DecodeData(const char* data, size_t *output_length);
 };

@@ -1238,7 +1238,7 @@ void Eluna::FreeInstanceId(uint32 instanceId)
     }
 }
 
-void Eluna::PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter)
+void Eluna::PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCounter)
 {
     // Check if the instance data is missing (i.e. someone reloaded Eluna).
     if (!HasInstanceData(ai->instance))

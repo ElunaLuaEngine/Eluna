@@ -27,10 +27,10 @@ void Eluna::OnInitialize(ElunaInstanceAI* ai)
 
     LOCK_ELUNA;
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     CallAllFunctions(MapEventBindings, INSTANCE_EVENT_ON_INITIALIZE, map->GetId());
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     CallAllFunctions(InstanceEventBindings, INSTANCE_EVENT_ON_INITIALIZE, map->GetInstanceId());
 }
 
@@ -44,10 +44,10 @@ void Eluna::OnLoad(ElunaInstanceAI* ai)
 
     LOCK_ELUNA;
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     CallAllFunctions(MapEventBindings, INSTANCE_EVENT_ON_LOAD, map->GetId());
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     CallAllFunctions(InstanceEventBindings, INSTANCE_EVENT_ON_LOAD, map->GetInstanceId());
 }
 
@@ -61,11 +61,11 @@ void Eluna::OnUpdateInstance(ElunaInstanceAI* ai, uint32 diff)
 
     LOCK_ELUNA;
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     Push(diff);
     CallAllFunctions(MapEventBindings, INSTANCE_EVENT_ON_UPDATE, map->GetId());
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     Push(diff);
     CallAllFunctions(InstanceEventBindings, INSTANCE_EVENT_ON_UPDATE, map->GetInstanceId());
 }
@@ -80,11 +80,11 @@ void Eluna::OnPlayerEnterInstance(ElunaInstanceAI* ai, Player* player)
 
     LOCK_ELUNA;
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     Push(player);
     CallAllFunctions(MapEventBindings, INSTANCE_EVENT_ON_PLAYER_ENTER, map->GetId());
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     Push(player);
     CallAllFunctions(InstanceEventBindings, INSTANCE_EVENT_ON_PLAYER_ENTER, map->GetInstanceId());
 }
@@ -99,11 +99,11 @@ void Eluna::OnCreatureCreate(ElunaInstanceAI* ai, Creature* creature)
 
     LOCK_ELUNA;
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     Push(creature);
     CallAllFunctions(MapEventBindings, INSTANCE_EVENT_ON_CREATURE_CREATE, map->GetId());
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     Push(creature);
     CallAllFunctions(InstanceEventBindings, INSTANCE_EVENT_ON_CREATURE_CREATE, map->GetInstanceId());
 }
@@ -118,11 +118,11 @@ void Eluna::OnGameObjectCreate(ElunaInstanceAI* ai, GameObject* gameobject)
 
     LOCK_ELUNA;
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     Push(gameobject);
     CallAllFunctions(MapEventBindings, INSTANCE_EVENT_ON_GAMEOBJECT_CREATE, map->GetId());
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     Push(gameobject);
     CallAllFunctions(InstanceEventBindings, INSTANCE_EVENT_ON_GAMEOBJECT_CREATE, map->GetInstanceId());
 }
@@ -138,10 +138,10 @@ bool Eluna::OnCheckEncounterInProgress(ElunaInstanceAI* ai)
     LOCK_ELUNA;
     bool ret1, ret2;
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     ret1 = CallAllFunctionsBool(MapEventBindings, INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS, map->GetId());
 
-    PushInstanceData(ai);
+    PushInstanceData(L, ai);
     ret2 = CallAllFunctionsBool(InstanceEventBindings, INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS, map->GetInstanceId());
 
     return ret1 || ret2;

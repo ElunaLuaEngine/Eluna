@@ -322,7 +322,7 @@ public:
      *   and loaded with the last known save state, and `Load`/`Initialize`
      *   hooks are called).
      */
-    void PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter = true);
+    void PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCounter = true);
 
     void RunScripts();
     bool ShouldReload() const { return reload; }

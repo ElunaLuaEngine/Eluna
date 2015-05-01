@@ -16,20 +16,6 @@
 
 
 /*
- * When `Save` is called, the string returned is not freed, so it
- *   cannot be dynamically allocated.
- *
- * Instead I just reserve a buffer that's `MAX_SAVE_DATA` big and
- *   return a pointer to it.
- *
- * I have assumed 1 kiB is enough, if you need to save more data
- *   than the buffer can hold, just make this constant larger.
- *   (1 kiB is enough for 100's of fields).
- */
-#define MAX_SAVE_DATA 1024
-
-
-/*
  * This class is a small wrapper around `InstanceData`,
  *   allowing instances to be scripted with Eluna.
  *

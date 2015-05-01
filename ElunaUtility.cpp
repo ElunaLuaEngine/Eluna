@@ -94,27 +94,19 @@ static char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
                                 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
                                 'w', 'x', 'y', 'z', '0', '1', '2', '3',
                                 '4', '5', '6', '7', '8', '9', '+', '/'};
-static char *decoding_table = NULL;
+static char decoding_table[256];
 static int mod_table[] = {0, 2, 1};
 
 static void build_decoding_table()
 {
-    decoding_table = (char*)calloc(256, sizeof(char));
-
     for (int i = 0; i < 64; i++)
         decoding_table[(unsigned char)encoding_table[i]] = i;
 }
 
-void ElunaUtil::EncodeData(const unsigned char* data, size_t input_length, std::string& output, size_t max_length)
+void ElunaUtil::EncodeData(const unsigned char* data, size_t input_length, std::string& output)
 {
     size_t output_length = 4 * ((input_length + 2) / 3);
     char* buffer = new char[output_length];
-
-    if ((output_length + 1) > max_length) // + 1 for the NUL terminator.
-    {
-        ELUNA_LOG_ERROR("Could not save instance data, too much data (%u bytes)", output_length);
-        return;
-    }
 
     for (size_t i = 0, j = 0; i < input_length;)
     {

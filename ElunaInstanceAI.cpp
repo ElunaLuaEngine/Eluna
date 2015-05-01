@@ -112,7 +112,7 @@ const char* ElunaInstanceAI::Save() const
     ElunaInstanceAI* self = const_cast<ElunaInstanceAI*>(this);
 
     lua_pushcfunction(L, mar_encode);
-    sEluna->PushInstanceData(self, false);
+    sEluna->PushInstanceData(L, self, false);
     // Stack: mar_encode, instance_data
 
     if (lua_pcall(L, 1, 1, 0) != 0)
@@ -126,7 +126,7 @@ const char* ElunaInstanceAI::Save() const
     // Stack: data
     size_t dataLength;
     const unsigned char* data = (const unsigned char*)lua_tolstring(L, -1, &dataLength);
-    ElunaUtil::EncodeData(data, dataLength, self->lastSaveData, MAX_SAVE_DATA);
+    ElunaUtil::EncodeData(data, dataLength, self->lastSaveData);
 
     lua_pop(L, 1);
     // Stack: (empty)
@@ -140,7 +140,7 @@ uint32 ElunaInstanceAI::GetData(uint32 key) const
     lua_State* L = sEluna->L;
     // Stack: (empty)
 
-    sEluna->PushInstanceData(const_cast<ElunaInstanceAI*>(this), false);
+    sEluna->PushInstanceData(L, const_cast<ElunaInstanceAI*>(this), false);
     // Stack: instance_data
 
     Eluna::Push(L, key);
@@ -162,7 +162,7 @@ void ElunaInstanceAI::SetData(uint32 key, uint32 value)
     lua_State* L = sEluna->L;
     // Stack: (empty)
 
-    sEluna->PushInstanceData(this, false);
+    sEluna->PushInstanceData(L, this, false);
     // Stack: instance_data
 
     Eluna::Push(L, key);
@@ -182,7 +182,7 @@ uint64 ElunaInstanceAI::GetData64(uint32 key) const
     lua_State* L = sEluna->L;
     // Stack: (empty)
 
-    sEluna->PushInstanceData(const_cast<ElunaInstanceAI*>(this), false);
+    sEluna->PushInstanceData(L, const_cast<ElunaInstanceAI*>(this), false);
     // Stack: instance_data
 
     Eluna::Push(L, key);
@@ -204,7 +204,7 @@ void ElunaInstanceAI::SetData64(uint32 key, uint64 value)
     lua_State* L = sEluna->L;
     // Stack: (empty)
 
-    sEluna->PushInstanceData(this, false);
+    sEluna->PushInstanceData(L, this, false);
     // Stack: instance_data
 
     Eluna::Push(L, key);

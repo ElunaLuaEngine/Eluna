@@ -293,9 +293,9 @@ namespace LuaMap
 #endif
 
         if (iAI)
-        {
-            sEluna->PushInstanceData(iAI, false);
-        }
+            sEluna->PushInstanceData(L, iAI, false);
+        else
+            Eluna::Push(L); // nil
 
         return 1;
     }
@@ -314,9 +314,7 @@ namespace LuaMap
 #endif
 
         if (iAI)
-        {
             iAI->SaveToDB();
-        }
 
         return 0;
     }
