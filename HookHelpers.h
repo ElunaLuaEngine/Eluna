@@ -15,10 +15,10 @@
  *
  * Returns the number of functions that were pushed onto the stack.
  *
- * Use the simpler overloads for just EventBind or EntryBind instead of this overload in hooks.
+ * Use the simpler overloads for just EventBind or IDBind instead of this overload in hooks.
  */
 template<typename T>
-int Eluna::SetupStack(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments)
+int Eluna::SetupStack(EventBind<T>* event_bindings, IDBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments)
 {
     // Ensure that if `entry_bindings` is not NULL, a valid entry is supplied.
     ASSERT(!entry_bindings || (entry_bindings && entry > 0));
@@ -71,7 +71,7 @@ void Eluna::ReplaceArgument(T value, uint8 index)
  * Call all event handlers registered to the event ID/entry combination and ignore any results.
  */
 template<typename T>
-void Eluna::CallAllFunctions(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId)
+void Eluna::CallAllFunctions(EventBind<T>* event_bindings, IDBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId)
 {
     int number_of_arguments = this->push_counter;
     // Stack: [arguments]
@@ -97,7 +97,7 @@ void Eluna::CallAllFunctions(EventBind<T>* event_bindings, EntryBind<T>* entry_b
  *   otherwise returns the opposite of `default_value`.
  */
 template<typename T>
-bool Eluna::CallAllFunctionsBool(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, bool default_value)
+bool Eluna::CallAllFunctionsBool(EventBind<T>* event_bindings, IDBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, bool default_value)
 {
     bool result = default_value;
     // Note: number_of_arguments here does not count in eventID, which is pushed in SetupStack

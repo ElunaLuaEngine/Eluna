@@ -19,6 +19,7 @@
 #include "Weather.h"
 #include "World.h"
 #include "Hooks.h"
+#include "ElunaUtility.h"
 
 extern "C"
 {
@@ -56,6 +57,13 @@ class GameObjectAI;
 #endif
 class Guild;
 class Group;
+#ifdef TRINITY
+class InstanceScript;
+typedef InstanceScript InstanceData;
+#else
+class InstanceData;
+#endif
+class ElunaInstanceAI;
 class Item;
 class Pet;
 class Player;
@@ -91,7 +99,7 @@ class ElunaTemplate;
 template<typename T>
 class EventBind;
 template<typename T>
-class EntryBind;
+class IDBind;
 template<typename T>
 class UniqueBind;
 
@@ -138,6 +146,11 @@ private:
     uint8 push_counter;
     bool enabled;
 
+    // Map from instance ID -> Lua table ref
+    UNORDERED_MAP<uint32, int> instanceDataRefs;
+    // Map from map ID -> Lua table ref
+    UNORDERED_MAP<uint32, int> continentDataRefs;
+
     Eluna();
     ~Eluna();
 
@@ -164,54 +177,71 @@ private:
 
     // Some helpers for hooks to call event handlers.
     // The bodies of the templates are in HookHelpers.h, so if you want to use them you need to #include "HookHelpers.h".
-    template<typename T> int SetupStack(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments);
+    template<typename T> int SetupStack(EventBind<T>* event_bindings, IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments);
                          int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
                          void CleanUpStack(int number_of_arguments);
     template<typename T> void ReplaceArgument(T value, uint8 index);
-    template<typename T> void CallAllFunctions(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId);
-    template<typename T> bool CallAllFunctionsBool(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, bool default_value);
+    template<typename T> void CallAllFunctions(EventBind<T>* event_bindings, IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId);
+    template<typename T> bool CallAllFunctionsBool(EventBind<T>* event_bindings, IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, bool default_value);
 
     // Convenient overloads for Setup. Use these in hooks instead of original.
     template<typename T> int SetupStack(EventBind<T>* event_bindings, T event_id, int number_of_arguments)
     {
-        return SetupStack(event_bindings, (EntryBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0, number_of_arguments);
+        return SetupStack(event_bindings, (IDBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0, number_of_arguments);
     }
-    template<typename T> int SetupStack(EntryBind<T>* entry_bindings, T event_id, uint32 entry, int number_of_arguments)
+    template<typename T> int SetupStack(IDBind<T>* id_bindings, T event_id, uint32 entry, int number_of_arguments)
     {
-        return SetupStack((EventBind<T>*)NULL, entry_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0, number_of_arguments);
+        return SetupStack((EventBind<T>*)NULL, id_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0, number_of_arguments);
     }
-    template<typename T> int SetupStack(EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments)
+    template<typename T> int SetupStack(IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments)
     {
-        return SetupStack((EventBind<T>*)NULL, entry_bindings, guid_bindings, event_id, entry, guid, instanceId, number_of_arguments);
+        return SetupStack((EventBind<T>*)NULL, id_bindings, guid_bindings, event_id, entry, guid, instanceId, number_of_arguments);
     }
 
     // Convenient overloads for CallAllFunctions. Use these in hooks instead of original.
     template<typename T> void CallAllFunctions(EventBind<T>* event_bindings, T event_id)
     {
-        CallAllFunctions(event_bindings, (EntryBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0);
+        CallAllFunctions(event_bindings, (IDBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0);
     }
-    template<typename T> void CallAllFunctions(EntryBind<T>* entry_bindings, T event_id, uint32 entry)
+    template<typename T> void CallAllFunctions(IDBind<T>* id_bindings, T event_id, uint32 entry)
     {
-        CallAllFunctions((EventBind<T>*)NULL, entry_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0);
+        CallAllFunctions((EventBind<T>*)NULL, id_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0);
     }
-    template<typename T> void CallAllFunctions(EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId)
+    template<typename T> void CallAllFunctions(IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId)
     {
-        CallAllFunctions((EventBind<T>*)NULL, entry_bindings, guid_bindings, event_id, entry, guid, instanceId);
+        CallAllFunctions((EventBind<T>*)NULL, id_bindings, guid_bindings, event_id, entry, guid, instanceId);
     }
 
     // Convenient overloads for CallAllFunctionsBool. Use these in hooks instead of original.
     template<typename T> bool CallAllFunctionsBool(EventBind<T>* event_bindings, T event_id, bool default_value = false)
     {
-        return CallAllFunctionsBool(event_bindings, (EntryBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0, default_value);
+        return CallAllFunctionsBool(event_bindings, (IDBind<T>*)NULL, (UniqueBind<T>*)NULL, event_id, 0, 0, 0, default_value);
     }
-    template<typename T> bool CallAllFunctionsBool(EntryBind<T>* entry_bindings, T event_id, uint32 entry, bool default_value = false)
+    template<typename T> bool CallAllFunctionsBool(IDBind<T>* id_bindings, T event_id, uint32 entry, bool default_value = false)
     {
-        return CallAllFunctionsBool((EventBind<T>*)NULL, entry_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0, default_value);
+        return CallAllFunctionsBool((EventBind<T>*)NULL, id_bindings, (UniqueBind<T>*)NULL, event_id, entry, 0, 0, default_value);
     }
-    template<typename T> bool CallAllFunctionsBool(EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, bool default_value = false)
+    template<typename T> bool CallAllFunctionsBool(IDBind<T>* id_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, bool default_value = false)
     {
-        return CallAllFunctionsBool((EventBind<T>*)NULL, entry_bindings, guid_bindings, event_id, entry, guid, instanceId, default_value);
+        return CallAllFunctionsBool((EventBind<T>*)NULL, id_bindings, guid_bindings, event_id, entry, guid, instanceId, default_value);
     }
+
+    // Non-static pushes, to be used in hooks.
+    // These just call the correct static version with the main thread's Lua state.
+    void Push()                                 { Push(L); ++push_counter; }
+    void Push(const long long value)            { Push(L, value); ++push_counter; }
+    void Push(const unsigned long long value)   { Push(L, value); ++push_counter; }
+    void Push(const long value)                 { Push(L, value); ++push_counter; }
+    void Push(const unsigned long value)        { Push(L, value); ++push_counter; }
+    void Push(const int value)                  { Push(L, value); ++push_counter; }
+    void Push(const unsigned int value)         { Push(L, value); ++push_counter; }
+    void Push(const bool value)                 { Push(L, value); ++push_counter; }
+    void Push(const float value)                { Push(L, value); ++push_counter; }
+    void Push(const double value)               { Push(L, value); ++push_counter; }
+    void Push(const std::string& value)         { Push(L, value); ++push_counter; }
+    void Push(const char* value)                { Push(L, value); ++push_counter; }
+    template<typename T>
+    void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
 
 public:
     static Eluna* GEluna;
@@ -226,14 +256,16 @@ public:
     EventBind<Hooks::VehicleEvents>*    VehicleEventBindings;
     EventBind<Hooks::BGEvents>*         BGEventBindings;
 
-    EntryBind<Hooks::PacketEvents>*     PacketEventBindings;
-    EntryBind<Hooks::CreatureEvents>*   CreatureEventBindings;
-    EntryBind<Hooks::GossipEvents>*     CreatureGossipBindings;
-    EntryBind<Hooks::GameObjectEvents>* GameObjectEventBindings;
-    EntryBind<Hooks::GossipEvents>*     GameObjectGossipBindings;
-    EntryBind<Hooks::ItemEvents>*       ItemEventBindings;
-    EntryBind<Hooks::GossipEvents>*     ItemGossipBindings;
-    EntryBind<Hooks::GossipEvents>*     playerGossipBindings;
+    IDBind<Hooks::PacketEvents>*        PacketEventBindings;
+    IDBind<Hooks::CreatureEvents>*      CreatureEventBindings;
+    IDBind<Hooks::GossipEvents>*        CreatureGossipBindings;
+    IDBind<Hooks::GameObjectEvents>*    GameObjectEventBindings;
+    IDBind<Hooks::GossipEvents>*        GameObjectGossipBindings;
+    IDBind<Hooks::ItemEvents>*          ItemEventBindings;
+    IDBind<Hooks::GossipEvents>*        ItemGossipBindings;
+    IDBind<Hooks::GossipEvents>*        playerGossipBindings;
+    IDBind<Hooks::InstanceEvents>*      MapEventBindings;
+    IDBind<Hooks::InstanceEvents>*      InstanceEventBindings;
 
     UniqueBind<Hooks::CreatureEvents>*  CreatureUniqueBindings;
 
@@ -268,28 +300,35 @@ public:
         ElunaTemplate<T>::Push(luastate, ptr);
     }
 
+    /*
+     * Returns `true` if Eluna has instance data for `map`.
+     */
+    bool HasInstanceData(Map const* map);
+
+    /*
+     * Use the top element of the stack as the instance data table for `map`,
+     *   then pops it off the stack.
+     */
+    void CreateInstanceData(Map const* map);
+
+    /*
+     * Retrieve the instance data for the `Map` scripted by `ai` and push it
+     *   onto the stack.
+     *
+     * An `ElunaInstanceAI` is needed because the instance data might
+     *   not exist (i.e. Eluna has been reloaded).
+     *
+     * In that case, the AI is "reloaded" (new instance data table is created
+     *   and loaded with the last known save state, and `Load`/`Initialize`
+     *   hooks are called).
+     */
+    void PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCounter = true);
+
     void RunScripts();
     bool ShouldReload() const { return reload; }
     bool IsEnabled() const { return enabled && IsInitialized(); }
     bool HasLuaState() const { return L != NULL; }
     void Register(uint8 reg, uint32 id, uint64 guid, uint32 instanceId, uint32 evt, int func, uint32 shots);
-
-    // Non-static pushes, to be used in hooks.
-    // These just call the correct static version with the main thread's Lua state.
-    void Push()                                 { Push(L); ++push_counter; }
-    void Push(const long long value)            { Push(L, value); ++push_counter; }
-    void Push(const unsigned long long value)   { Push(L, value); ++push_counter; }
-    void Push(const long value)                 { Push(L, value); ++push_counter; }
-    void Push(const unsigned long value)        { Push(L, value); ++push_counter; }
-    void Push(const int value)                  { Push(L, value); ++push_counter; }
-    void Push(const unsigned int value)         { Push(L, value); ++push_counter; }
-    void Push(const bool value)                 { Push(L, value); ++push_counter; }
-    void Push(const float value)                { Push(L, value); ++push_counter; }
-    void Push(const double value)               { Push(L, value); ++push_counter; }
-    void Push(const std::string& value)         { Push(L, value); ++push_counter; }
-    void Push(const char* value)                { Push(L, value); ++push_counter; }
-    template<typename T>
-    void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* luastate, int narg);
@@ -304,6 +343,8 @@ public:
     static ElunaObject* CHECKTYPE(lua_State* luastate, int narg, const char *tname, bool error = true);
 
     CreatureAI* GetAI(Creature* creature);
+    InstanceData* GetInstanceData(Map* map);
+    void FreeInstanceId(uint32 instanceId);
 
     /* Custom */
     void OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj);
@@ -482,6 +523,15 @@ public:
     void OnRemoveFromWorld(GameObject* gameobject);
     void OnRemove(Creature* creature);
     void OnRemove(GameObject* gameobject);
+
+    /* Instance */
+    void OnInitialize(ElunaInstanceAI* ai);
+    void OnLoad(ElunaInstanceAI* ai);
+    void OnUpdateInstance(ElunaInstanceAI* ai, uint32 diff);
+    void OnPlayerEnterInstance(ElunaInstanceAI* ai, Player* player);
+    void OnCreatureCreate(ElunaInstanceAI* ai, Creature* creature);
+    void OnGameObjectCreate(ElunaInstanceAI* ai, GameObject* gameobject);
+    bool OnCheckEncounterInProgress(ElunaInstanceAI* ai);
 
     /* World */
     void OnOpenStateChange(bool open);

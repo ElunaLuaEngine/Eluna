@@ -499,7 +499,7 @@ namespace LuaGlobalFunctions
 
     static void RegisterEntryHelper(Eluna* E, lua_State* L, int regtype)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 id = Eluna::CHECKVAL<uint32>(L, 1);
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 3, LUA_TFUNCTION);
         uint32 shots = Eluna::CHECKVAL<uint32>(L, 4, 0);
@@ -507,7 +507,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 3);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
-            E->Register(regtype, entry, 0, 0, ev, functionRef, shots);
+            E->Register(regtype, id, 0, 0, ev, functionRef, shots);
         else
             luaL_argerror(L, 3, "unable to make a ref to function");
     }
@@ -877,6 +877,62 @@ namespace LuaGlobalFunctions
     int RegisterItemGossipEvent(Eluna* E, lua_State* L)
     {
         RegisterEntryHelper(E, L, Hooks::REGTYPE_ITEM_GOSSIP);
+        return 0;
+    }
+
+    /**
+     * Registers a [Map] event handler for all instance of a [Map].
+     *
+     * <pre>
+     * enum InstanceEvents
+     * {
+     *     INSTANCE_EVENT_ON_INITIALIZE                    = 1,    // (event, instance_data, map)
+     *     INSTANCE_EVENT_ON_LOAD                          = 2,    // (event, instance_data, map)
+     *     INSTANCE_EVENT_ON_UPDATE                        = 3,    // (event, instance_data, map, diff)
+     *     INSTANCE_EVENT_ON_PLAYER_ENTER                  = 4,    // (event, instance_data, map, player)
+     *     INSTANCE_EVENT_ON_CREATURE_CREATE               = 5,    // (event, instance_data, map, creature)
+     *     INSTANCE_EVENT_ON_GAMEOBJECT_CREATE             = 6,    // (event, instance_data, map, go)
+     *     INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS   = 7,    // (event, instance_data, map)
+     *     INSTANCE_EVENT_COUNT
+     * };
+     * </pre>
+     *
+     * @param uint32 map_id : ID of a [Map]
+     * @param uint32 event : [Map] event ID, refer to MapEvents above
+     * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+     */
+    int RegisterMapEvent(Eluna* E, lua_State* L)
+    {
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_MAP);
+        return 0;
+    }
+
+    /**
+     * Registers a [Map] event handler for one instance of a [Map].
+     *
+     * <pre>
+     * enum InstanceEvents
+     * {
+     *     INSTANCE_EVENT_ON_INITIALIZE                    = 1,    // (event, instance_data, map)
+     *     INSTANCE_EVENT_ON_LOAD                          = 2,    // (event, instance_data, map)
+     *     INSTANCE_EVENT_ON_UPDATE                        = 3,    // (event, instance_data, map, diff)
+     *     INSTANCE_EVENT_ON_PLAYER_ENTER                  = 4,    // (event, instance_data, map, player)
+     *     INSTANCE_EVENT_ON_CREATURE_CREATE               = 5,    // (event, instance_data, map, creature)
+     *     INSTANCE_EVENT_ON_GAMEOBJECT_CREATE             = 6,    // (event, instance_data, map, go)
+     *     INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS   = 7,    // (event, instance_data, map)
+     *     INSTANCE_EVENT_COUNT
+     * };
+     * </pre>
+     *
+     * @param uint32 instance_id : ID of an instance of a [Map]
+     * @param uint32 event : [Map] event ID, refer to MapEvents above
+     * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+     */
+    int RegisterInstanceEvent(Eluna* E, lua_State* L)
+    {
+        RegisterEntryHelper(E, L, Hooks::REGTYPE_INSTANCE);
         return 0;
     }
 
@@ -2791,6 +2847,34 @@ namespace LuaGlobalFunctions
             uint32 event_type = Eluna::CHECKVAL<uint32>(L, 1);
             E->ServerEventBindings->Clear(event_type);
         }
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Map] event.
+     *
+     * @param uint32 map_id : the ID of a [Map] whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterMapEvent]
+     */
+    int ClearMapEvents(Eluna* E, lua_State* L)
+    {
+        uint32 map_id = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->MapEventBindings->Clear(map_id, event_type);
+        return 0;
+    }
+
+    /**
+     * Unbinds all event handlers for a particular [Map] instance event.
+     *
+     * @param uint32 instance_id : the ID of a [Map] instance whose handlers will be cleared
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterInstanceEvent]
+     */
+    int ClearInstanceEvents(Eluna* E, lua_State* L)
+    {
+        uint32 instance_id = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+        E->InstanceEventBindings->Clear(instance_id, event_type);
         return 0;
     }
 }

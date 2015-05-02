@@ -12,6 +12,7 @@
 #include "ElunaTemplate.h"
 #include "ElunaUtility.h"
 #include "ElunaCreatureAI.h"
+#include "ElunaInstanceAI.h"
 
 #ifdef USING_BOOST
 #include <boost/filesystem.hpp>
@@ -45,6 +46,12 @@ void Eluna::Initialize()
 {
     LOCK_ELUNA;
     ASSERT(!IsInitialized());
+
+#ifdef TRINITY
+    // For instance data the data column needs to be able to hold more than 255 characters (tinytext)
+    // so we change it to TEXT automatically on startup
+    CharacterDatabase.DirectExecute("ALTER TABLE `instance` CHANGE COLUMN `data` `data` TEXT NOT NULL");
+#endif
 
     LoadScriptPaths();
 
@@ -151,6 +158,8 @@ GameObjectGossipBindings(NULL),
 ItemEventBindings(NULL),
 ItemGossipBindings(NULL),
 playerGossipBindings(NULL),
+MapEventBindings(NULL),
+InstanceEventBindings(NULL),
 
 CreatureUniqueBindings(NULL)
 {
@@ -184,6 +193,9 @@ void Eluna::CloseLua()
     if (L)
         lua_close(L);
     L = NULL;
+
+    instanceDataRefs.clear();
+    continentDataRefs.clear();
 }
 
 void Eluna::OpenLua()
@@ -235,14 +247,16 @@ void Eluna::CreateBindStores()
     VehicleEventBindings = new EventBind<Hooks::VehicleEvents>("VehicleEvents", *this);
     BGEventBindings = new EventBind<Hooks::BGEvents>("BGEvents", *this);
 
-    PacketEventBindings = new EntryBind<Hooks::PacketEvents>("PacketEvents", *this);
-    CreatureEventBindings = new EntryBind<Hooks::CreatureEvents>("CreatureEvents", *this);
-    CreatureGossipBindings = new EntryBind<Hooks::GossipEvents>("GossipEvents (creature)", *this);
-    GameObjectEventBindings = new EntryBind<Hooks::GameObjectEvents>("GameObjectEvents", *this);
-    GameObjectGossipBindings = new EntryBind<Hooks::GossipEvents>("GossipEvents (gameobject)", *this);
-    ItemEventBindings = new EntryBind<Hooks::ItemEvents>("ItemEvents", *this);
-    ItemGossipBindings = new EntryBind<Hooks::GossipEvents>("GossipEvents (item)", *this);
-    playerGossipBindings = new EntryBind<Hooks::GossipEvents>("GossipEvents (player)", *this);
+    PacketEventBindings = new IDBind<Hooks::PacketEvents>("PacketEvents", *this);
+    CreatureEventBindings = new IDBind<Hooks::CreatureEvents>("CreatureEvents", *this);
+    CreatureGossipBindings = new IDBind<Hooks::GossipEvents>("GossipEvents (creature)", *this);
+    GameObjectEventBindings = new IDBind<Hooks::GameObjectEvents>("GameObjectEvents", *this);
+    GameObjectGossipBindings = new IDBind<Hooks::GossipEvents>("GossipEvents (gameobject)", *this);
+    ItemEventBindings = new IDBind<Hooks::ItemEvents>("ItemEvents", *this);
+    ItemGossipBindings = new IDBind<Hooks::GossipEvents>("GossipEvents (item)", *this);
+    playerGossipBindings = new IDBind<Hooks::GossipEvents>("GossipEvents (player)", *this);
+    MapEventBindings = new IDBind<Hooks::InstanceEvents>("MapEvents (all instances)", *this);
+    InstanceEventBindings = new IDBind<Hooks::InstanceEvents>("MapEvents (one instance)", *this);
 
     CreatureUniqueBindings = new UniqueBind<Hooks::CreatureEvents>("CreatureEvents (unique)", *this);
 }
@@ -264,6 +278,8 @@ void Eluna::DestroyBindStores()
     delete ItemGossipBindings;
     delete playerGossipBindings;
     delete BGEventBindings;
+    delete MapEventBindings;
+    delete InstanceEventBindings;
 
     delete CreatureUniqueBindings;
 
@@ -282,6 +298,8 @@ void Eluna::DestroyBindStores()
     ItemGossipBindings = NULL;
     playerGossipBindings = NULL;
     BGEventBindings = NULL;
+    MapEventBindings = NULL;
+    InstanceEventBindings = NULL;
 
     CreatureUniqueBindings = NULL;
 }
@@ -1079,6 +1097,20 @@ void Eluna::Register(uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, u
                 return;
             }
             break;
+        case Hooks::REGTYPE_MAP:
+            if (evt < Hooks::INSTANCE_EVENT_COUNT)
+            {
+                MapEventBindings->Insert(id, evt, functionRef, shots);
+                return;
+            }
+            break;
+        case Hooks::REGTYPE_INSTANCE:
+            if (evt < Hooks::INSTANCE_EVENT_COUNT)
+            {
+                InstanceEventBindings->Insert(id, evt, functionRef, shots);
+                return;
+            }
+            break;
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     luaL_error(L, "Unknown event type (regtype %d, id %d, event %d)", regtype, id, evt);
@@ -1135,4 +1167,96 @@ CreatureAI* Eluna::GetAI(Creature* creature)
         return new ElunaCreatureAI(creature);
 
     return NULL;
+}
+
+InstanceData* Eluna::GetInstanceData(Map* map)
+{
+    if (MapEventBindings->HasEvents(map->GetId()) ||
+        InstanceEventBindings->HasEvents(map->GetInstanceId()))
+        return new ElunaInstanceAI(map);
+
+    return NULL;
+}
+
+bool Eluna::HasInstanceData(Map const* map)
+{
+    if (map->IsContinent())
+        return continentDataRefs.count(map->GetId()) != 0;
+    else
+        return instanceDataRefs.count(map->GetInstanceId()) != 0;
+}
+
+void Eluna::CreateInstanceData(Map const* map)
+{
+    ASSERT(lua_istable(L, -1));
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+
+    if (map->IsContinent())
+    {
+        uint32 mapId = map->GetId();
+
+        // If there's another table that was already stored for the map, unref it.
+        if (continentDataRefs.count(mapId) > 0)
+        {
+            luaL_unref(L, LUA_REGISTRYINDEX, continentDataRefs[mapId]);
+        }
+
+        continentDataRefs[mapId] = ref;
+    }
+    else
+    {
+        uint32 instanceId = map->GetInstanceId();
+
+        // If there's another table that was already stored for the instance, unref it.
+        if (instanceDataRefs.count(instanceId) > 0)
+        {
+            luaL_unref(L, LUA_REGISTRYINDEX, instanceDataRefs[instanceId]);
+        }
+
+        instanceDataRefs[instanceId] = ref;
+    }
+}
+
+/*
+ * Unrefs the instanceId related events and data
+ * Does all required actions for when an instance is freed.
+ */
+void Eluna::FreeInstanceId(uint32 instanceId)
+{
+    LOCK_ELUNA;
+
+    if (CreatureUniqueBindings->HasEvents(instanceId))
+        CreatureUniqueBindings->Clear(instanceId);
+
+    if (InstanceEventBindings->HasEvents(instanceId))
+        InstanceEventBindings->Clear(instanceId);
+
+    if (instanceDataRefs.find(instanceId) != instanceDataRefs.end())
+    {
+        luaL_unref(L, LUA_REGISTRYINDEX, instanceDataRefs[instanceId]);
+        instanceDataRefs.erase(instanceId);
+    }
+}
+
+void Eluna::PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCounter)
+{
+    // Check if the instance data is missing (i.e. someone reloaded Eluna).
+    if (!HasInstanceData(ai->instance))
+        ai->Reload();
+
+    // Get the instance data table from the registry.
+    if (ai->instance->IsContinent())
+        lua_rawgeti(L, LUA_REGISTRYINDEX, continentDataRefs[ai->instance->GetId()]);
+    else
+        lua_rawgeti(L, LUA_REGISTRYINDEX, instanceDataRefs[ai->instance->GetInstanceId()]);
+
+    ASSERT(lua_istable(L, -1));
+
+    // Set the "map" field to a fresh reference of the instance Map.
+    Eluna::Push(L, "map");
+    Eluna::Push(L, ai->instance);
+    lua_rawset(L, -3);
+
+    if (incrementCounter)
+        ++push_counter;
 }
