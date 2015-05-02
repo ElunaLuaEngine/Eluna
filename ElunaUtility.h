@@ -28,6 +28,8 @@
 #ifdef USING_BOOST
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
+#else
+#include <ace/Recursive_Thread_Mutex.h>
 #endif
 
 #ifdef TRINITY
