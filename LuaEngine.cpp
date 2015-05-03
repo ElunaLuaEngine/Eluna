@@ -137,7 +137,7 @@ enabled(false),
 L(NULL),
 eventMgr(NULL),
 
-ServerEventBindings(NULL),
+ServerEventBindings(NULL)/*,
 PlayerEventBindings(NULL),
 GuildEventBindings(NULL),
 GroupEventBindings(NULL),
@@ -153,7 +153,7 @@ ItemEventBindings(NULL),
 ItemGossipBindings(NULL),
 playerGossipBindings(NULL),
 
-CreatureUniqueBindings(NULL)
+CreatureUniqueBindings(NULL)*/
 {
     ASSERT(IsInitialized());
 
@@ -229,8 +229,8 @@ void Eluna::CreateBindStores()
 {
     DestroyBindStores();
 
-    ServerEventBindings = new EventBind<Hooks::ServerEvents>("ServerEvents", *this);
-    PlayerEventBindings = new EventBind<Hooks::PlayerEvents>("PlayerEvents", *this);
+    ServerEventBindings = new BindingMap< EventKey<Hooks::ServerEvents> >(L);
+    /*PlayerEventBindings = new EventBind<Hooks::PlayerEvents>("PlayerEvents", *this);
     GuildEventBindings = new EventBind<Hooks::GuildEvents>("GuildEvents", *this);
     GroupEventBindings = new EventBind<Hooks::GroupEvents>("GroupEvents", *this);
     VehicleEventBindings = new EventBind<Hooks::VehicleEvents>("VehicleEvents", *this);
@@ -245,13 +245,13 @@ void Eluna::CreateBindStores()
     ItemGossipBindings = new EntryBind<Hooks::GossipEvents>("GossipEvents (item)", *this);
     playerGossipBindings = new EntryBind<Hooks::GossipEvents>("GossipEvents (player)", *this);
 
-    CreatureUniqueBindings = new UniqueBind<Hooks::CreatureEvents>("CreatureEvents (unique)", *this);
+    CreatureUniqueBindings = new UniqueBind<Hooks::CreatureEvents>("CreatureEvents (unique)", *this);*/
 }
 
 void Eluna::DestroyBindStores()
 {
     delete ServerEventBindings;
-    delete PlayerEventBindings;
+    /*delete PlayerEventBindings;
     delete GuildEventBindings;
     delete GroupEventBindings;
     delete VehicleEventBindings;
@@ -266,10 +266,10 @@ void Eluna::DestroyBindStores()
     delete playerGossipBindings;
     delete BGEventBindings;
 
-    delete CreatureUniqueBindings;
+    delete CreatureUniqueBindings;*/
 
     ServerEventBindings = NULL;
-    PlayerEventBindings = NULL;
+    /*PlayerEventBindings = NULL;
     GuildEventBindings = NULL;
     GroupEventBindings = NULL;
     VehicleEventBindings = NULL;
@@ -284,7 +284,7 @@ void Eluna::DestroyBindStores()
     playerGossipBindings = NULL;
     BGEventBindings = NULL;
 
-    CreatureUniqueBindings = NULL;
+    CreatureUniqueBindings = NULL;*/
 }
 
 void Eluna::AddScriptPath(std::string filename, const std::string& fullpath)
@@ -909,69 +909,43 @@ ElunaObject* Eluna::CHECKTYPE(lua_State* luastate, int narg, const char* tname, 
 
 static int cancelBinding(lua_State *L)
 {
-    int ref = lua_tointeger(L, lua_upvalueindex(1));
-    uint32 event_id = lua_tounsigned(L, lua_upvalueindex(2));
-    uint32 entry_id = lua_tounsigned(L, lua_upvalueindex(3));
-    uint64 guid = Eluna::CHECKVAL<uint64>(L, lua_upvalueindex(4));
+    uint64 bindingID = Eluna::CHECKVAL<uint64>(L, lua_upvalueindex(1));
 
-    // This marker (initially `false`) is used to protect against calling this callback twice.
-    // After the first call, `alreadyCalled` will be `true`, so we know not to proceed.
-    bool alreadyCalled = lua_toboolean(L, lua_upvalueindex(5));
+    BindingMapBase* bindings = (BindingMapBase*)lua_touserdata(L, lua_upvalueindex(2));
+    ASSERT(bindings != NULL);
 
-    if (alreadyCalled)
-        return 0;
-    else
-    {
-        lua_pushboolean(L, true);
-        lua_replace(L, lua_upvalueindex(5));
-    }
-
-    ElunaBind* bindings1 = (ElunaBind*)lua_touserdata(L, lua_upvalueindex(6));
-    ASSERT(bindings1 != NULL);
-    bindings1->ClearOne(ref, event_id, entry_id, guid);
+    bindings->Remove(bindingID);
 
     return 0;
 }
 
-static int createCancelCallback(lua_State* L, int ref, ElunaBind* bindings1, uint32 event_id, uint32 entry_id = 0, uint64 guid = 0)
+static void createCancelCallback(lua_State* L, uint64 bindingID, BindingMapBase* bindings)
 {
-    lua_pushinteger(L, ref);
-    lua_pushunsigned(L, event_id);
-    lua_pushunsigned(L, entry_id);
-    Eluna::Push(L, guid);
-    lua_pushboolean(L, false);
-    lua_pushlightuserdata(L, bindings1);
-    // Stack: ref, event_id, entry_id, guid, false, bindings1
+    Eluna::Push(L, bindingID);
+    lua_pushlightuserdata(L, bindings);
+    // Stack: bindingID, bindings
 
-    lua_pushcclosure(L, &cancelBinding, 6);
-    // Stack: cancel_callback
-
-    lua_pushvalue(L, -1);
-    return luaL_ref(L, LUA_REGISTRYINDEX);
+    lua_pushcclosure(L, &cancelBinding, 2);
     // Stack: cancel_callback
 }
 
 // Saves the function reference ID given to the register type's store for given entry under the given event
-int Eluna::Register(lua_State* L, uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, uint32 evt, int functionRef, uint32 shots, bool returnCallback)
+int Eluna::Register(lua_State* L, uint8 regtype, uint32 id, uint64 guid, uint32 instanceId, uint32 evt, int functionRef, uint32 shots)
 {
+    uint64 bindingID;
+
     switch (regtype)
     {
         case Hooks::REGTYPE_SERVER:
             if (evt < Hooks::SERVER_EVENT_COUNT)
             {
-                if (returnCallback)
-                {
-                    int callbackRef = createCancelCallback(L, functionRef, ServerEventBindings, evt);
-                    ServerEventBindings->Insert(evt, functionRef, shots, callbackRef);
-                    return 1; // Stack: callback
-                }
-
-                ServerEventBindings->Insert(evt, functionRef, shots);
-                return 0; // Stack: (empty)
+                bindingID = ServerEventBindings->Insert((Hooks::ServerEvents)evt, functionRef, shots);
+                createCancelCallback(L, bindingID, ServerEventBindings);
+                return 1; // Stack: callback
             }
             break;
 
-        case Hooks::REGTYPE_PLAYER:
+        /*case Hooks::REGTYPE_PLAYER:
             if (evt < Hooks::PLAYER_EVENT_COUNT)
             {
                 if (returnCallback)
@@ -1230,7 +1204,7 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 id, uint64 guid, uint32 
                 playerGossipBindings->Insert(id, evt, functionRef, shots);
                 return 0; // Stack: (empty)
             }
-            break;
+            break;*/
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     luaL_error(L, "Unknown event type (regtype %d, id %d, event %d)", regtype, id, evt);
@@ -1281,7 +1255,7 @@ int Eluna::CallOneFunction(int number_of_functions, int number_of_arguments, int
     return functions_top + 1; // Return the location of the first result (if any exist).
 }
 
-CreatureAI* Eluna::GetAI(Creature* creature)
+/*CreatureAI* Eluna::GetAI(Creature* creature)
 {
     if (CreatureEventBindings->HasEvents(creature->GetEntry()) ||
         CreatureUniqueBindings->HasEvents(creature->GET_GUID(), creature->GetInstanceId()))
@@ -1289,3 +1263,4 @@ CreatureAI* Eluna::GetAI(Creature* creature)
 
     return NULL;
 }
+*/

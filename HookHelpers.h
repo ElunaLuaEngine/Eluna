@@ -14,18 +14,14 @@
  * Sets up the stack so that event handlers can be called.
  *
  * Returns the number of functions that were pushed onto the stack.
- *
- * Use the simpler overloads for just EventBind or EntryBind instead of this overload in hooks.
  */
 template<typename T>
-int Eluna::SetupStack(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, int number_of_arguments)
+int Eluna::SetupStack(BindingMap<T>* bindings, const T& key, int number_of_arguments)
 {
-    // Ensure that if `entry_bindings` is not NULL, a valid entry is supplied.
-    ASSERT(!entry_bindings || (entry_bindings && entry > 0));
     ASSERT(number_of_arguments == this->push_counter);
     // Stack: [arguments]
 
-    Push(event_id);
+    Push(key.event_id);
     this->push_counter = 0;
     ++number_of_arguments;
     // Stack: [arguments], event_id
@@ -37,14 +33,7 @@ int Eluna::SetupStack(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings
     lua_insert(L, first_argument_index);
     // Stack: event_id, [arguments]
 
-    if (event_bindings)
-        event_bindings->PushFuncRefs(L, (int)event_id);
-
-    if (entry_bindings)
-        entry_bindings->PushFuncRefs(L, (int)event_id, entry);
-
-    if (guid_bindings)
-        guid_bindings->PushFuncRefs(L, (int)event_id, guid, instanceId);
+    bindings->PushRefsFor(key);
     // Stack: event_id, [arguments], [functions]
 
     int number_of_functions = lua_gettop(L) - arguments_top;
@@ -71,12 +60,12 @@ void Eluna::ReplaceArgument(T value, uint8 index)
  * Call all event handlers registered to the event ID/entry combination and ignore any results.
  */
 template<typename T>
-void Eluna::CallAllFunctions(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId)
+void Eluna::CallAllFunctions(BindingMap<T>* bindings, const T& key)
 {
     int number_of_arguments = this->push_counter;
     // Stack: [arguments]
 
-    int number_of_functions = SetupStack(event_bindings, entry_bindings, guid_bindings, event_id, entry, guid, instanceId, number_of_arguments);
+    int number_of_functions = SetupStack(bindings, key, number_of_arguments);
     // Stack: event_id, [arguments], [functions]
 
     while (number_of_functions > 0)
@@ -97,14 +86,14 @@ void Eluna::CallAllFunctions(EventBind<T>* event_bindings, EntryBind<T>* entry_b
  *   otherwise returns the opposite of `default_value`.
  */
 template<typename T>
-bool Eluna::CallAllFunctionsBool(EventBind<T>* event_bindings, EntryBind<T>* entry_bindings, UniqueBind<T>* guid_bindings, T event_id, uint32 entry, uint64 guid, uint32 instanceId, bool default_value)
+bool Eluna::CallAllFunctionsBool(BindingMap<T>* bindings, const T& key, bool default_value)
 {
     bool result = default_value;
     // Note: number_of_arguments here does not count in eventID, which is pushed in SetupStack
     int number_of_arguments = this->push_counter;
     // Stack: [arguments]
 
-    int number_of_functions = SetupStack(event_bindings, entry_bindings, guid_bindings, event_id, entry, guid, instanceId, number_of_arguments);
+    int number_of_functions = SetupStack(bindings, key, number_of_arguments);
     // Stack: event_id, [arguments], [functions]
 
     while (number_of_functions > 0)
