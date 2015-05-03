@@ -86,12 +86,12 @@ typedef VehicleInfo Vehicle;
 struct lua_State;
 class EventMgr;
 class ElunaObject;
-template <typename T> class ElunaTemplate;
+template<typename T> class ElunaTemplate;
 
-template <typename T> class BindingMap;
-template <typename T> class EventKey;
-template <typename T> class EntryKey;
-template <typename T> class UniqueCreatureKey;
+template<typename K> class BindingMap;
+template<typename T> struct EventKey;
+template<typename T> struct EntryKey;
+template<typename T> struct UniqueCreatureKey;
 
 struct LuaScript
 {
@@ -176,11 +176,11 @@ public:
     EventMgr* eventMgr;
 
     BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
-    /*BindingMap<Hooks::PlayerEvents>*     PlayerEventBindings;
-    BindingMap<Hooks::GuildEvents>*      GuildEventBindings;
-    BindingMap<Hooks::GroupEvents>*      GroupEventBindings;
-    BindingMap<Hooks::VehicleEvents>*    VehicleEventBindings;
-    BindingMap<Hooks::BGEvents>*         BGEventBindings;
+    BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;
+    BindingMap< EventKey<Hooks::GuildEvents> >*      GuildEventBindings;
+    BindingMap< EventKey<Hooks::GroupEvents> >*      GroupEventBindings;
+    BindingMap< EventKey<Hooks::VehicleEvents> >*    VehicleEventBindings;
+    BindingMap< EventKey<Hooks::BGEvents> >*         BGEventBindings;
 
     BindingMap< EntryKey<Hooks::PacketEvents> >*     PacketEventBindings;
     BindingMap< EntryKey<Hooks::CreatureEvents> >*   CreatureEventBindings;
@@ -191,7 +191,7 @@ public:
     BindingMap< EntryKey<Hooks::GossipEvents> >*     ItemGossipBindings;
     BindingMap< EntryKey<Hooks::GossipEvents> >*     PlayerGossipBindings;
 
-    BindingMap< UniqueCreatureKey<Hooks::CreatureEvents> >*  CreatureUniqueBindings;*/
+    BindingMap< UniqueCreatureKey<Hooks::CreatureEvents> >*  CreatureUniqueBindings;
 
     static void Initialize();
     static void Uninitialize();
@@ -228,7 +228,7 @@ public:
     bool ShouldReload() const { return reload; }
     bool IsEnabled() const { return enabled && IsInitialized(); }
     bool HasLuaState() const { return L != NULL; }
-    int Register(lua_State* L, uint8 reg, uint32 id, uint64 guid, uint32 instanceId, uint32 evt, int func, uint32 shots);
+    int Register(lua_State* L, uint8 reg, uint32 entry, uint64 guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
 
     // Non-static pushes, to be used in hooks.
     // These just call the correct static version with the main thread's Lua state.

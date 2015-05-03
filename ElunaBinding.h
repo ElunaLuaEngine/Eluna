@@ -29,11 +29,11 @@ static uint64 maxBindingID;
 class BindingMapBase : public ElunaUtil::RWLockable
 {
 public:
-    virtual void Remove(uint64 id);
+    virtual void Remove(uint64 id) = 0;
 };
 
 
-template <typename K>
+template<typename K>
 class BindingMap : public BindingMapBase
 {
     lua_State* L;
@@ -107,18 +107,6 @@ public:
         }
     }
 
-    bool HasEvents(const K& key)
-    {
-        ReadGuard guard(GetLock());
-
-        auto result = bindings.find(key);
-        if (result == bindings.end())
-            return false;
-
-        BindingList& list = result->second;
-        return !list.empty();
-    }
-
     void PushRefsFor(const K& key)
     {
         WriteGuard guard(GetLock());
@@ -144,6 +132,8 @@ public:
             }
         }
     }
+
+    bool HasEvents(const K& key);
 };
 
 
@@ -151,9 +141,15 @@ template <typename T>
 struct EventKey
 {
     T event_id;
+    bool is_wildcard;
 
     EventKey(T event_id) :
-        event_id(event_id)
+        event_id(event_id),
+        is_wildcard(false)
+    {}
+
+    EventKey() :
+        is_wildcard(true)
     {}
 };
 
@@ -166,6 +162,11 @@ struct EntryKey : public EventKey<T>
         EventKey(event_type),
         entry(entry)
     {}
+
+    EntryKey(uint32 entry) :
+        EventKey(),
+        entry(entry)
+    {}
 };
 
 template <typename T>
@@ -176,6 +177,12 @@ struct UniqueCreatureKey : public EventKey<T>
 
     UniqueCreatureKey(T event_type, uint64 guid, uint32 instance_id) :
         EventKey(event_type),
+        guid(guid),
+        instance_id(instance_id)
+    {}
+
+    UniqueCreatureKey(uint64 guid, uint32 instance_id) :
+        EventKey(),
         guid(guid),
         instance_id(instance_id)
     {}
@@ -255,6 +262,78 @@ namespace std
             return h1 ^ (h2 << 1) ^ (h3 << 2);
         }
     };
+}
+
+
+template<typename T>
+bool BindingMap< EventKey<T> >::HasEvents(const EventKey<T>& key)
+{
+    ReadGuard guard(GetLock());
+
+    auto result = bindings.find(key);
+    if (result == bindings.end())
+        return false;
+
+    BindingList& list = result->second;
+    return !list.empty();
+}
+
+template<typename T>
+bool BindingMap< EntryKey<T> >::HasEvents(const EntryKey<T>& key)
+{
+    ReadGuard guard(GetLock());
+
+    if (!key.is_wildcard)
+    {
+        auto result = bindings.find(key);
+        if (result == bindings.end())
+            return false;
+
+        BindingList& list = result->second;
+        return !list.empty();
+    }
+
+    for (auto listIter = bindings.begin(); listIter != bindings.end(); ++listIter)
+    {
+        EntryKey<T> const& listKey = listIter->first;
+
+        if (listKey.entry != key.entry)
+            continue;
+
+        BindingList& list = listIter->second;
+        if (!list.empty())
+            return true;
+    }
+    return false;
+}
+
+template<typename T>
+bool BindingMap< UniqueCreatureKey<T> >::HasEvents(const UniqueCreatureKey<T>& key)
+{
+    ReadGuard guard(GetLock());
+
+    if (!key.is_wildcard)
+    {
+        auto result = bindings.find(key);
+        if (result == bindings.end())
+            return false;
+
+        BindingList& list = result->second;
+        return !list.empty();
+    }
+
+    for (auto listIter = bindings.begin(); listIter != bindings.end(); ++listIter)
+    {
+        EntryKey<T> const& listKey = listIter->first;
+
+        if (listKey.guid != key.guid || listKey.instance_id != key.instance_id)
+            continue;
+
+        BindingList& list = listIter->second;
+        if (!list.empty())
+            return true;
+    }
+    return false;
 }
 
 #endif

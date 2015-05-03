@@ -242,15 +242,17 @@ void Eluna::OnPacketSendAny(Player* player, WorldPacket& packet, bool& result)
     CleanUpStack(2);
 }
 
-/*void Eluna::OnPacketSendOne(Player* player, WorldPacket& packet, bool& result)
+void Eluna::OnPacketSendOne(Player* player, WorldPacket& packet, bool& result)
 {
-    if (!PacketEventBindings->HasEvents(PACKET_EVENT_ON_PACKET_SEND, packet.GetOpcode()))
+    auto key = EntryKey<Hooks::PacketEvents>(PACKET_EVENT_ON_PACKET_SEND, packet.GetOpcode());
+
+    if (!PacketEventBindings->HasEvents(key))
         return;
 
     LOCK_ELUNA;
     Push(new WorldPacket(packet));
     Push(player);
-    int n = SetupStack(PacketEventBindings, PACKET_EVENT_ON_PACKET_SEND, OpcodesList(packet.GetOpcode()), 2);
+    int n = SetupStack(PacketEventBindings, key, 2);
 
     while (n > 0)
     {
@@ -267,7 +269,7 @@ void Eluna::OnPacketSendAny(Player* player, WorldPacket& packet, bool& result)
     }
 
     CleanUpStack(2);
-}*/
+}
 
 bool Eluna::OnPacketReceive(WorldSession* session, WorldPacket& packet)
 {
@@ -307,15 +309,17 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
     CleanUpStack(2);
 }
 
-/*void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result)
+void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result)
 {
-    if (!PacketEventBindings->HasEvents(PACKET_EVENT_ON_PACKET_RECEIVE, packet.GetOpcode()))
+    auto key = EntryKey<Hooks::PacketEvents>(PACKET_EVENT_ON_PACKET_SEND, packet.GetOpcode());
+
+    if (!PacketEventBindings->HasEvents(key))
         return;
 
     LOCK_ELUNA;
     Push(new WorldPacket(packet));
     Push(player);
-    int n = SetupStack(PacketEventBindings, PACKET_EVENT_ON_PACKET_RECEIVE, OpcodesList(), 2);
+    int n = SetupStack(PacketEventBindings, key, 2);
 
     while (n > 0)
     {
@@ -332,7 +336,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
     }
 
     CleanUpStack(2);
-}*/
+}
 
 void Eluna::OnOpenStateChange(bool open)
 {
