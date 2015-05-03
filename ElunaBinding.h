@@ -22,6 +22,114 @@ extern "C"
 #pragma warning(disable:4503)
 #endif
 
+static uint64 maxBindingID;
+
+template <typename T>
+class BindingMap : public ElunaUtil::RWLockable
+{
+    struct Binding
+    {
+        uint64 id;
+        int functionReference;
+        uint32 remainingShots;
+        lua_State* L;
+
+        Binding(uint64 id, int functionReference, uint32 remainingShots) :
+            id(id),
+            functionReference(functionReference),
+            remainingShots(remainingShots)
+        {}
+
+        ~Binding()
+        {
+            luaL_unref(L, LUA_REGISTRYINDEX, functionReference);
+        }
+    };
+
+    typedef std::vector< std::unique_ptr<Binding> > BindingList;
+
+    UNORDERED_MAP<T, BindingList> bindings;
+
+public:
+    uint64 Insert(const T& key, int ref, uint32 shots)
+    {
+        WriteGuard guard(GetLock());
+
+        uint64 id = (++maxBindingID);
+        bindings[key].push_back(std::unique_ptr<Binding>(new Binding(id, ref, shots)));
+        return id;
+    }
+
+    void Clear(const T& key)
+    {
+        WriteGuard guard(GetLock());
+
+        auto iter = bindings.find(key);
+        if (iter != bindings.end())
+            bindings.erase(iter);
+    }
+
+    void Remove(uint64 id)
+    {
+        WriteGuard guard(GetLock());
+
+        for (auto listIter = bindings.begin(); listIter != bindings.end(); ++listIter)
+        {
+            BindingList& list = *listIter;
+
+            auto i = list.begin();
+            for (; i != list.end(); ++i)
+            {
+                std::unique_ptr<Binding>& binding = *i;
+                if (binding->id == id)
+                    break;
+            }
+
+            if (i != list.end())
+                list.erase(i);
+        }
+    }
+
+    bool HasEvents(const T& key)
+    {
+        ReadGuard guard(GetLock());
+
+        auto result = bindings.find(key);
+        if (result == bindings.end())
+            return false;
+
+        BindingList& list = *result;
+        return !list.empty();
+    }
+
+    void PushRefsFor(const T& key)
+    {
+        WriteGuard guard(GetLock());
+
+        auto result = bindings.find(key);
+        if (result == bindings.end())
+            return;
+
+        BindingList& list = (*result);
+        for (auto i = list.begin(); i != list.end();)
+        {
+            std::unique_ptr<Binding>& binding = (*i);
+            auto i_prev = (i++);
+
+            lua_rawgeti(L, LUA_REGISTRYINDEX, binding->functionReference);
+
+            if (binding->remainingShots > 0)
+            {
+                binding->remainingShots -= 1;
+
+                if (binding->remainingShots == 0)
+                    list.erase(i_prev);
+            }
+        }
+    }
+};
+
+
 class ElunaBind : public ElunaUtil::RWLockable
 {
 public:
