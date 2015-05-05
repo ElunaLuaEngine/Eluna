@@ -51,7 +51,7 @@ class BindingMap : public ElunaUtil::RWLockable
         }
     };
 
-    typedef std::vector<Binding*> BindingList;
+    typedef std::vector< std::unique_ptr<Binding> > BindingList;
 
     UNORDERED_MAP<K, BindingList> bindings;
 
@@ -66,7 +66,7 @@ public:
         WriteGuard guard(GetLock());
 
         uint64 id = (++maxBindingID);
-        bindings[key].push_back(new Binding(L, id, ref, shots));
+        bindings[key].push_back(std::unique_ptr<Binding>(new Binding(L, id, ref, shots)));
         return id;
     }
 
@@ -76,19 +76,7 @@ public:
 
         auto iter = bindings.find(key);
         if (iter != bindings.end())
-        {
-            BindingList& list = iter->second;
-
-            for (auto i = list.begin(); i != list.end;)
-            {
-                auto i_prev = (i++);
-                Binding* binding = *i_prev;
-                list.erase(i_prev);
-                delete binding;
-            }
-
             bindings.erase(iter);
-        }
     }
 
     void Remove(uint64 id)
@@ -100,20 +88,15 @@ public:
             BindingList& list = listIter->second;
 
             auto i = list.begin();
-            Binding* binding;
-
             for (; i != list.end(); ++i)
             {
-                binding = *i;
+                std::unique_ptr<Binding>& binding = *i;
                 if (binding->id == id)
                     break;
             }
 
             if (i != list.end())
-            {
                 list.erase(i);
-                delete binding;
-            }
         }
     }
 
@@ -140,7 +123,7 @@ public:
         BindingList& list = result->second;
         for (auto i = list.begin(); i != list.end();)
         {
-            Binding* binding = (*i);
+            std::unique_ptr<Binding>& binding = (*i);
             auto i_prev = (i++);
 
             lua_rawgeti(L, LUA_REGISTRYINDEX, binding->functionReference);
@@ -150,10 +133,7 @@ public:
                 binding->remainingShots -= 1;
 
                 if (binding->remainingShots == 0)
-                {
                     list.erase(i_prev);
-                    delete binding;
-                }
             }
         }
     }
