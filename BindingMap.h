@@ -8,7 +8,6 @@
 #define _ELUNA_BINDING_H
 
 #include "Common.h"
-#include "LuaEngine.h"
 #include "ElunaUtility.h"
 
 extern "C"
@@ -17,18 +16,14 @@ extern "C"
 #include "lauxlib.h"
 };
 
-#ifdef WIN32
-// VC++ complains about UniqueBind because one of its template types is really long.
-#pragma warning(disable:4503)
-#endif
 
-
-static uint64 maxBindingID;
+static uint64 maxBindingID = 0;
 
 
 template<typename K>
 class BindingMap : public ElunaUtil::RWLockable
 {
+private:
     lua_State* L;
 
     struct Binding
@@ -74,9 +69,9 @@ public:
     {
         WriteGuard guard(GetLock());
 
-        auto iter = bindings.find(key);
-        if (iter != bindings.end())
-            bindings.erase(iter);
+        if (bindings.empty())
+            return;
+        bindings.erase(key);
     }
 
     void Remove(uint64 id)
@@ -104,6 +99,9 @@ public:
     {
         ReadGuard guard(GetLock());
 
+        if (bindings.empty())
+            return false;
+
         auto result = bindings.find(key);
         if (result == bindings.end())
             return false;
@@ -115,6 +113,9 @@ public:
     void PushRefsFor(const K& key)
     {
         WriteGuard guard(GetLock());
+
+        if (bindings.empty())
+            return;
 
         auto result = bindings.find(key);
         if (result == bindings.end())

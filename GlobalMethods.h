@@ -2636,7 +2636,7 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(L, 1))
         {
-            for (uint32 i = Hooks::BG_EVENT_ON_START; i < Hooks::BG_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::BG_EVENT_COUNT; ++i)
                 E->BGEventBindings->Clear(Key((Hooks::BGEvents)i));
         }
         else
@@ -2670,7 +2670,7 @@ namespace LuaGlobalFunctions
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
 
-            for (uint32 i = Hooks::CREATURE_EVENT_ON_ENTER_COMBAT; i < Hooks::CREATURE_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::CREATURE_EVENT_COUNT; ++i)
                 E->CreatureEventBindings->Clear(Key((Hooks::CreatureEvents)i, entry));
         }
         else
@@ -2707,7 +2707,7 @@ namespace LuaGlobalFunctions
             uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
             uint32 instanceId = Eluna::CHECKVAL<uint32>(L, 2);
 
-            for (uint32 i = Hooks::CREATURE_EVENT_ON_ENTER_COMBAT; i < Hooks::CREATURE_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::CREATURE_EVENT_COUNT; ++i)
                 E->CreatureUniqueBindings->Clear(Key((Hooks::CreatureEvents)i, guid, instanceId));
         }
         else
@@ -2743,7 +2743,7 @@ namespace LuaGlobalFunctions
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
 
-            for (uint32 i = Hooks::GOSSIP_EVENT_ON_HELLO; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
                 E->CreatureGossipBindings->Clear(Key((Hooks::GossipEvents)i, entry));
         }
         else
@@ -2778,7 +2778,7 @@ namespace LuaGlobalFunctions
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
 
-            for (uint32 i = Hooks::GAMEOBJECT_EVENT_ON_AIUPDATE; i < Hooks::GAMEOBJECT_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::GAMEOBJECT_EVENT_COUNT; ++i)
                 E->GameObjectEventBindings->Clear(Key((Hooks::GameObjectEvents)i, entry));
         }
         else
@@ -2813,7 +2813,7 @@ namespace LuaGlobalFunctions
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
 
-            for (uint32 i = Hooks::GOSSIP_EVENT_ON_HELLO; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
                 E->GameObjectGossipBindings->Clear(Key((Hooks::GossipEvents)i, entry));
         }
         else
@@ -2842,7 +2842,7 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(L, 1))
         {
-            for (uint32 i = Hooks::GROUP_EVENT_ON_MEMBER_ADD; i < Hooks::GROUP_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::GROUP_EVENT_COUNT; ++i)
                 E->GroupEventBindings->Clear(Key((Hooks::GroupEvents)i));
         }
         else
@@ -2870,7 +2870,7 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(L, 1))
         {
-            for (uint32 i = Hooks::GUILD_EVENT_ON_ADD_MEMBER; i < Hooks::GUILD_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::GUILD_EVENT_COUNT; ++i)
                 E->GuildEventBindings->Clear(Key((Hooks::GuildEvents)i));
         }
         else
@@ -2904,7 +2904,7 @@ namespace LuaGlobalFunctions
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
 
-            for (uint32 i = Hooks::ITEM_EVENT_ON_DUMMY_EFFECT; i < Hooks::ITEM_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::ITEM_EVENT_COUNT; ++i)
                 E->ItemEventBindings->Clear(Key((Hooks::ItemEvents)i, entry));
         }
         else
@@ -2939,7 +2939,7 @@ namespace LuaGlobalFunctions
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
 
-            for (uint32 i = Hooks::GOSSIP_EVENT_ON_HELLO; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
                 E->ItemGossipBindings->Clear(Key((Hooks::GossipEvents)i, entry));
         }
         else
@@ -2971,7 +2971,7 @@ namespace LuaGlobalFunctions
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
 
-            for (uint32 i = Hooks::PACKET_EVENT_ON_PACKET_RECEIVE; i < Hooks::PACKET_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::PACKET_EVENT_COUNT; ++i)
                 E->PacketEventBindings->Clear(Key((Hooks::PacketEvents)i, entry));
         }
         else
@@ -3000,7 +3000,7 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(L, 1))
         {
-            for (uint32 i = Hooks::PLAYER_EVENT_ON_CHARACTER_CREATE; i < Hooks::PLAYER_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::PLAYER_EVENT_COUNT; ++i)
                 E->PlayerEventBindings->Clear(Key((Hooks::PlayerEvents)i));
         }
         else
@@ -3031,7 +3031,7 @@ namespace LuaGlobalFunctions
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
 
-            for (uint32 i = Hooks::GOSSIP_EVENT_ON_HELLO; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
                 E->PlayerGossipBindings->Clear(Key((Hooks::GossipEvents)i, entry));
         }
         else
@@ -3060,7 +3060,7 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(L, 1))
         {
-            for (uint32 i = Hooks::SERVER_EVENT_ON_NETWORK_START; i < Hooks::SERVER_EVENT_COUNT; ++i)
+            for (uint32 i = 1; i < Hooks::SERVER_EVENT_COUNT; ++i)
                 E->ServerEventBindings->Clear(Key((Hooks::ServerEvents)i));
         }
         else

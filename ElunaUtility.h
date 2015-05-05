@@ -28,8 +28,6 @@
 #ifdef USING_BOOST
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
-#else
-#include <ace/Recursive_Thread_Mutex.h>
 #endif
 
 #ifdef TRINITY
@@ -132,11 +130,11 @@ namespace ElunaUtil
     public:
 
 #ifdef USING_BOOST
-        typedef boost::recursive_mutex LockType;
-        typedef boost::shared_lock<boost::shared_mutex> ReadGuard;
-        typedef boost::unique_lock<boost::shared_mutex> WriteGuard;
+        typedef boost::shared_mutex LockType;
+        typedef boost::shared_lock<LockType> ReadGuard;
+        typedef boost::unique_lock<LockType> WriteGuard;
 #else
-        typedef ACE_Recursive_Thread_Mutex LockType;
+        typedef ACE_RW_Thread_Mutex LockType;
         typedef ACE_Read_Guard<LockType> ReadGuard;
         typedef ACE_Write_Guard<LockType> WriteGuard;
 #endif
