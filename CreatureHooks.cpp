@@ -15,7 +15,7 @@ using namespace Hooks;
 
 #define START_HOOK(EVENT, CREATURE) \
     auto entry_key = EntryKey<CreatureEvents>(EVENT, CREATURE->GetEntry());\
-    auto unique_key = UniqueCreatureKey<CreatureEvents>(EVENT, CREATURE->GET_GUID(), CREATURE->GetInstanceId());\
+    auto unique_key = UniqueObjectKey<CreatureEvents>(EVENT, CREATURE->GET_GUID(), CREATURE->GetInstanceId());\
     if (!CreatureEventBindings->HasEvents(entry_key))\
         if (!CreatureUniqueBindings->HasEvents(unique_key))\
             return;\
@@ -23,7 +23,7 @@ using namespace Hooks;
 
 #define START_HOOK_WITH_RETVAL(EVENT, CREATURE, RETVAL) \
     auto entry_key = EntryKey<CreatureEvents>(EVENT, CREATURE->GetEntry());\
-    auto unique_key = UniqueCreatureKey<CreatureEvents>(EVENT, CREATURE->GET_GUID(), CREATURE->GetInstanceId());\
+    auto unique_key = UniqueObjectKey<CreatureEvents>(EVENT, CREATURE->GET_GUID(), CREATURE->GetInstanceId());\
     if (!CreatureEventBindings->HasEvents(entry_key))\
         if (!CreatureUniqueBindings->HasEvents(unique_key))\
             return RETVAL;\

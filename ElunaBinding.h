@@ -169,12 +169,12 @@ struct EntryKey : public EventKey<T>
 };
 
 template <typename T>
-struct UniqueCreatureKey : public EventKey<T>
+struct UniqueObjectKey : public EventKey<T>
 {
     uint64 guid;
     uint32 instance_id;
 
-    UniqueCreatureKey(T event_type, uint64 guid, uint32 instance_id) :
+    UniqueObjectKey(T event_type, uint64 guid, uint32 instance_id) :
         EventKey(event_type),
         guid(guid),
         instance_id(instance_id)
@@ -204,9 +204,9 @@ namespace std
     };
 
     template<typename T>
-    struct equal_to < UniqueCreatureKey<T> >
+    struct equal_to < UniqueObjectKey<T> >
     {
-        bool operator()(UniqueCreatureKey<T> const& lhs, UniqueCreatureKey<T> const& rhs) const
+        bool operator()(UniqueObjectKey<T> const& lhs, UniqueObjectKey<T> const& rhs) const
         {
             return lhs.event_id == rhs.event_id
                 && lhs.guid == rhs.guid
@@ -242,9 +242,9 @@ namespace std
     };
 
     template<typename T>
-    struct hash < UniqueCreatureKey<T> >
+    struct hash < UniqueObjectKey<T> >
     {
-        typedef UniqueCreatureKey<T> argument_type;
+        typedef UniqueObjectKey<T> argument_type;
         typedef std::size_t result_type;
 
         result_type operator()(argument_type const& k) const

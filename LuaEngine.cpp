@@ -245,7 +245,7 @@ void Eluna::CreateBindStores()
     ItemGossipBindings       = new BindingMap< EntryKey<Hooks::GossipEvents> >(L);
     PlayerGossipBindings     = new BindingMap< EntryKey<Hooks::GossipEvents> >(L);
 
-    CreatureUniqueBindings   = new BindingMap< UniqueCreatureKey<Hooks::CreatureEvents> >(L);
+    CreatureUniqueBindings   = new BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >(L);
 }
 
 void Eluna::DestroyBindStores()
@@ -1033,7 +1033,7 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, uint64 guid, uint
                 {
                     ASSERT(guid != 0);
 
-                    auto key = UniqueCreatureKey<Hooks::CreatureEvents>((Hooks::CreatureEvents)event_id, guid, instanceId);
+                    auto key = UniqueObjectKey<Hooks::CreatureEvents>((Hooks::CreatureEvents)event_id, guid, instanceId);
                     bindingID = CreatureUniqueBindings->Insert(key, functionRef, shots);
                     createCancelCallback(L, bindingID, CreatureUniqueBindings);
                 }
@@ -1192,7 +1192,7 @@ CreatureAI* Eluna::GetAI(Creature* creature)
         Hooks::CreatureEvents event_id = (Hooks::CreatureEvents)i;
 
         auto entryKey = EntryKey<Hooks::CreatureEvents>(event_id, creature->GetEntry());
-        auto uniqueKey = UniqueCreatureKey<Hooks::CreatureEvents>(event_id, creature->GET_GUID(), creature->GetInstanceId());
+        auto uniqueKey = UniqueObjectKey<Hooks::CreatureEvents>(event_id, creature->GET_GUID(), creature->GetInstanceId());
 
         if (CreatureEventBindings->HasEvents(entryKey) ||
             CreatureUniqueBindings->HasEvents(uniqueKey))

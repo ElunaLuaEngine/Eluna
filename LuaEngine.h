@@ -91,7 +91,7 @@ template<typename T> class ElunaTemplate;
 template<typename K> class BindingMap;
 template<typename T> struct EventKey;
 template<typename T> struct EntryKey;
-template<typename T> struct UniqueCreatureKey;
+template<typename T> struct UniqueObjectKey;
 
 struct LuaScript
 {
@@ -206,7 +206,7 @@ public:
     BindingMap< EntryKey<Hooks::GossipEvents> >*     ItemGossipBindings;
     BindingMap< EntryKey<Hooks::GossipEvents> >*     PlayerGossipBindings;
 
-    BindingMap< UniqueCreatureKey<Hooks::CreatureEvents> >*  CreatureUniqueBindings;
+    BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >*  CreatureUniqueBindings;
 
     static void Initialize();
     static void Uninitialize();

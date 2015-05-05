@@ -2700,7 +2700,7 @@ namespace LuaGlobalFunctions
      */
     int ClearUniqueCreatureEvents(Eluna* E, lua_State* L)
     {
-        typedef UniqueCreatureKey<Hooks::CreatureEvents> Key;
+        typedef UniqueObjectKey<Hooks::CreatureEvents> Key;
 
         if (lua_isnoneornil(L, 3))
         {
