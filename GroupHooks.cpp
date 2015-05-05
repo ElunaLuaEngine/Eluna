@@ -13,6 +13,8 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
+    if (!IsEnabled())\
+        return;\
     auto key = EventKey<GroupEvents>(EVENT);\
     if (!GroupEventBindings->HasEvents(key))\
         return;\

@@ -14,6 +14,8 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT, CREATURE) \
+    if (!IsEnabled())\
+        return;\
     auto entry_key = EntryKey<CreatureEvents>(EVENT, CREATURE->GetEntry());\
     auto unique_key = UniqueObjectKey<CreatureEvents>(EVENT, CREATURE->GET_GUID(), CREATURE->GetInstanceId());\
     if (!CreatureEventBindings->HasEvents(entry_key))\
@@ -22,6 +24,8 @@ using namespace Hooks;
     LOCK_ELUNA
 
 #define START_HOOK_WITH_RETVAL(EVENT, CREATURE, RETVAL) \
+    if (!IsEnabled())\
+        return RETVAL;\
     auto entry_key = EntryKey<CreatureEvents>(EVENT, CREATURE->GetEntry());\
     auto unique_key = UniqueObjectKey<CreatureEvents>(EVENT, CREATURE->GET_GUID(), CREATURE->GetInstanceId());\
     if (!CreatureEventBindings->HasEvents(entry_key))\

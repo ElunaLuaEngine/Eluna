@@ -13,6 +13,8 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
+    if (!IsEnabled())\
+        return;\
     auto key = EventKey<BGEvents>(EVENT);\
     if (!BGEventBindings->HasEvents(key))\
         return;\

@@ -189,8 +189,6 @@ void Eluna::CloseLua()
 
 void Eluna::OpenLua()
 {
-    CreateBindStores();
-
     enabled = eConfigMgr->GetBoolDefault("Eluna.Enabled", true);
     if (!IsEnabled())
     {
@@ -199,6 +197,7 @@ void Eluna::OpenLua()
     }
 
     L = luaL_newstate();
+    CreateBindStores();
 
     // open base lua libraries
     luaL_openlibs(L);
