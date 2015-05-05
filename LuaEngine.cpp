@@ -1037,7 +1037,6 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, uint64 guid, uint
                     bindingID = CreatureUniqueBindings->Insert(key, functionRef, shots);
                     createCancelCallback(L, bindingID, CreatureUniqueBindings);
                 }
-
                 return 1; // Stack: callback
             }
             break;
@@ -1188,12 +1187,17 @@ int Eluna::CallOneFunction(int number_of_functions, int number_of_arguments, int
 
 CreatureAI* Eluna::GetAI(Creature* creature)
 {
-    auto entryKey = EntryKey<Hooks::CreatureEvents>(creature->GetEntry());
-    auto uniqueKey = UniqueCreatureKey<Hooks::CreatureEvents>(creature->GET_GUID(), creature->GetInstanceId());
+    for (int i = Hooks::CREATURE_EVENT_ON_ENTER_COMBAT; i < Hooks::CREATURE_EVENT_COUNT; ++i)
+    {
+        Hooks::CreatureEvents event_id = (Hooks::CreatureEvents)i;
 
-    if (CreatureEventBindings->HasEvents(entryKey) ||
-        CreatureUniqueBindings->HasEvents(uniqueKey))
-        return new ElunaCreatureAI(creature);
+        auto entryKey = EntryKey<Hooks::CreatureEvents>(event_id, creature->GetEntry());
+        auto uniqueKey = UniqueCreatureKey<Hooks::CreatureEvents>(event_id, creature->GET_GUID(), creature->GetInstanceId());
+
+        if (CreatureEventBindings->HasEvents(entryKey) ||
+            CreatureUniqueBindings->HasEvents(uniqueKey))
+            return new ElunaCreatureAI(creature);
+    }
 
     return NULL;
 }

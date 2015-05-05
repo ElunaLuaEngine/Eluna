@@ -4,9 +4,6 @@
  * Please see the included DOCS/LICENSE.md for more information
  */
 
-#ifndef _SERVER_HOOKS_H
-#define _SERVER_HOOKS_H
-
 #include "Hooks.h"
 #include "HookHelpers.h"
 #include "LuaEngine.h"
@@ -17,7 +14,39 @@
 
 using namespace Hooks;
 
-typedef EventKey<Hooks::ServerEvents> Key;
+#define START_HOOK(EVENT) \
+    auto key = EventKey<ServerEvents>(EVENT);\
+    if (!ServerEventBindings->HasEvents(key))\
+        return;\
+    LOCK_ELUNA
+
+#define START_HOOK_WITH_RETVAL(EVENT, RETVAL) \
+    auto key = EventKey<ServerEvents>(EVENT);\
+    if (!ServerEventBindings->HasEvents(key))\
+        return RETVAL;\
+    LOCK_ELUNA
+
+bool Eluna::OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel)
+{
+    START_HOOK_WITH_RETVAL(ADDON_EVENT_ON_MESSAGE, true);
+    Push(sender);
+    Push(type);
+    const char* c_msg = msg.c_str();
+    Push(strtok((char*)c_msg, "\t")); // prefix
+    Push(strtok(NULL, "")); // msg
+    if (receiver)
+        Push(receiver);
+    else if (guild)
+        Push(guild);
+    else if (group)
+        Push(group);
+    else if (channel)
+        Push(channel->GetChannelId());
+    else
+        Push();
+
+    return CallAllFunctionsBool(ServerEventBindings, key, true);
+}
 
 void Eluna::OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj)
 {
@@ -42,53 +71,38 @@ void Eluna::OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* o
 
 void Eluna::OnLuaStateClose()
 {
-    if (!ServerEventBindings->HasEvents(Key(ELUNA_EVENT_ON_LUA_STATE_CLOSE)))
-        return;
-
-    LOCK_ELUNA;
-    CallAllFunctions(ServerEventBindings, Key(ELUNA_EVENT_ON_LUA_STATE_CLOSE));
+    START_HOOK(ELUNA_EVENT_ON_LUA_STATE_CLOSE);
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnLuaStateOpen()
 {
-    if (!ServerEventBindings->HasEvents(Key(ELUNA_EVENT_ON_LUA_STATE_OPEN)))
-        return;
-
-    LOCK_ELUNA;
-    CallAllFunctions(ServerEventBindings, Key(ELUNA_EVENT_ON_LUA_STATE_OPEN));
+    START_HOOK(ELUNA_EVENT_ON_LUA_STATE_OPEN);
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 // areatrigger
 bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
 {
-    if (!ServerEventBindings->HasEvents(Key(TRIGGER_EVENT_ON_TRIGGER)))
-        return false;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(TRIGGER_EVENT_ON_TRIGGER, false);
     Push(pPlayer);
     Push(pTrigger->id);
-    return CallAllFunctionsBool(ServerEventBindings, Key(TRIGGER_EVENT_ON_TRIGGER));
+    return CallAllFunctionsBool(ServerEventBindings, key);
 }
 
 // weather
 void Eluna::OnChange(Weather* weather, uint32 zone, WeatherState state, float grade)
 {
-    if (!ServerEventBindings->HasEvents(Key(WEATHER_EVENT_ON_CHANGE)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(WEATHER_EVENT_ON_CHANGE);
     Push(zone);
     Push(state);
     Push(grade);
-    CallAllFunctions(ServerEventBindings, Key(WEATHER_EVENT_ON_CHANGE));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 // Auction House
 void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    if (!ServerEventBindings->HasEvents(Key(AUCTION_EVENT_ON_ADD)))
-        return;
-
     Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
@@ -102,7 +116,7 @@ void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     if (!owner || !item)
         return;
 
-    LOCK_ELUNA;
+    START_HOOK(AUCTION_EVENT_ON_ADD);
     Push(entry->Id);
     Push(owner);
     Push(item);
@@ -111,14 +125,11 @@ void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     Push(entry->startbid);
     Push(entry->bid);
     Push(entry->bidder);
-    CallAllFunctions(ServerEventBindings, Key(AUCTION_EVENT_ON_ADD));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    if (!ServerEventBindings->HasEvents(Key(AUCTION_EVENT_ON_REMOVE)))
-        return;
-
     Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
@@ -132,7 +143,7 @@ void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     if (!owner || !item)
         return;
 
-    LOCK_ELUNA;
+    START_HOOK(AUCTION_EVENT_ON_REMOVE);
     Push(entry->Id);
     Push(owner);
     Push(item);
@@ -141,14 +152,11 @@ void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     Push(entry->startbid);
     Push(entry->bid);
     Push(entry->bidder);
-    CallAllFunctions(ServerEventBindings, Key(AUCTION_EVENT_ON_REMOVE));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    if (!ServerEventBindings->HasEvents(Key(AUCTION_EVENT_ON_SUCCESSFUL)))
-        return;
-
     Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
@@ -162,7 +170,7 @@ void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     if (!owner || !item)
         return;
 
-    LOCK_ELUNA;
+    START_HOOK(AUCTION_EVENT_ON_SUCCESSFUL);
     Push(entry->Id);
     Push(owner);
     Push(item);
@@ -171,14 +179,11 @@ void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     Push(entry->startbid);
     Push(entry->bid);
     Push(entry->bidder);
-    CallAllFunctions(ServerEventBindings, Key(AUCTION_EVENT_ON_SUCCESSFUL));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    if (!ServerEventBindings->HasEvents(Key(AUCTION_EVENT_ON_EXPIRE)))
-        return;
-
     Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
@@ -192,7 +197,7 @@ void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     if (!owner || !item)
         return;
 
-    LOCK_ELUNA;
+    START_HOOK(AUCTION_EVENT_ON_EXPIRE);
     Push(entry->Id);
     Push(owner);
     Push(item);
@@ -201,181 +206,35 @@ void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     Push(entry->startbid);
     Push(entry->bid);
     Push(entry->bidder);
-    CallAllFunctions(ServerEventBindings, Key(AUCTION_EVENT_ON_EXPIRE));
-}
-
-// Packet
-bool Eluna::OnPacketSend(WorldSession* session, WorldPacket& packet)
-{
-    bool result = true;
-    Player* player = NULL;
-    if (session)
-        player = session->GetPlayer();
-    OnPacketSendAny(player, packet, result);
-    OnPacketSendOne(player, packet, result);
-    return result;
-}
-void Eluna::OnPacketSendAny(Player* player, WorldPacket& packet, bool& result)
-{
-    if (!ServerEventBindings->HasEvents(Key(SERVER_EVENT_ON_PACKET_SEND)))
-        return;
-
-    LOCK_ELUNA;
-    Push(new WorldPacket(packet));
-    Push(player);
-    int n = SetupStack(ServerEventBindings, Key(SERVER_EVENT_ON_PACKET_SEND), 2);
-
-    while (n > 0)
-    {
-        int r = CallOneFunction(n--, 2, 2);
-
-        if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
-            result = false;
-
-        if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
-                packet = *data;
-
-        lua_pop(L, 2);
-    }
-
-    CleanUpStack(2);
-}
-
-void Eluna::OnPacketSendOne(Player* player, WorldPacket& packet, bool& result)
-{
-    auto key = EntryKey<Hooks::PacketEvents>(PACKET_EVENT_ON_PACKET_SEND, packet.GetOpcode());
-
-    if (!PacketEventBindings->HasEvents(key))
-        return;
-
-    LOCK_ELUNA;
-    Push(new WorldPacket(packet));
-    Push(player);
-    int n = SetupStack(PacketEventBindings, key, 2);
-
-    while (n > 0)
-    {
-        int r = CallOneFunction(n--, 2, 2);
-
-        if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
-            result = false;
-
-        if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
-                packet = *data;
-
-        lua_pop(L, 2);
-    }
-
-    CleanUpStack(2);
-}
-
-bool Eluna::OnPacketReceive(WorldSession* session, WorldPacket& packet)
-{
-    bool result = true;
-    Player* player = NULL;
-    if (session)
-        player = session->GetPlayer();
-    OnPacketReceiveAny(player, packet, result);
-    OnPacketReceiveOne(player, packet, result);
-    return result;
-}
-
-void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result)
-{
-    if (!ServerEventBindings->HasEvents(Key(SERVER_EVENT_ON_PACKET_RECEIVE)))
-        return;
-
-    LOCK_ELUNA;
-    Push(new WorldPacket(packet));
-    Push(player);
-    int n = SetupStack(ServerEventBindings, Key(SERVER_EVENT_ON_PACKET_RECEIVE), 2);
-
-    while (n > 0)
-    {
-        int r = CallOneFunction(n--, 2, 2);
-
-        if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
-            result = false;
-
-        if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
-                packet = *data;
-
-        lua_pop(L, 2);
-    }
-
-    CleanUpStack(2);
-}
-
-void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result)
-{
-    auto key = EntryKey<Hooks::PacketEvents>(PACKET_EVENT_ON_PACKET_SEND, packet.GetOpcode());
-
-    if (!PacketEventBindings->HasEvents(key))
-        return;
-
-    LOCK_ELUNA;
-    Push(new WorldPacket(packet));
-    Push(player);
-    int n = SetupStack(PacketEventBindings, key, 2);
-
-    while (n > 0)
-    {
-        int r = CallOneFunction(n--, 2, 2);
-
-        if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
-            result = false;
-
-        if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
-                packet = *data;
-
-        lua_pop(L, 2);
-    }
-
-    CleanUpStack(2);
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnOpenStateChange(bool open)
 {
-    if (!ServerEventBindings->HasEvents(Key(WORLD_EVENT_ON_OPEN_STATE_CHANGE)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(WORLD_EVENT_ON_OPEN_STATE_CHANGE);
     Push(open);
-    CallAllFunctions(ServerEventBindings, Key(WORLD_EVENT_ON_OPEN_STATE_CHANGE));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnConfigLoad(bool reload)
 {
-    if (!ServerEventBindings->HasEvents(Key(WORLD_EVENT_ON_CONFIG_LOAD)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(WORLD_EVENT_ON_CONFIG_LOAD);
     Push(reload);
-    CallAllFunctions(ServerEventBindings, Key(WORLD_EVENT_ON_CONFIG_LOAD));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask)
 {
-    if (!ServerEventBindings->HasEvents(Key(WORLD_EVENT_ON_SHUTDOWN_INIT)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(WORLD_EVENT_ON_SHUTDOWN_INIT);
     Push(code);
     Push(mask);
-    CallAllFunctions(ServerEventBindings, Key(WORLD_EVENT_ON_SHUTDOWN_INIT));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnShutdownCancel()
 {
-    if (!ServerEventBindings->HasEvents(Key(WORLD_EVENT_ON_SHUTDOWN_CANCEL)))
-        return;
-
-    LOCK_ELUNA;
-    CallAllFunctions(ServerEventBindings, Key(WORLD_EVENT_ON_SHUTDOWN_CANCEL));
+    START_HOOK(WORLD_EVENT_ON_SHUTDOWN_CANCEL);
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnWorldUpdate(uint32 diff)
@@ -388,106 +247,74 @@ void Eluna::OnWorldUpdate(uint32 diff)
 
     eventMgr->globalProcessor->Update(diff);
 
-    if (!ServerEventBindings->HasEvents(Key(WORLD_EVENT_ON_UPDATE)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(WORLD_EVENT_ON_UPDATE);
     Push(diff);
-    CallAllFunctions(ServerEventBindings, Key(WORLD_EVENT_ON_UPDATE));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnStartup()
 {
-    if (!ServerEventBindings->HasEvents(Key(WORLD_EVENT_ON_STARTUP)))
-        return;
-
-    LOCK_ELUNA;
-    CallAllFunctions(ServerEventBindings, Key(WORLD_EVENT_ON_STARTUP));
+    START_HOOK(WORLD_EVENT_ON_STARTUP);
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnShutdown()
 {
-    if (!ServerEventBindings->HasEvents(Key(WORLD_EVENT_ON_SHUTDOWN)))
-        return;
-
-    LOCK_ELUNA;
-    CallAllFunctions(ServerEventBindings, Key(WORLD_EVENT_ON_SHUTDOWN));
+    START_HOOK(WORLD_EVENT_ON_SHUTDOWN);
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 /* Map */
 void Eluna::OnCreate(Map* map)
 {
-    if (!ServerEventBindings->HasEvents(Key(MAP_EVENT_ON_CREATE)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(MAP_EVENT_ON_CREATE);
     Push(map);
-    CallAllFunctions(ServerEventBindings, Key(MAP_EVENT_ON_CREATE));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnDestroy(Map* map)
 {
-    if (!ServerEventBindings->HasEvents(Key(MAP_EVENT_ON_DESTROY)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(MAP_EVENT_ON_DESTROY);
     Push(map);
-    CallAllFunctions(ServerEventBindings, Key(MAP_EVENT_ON_DESTROY));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnPlayerEnter(Map* map, Player* player)
 {
-    if (!ServerEventBindings->HasEvents(Key(MAP_EVENT_ON_PLAYER_ENTER)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(MAP_EVENT_ON_PLAYER_ENTER);
     Push(map);
     Push(player);
-    CallAllFunctions(ServerEventBindings, Key(MAP_EVENT_ON_PLAYER_ENTER));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnPlayerLeave(Map* map, Player* player)
 {
-    if (!ServerEventBindings->HasEvents(Key(MAP_EVENT_ON_PLAYER_LEAVE)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(MAP_EVENT_ON_PLAYER_LEAVE);
     Push(map);
     Push(player);
-    CallAllFunctions(ServerEventBindings, Key(MAP_EVENT_ON_PLAYER_LEAVE));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnUpdate(Map* map, uint32 diff)
 {
-    if (!ServerEventBindings->HasEvents(Key(MAP_EVENT_ON_UPDATE)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(MAP_EVENT_ON_UPDATE);
     // enable this for multithread
     // eventMgr->globalProcessor->Update(diff);
     Push(map);
     Push(diff);
-    CallAllFunctions(ServerEventBindings, Key(MAP_EVENT_ON_UPDATE));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnRemove(GameObject* gameobject)
 {
-    if (!ServerEventBindings->HasEvents(Key(WORLD_EVENT_ON_DELETE_GAMEOBJECT)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(WORLD_EVENT_ON_DELETE_GAMEOBJECT);
     Push(gameobject);
-    CallAllFunctions(ServerEventBindings, Key(WORLD_EVENT_ON_DELETE_GAMEOBJECT));
+    CallAllFunctions(ServerEventBindings, key);
 }
 
 void Eluna::OnRemove(Creature* creature)
 {
-    if (!ServerEventBindings->HasEvents(Key(WORLD_EVENT_ON_DELETE_CREATURE)))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(WORLD_EVENT_ON_DELETE_CREATURE);
     Push(creature);
-    CallAllFunctions(ServerEventBindings, Key(WORLD_EVENT_ON_DELETE_CREATURE));
+    CallAllFunctions(ServerEventBindings, key);
 }
-
-#endif // _SERVER_HOOKS_H

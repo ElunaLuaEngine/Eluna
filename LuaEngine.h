@@ -162,12 +162,27 @@ private:
 
     // Some helpers for hooks to call event handlers.
     // The bodies of the templates are in HookHelpers.h, so if you want to use them you need to #include "HookHelpers.h".
-    template<typename T> int SetupStack(BindingMap<T>* bindings, const T& key, int number_of_arguments);
-                         int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
-                         void CleanUpStack(int number_of_arguments);
-    template<typename T> void ReplaceArgument(T value, uint8 index);
-    template<typename T> void CallAllFunctions(BindingMap<T>* bindings, const T& key);
-    template<typename T> bool CallAllFunctionsBool(BindingMap<T>* bindings, const T& key, bool default_value = false);
+    template<typename K1, typename K2> int SetupStack(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, int number_of_arguments);
+                                       int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);          
+                                       void CleanUpStack(int number_of_arguments);
+    template<typename T>               void ReplaceArgument(T value, uint8 index);
+    template<typename K1, typename K2> void CallAllFunctions(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2);
+    template<typename K1, typename K2> bool CallAllFunctionsBool(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, bool default_value = false);
+
+    // Same as above but for only one binding instead of two.
+    // `key` is passed twice because there's no NULL for references, but it's not actually used if `bindings2` is NULL.
+    template<typename K> int SetupStack(BindingMap<K>* bindings, const K& key, int number_of_arguments)
+    {
+        return SetupStack<K, K>(bindings, NULL, key, key, number_of_arguments);
+    }
+    template<typename K> void CallAllFunctions(BindingMap<K>* bindings, const K& key)
+    {
+        CallAllFunctions<K, K>(bindings, NULL, key, key);
+    }
+    template<typename K> bool CallAllFunctionsBool(BindingMap<K>* bindings, const K& key, bool default_value = false)
+    {
+        return CallAllFunctionsBool<K, K>(bindings, NULL, key, key, default_value);
+    }
 
 public:
     static Eluna* GEluna;
