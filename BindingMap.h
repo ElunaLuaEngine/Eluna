@@ -26,15 +26,8 @@ extern "C"
 static uint64 maxBindingID;
 
 
-class BindingMapBase : public ElunaUtil::RWLockable
-{
-public:
-    virtual void Remove(uint64 id) = 0;
-};
-
-
 template<typename K>
-class BindingMap : public BindingMapBase
+class BindingMap : public ElunaUtil::RWLockable
 {
     lua_State* L;
 
@@ -86,7 +79,7 @@ public:
             bindings.erase(iter);
     }
 
-    void Remove(uint64 id) override
+    void Remove(uint64 id)
     {
         WriteGuard guard(GetLock());
 

@@ -906,11 +906,12 @@ ElunaObject* Eluna::CHECKTYPE(lua_State* luastate, int narg, const char* tname, 
     return *ptrHold;
 }
 
+template<typename K>
 static int cancelBinding(lua_State *L)
 {
     uint64 bindingID = Eluna::CHECKVAL<uint64>(L, lua_upvalueindex(1));
 
-    BindingMapBase* bindings = (BindingMapBase*)lua_touserdata(L, lua_upvalueindex(2));
+    BindingMap<K>* bindings = (BindingMap<K>*)lua_touserdata(L, lua_upvalueindex(2));
     ASSERT(bindings != NULL);
 
     bindings->Remove(bindingID);
@@ -918,13 +919,14 @@ static int cancelBinding(lua_State *L)
     return 0;
 }
 
-static void createCancelCallback(lua_State* L, uint64 bindingID, BindingMapBase* bindings)
+template<typename K>
+static void createCancelCallback(lua_State* L, uint64 bindingID, BindingMap<K>* bindings)
 {
     Eluna::Push(L, bindingID);
     lua_pushlightuserdata(L, bindings);
     // Stack: bindingID, bindings
 
-    lua_pushcclosure(L, &cancelBinding, 2);
+    lua_pushcclosure(L, &cancelBinding<K>, 2);
     // Stack: cancel_callback
 }
 
