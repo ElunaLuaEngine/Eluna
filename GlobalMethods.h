@@ -7,7 +7,7 @@
 #ifndef GLOBALMETHODS_H
 #define GLOBALMETHODS_H
 
-#include "ElunaBinding.h"
+#include "BindingMap.h"
 
 /***
  * These functions can be used anywhere at any time, including at start-up.
