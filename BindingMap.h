@@ -100,10 +100,10 @@ public:
         if (iter == bindings.end())
             return;
 
-        BindingList* list = &(iter->second);
+        BindingList& list = iter->second;
 
         // Remove all pointers to `list` from `id_lookup_table`.
-        for (auto i = list->begin(); i != list->end(); ++i)
+        for (auto i = list.begin(); i != list.end(); ++i)
         {
             std::unique_ptr<Binding>& binding = *i;
             id_lookup_table.erase(binding->id);
