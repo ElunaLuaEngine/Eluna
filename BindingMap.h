@@ -4,8 +4,8 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifndef _ELUNA_BINDING_H
-#define _ELUNA_BINDING_H
+#ifndef _BINDING_MAP_H
+#define _BINDING_MAP_H
 
 #include "Common.h"
 #include "ElunaUtility.h"
@@ -307,4 +307,4 @@ namespace std
     };
 }
 
-#endif
+#endif // _BINDING_MAP_H
