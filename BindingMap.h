@@ -275,7 +275,8 @@ namespace std
         {
             result_type const h1(std::hash<uint32>()(k.event_id));
             result_type const h2(std::hash<uint32>()(k.entry));
-            return h1 ^ (h2 << 1);
+
+            return h1 ^ (h2 << 8); // `event_id` probably won't exceed 2^8.
         }
     };
 
@@ -288,9 +289,10 @@ namespace std
         result_type operator()(argument_type const& k) const
         {
             result_type const h1(std::hash<uint32>()(k.event_id));
-            result_type const h2(std::hash<uint64>()(k.guid));
-            result_type const h3(std::hash<uint32>()(k.instance_id));
-            return h1 ^ (h2 << 1) ^ (h3 << 2);
+            result_type const h2(std::hash<uint32>()(k.instance_id));
+            result_type const h3(std::hash<uint64>()(k.guid));
+
+            return h1 ^ (h2 << 8) ^ (h3 << 24); // `instance_id` probably won't exceed 2^16.
         }
     };
 }
