@@ -49,6 +49,17 @@ private:
     typedef std::vector< std::unique_ptr<Binding> > BindingList;
 
     UNORDERED_MAP<K, BindingList> bindings;
+    /*
+     * This table is for fast removal of bindings by ID.
+     *
+     * Instead of having to look through (potentially) every BindingList to find
+     *   the Binding with the right ID, this allows you to go directly to the
+     *   BindingList that might have the Binding with that ID.
+     *
+     * However, you must be careful not to store pointers to BindingLists
+     *   that no longer exist (see `void Clear(const K& key)` implementation).
+     */
+    UNORDERED_MAP<uint64, BindingList*> id_lookup_table;
 
 public:
     BindingMap(lua_State* L) :
@@ -61,7 +72,9 @@ public:
         WriteGuard guard(GetLock());
 
         uint64 id = (++maxBindingID);
-        bindings[key].push_back(std::unique_ptr<Binding>(new Binding(L, id, ref, shots)));
+        BindingList& list = bindings[key];
+        list.push_back(std::unique_ptr<Binding>(new Binding(L, id, ref, shots)));
+        id_lookup_table[id] = &list;
         return id;
     }
 
@@ -71,6 +84,29 @@ public:
 
         if (bindings.empty())
             return;
+
+        auto iter = bindings.find(key);
+        if (iter == bindings.end())
+            return;
+
+        BindingList* list_address = &(iter->second);
+        // A list of keys that needs to be invalidated.
+        std::vector<uint64> bad_keys;
+
+        // Find all references in `id_lookup_table` to the list that is being erased
+        //   and stored the key in `bad_keys`.
+        for (auto i = id_lookup_table.begin(); i != id_lookup_table.end(); ++i)
+        {
+            if (i->second == list_address)
+                bad_keys.push_back(i->first);
+        }
+
+        // Remove all the bad keys.
+        for (auto i = bad_keys.begin(); i != bad_keys.end(); ++i)
+        {
+            id_lookup_table.erase(*i);
+        }
+
         bindings.erase(key);
     }
 
@@ -78,21 +114,26 @@ public:
     {
         WriteGuard guard(GetLock());
 
-        for (auto listIter = bindings.begin(); listIter != bindings.end(); ++listIter)
+        auto iter = id_lookup_table.find(id);
+        if (iter == id_lookup_table.end())
+            return;
+
+        BindingList* list = iter->second;
+        auto i = list->begin();
+
+        for (; i != list->end(); ++i)
         {
-            BindingList& list = listIter->second;
-
-            auto i = list.begin();
-            for (; i != list.end(); ++i)
-            {
-                std::unique_ptr<Binding>& binding = *i;
-                if (binding->id == id)
-                    break;
-            }
-
-            if (i != list.end())
-                list.erase(i);
+            std::unique_ptr<Binding>& binding = *i;
+            if (binding->id == id)
+                break;
         }
+
+        if (i != list->end())
+            list->erase(i);
+
+        // Unconditionally erase the ID in the lookup table because
+        //   it was either already invalid, or it's no longer valid.
+        id_lookup_table.erase(id);
     }
 
     bool HasEvents(const K& key)
@@ -134,7 +175,10 @@ public:
                 binding->remainingShots -= 1;
 
                 if (binding->remainingShots == 0)
+                {
+                    id_lookup_table.erase(binding->id);
                     list.erase(i_prev);
+                }
             }
         }
     }
