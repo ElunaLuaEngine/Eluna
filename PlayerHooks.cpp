@@ -17,7 +17,7 @@ using namespace Hooks;
     if (!IsEnabled())\
         return;\
     auto key = EventKey<PlayerEvents>(EVENT);\
-    if (!PlayerEventBindings->HasEvents(key))\
+    if (!PlayerEventBindings->HasBindingsFor(key))\
         return;\
     LOCK_ELUNA
 
@@ -25,7 +25,7 @@ using namespace Hooks;
     if (!IsEnabled())\
         return RETVAL;\
     auto key = EventKey<PlayerEvents>(EVENT);\
-    if (!PlayerEventBindings->HasEvents(key))\
+    if (!PlayerEventBindings->HasBindingsFor(key))\
         return RETVAL;\
     LOCK_ELUNA
 

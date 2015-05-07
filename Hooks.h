@@ -13,7 +13,7 @@
  * A. If results will be IGNORED:
  *
  *     // Return early if there are no bindings.
- *     if (!WhateverBindings->HasEvents(SOME_EVENT_TYPE))
+ *     if (!WhateverBindings->HasBindingsFor(SOME_EVENT_TYPE))
  *         return;
  *
  *     // Lock out any other threads.
@@ -31,7 +31,7 @@
  * B. If results will be USED:
  *
  *     // Return early if there are no bindings.
- *     if (!WhateverBindings->HasEvents(SOME_EVENT_TYPE))
+ *     if (!WhateverBindings->HasBindingsFor(SOME_EVENT_TYPE))
  *          return;
  *
  *     // Lock out any other threads.

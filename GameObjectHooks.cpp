@@ -18,7 +18,7 @@ using namespace Hooks;
     if (!IsEnabled())\
         return;\
     auto key = EntryKey<GameObjectEvents>(EVENT, ENTRY);\
-    if (!GameObjectEventBindings->HasEvents(key))\
+    if (!GameObjectEventBindings->HasBindingsFor(key))\
         return;\
     LOCK_ELUNA
 
@@ -26,7 +26,7 @@ using namespace Hooks;
     if (!IsEnabled())\
         return RETVAL;\
     auto key = EntryKey<GameObjectEvents>(EVENT, ENTRY);\
-    if (!GameObjectEventBindings->HasEvents(key))\
+    if (!GameObjectEventBindings->HasBindingsFor(key))\
         return RETVAL;\
     LOCK_ELUNA
 

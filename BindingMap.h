@@ -17,6 +17,9 @@ extern "C"
 };
 
 
+/*
+ * A set of bindings from keys of type `K` to Lua references.
+ */
 template<typename K>
 class BindingMap : public ElunaUtil::RWLockable
 {
@@ -66,6 +69,12 @@ public:
     {
     }
 
+    /*
+     * Insert a new binding from `key` to `ref`, which lasts for `shots`-many pushes.
+     *
+     * If `shots` is 0, it will never automatically expire, but can still be
+     *   removed with `Clear` or `Remove`.
+     */
     uint64 Insert(const K& key, int ref, uint32 shots)
     {
         WriteGuard guard(GetLock());
@@ -77,6 +86,9 @@ public:
         return id;
     }
 
+    /*
+     * Clear all bindings for `key`.
+     */
     void Clear(const K& key)
     {
         WriteGuard guard(GetLock());
@@ -109,6 +121,9 @@ public:
         bindings.erase(key);
     }
 
+    /*
+     * Clear all bindings for all keys.
+     */
     void Clear()
     {
         WriteGuard guard(GetLock());
@@ -120,6 +135,11 @@ public:
         bindings.clear();
     }
 
+    /*
+     * Remove a specific binding identified by `id`.
+     *
+     * If `id` in invalid, nothing is removed.
+     */
     void Remove(uint64 id)
     {
         WriteGuard guard(GetLock());
@@ -146,7 +166,10 @@ public:
         id_lookup_table.erase(id);
     }
 
-    bool HasEvents(const K& key)
+    /*
+     * Check whether `key` has any bindings.
+     */
+    bool HasBindingsFor(const K& key)
     {
         ReadGuard guard(GetLock());
 
@@ -161,6 +184,9 @@ public:
         return !list.empty();
     }
 
+    /*
+     * Push all Lua references for `key` onto the stack.
+     */
     void PushRefsFor(const K& key)
     {
         WriteGuard guard(GetLock());
@@ -195,6 +221,10 @@ public:
 };
 
 
+/*
+ * A `BindingMap` key type for simple event ID bindings
+ *   (ServerEvents, GuildEvents, etc.).
+ */
 template <typename T>
 struct EventKey
 {
@@ -205,6 +235,10 @@ struct EventKey
     {}
 };
 
+/*
+ * A `BindingMap` key type for event ID/Object entry ID bindings
+ *   (CreatureEvents, GameObjectEvents, etc.).
+ */
 template <typename T>
 struct EntryKey : public EventKey<T>
 {
@@ -216,6 +250,10 @@ struct EntryKey : public EventKey<T>
     {}
 };
 
+/*
+ * A `BindingMap` key type for event ID/unique Object bindings
+ *   (currently just CreatureEvents).
+ */
 template <typename T>
 struct UniqueObjectKey : public EventKey<T>
 {
@@ -230,6 +268,10 @@ struct UniqueObjectKey : public EventKey<T>
 };
 
 
+/*
+ * Implementations of various std functions on the above key types,
+ *   so that they can be used within an UNORDERED_MAP.
+ */
 namespace std
 {
     template<typename T>

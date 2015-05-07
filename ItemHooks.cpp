@@ -17,7 +17,7 @@ using namespace Hooks;
     if (!IsEnabled())\
         return RETVAL;\
     auto key = EntryKey<ItemEvents>(EVENT, ENTRY);\
-    if (!ItemEventBindings->HasEvents(key))\
+    if (!ItemEventBindings->HasBindingsFor(key))\
         return RETVAL;\
     LOCK_ELUNA
 

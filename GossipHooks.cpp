@@ -17,7 +17,7 @@ using namespace Hooks;
     if (!IsEnabled())\
         return;\
     auto key = EntryKey<GossipEvents>(EVENT, ENTRY);\
-    if (!BINDINGS->HasEvents(key))\
+    if (!BINDINGS->HasBindingsFor(key))\
         return;\
     LOCK_ELUNA
 
@@ -25,7 +25,7 @@ using namespace Hooks;
     if (!IsEnabled())\
         return RETVAL;\
     auto key = EntryKey<GossipEvents>(EVENT, ENTRY);\
-    if (!BINDINGS->HasEvents(key))\
+    if (!BINDINGS->HasBindingsFor(key))\
         return RETVAL;\
     LOCK_ELUNA
 

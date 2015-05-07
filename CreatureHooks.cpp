@@ -18,8 +18,8 @@ using namespace Hooks;
         return;\
     auto entry_key = EntryKey<CreatureEvents>(EVENT, CREATURE->GetEntry());\
     auto unique_key = UniqueObjectKey<CreatureEvents>(EVENT, CREATURE->GET_GUID(), CREATURE->GetInstanceId());\
-    if (!CreatureEventBindings->HasEvents(entry_key))\
-        if (!CreatureUniqueBindings->HasEvents(unique_key))\
+    if (!CreatureEventBindings->HasBindingsFor(entry_key))\
+        if (!CreatureUniqueBindings->HasBindingsFor(unique_key))\
             return;\
     LOCK_ELUNA
 
@@ -28,8 +28,8 @@ using namespace Hooks;
         return RETVAL;\
     auto entry_key = EntryKey<CreatureEvents>(EVENT, CREATURE->GetEntry());\
     auto unique_key = UniqueObjectKey<CreatureEvents>(EVENT, CREATURE->GET_GUID(), CREATURE->GetInstanceId());\
-    if (!CreatureEventBindings->HasEvents(entry_key))\
-        if (!CreatureUniqueBindings->HasEvents(unique_key))\
+    if (!CreatureEventBindings->HasBindingsFor(entry_key))\
+        if (!CreatureUniqueBindings->HasBindingsFor(unique_key))\
             return RETVAL;\
     LOCK_ELUNA
 

@@ -1195,8 +1195,8 @@ CreatureAI* Eluna::GetAI(Creature* creature)
         auto entryKey = EntryKey<Hooks::CreatureEvents>(event_id, creature->GetEntry());
         auto uniqueKey = UniqueObjectKey<Hooks::CreatureEvents>(event_id, creature->GET_GUID(), creature->GetInstanceId());
 
-        if (CreatureEventBindings->HasEvents(entryKey) ||
-            CreatureUniqueBindings->HasEvents(uniqueKey))
+        if (CreatureEventBindings->HasBindingsFor(entryKey) ||
+            CreatureUniqueBindings->HasBindingsFor(uniqueKey))
             return new ElunaCreatureAI(creature);
     }
 
