@@ -503,13 +503,6 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 2);
         luaL_checktype(L, 3, LUA_TFUNCTION);
         uint32 shots = Eluna::CHECKVAL<uint32>(L, 4, 0);
-        bool returnCallback = Eluna::CHECKVAL<bool>(L, 5, false);
-
-        if (shots > 0 && returnCallback)
-        {
-            luaL_argerror(L, 5, "cannot return a callback if shots is > 0");
-            return 0;
-        }
 
         lua_pushvalue(L, 3);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -525,13 +518,6 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
         luaL_checktype(L, 2, LUA_TFUNCTION);
         uint32 shots = Eluna::CHECKVAL<uint32>(L, 3, 0);
-        bool returnCallback = Eluna::CHECKVAL<bool>(L, 4, false);
-
-        if (shots > 0 && returnCallback)
-        {
-            luaL_argerror(L, 5, "cannot return a callback if shots is > 0");
-            return 0;
-        }
 
         lua_pushvalue(L, 2);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -549,13 +535,6 @@ namespace LuaGlobalFunctions
         uint32 ev = Eluna::CHECKVAL<uint32>(L, 3);
         luaL_checktype(L, 4, LUA_TFUNCTION);
         uint32 shots = Eluna::CHECKVAL<uint32>(L, 5, 0);
-        bool returnCallback = Eluna::CHECKVAL<bool>(L, 6, false);
-
-        if (shots > 0 && returnCallback)
-        {
-            luaL_argerror(L, 5, "cannot return a callback if shots is > 0");
-            return 0;
-        }
 
         lua_pushvalue(L, 4);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -568,16 +547,6 @@ namespace LuaGlobalFunctions
 
     /**
      * Registers a server event handler.
-     *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearServerEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearServerEvents] work as normal.
      *
      *     enum ServerEvents
      *     {
@@ -634,14 +603,12 @@ namespace LuaGlobalFunctions
      *         SERVER_EVENT_COUNT
      *     };
      *
-     * @proto (event, function)
-     * @proto (event, function, shots)
-     * @proto cancel = (event, function, 0, true)
+     * @proto cancel = (event, function)
+     * @proto cancel = (event, function, shots)
      *
      * @param uint32 event : server event ID, refer to ServerEvents above
      * @param function function : function that will be called when the event occurs
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -652,16 +619,6 @@ namespace LuaGlobalFunctions
 
     /**
      * Registers a [Player] event handler.
-     *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearPlayerEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearPlayerEvents] work as normal.
      *
      * <pre>
      * enum PlayerEvents
@@ -715,14 +672,12 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (event, function)
-     * @proto (event, function, shots)
-     * @proto cancel = (event, function, 0, true)
+     * @proto cancel = (event, function)
+     * @proto cancel = (event, function, shots)
      *
      * @param uint32 event : [Player] event Id, refer to PlayerEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -733,16 +688,6 @@ namespace LuaGlobalFunctions
 
     /**
      * Registers a [Guild] event handler.
-     *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearGuildEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearGuildEvents] work as normal.
      *
      * <pre>
      * enum GuildEvents
@@ -764,14 +709,12 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (event, function)
-     * @proto (event, function, shots)
-     * @proto cancel = (event, function, 0, true)
+     * @proto cancel = (event, function)
+     * @proto cancel = (event, function, shots)
      *
      * @param uint32 event : [Guild] event Id, refer to GuildEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -782,16 +725,6 @@ namespace LuaGlobalFunctions
 
     /**
      * Registers a [Group] event handler.
-     *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearGroupEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearGroupEvents] work as normal.
      *
      * <pre>
      * enum GroupEvents
@@ -808,14 +741,12 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (event, function)
-     * @proto (event, function, shots)
-     * @proto cancel = (event, function, 0, true)
+     * @proto cancel = (event, function)
+     * @proto cancel = (event, function, shots)
      *
      * @param uint32 event : [Group] event Id, refer to GroupEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -828,16 +759,6 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [BattleGround] event handler.
      *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearBattleGroundEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearBattleGroundEvents] work as normal.
-     *
      * <pre>
      * enum BGEvents
      * {
@@ -849,14 +770,12 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (event, function)
-     * @proto (event, function, shots)
-     * @proto cancel = (event, function, 0, true)
+     * @proto cancel = (event, function)
+     * @proto cancel = (event, function, shots)
      *
      * @param uint32 event : [BattleGround] event Id, refer to BGEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -867,16 +786,6 @@ namespace LuaGlobalFunctions
 
     /**
      * Registers a [WorldPacket] event handler.
-     *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearPacketEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearPacketEvents] work as normal.
      *
      * <pre>
      * enum PacketEvents
@@ -889,15 +798,13 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (entry, event, function)
-     * @proto (entry, event, function, shots)
-     * @proto cancel = (entry, event, function, 0, true)
+     * @proto cancel = (entry, event, function)
+     * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : opcode
      * @param uint32 event : packet event Id, refer to PacketEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -909,16 +816,6 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Creature] gossip event handler.
      *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearCreatureGossipEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearCreatureGossipEvents] work as normal.
-     *
      * <pre>
      * enum GossipEvents
      * {
@@ -928,15 +825,13 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (menu_id, event, function)
-     * @proto (menu_id, event, function, shots)
-     * @proto cancel = (menu_id, event, function, 0, true)
+     * @proto cancel = (menu_id, event, function)
+     * @proto cancel = (menu_id, event, function, shots)
      *
      * @param uint32 menu_id : [Creature] entry Id
      * @param uint32 event : [Creature] gossip event Id, refer to GossipEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -948,16 +843,6 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [GameObject] gossip event handler.
      *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearGameObjectGossipEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearGameObjectGossipEvents] work as normal.
-     *
      * <pre>
      * enum GossipEvents
      * {
@@ -967,15 +852,13 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (menu_id, event, function)
-     * @proto (menu_id, event, function, shots)
-     * @proto cancel = (menu_id, event, function, 0, true)
+     * @proto cancel = (menu_id, event, function)
+     * @proto cancel = (menu_id, event, function, shots)
      *
      * @param uint32 menu_id : [GameObject] entry Id
      * @param uint32 event : [GameObject] gossip event Id, refer to GossipEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -986,16 +869,6 @@ namespace LuaGlobalFunctions
 
     /**
      * Registers an [Item] event handler.
-     *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearItemEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearItemEvents] work as normal.
      *
      * <pre>
      * enum ItemEvents
@@ -1009,15 +882,13 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (entry, event, function)
-     * @proto (entry, event, function, shots)
-     * @proto cancel = (entry, event, function, 0, true)
+     * @proto cancel = (entry, event, function)
+     * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : [Item] entry Id
      * @param uint32 event : [Item] event Id, refer to ItemEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -1029,16 +900,6 @@ namespace LuaGlobalFunctions
     /**
      * Registers an [Item] gossip event handler.
      *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearItemGossipEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearItemGossipEvents] work as normal.
-     *
      * <pre>
      * enum GossipEvents
      * {
@@ -1048,15 +909,13 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (entry, event, function)
-     * @proto (entry, event, function, shots)
-     * @proto cancel = (entry, event, function, 0, true)
+     * @proto cancel = (entry, event, function)
+     * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : [Item] entry Id
      * @param uint32 event : [Item] gossip event Id, refer to GossipEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -1068,16 +927,6 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Player] gossip event handler.
      *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearPlayerGossipEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearPlayerGossipEvents] work as normal.
-     *
      * <pre>
      * enum GossipEvents
      * {
@@ -1087,15 +936,13 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (menu_id, event, function)
-     * @proto (menu_id, event, function, shots)
-     * @proto cancel = (menu_id, event, function, 0, true)
+     * @proto cancel = (menu_id, event, function)
+     * @proto cancel = (menu_id, event, function, shots)
      *
      * @param uint32 menu_id : [Player] gossip menu Id
      * @param uint32 event : [Player] gossip event Id, refer to GossipEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -1107,16 +954,6 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Creature] event handler.
      *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearCreatureEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearCreatureEvents] work as normal.
-     *
      * <pre>
      * enum CreatureEvents
      * {
@@ -1161,15 +998,13 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (entry, event, function)
-     * @proto (entry, event, function, shots)
-     * @proto cancel = (entry, event, function, 0, true)
+     * @proto cancel = (entry, event, function)
+     * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : the ID of one or more [Creature]s
      * @param uint32 event : refer to CreatureEvents above
      * @param function function : function that will be called when the event occurs
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -1181,16 +1016,6 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Creature] event handler for a *single* [Creature].
      *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearUniqueCreatureEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearUniqueCreatureEvents] work as normal.
-     *
      * <pre>
      * enum CreatureEvents
      * {
@@ -1235,16 +1060,14 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (guid, instance_id, event, function)
-     * @proto (guid, instance_id, event, function, shots)
-     * @proto cancel = (guid, instance_id, event, function, 0, true)
+     * @proto cancel = (guid, instance_id, event, function)
+     * @proto cancel = (guid, instance_id, event, function, shots)
      *
      * @param uint64 guid : the GUID of a single [Creature]
      * @param uint32 instance_id : the instance ID of a single [Creature]
      * @param uint32 event : refer to CreatureEvents above
      * @param function function : function that will be called when the event occurs
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
@@ -1255,16 +1078,6 @@ namespace LuaGlobalFunctions
 
     /**
      * Registers a [GameObject] event handler.
-     *
-     * If `return_callback` is `true`, a function will be returned which
-     *   cancels this event binding.
-     *
-     * (The returned function is the **only** way to cancel the bindings;
-     *   `shots` must be `0` (e.g. the binding will never expire), and
-     *   [Global:ClearGameObjectEvents] will skip this binding.)
-     *
-     * If `return_callback` is `false`, nothing is returned, and `shots` and
-     *   [Global:ClearGameObjectEvents] work as normal.
      *
      * <pre>
      * enum GameObjectEvents
@@ -1286,15 +1099,13 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto (entry, event, function)
-     * @proto (entry, event, function, shots)
-     * @proto cancel = (entry, event, function, 0, true)
+     * @proto cancel = (entry, event, function)
+     * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : [GameObject] entry Id
      * @param uint32 event : [GameObject] event Id, refer to GameObjectEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
-     * @param bool return_callback = false
      *
      * @return function cancel : a function that cancels the binding when called
      */
