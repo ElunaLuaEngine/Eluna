@@ -2447,8 +2447,7 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(L, 1))
         {
-            for (uint32 i = 1; i < Hooks::BG_EVENT_COUNT; ++i)
-                E->BGEventBindings->Clear(Key((Hooks::BGEvents)i));
+            E->BGEventBindings->Clear();
         }
         else
         {
@@ -2653,8 +2652,7 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(L, 1))
         {
-            for (uint32 i = 1; i < Hooks::GROUP_EVENT_COUNT; ++i)
-                E->GroupEventBindings->Clear(Key((Hooks::GroupEvents)i));
+            E->GroupEventBindings->Clear();
         }
         else
         {
@@ -2681,8 +2679,7 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(L, 1))
         {
-            for (uint32 i = 1; i < Hooks::GUILD_EVENT_COUNT; ++i)
-                E->GuildEventBindings->Clear(Key((Hooks::GuildEvents)i));
+            E->GuildEventBindings->Clear();
         }
         else
         {
@@ -2811,8 +2808,7 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(L, 1))
         {
-            for (uint32 i = 1; i < Hooks::PLAYER_EVENT_COUNT; ++i)
-                E->PlayerEventBindings->Clear(Key((Hooks::PlayerEvents)i));
+            E->PlayerEventBindings->Clear();
         }
         else
         {
@@ -2871,8 +2867,7 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(L, 1))
         {
-            for (uint32 i = 1; i < Hooks::SERVER_EVENT_COUNT; ++i)
-                E->ServerEventBindings->Clear(Key((Hooks::ServerEvents)i));
+            E->ServerEventBindings->Clear();
         }
         else
         {

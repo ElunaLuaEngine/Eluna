@@ -110,6 +110,17 @@ public:
         bindings.erase(key);
     }
 
+    void Clear()
+    {
+        WriteGuard guard(GetLock());
+
+        if (bindings.empty())
+            return;
+
+        id_lookup_table.clear();
+        bindings.clear();
+    }
+
     void Remove(uint64 id)
     {
         WriteGuard guard(GetLock());
