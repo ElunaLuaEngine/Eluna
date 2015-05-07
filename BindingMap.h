@@ -17,14 +17,12 @@ extern "C"
 };
 
 
-static uint64 maxBindingID = 0;
-
-
 template<typename K>
 class BindingMap : public ElunaUtil::RWLockable
 {
 private:
     lua_State* L;
+    uint64 maxBindingID;
 
     struct Binding
     {
@@ -63,7 +61,8 @@ private:
 
 public:
     BindingMap(lua_State* L) :
-        L(L)
+        L(L),
+        maxBindingID(0)
     {
     }
 
