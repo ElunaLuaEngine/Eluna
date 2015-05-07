@@ -100,22 +100,13 @@ public:
         if (iter == bindings.end())
             return;
 
-        BindingList* list_address = &(iter->second);
-        // A list of keys that needs to be invalidated.
-        std::vector<uint64> bad_keys;
+        BindingList* list = &(iter->second);
 
-        // Find all references in `id_lookup_table` to the list that is being erased
-        //   and stored the key in `bad_keys`.
-        for (auto i = id_lookup_table.begin(); i != id_lookup_table.end(); ++i)
+        // Remove all pointers to `list` from `id_lookup_table`.
+        for (auto i = list->begin(); i != list->end(); ++i)
         {
-            if (i->second == list_address)
-                bad_keys.push_back(i->first);
-        }
-
-        // Remove all the bad keys.
-        for (auto i = bad_keys.begin(); i != bad_keys.end(); ++i)
-        {
-            id_lookup_table.erase(*i);
+            std::unique_ptr<Binding>& binding = *i;
+            id_lookup_table.erase(binding->id);
         }
 
         bindings.erase(key);
