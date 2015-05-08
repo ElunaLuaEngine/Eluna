@@ -237,7 +237,7 @@ struct EntryKey : public EventKey<T>
     uint32 entry;
 
     EntryKey(T event_type, uint32 entry) :
-        EventKey(event_type),
+        EventKey<T>(event_type),
         entry(entry)
     {}
 };
@@ -253,7 +253,7 @@ struct UniqueObjectKey : public EventKey<T>
     uint32 instance_id;
 
     UniqueObjectKey(T event_type, uint64 guid, uint32 instance_id) :
-        EventKey(event_type),
+        EventKey<T>(event_type),
         guid(guid),
         instance_id(instance_id)
     {}
