@@ -50,7 +50,7 @@ private:
 
     typedef std::vector< std::unique_ptr<Binding> > BindingList;
 
-    UNORDERED_MAP<K, BindingList> bindings;
+    std::unordered_map<K, BindingList> bindings;
     /*
      * This table is for fast removal of bindings by ID.
      *
@@ -61,7 +61,7 @@ private:
      * However, you must be careful not to store pointers to BindingLists
      *   that no longer exist (see `void Clear(const K& key)` implementation).
      */
-    UNORDERED_MAP<uint64, BindingList*> id_lookup_table;
+    std::unordered_map<uint64, BindingList*> id_lookup_table;
 
 public:
     BindingMap(lua_State* L) :
@@ -262,7 +262,7 @@ struct UniqueObjectKey : public EventKey<T>
 
 /*
  * Implementations of various std functions on the above key types,
- *   so that they can be used within an UNORDERED_MAP.
+ *   so that they can be used within an unordered_map.
  */
 namespace std
 {

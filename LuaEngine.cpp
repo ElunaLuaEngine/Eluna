@@ -434,7 +434,7 @@ void Eluna::RunScripts()
     scripts.insert(scripts.end(), lua_extensions.begin(), lua_extensions.end());
     scripts.insert(scripts.end(), lua_scripts.begin(), lua_scripts.end());
 
-    UNORDERED_MAP<std::string, std::string> loaded; // filename, path
+    std::unordered_map<std::string, std::string> loaded; // filename, path
 
     lua_getglobal(L, "package");
     // Stack: package

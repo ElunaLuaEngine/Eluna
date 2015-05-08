@@ -7,6 +7,8 @@
 #ifndef _ELUNA_UTIL_H
 #define _ELUNA_UTIL_H
 
+#include <unordered_map>
+#include <unordered_set>
 #include "Common.h"
 #include "SharedDefines.h"
 #include "ObjectGuid.h"
@@ -46,15 +48,6 @@ typedef QueryNamedResult ElunaQuery;
 #define GetGameObjectTemplate   GetGameObjectInfo
 #define GetItemTemplate         GetItemPrototype
 #define GetTemplate             GetProto
-#endif
-
-#ifndef UNORDERED_MAP
-#include <unordered_map>
-#define UNORDERED_MAP std::unordered_map
-#endif
-#ifndef UNORDERED_SET
-#include <unordered_set>
-#define UNORDERED_SET std::unordered_set
 #endif
 
 #ifndef MAKE_NEW_GUID
