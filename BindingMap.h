@@ -7,6 +7,7 @@
 #ifndef _BINDING_MAP_H
 #define _BINDING_MAP_H
 
+#include <memory>
 #include "Common.h"
 #include "ElunaUtility.h"
 
