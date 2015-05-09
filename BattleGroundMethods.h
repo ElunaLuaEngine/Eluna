@@ -65,7 +65,7 @@ namespace LuaBattleGround
     /**
      * Returns the bracket ID of the specific [BattleGround].
      *
-     * @return BattleGroundBracketId bracketId
+     * @return [BattleGroundBracketId] bracketId
      */
     int GetBracketId(Eluna* /*E*/, lua_State* L, BattleGround* bg)
     {
@@ -127,7 +127,7 @@ namespace LuaBattleGround
     /**
      * Returns the type ID of the [BattleGround].
      *
-     * @return BattleGroundTypeId typeId
+     * @return [BattleGroundTypeId] typeId
      */
     int GetTypeId(Eluna* /*E*/, lua_State* L, BattleGround* bg)
     {
@@ -204,7 +204,7 @@ namespace LuaBattleGround
     /**
      * Returns the winning team of the specific [BattleGround].
      *
-     * @return Team team
+     * @return [Team] team
      */
     int GetWinner(Eluna* /*E*/, lua_State* L, BattleGround* bg)
     {
@@ -215,7 +215,7 @@ namespace LuaBattleGround
     /**
      * Returns the status of the specific [BattleGround].
      *
-     * @return BattleGroundStatus status
+     * @return [BattleGroundStatus] status
      */
     int GetStatus(Eluna* /*E*/, lua_State* L, BattleGround* bg)
     {

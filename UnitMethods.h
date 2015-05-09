@@ -1298,7 +1298,7 @@ namespace LuaUnit
      * };
      * </pre>
      *
-     * @return MovementGeneratorType movementType
+     * @return [MovementGeneratorType] movementType
      */
     int GetMovementType(Eluna* /*E*/, lua_State* L, Unit* unit)
     {

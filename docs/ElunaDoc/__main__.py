@@ -5,6 +5,7 @@ from jinja2 import Environment, FileSystemLoader
 from typedecorator import params, returns
 from parser import ClassParser, MethodDoc
 import glob
+import time
 
 
 @returns([(str, FileType)])
@@ -39,9 +40,10 @@ def make_renderer(template_path, link_parser_factory):
         template = env.get_template(template_name)
         static = make_static(level)
         root = make_root(level)
+        currdate = time.strftime("%d/%m/%Y")
 
         with open('build/' + output_path, 'w') as out:
-            out.write(template.render(level=level, static=static, root=root, **kwargs))
+            out.write(template.render(level=level, static=static, root=root, currdate=currdate, **kwargs))
 
     return inner
 

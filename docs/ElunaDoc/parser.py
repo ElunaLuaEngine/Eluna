@@ -42,7 +42,7 @@ class ParameterDoc(object):
             self.description = ''
 
         # If the data type is a C++ number, convert to Lua number and add range info to description.
-        if self.data_type in ['float', 'double', 'int8', 'uint8', 'int16', 'uint16', 'int32', 'uint32']:
+        if self.data_type in ['float', 'double', 'int', 'int8', 'uint8', 'int16', 'uint16', 'int32', 'uint32']:
             range = ParameterDoc.valid_ranges[self.data_type]
             if range:
                 self.description += '<p><em>Valid numbers</em>: integers from {0} to {1}.</p>'.format(range[0], range[1])
@@ -56,6 +56,9 @@ class ParameterDoc(object):
 
         elif self.data_type == 'int64' or self.data_type == 'uint64':
             self.data_type = '[' + self.data_type + ']'
+
+        elif not self.data_type in ['nil', 'boolean', 'number', 'string', 'table', 'function', '...'] and self.data_type[:1] != '[':
+            print "Missing [] from data type `" + self.data_type + "`"
 
 
 class MethodDoc(object):

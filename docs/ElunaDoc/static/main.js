@@ -678,7 +678,7 @@
         if (rootPath == '../') {
             var sidebar = $('.sidebar');
             var div = $('<div>').attr('class', 'block crate');
-            div.append($('<h2>').text('Crates'));
+            div.append($('<h2>').text('All Classes'));
 
             var crates = [];
             for (var crate in rawSearchIndex) {

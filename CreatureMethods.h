@@ -86,8 +86,8 @@ namespace LuaCreature
      * Returns `true` if the [Creature] can assist `friend` in combat against `enemy`,
      *   and returns `false` otherwise.
      *
-     * @param Unit friend : the Unit we will be assisting
-     * @param Unit enemy : the Unit that we would attack if we assist `friend`
+     * @param [Unit] friend : the Unit we will be assisting
+     * @param [Unit] enemy : the Unit that we would attack if we assist `friend`
      * @param bool checkFaction = true : if `true`, the [Creature] must be the same faction as `friend` to assist
      * @return bool canAssist
      */
@@ -440,7 +440,7 @@ namespace LuaCreature
     /**
      * Returns the default movement type for this [Creature].
      *
-     * @return MovementGeneratorType defaultMovementType
+     * @return [MovementGeneratorType] defaultMovementType
      */
     int GetDefaultMovementType(Eluna* /*E*/, lua_State* L, Creature* creature)
     {
@@ -451,7 +451,7 @@ namespace LuaCreature
     /**
      * Returns the aggro range of the [Creature] for `target`.
      *
-     * @param Unit target
+     * @param [Unit] target
      * @return float aggroRange
      */
     int GetAggroRange(Eluna* /*E*/, lua_State* L, Creature* creature)
@@ -474,7 +474,7 @@ namespace LuaCreature
      * If this is smaller than the minimum aggro range set in the config file,
      *   that is used as the aggro range instead.
      *
-     * @param Unit target
+     * @param [Unit] target
      * @return float attackDistance
      */
     int GetAttackDistance(Eluna* /*E*/, lua_State* L, Creature* creature)
@@ -488,7 +488,7 @@ namespace LuaCreature
     /**
      * Returns the [Group] that can loot this [Creature].
      *
-     * @return Group lootRecipientGroup : the group or `nil`
+     * @return [Group] lootRecipientGroup : the group or `nil`
      */
     int GetLootRecipientGroup(Eluna* /*E*/, lua_State* L, Creature* creature)
     {
@@ -503,7 +503,7 @@ namespace LuaCreature
     /**
      * Returns the [Player] that can loot this [Creature].
      *
-     * @return Player lootRecipient : the player or `nil`
+     * @return [Player] lootRecipient : the player or `nil`
      */
     int GetLootRecipient(Eluna* /*E*/, lua_State* L, Creature* creature)
     {
@@ -793,7 +793,7 @@ namespace LuaCreature
      * These are used to control whether the NPC is a vendor, can repair items,
      *   can give quests, etc.
      *
-     * @return NPCFlags npcFlags
+     * @return [NPCFlags] npcFlags
      */
     int GetNPCFlags(Eluna* /*E*/, lua_State* L, Creature* creature)
     {
@@ -827,7 +827,7 @@ namespace LuaCreature
     /**
      * Sets the [Creature]'s NPC flags to `flags`.
      *
-     * @param NPCFlags flags
+     * @param [NPCFlags] flags
      */
     int SetNPCFlags(Eluna* /*E*/, lua_State* L, Creature* creature)
     {
@@ -868,7 +868,7 @@ namespace LuaCreature
     /**
      * Sets the [Creature]'s death state to `deathState`.
      *
-     * @param DeathState deathState
+     * @param [DeathState] deathState
      */
     int SetDeathState(Eluna* /*E*/, lua_State* L, Creature* creature)
     {
@@ -998,7 +998,7 @@ namespace LuaCreature
     /**
      * Sets the default movement type of the [Creature].
      *
-     * @param MovementGeneratorType type
+     * @param [MovementGeneratorType] type
      */
     int SetDefaultMovementType(Eluna* /*E*/, lua_State* L, Creature* creature)
     {
@@ -1144,7 +1144,7 @@ namespace LuaCreature
     /**
      * Make the [Creature] attack `target`.
      *
-     * @param Unit target
+     * @param [Unit] target
      */
     int AttackStart(Eluna* /*E*/, lua_State* L, Creature* creature)
     {
