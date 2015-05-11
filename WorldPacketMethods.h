@@ -43,7 +43,7 @@ namespace LuaPacket
     /**
      * Sets the opcode of the [WorldPacket] to the specified opcode.
      *
-     * @param uint32 opcode : see Opcodes.h for all known opcodes
+     * @param [Opcodes] opcode : see Opcodes.h for all known opcodes
      */
     int SetOpcode(Eluna* /*E*/, lua_State* L, WorldPacket* packet)
     {

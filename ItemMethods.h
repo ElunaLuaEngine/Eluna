@@ -387,7 +387,7 @@ namespace LuaItem
     /**
      * Returns the [Item]s enchantment ID by enchant slot specified
      *
-     * @param uint32 enchantSlot : the enchant slot specified
+     * @param [EnchantmentSlot] enchantSlot : the enchant slot specified
      * @return uint32 enchantId : the id of the enchant slot specified
      */
     int GetEnchantmentId(Eluna* /*E*/, lua_State* L, Item* item)

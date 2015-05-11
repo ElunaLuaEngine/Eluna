@@ -26,7 +26,7 @@ namespace LuaBattleGround
     /**
      * Returns the amount of alive players in the [BattleGround] by the team ID.
      *
-     * @param uint32 team : team ID
+     * @param [Team] team : team ID
      * @return uint32 count
      */
     int GetAlivePlayersCountByTeam(Eluna* /*E*/, lua_State* L, BattleGround* bg)
@@ -91,7 +91,7 @@ namespace LuaBattleGround
     /**
      * Returns the amount of free slots for the selected team in the specific [BattleGround].
      *
-     * @param uint32 team : team ID
+     * @param [Team] team : team ID
      * @return uint32 freeSlots
      */
     int GetFreeSlotsForTeam(Eluna* /*E*/, lua_State* L, BattleGround* bg)

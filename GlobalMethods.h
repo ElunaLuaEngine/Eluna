@@ -1862,7 +1862,7 @@ namespace LuaGlobalFunctions
     /**
      * Creates a [WorldPacket].
      *
-     * @param uint32 opcode : the opcode of the packet
+     * @param [Opcodes] opcode : the opcode of the packet
      * @param uint32 size : the size of the packet
      * @return [WorldPacket] packet
      */
@@ -1982,7 +1982,7 @@ namespace LuaGlobalFunctions
      *         BAN_IP
      *     };
      *
-     * @param int32 banMode : method of ban, refer to BanMode above
+     * @param [BanMode] banMode : method of ban, refer to BanMode above
      * @param string nameOrIP : name of the [Player] or IP of the [Player]
      * @param uint32 duration : duration (in seconds) of the ban
      * @param string reason = "" : ban reason, this is optional
@@ -2053,7 +2053,7 @@ namespace LuaGlobalFunctions
      * @param string text : contents of the mail
      * @param uint32 receiverGUIDLow : low GUID of the receiver
      * @param uint32 senderGUIDLow = 0 : low GUID of the sender
-     * @param uint32 stationary = MAIL_STATIONERY_DEFAULT : type of mail that is being sent as, refer to MailStationery above
+     * @param [MailStationery] stationary = MAIL_STATIONERY_DEFAULT : type of mail that is being sent as, refer to MailStationery above
      * @param uint32 delay = 0 : mail send delay in milliseconds
      * @param uint32 money = 0 : money to send
      * @param uint32 cod = 0 : cod money amount

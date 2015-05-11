@@ -43,7 +43,7 @@ namespace LuaQuest
      * };
      * </pre>
      *
-     * @param uint32 flag : all available flags can be seen above
+     * @param [QuestFlags] flag : all available flags can be seen above
      * @return bool hasFlag
      */
     int HasFlag(Eluna* /*E*/, lua_State* L, Quest* quest)
@@ -150,7 +150,7 @@ namespace LuaQuest
     /**
      * Returns the [Quest]'s flags.
      *
-     * @return uint32 flags
+     * @return [QuestFlags] flags
      */
     int GetFlags(Eluna* /*E*/, lua_State* L, Quest* quest)
     {

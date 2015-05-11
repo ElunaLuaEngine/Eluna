@@ -1340,9 +1340,9 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns the [Player]s current team ID
+     * Returns the [Player]s [TeamId]
      *
-     * @return [PvpTeamIndex] teamId
+     * @return [TeamId] teamId
      */
     int GetTeam(Eluna* /*E*/, lua_State* L, Player* player)
     {
@@ -1773,7 +1773,7 @@ namespace LuaPlayer
      * - GENDER_MALE    = 0
      * - GENDER_FEMALE  = 1
      *
-     * @param uint32 gender
+     * @param [Gender] gender
      */
     int SetGender(Eluna* /*E*/, lua_State* L, Player* player)
     {
@@ -3282,7 +3282,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Learn the [Player] the [Talent] specified by talent_id and talentRank
+     * Learn the [Player] the talent specified by talent_id and talentRank
      *
      * @param uint32 talent_id
      * @param uint32 talentRank

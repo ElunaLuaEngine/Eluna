@@ -654,7 +654,7 @@ namespace LuaWorldObject
      * @param float y
      * @param float z
      * @param float o
-     * @param [TempSummonType] spawnType = 8 : defines how and when the creature despawns
+     * @param [TempSummonType] spawnType = MANUAL_DESPAWN : defines how and when the creature despawns
      * @param uint32 despawnTimer = 0 : despawn time in milliseconds
      * @return [Creature] spawnedCreature
      */

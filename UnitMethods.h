@@ -540,7 +540,7 @@ namespace LuaUnit
     /**
      * Returns true if the [Unit] has the given unit state.
      *
-     * @param uint32 state : an unit state
+     * @param [UnitState] state : an unit state
      * @return bool hasState
      */
     int HasUnitState(Eluna* /*E*/, lua_State* L, Unit* unit)
@@ -996,7 +996,7 @@ namespace LuaUnit
     /**
      * Returns the [Unit]'s race ID.
      *
-     * @return uint8 race
+     * @return [Races] race
      */
     int GetRace(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
@@ -1007,7 +1007,7 @@ namespace LuaUnit
     /**
      * Returns the [Unit]'s class ID.
      *
-     * @return uint8 class
+     * @return [Classes] class
      */
     int GetClass(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
@@ -2282,7 +2282,7 @@ namespace LuaUnit
     /**
      * Adds the given unit state for the [Unit].
      *
-     * @param uint32 state
+     * @param [UnitState] state
      */
     int AddUnitState(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
@@ -2299,7 +2299,7 @@ namespace LuaUnit
     /**
      * Removes the given unit state from the [Unit].
      *
-     * @param uint32 state
+     * @param [UnitState] state
      */
     int ClearUnitState(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
