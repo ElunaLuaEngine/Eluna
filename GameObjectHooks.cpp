@@ -4,119 +4,76 @@
  * Please see the included DOCS/LICENSE.md for more information
  */
 
-#ifndef _GAMEOBJECT_HOOKS_H
-#define _GAMEOBJECT_HOOKS_H
-
 #include "Hooks.h"
 #include "HookHelpers.h"
 #include "LuaEngine.h"
-#include "ElunaBinding.h"
+#include "BindingMap.h"
 #include "ElunaIncludes.h"
 #include "ElunaEventMgr.h"
 #include "ElunaTemplate.h"
 
 using namespace Hooks;
 
+#define START_HOOK(EVENT, ENTRY) \
+    if (!IsEnabled())\
+        return;\
+    auto key = EntryKey<GameObjectEvents>(EVENT, ENTRY);\
+    if (!GameObjectEventBindings->HasBindingsFor(key))\
+        return;\
+    LOCK_ELUNA
+
+#define START_HOOK_WITH_RETVAL(EVENT, ENTRY, RETVAL) \
+    if (!IsEnabled())\
+        return RETVAL;\
+    auto key = EntryKey<GameObjectEvents>(EVENT, ENTRY);\
+    if (!GameObjectEventBindings->HasBindingsFor(key))\
+        return RETVAL;\
+    LOCK_ELUNA
+
 bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, GameObject* pTarget)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_DUMMY_EFFECT, pTarget->GetEntry()))
-        return false;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(GAMEOBJECT_EVENT_ON_DUMMY_EFFECT, pTarget->GetEntry(), false);
     Push(pCaster);
     Push(spellId);
     Push(effIndex);
     Push(pTarget);
-    return CallAllFunctionsBool(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_DUMMY_EFFECT, pTarget->GetEntry());
-}
-
-bool Eluna::OnGossipHello(Player* pPlayer, GameObject* pGameObject)
-{
-    if (!GameObjectGossipBindings->HasEvents(GOSSIP_EVENT_ON_HELLO, pGameObject->GetEntry()))
-        return false;
-
-    LOCK_ELUNA;
-    pPlayer->PlayerTalkClass->ClearMenus();
-    Push(pPlayer);
-    Push(pGameObject);
-    return CallAllFunctionsBool(GameObjectGossipBindings, GOSSIP_EVENT_ON_HELLO, pGameObject->GetEntry(), true);
-}
-
-bool Eluna::OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action)
-{
-    if (!GameObjectGossipBindings->HasEvents(GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry()))
-        return false;
-
-    LOCK_ELUNA;
-    pPlayer->PlayerTalkClass->ClearMenus();
-    Push(pPlayer);
-    Push(pGameObject);
-    Push(sender);
-    Push(action);
-    return CallAllFunctionsBool(GameObjectGossipBindings, GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry(), true);
-}
-
-bool Eluna::OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action, const char* code)
-{
-    if (!GameObjectGossipBindings->HasEvents(GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry()))
-        return false;
-
-    LOCK_ELUNA;
-    pPlayer->PlayerTalkClass->ClearMenus();
-    Push(pPlayer);
-    Push(pGameObject);
-    Push(sender);
-    Push(action);
-    Push(code);
-    return CallAllFunctionsBool(GameObjectGossipBindings, GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry(), true);
-}
-
-bool Eluna::OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest)
-{
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_QUEST_ACCEPT, pGameObject->GetEntry()))
-        return false;
-
-    LOCK_ELUNA;
-    Push(pPlayer);
-    Push(pGameObject);
-    Push(pQuest);
-    return CallAllFunctionsBool(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_QUEST_ACCEPT, pGameObject->GetEntry());
+    return CallAllFunctionsBool(GameObjectEventBindings, key);
 }
 
 void Eluna::UpdateAI(GameObject* pGameObject, uint32 diff)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_AIUPDATE, pGameObject->GetEntry()))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(GAMEOBJECT_EVENT_ON_AIUPDATE, pGameObject->GetEntry());
     pGameObject->elunaEvents->Update(diff);
     Push(pGameObject);
     Push(diff);
-    CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_AIUPDATE, pGameObject->GetEntry());
+    CallAllFunctions(GameObjectEventBindings, key);
+}
+
+bool Eluna::OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest)
+{
+    START_HOOK_WITH_RETVAL(GAMEOBJECT_EVENT_ON_QUEST_ACCEPT, pGameObject->GetEntry(), false);
+    Push(pPlayer);
+    Push(pGameObject);
+    Push(pQuest);
+    return CallAllFunctionsBool(GameObjectEventBindings, key);
 }
 
 bool Eluna::OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest, uint32 opt)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_QUEST_REWARD, pGameObject->GetEntry()))
-        return false;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(GAMEOBJECT_EVENT_ON_QUEST_REWARD, pGameObject->GetEntry(), false);
     Push(pPlayer);
     Push(pGameObject);
     Push(pQuest);
     Push(opt);
-    return CallAllFunctionsBool(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_QUEST_REWARD, pGameObject->GetEntry());
+    return CallAllFunctionsBool(GameObjectEventBindings, key);
 }
 
 uint32 Eluna::GetDialogStatus(Player* pPlayer, GameObject* pGameObject)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_DIALOG_STATUS, pGameObject->GetEntry()))
-        return DIALOG_STATUS_SCRIPTED_NO_STATUS;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(GAMEOBJECT_EVENT_ON_DIALOG_STATUS, pGameObject->GetEntry(), false);
     Push(pPlayer);
     Push(pGameObject);
-    CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_DIALOG_STATUS, pGameObject->GetEntry());
+    CallAllFunctions(GameObjectEventBindings, key);
     return DIALOG_STATUS_SCRIPTED_NO_STATUS; // DIALOG_STATUS_UNDEFINED
 }
 
@@ -124,89 +81,63 @@ uint32 Eluna::GetDialogStatus(Player* pPlayer, GameObject* pGameObject)
 #ifndef TBC
 void Eluna::OnDestroyed(GameObject* pGameObject, Player* pPlayer)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_DESTROYED, pGameObject->GetEntry()))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(GAMEOBJECT_EVENT_ON_DESTROYED, pGameObject->GetEntry());
     Push(pGameObject);
     Push(pPlayer);
-    CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_DESTROYED, pGameObject->GetEntry());
+    CallAllFunctions(GameObjectEventBindings, key);
 }
 
 void Eluna::OnDamaged(GameObject* pGameObject, Player* pPlayer)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_DAMAGED, pGameObject->GetEntry()))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(GAMEOBJECT_EVENT_ON_DAMAGED, pGameObject->GetEntry());
     Push(pGameObject);
     Push(pPlayer);
-    CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_DAMAGED, pGameObject->GetEntry());
+    CallAllFunctions(GameObjectEventBindings, key);
 }
 #endif
 #endif
 
 void Eluna::OnLootStateChanged(GameObject* pGameObject, uint32 state)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE, pGameObject->GetEntry()))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE, pGameObject->GetEntry());
     Push(pGameObject);
     Push(state);
-    CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE, pGameObject->GetEntry());
+    CallAllFunctions(GameObjectEventBindings, key);
 }
 
 void Eluna::OnGameObjectStateChanged(GameObject* pGameObject, uint32 state)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED, pGameObject->GetEntry()))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED, pGameObject->GetEntry());
     Push(pGameObject);
     Push(state);
-    CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED, pGameObject->GetEntry());
+    CallAllFunctions(GameObjectEventBindings, key);
 }
 
-void Eluna::OnSpawn(GameObject* gameobject)
+void Eluna::OnSpawn(GameObject* pGameObject)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_SPAWN, gameobject->GetEntry()))
-        return;
-
-    LOCK_ELUNA;
-    Push(gameobject);
-    CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_SPAWN, gameobject->GetEntry());
+    START_HOOK(GAMEOBJECT_EVENT_ON_SPAWN, pGameObject->GetEntry());
+    Push(pGameObject);
+    CallAllFunctions(GameObjectEventBindings, key);
 }
 
-void Eluna::OnAddToWorld(GameObject* gameobject)
+void Eluna::OnAddToWorld(GameObject* pGameObject)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_ADD, gameobject->GetEntry()))
-        return;
-
-    LOCK_ELUNA;
-    Push(gameobject);
-    CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_ADD, gameobject->GetEntry());
+    START_HOOK(GAMEOBJECT_EVENT_ON_ADD, pGameObject->GetEntry());
+    Push(pGameObject);
+    CallAllFunctions(GameObjectEventBindings, key);
 }
 
-void Eluna::OnRemoveFromWorld(GameObject* gameobject)
+void Eluna::OnRemoveFromWorld(GameObject* pGameObject)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_REMOVE, gameobject->GetEntry()))
-        return;
-
-    LOCK_ELUNA;
-    Push(gameobject);
-    CallAllFunctions(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_REMOVE, gameobject->GetEntry());
+    START_HOOK(GAMEOBJECT_EVENT_ON_REMOVE, pGameObject->GetEntry());
+    Push(pGameObject);
+    CallAllFunctions(GameObjectEventBindings, key);
 }
 
 bool Eluna::OnGameObjectUse(Player* pPlayer, GameObject* pGameObject)
 {
-    if (!GameObjectEventBindings->HasEvents(GAMEOBJECT_EVENT_ON_USE, pGameObject->GetEntry()))
-        return false;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(GAMEOBJECT_EVENT_ON_USE, pGameObject->GetEntry(), false);
     Push(pGameObject);
     Push(pPlayer);
-    return CallAllFunctionsBool(GameObjectEventBindings, GAMEOBJECT_EVENT_ON_USE, pGameObject->GetEntry());
+    return CallAllFunctionsBool(GameObjectEventBindings, key);
 }
-
-#endif // _GAMEOBJECT_HOOKS_H

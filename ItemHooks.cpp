@@ -4,41 +4,40 @@
  * Please see the included DOCS/LICENSE.md for more information
  */
 
-#ifndef _ITEM_HOOKS_H
-#define _ITEM_HOOKS_H
-
 #include "Hooks.h"
 #include "HookHelpers.h"
 #include "LuaEngine.h"
-#include "ElunaBinding.h"
+#include "BindingMap.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
 
 using namespace Hooks;
 
+#define START_HOOK_WITH_RETVAL(EVENT, ENTRY, RETVAL) \
+    if (!IsEnabled())\
+        return RETVAL;\
+    auto key = EntryKey<ItemEvents>(EVENT, ENTRY);\
+    if (!ItemEventBindings->HasBindingsFor(key))\
+        return RETVAL;\
+    LOCK_ELUNA
+
 bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget)
 {
-    if (!ItemEventBindings->HasEvents(ITEM_EVENT_ON_DUMMY_EFFECT, pTarget->GetEntry()))
-        return false;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_DUMMY_EFFECT, pTarget->GetEntry(), false);
     Push(pCaster);
     Push(spellId);
     Push(effIndex);
     Push(pTarget);
-    return CallAllFunctionsBool(ItemEventBindings, ITEM_EVENT_ON_DUMMY_EFFECT, pTarget->GetEntry());
+    return CallAllFunctionsBool(ItemEventBindings, key);
 }
 
 bool Eluna::OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest)
 {
-    if (!ItemEventBindings->HasEvents(ITEM_EVENT_ON_QUEST_ACCEPT, pItem->GetEntry()))
-        return false;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_QUEST_ACCEPT, pItem->GetEntry(), false);
     Push(pPlayer);
     Push(pItem);
     Push(pQuest);
-    return CallAllFunctionsBool(ItemEventBindings, ITEM_EVENT_ON_QUEST_ACCEPT, pItem->GetEntry());
+    return CallAllFunctionsBool(ItemEventBindings, key);
 }
 
 bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
@@ -73,10 +72,7 @@ bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 
 bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 {
-    if (!ItemEventBindings->HasEvents(ITEM_EVENT_ON_USE, pItem->GetEntry()))
-        return true;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_USE, pItem->GetEntry(), true);
     Push(pPlayer);
     Push(pItem);
 #ifndef TRINITY
@@ -105,41 +101,21 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
         Push();
 #endif
 
-    return CallAllFunctionsBool(ItemEventBindings, ITEM_EVENT_ON_USE, pItem->GetEntry(), true);
-}
-
-bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& /*targets*/)
-{
-    if (!ItemGossipBindings->HasEvents(GOSSIP_EVENT_ON_HELLO, pItem->GetEntry()))
-        return true;
-
-    LOCK_ELUNA;
-    pPlayer->PlayerTalkClass->ClearMenus();
-    Push(pPlayer);
-    Push(pItem);
-    return CallAllFunctionsBool(ItemGossipBindings, GOSSIP_EVENT_ON_HELLO, pItem->GetEntry(), true);
+    return CallAllFunctionsBool(ItemEventBindings, key, true);
 }
 
 bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
 {
-    if (!ItemEventBindings->HasEvents(ITEM_EVENT_ON_EXPIRE, pProto->ItemId))
-        return false;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_EXPIRE, pProto->ItemId, false);
     Push(pPlayer);
     Push(pProto->ItemId);
-    return CallAllFunctionsBool(ItemEventBindings, ITEM_EVENT_ON_EXPIRE, pProto->ItemId);
+    return CallAllFunctionsBool(ItemEventBindings, key);
 }
 
-bool Eluna::OnRemove(Player* pPlayer, Item* item)
+bool Eluna::OnRemove(Player* pPlayer, Item* pItem)
 {
-    if (!ItemEventBindings->HasEvents(ITEM_EVENT_ON_REMOVE, item->GetEntry()))
-        return false;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_REMOVE, pItem->GetEntry(), false);
     Push(pPlayer);
-    Push(item);
-    return CallAllFunctionsBool(ItemEventBindings, ITEM_EVENT_ON_REMOVE, item->GetEntry());
+    Push(pItem);
+    return CallAllFunctionsBool(ItemEventBindings, key);
 }
-
-#endif // _ITEM_HOOKS_H

@@ -4,13 +4,10 @@
  * Please see the included DOCS/LICENSE.md for more information
  */
 
-#ifndef _VEHICLE_HOOKS_H
-#define _VEHICLE_HOOKS_H
-
 #include "Hooks.h"
 #include "HookHelpers.h"
 #include "LuaEngine.h"
-#include "ElunaBinding.h"
+#include "BindingMap.h"
 #include "ElunaTemplate.h"
 
 #ifndef CLASSIC
@@ -18,61 +15,53 @@
 
 using namespace Hooks;
 
+#define START_HOOK(EVENT) \
+    if (!IsEnabled())\
+        return;\
+    auto key = EventKey<VehicleEvents>(EVENT);\
+    if (!VehicleEventBindings->HasBindingsFor(key))\
+        return;\
+    LOCK_ELUNA
+
 // Vehicle
 void Eluna::OnInstall(Vehicle* vehicle)
 {
-    if (!VehicleEventBindings->HasEvents(VEHICLE_EVENT_ON_INSTALL))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(VEHICLE_EVENT_ON_INSTALL);
     Push(vehicle);
-    CallAllFunctions(VehicleEventBindings, VEHICLE_EVENT_ON_INSTALL);
+    CallAllFunctions(VehicleEventBindings, key);
 }
 
 void Eluna::OnUninstall(Vehicle* vehicle)
 {
-    if (!VehicleEventBindings->HasEvents(VEHICLE_EVENT_ON_UNINSTALL))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(VEHICLE_EVENT_ON_UNINSTALL);
     Push(vehicle);
-    CallAllFunctions(VehicleEventBindings, VEHICLE_EVENT_ON_UNINSTALL);
+    CallAllFunctions(VehicleEventBindings, key);
 }
 
 void Eluna::OnInstallAccessory(Vehicle* vehicle, Creature* accessory)
 {
-    if (!VehicleEventBindings->HasEvents(VEHICLE_EVENT_ON_INSTALL_ACCESSORY))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(VEHICLE_EVENT_ON_INSTALL_ACCESSORY);
     Push(vehicle);
     Push(accessory);
-    CallAllFunctions(VehicleEventBindings, VEHICLE_EVENT_ON_INSTALL_ACCESSORY);
+    CallAllFunctions(VehicleEventBindings, key);
 }
 
 void Eluna::OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId)
 {
-    if (!VehicleEventBindings->HasEvents(VEHICLE_EVENT_ON_ADD_PASSENGER))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(VEHICLE_EVENT_ON_ADD_PASSENGER);
     Push(vehicle);
     Push(passenger);
     Push(seatId);
-    CallAllFunctions(VehicleEventBindings, VEHICLE_EVENT_ON_ADD_PASSENGER);
+    CallAllFunctions(VehicleEventBindings, key);
 }
 
 void Eluna::OnRemovePassenger(Vehicle* vehicle, Unit* passenger)
 {
-    if (!VehicleEventBindings->HasEvents(VEHICLE_EVENT_ON_REMOVE_PASSENGER))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(VEHICLE_EVENT_ON_REMOVE_PASSENGER);
     Push(vehicle);
     Push(passenger);
-    CallAllFunctions(VehicleEventBindings, VEHICLE_EVENT_ON_REMOVE_PASSENGER);
+    CallAllFunctions(VehicleEventBindings, key);
 }
 
 #endif // CLASSIC
 #endif // TBC
-#endif // _VEHICLE_HOOKS_H

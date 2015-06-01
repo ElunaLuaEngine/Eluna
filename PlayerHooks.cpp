@@ -4,69 +4,39 @@
  * Please see the included DOCS/LICENSE.md for more information
  */
 
-#ifndef _PLAYER_HOOKS_H
-#define _PLAYER_HOOKS_H
-
 #include "Hooks.h"
 #include "HookHelpers.h"
 #include "LuaEngine.h"
-#include "ElunaBinding.h"
+#include "BindingMap.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
 
 using namespace Hooks;
 
+#define START_HOOK(EVENT) \
+    if (!IsEnabled())\
+        return;\
+    auto key = EventKey<PlayerEvents>(EVENT);\
+    if (!PlayerEventBindings->HasBindingsFor(key))\
+        return;\
+    LOCK_ELUNA
+
+#define START_HOOK_WITH_RETVAL(EVENT, RETVAL) \
+    if (!IsEnabled())\
+        return RETVAL;\
+    auto key = EventKey<PlayerEvents>(EVENT);\
+    if (!PlayerEventBindings->HasBindingsFor(key))\
+        return RETVAL;\
+    LOCK_ELUNA
+
 void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, uint32 spellid)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_LEARN_TALENTS))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_LEARN_TALENTS);
     Push(pPlayer);
     Push(talentId);
     Push(talentRank);
     Push(spellid);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LEARN_TALENTS);
-}
-
-void Eluna::HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code)
-{
-    if (!ItemGossipBindings->HasEvents(GOSSIP_EVENT_ON_SELECT, item->GetEntry()))
-        return;
-
-    LOCK_ELUNA;
-    pPlayer->PlayerTalkClass->ClearMenus();
-
-    Push(pPlayer);
-    Push(item);
-    Push(sender);
-    Push(action);
-    if (code.empty())
-        Push();
-    else
-        Push(code);
-
-    CallAllFunctions(ItemGossipBindings, GOSSIP_EVENT_ON_SELECT, item->GetEntry());
-}
-
-void Eluna::HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code)
-{
-    if (!playerGossipBindings->HasEvents(GOSSIP_EVENT_ON_SELECT, menuId))
-        return;
-
-    LOCK_ELUNA;
-    pPlayer->PlayerTalkClass->ClearMenus();
-
-    Push(pPlayer); // receiver
-    Push(pPlayer); // sender, just not to mess up the amount of args.
-    Push(sender);
-    Push(action);
-    if (code.empty())
-        Push();
-    else
-        Push(code);
-
-    CallAllFunctions(playerGossipBindings, GOSSIP_EVENT_ON_SELECT, menuId);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 // Player
@@ -95,103 +65,76 @@ bool Eluna::OnCommand(Player* player, const char* text)
         }
     }
 
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_COMMAND))
-        return true;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_COMMAND, true);
     Push(player);
     Push(fullcmd);
-    return CallAllFunctionsBool(PlayerEventBindings, PLAYER_EVENT_ON_COMMAND, true);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 
 void Eluna::OnLootItem(Player* pPlayer, Item* pItem, uint32 count, uint64 guid)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_LOOT_ITEM))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_LOOT_ITEM);
     Push(pPlayer);
     Push(pItem);
     Push(count);
     Push(guid);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LOOT_ITEM);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnLootMoney(Player* pPlayer, uint32 amount)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_LOOT_MONEY))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_LOOT_MONEY);
     Push(pPlayer);
     Push(amount);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LOOT_MONEY);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnFirstLogin(Player* pPlayer)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_FIRST_LOGIN))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_FIRST_LOGIN);
     Push(pPlayer);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_FIRST_LOGIN);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnRepop(Player* pPlayer)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_REPOP))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_REPOP);
     Push(pPlayer);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_REPOP);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnResurrect(Player* pPlayer)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_RESURRECT))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_RESURRECT);
     Push(pPlayer);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_RESURRECT);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnQuestAbandon(Player* pPlayer, uint32 questId)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_QUEST_ABANDON))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_QUEST_ABANDON);
     Push(pPlayer);
     Push(questId);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_QUEST_ABANDON);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_EQUIP))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_EQUIP);
     Push(pPlayer);
     Push(pItem);
     Push(bag);
     Push(slot);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_EQUIP);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_CAN_USE_ITEM))
-        return EQUIP_ERR_OK;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_USE_ITEM, EQUIP_ERR_OK);
     InventoryResult result = EQUIP_ERR_OK;
     Push(pPlayer);
     Push(itemEntry);
-    int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_CAN_USE_ITEM, 2);
+    int n = SetupStack(PlayerEventBindings, key, 2);
 
     while (n > 0)
     {
@@ -208,101 +151,74 @@ InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
 }
 void Eluna::OnPlayerEnterCombat(Player* pPlayer, Unit* pEnemy)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_ENTER_COMBAT))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_ENTER_COMBAT);
     Push(pPlayer);
     Push(pEnemy);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_ENTER_COMBAT);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnPlayerLeaveCombat(Player* pPlayer)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_LEAVE_COMBAT))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_LEAVE_COMBAT);
     Push(pPlayer);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LEAVE_COMBAT);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnPVPKill(Player* pKiller, Player* pKilled)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_KILL_PLAYER))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_KILL_PLAYER);
     Push(pKiller);
     Push(pKilled);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_KILL_PLAYER);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnCreatureKill(Player* pKiller, Creature* pKilled)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_KILL_CREATURE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_KILL_CREATURE);
     Push(pKiller);
     Push(pKilled);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_KILL_CREATURE);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_KILLED_BY_CREATURE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_KILLED_BY_CREATURE);
     Push(pKiller);
     Push(pKilled);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_KILLED_BY_CREATURE);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnLevelChanged(Player* pPlayer, uint8 oldLevel)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_LEVEL_CHANGE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_LEVEL_CHANGE);
     Push(pPlayer);
     Push(oldLevel);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LEVEL_CHANGE);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_TALENTS_CHANGE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_TALENTS_CHANGE);
     Push(pPlayer);
     Push(newPoints);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_TALENTS_CHANGE);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnTalentsReset(Player* pPlayer, bool noCost)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_TALENTS_RESET))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_TALENTS_RESET);
     Push(pPlayer);
     Push(noCost);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_TALENTS_RESET);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_MONEY_CHANGE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_MONEY_CHANGE);
     Push(pPlayer);
     Push(amount);
     int amountIndex = lua_gettop(L);
-    int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_MONEY_CHANGE, 2);
+    int n = SetupStack(PlayerEventBindings, key, 2);
 
     while (n > 0)
     {
@@ -323,15 +239,12 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
 
 void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_GIVE_XP))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_GIVE_XP);
     Push(pPlayer);
     Push(amount);
     Push(pVictim);
     int amountIndex = lua_gettop(L) - 1;
-    int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_GIVE_XP, 3);
+    int n = SetupStack(PlayerEventBindings, key, 3);
 
     while (n > 0)
     {
@@ -352,16 +265,13 @@ void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
 
 void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standing, bool incremental)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_REPUTATION_CHANGE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_REPUTATION_CHANGE);
     Push(pPlayer);
     Push(factionID);
     Push(standing);
     Push(incremental);
     int standingIndex = lua_gettop(L) - 1;
-    int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_REPUTATION_CHANGE, 4);
+    int n = SetupStack(PlayerEventBindings, key, 4);
 
     while (n > 0)
     {
@@ -382,183 +292,115 @@ void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standin
 
 void Eluna::OnDuelRequest(Player* pTarget, Player* pChallenger)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_DUEL_REQUEST))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_DUEL_REQUEST);
     Push(pTarget);
     Push(pChallenger);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_DUEL_REQUEST);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnDuelStart(Player* pStarter, Player* pChallenger)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_DUEL_START))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_DUEL_START);
     Push(pStarter);
     Push(pChallenger);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_DUEL_START);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnDuelEnd(Player* pWinner, Player* pLoser, DuelCompleteType type)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_DUEL_END))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_DUEL_END);
     Push(pWinner);
     Push(pLoser);
     Push(type);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_DUEL_END);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnEmote(Player* pPlayer, uint32 emote)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_EMOTE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_EMOTE);
     Push(pPlayer);
     Push(emote);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_EMOTE);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint64 guid)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_TEXT_EMOTE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_TEXT_EMOTE);
     Push(pPlayer);
     Push(textEmote);
     Push(emoteNum);
     Push(guid);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_TEXT_EMOTE);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_SPELL_CAST))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_SPELL_CAST);
     Push(pPlayer);
     Push(pSpell);
     Push(skipCheck);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_SPELL_CAST);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnLogin(Player* pPlayer)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_LOGIN))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_LOGIN);
     Push(pPlayer);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LOGIN);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnLogout(Player* pPlayer)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_LOGOUT))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_LOGOUT);
     Push(pPlayer);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_LOGOUT);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnCreate(Player* pPlayer)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_CHARACTER_CREATE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_CHARACTER_CREATE);
     Push(pPlayer);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_CHARACTER_CREATE);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnDelete(uint32 guidlow)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_CHARACTER_DELETE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_CHARACTER_DELETE);
     Push(guidlow);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_CHARACTER_DELETE);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnSave(Player* pPlayer)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_SAVE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_SAVE);
     Push(pPlayer);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_SAVE);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapid, bool permanent)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_BIND_TO_INSTANCE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_BIND_TO_INSTANCE);
     Push(pPlayer);
     Push(difficulty);
     Push(mapid);
     Push(permanent);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_BIND_TO_INSTANCE);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_UPDATE_ZONE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_UPDATE_ZONE);
     Push(pPlayer);
     Push(newZone);
     Push(newArea);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_UPDATE_ZONE);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 void Eluna::OnMapChanged(Player* player)
 {
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_MAP_CHANGE))
-        return;
-
-    LOCK_ELUNA;
+    START_HOOK(PLAYER_EVENT_ON_MAP_CHANGE);
     Push(player);
-    CallAllFunctions(PlayerEventBindings, PLAYER_EVENT_ON_MAP_CHANGE);
-}
-
-// AddOns
-bool Eluna::OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel)
-{
-    if (!ServerEventBindings->HasEvents(ADDON_EVENT_ON_MESSAGE))
-        return true;
-
-    LOCK_ELUNA;
-    Push(sender);
-    Push(type);
-    const char* c_msg = msg.c_str();
-    Push(strtok((char*)c_msg, "\t")); // prefix
-    Push(strtok(NULL, "")); // msg
-    if (receiver)
-        Push(receiver);
-    else if (guild)
-        Push(guild);
-    else if (group)
-        Push(group);
-    else if (channel)
-        Push(channel->GetChannelId());
-    else
-        Push();
-
-    return CallAllFunctionsBool(ServerEventBindings, ADDON_EVENT_ON_MESSAGE, true);
+    CallAllFunctions(PlayerEventBindings, key);
 }
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
@@ -566,16 +408,13 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, NULL, NULL, NULL);
 
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_CHAT))
-        return true;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CHAT, true);
     bool result = true;
     Push(pPlayer);
     Push(msg);
     Push(type);
     Push(lang);
-    int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_CHAT, 4);
+    int n = SetupStack(PlayerEventBindings, key, 4);
 
     while (n > 0)
     {
@@ -599,17 +438,14 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, NULL, pGroup, NULL);
 
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_GROUP_CHAT))
-        return true;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_GROUP_CHAT, true);
     bool result = true;
     Push(pPlayer);
     Push(msg);
     Push(type);
     Push(lang);
     Push(pGroup);
-    int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_GROUP_CHAT, 5);
+    int n = SetupStack(PlayerEventBindings, key, 5);
 
     while (n > 0)
     {
@@ -633,17 +469,14 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, pGuild, NULL, NULL);
 
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_GUILD_CHAT))
-        return true;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_GUILD_CHAT, true);
     bool result = true;
     Push(pPlayer);
     Push(msg);
     Push(type);
     Push(lang);
     Push(pGuild);
-    int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_GUILD_CHAT, 5);
+    int n = SetupStack(PlayerEventBindings, key, 5);
 
     while (n > 0)
     {
@@ -667,17 +500,14 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, NULL, NULL, NULL, pChannel);
 
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_CHANNEL_CHAT))
-        return true;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CHANNEL_CHAT, true);
     bool result = true;
     Push(pPlayer);
     Push(msg);
     Push(type);
     Push(lang);
     Push(pChannel->GetChannelId());
-    int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_CHANNEL_CHAT, 5);
+    int n = SetupStack(PlayerEventBindings, key, 5);
 
     while (n > 0)
     {
@@ -701,17 +531,14 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     if (lang == LANG_ADDON)
         return OnAddonMessage(pPlayer, type, msg, pReceiver, NULL, NULL, NULL);
 
-    if (!PlayerEventBindings->HasEvents(PLAYER_EVENT_ON_WHISPER))
-        return true;
-
-    LOCK_ELUNA;
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_WHISPER, true);
     bool result = true;
     Push(pPlayer);
     Push(msg);
     Push(type);
     Push(lang);
     Push(pReceiver);
-    int n = SetupStack(PlayerEventBindings, PLAYER_EVENT_ON_WHISPER, 5);
+    int n = SetupStack(PlayerEventBindings, key, 5);
 
     while (n > 0)
     {
@@ -729,5 +556,3 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     CleanUpStack(5);
     return result;
 }
-
-#endif // _PLAYER_HOOKS_H
