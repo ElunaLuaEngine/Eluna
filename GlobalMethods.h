@@ -2093,6 +2093,16 @@ namespace LuaGlobalFunctions
                 // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, node, key, value
             }
             TaxiPathNodeEntry entry;
+#ifdef TRINITY
+            // mandatory
+            entry.MapID = Eluna::CHECKVAL<uint32>(L, start);
+            entry.LocX = Eluna::CHECKVAL<float>(L, start + 1);
+            entry.LocY = Eluna::CHECKVAL<float>(L, start + 2);
+            entry.LocZ = Eluna::CHECKVAL<float>(L, start + 3);
+            // optional
+            entry.Flags = Eluna::CHECKVAL<uint32>(L, start + 4, 0);
+            entry.Delay = Eluna::CHECKVAL<uint32>(L, start + 5, 0);
+#else
             // mandatory
             entry.mapid = Eluna::CHECKVAL<uint32>(L, start);
             entry.x = Eluna::CHECKVAL<float>(L, start + 1);
@@ -2101,6 +2111,7 @@ namespace LuaGlobalFunctions
             // optional
             entry.actionFlag = Eluna::CHECKVAL<uint32>(L, start + 4, 0);
             entry.delay = Eluna::CHECKVAL<uint32>(L, start + 5, 0);
+#endif
 
             nodes.push_back(entry);
 
@@ -2130,17 +2141,26 @@ namespace LuaGlobalFunctions
         for (std::list<TaxiPathNodeEntry>::iterator it = nodes.begin(); it != nodes.end(); ++it)
         {
             TaxiPathNodeEntry& entry = *it;
-            entry.path = pathId;
             TaxiNodesEntry* nodeEntry = new TaxiNodesEntry();
+#ifdef TRINITY
+            entry.PathID = pathId;
+            nodeEntry->ID = index;
+            nodeEntry->map_id = entry.MapID;
+            nodeEntry->x = entry.LocX;
+            nodeEntry->y = entry.LocY;
+            nodeEntry->z = entry.LocZ;
+#else
+            entry.path = pathId;
             nodeEntry->ID = index;
             nodeEntry->map_id = entry.mapid;
-            nodeEntry->MountCreatureID[0] = mountH;
-            nodeEntry->MountCreatureID[1] = mountA;
             nodeEntry->x = entry.x;
             nodeEntry->y = entry.y;
             nodeEntry->z = entry.z;
+#endif
+            nodeEntry->MountCreatureID[0] = mountH;
+            nodeEntry->MountCreatureID[1] = mountA;
             sTaxiNodesStore.SetEntry(nodeId, nodeEntry);
-            entry.index = nodeId++;
+            entry.NodeIndex = nodeId++;
             sTaxiPathNodesByPath[pathId].set(index++, new TaxiPathNodeEntry(entry));
         }
         if (startNode >= nodeId)

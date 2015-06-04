@@ -199,7 +199,11 @@ namespace LuaPlayer
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
 
+#ifdef TRINITY
+        Eluna::Push(L, player->GetSpellHistory()->HasCooldown(spellId));
+#else
         Eluna::Push(L, player->HasSpellCooldown(spellId));
+#endif
         return 1;
     }
 
@@ -783,7 +787,11 @@ namespace LuaPlayer
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
 
+#ifdef TRINITY
+        Eluna::Push(L, player->GetSpellHistory()->GetRemainingCooldown(spellId));
+#else
         Eluna::Push(L, uint32(player->GetSpellCooldownDelay(spellId)));
+#endif
         return 1;
     }
 
@@ -935,24 +943,6 @@ namespace LuaPlayer
     int GetDrunkValue(Eluna* /*E*/, lua_State* L, Player* player)
     {
         Eluna::Push(L, player->GetDrunkValue());
-        return 1;
-    }
-
-    int GetSpellCooldowns(Eluna* /*E*/, lua_State* L, Player* player)
-    {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
-        uint32 i = 0;
-
-        for (SpellCooldowns::const_iterator it = player->GetSpellCooldownMap().begin(); it != player->GetSpellCooldownMap().end(); ++it)
-        {
-            ++i;
-            Eluna::Push(L, it->first);
-            Eluna::Push(L, uint32(it->second.end));
-            lua_settable(L, tbl);
-        }
-
-        lua_settop(L, tbl);
         return 1;
     }
 
@@ -3133,7 +3123,11 @@ namespace LuaPlayer
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
         bool update = Eluna::CHECKVAL<bool>(L, 3, true);
+#ifdef TRINITY
+        player->GetSpellHistory()->ResetCooldown(spellId, update);
+#else
         player->RemoveSpellCooldown(spellId, update);
+#endif
         return 0;
     }
 
@@ -3141,7 +3135,16 @@ namespace LuaPlayer
     {
         uint32 category = Eluna::CHECKVAL<uint32>(L, 2);
         bool update = Eluna::CHECKVAL<bool>(L, 3, true);
+
+#ifdef TRINITY
+        player->GetSpellHistory()->ResetCooldowns([](SpellHistory::CooldownStorageType::iterator itr) -> bool
+        {
+            SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(itr->first);
+            return spellInfo && spellInfo->GetCategory() == 1248;
+        }, true);
+#else
         player->RemoveSpellCategoryCooldown(category, update);
+#endif
         return 0;
     }
 
@@ -3150,7 +3153,11 @@ namespace LuaPlayer
      */
     int ResetAllCooldowns(Eluna* /*E*/, lua_State* /*L*/, Player* player)
     {
+#ifdef TRINITY
+        player->GetSpellHistory()->ResetAllCooldowns();
+#else
         player->RemoveAllSpellCooldown();
+#endif
         return 0;
     }
 
@@ -3158,8 +3165,12 @@ namespace LuaPlayer
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 3);
-
+        
+#ifdef TRINITY
+        target->GetSpellHistory()->ResetCooldown(spellId, true);
+#else
         player->SendClearCooldown(spellId, target);
+#endif
         return 0;
     }
     /**

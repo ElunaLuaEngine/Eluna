@@ -45,6 +45,7 @@
 #include "WeatherMgr.h"
 #include "Battleground.h"
 #include "revision.h"
+#include "SpellHistory.h"
 #else
 #include "Config/Config.h"
 #include "AggressorAI.h"
