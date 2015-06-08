@@ -2144,6 +2144,7 @@ namespace LuaGlobalFunctions
             TaxiNodesEntry* nodeEntry = new TaxiNodesEntry();
 #ifdef TRINITY
             entry.PathID = pathId;
+            entry.NodeIndex = nodeId;
             nodeEntry->ID = index;
             nodeEntry->map_id = entry.MapID;
             nodeEntry->x = entry.LocX;
@@ -2151,6 +2152,7 @@ namespace LuaGlobalFunctions
             nodeEntry->z = entry.LocZ;
 #else
             entry.path = pathId;
+            entry.index = nodeId;
             nodeEntry->ID = index;
             nodeEntry->map_id = entry.mapid;
             nodeEntry->x = entry.x;
@@ -2159,8 +2161,7 @@ namespace LuaGlobalFunctions
 #endif
             nodeEntry->MountCreatureID[0] = mountH;
             nodeEntry->MountCreatureID[1] = mountA;
-            sTaxiNodesStore.SetEntry(nodeId, nodeEntry);
-            entry.NodeIndex = nodeId++;
+            sTaxiNodesStore.SetEntry(nodeId++, nodeEntry);
             sTaxiPathNodesByPath[pathId].set(index++, new TaxiPathNodeEntry(entry));
         }
         if (startNode >= nodeId)
