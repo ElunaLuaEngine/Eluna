@@ -31,16 +31,16 @@ private:
     struct Binding
     {
         uint64 id;
-        int functionReference;
-        uint32 remainingShots;
         lua_State* L;
+        uint32 remainingShots;
+        int functionReference;
 
         Binding(lua_State* L, uint64 id, int functionReference, uint32 remainingShots) :
-            L(L),
             id(id),
-            functionReference(functionReference),
-            remainingShots(remainingShots)
-        {}
+            L(L),
+            remainingShots(remainingShots),
+            functionReference(functionReference)
+        { }
 
         ~Binding()
         {

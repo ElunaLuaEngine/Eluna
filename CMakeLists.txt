@@ -138,7 +138,6 @@ if( ${CMAKE_PROJECT_NAME} STREQUAL "TrinityCore" )
     ${CMAKE_SOURCE_DIR}/src/server/game/Weather
     ${CMAKE_SOURCE_DIR}/src/server/game/World
     ${CMAKE_SOURCE_DIR}/src/server/scripts/PrecompiledHeaders
-    ${Boost_LIBRARIES}
   )
 
   find_package(Boost COMPONENTS system filesystem REQUIRED)

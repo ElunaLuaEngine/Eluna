@@ -1755,7 +1755,7 @@ namespace LuaUnit
      *
      * @param bool apply = true
      */
-    int SetRooted(Eluna* E, lua_State* L, Unit* unit)
+    int SetRooted(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
 #ifndef TRINITY
@@ -1771,7 +1771,7 @@ namespace LuaUnit
      *
      * @param bool apply = true
      */
-    int SetConfused(Eluna* E, lua_State* L, Unit* unit)
+    int SetConfused(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
 #ifndef TRINITY
@@ -1787,7 +1787,7 @@ namespace LuaUnit
      *
      * @param bool apply = true
      */
-    int SetFeared(Eluna* E, lua_State* L, Unit* unit)
+    int SetFeared(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
 #ifndef TRINITY

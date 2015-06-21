@@ -736,6 +736,8 @@ ElunaRegister<Player> PlayerMethods[] =
     { "Mute", &LuaPlayer::Mute },                                                         // :Mute(time[, reason]) - Mutes the player for given time in seconds.
     { "SummonPlayer", &LuaPlayer::SummonPlayer },                                         // :SummonPlayer(player, map, x, y, z, zoneId[, delay]) - Sends a popup to the player asking if he wants to be summoned if yes, teleported to coords. ZoneID defines the location name shown in the popup Delay is the time until the popup closes automatically.
     { "SaveToDB", &LuaPlayer::SaveToDB },                                                 // :SaveToDB() - Saves to database
+    { "GroupInvite", &LuaPlayer::GroupInvite },
+    { "GroupCreate", &LuaPlayer::GroupCreate },
 #ifdef CLASSIC
     { "UpdateHonor", &LuaPlayer::UpdateHonor },                                             // :UpdateHonor() - Updates Player Honor
     { "ResetHonor", &LuaPlayer::ResetHonor },                                               // :ResetHonor() - Resets Player Honor
@@ -1031,7 +1033,6 @@ ElunaRegister<Group> GroupMethods[] =
     // Getters
     { "GetMembers", &LuaGroup::GetMembers },
     { "GetLeaderGUID", &LuaGroup::GetLeaderGUID },
-    { "GetLeader", &LuaGroup::GetLeader },
     { "GetGUID", &LuaGroup::GetGUID },
     { "GetMemberGroup", &LuaGroup::GetMemberGroup },
     { "GetMemberGUID", &LuaGroup::GetMemberGUID },
@@ -1044,7 +1045,7 @@ ElunaRegister<Group> GroupMethods[] =
 
     // Boolean
     { "IsLeader", &LuaGroup::IsLeader },
-    { "AddInvite", &LuaGroup::AddInvite },
+    { "AddMember", &LuaGroup::AddMember },
     { "RemoveMember", &LuaGroup::RemoveMember },
     { "Disband", &LuaGroup::Disband },
     { "IsFull", &LuaGroup::IsFull },

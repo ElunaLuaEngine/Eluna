@@ -2266,7 +2266,7 @@ namespace LuaPlayer
     /**
      * Unbinds the [Player] from his instances except the one he currently is in.
      */
-    int UnbindAllInstances(Eluna* /*E*/, lua_State* L, Player* player)
+    int UnbindAllInstances(Eluna* /*E*/, lua_State* /*L*/, Player* player)
     {
 #ifdef CLASSIC
         Player::BoundInstancesMap& binds = player->GetBoundInstances();
@@ -3137,11 +3137,11 @@ namespace LuaPlayer
         bool update = Eluna::CHECKVAL<bool>(L, 3, true);
 
 #ifdef TRINITY
-        player->GetSpellHistory()->ResetCooldowns([](SpellHistory::CooldownStorageType::iterator itr) -> bool
+        player->GetSpellHistory()->ResetCooldowns([category](SpellHistory::CooldownStorageType::iterator itr) -> bool
         {
             SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(itr->first);
-            return spellInfo && spellInfo->GetCategory() == 1248;
-        }, true);
+            return spellInfo && spellInfo->GetCategory() == category;
+        }, update);
 #else
         player->RemoveSpellCategoryCooldown(category, update);
 #endif
@@ -3507,6 +3507,114 @@ namespace LuaPlayer
         Player* looter = Eluna::CHECKOBJ<Player>(L, 2);
         player->RemovedInsignia(looter);
         return 0;
+    }
+
+    /**
+     * Makes the [Player] invite another player to a group.
+     *
+     * @param [Player] invited : player to invite to group
+     * @return bool success : true if the player was invited to a group
+     */
+    int GroupInvite(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        Player* invited = Eluna::CHECKOBJ<Player>(L, 2);
+
+        if (invited->GetGroup() || invited->GetGroupInvite())
+        {
+            Eluna::Push(L, false);
+            return 1;
+        }
+
+        // Get correct existing group if any
+        Group* group = player->GetGroup();
+        if (group && group->isBGGroup())
+            group = player->GetOriginalGroup();
+
+        bool success = false;
+
+        // Try invite if group found
+        if (group)
+            success = !group->IsFull() && group->AddInvite(invited);
+        else
+        {
+            // Create new group if one not found
+            group = new Group;
+            success = group->AddLeaderInvite(player) && group->AddInvite(invited);
+            if (!success)
+                delete group;
+        }
+
+        if (success)
+        {
+#if defined(CLASSIC) || defined(TBC)
+            WorldPacket data(SMSG_GROUP_INVITE, 10);                // guess size
+            data << player->GetName();
+            invited->GetSession()->SendPacket(&data);
+#else
+            WorldPacket data(SMSG_GROUP_INVITE, 10);                // guess size
+            data << uint8(1);                                       // invited/already in group flag
+            data << player->GetName();                              // max len 48
+            data << uint32(0);                                      // unk
+            data << uint8(0);                                       // count
+            data << uint32(0);                                      // unk
+            invited->GetSession()->SendPacket(&data);
+#endif
+        }
+
+        Eluna::Push(L, success);
+        return 1;
+    }
+
+    /**
+     * Creates a new [Group] with the creator [Player] as leader.
+     *
+     * @param [Player] invited : player to add to group
+     * @return [Group] createdGroup : the created group or nil
+     */
+    int GroupCreate(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        Player* invited = Eluna::CHECKOBJ<Player>(L, 2);
+
+        if (player->GetGroup() || invited->GetGroup())
+            return 0;
+
+        if (Group* invitedgroup = player->GetGroupInvite())
+            player->UninviteFromGroup();
+        if (Group* invitedgroup = invited->GetGroupInvite())
+            invited->UninviteFromGroup();
+
+        // Try create new group
+        Group* group = new Group;
+        if (!group->AddLeaderInvite(player))
+        {
+            delete group;
+            return 0;
+        }
+
+        // Forming a new group, create it
+        if (!group->IsCreated())
+        {
+            group->RemoveInvite(player);
+#ifdef TRINITY
+            group->Create(player);
+            sGroupMgr->AddGroup(group);
+#else
+            if (!group->Create(group->GetLeaderGuid(), group->GetLeaderName()))
+                return 0;
+            sObjectMgr.AddGroup(group);
+#endif
+        }
+
+#ifdef TRINITY
+        if (!group->AddMember(invited))
+            return 0;
+        group->BroadcastGroupUpdate();
+#else
+        if (!group->AddMember(invited->GetObjectGuid(), invited->GetName()))
+            return 0;
+#endif
+        Eluna::Push(L, group);
+        return 1;
     }
 
     /*int BindToInstance(Eluna* E, lua_State* L, Player* player)
