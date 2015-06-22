@@ -207,7 +207,7 @@ namespace Hooks
     {
         // Guild
         GUILD_EVENT_ON_ADD_MEMBER               =     1,       // (event, guild, player, rank)
-        GUILD_EVENT_ON_REMOVE_MEMBER            =     2,       // (event, guild, isDisbanding)
+        GUILD_EVENT_ON_REMOVE_MEMBER            =     2,       // (event, guild, player, isDisbanding)
         GUILD_EVENT_ON_MOTD_CHANGE              =     3,       // (event, guild, newMotd)
         GUILD_EVENT_ON_INFO_CHANGE              =     4,       // (event, guild, newInfo)
         GUILD_EVENT_ON_CREATE                   =     5,       // (event, guild, leader, name)  // Not on TC
