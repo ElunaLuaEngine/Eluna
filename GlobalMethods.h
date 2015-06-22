@@ -752,8 +752,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterGroupEvent(Eluna* E, lua_State* L)
     {
-        RegisterEventHelper(E, L, Hooks::REGTYPE_GROUP);
-        return 0;
+        return RegisterEventHelper(E, L, Hooks::REGTYPE_GROUP);
     }
 
     /**
