@@ -149,7 +149,7 @@ ElunaRegister<Object> ObjectMethods[] =
     // Getters
     { "GetEntry", &LuaObject::GetEntry },                     // :GetEntry() - Returns the object's entryId
     { "GetGUID", &LuaObject::GetGUID },                       // :GetGUID() - Returns uint64 guid as hex string
-    { "GetGUIDLow", &LuaObject::GetGUIDLow },                 // :GetGUIDLow() - Returns uint32 guid (low guid) that is used in database.
+    { "GetGUIDLow", &LuaObject::GetGUIDLow },                 // :GetGUIDLow() - Returns uint32 guid (low guid) that is used to differentiate objects of same type.
     { "GetInt32Value", &LuaObject::GetInt32Value },           // :GetInt32Value(index) - returns an int value from object fields
     { "GetUInt32Value", &LuaObject::GetUInt32Value },         // :GetUInt32Value(index) - returns an uint value from object fields
     { "GetFloatValue", &LuaObject::GetFloatValue },           // :GetFloatValue(index) - returns a float value from object fields
@@ -775,6 +775,7 @@ ElunaRegister<Creature> CreatureMethods[] =
 #ifndef CATA
     { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
 #endif
+    { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
 
     // Setters
     { "SetHover", &LuaCreature::SetHover },
@@ -859,6 +860,7 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "GetLootState", &LuaGameObject::GetLootState },
     { "GetLootRecipient", &LuaGameObject::GetLootRecipient },
     { "GetLootRecipientGroup", &LuaGameObject::GetLootRecipientGroup },
+    { "GetDBTableGUIDLow", &LuaGameObject::GetDBTableGUIDLow },
 
     // Setters
     { "SetGoState", &LuaGameObject::SetGoState },

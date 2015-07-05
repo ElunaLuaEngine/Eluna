@@ -837,6 +837,22 @@ namespace LuaCreature
     }
 #endif
 
+    /**
+     * Returns the guid of the [Creature] that is used as the ID in the database
+     *
+     * @return uint32 dbguid
+     */
+    int GetDBTableGUIDLow(Eluna* /*E*/, lua_State* L, Creature* creature)
+    {
+#ifdef TRINITY
+        Eluna::Push(L, creature->GetDBTableGUIDLow());
+#else
+        // on mangos based this is same as lowguid
+        Eluna::Push(L, creature->GetGUIDLow());
+#endif
+        return 1;
+    }
+
     /* SETTERS */
 
     /**
