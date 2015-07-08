@@ -3086,8 +3086,8 @@ namespace LuaPlayer
     /**
      * Removes the given amount of the specified [Item] from the player.
      *
-     * @proto item = (item, itemCount)
-     * @proto item = (entry, itemCount)
+     * @proto (item, itemCount)
+     * @proto (entry, itemCount)
      * @param [Item] item : item to remove
      * @param uint32 entry : entry of the item to remove
      * @param uint32 itemCount = 1 : amount of the item to add
