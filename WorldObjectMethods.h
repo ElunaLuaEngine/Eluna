@@ -7,6 +7,9 @@
 #ifndef WORLDOBJECTMETHODS_H
 #define WORLDOBJECTMETHODS_H
 
+/***
+ * Inherits all methods from: [Object]
+ */
 namespace LuaWorldObject
 {
     /**

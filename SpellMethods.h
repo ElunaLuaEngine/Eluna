@@ -9,6 +9,8 @@
 
 /***
  * An instance of a spell, created when the spell is cast by a [Unit].
+ *
+ * Inherits all methods from: none
  */
 namespace LuaSpell
 {

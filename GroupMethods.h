@@ -7,6 +7,9 @@
 #ifndef GROUPMETHODS_H
 #define GROUPMETHODS_H
 
+/***
+ * Inherits all methods from: none
+ */
 namespace LuaGroup
 {
     /**

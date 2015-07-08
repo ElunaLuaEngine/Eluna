@@ -15,6 +15,8 @@
  *   the client has sent a message that its [Player] wants to logout.
  *
  * The packet can contain further data, the format of which depends on the opcode.
+ *
+ * Inherits all methods from: none
  */
 namespace LuaPacket
 {

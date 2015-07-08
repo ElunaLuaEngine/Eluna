@@ -16,6 +16,8 @@
  *
  * [Aura]s on your player are displayed in-game as a series of icons to the left
  *   of the mini-map.
+ *
+ * Inherits all methods from: none
  */
 namespace LuaAura
 {

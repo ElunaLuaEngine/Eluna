@@ -9,6 +9,8 @@
 
 /***
  * Contains the state of a battleground, e.g. Warsong Gulch, Arathi Basin, etc.
+ *
+ * Inherits all methods from: none
  */
 namespace LuaBattleGround
 {

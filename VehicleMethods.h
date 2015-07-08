@@ -9,6 +9,9 @@
 #ifndef CLASSIC
 #ifndef TBC
 
+/***
+ * Inherits all methods from: none
+ */
 namespace LuaVehicle
 {
     /* BOOLEAN */

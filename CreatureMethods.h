@@ -10,7 +10,7 @@
 /***
  * Non-[Player] controlled [Unit]s (i.e. NPCs).
  *
- * Inherits all [Object], [WorldObject], and [Unit] methods.
+ * Inherits all methods from: [Object], [WorldObject], [Unit]
  */
 namespace LuaCreature
 {

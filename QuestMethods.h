@@ -7,6 +7,9 @@
 #ifndef QUESTMETHODS_H
 #define QUESTMETHODS_H
 
+/***
+ * Inherits all methods from: none
+ */
 namespace LuaQuest
 {
     /**

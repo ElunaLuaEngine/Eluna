@@ -9,6 +9,8 @@
 
 /***
  * A game map, e.g. Azeroth, Eastern Kingdoms, the Molten Core, etc.
+ *
+ * Inherits all methods from: none
  */
 namespace LuaMap
 {

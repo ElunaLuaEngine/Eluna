@@ -7,6 +7,9 @@
 #ifndef GAMEOBJECTMETHODS_H
 #define GAMEOBJECTMETHODS_H
 
+/***
+ * Inherits all methods from: [Object], [WorldObject]
+ */
 namespace LuaGameObject
 {
     /**

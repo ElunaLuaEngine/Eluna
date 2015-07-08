@@ -7,6 +7,9 @@
 #ifndef UNITMETHODS_H
 #define UNITMETHODS_H
 
+/***
+ * Inherits all methods from: [Object], [WorldObject]
+ */
 namespace LuaUnit
 {
     /* BOOLEAN */

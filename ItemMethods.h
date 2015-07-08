@@ -7,6 +7,9 @@
 #ifndef ITEMMETHODS_H
 #define ITEMMETHODS_H
 
+/***
+ * Inherits all methods from: [Object]
+ */
 namespace LuaItem
 {
     /* BOOLEAN */

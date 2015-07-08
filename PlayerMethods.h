@@ -7,6 +7,9 @@
 #ifndef PLAYERMETHODS_H
 #define PLAYERMETHODS_H
 
+/***
+ * Inherits all methods from: [Object], [WorldObject], [Unit]
+ */
 namespace LuaPlayer
 {
     /* BOOLEAN */
@@ -3088,7 +3091,6 @@ namespace LuaPlayer
      * @param [Item] item : item to remove
      * @param uint32 entry : entry of the item to remove
      * @param uint32 itemCount = 1 : amount of the item to add
-     * @return [Item] item : the item that was added or nil
      */
     int RemoveItem(Eluna* /*E*/, lua_State* L, Player* player)
     {

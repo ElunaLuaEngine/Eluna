@@ -19,6 +19,8 @@
  *
  * The GetValue methods in this class (e.g. [Object:GetInt32Value]) provide low-level access to the data block.
  * Other methods, like [Object:HasFlag] and [Object:GetScale], merely wrap the GetValue methods and provide a simpler interface.
+ *
+ * Inherits all methods from: none
  */
 namespace LuaObject
 {

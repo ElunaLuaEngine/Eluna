@@ -9,6 +9,8 @@
 
 /***
  * The remains of a [Player] that has died.
+ *
+ * Inherits all methods from: [Object], [WorldObject]
  */
 namespace LuaCorpse
 {

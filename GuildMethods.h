@@ -7,6 +7,9 @@
 #ifndef GUILDMETHODS_H
 #define GUILDMETHODS_H
 
+/***
+ * Inherits all methods from: none
+ */
 namespace LuaGuild
 {
     /* GETTERS */

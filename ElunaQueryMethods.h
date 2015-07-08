@@ -17,6 +17,8 @@
  * The result of a database query.
  *
  * E.g. the return value of [Global:WorldDBQuery].
+ *
+ * Inherits all methods from: none
  */
 namespace LuaQuery
 {
