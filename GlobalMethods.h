@@ -926,6 +926,8 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Player] gossip event handler.
      *
+     * Note that you can not use `GOSSIP_EVENT_ON_HELLO` with this hook. It does nothing since players dont have an "on hello".
+     *
      * <pre>
      * enum GossipEvents
      * {

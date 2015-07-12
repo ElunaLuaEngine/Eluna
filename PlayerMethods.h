@@ -3090,7 +3090,7 @@ namespace LuaPlayer
      * @proto (entry, itemCount)
      * @param [Item] item : item to remove
      * @param uint32 entry : entry of the item to remove
-     * @param uint32 itemCount = 1 : amount of the item to add
+     * @param uint32 itemCount = 1 : amount of the item to remove
      */
     int RemoveItem(Eluna* /*E*/, lua_State* L, Player* player)
     {
@@ -3381,10 +3381,16 @@ namespace LuaPlayer
     /**
      * Sends the current gossip items of the player to him as a gossip menu with header text from the given textId.
      *
+     * If sender is a [Player] then menu_id is mandatory, otherwise it is not used for anything.
+     * menu_id is the ID used to trigger the OnGossipSelect registered for players. See [Global:RegisterPlayerGossipEvent]
+     *
      * See also: [Player:GossipMenuAddItem], [Player:GossipAddQuests], [Player:GossipComplete], [Player:GossipClearMenu]
      *
+     * @proto (npc_text, sender)
+     * @proto (npc_text, sender, menu_id)
      * @param uint32 npc_text : entry ID of a header text in npc_text database table, common default is 100
      * @param [Object] sender : object acting as the source of the sent gossip menu
+     * @param uint32 menu_id : if sender is a [Player] then menu_id is mandatory
      */
     int GossipSendMenu(Eluna* /*E*/, lua_State* L, Player* player)
     {
