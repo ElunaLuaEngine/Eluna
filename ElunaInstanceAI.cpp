@@ -13,7 +13,7 @@ void ElunaInstanceAI::Initialize()
 {
     LOCK_ELUNA;
 
-    ASSERT(!sEluna->HasInstanceData(instance))
+    ASSERT(!sEluna->HasInstanceData(instance));
 
     // Create a new table for instance data.
     lua_State* L = sEluna->L;
@@ -40,7 +40,7 @@ void ElunaInstanceAI::Load(const char* data)
 
     if (data[0] == '\0')
     {
-        ASSERT(!sEluna->HasInstanceData(instance))
+        ASSERT(!sEluna->HasInstanceData(instance));
 
         // Create a new table for instance data.
         lua_State* L = sEluna->L;

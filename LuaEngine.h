@@ -145,9 +145,9 @@ private:
     bool enabled;
 
     // Map from instance ID -> Lua table ref
-    UNORDERED_MAP<uint32, int> instanceDataRefs;
+    std::unordered_map<uint32, int> instanceDataRefs;
     // Map from map ID -> Lua table ref
-    UNORDERED_MAP<uint32, int> continentDataRefs;
+    std::unordered_map<uint32, int> continentDataRefs;
 
     Eluna();
     ~Eluna();

@@ -1263,10 +1263,10 @@ InstanceData* Eluna::GetInstanceData(Map* map)
 
 bool Eluna::HasInstanceData(Map const* map)
 {
-    if (map->IsContinent())
-        return continentDataRefs.count(map->GetId()) != 0;
+    if (!map->Instanceable())
+        return continentDataRefs.find(map->GetId()) != continentDataRefs.end();
     else
-        return instanceDataRefs.count(map->GetInstanceId()) != 0;
+        return instanceDataRefs.find(map->GetInstanceId()) != instanceDataRefs.end();
 }
 
 void Eluna::CreateInstanceData(Map const* map)
@@ -1274,14 +1274,15 @@ void Eluna::CreateInstanceData(Map const* map)
     ASSERT(lua_istable(L, -1));
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    if (map->IsContinent())
+    if (!map->Instanceable())
     {
         uint32 mapId = map->GetId();
 
         // If there's another table that was already stored for the map, unref it.
-        if (continentDataRefs.count(mapId) > 0)
+        auto mapRef = continentDataRefs.find(mapId);
+        if (mapRef != continentDataRefs.end())
         {
-            luaL_unref(L, LUA_REGISTRYINDEX, continentDataRefs[mapId]);
+            luaL_unref(L, LUA_REGISTRYINDEX, mapRef->second);
         }
 
         continentDataRefs[mapId] = ref;
@@ -1291,9 +1292,10 @@ void Eluna::CreateInstanceData(Map const* map)
         uint32 instanceId = map->GetInstanceId();
 
         // If there's another table that was already stored for the instance, unref it.
-        if (instanceDataRefs.count(instanceId) > 0)
+        auto instRef = instanceDataRefs.find(instanceId);
+        if (instRef != instanceDataRefs.end())
         {
-            luaL_unref(L, LUA_REGISTRYINDEX, instanceDataRefs[instanceId]);
+            luaL_unref(L, LUA_REGISTRYINDEX, instRef->second);
         }
 
         instanceDataRefs[instanceId] = ref;
@@ -1333,7 +1335,7 @@ void Eluna::PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCo
         ai->Reload();
 
     // Get the instance data table from the registry.
-    if (ai->instance->IsContinent())
+    if (!ai->instance->Instanceable())
         lua_rawgeti(L, LUA_REGISTRYINDEX, continentDataRefs[ai->instance->GetId()]);
     else
         lua_rawgeti(L, LUA_REGISTRYINDEX, instanceDataRefs[ai->instance->GetInstanceId()]);
