@@ -947,8 +947,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterMapEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, Hooks::REGTYPE_MAP);
-        return 0;
+        return RegisterEntryHelper(E, L, Hooks::REGTYPE_MAP);
     }
 
     /**
@@ -975,8 +974,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterInstanceEvent(Eluna* E, lua_State* L)
     {
-        RegisterEntryHelper(E, L, Hooks::REGTYPE_INSTANCE);
-        return 0;
+        return RegisterEntryHelper(E, L, Hooks::REGTYPE_INSTANCE);
     }
 
     /**

@@ -1342,11 +1342,6 @@ void Eluna::PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCo
 
     ASSERT(lua_istable(L, -1));
 
-    // Set the "map" field to a fresh reference of the instance Map.
-    Eluna::Push(L, "map");
-    Eluna::Push(L, ai->instance);
-    lua_rawset(L, -3);
-
     if (incrementCounter)
         ++push_counter;
 }
