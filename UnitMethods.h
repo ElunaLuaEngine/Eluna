@@ -2491,12 +2491,12 @@ namespace LuaUnit
     {
         Unit* victim = Eluna::CHECKOBJ<Unit>(L, 2);
         float threat = Eluna::CHECKVAL<float>(L, 3, true);
-        uint32 schoolMask = Eluna::CHECKVAL<uint32>(L, 3, 0);
-        uint32 spell = Eluna::CHECKVAL<uint32>(L, 3, 0);
+        uint32 schoolMask = Eluna::CHECKVAL<uint32>(L, 4, 0);
+        uint32 spell = Eluna::CHECKVAL<uint32>(L, 5, 0);
 
         if (schoolMask > SPELL_SCHOOL_MASK_ALL)
         {
-            return luaL_argerror(L, 3, "valid SpellSchoolMask expected");
+            return luaL_argerror(L, 4, "valid SpellSchoolMask expected");
         }
 
 #ifdef TRINITY
