@@ -185,8 +185,131 @@ static void mar_encode_value(lua_State *L, mar_Buffer *buf, int val, size_t *idx
         }
         break;
     }
-    case LUA_TFUNCTION:
-    case LUA_TUSERDATA:
+    case LUA_TFUNCTION: {
+        int tag, ref;
+        lua_pushvalue(L, -1);
+        lua_rawget(L, SEEN_IDX);
+        if (!lua_isnil(L, -1)) {
+            ref = lua_tointeger(L, -1);
+            tag = MAR_TREF;
+            buf_write(L, (const char*)&tag, MAR_CHR, buf);
+            buf_write(L, (const char*)&ref, MAR_I32, buf);
+            lua_pop(L, 1);
+        }
+        else {
+            mar_Buffer rec_buf;
+            int i;
+            lua_Debug ar;
+            lua_pop(L, 1); /* pop nil */
+
+            lua_pushvalue(L, -1);
+            lua_getinfo(L, ">nuS", &ar);
+            if (ar.what[0] != 'L') {
+                luaL_error(L, "attempt to persist a C function '%s'", ar.name);
+            }
+            tag = MAR_TVAL;
+            lua_pushvalue(L, -1);
+            lua_pushinteger(L, (*idx)++);
+            lua_rawset(L, SEEN_IDX);
+
+            lua_pushvalue(L, -1);
+            buf_init(L, &rec_buf);
+            lua_dump(L, (lua_Writer)buf_write, &rec_buf);
+
+            buf_write(L, (const char*)&tag, MAR_CHR, buf);
+            buf_write(L, (const char*)&rec_buf.head, MAR_I32, buf);
+            buf_write(L, rec_buf.data, rec_buf.head, buf);
+            buf_done(L, &rec_buf);
+            lua_pop(L, 1);
+
+            lua_newtable(L);
+            for (i=1; i <= ar.nups; i++) {
+                // Create a new table to act as the (upvalue index, upvalue) tuple.
+                lua_createtable(L, 2, 0);
+                lua_pushinteger(L, i);
+                lua_rawseti(L, -2, 1);
+
+                const char* upvalue_name = lua_getupvalue(L, -3, i);
+
+                /*
+                 * In Lua 5.2, a reference to the current _ENV is included as
+                 *   an upvalue in closures when they are created.
+                 *
+                 * Instead of saving the entire _ENV table
+                 *   (which contains C functions which cannot be saved)
+                 *   we just insert a `true` value in its place.
+                 *
+                 * Then, when the upvalues are loaded, a reference to the
+                 *   current _G is used as the upvalue.
+                 */
+                if (strcmp("_ENV", upvalue_name) == 0) {
+                    lua_pop(L, 1);
+                    lua_pushboolean(L, true);
+                }
+
+                lua_rawseti(L, -2, 2);
+                lua_pushstring(L, upvalue_name);
+                lua_insert(L, -2);
+                lua_rawset(L, -3);
+            }
+
+            buf_init(L, &rec_buf);
+            mar_encode_table(L, &rec_buf, idx);
+
+            buf_write(L, (const char*)&rec_buf.head, MAR_I32, buf);
+            buf_write(L, rec_buf.data, rec_buf.head, buf);
+            buf_done(L, &rec_buf);
+            lua_pop(L, 1);
+        }
+
+        break;
+    }
+    case LUA_TUSERDATA: {
+        int tag, ref;
+        lua_pushvalue(L, -1);
+        lua_rawget(L, SEEN_IDX);
+        if (!lua_isnil(L, -1)) {
+            ref = lua_tointeger(L, -1);
+            tag = MAR_TREF;
+            buf_write(L, (const char*)&tag, MAR_CHR, buf);
+            buf_write(L, (const char*)&ref, MAR_I32, buf);
+            lua_pop(L, 1);
+        }
+        else {
+            mar_Buffer rec_buf;
+            lua_pop(L, 1); /* pop nil */
+            if (luaL_getmetafield(L, -1, "__persist")) {
+                tag = MAR_TUSR;
+
+                lua_pushvalue(L, -2);
+                lua_pushinteger(L, (*idx)++);
+                lua_rawset(L, SEEN_IDX);
+
+                lua_pushvalue(L, -2);
+                lua_call(L, 1, 1);
+                if (!lua_isfunction(L, -1)) {
+                    luaL_error(L, "__persist must return a function");
+                }
+                lua_newtable(L);
+                lua_pushvalue(L, -2);
+                lua_rawseti(L, -2, 1);
+                lua_remove(L, -2);
+
+                buf_init(L, &rec_buf);
+                mar_encode_table(L, &rec_buf, idx);
+
+                buf_write(L, (const char*)&tag, MAR_CHR, buf);
+                buf_write(L, (const char*)&rec_buf.head, MAR_I32, buf);
+		        buf_write(L, rec_buf.data, rec_buf.head, buf);
+		        buf_done(L, &rec_buf);
+            }
+            else {
+                luaL_error(L, "attempt to encode userdata (no __persist hook)");
+            }
+            lua_pop(L, 1);
+        }
+        break;
+    }
     case LUA_TNIL: break;
     default:
         luaL_error(L, "invalid value type (%s)", lua_typename(L, val_type));
@@ -206,10 +329,10 @@ static int mar_encode_table(lua_State *L, mar_Buffer *buf, size_t *idx)
 }
 
 #define mar_incr_ptr(l) \
-    if ((size_t)(((*p)-buf)+(l)) > len) luaL_error(L, "bad code"); (*p) += (l);
+    if (((*p)-buf)+(ptrdiff_t)(l) > (ptrdiff_t)len) luaL_error(L, "bad code"); (*p) += (l);
 
 #define mar_next_len(l,T) \
-    if (((*p)-buf)+sizeof(T) > len) luaL_error(L, "bad code"); \
+    if (((*p)-buf)+(ptrdiff_t)sizeof(T) > (ptrdiff_t)len) luaL_error(L, "bad code"); \
     l = *(T*)*p; (*p) += sizeof(T);
 
 static void mar_decode_value
@@ -264,8 +387,83 @@ static void mar_decode_value
         }
         break;
     }
-    case LUA_TFUNCTION:
-    case LUA_TUSERDATA:
+    case LUA_TFUNCTION: {
+        const char* uv_name;
+        int uv_index;
+        mar_Buffer dec_buf;
+        char tag = *(char*)*p;
+        mar_incr_ptr(1);
+        if (tag == MAR_TREF) {
+            int ref;
+            mar_next_len(ref, int);
+            lua_rawgeti(L, SEEN_IDX, ref);
+        }
+        else {
+            mar_next_len(l, uint32_t);
+            dec_buf.data = (char*)*p;
+            dec_buf.size = l;
+            dec_buf.head = l;
+            dec_buf.seek = 0;
+            lua_load(L, (lua_Reader)buf_read, &dec_buf, "=marshal", NULL);
+            mar_incr_ptr(l);
+
+            lua_pushvalue(L, -1);
+            lua_rawseti(L, SEEN_IDX, (*idx)++);
+
+            mar_next_len(l, uint32_t);
+            lua_newtable(L);
+            mar_decode_table(L, *p, l, idx);
+            lua_pushnil(L);
+            while (lua_next(L, -2) != 0) {
+                lua_rawgeti(L, -1, 1);
+                uv_index = lua_tointeger(L, -1);
+
+                lua_rawgeti(L, -2, 2);
+                /*
+                 * If the upvalue's name was "_ENV", a dummy value was put
+                 *   into the serialized table instead of the real _ENV.
+                 *
+                 * Here we just replace the dummy value with a reference to
+                 *   the current _G.
+                 */
+                uv_name = lua_tostring(L, -4);
+                if (strcmp(uv_name, "_ENV") == 0) {
+                    lua_pop(L, 1);
+                    lua_pushglobaltable(L);
+                }
+
+                lua_setupvalue(L, -6, uv_index);
+                lua_pop(L, 2);
+            }
+            lua_pop(L, 1);
+            mar_incr_ptr(l);
+        }
+        break;
+    }
+    case LUA_TUSERDATA: {
+        char tag = *(char*)*p;
+        mar_incr_ptr(MAR_CHR);
+        if (tag == MAR_TREF) {
+            int ref;
+            mar_next_len(ref, int);
+            lua_rawgeti(L, SEEN_IDX, ref);
+        }
+        else if (tag == MAR_TUSR) {
+            mar_next_len(l, uint32_t);
+            lua_newtable(L);
+            mar_decode_table(L, *p, l, idx);
+            lua_rawgeti(L, -1, 1);
+            lua_call(L, 0, 1);
+            lua_remove(L, -2);
+            lua_pushvalue(L, -1);
+            lua_rawseti(L, SEEN_IDX, (*idx)++);
+            mar_incr_ptr(l);
+        }
+        else { /* tag == MAR_TVAL */
+            lua_pushnil(L);
+        }
+        break;
+    }
     case LUA_TNIL:
     case LUA_TTHREAD:
         lua_pushnil(L);
@@ -279,7 +477,7 @@ static int mar_decode_table(lua_State *L, const char* buf, size_t len, size_t *i
 {
     const char* p;
     p = buf;
-    while ((size_t)(p - buf) < len) {
+    while (p - buf < (ptrdiff_t)len) {
         mar_decode_value(L, buf, len, &p, idx);
         mar_decode_value(L, buf, len, &p, idx);
         lua_settable(L, -3);
@@ -367,7 +565,7 @@ int mar_decode(lua_State* L)
     return 1;
 }
 
-static int mar_clone(lua_State* L)
+int mar_clone(lua_State* L)
 {
     mar_encode(L);
     lua_replace(L, 1);
