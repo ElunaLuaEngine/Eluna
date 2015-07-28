@@ -47,8 +47,10 @@ extern "C" {
 #define MAR_I32 4
 #define MAR_I64 8
 
-#define MAR_MAGIC 0x8e
+#define MAR_MAGIC 0x8f
 #define SEEN_IDX  3
+
+#define MAR_ENV_UV_IDX_KEY "E"
 
 typedef struct mar_Buffer {
     size_t size;
@@ -223,34 +225,19 @@ static void mar_encode_value(lua_State *L, mar_Buffer *buf, int val, size_t *idx
             lua_pop(L, 1);
 
             lua_newtable(L);
-            for (i=1; i <= ar.nups; i++) {
-                // Create a new table to act as the (upvalue index, upvalue) tuple.
-                lua_createtable(L, 2, 0);
-                lua_pushinteger(L, i);
-                lua_rawseti(L, -2, 1);
+            for (i = 1; i <= ar.nups; i++) {
+                lua_createtable(L, 1, 0); // Create wrapper (for nil upvalues)
 
                 const char* upvalue_name = lua_getupvalue(L, -3, i);
-
-                /*
-                 * In Lua 5.2, a reference to the current _ENV is included as
-                 *   an upvalue in closures when they are created.
-                 *
-                 * Instead of saving the entire _ENV table
-                 *   (which contains C functions which cannot be saved)
-                 *   we just insert a `true` value in its place.
-                 *
-                 * Then, when the upvalues are loaded, a reference to the
-                 *   current _G is used as the upvalue.
-                 */
                 if (strcmp("_ENV", upvalue_name) == 0) {
                     lua_pop(L, 1);
-                    lua_pushboolean(L, true);
+                    lua_pushinteger(L, i);
+                    lua_setfield(L, -3, MAR_ENV_UV_IDX_KEY); // Mark where _ENV is expected.
+                    lua_pushnil(L);
                 }
 
-                lua_rawseti(L, -2, 2);
-                lua_pushstring(L, upvalue_name);
-                lua_insert(L, -2);
-                lua_rawset(L, -3);
+                lua_rawseti(L, -2, 1); // Wrap upvalue
+                lua_rawseti(L, -2, i);
             }
 
             buf_init(L, &rec_buf);
@@ -388,8 +375,9 @@ static void mar_decode_value
         break;
     }
     case LUA_TFUNCTION: {
-        const char* uv_name;
-        int uv_index;
+        size_t nups;
+        int i;
+        int env_pos;
         mar_Buffer dec_buf;
         char tag = *(char*)*p;
         mar_incr_ptr(1);
@@ -413,29 +401,23 @@ static void mar_decode_value
             mar_next_len(l, uint32_t);
             lua_newtable(L);
             mar_decode_table(L, *p, l, idx);
-            lua_pushnil(L);
-            while (lua_next(L, -2) != 0) {
-                lua_rawgeti(L, -1, 1);
-                uv_index = lua_tointeger(L, -1);
 
-                lua_rawgeti(L, -2, 2);
-                /*
-                 * If the upvalue's name was "_ENV", a dummy value was put
-                 *   into the serialized table instead of the real _ENV.
-                 *
-                 * Here we just replace the dummy value with a reference to
-                 *   the current _G.
-                 */
-                uv_name = lua_tostring(L, -4);
-                if (strcmp(uv_name, "_ENV") == 0) {
-                    lua_pop(L, 1);
-                    lua_pushglobaltable(L);
-                }
-
-                lua_setupvalue(L, -6, uv_index);
-                lua_pop(L, 2);
+            nups = lua_rawlen(L, -1);
+            for (i = 1; i <= nups; i++) {
+                lua_rawgeti(L, -1, i);
+                lua_rawgeti(L, -1, 1); // Unwrap upvalue
+                lua_setupvalue(L, -4, i);
+                lua_pop(L, 1);
             }
-            lua_pop(L, 1);
+
+            lua_getfield(L, -1, MAR_ENV_UV_IDX_KEY);
+            if (lua_isnumber(L, -1)) {
+                env_pos = lua_tointeger(L, -1);
+                lua_pushglobaltable(L);
+                lua_setupvalue(L, -4, env_pos);
+            }
+
+            lua_pop(L, 2);
             mar_incr_ptr(l);
         }
         break;
