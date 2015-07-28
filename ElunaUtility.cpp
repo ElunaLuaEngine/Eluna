@@ -144,6 +144,9 @@ unsigned char* ElunaUtil::DecodeData(const char *data, size_t *output_length)
     {
         unsigned char byte = data[i];
 
+        if (byte == '=')
+            continue;
+
         // Every invalid character (and 'A') will map to 0 (due to `calloc`).
         if (decoding_table[byte] == 0 && byte != 'A')
             return NULL;
