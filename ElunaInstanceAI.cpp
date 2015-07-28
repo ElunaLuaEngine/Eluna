@@ -78,35 +78,29 @@ void ElunaInstanceAI::Load(const char* data)
             }
             else
             {
-                ELUNA_LOG_ERROR("Error while loading instance data (data: \"%s\"): Expected data to be a table (type 5), got type %d instead", data, lua_type(L, -1));
+                ELUNA_LOG_ERROR("Error while loading instance data: Expected data to be a table (type 5), got type %d instead", lua_type(L, -1));
                 lua_pop(L, 1);
                 // Stack: (empty)
 
-                lua_newtable(L);
-                sEluna->CreateInstanceData(instance);
-                // Stack: (empty)
+                Initialize();
             }
         }
         else
         {
             // Stack: error_message
-            ELUNA_LOG_ERROR("Error while parsing instance data with lua-marshal (data: \"%s\"): %s", data, lua_tostring(L, -1));
+            ELUNA_LOG_ERROR("Error while parsing instance data with lua-marshal: %s", lua_tostring(L, -1));
             lua_pop(L, 1);
             // Stack: (empty)
 
-            lua_newtable(L);
-            sEluna->CreateInstanceData(instance);
-            // Stack: (empty)
+            Initialize();
         }
 
         delete[] decodedData;
     }
     else
     {
-        ELUNA_LOG_ERROR("Error while decoding instance data (data: \"%s\"): Data is not valid base-64", data);
-        lua_newtable(L);
-        sEluna->CreateInstanceData(instance);
-        // Stack: (empty)
+        ELUNA_LOG_ERROR("Error while decoding instance data: Data is not valid base-64");
+        Initialize();
     }
 }
 
