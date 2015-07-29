@@ -50,7 +50,8 @@ extern "C" {
 #define MAR_MAGIC 0x8f
 #define SEEN_IDX  3
 
-#define MAR_ENV_UV_IDX_KEY "E"
+#define MAR_ENV_IDX_KEY  "E"
+#define MAR_NUPS_IDX_KEY "n"
 
 typedef struct mar_Buffer {
     size_t size;
@@ -200,7 +201,7 @@ static void mar_encode_value(lua_State *L, mar_Buffer *buf, int val, size_t *idx
         }
         else {
             mar_Buffer rec_buf;
-            int i;
+            unsigned int i;
             lua_Debug ar;
             lua_pop(L, 1); /* pop nil */
 
@@ -226,19 +227,21 @@ static void mar_encode_value(lua_State *L, mar_Buffer *buf, int val, size_t *idx
 
             lua_newtable(L);
             for (i = 1; i <= ar.nups; i++) {
-                lua_createtable(L, 1, 0); // Create wrapper (for nil upvalues)
-
-                const char* upvalue_name = lua_getupvalue(L, -3, i);
+                const char* upvalue_name = lua_getupvalue(L, -2, i);
                 if (strcmp("_ENV", upvalue_name) == 0) {
                     lua_pop(L, 1);
+                    // Mark where _ENV is expected.
+                    lua_pushstring(L, MAR_ENV_IDX_KEY);
                     lua_pushinteger(L, i);
-                    lua_setfield(L, -3, MAR_ENV_UV_IDX_KEY); // Mark where _ENV is expected.
-                    lua_pushnil(L);
+                    lua_rawset(L, -3);
                 }
-
-                lua_rawseti(L, -2, 1); // Wrap upvalue
-                lua_rawseti(L, -2, i);
+                else {
+                    lua_rawseti(L, -2, i);
+                }
             }
+            lua_pushstring(L, MAR_NUPS_IDX_KEY);
+            lua_pushnumber(L, ar.nups);
+            lua_rawset(L, -3);
 
             buf_init(L, &rec_buf);
             mar_encode_table(L, &rec_buf, idx);
@@ -375,9 +378,8 @@ static void mar_decode_value
         break;
     }
     case LUA_TFUNCTION: {
-        size_t nups;
-        int i;
-        int env_pos;
+        unsigned int nups;
+        unsigned int i;
         mar_Buffer dec_buf;
         char tag = *(char*)*p;
         mar_incr_ptr(1);
@@ -402,22 +404,27 @@ static void mar_decode_value
             lua_newtable(L);
             mar_decode_table(L, *p, l, idx);
 
-            nups = lua_rawlen(L, -1);
-            for (i = 1; i <= nups; i++) {
-                lua_rawgeti(L, -1, i);
-                lua_rawgeti(L, -1, 1); // Unwrap upvalue
-                lua_setupvalue(L, -4, i);
+            lua_pushstring(L, MAR_ENV_IDX_KEY);
+            lua_rawget(L, -2);
+            if (lua_isnumber(L, -1)) {
+                lua_pushglobaltable(L);
+                lua_rawset(L, -3);
+            }
+            else {
                 lua_pop(L, 1);
             }
 
-            lua_getfield(L, -1, MAR_ENV_UV_IDX_KEY);
-            if (lua_isnumber(L, -1)) {
-                env_pos = lua_tointeger(L, -1);
-                lua_pushglobaltable(L);
-                lua_setupvalue(L, -4, env_pos);
+            lua_pushstring(L, MAR_NUPS_IDX_KEY);
+            lua_rawget(L, -2);
+            nups = luaL_checknumber(L, -1);
+            lua_pop(L, 1);
+
+            for (i = 1; i <= nups; i++) {
+                lua_rawgeti(L, -1, i);
+                lua_setupvalue(L, -3, i);
             }
 
-            lua_pop(L, 2);
+            lua_pop(L, 1);
             mar_incr_ptr(l);
         }
         break;
