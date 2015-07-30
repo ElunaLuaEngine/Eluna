@@ -18,13 +18,14 @@ struct ScriptedAI;
 
 struct ElunaCreatureAI : ScriptedAI
 {
+    // used to delay the spawn hook triggering on AI creation
+    bool justSpawned;
 #ifndef TRINITY
 #define me  m_creature
 #endif
 
-    ElunaCreatureAI(Creature* creature) : ScriptedAI(creature)
+    ElunaCreatureAI(Creature* creature) : ScriptedAI(creature), justSpawned(true)
     {
-        JustRespawned();
     }
     ~ElunaCreatureAI() { }
 
@@ -35,6 +36,9 @@ struct ElunaCreatureAI : ScriptedAI
     void UpdateAI(uint32 diff) override
 #endif
     {
+        if (justSpawned)
+            JustRespawned();
+
         if (!sEluna->UpdateAI(me, diff))
         {
 #ifdef TRINITY
