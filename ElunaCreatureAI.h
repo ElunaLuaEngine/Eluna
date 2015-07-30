@@ -37,7 +37,10 @@ struct ElunaCreatureAI : ScriptedAI
 #endif
     {
         if (justSpawned)
+        {
+            justSpawned = false;
             JustRespawned();
+        }
 
         if (!sEluna->UpdateAI(me, diff))
         {
