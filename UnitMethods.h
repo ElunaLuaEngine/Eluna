@@ -1274,7 +1274,6 @@ namespace LuaUnit
         return 1;
     }
 
-#ifdef MANGOS
     /**
      * Returns the current movement type for this [Unit].
      *
@@ -1285,6 +1284,7 @@ namespace LuaUnit
      *     RANDOM_MOTION_TYPE              = 1,
      *     WAYPOINT_MOTION_TYPE            = 2,
      *     MAX_DB_MOTION_TYPE              = 3,
+     *     ANIMAL_RANDOM_MOTION_TYPE       = 3, // TC
      * 
      *     CONFUSED_MOTION_TYPE            = 4,
      *     CHASE_MOTION_TYPE               = 5,
@@ -1297,7 +1297,10 @@ namespace LuaUnit
      *     ASSISTANCE_DISTRACT_MOTION_TYPE = 12,          
      *     TIMED_FLEEING_MOTION_TYPE       = 13,
      *     FOLLOW_MOTION_TYPE              = 14,
-     *     EFFECT_MOTION_TYPE              = 15,
+     *     EFFECT_MOTION_TYPE              = 15, // mangos
+     *     ROTATE_MOTION_TYPE              = 15, // TC
+     *     EFFECT_MOTION_TYPE              = 16, // TC
+     *     NULL_MOTION_TYPE                = 17, // TC
      * };
      * </pre>
      *
@@ -1308,7 +1311,6 @@ namespace LuaUnit
         Eluna::Push(L, unit->GetMotionMaster()->GetCurrentMovementGeneratorType());
         return 1;
     }
-#endif
 
     /* SETTERS */
 
