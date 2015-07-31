@@ -13,12 +13,14 @@ Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and
 
 ##Documentation
 
- * [Installation](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/INSTALL.md)
+ * [__Installation__](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/INSTALL.md)
+ * [Getting started](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/USAGE.md)
+ * [Eluna features](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/IMPL_DETAILS.md)
  * [Function documentation](http://eluna.emudevs.com/)
  * [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/Hooks.h)
  * [Lua reference manual](http://www.lua.org/manual/5.2/)
 
-* [Contributing](docs/CONTRIBUTING.md)
+* [Contributing](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/CONTRIBUTING.md)
 * [Support forum](http://emudevs.com/forumdisplay.php/279-Eluna-Support)
 * [Example scripts](https://github.com/ElunaLuaEngine/Scripts)
 * [Guides, releases and news](http://emudevs.com/forumdisplay.php/15-Eluna-Lua-Engine-%C2%A9)
