@@ -44,7 +44,29 @@ Any userdata object that is memory managed by lua is safe to store over time. Th
 
 ##Userdata metamethods
 All userdata objects in Eluna have tostring metamethod implemented.
-This allows you to print the player object for example.
+This allows you to print the player object for example and to use `tostring(player)`.
+
+The userdata uses metatables that contain the methods and functions it uses.
+These tables are globally accessible by using the type name. For example `Player` is a global table containing all Player methods.
+
+You can define new methods in lua for a class using these global tables.
+```lua
+function Player:CustomFunc(param1)
+    -- self is the player the method is used on
+    self:SendBroadcastMessage(param1)
+end
+
+function GameObject:CustomFunc(param1)
+    -- self is the gameobject the method is used on
+    print(self:GetName())
+end
+
+-- Example use:
+player:CustomFunc("test")
+gob:CustomFunc("test2")
+```
+
+It is recommended that in normal code these global tables and their names (variables starting with capital letters like Player, Creature, GameObject, Spell..) are avoided so they are not unintentionally edited or deleted causing other scripts possibly not to function.
 
 ##Database
 Database is a great thing, but it has it's own issues.
