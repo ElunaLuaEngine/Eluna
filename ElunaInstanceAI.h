@@ -60,13 +60,8 @@ private:
     //   either through `Load` or `Save`.
     std::string lastSaveData;
 
-    // Used to prevent saving this AI while it's still loading,
-    //   effectively nuking the data that's supposed to be loaded.
-    // Set to `false` while loading, `true` otherwise.
-    bool canSave;
-
 public:
-    ElunaInstanceAI(Map* map) : InstanceData(map), canSave(true)
+    ElunaInstanceAI(Map* map) : InstanceData(map)
     {
     }
 
