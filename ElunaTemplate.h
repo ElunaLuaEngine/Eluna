@@ -137,30 +137,22 @@ public:
         ASSERT(name);
 
         // check that metatable isn't already there
-        luaL_getmetatable(E->L, name);
-        ASSERT(lua_isnoneornil(E->L, -1));
-
-        // check that metatable isn't already there
         lua_getglobal(E->L, name);
         ASSERT(lua_isnoneornil(E->L, -1));
 
-        // pop metatable and methodtable values
-        lua_pop(E->L, 2);
+        // pop nil
+        lua_pop(E->L, 1);
 
         tname = name;
         manageMemory = gc;
 
-        // create methodtable for userdata of this type
+        // create metatable for userdata of this type
         lua_newtable(E->L);
-        int methods = lua_gettop(E->L);
+        int metatable  = lua_gettop(E->L);
 
         // push methodtable to stack to be accessed and modified by users
-        lua_pushvalue(E->L, methods);
+        lua_pushvalue(E->L, metatable);
         lua_setglobal(E->L, tname);
-
-        // create metatable for userdatas of this type
-        ASSERT(luaL_newmetatable(E->L, tname));
-        int metatable = lua_gettop(E->L);
 
         // tostring
         lua_pushcfunction(E->L, ToString);
@@ -171,12 +163,8 @@ public:
         lua_setfield(E->L, metatable, "__gc");
 
         // make methods accessible through metatable
-        lua_pushvalue(E->L, methods);
+        lua_pushvalue(E->L, metatable);
         lua_setfield(E->L, metatable, "__index");
-
-        // make new indexes saved to methods
-        lua_pushvalue(E->L, methods);
-        lua_setfield(E->L, metatable, "__newindex");
 
         // make new indexes saved to methods
         lua_pushcfunction(E->L, Add);
@@ -232,14 +220,14 @@ public:
 
         // special method to get the object type
         lua_pushcfunction(E->L, GetType);
-        lua_setfield(E->L, methods, "GetObjectType");
+        lua_setfield(E->L, metatable, "GetObjectType");
 
         // special method to decide object invalidation at end of call
         lua_pushcfunction(E->L, SetInvalidation);
-        lua_setfield(E->L, methods, "SetInvalidation");
+        lua_setfield(E->L, metatable, "SetInvalidation");
 
-        // pop methods and metatable
-        lua_pop(E->L, 2);
+        // pop metatable
+        lua_pop(E->L, 1);
     }
 
     template<typename C>
@@ -250,12 +238,7 @@ public:
         ASSERT(methodTable);
 
         // get metatable
-        luaL_getmetatable(E->L, tname);
-        ASSERT(lua_istable(E->L, -1));
-
-        // get method table
-        lua_getfield(E->L, -1, "__index");
-        lua_remove(E->L, -2);
+        lua_getglobal(E->L, tname);
         ASSERT(lua_istable(E->L, -1));
 
         for (; methodTable && methodTable->name && methodTable->mfunc; ++methodTable)
@@ -267,7 +250,7 @@ public:
             lua_settable(E->L, -3);
         }
 
-        lua_remove(E->L, -1);
+        lua_pop(E->L, 1);
     }
 
     static int Push(lua_State* L, T const* obj)
@@ -278,54 +261,50 @@ public:
             return 1;
         }
 
-        //if (!manageMemory)
-        //{
-            lua_getglobal(L, ELUNA_OBJECT_STORE);
-            ASSERT(lua_istable(L, -1));
-            lua_pushfstring(L, "%p", obj);
-            lua_gettable(L, -2);
-            if (ElunaObject* elunaObj = Eluna::CHECKTYPE(L, -1, tname, false))
-            {
-                // set userdata valid
-                elunaObj->SetValid(true);
+        void* obj_voidptr = static_cast<void*>(const_cast<T*>(obj));
 
-                // remove userdata_table, leave userdata
-                lua_remove(L, -2);
-                return 1;
-            }
-            lua_remove(L, -1);
-            // left userdata_table in stack
-        //}
+        lua_getglobal(L, ELUNA_OBJECT_STORE);
+        ASSERT(lua_istable(L, -1));
+        lua_pushlightuserdata(L, obj_voidptr);
+        lua_rawget(L, -2);
+        if (ElunaObject* elunaObj = Eluna::CHECKTYPE(L, -1, tname, false))
+        {
+            // set userdata valid
+            elunaObj->SetValid(true);
+
+            // remove userdata_table, leave userdata
+            lua_remove(L, -2);
+            return 1;
+        }
+        lua_pop(L, 1);
+        // left userdata_table in stack
 
         // Create new userdata
         ElunaObject** ptrHold = static_cast<ElunaObject**>(lua_newuserdata(L, sizeof(ElunaObject*)));
         if (!ptrHold)
         {
             ELUNA_LOG_ERROR("%s could not create new userdata", tname);
-            lua_pop(L, 2 /*manageMemory ? 1 : 2*/);
+            lua_pop(L, 2);
             lua_pushnil(L);
             return 1;
         }
-        *ptrHold = new ElunaObject((void*)(obj), manageMemory);
+        *ptrHold = new ElunaObject(obj_voidptr, manageMemory);
 
         // Set metatable for it
-        luaL_getmetatable(L, tname);
+        lua_getglobal(L, tname);
         if (!lua_istable(L, -1))
         {
             ELUNA_LOG_ERROR("%s missing metatable", tname);
-            lua_pop(L, 3 /*manageMemory ? 2 : 3*/);
+            lua_pop(L, 3);
             lua_pushnil(L);
             return 1;
         }
         lua_setmetatable(L, -2);
 
-        //if (!manageMemory)
-        //{
-            lua_pushfstring(L, "%p", obj);
-            lua_pushvalue(L, -2);
-            lua_settable(L, -4);
-            lua_remove(L, -2);
-        //}
+        lua_pushlightuserdata(L, obj_voidptr);
+        lua_pushvalue(L, -2);
+        lua_rawset(L, -4);
+        lua_remove(L, -2);
         return 1;
     }
 
@@ -334,31 +313,6 @@ public:
         ElunaObject* elunaObj = Eluna::CHECKTYPE(L, narg, tname, error);
         if (!elunaObj)
             return NULL;
-
-        //if (!manageMemory)
-        //{
-        //    // Check pointer validity
-        //    lua_rawgeti(L, LUA_REGISTRYINDEX, sEluna->userdata_table);
-        //    lua_pushfstring(L, "%p", (*ptrHold)->GetObj());
-        //    lua_gettable(L, -2);
-        //    lua_remove(L, -2);
-        //    bool valid = lua_isuserdata(L, -1) != 0;
-        //    lua_remove(L, -1);
-        //    if (!valid)
-        //    {
-        //        char buff[256];
-        //        snprintf(buff, 256, "%s expected, got pointer to nonexisting object (%s). This should never happen", tname, luaL_typename(L, narg));
-        //        if (error)
-        //        {
-        //            luaL_argerror(L, narg, buff);
-        //        }
-        //        else
-        //        {
-        //            ELUNA_LOG_ERROR("%s", buff);
-        //        }
-        //        return NULL;
-        //    }
-        //}
 
         if (!elunaObj->IsValid())
         {

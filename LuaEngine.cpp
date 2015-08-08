@@ -178,6 +178,8 @@ CreatureUniqueBindings(NULL)
 
 Eluna::~Eluna()
 {
+    ASSERT(IsInitialized());
+
     CloseLua();
 
     delete eventMgr;
@@ -901,13 +903,14 @@ ElunaObject* Eluna::CHECKTYPE(lua_State* luastate, int narg, const char* tname, 
     {
         if (lua_getmetatable(luastate, narg))
         {
-            luaL_getmetatable(luastate, tname);
-            if (lua_rawequal(luastate, -1, -2) == 1)
+            lua_getglobal(luastate, tname);
+            bool equal = lua_rawequal(luastate, -1, -2) == 1;
+            lua_pop(luastate, 2);
+            if (equal)
             {
                 valid = true;
                 ptrHold = static_cast<ElunaObject**>(lua_touserdata(luastate, narg));
             }
-            lua_pop(luastate, 2);
         }
     }
 
@@ -916,7 +919,7 @@ ElunaObject* Eluna::CHECKTYPE(lua_State* luastate, int narg, const char* tname, 
         if (error)
         {
             char buff[256];
-            snprintf(buff, 256, "bad argument : %s expected, got %s", tname ? tname : "userdata", luaL_typename(luastate, narg));
+            snprintf(buff, 256, "bad argument : %s expected, got %s", tname ? tname : "ElunaObject", luaL_typename(luastate, narg));
             luaL_argerror(luastate, narg, buff);
         }
         return NULL;

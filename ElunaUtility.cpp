@@ -131,7 +131,7 @@ void ElunaUtil::EncodeData(const unsigned char* data, size_t input_length, std::
 
 unsigned char* ElunaUtil::DecodeData(const char *data, size_t *output_length)
 {
-    if (decoding_table['B'] == 0)
+    if (decoding_table[(unsigned char)'B'] == 0)
         build_decoding_table();
 
     size_t input_length = strlen(data);
@@ -162,10 +162,10 @@ unsigned char* ElunaUtil::DecodeData(const char *data, size_t *output_length)
 
     for (size_t i = 0, j = 0; i < input_length;)
     {
-        uint32_t sextet_a = data[i] == '=' ? 0 & i++ : decoding_table[data[i++]];
-        uint32_t sextet_b = data[i] == '=' ? 0 & i++ : decoding_table[data[i++]];
-        uint32_t sextet_c = data[i] == '=' ? 0 & i++ : decoding_table[data[i++]];
-        uint32_t sextet_d = data[i] == '=' ? 0 & i++ : decoding_table[data[i++]];
+        uint32_t sextet_a = data[i] == '=' ? 0 & i++ : decoding_table[(unsigned char)data[i++]];
+        uint32_t sextet_b = data[i] == '=' ? 0 & i++ : decoding_table[(unsigned char)data[i++]];
+        uint32_t sextet_c = data[i] == '=' ? 0 & i++ : decoding_table[(unsigned char)data[i++]];
+        uint32_t sextet_d = data[i] == '=' ? 0 & i++ : decoding_table[(unsigned char)data[i++]];
 
         uint32_t triple = (sextet_a << (3 * 6))
         + (sextet_b << (2 * 6))

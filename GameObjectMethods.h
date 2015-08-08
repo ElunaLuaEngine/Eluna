@@ -238,21 +238,39 @@ namespace LuaGameObject
     /**
      * Removes [GameObject] from the world
      *
+     * The object is no longer reachable after this and it is not respawned.
+     *
      * @param bool deleteFromDB : if true, it will delete the [GameObject] from the database
      */
     int RemoveFromWorld(Eluna* /*E*/, lua_State* L, GameObject* go)
     {
         bool deldb = Eluna::CHECKVAL<bool>(L, 2, false);
+
+        // cs_gobject.cpp copy paste
+        ObjectGuid ownerGuid = go->GetOwnerGUID();
+        if (ownerGuid)
+        {
+            Unit* owner = ObjectAccessor::GetUnit(*go, ownerGuid);
+            if (!owner || !ownerGuid.IsPlayer())
+                return 0;
+
+            owner->RemoveGameObject(go, false);
+        }
+
+        go->SetRespawnTime(0);
+        go->Delete();
+
         if (deldb)
             go->DeleteFromDB();
-        go->RemoveFromWorld();
+
+        Eluna::CHECKOBJ<ElunaObject>(L, 1)->Invalidate();
         return 0;
     }
 
     /**
-     * Changes uses a door or a button type [GameObject]
+     * Activates a door or a button/lever
      *
-     * @param uint32 delay : cooldown time in seconds to restore the [GameObject] back to normal
+     * @param uint32 delay = 0 : cooldown time in seconds to restore the [GameObject] back to normal. 0 for infinite duration
      */
     int UseDoorOrButton(Eluna* /*E*/, lua_State* L, GameObject* go)
     {
@@ -265,32 +283,35 @@ namespace LuaGameObject
     /**
      * Despawns a [GameObject]
      *
-     * @param uint32 delay : time in seconds to despawn
+     * The gameobject may be automatically respawned by the core
      */
     int Despawn(Eluna* /*E*/, lua_State* L, GameObject* go)
     {
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 2, 1);
-        if (!delay)
-            delay = 1;
-
-        go->SetSpawnedByDefault(false);
-        go->SetRespawnTime(delay);
+        go->SetLootState(GO_JUST_DEACTIVATED);
         return 0;
     }
 
     /**
      * Respawns a [GameObject]
-     *
-     * @param uint32 delay : time of respawn in seconds
      */
     int Respawn(Eluna* /*E*/, lua_State* L, GameObject* go)
     {
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 2, 1);
-        if (!delay)
-            delay = 1;
+        go->Respawn();
+        return 0;
+    }
 
-        go->SetSpawnedByDefault(true);
-        go->SetRespawnTime(delay);
+    /**
+     * Sets the respawn or despawn time for the gameobject.
+     *
+     * Respawn time is also used as despawn time depending on gameobject settings
+     *
+     * @param int32 delay = 0 : cooldown time in seconds to respawn or despawn the object. 0 means never
+     */
+    int SetRespawnTime(Eluna* /*E*/, lua_State* L, GameObject* go)
+    {
+        int32 respawn = Eluna::CHECKVAL<int32>(L, 2);
+
+        go->SetRespawnTime(respawn);
         return 0;
     }
 };

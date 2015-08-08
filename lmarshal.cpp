@@ -71,7 +71,7 @@ static void buf_init(lua_State *L, mar_Buffer *buf)
     if (!(buf->data = (char*)malloc(buf->size))) luaL_error(L, "Out of memory!");
 }
 
-static void buf_done(lua_State* L, mar_Buffer *buf)
+static void buf_done(lua_State* /*L*/, mar_Buffer *buf)
 {
     free(buf->data);
 }
@@ -85,9 +85,11 @@ static int buf_write(lua_State* L, const char* str, size_t len, mar_Buffer *buf)
         while (new_size - cur_head <= len) {
             new_size = new_size << 1;
         }
-        if (!(buf->data = (char*)realloc(buf->data, new_size))) {
-            luaL_error(L, "Out of memory!");
+        char* data = (char*)realloc(buf->data, new_size);
+        if (!data) {
+            return luaL_error(L, "Out of memory!");
         }
+        buf->data = data;
         buf->size = new_size;
     }
     memcpy(&buf->data[buf->head], str, len);
@@ -95,7 +97,7 @@ static int buf_write(lua_State* L, const char* str, size_t len, mar_Buffer *buf)
     return 0;
 }
 
-static const char* buf_read(lua_State *L, mar_Buffer *buf, size_t *len)
+static const char* buf_read(lua_State* /*L*/, mar_Buffer *buf, size_t *len)
 {
     if (buf->seek < buf->head) {
         buf->seek = buf->head;
@@ -225,7 +227,7 @@ static void mar_encode_value(lua_State *L, mar_Buffer *buf, int val, size_t *idx
             buf_done(L, &rec_buf);
             lua_pop(L, 1);
 
-            lua_newtable(L);
+            lua_createtable(L, ar.nups, 0);
             for (i = 1; i <= ar.nups; i++) {
                 const char* upvalue_name = lua_getupvalue(L, -2, i);
                 if (strcmp("_ENV", upvalue_name) == 0) {
@@ -469,7 +471,7 @@ static int mar_decode_table(lua_State *L, const char* buf, size_t len, size_t *i
     while (p - buf < (ptrdiff_t)len) {
         mar_decode_value(L, buf, len, &p, idx);
         mar_decode_value(L, buf, len, &p, idx);
-        lua_settable(L, -3);
+        lua_rawset(L, -3);
     }
     return 1;
 }
