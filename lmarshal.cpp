@@ -31,7 +31,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h>
+#include <cstdint>
 
 extern "C" {
 #include "lua.h"
