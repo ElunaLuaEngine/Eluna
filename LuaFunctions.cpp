@@ -366,6 +366,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "IsRooted", &LuaUnit::IsRooted },                               // :IsRooted()
     { "IsFullHealth", &LuaUnit::IsFullHealth },                       // :IsFullHealth() - Returns if the unit is full health
     { "HasAura", &LuaUnit::HasAura },                                 // :HasAura(spellId) - Returns true if the unit has the aura from the spell
+    { "IsCasting", &LuaUnit::IsCasting },
     { "IsStandState", &LuaUnit::IsStandState },                       // :IsStandState() - Returns true if the unit is standing
 #ifndef CLASSIC
     { "IsOnVehicle", &LuaUnit::IsOnVehicle },                         // :IsOnVehicle() - Checks if the unit is on a vehicle
