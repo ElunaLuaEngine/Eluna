@@ -45,7 +45,7 @@
 #include "SpellInfo.h"
 #include "WeatherMgr.h"
 #include "Battleground.h"
-#include "revision.h"
+#include "GitRevision.h"
 #include "SpellHistory.h"
 #else
 #include "Config/Config.h"
@@ -88,7 +88,7 @@ typedef Opcodes                 OpcodesList;
 
 #ifdef TRINITY
 #define CORE_NAME               "TrinityCore"
-#define CORE_VERSION            _DATE
+#define CORE_VERSION            (GitRevision::GetDate())
 #define eWorld                  (sWorld)
 #define eMapMgr                 (sMapMgr)
 #define eConfigMgr              (sConfigMgr)
