@@ -45,8 +45,8 @@ bool ElunaUtil::ObjectDistanceOrderPred::operator()(WorldObject const* pLeft, Wo
 }
 
 ElunaUtil::WorldObjectInRangeCheck::WorldObjectInRangeCheck(bool nearest, WorldObject const* obj, float range,
-    uint16 typeMask, uint32 entry, uint32 hostile) :
-    i_obj(obj), i_hostile(hostile), i_entry(entry), i_range(range), i_typeMask(typeMask), i_nearest(nearest)
+    uint16 typeMask, uint32 entry, uint32 hostile, uint32 dead) :
+    i_obj(obj), i_hostile(hostile), i_entry(entry), i_range(range), i_typeMask(typeMask), i_dead(dead), i_nearest(nearest)
 {
 }
 WorldObject const& ElunaUtil::WorldObjectInRangeCheck::GetFocusObject() const
@@ -66,10 +66,10 @@ bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
     if (Unit* unit = u->ToUnit())
     {
 #ifdef CMANGOS
-        if (!unit->isAlive())
+        if (i_dead && (i_dead == 1) != unit->isAlive())
             return false;
 #else
-        if (!unit->IsAlive())
+        if (i_dead && (i_dead == 1) != unit->IsAlive())
             return false;
 #endif
         if (i_hostile)

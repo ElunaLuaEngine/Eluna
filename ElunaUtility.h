@@ -97,15 +97,16 @@ namespace ElunaUtil
     {
     public:
         WorldObjectInRangeCheck(bool nearest, WorldObject const* obj, float range,
-            uint16 typeMask = 0, uint32 entry = 0, uint32 hostile = 0);
+            uint16 typeMask = 0, uint32 entry = 0, uint32 hostile = 0, uint32 dead = 0);
         WorldObject const& GetFocusObject() const;
         bool operator()(WorldObject* u);
 
         WorldObject const* i_obj;
-        uint32 i_hostile;
+        uint32 i_hostile; // 0 both, 1 hostile, 2 friendly
         uint32 i_entry;
         float i_range;
         uint16 i_typeMask;
+        uint32 i_dead; // 0 both, 1 alive, 2 dead
         bool i_nearest;
     };
 

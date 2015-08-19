@@ -156,15 +156,19 @@ namespace LuaWorldObject
      * Returns the nearest [Player] object in sight of the [WorldObject] or within the given range
      *
      * @param float range = 533.33333 : optionally set range. Default range is grid size
+     * @param uint32 hostile = 0 : 0 both, 1 hostile, 2 friendly
+     * @param uint32 dead = 1 : 0 both, 1 alive, 2 dead
      *
      * @return [Player] nearestPlayer
      */
     int GetNearestPlayer(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
+        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 3, 0);
+        uint32 dead = Eluna::CHECKVAL<uint32>(L, 4, 1);
 
         Unit* target = NULL;
-        ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER);
+        ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
 #ifndef TRINITY
         MaNGOS::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
@@ -209,6 +213,8 @@ namespace LuaWorldObject
      *
      * @param float range = 533.33333 : optionally set range. Default range is grid size
      * @param uint32 entryId = 0 : optionally set entry ID of creature to find
+     * @param uint32 hostile = 0 : 0 both, 1 hostile, 2 friendly
+     * @param uint32 dead = 1 : 0 both, 1 alive, 2 dead
      *
      * @return [Creature] nearestCreature
      */
@@ -216,9 +222,11 @@ namespace LuaWorldObject
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
+        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 4, 0);
+        uint32 dead = Eluna::CHECKVAL<uint32>(L, 5, 1);
 
         Creature* target = NULL;
-        ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_UNIT, entry);
+        ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_UNIT, entry, hostile, dead);
 #ifndef TRINITY
         MaNGOS::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
@@ -235,15 +243,19 @@ namespace LuaWorldObject
      * Returns a table of [Player] objects in sight of the [WorldObject] or within the given range
      *
      * @param float range = 533.33333 : optionally set range. Default range is grid size
+     * @param uint32 hostile = 0 : 0 both, 1 hostile, 2 friendly
+     * @param uint32 dead = 1 : 0 both, 1 alive, 2 dead
      *
      * @return table playersInRange : table of [Player]s
      */
     int GetPlayersInRange(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
+        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 3, 0);
+        uint32 dead = Eluna::CHECKVAL<uint32>(L, 4, 1);
 
         std::list<Player*> list;
-        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_PLAYER);
+        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
 #ifndef TRINITY
         MaNGOS::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
@@ -272,6 +284,8 @@ namespace LuaWorldObject
      *
      * @param float range = 533.33333 : optionally set range. Default range is grid size
      * @param uint32 entryId = 0 : optionally set entry ID of creatures to find
+     * @param uint32 hostile = 0 : 0 both, 1 hostile, 2 friendly
+     * @param uint32 dead = 1 : 0 both, 1 alive, 2 dead
      *
      * @return table creaturesInRange : table of [Creature]s
      */
@@ -279,9 +293,11 @@ namespace LuaWorldObject
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
+        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 3, 0);
+        uint32 dead = Eluna::CHECKVAL<uint32>(L, 4, 1);
 
         std::list<Creature*> list;
-        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry);
+        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry, hostile, dead);
 #ifndef TRINITY
         MaNGOS::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
@@ -351,6 +367,7 @@ namespace LuaWorldObject
      * @param [TypeMask] type = 0 : the [TypeMask] that the [WorldObject] must be. This can contain multiple types. 0 will be ingored
      * @param uint32 entry = 0 : the entry of the [WorldObject], 0 will be ingored
      * @param uint32 hostile = 0 : specifies whether the [WorldObject] needs to be 1 hostile, 2 friendly or 0 either
+     * @param uint32 dead = 1 : 0 both, 1 alive, 2 dead
      *
      * @return [WorldObject] worldObject
      */
@@ -360,6 +377,7 @@ namespace LuaWorldObject
         uint16 type = Eluna::CHECKVAL<uint16>(L, 3, 0); // TypeMask
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 4, 0);
         uint32 hostile = Eluna::CHECKVAL<uint32>(L, 5, 0); // 0 none, 1 hostile, 2 friendly
+        uint32 dead = Eluna::CHECKVAL<uint32>(L, 6, 1); // 0 both, 1 alive, 2 dead
 
         float x, y, z;
         obj->GetPosition(x, y, z);
@@ -386,6 +404,7 @@ namespace LuaWorldObject
      * @param [TypeMask] type = 0 : the [TypeMask] that the [WorldObject] must be. This can contain multiple types. 0 will be ingored
      * @param uint32 entry = 0 : the entry of the [WorldObject], 0 will be ingored
      * @param uint32 hostile = 0 : specifies whether the [WorldObject] needs to be 1 hostile, 2 friendly or 0 either
+     * @param uint32 dead = 1 : 0 both, 1 alive, 2 dead
      *
      * @return table worldObjectList : table of [WorldObject]s
      */
@@ -395,10 +414,11 @@ namespace LuaWorldObject
         uint16 type = Eluna::CHECKVAL<uint16>(L, 3, 0); // TypeMask
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 4, 0);
         uint32 hostile = Eluna::CHECKVAL<uint32>(L, 5, 0); // 0 none, 1 hostile, 2 friendly
+        uint32 dead = Eluna::CHECKVAL<uint32>(L, 6, 1); // 0 both, 1 alive, 2 dead
 
         float x, y, z;
         obj->GetPosition(x, y, z);
-        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, type, entry, hostile);
+        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, type, entry, hostile, dead);
 
         std::list<WorldObject*> list;
 #ifndef TRINITY
