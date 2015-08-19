@@ -247,7 +247,11 @@ namespace LuaGameObject
         bool deldb = Eluna::CHECKVAL<bool>(L, 2, false);
 
         // cs_gobject.cpp copy paste
+#ifdef TRINITY
         ObjectGuid ownerGuid = go->GetOwnerGUID();
+#else
+        ObjectGuid ownerGuid = go->GetOwnerGuid();
+#endif
         if (ownerGuid)
         {
             Unit* owner = ObjectAccessor::GetUnit(*go, ownerGuid);

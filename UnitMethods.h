@@ -547,10 +547,10 @@ namespace LuaUnit
      */
     int IsCasting(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
-#ifndef TRINITY
-        Eluna::Push(L, unit->hasUnitState(UNIT_STATE_CASTING));
-#else
+#ifdef TRINITY
         Eluna::Push(L, unit->HasUnitState(UNIT_STATE_CASTING));
+#else
+        Eluna::Push(L, unit->IsNonMeleeSpellCasted(false));
 #endif
         return 1;
     }
