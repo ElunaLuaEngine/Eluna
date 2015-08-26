@@ -509,7 +509,6 @@ public:
     void OnConfigLoad(bool reload);
     void OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask);
     void OnShutdownCancel();
-    void OnUpdate(uint32 diff);
     void OnStartup();
     void OnShutdown();
 

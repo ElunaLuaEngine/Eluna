@@ -577,7 +577,7 @@ namespace LuaPlayer
      */
     int IsRested(Eluna* /*E*/, lua_State* L, Player* player)
     {
-        Eluna::Push(L, player->isRested());
+        Eluna::Push(L, player->GetRestBonus() > 0.0f);
         return 1;
     }
 
@@ -875,17 +875,6 @@ namespace LuaPlayer
         return 1;
     }
 
-    /**
-     * Returns the [Player]s current accumulated rest time
-     *
-     * @return uint32 restTime
-     */
-    int GetRestTime(Eluna* /*E*/, lua_State* L, Player* player)
-    {
-        Eluna::Push(L, player->GetRestTime());
-        return 1;
-    }
-
     int GetXPRestBonus(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 xp = Eluna::CHECKVAL<uint32>(L, 2);
@@ -1175,17 +1164,6 @@ namespace LuaPlayer
 
         Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
         Eluna::Push(L, item);
-        return 1;
-    }
-
-    /**
-     * Returns the [Player]s resting type
-     *
-     * @return [RestType] restType
-     */
-    int GetRestType(Eluna* /*E*/, lua_State* L, Player* player)
-    {
-        Eluna::Push(L, player->GetRestType());
         return 1;
     }
 
@@ -1558,19 +1536,6 @@ namespace LuaPlayer
     }
 
     /**
-     * Sets the [Player]s rested time to the time specified
-     *
-     * @param uint32 restTime
-     */
-    int SetRestTime(Eluna* /*E*/, lua_State* L, Player* player)
-    {
-        uint32 value = Eluna::CHECKVAL<uint32>(L, 2);
-
-        player->SetRestTime(value);
-        return 0;
-    }
-
-    /**
      * Sets the [Player]s intoxication level to the level specified
      *
      * @param uint8 drunkValue
@@ -1663,19 +1628,6 @@ namespace LuaPlayer
             return 0;
 
         player->SetQuestStatus(entry, (QuestStatus)status);
-        return 0;
-    }
-
-    /**
-     * Sets the [Player]s rest type to the type specified
-     *
-     * @param int restType
-     */
-    int SetRestType(Eluna* /*E*/, lua_State* L, Player* player)
-    {
-        int type = Eluna::CHECKVAL<int>(L, 2);
-
-        player->SetRestType((RestType)type);
         return 0;
     }
 
