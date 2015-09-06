@@ -52,12 +52,7 @@
 #include "AggressorAI.h"
 #include "BattleGroundMgr.h"
 #include "SQLStorages.h"
-#endif
-
-#ifdef MANGOS
 #include "revision.h"
-#elif defined(CMANGOS)
-#include "revision_nr.h"
 #endif
 
 #if (!defined(TBC) && !defined(CLASSIC))
@@ -73,17 +68,17 @@ typedef Opcodes                 OpcodesList;
 #endif
 
 /*
- * Note: if you add or change a CORE_NAME #define,
- *   please update LuaGlobalFunctions::GetCoreName docstring.
+ * Note: if you add or change a CORE_NAME or CORE_VERSION #define,
+ *   please update LuaGlobalFunctions::GetCoreName or LuaGlobalFunctions::GetCoreVersion documentation example string.
  */
 #ifdef MANGOS
 #define CORE_NAME               "MaNGOS"
-#define CORE_VERSION            REVISION_NR
+#define CORE_VERSION            REVISION_DATE " " REVISION_TIME
 #endif
 
 #ifdef CMANGOS
 #define CORE_NAME               "cMaNGOS"
-#define CORE_VERSION            REVISION_NR
+#define CORE_VERSION            REVISION_DATE " " REVISION_TIME
 #endif
 
 #ifdef TRINITY
