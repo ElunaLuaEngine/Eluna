@@ -37,10 +37,10 @@ local function DestroyMapData(event, obj)
 end
 
 local function DestroyObjData(event, obj)
-    local map = self:GetMapId()
-    local inst = self:GetInstanceId()
-    local otype = self:GetObjectType()
-    local guid = otype == "Map" and 1 or self:GetGUIDLow()
+    local map = obj:GetMapId()
+    local inst = obj:GetInstanceId()
+    local otype = obj:GetObjectType()
+    local guid = otype == "Map" and 1 or obj:GetGUIDLow()
     local mapdata = variableStores[otype][map]
     if mapdata then
         local instancedata = mapdata[inst]
