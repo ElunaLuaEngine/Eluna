@@ -2205,6 +2205,10 @@ namespace LuaGlobalFunctions
             nodeEntry->x = entry.LocX;
             nodeEntry->y = entry.LocY;
             nodeEntry->z = entry.LocZ;
+            nodeEntry->MountCreatureID[0] = mountH;
+            nodeEntry->MountCreatureID[1] = mountA;
+            sTaxiNodesStore.SetEntry(nodeId++, nodeEntry);
+            sTaxiPathNodesByPath[pathId][index++] = new TaxiPathNodeEntry(entry);
 #else
             entry.path = pathId;
             entry.index = nodeId;
@@ -2213,11 +2217,11 @@ namespace LuaGlobalFunctions
             nodeEntry->x = entry.x;
             nodeEntry->y = entry.y;
             nodeEntry->z = entry.z;
-#endif
             nodeEntry->MountCreatureID[0] = mountH;
             nodeEntry->MountCreatureID[1] = mountA;
             sTaxiNodesStore.SetEntry(nodeId++, nodeEntry);
             sTaxiPathNodesByPath[pathId].set(index++, new TaxiPathNodeEntry(entry));
+#endif
         }
         if (startNode >= nodeId)
             return 1;
