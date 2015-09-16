@@ -2178,7 +2178,7 @@ namespace LuaUnit
      * The [Unit] will whisper the message to a [Player]
      *
      * @param string msg : message for the [Unit] to emote
-     * @param lang : language for the [Unit] to speak
+     * @param uint32 lang : language for the [Unit] to speak
      * @param [Player] receiver : specific [Unit] to receive the message
      * @param bool bossWhisper = false : is a boss whisper
      */

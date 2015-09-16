@@ -3674,7 +3674,7 @@ namespace LuaPlayer
     /**
      * Plays sound to [Player]
      *
-     * See [Unit]:PlayDirectSound
+     * See [Unit:PlayDirectSound]
      *
      * @param uint32 sound : entry of a sound
      */
