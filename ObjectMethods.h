@@ -24,7 +24,6 @@
  */
 namespace LuaObject
 {
-    /* BOOLEAN */
     /**
      * Returns `true` if the specified flag is set, otherwise `false`.
      *
@@ -52,7 +51,6 @@ namespace LuaObject
         return 1;
     }
 
-    /* GETTERS */
     /**
      * Returns the data at the specified index, casted to a signed 32-bit integer.
      *
@@ -224,7 +222,6 @@ namespace LuaObject
         return 0;
     }
 
-    /* SETTERS */
     /**
      * Sets the specified flag in the data value at the specified index.
      *
@@ -376,7 +373,6 @@ namespace LuaObject
         return 0;
     }
 
-    /* OTHER */
     /**
      * Removes a flag from the value at the specified index.
      *

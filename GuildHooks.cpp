@@ -70,7 +70,7 @@ void Eluna::OnDisband(Guild* guild)
     CallAllFunctions(GuildEventBindings, key);
 }
 
-void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair) // isRepair not a part of Mangos, implement?
+void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_WITHDRAW);
     Push(guild);

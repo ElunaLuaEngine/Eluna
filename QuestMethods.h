@@ -180,8 +180,8 @@ namespace LuaQuest
 
     /*int GetMaxLevel(Eluna* E, lua_State* L, Quest* quest)
     {
-    Eluna::Push(L, quest->GetMaxLevel());
-    return 1;
+        Eluna::Push(L, quest->GetMaxLevel());
+        return 1;
     }*/
 };
 #endif

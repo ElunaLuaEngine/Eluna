@@ -28,7 +28,6 @@ namespace LuaQuery
             luaL_argerror(L, 2, "invalid field index");
     }
 
-    /* BOOLEAN */
     /**
      * Returns `true` if the specified column of the current row is `NULL`, otherwise `false`.
      *
@@ -48,7 +47,6 @@ namespace LuaQuery
         return 1;
     }
 
-    /* GETTERS */
     /**
      * Returns the number of columns in the result set.
      *
@@ -246,8 +244,6 @@ namespace LuaQuery
 #endif
         return 1;
     }
-
-    /* OTHER */
 
     /**
      * Advances the [ElunaQuery] to the next row in the result set.

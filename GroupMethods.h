@@ -152,14 +152,14 @@ namespace LuaGroup
 
     /*int IsLFGGroup(Eluna* E, lua_State* L, Group* group) // TODO: Implementation
     {
-    Eluna::Push(L, group->isLFGGroup());
-    return 1;
+        Eluna::Push(L, group->isLFGGroup());
+        return 1;
     }*/
 
     /*int IsBFGroup(Eluna* E, lua_State* L, Group* group) // TODO: Implementation
     {
-    Eluna::Push(L, group->isBFGroup());
-    return 1;
+        Eluna::Push(L, group->isBFGroup());
+        return 1;
     }*/
 
     /**
@@ -395,8 +395,8 @@ namespace LuaGroup
 
     /*int ConvertToLFG(Eluna* E, lua_State* L, Group* group) // TODO: Implementation
     {
-    group->ConvertToLFG();
-    return 0;
+        group->ConvertToLFG();
+        return 0;
     }*/
 };
 #endif

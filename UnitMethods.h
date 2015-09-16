@@ -12,7 +12,13 @@
  */
 namespace LuaUnit
 {
-    /* BOOLEAN */
+    /**
+     * The [Unit] tries to attack a given target
+     *
+     * @param [Unit] who : [Unit] to attack
+     * @param bool meleeAttack = false: attack with melee or not
+     * @return didAttack : if the [Unit] did not attack
+     */
     int Attack(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         Unit* who = Eluna::CHECKOBJ<Unit>(L, 2);
@@ -22,6 +28,11 @@ namespace LuaUnit
         return 1;
     }
 
+    /**
+     * The [Unit] stops attacking its target
+     *
+     * @return bool isAttacking : if the [Unit] wasn't attacking already
+     */
     int AttackStop(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         Eluna::Push(L, unit->AttackStop());
@@ -574,23 +585,21 @@ namespace LuaUnit
 
     /*int IsVisible(Eluna* E, lua_State* L, Unit* unit)
     {
-    Eluna::Push(L, unit->IsVisible());
-    return 1;
+        Eluna::Push(L, unit->IsVisible());
+        return 1;
     }*/
 
     /*int IsMoving(Eluna* E, lua_State* L, Unit* unit)
     {
-    Eluna::Push(L, unit->isMoving());
-    return 1;
+        Eluna::Push(L, unit->isMoving());
+        return 1;
     }*/
 
     /*int IsFlying(Eluna* E, lua_State* L, Unit* unit)
     {
-    Eluna::Push(L, unit->IsFlying());
-    return 1;
+        Eluna::Push(L, unit->IsFlying());
+        return 1;
     }*/
-
-    /* GETTERS */
     
     /**
      * Returns the [Unit]'s owner.
@@ -719,6 +728,12 @@ namespace LuaUnit
         return 1;
     }
 
+    /**
+     * Returns [Unit]'s specified stat
+     *
+     * @param uint32 statType
+     * @return float stat
+     */
     int GetStat(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint32 stat = Eluna::CHECKVAL<uint32>(L, 2);
@@ -730,6 +745,12 @@ namespace LuaUnit
         return 1;
     }
 
+    /**
+     * Returns the [Unit]'s base spell power
+     *
+     * @param uint32 spellSchool
+     * @return uint32 spellPower
+     */
     int GetBaseSpellPower(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint32 spellschool = Eluna::CHECKVAL<uint32>(L, 2);
@@ -1142,6 +1163,11 @@ namespace LuaUnit
         return 1;
     }
 
+    /**
+     * Returns the [Unit]'s combat timer
+     *
+     * @return uint32 combatTimer
+     */
     int GetCombatTime(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         Eluna::Push(L, unit->GetCombatTimer());
@@ -1225,6 +1251,11 @@ namespace LuaUnit
     }
 
 #if (!defined(TBC) && !defined(CLASSIC))
+    /**
+     * Returns [Unit]'s [Vehicle] methods
+     *
+     * @return [Vehicle] vehicle
+     */
     int GetVehicleKit(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
 #ifndef TRINITY
@@ -1243,6 +1274,11 @@ namespace LuaUnit
     }
     */
 
+    /**
+     * Returns the Critter Guid
+     *
+     * @return uint64 critterGuid
+     */
     int GetCritterGUID(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
 #ifndef TRINITY
@@ -1326,8 +1362,6 @@ namespace LuaUnit
         Eluna::Push(L, unit->GetMotionMaster()->GetCurrentMovementGeneratorType());
         return 1;
     }
-
-    /* SETTERS */
 
     /**
      * Sets the [Unit]'s owner GUID to given GUID.
@@ -1636,6 +1670,11 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Sets creator GUID
+     *
+     * @param uint64 guid
+     */
     int SetCreatorGUID(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
@@ -1647,6 +1686,11 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Sets charmer GUID
+     *
+     * @param uint64 guid
+     */
     int SetCharmerGUID(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
@@ -1658,6 +1702,11 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Sets pet GUID
+     *
+     * @param uint64 guid
+     */
     int SetPetGUID(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
@@ -1669,6 +1718,11 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Toggles (Sets) [Unit]'s water walking
+     *
+     * @param bool enable = true
+     */
     int SetWaterWalk(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         bool enable = Eluna::CHECKVAL<bool>(L, 2, true);
@@ -1680,6 +1734,11 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Sets the [Unit]'s stand state
+     *
+     * @param uint8 state : stand state
+     */
     int SetStandState(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint8 state = Eluna::CHECKVAL<uint8>(L, 2);
@@ -1820,19 +1879,17 @@ namespace LuaUnit
 
     /*int SetCanFly(Eluna* E, lua_State* L, Unit* unit)
     {
-    bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
-    unit->SetCanFly(apply);
-    return 0;
+        bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
+        unit->SetCanFly(apply);
+        return 0;
     }*/
 
     /*int SetVisible(Eluna* E, lua_State* L, Unit* unit)
     {
-    bool x = Eluna::CHECKVAL<bool>(L, 2, true);
-    unit->SetVisible(x);
-    return 0;
+        bool x = Eluna::CHECKVAL<bool>(L, 2, true);
+        unit->SetVisible(x);
+        return 0;
     }*/
-
-    /* OTHER */
 
     /**
      * Clears the [Unit]'s threat list.
@@ -1890,18 +1947,36 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Returns calculated percentage from Health
+     *
+     * @return int32 percentage
+     */
     int CountPctFromCurHealth(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         Eluna::Push(L, unit->CountPctFromCurHealth(Eluna::CHECKVAL<int32>(L, 2)));
         return 1;
     }
 
+    /**
+     * Returns calculated percentage from Max Health
+     *
+     * @return int32 percentage
+     */
     int CountPctFromMaxHealth(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         Eluna::Push(L, unit->CountPctFromMaxHealth(Eluna::CHECKVAL<int32>(L, 2)));
         return 1;
     }
 
+    /**
+     * Sends chat message to [Player]
+     *
+     * @param uint8 type : chat, whisper, etc
+     * @param uint32 lang : language to speak
+     * @param string msg
+     * @param [Player] target
+     */
     int SendChatMessageToPlayer(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint8 type = Eluna::CHECKVAL<uint8>(L, 2);
@@ -1924,19 +1999,27 @@ namespace LuaUnit
         return 0;
     }
 
-    // static void PrepareMove(Unit* unit)
-    // {
-    //     unit->GetMotionMaster()->MovementExpired(); // Chase
-    //     unit->StopMoving(); // Some
-    //     unit->GetMotionMaster()->Clear(); // all
-    // }
+    /*static void PrepareMove(Unit* unit)
+    {
+        unit->GetMotionMaster()->MovementExpired(); // Chase
+        unit->StopMoving(); // Some
+        unit->GetMotionMaster()->Clear(); // all
+    }*/
 
+    /**
+     * Stops the [Unit]'s movement
+     */
     int MoveStop(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->StopMoving();
         return 0;
     }
 
+    /**
+     * The [Unit]'s movement expires and clears movement
+     *
+     * @param bool reset = true : cleans movement
+     */
     int MoveExpire(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         bool reset = Eluna::CHECKVAL<bool>(L, 2, true);
@@ -1944,6 +2027,11 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Clears the [Unit]'s movement
+     *
+     * @param bool reset = true : clean movement
+     */
     int MoveClear(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         bool reset = Eluna::CHECKVAL<bool>(L, 2, true);
@@ -1951,12 +2039,20 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * The [Unit] will be idle
+     */
     int MoveIdle(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->GetMotionMaster()->MoveIdle();
         return 0;
     }
 
+    /**
+     * The [Unit] will move at random
+     *
+     * @param float radius : limit on how far the [Unit] will move at random
+     */
     int MoveRandom(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         float radius = Eluna::CHECKVAL<float>(L, 2);
@@ -1970,12 +2066,22 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * The [Unit] will move to its set home location
+     */
     int MoveHome(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->GetMotionMaster()->MoveTargetedHome();
         return 0;
     }
 
+    /**
+     * The [Unit] will follow the target
+     *
+     * @param [Unit] target : target to follow
+     * @param float dist = 0 : distance to start following
+     * @param float angle = 0
+     */
     int MoveFollow(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
@@ -1985,6 +2091,13 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * The [Unit] will chase the target
+     *
+     * @param [Unit] target : target to chase
+     * @param float dist = 0 : distance start chasing
+     * @param float angle = 0
+     */
     int MoveChase(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
@@ -1994,12 +2107,21 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * The [Unit] will move confused
+     */
     int MoveConfused(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->GetMotionMaster()->MoveConfused();
         return 0;
     }
 
+    /**
+     * The [Unit] will flee
+     *
+     * @param [Unit] target
+     * @param uint32 time = 0 : flee delay
+     */
     int MoveFleeing(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
@@ -2008,6 +2130,15 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * The [Unit] will move to the coordinates
+     *
+     * @param uint32 id : unique waypoint Id
+     * @param float x
+     * @param float y
+     * @param float z
+     * @param bool genPath = true : if true, generates path
+     */
     int MoveTo(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint32 id = Eluna::CHECKVAL<uint32>(L, 2);
@@ -2020,6 +2151,16 @@ namespace LuaUnit
     }
 
 #if (!defined(TBC) && !defined(CLASSIC))
+    /**
+     * Makes the [Unit] jump to the coordinates
+     *
+     * @param float x
+     * @param float y
+     * @param float z
+     * @param float zSpeed : start velocity
+     * @param float maxHeight : maximum height
+     * @param uint32 id = 0 : unique movement Id
+     */
     int MoveJump(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         float x = Eluna::CHECKVAL<float>(L, 2);
@@ -2033,6 +2174,14 @@ namespace LuaUnit
     }
 #endif
 
+    /**
+     * The [Unit] will whisper the message to a [Player]
+     *
+     * @param string msg : message for the [Unit] to emote
+     * @param lang : language for the [Unit] to speak
+     * @param [Player] receiver : specific [Unit] to receive the message
+     * @param bool bossWhisper = false : is a boss whisper
+     */
     int SendUnitWhisper(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
@@ -2048,6 +2197,13 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * The [Unit] will emote the message
+     *
+     * @param string msg : message for the [Unit] to emote
+     * @param [Unit] receiver = nil : specific [Unit] to receive the message
+     * @param bool bossEmote = false : is a boss emote
+     */
     int SendUnitEmote(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
@@ -2062,6 +2218,12 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * The [Unit] will say the message
+     *
+     * @param string msg : message for the [Unit] to say
+     * @param uint32 language : language for the [Unit] to speak
+     */
     int SendUnitSay(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
@@ -2075,6 +2237,12 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * The [Unit] will yell the message
+     *
+     * @param string msg : message for the [Unit] to yell
+     * @param uint32 language : language for the [Unit] to speak
+     */
     int SendUnitYell(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
@@ -2168,12 +2336,20 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Clears the [Unit]'s combat
+     */
     int ClearInCombat(Eluna* /*E*/, lua_State* /*L*/, Unit* unit)
     {
         unit->ClearInCombat();
         return 0;
     }
 
+    /**
+     * Stops the [Unit]'s current spell cast
+     *
+     * @param uint32 spell = 0 : entry of a spell
+     */
     int StopSpellCast(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2, 0);
@@ -2181,6 +2357,14 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Interrupts [Unit]'s spell state, casting, etc.
+     *
+     * if spell is not interruptible, it will return
+     *
+     * @param int32 spellType : type of spell to interrupt
+     * @param bool delayed = true : skips if the spell is delayed
+     */
     int InterruptSpell(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         int spellType = Eluna::CHECKVAL<int>(L, 2);
@@ -2271,6 +2455,12 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * The [Unit] plays a sound to a [Player], if no [Player] it will play the sound to everyone near
+     *
+     * @param uint32 sound : entry of a sound
+     * @param [Player] player : [Player] to play the sound to
+     */
     int PlayDirectSound(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint32 soundId = Eluna::CHECKVAL<uint32>(L, 2);
@@ -2285,6 +2475,15 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * The [Unit] plays a sound to a [Player]
+     *
+     * If no [Player] it will play the sound to everyone near
+     * Sound will fade the further you are
+     *
+     * @param uint32 sound : entry of a sound
+     * @param [Player] player : [Player] to play the sound to
+     */
     int PlayDistanceSound(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
         uint32 soundId = Eluna::CHECKVAL<uint32>(L, 2);
@@ -2526,26 +2725,26 @@ namespace LuaUnit
 
     /*int RestoreDisplayId(Eluna* E, lua_State* L, Unit* unit)
     {
-    unit->RestoreDisplayId();
-    return 0;
+        unit->RestoreDisplayId();
+        return 0;
     }*/
 
     /*int RestoreFaction(Eluna* E, lua_State* L, Unit* unit)
     {
-    unit->RestoreFaction();
-    return 0;
+        unit->RestoreFaction();
+        return 0;
     }*/
 
     /*int RemoveBindSightAuras(Eluna* E, lua_State* L, Unit* unit)
     {
-    unit->RemoveBindSightAuras();
-    return 0;
+        unit->RemoveBindSightAuras();
+        return 0;
     }*/
 
     /*int RemoveCharmAuras(Eluna* E, lua_State* L, Unit* unit)
     {
-    unit->RemoveCharmAuras();
-    return 0;
+        unit->RemoveCharmAuras();
+        return 0;
     }*/
 
     /*int DisableMelee(Eluna* E, lua_State* L, Unit* unit)

@@ -85,7 +85,7 @@ void Eluna::OnLuaStateOpen()
     CallAllFunctions(ServerEventBindings, key);
 }
 
-// areatrigger
+// AreaTrigger
 bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
 {
     START_HOOK_WITH_RETVAL(TRIGGER_EVENT_ON_TRIGGER, false);
@@ -94,7 +94,7 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
     return CallAllFunctionsBool(ServerEventBindings, key);
 }
 
-// weather
+// Weather
 void Eluna::OnChange(Weather* weather, uint32 zone, WeatherState state, float grade)
 {
     START_HOOK(WEATHER_EVENT_ON_CHANGE);

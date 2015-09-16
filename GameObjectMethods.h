@@ -65,8 +65,8 @@ namespace LuaGameObject
 
     /*int IsDestructible(Eluna* E, lua_State* L, GameObject* go) // TODO: Implementation core side
     {
-    Eluna::Push(L, go->IsDestructibleBuilding());
-    return 1;
+        Eluna::Push(L, go->IsDestructibleBuilding());
+        return 1;
     }*/
 
     /**

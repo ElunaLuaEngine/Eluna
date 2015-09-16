@@ -23,7 +23,6 @@ using namespace Hooks;
         return;\
     LOCK_ELUNA
 
-// Vehicle
 void Eluna::OnInstall(Vehicle* vehicle)
 {
     START_HOOK(VEHICLE_EVENT_ON_INSTALL);

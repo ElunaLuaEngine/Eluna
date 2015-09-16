@@ -14,7 +14,12 @@
  */
 namespace LuaVehicle
 {
-    /* BOOLEAN */
+    /**
+     * Returns true if the [Unit] passenger is on board
+     *
+     * @param [Unit] passenger
+     * @return bool isOnBoard
+     */
     int IsOnBoard(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
     {
         Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
@@ -26,7 +31,11 @@ namespace LuaVehicle
         return 1;
     }
 
-    /* GETTERS */
+    /**
+     * Returns the [Vehicle]'s owner
+     *
+     * @return [Unit] owner
+     */
     int GetOwner(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
     {
 #ifndef TRINITY
@@ -37,6 +46,11 @@ namespace LuaVehicle
         return 1;
     }
 
+    /**
+     * Returns the [Vehicle]'s entry
+     *
+     * @return uint32 entry
+     */
     int GetEntry(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
     {
 #ifndef TRINITY
@@ -47,6 +61,12 @@ namespace LuaVehicle
         return 1;
     }
 
+    /**
+     * Returns the [Vehicle]'s passenger in the specified seat
+     *
+     * @param int8 seat
+     * @return [Unit] passenger
+     */
     int GetPassenger(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
     {
         int8 seatId = Eluna::CHECKVAL<int8>(L, 2);
@@ -54,7 +74,12 @@ namespace LuaVehicle
         return 1;
     }
 
-    /* OTHER */
+    /**
+     * Adds [Unit] passenger to a specified seat in the [Vehicle]
+     *
+     * @param [Unit] passenger
+     * @param int8 seat
+     */
     int AddPassenger(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
     {
         Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
@@ -68,6 +93,11 @@ namespace LuaVehicle
         return 0;
     }
 
+    /**
+     * Removes [Unit] passenger from the [Vehicle]
+     *
+     * @param [Unit] passenger
+     */
     int RemovePassenger(Eluna* /*E*/, lua_State* L, Vehicle* vehicle)
     {
         Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
@@ -80,6 +110,6 @@ namespace LuaVehicle
     }
 }
 
-#endif
-#endif
-#endif
+#endif // CLASSIC
+#endif // TBC
+#endif // VEHICLEMETHODS_H

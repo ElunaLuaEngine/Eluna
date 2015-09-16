@@ -12,7 +12,6 @@
  */
 namespace LuaItem
 {
-    /* BOOLEAN */
     /**
      * Returns 'true' if the [Item] is soulbound, 'false' otherwise
      *
@@ -231,15 +230,11 @@ namespace LuaItem
         return 1;
     }
 
-    /*
-     * int IsRefundExpired(Eluna* E, lua_State* L, Item* item)// TODO: Implement core support
-     * {
-     *     Eluna::Push(L, item->IsRefundExpired());
-     *     return 1;
-     * }
-     */
-
-    /* GETTERS */
+    /*int IsRefundExpired(Eluna* E, lua_State* L, Item* item)// TODO: Implement core support
+    {
+        Eluna::Push(L, item->IsRefundExpired());
+        return 1;
+    }*/
 
     /**
      * Returns the chat link of the [Item]
@@ -295,12 +290,8 @@ namespace LuaItem
             }
             if (suffix)
             {
-                //std::string test(suffix[(name != temp->Name1) ? loc_idx : DEFAULT_LOCALE]);
-                //if (!test.empty())
-                //{
                 name += ' ';
                 name += suffix[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
-                /*}*/
             }
         }
 #endif
@@ -631,7 +622,6 @@ namespace LuaItem
         return 1;
     }
 
-    /* SETTERS */
     /**
      * Sets the [Player] specified as the owner of the [Item]
      *

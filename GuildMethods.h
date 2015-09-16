@@ -12,7 +12,6 @@
  */
 namespace LuaGuild
 {
-    /* GETTERS */
     /**
      * Returns a table with the [Player]s in this [Guild]
      *
@@ -139,7 +138,6 @@ namespace LuaGuild
         return 1;
     }
 
-    /* SETTERS */
 #ifndef CATA
     /**
      * Sets the leader of this [Guild]
@@ -179,7 +177,6 @@ namespace LuaGuild
     }
 #endif
 
-    /* OTHER */
     // SendPacketToGuild(packet)
     /**
      * Sends a [WorldPacket] to all the [Player]s in the [Guild]
@@ -272,6 +269,12 @@ namespace LuaGuild
 
 #ifndef CLASSIC
     // Move to Player methods
+    /**
+     * Windraws money from the [Guild] bank
+     *
+     * @param [Player] player
+     * @param uint32 money
+     */
     int WithdrawBankMoney(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
@@ -287,6 +290,12 @@ namespace LuaGuild
     }
 
     // Move to Player methods
+    /**
+     * Deposits money to the [Guild] bank
+     *
+     * @param [Player] player
+     * @param uint32 money
+     */
     int DepositBankMoney(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);

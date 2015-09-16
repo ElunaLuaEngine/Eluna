@@ -39,7 +39,6 @@ void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, 
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-// Player
 bool Eluna::OnCommand(Player* player, const char* text)
 {
     // If from console, player is NULL

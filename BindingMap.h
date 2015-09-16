@@ -67,8 +67,7 @@ public:
     BindingMap(lua_State* L) :
         L(L),
         maxBindingID(0)
-    {
-    }
+    { }
 
     /*
      * Insert a new binding from `key` to `ref`, which lasts for `shots`-many pushes.
@@ -224,7 +223,7 @@ struct EventKey
 
     EventKey(T event_id) :
         event_id(event_id)
-    {}
+    { }
 };
 
 /*
@@ -240,7 +239,7 @@ struct EntryKey
     EntryKey(T event_id, uint32 entry) :
         event_id(event_id),
         entry(entry)
-    {}
+    { }
 };
 
 /*
@@ -258,7 +257,7 @@ struct UniqueObjectKey
         event_id(event_id),
         guid(guid),
         instance_id(instance_id)
-    {}
+    { }
 };
 
 
