@@ -65,6 +65,7 @@ typedef QueryNamedResult ElunaQuery;
 
 class Unit;
 class WorldObject;
+struct FactionTemplateEntry;
 
 namespace ElunaUtil
 {
@@ -101,13 +102,15 @@ namespace ElunaUtil
         WorldObject const& GetFocusObject() const;
         bool operator()(WorldObject* u);
 
-        WorldObject const* i_obj;
-        uint32 i_hostile; // 0 both, 1 hostile, 2 friendly
-        uint32 i_entry;
+        WorldObject const* const i_obj;
+        Unit const* i_obj_unit;
+        FactionTemplateEntry const* i_obj_fact;
+        uint32 const i_hostile; // 0 both, 1 hostile, 2 friendly
+        uint32 const i_entry;
         float i_range;
-        uint16 i_typeMask;
-        uint32 i_dead; // 0 both, 1 alive, 2 dead
-        bool i_nearest;
+        uint16 const i_typeMask;
+        uint32 const i_dead; // 0 both, 1 alive, 2 dead
+        bool const i_nearest;
     };
 
     /*

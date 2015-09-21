@@ -186,6 +186,7 @@ namespace LuaWorldObject
      *
      * @param float range = 533.33333 : optionally set range. Default range is grid size
      * @param uint32 entryId = 0 : optionally set entry ID of game object to find
+     * @param uint32 hostile = 0 : 0 both, 1 hostile, 2 friendly
      *
      * @return [GameObject] nearestGameObject
      */
@@ -193,9 +194,10 @@ namespace LuaWorldObject
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
+        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 4, 0);
 
         GameObject* target = NULL;
-        ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry);
+        ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
 #ifndef TRINITY
         MaNGOS::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
@@ -293,8 +295,8 @@ namespace LuaWorldObject
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
-        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 3, 0);
-        uint32 dead = Eluna::CHECKVAL<uint32>(L, 4, 1);
+        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 4, 0);
+        uint32 dead = Eluna::CHECKVAL<uint32>(L, 5, 1);
 
         std::list<Creature*> list;
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry, hostile, dead);
@@ -326,6 +328,7 @@ namespace LuaWorldObject
      *
      * @param float range = 533.33333 : optionally set range. Default range is grid size
      * @param uint32 entryId = 0 : optionally set entry ID of game objects to find
+     * @param uint32 hostile = 0 : 0 both, 1 hostile, 2 friendly
      *
      * @return table gameObjectsInRange : table of [GameObject]s
      */
@@ -333,9 +336,10 @@ namespace LuaWorldObject
     {
         float range = Eluna::CHECKVAL<float>(L, 2, SIZE_OF_GRIDS);
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 3, 0);
+        uint32 hostile = Eluna::CHECKVAL<uint32>(L, 4, 0);
 
         std::list<GameObject*> list;
-        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_GAMEOBJECT, entry);
+        ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
 #ifndef TRINITY
         MaNGOS::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
