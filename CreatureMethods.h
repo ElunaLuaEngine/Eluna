@@ -860,7 +860,7 @@ namespace LuaCreature
     int GetDBTableGUIDLow(Eluna* /*E*/, lua_State* L, Creature* creature)
     {
 #ifdef TRINITY
-        Eluna::Push(L, creature->GetDBTableGUIDLow());
+        Eluna::Push(L, creature->GetSpawnId());
 #else
         // on mangos based this is same as lowguid
         Eluna::Push(L, creature->GetGUIDLow());

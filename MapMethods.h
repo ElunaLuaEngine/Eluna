@@ -213,25 +213,25 @@ namespace LuaMap
         switch (GUID_HIPART(guid))
         {
             case HIGHGUID_PLAYER:
-                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Player*)NULL));
+                Eluna::Push(L, sObjectAccessor->GetPlayer(map, ObjectGuid(guid)));
                 break;
             case HIGHGUID_TRANSPORT:
             case HIGHGUID_MO_TRANSPORT:
             case HIGHGUID_GAMEOBJECT:
-                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (GameObject*)NULL));
+                Eluna::Push(L, map->GetGameObject(ObjectGuid(guid)));
                 break;
             case HIGHGUID_VEHICLE:
             case HIGHGUID_UNIT:
-                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Creature*)NULL));
+                Eluna::Push(L, map->GetCreature(ObjectGuid(guid)));
                 break;
             case HIGHGUID_PET:
-                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Pet*)NULL));
+                Eluna::Push(L, map->GetPet(ObjectGuid(guid)));
                 break;
             case HIGHGUID_DYNAMICOBJECT:
-                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (DynamicObject*)NULL));
+                Eluna::Push(L, map->GetDynamicObject(ObjectGuid(guid)));
                 break;
             case HIGHGUID_CORPSE:
-                Eluna::Push(L, sObjectAccessor->GetObjectInMap(ObjectGuid(guid), map, (Corpse*)NULL));
+                Eluna::Push(L, map->GetCorpse(ObjectGuid(guid)));
                 break;
             default:
                 break;

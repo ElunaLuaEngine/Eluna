@@ -438,12 +438,12 @@ namespace LuaGlobalFunctions
      * GUID consist of entry ID, low GUID, and type ID.
      *
      * @param uint64 guid : GUID of an [Object]
-     * @return uint32 typeId : type ID of the [Object]
+     * @return int32 typeId : type ID of the [Object]
      */
     int GetGUIDType(Eluna* /*E*/, lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-        Eluna::Push(L, GUID_HIPART(guid));
+        Eluna::Push(L, static_cast<int>(GUID_HIPART(guid)));
         return 1;
     }
 
@@ -1632,7 +1632,7 @@ namespace LuaGlobalFunctions
             if (save)
             {
                 Creature* creature = new Creature();
-                if (!creature->Create(eObjectMgr->GenerateLowGuid(HIGHGUID_UNIT), map, phase, entry, x, y, z, o))
+                if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, x, y, z, o))
                 {
                     delete creature;
                     Eluna::Push(L);
@@ -1641,15 +1641,21 @@ namespace LuaGlobalFunctions
 
                 creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
 
-                uint32 db_lowguid = creature->GetDBTableGUIDLow();
-                if (!creature->LoadCreatureFromDB(db_lowguid, map))
+                uint32 db_guid = creature->GetSpawnId();
+
+                // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells()
+                // current "creature" variable is deleted and created fresh new, otherwise old values might trigger asserts or cause undefined behavior
+                creature->CleanupsBeforeDelete();
+                delete creature;
+                creature = new Creature();
+                if (!creature->LoadCreatureFromDB(db_guid, map))
                 {
                     delete creature;
                     Eluna::Push(L);
                     return 1;
                 }
 
-                eObjectMgr->AddCreatureToGrid(db_lowguid, eObjectMgr->GetCreatureData(db_lowguid));
+                eObjectMgr->AddCreatureToGrid(db_guid, eObjectMgr->GetCreatureData(db_guid));
                 Eluna::Push(L, creature);
             }
             else
@@ -1688,9 +1694,9 @@ namespace LuaGlobalFunctions
             }
 
             GameObject* object = new GameObject;
-            uint32 lowguid = eObjectMgr->GenerateLowGuid(HIGHGUID_GAMEOBJECT);
+            uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
 
-            if (!object->Create(lowguid, objectInfo->entry, map, phase, x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY))
+            if (!object->Create(guidLow, objectInfo->entry, map, phase, x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY))
             {
                 delete object;
                 Eluna::Push(L);
@@ -1706,14 +1712,14 @@ namespace LuaGlobalFunctions
                 object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
 
                 // this will generate a new lowguid if the object is in an instance
-                if (!object->LoadGameObjectFromDB(lowguid, map))
+                if (!object->LoadGameObjectFromDB(guidLow, map))
                 {
                     delete object;
                     Eluna::Push(L);
                     return 1;
                 }
 
-                eObjectMgr->AddGameobjectToGrid(lowguid, eObjectMgr->GetGOData(lowguid));
+                eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGOData(guidLow));
             }
             else
                 map->AddToMap(object);

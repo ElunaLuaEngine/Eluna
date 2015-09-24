@@ -157,7 +157,7 @@ namespace LuaGameObject
     int GetDBTableGUIDLow(Eluna* /*E*/, lua_State* L, GameObject* go)
     {
 #ifdef TRINITY
-        Eluna::Push(L, go->GetDBTableGUIDLow());
+        Eluna::Push(L, go->GetSpawnId());
 #else
         // on mangos based this is same as lowguid
         Eluna::Push(L, go->GetGUIDLow());

@@ -182,7 +182,11 @@ namespace LuaObject
      */
     int GetGUIDLow(Eluna* /*E*/, lua_State* L, Object* obj)
     {
+#ifdef TRINITY
+        Eluna::Push(L, obj->GetGUID().GetCounter());
+#else
         Eluna::Push(L, obj->GetGUIDLow());
+#endif
         return 1;
     }
 

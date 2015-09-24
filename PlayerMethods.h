@@ -2157,7 +2157,11 @@ namespace LuaPlayer
 
         target->SetSummonPoint(map, x, y, z);
         WorldPacket data(SMSG_SUMMON_REQUEST, 8 + 4 + 4);
+#ifdef TRINITY
+        data << uint64(player->GetGUID().GetCounter());
+#else
         data << uint64(player->GetGUIDLow());
+#endif
         data << uint32(zoneId);
         data << uint32(delay);
         target->GetSession()->SendPacket(&data);
@@ -2228,7 +2232,11 @@ namespace LuaPlayer
             return 0;
 
         WorldPacket data(MSG_AUCTION_HELLO, 12);
+#ifdef TRINITY
+        data << uint64(unit->GetGUID().GetCounter());
+#else
         data << uint64(unit->GetGUIDLow());
+#endif
         data << uint32(ahEntry->houseId);
         data << uint8(1);
         player->GetSession()->SendPacket(&data);
@@ -2846,7 +2854,7 @@ namespace LuaPlayer
             // prepare Quest Tracker datas
             PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_QUEST_TRACK_GM_COMPLETE);
             stmt->setUInt32(0, quest->GetQuestId());
-            stmt->setUInt32(1, player->GetGUIDLow());
+            stmt->setUInt32(1, player->GetGUID().GetCounter());
 
             // add to Quest Tracker
             CharacterDatabase.Execute(stmt);
