@@ -1192,7 +1192,9 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, uint64 guid, uint
             break;
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-    luaL_error(L, "Unknown event type (regtype %hhu, event %u, entry %u, guid " UI64FMTD ", instance %u)", regtype, event_id, entry, guid, instanceId);
+    std::ostringstream oss;
+    oss << "regtype " << regtype << ", event " << event_id << ", entry " << entry << ", guid " << guid << ", instance " << instanceId;
+    luaL_error(L, "Unknown event type (%s)", oss.str().c_str());
     return 0;
 }
 
