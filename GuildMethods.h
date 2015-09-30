@@ -29,7 +29,7 @@ namespace LuaGuild
 #else
             HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
 #endif
-            const HashMapHolder<Player>::MapType& m = eObjectAccessor->GetPlayers();
+            const HashMapHolder<Player>::MapType& m = eObjectAccessor()GetPlayers();
             for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
             {
                 if (Player* player = it->second)
@@ -68,9 +68,9 @@ namespace LuaGuild
     int GetLeader(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
 #ifndef TRINITY
-        Eluna::Push(L, eObjectAccessor->FindPlayer(guild->GetLeaderGuid()));
+        Eluna::Push(L, eObjectAccessor()FindPlayer(guild->GetLeaderGuid()));
 #else
-        Eluna::Push(L, eObjectAccessor->FindPlayer(guild->GetLeaderGUID()));
+        Eluna::Push(L, eObjectAccessor()FindPlayer(guild->GetLeaderGUID()));
 #endif
         return 1;
     }

@@ -98,7 +98,7 @@ namespace LuaGlobalFunctions
     int GetPlayerByGUID(Eluna* /*E*/, lua_State* L)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-        Eluna::Push(L, eObjectAccessor->FindPlayer(ObjectGuid(guid)));
+        Eluna::Push(L, eObjectAccessor()FindPlayer(ObjectGuid(guid)));
         return 1;
     }
 
@@ -111,7 +111,7 @@ namespace LuaGlobalFunctions
     int GetPlayerByName(Eluna* /*E*/, lua_State* L)
     {
         const char* name = Eluna::CHECKVAL<const char*>(L, 1);
-        Eluna::Push(L, eObjectAccessor->FindPlayerByName(name));
+        Eluna::Push(L, eObjectAccessor()FindPlayerByName(name));
         return 1;
     }
 
@@ -155,7 +155,7 @@ namespace LuaGlobalFunctions
 #else
             HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
 #endif
-            const HashMapHolder<Player>::MapType& m = eObjectAccessor->GetPlayers();
+            const HashMapHolder<Player>::MapType& m = eObjectAccessor()GetPlayers();
             for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
             {
                 if (Player* player = it->second)
@@ -1900,7 +1900,7 @@ namespace LuaGlobalFunctions
      */
     int SaveAllPlayers(Eluna* /*E*/, lua_State* /*L*/)
     {
-        eObjectAccessor->SaveAllPlayers();
+        eObjectAccessor()SaveAllPlayers();
         return 0;
     }
 
@@ -2240,57 +2240,6 @@ namespace LuaGlobalFunctions
         sTaxiPathStore.SetEntry(pathId, pathEntry);
         Eluna::Push(L, pathId);
         return 1;
-    }
-
-    /**
-     * Adds a [Corpse] to the world.
-     *
-     * @param [Corpse] corpse : [Corpse] to add
-     */
-    int AddCorpse(Eluna* /*E*/, lua_State* L)
-    {
-        Corpse* corpse = Eluna::CHECKOBJ<Corpse>(L, 1);
-
-        eObjectAccessor->AddCorpse(corpse);
-        return 0;
-    }
-
-    /**
-     * Removes a [Corpse] from the world.
-     *
-     * @param [Corpse] corpse : [Corpse] to remove
-     */
-    int RemoveCorpse(Eluna* /*E*/, lua_State* L)
-    {
-        Corpse* corpse = Eluna::CHECKOBJ<Corpse>(L, 1);
-        eObjectAccessor->RemoveCorpse(corpse);
-        Eluna::CHECKOBJ<ElunaObject>(L, 1)->Invalidate();
-        return 0;
-    }
-
-    /**
-     * Converts a [Corpse] by GUID, and optionally allows for insignia to be looted.
-     *
-     * @param uint64 playerGUID : GUID of the [Player]
-     * @param bool insignia = false : if `true`, allow an insignia to be looted
-     * @return [Corpse] corpse : returns converted [Corpse]
-     */
-    int ConvertCorpseForPlayer(Eluna* /*E*/, lua_State* L)
-    {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 1);
-        bool insignia = Eluna::CHECKVAL<bool>(L, 2, false);
-
-        Eluna::Push(L, eObjectAccessor->ConvertCorpseForPlayer(ObjectGuid(guid), insignia));
-        return 1;
-    }
-
-    /**
-     * Removes old [Corpse]s from the world.
-     */
-    int RemoveOldCorpses(Eluna* /*E*/, lua_State* /*L*/)
-    {
-        eObjectAccessor->RemoveOldCorpses();
-        return 0;
     }
 
     /**

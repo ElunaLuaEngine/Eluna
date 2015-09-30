@@ -107,7 +107,7 @@ void Eluna::OnChange(Weather* weather, uint32 zone, WeatherState state, float gr
 // Auction House
 void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+    Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
     uint32 expiretime = entry->expire_time;
@@ -134,7 +134,7 @@ void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 
 void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+    Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
     uint32 expiretime = entry->expire_time;
@@ -161,7 +161,7 @@ void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 
 void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+    Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
     uint32 expiretime = entry->expire_time;
@@ -188,7 +188,7 @@ void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 
 void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
-    Player* owner = eObjectAccessor->FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+    Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
     uint32 expiretime = entry->expire_time;

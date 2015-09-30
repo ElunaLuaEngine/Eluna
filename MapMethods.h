@@ -213,7 +213,7 @@ namespace LuaMap
         switch (GUID_HIPART(guid))
         {
             case HIGHGUID_PLAYER:
-                Eluna::Push(L, sObjectAccessor->GetPlayer(map, ObjectGuid(guid)));
+                Eluna::Push(L, eObjectAccessor()GetPlayer(map, ObjectGuid(guid)));
                 break;
             case HIGHGUID_TRANSPORT:
             case HIGHGUID_MO_TRANSPORT:

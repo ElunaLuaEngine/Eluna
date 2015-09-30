@@ -91,7 +91,7 @@ typedef Opcodes                 OpcodesList;
 #define eObjectMgr              (sObjectMgr)
 #define eAccountMgr             (sAccountMgr)
 #define eAuctionMgr             (sAuctionMgr)
-#define eObjectAccessor         (sObjectAccessor)
+#define eObjectAccessor()       ObjectAccessor::
 #define REGEN_TIME_FULL
 typedef ThreatContainer::StorageType ThreatList;
 
@@ -108,7 +108,7 @@ typedef ThreatContainer::StorageType ThreatList;
 #define eObjectMgr              (&sObjectMgr)
 #define eAccountMgr             (&sAccountMgr)
 #define eAuctionMgr             (&sAuctionMgr)
-#define eObjectAccessor         (&sObjectAccessor)
+#define eObjectAccessor()       sObjectAccessor.
 #define SERVER_MSG_STRING       SERVER_MSG_CUSTOM
 #define TOTAL_LOCALES           MAX_LOCALE
 #define DIALOG_STATUS_SCRIPTED_NO_STATUS    DIALOG_STATUS_UNDEFINED

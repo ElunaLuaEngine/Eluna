@@ -138,10 +138,6 @@ ElunaGlobal::ElunaRegister GlobalMethods[] =
     { "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers },
     { "SendMail", &LuaGlobalFunctions::SendMail },
     { "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
-    { "AddCorpse", &LuaGlobalFunctions::AddCorpse },
-    { "RemoveCorpse", &LuaGlobalFunctions::RemoveCorpse },
-    { "ConvertCorpseForPlayer", &LuaGlobalFunctions::ConvertCorpseForPlayer },
-    { "RemoveOldCorpses", &LuaGlobalFunctions::RemoveOldCorpses },
     { "CreateInt64", &LuaGlobalFunctions::CreateLongLong },
     { "CreateUint64", &LuaGlobalFunctions::CreateULongLong },
 
