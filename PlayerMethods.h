@@ -3069,15 +3069,46 @@ namespace LuaPlayer
         player->ToggleAFK();
         return 0;
     }
-    
+
     /**
      * Equips the given item or item entry to the given slot. Returns the equipped item or nil.
+     *
+     *     enum EquipmentSlots // 19 slots
+     *     {
+     *         EQUIPMENT_SLOT_START        = 0,
+     *         EQUIPMENT_SLOT_HEAD         = 0,
+     *         EQUIPMENT_SLOT_NECK         = 1,
+     *         EQUIPMENT_SLOT_SHOULDERS    = 2,
+     *         EQUIPMENT_SLOT_BODY         = 3,
+     *         EQUIPMENT_SLOT_CHEST        = 4,
+     *         EQUIPMENT_SLOT_WAIST        = 5,
+     *         EQUIPMENT_SLOT_LEGS         = 6,
+     *         EQUIPMENT_SLOT_FEET         = 7,
+     *         EQUIPMENT_SLOT_WRISTS       = 8,
+     *         EQUIPMENT_SLOT_HANDS        = 9,
+     *         EQUIPMENT_SLOT_FINGER1      = 10,
+     *         EQUIPMENT_SLOT_FINGER2      = 11,
+     *         EQUIPMENT_SLOT_TRINKET1     = 12,
+     *         EQUIPMENT_SLOT_TRINKET2     = 13,
+     *         EQUIPMENT_SLOT_BACK         = 14,
+     *         EQUIPMENT_SLOT_MAINHAND     = 15,
+     *         EQUIPMENT_SLOT_OFFHAND      = 16,
+     *         EQUIPMENT_SLOT_RANGED       = 17,
+     *         EQUIPMENT_SLOT_TABARD       = 18,
+     *         EQUIPMENT_SLOT_END          = 19
+     *     };
+     *
+     *     enum InventorySlots // 4 slots
+     *     {
+     *         INVENTORY_SLOT_BAG_START    = 19,
+     *         INVENTORY_SLOT_BAG_END      = 23
+     *     };
      *
      * @proto equippedItem = (item, slot)
      * @proto equippedItem = (entry, slot)
      * @param [Item] item : item to equip
      * @param uint32 entry : entry of the item to equip
-     * @param uint32 slot : equipment slot to equip the item to
+     * @param uint32 slot : equipment slot to equip the item to The slot can be [EquipmentSlots] or [InventorySlots]
      * @return [Item] equippedItem : item or nil if equipping failed
      */
     int EquipItem(Eluna* /*E*/, lua_State* L, Player* player)
