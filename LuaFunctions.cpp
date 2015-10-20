@@ -5,7 +5,7 @@
 */
 
 extern "C"
-{{ "GroupCreate", &LuaPlayer::GroupCreate },
+{
 #include "lua.h"
 };
 
