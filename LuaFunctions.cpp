@@ -5,7 +5,7 @@
 */
 
 extern "C"
-{
+{{ "GroupCreate", &LuaPlayer::GroupCreate },
 #include "lua.h"
 };
 
@@ -738,6 +738,8 @@ ElunaRegister<Player> PlayerMethods[] =
     { "ResetHonor", &LuaPlayer::ResetHonor },
     { "ClearHonorInfo", &LuaPlayer::ClearHonorInfo },
 #endif
+    { "StartCinematicMovie", &LuaPlayer::StartCinematicMovie },							  // :StartCinematicMovie(id) - Plays cinematic with ID
+	{ "PlayMusicToPlayer", &LuaPlayer::PlayMusicToPlayer },								  // :PlayMusicToPlayer(soundid) - Plays Music to targeted player (plays the soundID in the music sound channel)
 
     { NULL, NULL }
 };
