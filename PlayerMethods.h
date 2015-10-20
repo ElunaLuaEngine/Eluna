@@ -4025,5 +4025,24 @@ namespace LuaPlayer
     player->RemovePet(player->GetPet(), (PetSaveMode)mode, returnreagent);
     return 0;
     }*/
+    int StartCinematicMovie(Eluna* /*E*/, lua_State* L, Player* player) // Sends cinematic movie to single player 
+	{
+		uint32 CinematicSequenceId = Eluna::CHECKVAL<uint32>(L, 2);
+		WorldPacket data(SMSG_TRIGGER_CINEMATIC, 4);
+		data << uint32(CinematicSequenceId);
+		player->SendDirectMessage(&data);
+		return 1;
+	}//GetGUID()
+
+	//(Eluna* /*E*/, lua_State* L, Unit* unit)
+	int PlayMusicToPlayer(Eluna* /*E*/, lua_State* L, Player* player) // Send sound ID to one player in music channel
+	{
+		uint32 soundid = Eluna::CHECKVAL<uint32>(L, 2);
+		WorldPacket data;
+		data.Initialize(SMSG_PLAY_MUSIC, 4);
+		data << uint32(soundid);
+		player->GetSession()->SendPacket(&data);
+		return 0;
+	}
 };
 #endif
