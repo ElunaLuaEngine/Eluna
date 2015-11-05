@@ -30,6 +30,9 @@
 #ifdef USING_BOOST
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
+#else
+#include <ace/RW_Thread_Mutex.h>
+#include <ace/Guard_T.h>
 #endif
 
 #ifdef TRINITY
