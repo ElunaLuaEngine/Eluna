@@ -21,6 +21,10 @@
 #include "Hooks.h"
 #include "ElunaUtility.h"
 
+#ifndef USING_BOOST
+#include <ace/Recursive_Thread_Mutex.h>
+#endif
+
 extern "C"
 {
 #include "lua.h"
