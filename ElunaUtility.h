@@ -50,45 +50,6 @@ typedef QueryNamedResult ElunaQuery;
 #define GetTemplate             GetProto
 #endif
 
-#ifndef HIGHGUID_PLAYER
-#define HIGHGUID_PLAYER         HighGuid::Player
-#endif
-#ifndef HIGHGUID_UNIT
-#define HIGHGUID_UNIT           HighGuid::Unit
-#endif
-#ifndef HIGHGUID_GAMEOBJECT
-#define HIGHGUID_GAMEOBJECT     HighGuid::GameObject
-#endif
-#ifndef HIGHGUID_TRANSPORT
-#define HIGHGUID_TRANSPORT      HighGuid::Transport
-#endif
-#ifndef HIGHGUID_MO_TRANSPORT
-#define HIGHGUID_MO_TRANSPORT   HighGuid::Mo_Transport
-#endif
-#ifndef HIGHGUID_VEHICLE
-#define HIGHGUID_VEHICLE        HighGuid::Vehicle
-#endif
-#ifndef HIGHGUID_PET
-#define HIGHGUID_PET            HighGuid::Pet
-#endif
-#ifndef HIGHGUID_DYNAMICOBJECT
-#define HIGHGUID_DYNAMICOBJECT  HighGuid::DynamicObject
-#endif
-#ifndef HIGHGUID_CORPSE
-#define HIGHGUID_CORPSE         HighGuid::Corpse
-#endif
-#ifndef HIGHGUID_ITEM
-#define HIGHGUID_ITEM           HighGuid::Item
-#endif
-#ifndef HIGHGUID_INSTANCE
-#define HIGHGUID_INSTANCE       HighGuid::Instance
-#endif
-#ifndef HIGHGUID_GROUP
-#define HIGHGUID_GROUP          HighGuid::Group
-#endif
-#ifndef HIGHGUID_CONTAINER
-#define HIGHGUID_CONTAINER      HighGuid::Container
-#endif
 #ifndef MAKE_NEW_GUID
 #define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
 #endif
