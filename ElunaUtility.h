@@ -41,6 +41,20 @@ typedef QueryResult ElunaQuery;
 #define ELUNA_LOG_ERROR(...)    TC_LOG_ERROR("eluna", __VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    TC_LOG_DEBUG("eluna", __VA_ARGS__);
 #define GET_GUID                GetGUID
+
+#define HIGHGUID_PLAYER         HighGuid::Player
+#define HIGHGUID_UNIT           HighGuid::Unit
+#define HIGHGUID_ITEM           HighGuid::Item
+#define HIGHGUID_GAMEOBJECT     HighGuid::GameObject
+#define HIGHGUID_PET            HighGuid::Pet
+#define HIGHGUID_TRANSPORT      HighGuid::Transport
+#define HIGHGUID_VEHICLE        HighGuid::Vehicle
+#define HIGHGUID_CONTAINER      HighGuid::Container
+#define HIGHGUID_DYNAMICOBJECT  HighGuid::DynamicObject
+#define HIGHGUID_CORPSE         HighGuid::Corpse
+#define HIGHGUID_MO_TRANSPORT   HighGuid::Mo_Transport
+#define HIGHGUID_INSTANCE       HighGuid::Instance
+#define HIGHGUID_GROUP          HighGuid::Group
 #else
 typedef QueryNamedResult ElunaQuery;
 #define ASSERT                  MANGOS_ASSERT

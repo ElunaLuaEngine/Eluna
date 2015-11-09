@@ -1226,7 +1226,6 @@ ElunaRegister<Corpse> CorpseMethods[] =
     // Other
     { "ResetGhostTime", &LuaCorpse::ResetGhostTime },
     { "SaveToDB", &LuaCorpse::SaveToDB },
-    { "DeleteBonesFromWorld", &LuaCorpse::DeleteBonesFromWorld },
 
     { NULL, NULL }
 };

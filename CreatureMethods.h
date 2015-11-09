@@ -592,7 +592,10 @@ namespace LuaCreature
         uint32 spell = Eluna::CHECKVAL<uint32>(L, 2);
 
 #ifdef TRINITY
-        Eluna::Push(L, creature->GetSpellHistory()->GetRemainingCooldown(spell));
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell))
+            Eluna::Push(L, creature->GetSpellHistory()->GetRemainingCooldown(spellInfo));
+        else
+            Eluna::Push(L, 0);
 #else
         Eluna::Push(L, creature->GetCreatureSpellCooldownDelay(spell));
 #endif

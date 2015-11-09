@@ -817,7 +817,10 @@ namespace LuaPlayer
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
 
 #ifdef TRINITY
-        Eluna::Push(L, player->GetSpellHistory()->GetRemainingCooldown(spellId));
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellId))
+            Eluna::Push(L, player->GetSpellHistory()->GetRemainingCooldown(spellInfo));
+        else
+            Eluna::Push(L, 0);
 #else
         Eluna::Push(L, uint32(player->GetSpellCooldownDelay(spellId)));
 #endif

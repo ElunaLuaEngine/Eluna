@@ -77,19 +77,5 @@ namespace LuaCorpse
         corpse->SaveToDB();
         return 0;
     }
-
-    /**
-     * Deletes the [Corpse] from the world.
-     *
-     * If the [Corpse]'s type is not BONES then this does nothing.
-     */
-    int DeleteBonesFromWorld(Eluna* /*E*/, lua_State* /*L*/, Corpse* corpse)
-    {
-        // Prevent a failed assertion.
-        if (corpse->GetType() != CORPSE_BONES)
-            return 0;
-        corpse->DeleteBonesFromWorld();
-        return 0;
-    }
 };
 #endif
