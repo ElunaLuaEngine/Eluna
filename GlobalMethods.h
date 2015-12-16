@@ -2097,6 +2097,7 @@ namespace LuaGlobalFunctions
      * Adds a taxi path to a specified map, returns the used pathId.
      * 
      * Note that the first taxi point needs to be near the player when he starts the taxi path.
+     * The function should also be used only **once** per path added so use it on server startup for example.
      *
      * Related function: [Player:StartTaxi]
      *
