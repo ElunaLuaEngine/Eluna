@@ -11,6 +11,7 @@
 #include "Common.h"
 #include "ElunaUtility.h"
 #include "Hooks.h"
+#include <type_traits>
 
 extern "C"
 {
@@ -280,11 +281,18 @@ public:
         return std::hash<T>()(t);
     }
 
+    template < typename T, std::enable_if_t<std::is_enum<T>::value> >
+    static inline result_type hash(T const & t)
+    {
+        typedef std::underlying_type<T>::type Enum_type;
+        return std::hash<Enum_type>()(static_cast<Enum_type>(t));
+    }
+
 private:
     template <typename T>
     static inline void _hash_combine(result_type& seed, T const & v)
     {
-        seed ^= std::hash<T>()(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= hash(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
 
     template <typename H, typename... T>
