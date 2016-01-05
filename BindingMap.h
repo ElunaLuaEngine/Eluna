@@ -260,6 +260,39 @@ struct UniqueObjectKey
     { }
 };
 
+class hash_helper
+{
+public:
+    typedef std::size_t result_type;
+
+    template <typename... T>
+    static inline result_type hash(T const &... t)
+    {
+        result_type seed = 0;
+        _hash_combine(seed, t...);
+        return seed;
+    }
+
+    template <typename T>
+    static inline result_type hash(T const & t)
+    {
+        return std::hash<T>()(t);
+    }
+
+private:
+    template <typename T>
+    static inline void _hash_combine(result_type& seed, T const & v)
+    {
+        seed ^= std::hash<T>()(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+
+    template <typename H, typename... T>
+    static inline void _hash_combine(result_type& seed, H const & h, T const &... t)
+    {
+        _hash_combine(seed, h);
+        _hash_combine(seed, t...);
+    }
+};
 
 /*
  * Implementations of various std functions on the above key types,
@@ -301,12 +334,10 @@ namespace std
     struct hash < EventKey<T> >
     {
         typedef EventKey<T> argument_type;
-        typedef std::size_t result_type;
 
-        result_type operator()(argument_type const& k) const
+        hash_helper::result_type operator()(argument_type const& k) const
         {
-            result_type const h1(std::hash<uint32>()(k.event_id));
-            return h1;
+            return hash_helper::hash(k.event_id);
         }
     };
 
@@ -314,14 +345,10 @@ namespace std
     struct hash < EntryKey<T> >
     {
         typedef EntryKey<T> argument_type;
-        typedef std::size_t result_type;
 
-        result_type operator()(argument_type const& k) const
+        hash_helper::result_type operator()(argument_type const& k) const
         {
-            result_type const h1(std::hash<uint32>()(k.event_id));
-            result_type const h2(std::hash<uint32>()(k.entry));
-
-            return h1 ^ (h2 << 8); // `event_id` probably won't exceed 2^8.
+            return hash_helper::hash(k.event_id, k.entry);
         }
     };
 
@@ -329,15 +356,10 @@ namespace std
     struct hash < UniqueObjectKey<T> >
     {
         typedef UniqueObjectKey<T> argument_type;
-        typedef std::size_t result_type;
 
-        result_type operator()(argument_type const& k) const
+        hash_helper::result_type operator()(argument_type const& k) const
         {
-            result_type const h1(std::hash<uint32>()(k.event_id));
-            result_type const h2(std::hash<uint32>()(k.instance_id));
-            result_type const h3(std::hash<uint64>()(k.guid));
-
-            return h1 ^ (h2 << 8) ^ (h3 << 24); // `instance_id` probably won't exceed 2^16.
+            return hash_helper::hash(k.event_id, k.instance_id, k.guid);
         }
     };
 }

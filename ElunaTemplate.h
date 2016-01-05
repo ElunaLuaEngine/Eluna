@@ -66,10 +66,8 @@ public:
 class ElunaObject
 {
 public:
-    ElunaObject(void* obj, bool manageMemory) : _isvalid(false), _invalidate(!manageMemory), object(obj)
-    {
-        SetValid(true);
-    }
+    template<typename T>
+    ElunaObject::ElunaObject(T * obj, bool manageMemory);
 
     ~ElunaObject()
     {
@@ -81,6 +79,8 @@ public:
     bool IsValid() const { return _isvalid; }
     // Returns whether the object can be invalidated or not
     bool CanInvalidate() const { return _invalidate; }
+    // Returns pointer to the wrapped object's type name
+    const char* GetTypeName() const { return type_name; }
 
     // Sets the object pointer that is wrapped
     void SetObj(void* obj)
@@ -111,6 +111,7 @@ private:
     bool _isvalid;
     bool _invalidate;
     void* object;
+    const char* type_name;
 };
 
 template<typename T>
@@ -288,7 +289,7 @@ public:
             lua_pushnil(L);
             return 1;
         }
-        *ptrHold = new ElunaObject(obj_voidptr, manageMemory);
+        *ptrHold = new ElunaObject(const_cast<T*>(obj), manageMemory);
 
         // Set metatable for it
         lua_getglobal(L, tname);
@@ -403,5 +404,11 @@ public:
     static int LessOrEqual(lua_State* L) { return CompareError(L); }
     static int Call(lua_State* L) { return luaL_error(L, "attempt to call a %s value", tname); }
 };
+
+template<typename T>
+ElunaObject::ElunaObject(T * obj, bool manageMemory) : _isvalid(false), _invalidate(!manageMemory), object(obj), type_name(ElunaTemplate<T>::tname)
+{
+    SetValid(true);
+}
 
 #endif

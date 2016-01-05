@@ -810,7 +810,7 @@ template<> bool Eluna::CHECKVAL<bool>(lua_State* luastate, int narg)
 }
 template<> float Eluna::CHECKVAL<float>(lua_State* luastate, int narg)
 {
-    return luaL_checknumber(luastate, narg);
+    return static_cast<float>(luaL_checknumber(luastate, narg));
 }
 template<> double Eluna::CHECKVAL<double>(lua_State* luastate, int narg)
 {
@@ -906,35 +906,21 @@ template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* luastate, int na
 
 ElunaObject* Eluna::CHECKTYPE(lua_State* luastate, int narg, const char* tname, bool error)
 {
-    bool valid = false;
-    ElunaObject** ptrHold = NULL;
-
-    if (!tname)
+    if (lua_islightuserdata(luastate, narg))
     {
-        valid = true;
-        ptrHold = static_cast<ElunaObject**>(lua_touserdata(luastate, narg));
-    }
-    else
-    {
-        if (lua_getmetatable(luastate, narg))
-        {
-            lua_getglobal(luastate, tname);
-            bool equal = lua_rawequal(luastate, -1, -2) == 1;
-            lua_pop(luastate, 2);
-            if (equal)
-            {
-                valid = true;
-                ptrHold = static_cast<ElunaObject**>(lua_touserdata(luastate, narg));
-            }
-        }
+        if (error)
+            luaL_argerror(luastate, narg, "bad argument : userdata expected, got lightuserdata");
+        return NULL;
     }
 
-    if (!valid || !ptrHold)
+    ElunaObject** ptrHold = static_cast<ElunaObject**>(lua_touserdata(luastate, narg));
+
+    if (!ptrHold || (tname && (*ptrHold)->GetTypeName() != tname))
     {
         if (error)
         {
             char buff[256];
-            snprintf(buff, 256, "bad argument : %s expected, got %s", tname ? tname : "ElunaObject", luaL_typename(luastate, narg));
+            snprintf(buff, 256, "bad argument : %s expected, got %s", tname ? tname : "ElunaObject", ptrHold ? (*ptrHold)->GetTypeName() : luaL_typename(luastate, narg));
             luaL_argerror(luastate, narg, buff);
         }
         return NULL;
