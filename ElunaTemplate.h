@@ -67,7 +67,7 @@ class ElunaObject
 {
 public:
     template<typename T>
-    ElunaObject::ElunaObject(T * obj, bool manageMemory);
+    ElunaObject(T * obj, bool manageMemory);
 
     ~ElunaObject()
     {
