@@ -389,6 +389,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "InterruptSpell", &LuaUnit::InterruptSpell },
     { "SendChatMessageToPlayer", &LuaUnit::SendChatMessageToPlayer },
     { "Emote", &LuaUnit::Emote },
+    { "EmoteState", &LuaUnit::EmoteState },
     { "CountPctFromCurHealth", &LuaUnit::CountPctFromCurHealth },
     { "CountPctFromMaxHealth", &LuaUnit::CountPctFromMaxHealth },
     { "Dismount", &LuaUnit::Dismount },

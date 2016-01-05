@@ -3927,10 +3927,10 @@ namespace LuaPlayer
     }
 
     /**
-    * Starts a cinematic for the [Player]
-    *
-    * @param uint32 CinematicSequenceId : entry of a cinematic
-    */
+     * Starts a cinematic for the [Player]
+     *
+     * @param uint32 CinematicSequenceId : entry of a cinematic
+     */
     int SendCinematicStart(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 CinematicSequenceId = Eluna::CHECKVAL<uint32>(L, 2);
@@ -3940,10 +3940,10 @@ namespace LuaPlayer
     }
 
     /**
-    * Starts a movie for the [Player]
-    *
-    * @param uint32 MovieId : entry of a movie
-    */
+     * Starts a movie for the [Player]
+     *
+     * @param uint32 MovieId : entry of a movie
+     */
     int SendMovieStart(Eluna* /*E*/, lua_State* L, Player* player)
     {
         uint32 MovieId = Eluna::CHECKVAL<uint32>(L, 2);

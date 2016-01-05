@@ -1948,6 +1948,19 @@ namespace LuaUnit
     }
 
     /**
+     * Makes the [Unit] perform the given emote continuously.
+     *
+     * @param uint32 emoteId
+     */
+    int EmoteState(Eluna* /*E*/, lua_State* L, Unit* unit)
+    {
+        uint32 emoteId = Eluna::CHECKVAL<uint32>(L, 2);
+
+        unit->SetUInt32Value(UNIT_NPC_EMOTESTATE, emoteId);
+        return 0;
+    }
+
+    /**
      * Returns calculated percentage from Health
      *
      * @return int32 percentage
