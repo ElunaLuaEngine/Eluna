@@ -228,6 +228,9 @@ ElunaRegister<WorldObject> WorldObjectMethods[] =
     { "RegisterEvent", &LuaWorldObject::RegisterEvent },
     { "RemoveEventById", &LuaWorldObject::RemoveEventById },
     { "RemoveEvents", &LuaWorldObject::RemoveEvents },
+    { "PlayMusic", &LuaWorldObject::PlayMusic },
+    { "PlayDirectSound", &LuaWorldObject::PlayDirectSound },
+    { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound },
 
     { NULL, NULL }
 };
@@ -381,8 +384,6 @@ ElunaRegister<Unit> UnitMethods[] =
     { "CastSpell", &LuaUnit::CastSpell },
     { "CastCustomSpell", &LuaUnit::CastCustomSpell },
     { "CastSpellAoF", &LuaUnit::CastSpellAoF },
-    { "PlayDirectSound", &LuaUnit::PlayDirectSound },
-    { "PlayDistanceSound", &LuaUnit::PlayDistanceSound },
     { "Kill", &LuaUnit::Kill },
     { "StopSpellCast", &LuaUnit::StopSpellCast },
     { "InterruptSpell", &LuaUnit::InterruptSpell },
@@ -651,7 +652,6 @@ ElunaRegister<Player> PlayerMethods[] =
     { "RemoveItem", &LuaPlayer::RemoveItem },
     { "RemoveLifetimeKills", &LuaPlayer::RemoveLifetimeKills },
     { "ResurrectPlayer", &LuaPlayer::ResurrectPlayer },
-    { "PlaySoundToPlayer", &LuaPlayer::PlaySoundToPlayer },
     { "EquipItem", &LuaPlayer::EquipItem },
     { "ResetSpellCooldown", &LuaPlayer::ResetSpellCooldown },
     { "ResetTypeCooldowns", &LuaPlayer::ResetTypeCooldowns },
@@ -733,6 +733,8 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SaveToDB", &LuaPlayer::SaveToDB },
     { "GroupInvite", &LuaPlayer::GroupInvite },
     { "GroupCreate", &LuaPlayer::GroupCreate },
+    { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
+    { "SendMovieStart", &LuaPlayer::SendMovieStart },
 #ifdef CLASSIC
     { "UpdateHonor", &LuaPlayer::UpdateHonor },
     { "ResetHonor", &LuaPlayer::ResetHonor },

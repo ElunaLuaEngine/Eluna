@@ -2454,49 +2454,6 @@ namespace LuaUnit
         unit->RemoveAllAuras();
         return 0;
     }
-
-    /**
-     * The [Unit] plays a sound to a [Player], if no [Player] it will play the sound to everyone near
-     *
-     * @param uint32 sound : entry of a sound
-     * @param [Player] player : [Player] to play the sound to
-     */
-    int PlayDirectSound(Eluna* /*E*/, lua_State* L, Unit* unit)
-    {
-        uint32 soundId = Eluna::CHECKVAL<uint32>(L, 2);
-        Player* player = Eluna::CHECKOBJ<Player>(L, 3, false);
-        if (!sSoundEntriesStore.LookupEntry(soundId))
-            return 0;
-
-        if (player)
-            unit->PlayDirectSound(soundId, player);
-        else
-            unit->PlayDirectSound(soundId);
-        return 0;
-    }
-
-    /**
-     * The [Unit] plays a sound to a [Player]
-     *
-     * If no [Player] it will play the sound to everyone near
-     * Sound will fade the further you are
-     *
-     * @param uint32 sound : entry of a sound
-     * @param [Player] player : [Player] to play the sound to
-     */
-    int PlayDistanceSound(Eluna* /*E*/, lua_State* L, Unit* unit)
-    {
-        uint32 soundId = Eluna::CHECKVAL<uint32>(L, 2);
-        Player* player = Eluna::CHECKOBJ<Player>(L, 3, false);
-        if (!sSoundEntriesStore.LookupEntry(soundId))
-            return 0;
-
-        if (player)
-            unit->PlayDistanceSound(soundId, player);
-        else
-            unit->PlayDistanceSound(soundId);
-        return 0;
-    }
     
     /**
      * Adds the given unit state for the [Unit].

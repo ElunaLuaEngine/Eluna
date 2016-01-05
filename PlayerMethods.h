@@ -3714,24 +3714,6 @@ namespace LuaPlayer
     }
 
     /**
-     * Plays sound to [Player]
-     *
-     * See [Unit:PlayDirectSound]
-     *
-     * @param uint32 sound : entry of a sound
-     */
-    int PlaySoundToPlayer(Eluna* /*E*/, lua_State* L, Player* player)
-    {
-        uint32 soundId = Eluna::CHECKVAL<uint32>(L, 2);
-        SoundEntriesEntry const* soundEntry = sSoundEntriesStore.LookupEntry(soundId);
-        if (!soundEntry)
-            return 0;
-
-        player->PlayDirectSound(soundId, player);
-        return 0;
-    }
-
-    /**
      * Attempts to start the taxi/flying to the given pathID
      *
      * @param uint32 pathId : pathId from DBC or [Global:AddTaxiPath]
@@ -3942,6 +3924,32 @@ namespace LuaPlayer
 #endif
         Eluna::Push(L, group);
         return 1;
+    }
+
+    /**
+    * Starts a cinematic for the [Player]
+    *
+    * @param uint32 CinematicSequenceId : entry of a cinematic
+    */
+    int SendCinematicStart(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        uint32 CinematicSequenceId = Eluna::CHECKVAL<uint32>(L, 2);
+
+        player->SendCinematicStart(CinematicSequenceId);
+        return 0;
+    }
+
+    /**
+    * Starts a movie for the [Player]
+    *
+    * @param uint32 MovieId : entry of a movie
+    */
+    int SendMovieStart(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        uint32 MovieId = Eluna::CHECKVAL<uint32>(L, 2);
+
+        player->SendMovieStart(MovieId);
+        return 0;
     }
 
     /*int BindToInstance(Eluna* E, lua_State* L, Player* player)
