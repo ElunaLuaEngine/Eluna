@@ -10,6 +10,7 @@
 #include <memory>
 #include "Common.h"
 #include "ElunaUtility.h"
+#include "Hooks.h"
 
 extern "C"
 {
