@@ -10,7 +10,6 @@
 #include <memory>
 #include "Common.h"
 #include "ElunaUtility.h"
-#include "Hooks.h"
 #include <type_traits>
 
 extern "C"
@@ -278,14 +277,9 @@ public:
     template <typename T>
     static inline result_type hash(T const & t)
     {
-        return std::hash<T>()(t);
-    }
-
-    template < typename T, std::enable_if_t<std::is_enum<T>::value> >
-    static inline result_type hash(T const & t)
-    {
-        typedef std::underlying_type<T>::type Enum_type;
-        return std::hash<Enum_type>()(static_cast<Enum_type>(t));
+        // Possibly convert int to std::underlying_type or find another way
+        using Hasher = typename std::conditional< std::is_enum<T>::value, std::hash<int>, std::hash<T> >::type;
+        return Hasher()(t);
     }
 
 private:
