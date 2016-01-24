@@ -3939,6 +3939,7 @@ namespace LuaPlayer
         return 0;
     }
 
+#if !defined(CLASSIC) && !defined(TBC)
     /**
      * Starts a movie for the [Player]
      *
@@ -3951,6 +3952,7 @@ namespace LuaPlayer
         player->SendMovieStart(MovieId);
         return 0;
     }
+#endif
 
     /*int BindToInstance(Eluna* E, lua_State* L, Player* player)
     {
