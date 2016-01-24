@@ -73,7 +73,7 @@ typedef Opcodes                 OpcodesList;
  */
 #ifdef MANGOS
 #define CORE_NAME               "MaNGOS"
-#define CORE_VERSION            REVISION_DATE " " REVISION_TIME
+#define CORE_VERSION            REVISION_NR
 #endif
 
 #ifdef CMANGOS

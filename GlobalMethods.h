@@ -44,7 +44,8 @@ namespace LuaGlobalFunctions
      * Returns emulator version
      *
      * - For TrinityCore returns the date of the last revision, e.g. `2015-08-26 22:53:12 +0300`
-     * - For cMaNGOS/MaNGOS returns the date and time of the last revision, e.g. `2015-09-06 13:18:50`
+     * - For cMaNGOS returns the date and time of the last revision, e.g. `2015-09-06 13:18:50`
+     * - for MaNGOS returns the version number as string, e.g. `21000`
      *
      * @return string version
      */

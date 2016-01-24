@@ -735,7 +735,9 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GroupInvite", &LuaPlayer::GroupInvite },
     { "GroupCreate", &LuaPlayer::GroupCreate },
     { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
+#if !defined(CLASSIC) && !defined(TBC)
     { "SendMovieStart", &LuaPlayer::SendMovieStart },
+#endif
 #ifdef CLASSIC
     { "UpdateHonor", &LuaPlayer::UpdateHonor },
     { "ResetHonor", &LuaPlayer::ResetHonor },
