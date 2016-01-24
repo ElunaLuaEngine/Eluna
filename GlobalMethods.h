@@ -824,10 +824,10 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto cancel = (menu_id, event, function)
-     * @proto cancel = (menu_id, event, function, shots)
+     * @proto cancel = (entry, event, function)
+     * @proto cancel = (entry, event, function, shots)
      *
-     * @param uint32 menu_id : [Creature] entry Id
+     * @param uint32 entry : [Creature] entry Id
      * @param uint32 event : [Creature] gossip event Id, refer to GossipEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
@@ -851,10 +851,10 @@ namespace LuaGlobalFunctions
      * };
      * </pre>
      *
-     * @proto cancel = (menu_id, event, function)
-     * @proto cancel = (menu_id, event, function, shots)
+     * @proto cancel = (entry, event, function)
+     * @proto cancel = (entry, event, function, shots)
      *
-     * @param uint32 menu_id : [GameObject] entry Id
+     * @param uint32 entry : [GameObject] entry Id
      * @param uint32 event : [GameObject] gossip event Id, refer to GossipEvents above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
@@ -2958,7 +2958,7 @@ namespace LuaGlobalFunctions
      * @proto (instance_id)
      * @proto (instance_id, event_type)
      * @param uint32 entry : the ID of an instance of a [Map]
-     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterPlayerGossipEvent]
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterInstanceEvent]
      */
     int ClearInstanceEvents(Eluna* E, lua_State* L)
     {
