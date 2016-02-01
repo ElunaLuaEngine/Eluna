@@ -274,18 +274,23 @@ public:
         return seed;
     }
 
-    template <typename T>
+    template <typename T, typename std::enable_if<std::is_enum<T>::value>::type* = nullptr>
     static inline result_type hash(T const & t)
     {
-        // Possibly convert int to std::underlying_type or find another way
-        using Hasher = typename std::conditional< std::is_enum<T>::value, std::hash<int>, std::hash<T> >::type;
-        return Hasher()(t);
+        return std::hash<typename std::underlying_type<T>::type>()(t);
+    }
+    
+    template <typename T, typename std::enable_if<!std::is_enum<T>::value>::type* = nullptr>
+    static inline result_type hash(T const & t)
+    {
+        return std::hash<T>()(t);
     }
 
 private:
     template <typename T>
     static inline void _hash_combine(result_type& seed, T const & v)
     {
+        // from http://www.boost.org/doc/libs/1_40_0/boost/functional/hash/hash.hpp
         seed ^= hash(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
 
