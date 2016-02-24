@@ -148,7 +148,7 @@ public:
         manageMemory = gc;
 
         // create metatable for userdata of this type
-        lua_newtable(E->L);
+        luaL_newmetatable(E->L, tname);
         int metatable  = lua_gettop(E->L);
 
         // push methodtable to stack to be accessed and modified by users
@@ -239,7 +239,8 @@ public:
         ASSERT(methodTable);
 
         // get metatable
-        lua_getglobal(E->L, tname);
+        lua_pushstring(E->L, tname);
+        lua_rawget(E->L, LUA_REGISTRYINDEX);
         ASSERT(lua_istable(E->L, -1));
 
         for (; methodTable && methodTable->name && methodTable->mfunc; ++methodTable)
@@ -264,7 +265,8 @@ public:
 
         void* obj_voidptr = static_cast<void*>(const_cast<T*>(obj));
 
-        lua_getglobal(L, ELUNA_OBJECT_STORE);
+        lua_pushstring(L, ELUNA_OBJECT_STORE);
+        lua_rawget(L, LUA_REGISTRYINDEX);
         ASSERT(lua_istable(L, -1));
         lua_pushlightuserdata(L, obj_voidptr);
         lua_rawget(L, -2);
@@ -292,7 +294,8 @@ public:
         *ptrHold = new ElunaObject(const_cast<T*>(obj), manageMemory);
 
         // Set metatable for it
-        lua_getglobal(L, tname);
+        lua_pushstring(L, tname);
+        lua_rawget(L, LUA_REGISTRYINDEX);
         if (!lua_istable(L, -1))
         {
             ELUNA_LOG_ERROR("%s missing metatable", tname);
@@ -384,7 +387,7 @@ public:
     static int ToString(lua_State* L)
     {
         T* obj = Eluna::CHECKOBJ<T>(L, 1, true); // get self
-        lua_pushfstring(L, "%s: (%p)", tname, obj);
+        lua_pushfstring(L, "%s: %p", tname, obj);
         return 1;
     }
 
