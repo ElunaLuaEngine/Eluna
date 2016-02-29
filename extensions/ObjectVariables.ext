@@ -18,6 +18,8 @@
 --  local val = obj:GetData(key)
 --
 
+local pairs = pairs
+
 local variableStores = {
     Map = {},
     Player = {},
@@ -37,10 +39,16 @@ local function DestroyMapData(event, obj)
 end
 
 local function DestroyObjData(event, obj)
-    local map = obj:GetMapId()
-    local inst = obj:GetInstanceId()
     local otype = obj:GetObjectType()
     local guid = otype == "Map" and 1 or obj:GetGUIDLow()
+
+    if otype == "Player" then
+        varStore[guid] = nil
+        return
+    end
+
+    local map = obj:GetMapId()
+    local inst = obj:GetInstanceId()
     local mapdata = variableStores[otype][map]
     if mapdata then
         local instancedata = mapdata[inst]
@@ -51,34 +59,47 @@ local function DestroyObjData(event, obj)
 end
 
 local function GetData(self, field)
-    local map = self:GetMapId()
-    local inst = self:GetInstanceId()
     local otype = self:GetObjectType()
     local guid = otype == "Map" and 1 or self:GetGUIDLow()
     local varStore = variableStores[otype]
 
+    if otype == "Player" then
+        varStore[guid] = varStore[guid] or {}
+        if field ~= nil then
+            return varStore[guid][field]
+        end
+        return varStore[guid]
+    end
+
+    local map = self:GetMapId()
+    local inst = self:GetInstanceId()
     varStore[map] = varStore[map] or {}
     varStore[map][inst] = varStore[map][inst] or {}
     varStore[map][inst][guid] = varStore[map][inst][guid] or {}
 
     if field ~= nil then
         return varStore[map][inst][guid][field]
-    else
-        return varStore[map][inst][guid]
     end
+    return varStore[map][inst][guid]
 end
 
 local function SetData(self, field, val)
-    local map = self:GetMapId()
-    local inst = self:GetInstanceId()
     local otype = self:GetObjectType()
     local guid = otype == "Map" and 1 or self:GetGUIDLow()
     local varStore = variableStores[otype]
 
+    if otype == "Player" then
+        varStore[guid] = varStore[guid] or {}
+        varStore[guid][field] = val
+        return
+    end
+
+    local map = self:GetMapId()
+    local inst = self:GetInstanceId()
     varStore[map] = varStore[map] or {}
     varStore[map][inst] = varStore[map][inst] or {}
     varStore[map][inst][guid] = varStore[map][inst][guid] or {}
-    
+
     varStore[map][inst][guid][field] = val
 end
 
