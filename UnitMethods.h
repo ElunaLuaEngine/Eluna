@@ -2182,7 +2182,9 @@ namespace LuaUnit
         float zSpeed = Eluna::CHECKVAL<float>(L, 5);
         float maxHeight = Eluna::CHECKVAL<float>(L, 6);
         uint32 id = Eluna::CHECKVAL<uint32>(L, 7, 0);
-        unit->GetMotionMaster()->MoveJump(x, y, z, zSpeed, maxHeight, id);
+
+        Position pos(x, y, z);
+        unit->GetMotionMaster()->MoveJump(pos, zSpeed, maxHeight, id);
         return 0;
     }
 #endif
