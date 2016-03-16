@@ -29,7 +29,7 @@ using namespace Hooks;
         return;\
     LOCK_ELUNA
 
-bool Eluna::OnPacketSend(WorldSession* session, WorldPacket& packet)
+bool Eluna::OnPacketSend(WorldSession* session, const WorldPacket& packet)
 {
     bool result = true;
     Player* player = NULL;
@@ -39,7 +39,7 @@ bool Eluna::OnPacketSend(WorldSession* session, WorldPacket& packet)
     OnPacketSendOne(player, packet, result);
     return result;
 }
-void Eluna::OnPacketSendAny(Player* player, WorldPacket& packet, bool& result)
+void Eluna::OnPacketSendAny(Player* player, const WorldPacket& packet, bool& result)
 {
     START_HOOK_SERVER(SERVER_EVENT_ON_PACKET_SEND);
     Push(new WorldPacket(packet));
@@ -48,22 +48,18 @@ void Eluna::OnPacketSendAny(Player* player, WorldPacket& packet, bool& result)
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 2, 2);
+        int r = CallOneFunction(n--, 2, 1);
 
         if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
             result = false;
 
-        if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
-                packet = *data;
-
-        lua_pop(L, 2);
+        lua_pop(L, 1);
     }
 
     CleanUpStack(2);
 }
 
-void Eluna::OnPacketSendOne(Player* player, WorldPacket& packet, bool& result)
+void Eluna::OnPacketSendOne(Player* player, const WorldPacket& packet, bool& result)
 {
     START_HOOK_PACKET(PACKET_EVENT_ON_PACKET_SEND, packet.GetOpcode());
     Push(new WorldPacket(packet));
@@ -72,16 +68,12 @@ void Eluna::OnPacketSendOne(Player* player, WorldPacket& packet, bool& result)
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 2, 2);
+        int r = CallOneFunction(n--, 2, 1);
 
         if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
             result = false;
 
-        if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
-                packet = *data;
-
-        lua_pop(L, 2);
+        lua_pop(L, 1);
     }
 
     CleanUpStack(2);

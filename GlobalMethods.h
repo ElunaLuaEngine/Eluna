@@ -1880,13 +1880,8 @@ namespace LuaGlobalFunctions
         switch (banMode)
         {
             case BAN_ACCOUNT:
-#ifdef CATA
                 if (!Utf8ToUpperOnlyLatin(nameOrIP))
                     return 0;
-#else
-                if (!AccountMgr::normalizeString(nameOrIP))
-                    return 0;
-#endif
                 break;
             case BAN_CHARACTER:
                 if (!normalizePlayerName(nameOrIP))

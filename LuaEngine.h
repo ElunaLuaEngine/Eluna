@@ -402,9 +402,9 @@ public:
     void OnSpawn(GameObject* gameobject);
 
     /* Packet */
-    bool OnPacketSend(WorldSession* session, WorldPacket& packet);
-    void OnPacketSendAny(Player* player, WorldPacket& packet, bool& result);
-    void OnPacketSendOne(Player* player, WorldPacket& packet, bool& result);
+    bool OnPacketSend(WorldSession* session, const WorldPacket& packet);
+    void OnPacketSendAny(Player* player, const WorldPacket& packet, bool& result);
+    void OnPacketSendOne(Player* player, const WorldPacket& packet, bool& result);
     bool OnPacketReceive(WorldSession* session, WorldPacket& packet);
     void OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result);
     void OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result);
