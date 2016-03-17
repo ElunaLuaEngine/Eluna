@@ -3236,23 +3236,18 @@ namespace LuaPlayer
         if (!step)
             return 0;
 
-        static const uint32 skillsArray[] = { SKILL_DEFENSE, SKILL_BOWS, SKILL_CROSSBOWS, SKILL_GUNS, SKILL_WANDS, SKILL_THROWN, SKILL_DAGGERS, SKILL_UNARMED, SKILL_FIST_WEAPONS, SKILL_AXES,
-            SKILL_MACES, SKILL_SWORDS, SKILL_POLEARMS, SKILL_STAVES, SKILL_2H_AXES, SKILL_2H_MACES, SKILL_2H_SWORDS, SKILL_SHIELD, SKILL_MINING, SKILL_ENCHANTING, SKILL_BLACKSMITHING,
-            SKILL_ALCHEMY, SKILL_HERBALISM, SKILL_ENGINEERING, SKILL_LEATHERWORKING, SKILL_LOCKPICKING, SKILL_SKINNING, SKILL_TAILORING, SKILL_COOKING, SKILL_FIRST_AID, SKILL_FISHING,
-#ifndef CLASSIC
-            SKILL_JEWELCRAFTING,
-#endif
-#if (!defined(TBC) && !defined(CLASSIC))
-            SKILL_INSCRIPTION,
-#endif
-        };
-        static const uint32 skillsSize = sizeof(skillsArray) / sizeof(*skillsArray);
-
-        for (uint32 i = 0; i < skillsSize; ++i)
+        for (uint32 i = 0; i < sSkillLineStore.GetNumRows(); ++i)
         {
-            if (player->HasSkill(skillsArray[i]))
-                player->UpdateSkill(skillsArray[i], step);
+            if (SkillLineEntry const* entry = sSkillLineStore.LookupEntry(i))
+            {
+                if (entry->categoryId == 10 || entry->categoryId == 12)
+                    continue;
+
+                if (player->HasSkill(entry->id))
+                    player->UpdateSkill(entry->id, step);
+            }
         }
+
         return 0;
     }
 
