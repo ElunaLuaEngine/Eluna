@@ -3240,7 +3240,7 @@ namespace LuaPlayer
         {
             if (SkillLineEntry const* entry = sSkillLineStore.LookupEntry(i))
             {
-                if (entry->categoryId == 10 || entry->categoryId == 12)
+                if (entry->categoryId == SKILL_CATEGORY_LANGUAGES || entry->categoryId == SKILL_CATEGORY_GENERIC)
                     continue;
 
                 if (player->HasSkill(entry->id))
