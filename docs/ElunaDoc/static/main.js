@@ -530,7 +530,9 @@
 
             // Because searching is incremental by character, only the most
             // recent search query is added to the browser history.
-            if (browserSupportsHistoryApi()) {
+            // Do not do this on local due to chrome security errors.
+            // http://stackoverflow.com/a/32454237/3586583
+            if (browserSupportsHistoryApi() && window.location.protocol != "file:") {
                 if (!history.state && !params.search) {
                     history.pushState(query, "", "?search=" +
                                                 encodeURIComponent(query.query));
