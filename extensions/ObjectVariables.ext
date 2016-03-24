@@ -43,7 +43,7 @@ local function DestroyObjData(event, obj)
     local guid = otype == "Map" and 1 or obj:GetGUIDLow()
 
     if otype == "Player" then
-        varStore[guid] = nil
+        variableStores[otype][guid] = nil
         return
     end
 
