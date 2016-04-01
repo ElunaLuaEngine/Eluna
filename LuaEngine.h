@@ -116,7 +116,10 @@ struct LuaScript
 #define ELUNA_OBJECT_STORE  "Eluna Object Store"
 #define LOCK_ELUNA Eluna::Guard __guard(Eluna::GetLock())
 
-class Eluna
+#ifndef TRINITY
+#define TC_GAME_API
+#endif
+class TC_GAME_API Eluna
 {
 public:
     typedef std::list<LuaScript> ScriptList;
