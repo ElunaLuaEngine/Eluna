@@ -135,6 +135,12 @@ if __name__ == '__main__':
                 url = '{}{}/index.html'.format(('../' * level), class_name)
                 return '<strong><a class="mod" href="{}">{}</a></strong>'.format(url, class_name)
 
+            # Case for enums to direct to a search on github
+            enum_name = content[1:-1]
+            url = 'https://github.com/ElunaLuaEngine/ElunaTrinityWotlk/search?l=cpp&q=%22enum+{}%22&type=Code&utf8=%E2%9C%93'.format(enum_name)
+            return '<strong><a href="{}">{}</a></strong>'.format(url, enum_name)
+
+            # By default we just return the name without the [] around it
             return content[1:-1]
 
         return link_parser, data_type_parser
