@@ -810,7 +810,11 @@ namespace LuaUnit
      */
     int GetStandState(Eluna* /*E*/, lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        Eluna::Push(L, unit->GetStandState());
+#else
         Eluna::Push(L, unit->getStandState());
+#endif
         return 1;
     }
     
