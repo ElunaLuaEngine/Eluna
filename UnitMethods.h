@@ -1465,7 +1465,7 @@ namespace LuaUnit
 #ifndef TRINITY
         unit->SetSpeedRate((UnitMoveType)type, rate, forced);
 #else
-        unit->SetSpeed((UnitMoveType)type, rate, forced);
+        unit->SetSpeedRate((UnitMoveType)type, rate);
 #endif
         return 0;
     }
