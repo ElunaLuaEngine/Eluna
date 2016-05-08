@@ -2136,38 +2136,27 @@ namespace LuaPlayer
     }
     
     /**
-     * Sends a summon request popup for the given [Player] to the given location
+     * Sends a summon request to the player from the given summoner
      *
-     * @param [Player] target : player to summon
-     * @param uint32 map
-     * @param float x
-     * @param float y
-     * @param float z
-     * @param uint32 zoneId
-     * @param uint32 delay = 2*MINUTE : time for the popup to be available for the target in milliseconds
+     * @param [Unit] summoner
      */
     int SummonPlayer(Eluna* /*E*/, lua_State* L, Player* player)
     {
-        Player* target = Eluna::CHECKOBJ<Player>(L, 2);
-        uint32 map = Eluna::CHECKVAL<uint32>(L, 3);
-        float x = Eluna::CHECKVAL<float>(L, 4);
-        float y = Eluna::CHECKVAL<float>(L, 5);
-        float z = Eluna::CHECKVAL<float>(L, 6);
-        uint32 zoneId = Eluna::CHECKVAL<uint32>(L, 7);
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 8, MAX_PLAYER_SUMMON_DELAY * IN_MILLISECONDS);
-        if (!MapManager::IsValidMapCoord(map, x, y, z))
-            return 0;
+        Unit* summoner = Eluna::CHECKOBJ<Unit>(L, 2);
 
-        target->SetSummonPoint(map, x, y, z);
-        WorldPacket data(SMSG_SUMMON_REQUEST, 8 + 4 + 4);
 #ifdef TRINITY
-        data << uint64(player->GetGUID().GetCounter());
+        player->SendSummonRequestFrom(summoner);
 #else
-        data << uint64(player->GetGUIDLow());
+        float x, y, x;
+        summoner->GetLocation(x,y,z);
+        player->SetSummonPoint(summoner->GetMapId(), x, y, z);
+
+        WorldPacket data(SMSG_SUMMON_REQUEST, 8 + 4 + 4);
+        data << uint64(summoner->GetGUIDLow());
+        data << uint32(summoner->GetZoneId());
+        data << uint32(MAX_PLAYER_SUMMON_DELAY * IN_MILLISECONDS);
+        player->GetSession()->SendPacket(&data);
 #endif
-        data << uint32(zoneId);
-        data << uint32(delay);
-        target->GetSession()->SendPacket(&data);
         return 0;
     }
 
