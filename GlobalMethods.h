@@ -1719,7 +1719,13 @@ namespace LuaGlobalFunctions
             {
                 // fill the gameobject data and save to the db
                 object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
+                guidLow = object->GetSpawnId();
 
+                // delete the old object and do a clean load from DB with a fresh new GameObject instance.
+                // this is required to avoid weird behavior and memory leaks
+                delete object;
+
+                object = new GameObject();
                 // this will generate a new lowguid if the object is in an instance
                 if (!object->LoadGameObjectFromDB(guidLow, map))
                 {
