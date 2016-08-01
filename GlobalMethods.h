@@ -1705,7 +1705,7 @@ namespace LuaGlobalFunctions
             GameObject* object = new GameObject;
             uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
 
-            if (!object->Create(guidLow, objectInfo->entry, map, phase, x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY))
+            if (!object->Create(guidLow, objectInfo->entry, map, phase, Position(x, y, z, o), G3D::Quat(), 0, GO_STATE_READY))
             {
                 delete object;
                 Eluna::Push(L);

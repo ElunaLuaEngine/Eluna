@@ -668,7 +668,7 @@ namespace LuaWorldObject
 #ifndef TRINITY
         Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, respawnDelay));
 #else
-        Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, 0, 0, 0, 0, respawnDelay));
+        Eluna::Push(L, obj->SummonGameObject(entry, Position(x, y, z, o), G3D::Quat(), respawnDelay));
 #endif
         return 1;
     }
