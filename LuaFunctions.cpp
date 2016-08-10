@@ -193,7 +193,7 @@ ElunaRegister<WorldObject> WorldObjectMethods[] =
     { "GetMap", &LuaWorldObject::GetMap },
 #if (!defined(TBC) && !defined(CLASSIC))
     { "GetPhaseMask", &LuaWorldObject::GetPhaseMask },
-    { "SetPhaseMask", &LuaUnit::SetPhaseMask },
+    { "SetPhaseMask", &LuaWorldObject::SetPhaseMask },
 #endif
     { "GetInstanceId", &LuaWorldObject::GetInstanceId },
     { "GetAreaId", &LuaWorldObject::GetAreaId },
