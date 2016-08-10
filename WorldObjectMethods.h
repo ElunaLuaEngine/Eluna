@@ -45,6 +45,20 @@ namespace LuaWorldObject
         Eluna::Push(L, obj->GetPhaseMask());
         return 1;
     }
+
+    /**
+    * Sets the [WorldObject]'s phase mask.
+    *
+    * @param uint32 phaseMask
+    * @param bool update = true : update visibility to nearby objects
+    */
+    int SetPhaseMask(Eluna* /*E*/, lua_State* L, WorldObject* obj)
+    {
+        uint32 phaseMask = Eluna::CHECKVAL<uint32>(L, 2);
+        bool update = Eluna::CHECKVAL<bool>(L, 3, true);
+        obj->SetPhaseMask(phaseMask, update);
+        return 0;
+    }
 #endif
 
     /**
