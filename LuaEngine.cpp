@@ -372,14 +372,13 @@ void Eluna::GetScripts(std::string path)
             std::string fullpath = dir_iter->path().generic_string();
 
             // Check if file is hidden
-#ifdef WIN32
+#if PLATFORM == PLATFORM_WINDOWS
             DWORD dwAttrib = GetFileAttributes(fullpath.c_str());
             if (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_HIDDEN))
                 continue;
-#endif
-#ifdef UNIX
+#else
             std::string name = dir_iter->path().filename().generic_string().c_str();
-            if (name != ".." || name != "." || name[0] == '.')
+            if (name[0] == '.')
                 continue;
 #endif
 
@@ -420,14 +419,13 @@ void Eluna::GetScripts(std::string path)
         std::string fullpath = path + "/" + directory->d_name;
 
         // Check if file is hidden
-#ifdef WIN32
+#if PLATFORM == PLATFORM_WINDOWS
         DWORD dwAttrib = GetFileAttributes(fullpath.c_str());
         if (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_HIDDEN))
             continue;
-#endif
-#ifdef UNIX
+#else
         std::string name = directory->d_name.c_str();
-        if (name != ".." || name != "." || name[0] == '.')
+        if (name[0] == '.')
             continue;
 #endif
 
