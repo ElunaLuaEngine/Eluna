@@ -1315,6 +1315,9 @@ void Eluna::FreeInstanceId(uint32 instanceId)
 {
     LOCK_ELUNA;
 
+    if (!IsEnabled())
+        return;
+
     for (int i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
     {
         auto key = EntryKey<Hooks::InstanceEvents>((Hooks::InstanceEvents)i, instanceId);
