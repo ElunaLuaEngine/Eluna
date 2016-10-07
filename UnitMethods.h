@@ -2619,7 +2619,10 @@ namespace LuaUnit
             unit->DealHeal(target, amount, info, critical);
 #else
         if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
-            unit->HealBySpell(target, info, amount, critical);
+        {
+            HealInfo healInfo(unit, target, amount, info, info->GetSchoolMask());
+            unit->HealBySpell(healInfo, critical);
+        }
 #endif
         return 0;
     }
