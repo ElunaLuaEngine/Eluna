@@ -7,8 +7,8 @@ If you are having trouble with the installation or updating the core source, hea
 If you are looking for a way to merge eluna with a fork of the official repositories see [merging](MERGING.md).
 
 ###Requirements and dependencies:
-Currently there are no additional requirements apart from the normal core requirements.
-See you desired core's documentation and installation instructions for it's requirements and dependencies.
+**Eluna uses `C++11` so you need a compiler that supports it.**  
+Additionally see you desired core's documentation and installation instructions for it's requirements and dependencies.
 
 ###Installation
 1. Open [git bash](http://git-scm.com/) and navigate to where you want the core source
