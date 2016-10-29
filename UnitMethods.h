@@ -2571,13 +2571,24 @@ namespace LuaUnit
         // melee damage by specific school
         if (!spell)
         {
+#ifdef TRINITY
+            DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE, BASE_ATTACK);
+            unit->CalcAbsorbResist(dmgInfo);
+
+            if (!dmgInfo.GetDamage())
+                damage = 0;
+            else
+                damage = dmgInfo.GetDamage();
+
+            uint32 absorb = dmgInfo.GetAbsorb();
+            uint32 resist = dmgInfo.GetResist();
+            unit->DealDamageMods(target, damage, &absorb);
+            unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
+            unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
+#else
             uint32 absorb = 0;
             uint32 resist = 0;
-#ifdef TRINITY
-            unit->CalcAbsorbResist(target, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
-#else
             target->CalculateDamageAbsorbAndResist(unit, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
-#endif
 
             if (damage <= absorb + resist)
                 damage = 0;
@@ -2586,9 +2597,6 @@ namespace LuaUnit
 
             unit->DealDamageMods(target, damage, &absorb);
             unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-#ifdef TRINITY
-            unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
-#else
             unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, schoolmask, damage, absorb, resist, VICTIMSTATE_NORMAL, 0);
 #endif
             return 0;
