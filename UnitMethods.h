@@ -2568,10 +2568,10 @@ namespace LuaUnit
             damage = unit->CalcArmorReducedDamage(target, damage);
 #endif
 
+#ifdef TRINITY
         // melee damage by specific school
         if (!spell)
         {
-#ifdef TRINITY
             DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE, BASE_ATTACK);
             unit->CalcAbsorbResist(dmgInfo);
 
@@ -2585,7 +2585,29 @@ namespace LuaUnit
             unit->DealDamageMods(target, damage, &absorb);
             unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
             unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
+            return 0;
+        }
+
+        if (!spell)
+            return false;
+
+        SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
+        if (!spellInfo)
+            return false;
+
+        SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
+        damage = unit->SpellDamageBonusDone(target, spellInfo, damage, SPELL_DIRECT_DAMAGE);
+        damage = target->SpellDamageBonusTaken(unit, spellInfo, damage, SPELL_DIRECT_DAMAGE);
+
+        unit->CalculateSpellDamageTaken(&dmgInfo, damage, spellInfo);
+        unit->DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
+        unit->SendSpellNonMeleeDamageLog(&dmgInfo);
+        unit->DealSpellDamage(&dmgInfo, true);
+        return 0;
 #else
+        // melee damage by specific school
+        if (!spell)
+        {
             uint32 absorb = 0;
             uint32 resist = 0;
             target->CalculateDamageAbsorbAndResist(unit, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
@@ -2598,13 +2620,13 @@ namespace LuaUnit
             unit->DealDamageMods(target, damage, &absorb);
             unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
             unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, schoolmask, damage, absorb, resist, VICTIMSTATE_NORMAL, 0);
-#endif
             return 0;
         }
 
         // non-melee damage
         unit->SpellNonMeleeDamageLog(target, spell, damage);
         return 0;
+#endif
     }
 
     /**
