@@ -24,8 +24,14 @@ namespace LuaQuery
 {
     static void CheckFields(lua_State* L, ElunaQuery* result)
     {
-        if (Eluna::CHECKVAL<uint32>(L, 2) >= RESULT->GetFieldCount())
-            luaL_argerror(L, 2, "invalid field index");
+        uint32 field = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 count = RESULT->GetFieldCount();
+        if (field >= count)
+        {
+            char arr[256];
+            sprintf(arr, "trying to access invalid field index %u. There are %u fields available and the indexes start from 0", field, count);
+            luaL_argerror(L, 2, arr);
+        }
     }
 
     /**
