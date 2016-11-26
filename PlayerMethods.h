@@ -2147,8 +2147,8 @@ namespace LuaPlayer
 #ifdef TRINITY
         player->SendSummonRequestFrom(summoner);
 #else
-        float x, y, x;
-        summoner->GetLocation(x,y,z);
+        float x, y, z;
+        summoner->GetPosition(x,y,z);
         player->SetSummonPoint(summoner->GetMapId(), x, y, z);
 
         WorldPacket data(SMSG_SUMMON_REQUEST, 8 + 4 + 4);
