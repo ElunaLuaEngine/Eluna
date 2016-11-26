@@ -424,7 +424,7 @@ void Eluna::GetScripts(std::string path)
         if (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_HIDDEN))
             continue;
 #else
-        std::string name = directory->d_name.c_str();
+        std::string name = directory->d_name;
         if (name[0] == '.')
             continue;
 #endif
