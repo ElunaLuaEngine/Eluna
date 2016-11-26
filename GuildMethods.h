@@ -60,7 +60,11 @@ namespace LuaGuild
      */
     int GetMemberCount(Eluna* /*E*/, lua_State* L, Guild* guild)
     {
+#ifdef TRINITY
+        Eluna::Push(L, guild->GetMemberCount());
+#else
         Eluna::Push(L, guild->GetMemberSize());
+#endif
         return 1;
     }
 
@@ -233,7 +237,12 @@ namespace LuaGuild
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         uint8 rankId = Eluna::CHECKVAL<uint8>(L, 3, GUILD_RANK_NONE);
 
+#ifdef TRINITY
+        SQLTransaction trans(nullptr);
+        guild->AddMember(trans, player->GET_GUID(), rankId);
+#else
         guild->AddMember(player->GET_GUID(), rankId);
+#endif
         return 0;
     }
 
@@ -248,10 +257,11 @@ namespace LuaGuild
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         bool isDisbanding = Eluna::CHECKVAL<bool>(L, 3, false);
 
-#ifndef TRINITY
-        guild->DelMember(player->GET_GUID(), isDisbanding);
+#ifdef TRINITY
+        SQLTransaction trans(nullptr);
+        guild->DeleteMember(trans, player->GET_GUID(), isDisbanding);
 #else
-        guild->DeleteMember(player->GET_GUID(), isDisbanding);
+        guild->DelMember(player->GET_GUID(), isDisbanding);
 #endif
         return 0;
     }
@@ -267,7 +277,12 @@ namespace LuaGuild
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         uint8 newRank = Eluna::CHECKVAL<uint8>(L, 3);
 
+#ifdef TRINITY
+        SQLTransaction trans(nullptr);
+        guild->ChangeMemberRank(trans, player->GET_GUID(), newRank);
+#else
         guild->ChangeMemberRank(player->GET_GUID(), newRank);
+#endif
         return 0;
     }
 
