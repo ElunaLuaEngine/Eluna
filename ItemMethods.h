@@ -648,6 +648,8 @@ namespace LuaItem
         bool soulbound = Eluna::CHECKVAL<bool>(L, 2);
 
         item->SetBinding(soulbound);
+        item->SetState(ITEM_CHANGED, item->GetOwner());
+
         return 0;
     }
 
