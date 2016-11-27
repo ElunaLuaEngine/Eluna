@@ -23,7 +23,7 @@
 
 // Some dummy includes containing BOOST_VERSION:
 // ObjectAccessor.h Config.h Log.h
-#ifdef BOOST_VERSION
+#ifndef MANGOS
 #define USING_BOOST
 #endif
 
