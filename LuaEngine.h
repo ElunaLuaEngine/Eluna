@@ -123,13 +123,9 @@ class TC_GAME_API Eluna
 {
 public:
     typedef std::list<LuaScript> ScriptList;
-#ifdef TRINITY
+
     typedef std::recursive_mutex LockType;
     typedef std::lock_guard<LockType> Guard;
-#else
-    typedef ACE_Recursive_Thread_Mutex LockType;
-    typedef ACE_Guard<LockType> Guard;
-#endif
 
 private:
     static bool reload;

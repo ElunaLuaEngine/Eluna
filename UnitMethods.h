@@ -1998,7 +1998,11 @@ namespace LuaUnit
 #else
         ChatHandler::BuildChatPacket(data, ChatMsg(type), msg.c_str(), Language(lang), 0, unit->GET_GUID(), unit->GetName(), target->GET_GUID(), target->GetName());
 #endif
+#ifdef CMANGOS
+        target->GetSession()->SendPacket(data);
+#else
         target->GetSession()->SendPacket(&data);
+#endif
         return 0;
     }
 
@@ -2286,7 +2290,11 @@ namespace LuaUnit
         if (!spellEntry)
             return 0;
 
+#ifdef CMANGOS
+        unit->CastSpell(target, spell, TRIGGERED_OLD_TRIGGERED);
+#else
         unit->CastSpell(target, spell, triggered);
+#endif
         return 0;
     }
 
@@ -2337,7 +2345,11 @@ namespace LuaUnit
         float _z = Eluna::CHECKVAL<float>(L, 4);
         uint32 spell = Eluna::CHECKVAL<uint32>(L, 5);
         bool triggered = Eluna::CHECKVAL<bool>(L, 6, true);
+#ifdef CMANGOS
+        unit->CastSpell(_x, _y, _z, spell, TRIGGERED_OLD_TRIGGERED);
+#else
         unit->CastSpell(_x, _y, _z, spell, triggered);
+#endif
         return 0;
     }
 

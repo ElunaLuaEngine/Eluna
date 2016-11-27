@@ -2155,7 +2155,11 @@ namespace LuaPlayer
         data << uint64(summoner->GetGUIDLow());
         data << uint32(summoner->GetZoneId());
         data << uint32(MAX_PLAYER_SUMMON_DELAY * IN_MILLISECONDS);
+#ifdef CMANGOS
+        player->GetSession()->SendPacket(data);
+#else
         player->GetSession()->SendPacket(&data);
+#endif
 #endif
         return 0;
     }
@@ -2231,7 +2235,11 @@ namespace LuaPlayer
 #endif
         data << uint32(ahEntry->houseId);
         data << uint8(1);
+#ifdef CMANGOS
+        player->GetSession()->SendPacket(data);
+#else
         player->GetSession()->SendPacket(&data);
+#endif
         return 0;
     }
 
@@ -3492,10 +3500,17 @@ namespace LuaPlayer
     {
         WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
         bool selfOnly = Eluna::CHECKVAL<bool>(L, 3, true);
+#ifdef CMANGOS
+        if (selfOnly)
+            player->GetSession()->SendPacket(*data);
+        else
+            player->SendMessageToSet(*data, true);
+#else
         if (selfOnly)
             player->GetSession()->SendPacket(data);
         else
             player->SendMessageToSet(data, true);
+#endif
         return 0;
     }
 
@@ -3529,7 +3544,11 @@ namespace LuaPlayer
         data << uint32(fullmsg.length() + 1);
         data << fullmsg;
         data << uint8(0);
+#ifdef CMANGOS
+        receiver->GetSession()->SendPacket(data);
+#else
         receiver->GetSession()->SendPacket(&data);
+#endif
         return 0;
     }
 
@@ -3736,7 +3755,11 @@ namespace LuaPlayer
         packet << icon;
         packet << data;
         packet << iconText;
+#ifdef CMANGOS
+        player->GetSession()->SendPacket(packet);
+#else
         player->GetSession()->SendPacket(&packet);
+#endif
         return 0;
     }
 
@@ -3842,7 +3865,11 @@ namespace LuaPlayer
 #if defined(CLASSIC) || defined(TBC)
             WorldPacket data(SMSG_GROUP_INVITE, 10);                // guess size
             data << player->GetName();
+#ifdef CMANGOS
+            invited->GetSession()->SendPacket(data);
+#else
             invited->GetSession()->SendPacket(&data);
+#endif
 #else
             WorldPacket data(SMSG_GROUP_INVITE, 10);                // guess size
             data << uint8(1);                                       // invited/already in group flag

@@ -195,7 +195,11 @@ namespace LuaGuild
     {
         WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
 
+#ifdef CMANGOS
+        guild->BroadcastPacket(*data);
+#else
         guild->BroadcastPacket(data);
+#endif
         return 0;
     }
 
@@ -211,7 +215,11 @@ namespace LuaGuild
         WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
         uint8 ranked = Eluna::CHECKVAL<uint8>(L, 3);
 
+#ifdef CMANGOS
+        guild->BroadcastPacketToRank(*data, ranked);
+#else
         guild->BroadcastPacketToRank(data, ranked);
+#endif
         return 0;
     }
 

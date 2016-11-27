@@ -656,7 +656,11 @@ namespace LuaWorldObject
     int SendPacket(Eluna* /*E*/, lua_State* L, WorldObject* obj)
     {
         WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(L, 2);
+#ifdef CMANGOS
+        obj->SendMessageToSet(*data, true);
+#else
         obj->SendMessageToSet(data, true);
+#endif
         return 0;
     }
 
@@ -868,10 +872,17 @@ namespace LuaWorldObject
 
         WorldPacket data(SMSG_PLAY_MUSIC, 4);
         data << uint32(musicid);
+#ifdef CMANGOS
+        if (player)
+            player->SendDirectMessage(data);
+        else
+            obj->SendMessageToSet(data, true);
+#else
         if (player)
             player->SendDirectMessage(&data);
         else
             obj->SendMessageToSet(&data, true);
+#endif
         return 0;
     }
 

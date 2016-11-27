@@ -49,7 +49,11 @@
 #include "SpellHistory.h"
 #else
 #include "Config/Config.h"
+#ifdef CMANGOS
+#include "AI/AggressorAI.h"
+#else
 #include "AggressorAI.h"
+#endif
 #include "BattleGroundMgr.h"
 #include "SQLStorages.h"
 #include "revision.h"

@@ -121,10 +121,10 @@ namespace LuaCreature
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
 
-#ifdef MANGOS
-        Eluna::Push(L, creature->IsTappedBy(player));
-#else
+#ifdef TRINITY
         Eluna::Push(L, creature->isTappedBy(player));
+#else
+        Eluna::Push(L, creature->IsTappedBy(player));
 #endif
         return 1;
     }
@@ -1102,7 +1102,11 @@ namespace LuaCreature
             data.Initialize(SMSG_MOVE_UNSET_HOVER, 8 + 4);
         data << creature->GetPackGUID();
         data << uint32(0);
+#ifdef CMANGOS
+        creature->SendMessageToSet(data, true);
+#else
         creature->SendMessageToSet(&data, true);
+#endif
 #endif
         return 0;
     }

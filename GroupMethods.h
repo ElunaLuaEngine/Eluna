@@ -291,7 +291,11 @@ namespace LuaGroup
         bool ignorePlayersInBg = Eluna::CHECKVAL<bool>(L, 3);
         uint64 ignore = Eluna::CHECKVAL<uint64>(L, 4);
 
+#ifdef CMANGOS
+        group->BroadcastPacket(*data, ignorePlayersInBg, -1, ObjectGuid(ignore));
+#else
         group->BroadcastPacket(data, ignorePlayersInBg, -1, ObjectGuid(ignore));
+#endif
         return 0;
     }
 
