@@ -30,10 +30,11 @@ Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and
 Eluna source code: [Source](https://github.com/ElunaLuaEngine/Eluna)  
 Core forks with required modifications for Eluna:
 
-[![Build Status](https://api.travis-ci.org/mangoszero/server.svg?branch=release20)](https://travis-ci.org/mangoszero/server) [Official MaNGOS Zero with Eluna](https://github.com/mangoszero/server)
+[![Build Status](https://api.travis-ci.org/mangoszero/server.svg)](https://travis-ci.org/mangoszero/server) [Official MaNGOS Zero with Eluna](https://github.com/mangoszero/server)  
+[![Build Status](https://api.travis-ci.org/mangosone/server.svg)](https://travis-ci.org/mangosone/server) [Official MaNGOS One with Eluna](https://github.com/mangosone/server)  
+[![Build Status](https://api.travis-ci.org/mangostwo/server.svg)](https://travis-ci.org/mangostwo/server) [Official MaNGOS Two with Eluna](https://github.com/mangostwo/server)
 
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk)  
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityCata) [Eluna TrinityCore Cataclysm](https://github.com/ElunaLuaEngine/ElunaTrinityCata)
+[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk)
 
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic) [Eluna cMaNGOS Classic](https://github.com/ElunaLuaEngine/ElunaMangosClassic)  
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc) [Eluna cMaNGOS TBC](https://github.com/ElunaLuaEngine/ElunaMangosTbc)  
