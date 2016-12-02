@@ -8,6 +8,7 @@ If you are looking for a way to merge eluna with a fork of the official reposito
 
 ###Requirements and dependencies:
 **Eluna uses `C++11` so you need a compiler that supports it.**  
+**Eluna can use ACE or BOOST for filesystem library.**  
 Additionally see you desired core's documentation and installation instructions for it's requirements and dependencies.
 
 ###Installation
