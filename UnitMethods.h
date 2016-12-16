@@ -2290,7 +2290,7 @@ namespace LuaUnit
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2, NULL);
         uint32 spell = Eluna::CHECKVAL<uint32>(L, 3);
         bool triggered = Eluna::CHECKVAL<bool>(L, 4, false);
-#if defined(CMANGOS) && defined(WOTLK)
+#ifdef CMANGOS
         SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
 #else
         SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
@@ -2427,7 +2427,7 @@ namespace LuaUnit
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 3);
-#if defined(CMANGOS) && defined(WOTLK)
+#ifdef CMANGOS
         SpellEntry const* spellInfo = GetSpellStore()->LookupEntry<SpellEntry>(spellId);
 #else
         SpellEntry const* spellInfo = sSpellStore.LookupEntry(spellId);
@@ -2669,7 +2669,7 @@ namespace LuaUnit
         bool critical = Eluna::CHECKVAL<bool>(L, 5, false);
 
 #ifndef TRINITY
-#if defined(CMANGOS) && defined(WOTLK)
+#ifdef CMANGOS
         SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
 #else
         SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
@@ -2742,7 +2742,7 @@ namespace LuaUnit
 #ifdef TRINITY
         unit->AddThreat(victim, threat, (SpellSchoolMask)schoolMask, spell ? sSpellMgr->GetSpellInfo(spell) : NULL);
 #else
-#if defined(CMANGOS) && defined(WOTLK)
+#ifdef CMANGOS
         SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
 #else
         SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
