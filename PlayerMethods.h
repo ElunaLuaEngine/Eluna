@@ -3877,7 +3877,11 @@ namespace LuaPlayer
             data << uint32(0);                                      // unk
             data << uint8(0);                                       // count
             data << uint32(0);                                      // unk
+#ifdef CMANGOS
+            invited->GetSession()->SendPacket(data);
+#else
             invited->GetSession()->SendPacket(&data);
+#endif
 #endif
         }
 

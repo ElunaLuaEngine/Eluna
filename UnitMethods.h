@@ -2177,8 +2177,12 @@ namespace LuaUnit
         float maxHeight = Eluna::CHECKVAL<float>(L, 6);
         uint32 id = Eluna::CHECKVAL<uint32>(L, 7, 0);
 
+#if defined(CMANGOS) && defined(WOTLK)
+        unit->GetMotionMaster()->MoveJump(x, y, z, zSpeed, maxHeight, id);
+#else
         Position pos(x, y, z);
         unit->GetMotionMaster()->MoveJump(pos, zSpeed, maxHeight, id);
+#endif
         return 0;
     }
 #endif
@@ -2286,7 +2290,11 @@ namespace LuaUnit
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2, NULL);
         uint32 spell = Eluna::CHECKVAL<uint32>(L, 3);
         bool triggered = Eluna::CHECKVAL<bool>(L, 4, false);
+#if defined(CMANGOS) && defined(WOTLK)
+        SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
+#else
         SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
+#endif
         if (!spellEntry)
             return 0;
 
@@ -2419,7 +2427,11 @@ namespace LuaUnit
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 3);
+#if defined(CMANGOS) && defined(WOTLK)
+        SpellEntry const* spellInfo = GetSpellStore()->LookupEntry<SpellEntry>(spellId);
+#else
         SpellEntry const* spellInfo = sSpellStore.LookupEntry(spellId);
+#endif
         if (!spellInfo)
             return 1;
 
@@ -2657,8 +2669,13 @@ namespace LuaUnit
         bool critical = Eluna::CHECKVAL<bool>(L, 5, false);
 
 #ifndef TRINITY
-        if (const SpellInfo* info = sSpellStore.LookupEntry(spell))
-            unit->DealHeal(target, amount, info, critical);
+#if defined(CMANGOS) && defined(WOTLK)
+        SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
+#else
+        SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
+#endif
+        if (spellEntry)
+            unit->DealHeal(target, amount, spellEntry, critical);
 #else
         if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
         {
@@ -2725,7 +2742,12 @@ namespace LuaUnit
 #ifdef TRINITY
         unit->AddThreat(victim, threat, (SpellSchoolMask)schoolMask, spell ? sSpellMgr->GetSpellInfo(spell) : NULL);
 #else
-        unit->AddThreat(victim, threat, false, (SpellSchoolMask)schoolMask, spell ? sSpellStore.LookupEntry(spell) : NULL);
+#if defined(CMANGOS) && defined(WOTLK)
+        SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
+#else
+        SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
+#endif
+        unit->AddThreat(victim, threat, false, (SpellSchoolMask)schoolMask, spellEntry);
 #endif
         return 0;
     }
