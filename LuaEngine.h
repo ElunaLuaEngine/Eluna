@@ -20,6 +20,8 @@
 #include "World.h"
 #include "Hooks.h"
 #include "ElunaUtility.h"
+#include <mutex>
+#include <memory>
 
 extern "C"
 {
