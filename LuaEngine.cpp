@@ -14,6 +14,12 @@
 #include "ElunaCreatureAI.h"
 #include "ElunaInstanceAI.h"
 
+// Some dummy includes containing BOOST_VERSION:
+// ObjectAccessor.h Config.h Log.h
+#ifndef MANGOS
+#define USING_BOOST
+#endif
+
 #ifdef USING_BOOST
 #include <boost/filesystem.hpp>
 #else
