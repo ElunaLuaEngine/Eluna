@@ -2177,7 +2177,7 @@ namespace LuaUnit
         float maxHeight = Eluna::CHECKVAL<float>(L, 6);
         uint32 id = Eluna::CHECKVAL<uint32>(L, 7, 0);
 
-#if defined(CMANGOS) && defined(WOTLK)
+#if (defined(CMANGOS) || defined(MANGOS)) && defined(WOTLK)
         unit->GetMotionMaster()->MoveJump(x, y, z, zSpeed, maxHeight, id);
 #else
         Position pos(x, y, z);
