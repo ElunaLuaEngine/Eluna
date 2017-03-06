@@ -123,7 +123,11 @@ namespace LuaGlobalFunctions
      */
     int GetGameTime(Eluna* /*E*/, lua_State* L)
     {
+#ifdef TRINITY
+        Eluna::Push(L, GameTime::GetGameTime());
+#else
         Eluna::Push(L, eWorld->GetGameTime());
+#endif
         return 1;
     }
 
