@@ -1,6 +1,6 @@
-###[![Eluna](docs/Eluna.png)](https://github.com/ElunaLuaEngine/Eluna)
+### [![Eluna](docs/Eluna.png)](https://github.com/ElunaLuaEngine/Eluna)
 
-##About
+## About
 
 Eluna Lua Engine &copy; is a lua engine embedded to World of Warcraft emulators. Eluna supports MaNGOS, CMaNGOS and TrinityCore.
 We are currently working hard to make Eluna better from inside and outside.  
@@ -10,7 +10,7 @@ For documentation and reference see [Eluna API](http://www.elunaengine.com/) and
 
 Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and use of Eluna. Please head over to their forums and show them some love!
 
-##Documentation
+## Documentation
 
  * [__Installation__](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/INSTALL.md)
  * [Getting started](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/USAGE.md)
@@ -23,7 +23,7 @@ Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and
 * [Example scripts](https://github.com/ElunaLuaEngine/Scripts)
 
 
-##Source
+## Source
 Eluna source code: [Source](https://github.com/ElunaLuaEngine/Eluna)  
 Core forks with required modifications for Eluna:
 
@@ -37,7 +37,7 @@ Core forks with required modifications for Eluna:
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc) [Eluna cMaNGOS TBC](https://github.com/ElunaLuaEngine/ElunaMangosTbc)  
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk) [Eluna cMaNGOS WotLK](https://github.com/ElunaLuaEngine/ElunaMangosWotlk)
 
-##Links
+## Links
 
 * [MaNGOS](http://getmangos.eu/)
 * [cMaNGOS](http://cmangos.net/)
@@ -45,7 +45,7 @@ Core forks with required modifications for Eluna:
 * [Lua.org](http://www.lua.org/)
 * [License](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/LICENSE.md)
 
-##Team
+## Team
 
 * [Tommy (Easelm)](https://github.com/Easelm)
 * [Foereaper](https://github.com/Foereaper)
