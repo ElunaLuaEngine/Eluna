@@ -134,6 +134,8 @@ namespace LuaGlobalFunctions
     /**
      * Returns a table with all the current [Player]s in the world
      *
+     * Does not return players that may be teleporting or otherwise not on any map.
+     *
      *     enum TeamId
      *     {
      *         TEAM_ALLIANCE = 0,
@@ -169,6 +171,8 @@ namespace LuaGlobalFunctions
             {
                 if (Player* player = it->second)
                 {
+                    if (!player->IsInWorld())
+                        continue;
 #ifndef TRINITY
                     if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
 #else
