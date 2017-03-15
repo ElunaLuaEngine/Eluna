@@ -15,6 +15,8 @@ namespace LuaGuild
     /**
      * Returns a table with the [Player]s in this [Guild]
      *
+     * Only the players that are online and on some map.
+     *
      * @return table guildPlayers : table of [Player]s
      */
     int GetMembers(Eluna* /*E*/, lua_State* L, Guild* guild)
