@@ -12,16 +12,14 @@ Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and
 
 ## Documentation
 
- * [__Installation__](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/INSTALL.md)
- * [Getting started](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/USAGE.md)
- * [Eluna features](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/IMPL_DETAILS.md)
- * [Function documentation](http://www.elunaengine.com)
- * [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/Hooks.h)
- * [Lua reference manual](http://www.lua.org/manual/5.2/)
-
+* [__Installation__](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/INSTALL.md)
+* [Getting started](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/USAGE.md)
+* [Eluna features](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/IMPL_DETAILS.md)
+* [Function documentation](http://www.elunaengine.com)
+* [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/Hooks.h)
+* [Lua reference manual](http://www.lua.org/manual/5.2/)
 * [Contributing](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/CONTRIBUTING.md)
 * [Example scripts](https://github.com/ElunaLuaEngine/Scripts)
-
 
 ## Source
 Eluna source code: [Source](https://github.com/ElunaLuaEngine/Eluna)  
