@@ -38,7 +38,7 @@ namespace LuaGuild
             {
                 if (Player* player = it->second)
                 {
-                    if (player->GetSession() && (player->GetGuildId() == guild->GetId()))
+                    if (player->IsInWorld() && player->GetGuildId() == guild->GetId())
                     {
                         ++i;
                         Eluna::Push(L, i);
