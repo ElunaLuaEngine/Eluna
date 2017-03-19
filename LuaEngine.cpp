@@ -232,6 +232,10 @@ void Eluna::OpenLua()
     }
 
     L = luaL_newstate();
+
+    lua_pushlightuserdata(L, this);
+    lua_setfield(L, LUA_REGISTRYINDEX, ELUNA_STATE_PTR);
+
     CreateBindStores();
 
     // open base lua libraries

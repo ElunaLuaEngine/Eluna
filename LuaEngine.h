@@ -112,6 +112,7 @@ struct LuaScript
 };
 
 #define ELUNA_OBJECT_STORE  "Eluna Object Store"
+#define ELUNA_STATE_PTR     "Eluna State Ptr"
 #define LOCK_ELUNA Eluna::Guard __guard(Eluna::GetLock())
 
 #ifndef TRINITY
@@ -154,8 +155,8 @@ private:
     ~Eluna();
 
     // Prevent copy
-    Eluna(Eluna const&);
-    Eluna& operator=(const Eluna&);
+    Eluna(Eluna const&) = delete;
+    Eluna& operator=(const Eluna&) = delete;
 
     void OpenLua();
     void CloseLua();
@@ -247,6 +248,17 @@ public:
     static void ReloadEluna() { LOCK_ELUNA; reload = true; }
     static LockType& GetLock() { return lock; };
     static bool IsInitialized() { return initialized; }
+    // Never returns nullptr
+    static Eluna* GetEluna(lua_State* L)
+    {
+        lua_pushstring(L, ELUNA_STATE_PTR);
+        lua_rawget(L, LUA_REGISTRYINDEX);
+        ASSERT(lua_islightuserdata(L, -1));
+        Eluna* E = static_cast<Eluna*>(lua_touserdata(L, -1));
+        lua_pop(L, 1);
+        ASSERT(E);
+        return E;
+    }
 
     // Static pushes, can be used by anything, including methods.
     static void Push(lua_State* luastate); // nil
