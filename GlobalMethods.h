@@ -179,10 +179,8 @@ namespace LuaGlobalFunctions
                     if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
 #endif
                     {
-                        ++i;
-                        Eluna::Push(L, i);
                         Eluna::Push(L, player);
-                        lua_settable(L, tbl);
+                        lua_rawseti(L, tbl, ++i);
                     }
                 }
             }
@@ -214,12 +212,12 @@ namespace LuaGlobalFunctions
         uint32 team = Eluna::CHECKVAL<uint32>(L, 3, TEAM_NEUTRAL);
 
         lua_newtable(L);
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
             return 1;
-
-        int tbl = lua_gettop(L);
-        uint32 i = 0;
 
         Map::PlayerList const& players = map->GetPlayers();
         for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
@@ -233,10 +231,8 @@ namespace LuaGlobalFunctions
                 continue;
             if (player->GetSession() && (team >= TEAM_NEUTRAL || player->GetTeamId() == team))
             {
-                ++i;
-                Eluna::Push(L, i);
                 Eluna::Push(L, player);
-                lua_settable(L, tbl);
+                lua_rawseti(L, tbl, ++i);
             }
         }
 

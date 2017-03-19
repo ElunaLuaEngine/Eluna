@@ -280,15 +280,14 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(L);
+        lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<Player*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(L, ++i);
             Eluna::Push(L, *it);
-            lua_settable(L, tbl);
+            lua_rawseti(L, tbl, ++i);
         }
 
         lua_settop(L, tbl);
@@ -322,15 +321,14 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(L);
+        lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<Creature*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(L, ++i);
             Eluna::Push(L, *it);
-            lua_settable(L, tbl);
+            lua_rawseti(L, tbl, ++i);
         }
 
         lua_settop(L, tbl);
@@ -362,15 +360,14 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(L);
+        lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<GameObject*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(L, ++i);
             Eluna::Push(L, *it);
-            lua_settable(L, tbl);
+            lua_rawseti(L, tbl, ++i);
         }
 
         lua_settop(L, tbl);
@@ -447,15 +444,14 @@ namespace LuaWorldObject
         obj->VisitNearbyObject(range, searcher);
 #endif
 
-        lua_newtable(L);
+        lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
         for (std::list<WorldObject*>::const_iterator it = list.begin(); it != list.end(); ++it)
         {
-            Eluna::Push(L, ++i);
             Eluna::Push(L, *it);
-            lua_settable(L, tbl);
+            lua_rawseti(L, tbl, ++i);
         }
 
         lua_settop(L, tbl);

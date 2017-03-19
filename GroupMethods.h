@@ -184,10 +184,8 @@ namespace LuaGroup
             if (!member || !member->GetSession())
                 continue;
 
-            ++i;
-            Eluna::Push(L, i);
             Eluna::Push(L, member);
-            lua_settable(L, tbl);
+            lua_rawseti(L, tbl, ++i);
         }
 
         lua_settop(L, tbl); // push table to top of stack

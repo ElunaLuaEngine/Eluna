@@ -779,26 +779,21 @@ namespace LuaCreature
      */
     int GetAITargets(lua_State* L, Creature* creature)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
-        uint32 i = 0;
-
 #ifdef MANGOS
         ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
 #else
         ThreatList const& threatlist = creature->getThreatManager().getThreatList();
 #endif
-        if (threatlist.empty())
-            return 1;
+        lua_createtable(L, threatlist.size(), 0);
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
         for (ThreatList::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
         {
             Unit* target = (*itr)->getTarget();
             if (!target)
                 continue;
-            ++i;
-            Eluna::Push(L, i);
             Eluna::Push(L, target);
-            lua_settable(L, tbl);
+            lua_rawseti(L, tbl, ++i);
         }
 
         lua_settop(L, tbl);

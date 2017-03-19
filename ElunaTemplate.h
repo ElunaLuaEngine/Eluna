@@ -47,7 +47,7 @@ public:
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
             lua_pushcclosure(E->L, thunk, 1);
-            lua_settable(E->L, -3);
+            lua_rawset(E->L, -3);
         }
 
         lua_remove(E->L, -1);
@@ -239,7 +239,7 @@ public:
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
             lua_pushcclosure(E->L, CallMethod, 1);
-            lua_settable(E->L, -3);
+            lua_rawset(E->L, -3);
         }
 
         lua_pop(E->L, 1);

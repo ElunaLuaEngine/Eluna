@@ -329,7 +329,7 @@ namespace LuaQuery
                 }
             }
 
-            lua_settable(L, tbl);
+            lua_rawset(L, tbl);
         }
 
         lua_settop(L, tbl);
