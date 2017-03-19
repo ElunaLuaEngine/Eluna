@@ -285,11 +285,11 @@ namespace LuaQuery
      */
     int GetRow(lua_State* L, ElunaQuery* result)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
-
         uint32 col = RESULT->GetFieldCount();
         Field* row = RESULT->Fetch();
+
+        lua_createtable(L, 0, col);
+        int tbl = lua_gettop(L);
 
 #ifndef TRINITY
         const QueryFieldNames& names = RESULT->GetFieldNames();
