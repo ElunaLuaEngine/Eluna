@@ -15,17 +15,17 @@ Additionally see you desired core's documentation and installation instructions 
 1. Open [git bash](http://git-scm.com/) and navigate to where you want the core source
 2. Choose the git address of your desired core and patch below and clone the core with `git clone <address>`.  
 For example `git clone https://github.com/ElunaLuaEngine/ElunaTrinityWotlk.git`
-  * TrinityCore WoTLK: `https://github.com/ElunaLuaEngine/ElunaTrinityWotlk.git`
-  * TrinityCore Cataclysm: `https://github.com/ElunaLuaEngine/ElunaTrinityCata.git`
-  * cMaNGOS Classic: `https://github.com/ElunaLuaEngine/ElunaMangosClassic.git`
-  * cMaNGOS TBC: `https://github.com/ElunaLuaEngine/ElunaMangosTbc.git`
-  * cMaNGOS WoTLK: `https://github.com/ElunaLuaEngine/ElunaMangosWotlk.git`
+   * TrinityCore WoTLK: `https://github.com/ElunaLuaEngine/ElunaTrinityWotlk.git`
+   * TrinityCore Cataclysm: `https://github.com/ElunaLuaEngine/ElunaTrinityCata.git`
+   * cMaNGOS Classic: `https://github.com/ElunaLuaEngine/ElunaMangosClassic.git`
+   * cMaNGOS TBC: `https://github.com/ElunaLuaEngine/ElunaMangosTbc.git`
+   * cMaNGOS WoTLK: `https://github.com/ElunaLuaEngine/ElunaMangosWotlk.git`
 3. Navigate to the newly created source folder with `git bash`
 4. Use the git command `git submodule init` followed by `git submodule update`
-  * If you really do not get how to use git bash (and do try!) you can navigate to the `LuaEngine` folder and clone the [eluna repository](https://github.com/ElunaLuaEngine/Eluna) there. This is not recommended though.
+   * If you really do not get how to use git bash (and do try!) you can navigate to the `LuaEngine` folder and clone the [eluna repository](https://github.com/ElunaLuaEngine/Eluna) there. This is not recommended though.
 4. Continue compiling the core normally using the official instructions
-  * [TrinityCore](http://collab.kpsn.org/display/tc/Installation+Guide)
-  * [cMaNGOS](https://github.com/cmangos/issues/wiki/Installation-Instructions)
+   * [TrinityCore](http://collab.kpsn.org/display/tc/Installation+Guide)
+   * [cMaNGOS](https://github.com/cmangos/issues/wiki/Installation-Instructions)
 
 __Important!__ After compiling use the new configuration files. They contain Eluna settings and without them Eluna may not function correctly. For example you do not get any error messages or error log.
 
