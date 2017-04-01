@@ -18,8 +18,9 @@ Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and
 * [Function documentation](http://www.elunaengine.com)
 * [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/Hooks.h)
 * [Lua reference manual](http://www.lua.org/manual/5.2/)
-* [Contributing](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/CONTRIBUTING.md)
+* [Forum - support, releases, guides](https://www.getmangos.eu/forums/forum/119-eluna-central/)
 * [Example scripts](https://github.com/ElunaLuaEngine/Scripts)
+* [Contributing](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/CONTRIBUTING.md)
 
 ## Source
 Eluna source code: [Source](https://github.com/ElunaLuaEngine/Eluna)  
