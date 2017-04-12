@@ -305,7 +305,7 @@ namespace LuaMap
     /**
      * Saves the [Map]'s instance data to the database.
      */
-    int SaveInstanceData(lua_State* L, Map* map)
+    int SaveInstanceData(lua_State* /*L*/, Map* map)
     {
 #ifdef TRINITY
         ElunaInstanceAI* iAI = NULL;

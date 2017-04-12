@@ -107,7 +107,7 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
 }
 
 // Weather
-void Eluna::OnChange(Weather* weather, uint32 zone, WeatherState state, float grade)
+void Eluna::OnChange(Weather* /*weather*/, uint32 zone, WeatherState state, float grade)
 {
     START_HOOK(WEATHER_EVENT_ON_CHANGE);
     Push(zone);

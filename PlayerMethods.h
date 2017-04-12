@@ -3433,25 +3433,6 @@ namespace LuaPlayer
     }
 
     /**
-     * Clears a cooldown of the specified spell
-     *
-     * @param uint32 spellId : entry of a spell
-     * @param [Unit] target
-     */
-    int SendClearCooldowns(lua_State* L, Player* player)
-    {
-        uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
-        Unit* target = Eluna::CHECKOBJ<Unit>(L, 3);
-        
-#ifdef TRINITY
-        target->GetSpellHistory()->ResetCooldown(spellId, true);
-#else
-        player->SendClearCooldown(spellId, target);
-#endif
-        return 0;
-    }
-
-    /**
      * Sends a Broadcast Message to the [Player]
      *
      * @param string message

@@ -2285,7 +2285,7 @@ namespace LuaUnit
      */
     int CastSpell(lua_State* L, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2, NULL);
+        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2, false);
         uint32 spell = Eluna::CHECKVAL<uint32>(L, 3);
         bool triggered = Eluna::CHECKVAL<bool>(L, 4, false);
 #ifdef CMANGOS
@@ -2319,7 +2319,7 @@ namespace LuaUnit
      */
     int CastCustomSpell(lua_State* L, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2, NULL);
+        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2, false);
         uint32 spell = Eluna::CHECKVAL<uint32>(L, 3);
         bool triggered = Eluna::CHECKVAL<bool>(L, 4, false);
         bool has_bp0 = !lua_isnoneornil(L, 5);

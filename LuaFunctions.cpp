@@ -639,7 +639,6 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GossipClearMenu", &LuaPlayer::GossipClearMenu },
 
     // Other
-    { "SendClearCooldowns", &LuaPlayer::SendClearCooldowns },
     { "SendBroadcastMessage", &LuaPlayer::SendBroadcastMessage },
     { "SendAreaTriggerMessage", &LuaPlayer::SendAreaTriggerMessage },
     { "SendNotification", &LuaPlayer::SendNotification },
