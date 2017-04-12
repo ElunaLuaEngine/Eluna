@@ -401,4 +401,7 @@ ElunaObject::ElunaObject(T * obj, bool manageMemory) : _isvalid(false), _invalid
     SetValid(true);
 }
 
+template<typename T> const char* ElunaTemplate<T>::tname = NULL;
+template<typename T> bool ElunaTemplate<T>::manageMemory = false;
+
 #endif
