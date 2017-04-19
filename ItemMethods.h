@@ -266,7 +266,7 @@ namespace LuaItem
         const ItemTemplate* temp = item->GetTemplate();
         std::string name = temp->Name1;
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(temp->ItemId))
-            ObjectMgr::GetLocaleString(il->Name, locale, name);
+            ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(locale), name);
 
 #ifndef CLASSIC
         if (int32 itemRandPropId = item->GetItemRandomPropertyId())
