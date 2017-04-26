@@ -778,6 +778,11 @@ namespace LuaWorldObject
      * Note that for [Creature] and [GameObject] the timed event timer ticks only if the creature is in sight of someone
      * For all [WorldObject]s the timed events are removed when the object is destoryed. This means that for example a [Player]'s events are removed on logout.
      *
+     *    local function Timed(eventid, delay, repeats, worldobject)
+     *        print(worldobject:GetName())
+     *    end
+     *    worldobject:RegisterEvent(Timed, 1000, 1) -- do it after 1 second once
+     *
      * @param function function : function to trigger when the time has passed
      * @param uint32 delay : set time in milliseconds for the event to trigger
      * @param uint32 repeats : how many times for the event to repeat, 0 is infinite
