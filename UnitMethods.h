@@ -1146,7 +1146,11 @@ namespace LuaUnit
      */
     int GetFaction(lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        Eluna::Push(L, unit->GetFaction());
+#else
         Eluna::Push(L, unit->getFaction());
+#endif
         return 1;
     }
 
@@ -1476,7 +1480,11 @@ namespace LuaUnit
     int SetFaction(lua_State* L, Unit* unit)
     {
         uint32 factionId = Eluna::CHECKVAL<uint32>(L, 2);
+#ifdef TRINITY
+        unit->SetFaction(factionId);
+#else
         unit->setFaction(factionId);
+#endif
         return 0;
     }
 
