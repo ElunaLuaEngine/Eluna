@@ -1709,7 +1709,7 @@ namespace LuaGlobalFunctions
             GameObject* object = new GameObject;
             uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
 
-            G3D::Quat rot = G3D::Matrix3::fromEulerAnglesZYX(o, 0.f, 0.f);
+            QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
             if (!object->Create(guidLow, objectInfo->entry, map, phase, Position(x, y, z, o), rot, 0, GO_STATE_READY))
             {
                 delete object;
@@ -1842,12 +1842,16 @@ namespace LuaGlobalFunctions
         if (!items || items->Empty())
             return 0;
 
-        VendorItemList const itemlist = items->m_items;
-        for (VendorItemList::const_iterator itr = itemlist.begin(); itr != itemlist.end(); ++itr)
+        auto const & itemlist = items->m_items;
+        for (auto itr = itemlist.begin(); itr != itemlist.end(); ++itr)
 #ifdef CATA
             eObjectMgr->RemoveVendorItem(entry, (*itr)->item, 1);
 #else
+#ifdef TRINITY
+            eObjectMgr->RemoveVendorItem(entry, itr->item);
+#else
             eObjectMgr->RemoveVendorItem(entry, (*itr)->item);
+#endif
 #endif
         return 0;
     }

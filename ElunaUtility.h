@@ -16,6 +16,7 @@
 #include "ObjectGuid.h"
 #ifdef TRINITY
 #include "QueryResult.h"
+#include "Log.h"
 #ifdef CATA
 #include "Object.h"
 #endif

@@ -47,6 +47,11 @@
 #include "Battleground.h"
 #include "GitRevision.h"
 #include "SpellHistory.h"
+#include "MotionMaster.h"
+#include "DatabaseEnv.h"
+#include "Bag.h"
+#include <boost/thread/locks.hpp>
+#include <boost/thread/shared_mutex.hpp>
 #else
 #include "Config/Config.h"
 #ifdef CMANGOS

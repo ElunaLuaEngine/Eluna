@@ -303,13 +303,30 @@ namespace LuaQuery
             const char* str = row[i].GetCString();
             if (row[i].IsNull() || !str)
                 Eluna::Push(L);
+            else
+            {
+                // MYSQL_TYPE_LONGLONG Interpreted as string for lua
+                switch (row[i].GetType())
+                {
+                    case DatabaseFieldTypes::Int8:
+                    case DatabaseFieldTypes::Int16:
+                    case DatabaseFieldTypes::Int32:
+                    case DatabaseFieldTypes::Int64:
+                    case DatabaseFieldTypes::Float:
+                    case DatabaseFieldTypes::Double:
+                        Eluna::Push(L, strtod(str, NULL));
+                        break;
+                    default:
+                        Eluna::Push(L, str);
+                        break;
+        }
+    }
 #else
             Eluna::Push(L, names[i]);
 
             const char* str = row[i].GetString();
             if (row[i].IsNULL() || !str)
                 Eluna::Push(L);
-#endif
             else
             {
                 // MYSQL_TYPE_LONGLONG Interpreted as string for lua
@@ -328,6 +345,7 @@ namespace LuaQuery
                         break;
                 }
             }
+#endif
 
             lua_rawset(L, tbl);
         }

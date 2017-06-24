@@ -188,7 +188,7 @@ namespace LuaWorldObject
         Cell::VisitWorldObjects(obj, searcher, range);
 #else
         Trinity::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #endif
 
         Eluna::Push(L, target);
@@ -217,7 +217,7 @@ namespace LuaWorldObject
         Cell::VisitGridObjects(obj, searcher, range);
 #else
         Trinity::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #endif
 
         Eluna::Push(L, target);
@@ -248,7 +248,7 @@ namespace LuaWorldObject
         Cell::VisitGridObjects(obj, searcher, range);
 #else
         Trinity::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #endif
 
         Eluna::Push(L, target);
@@ -277,7 +277,7 @@ namespace LuaWorldObject
         Cell::VisitWorldObjects(obj, searcher, range);
 #else
         Trinity::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #endif
 
         lua_createtable(L, list.size(), 0);
@@ -318,7 +318,7 @@ namespace LuaWorldObject
         Cell::VisitGridObjects(obj, searcher, range);
 #else
         Trinity::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #endif
 
         lua_createtable(L, list.size(), 0);
@@ -357,7 +357,7 @@ namespace LuaWorldObject
         Cell::VisitGridObjects(obj, searcher, range);
 #else
         Trinity::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #endif
 
         lua_createtable(L, list.size(), 0);
@@ -404,7 +404,7 @@ namespace LuaWorldObject
         Cell::VisitAllObjects(obj, searcher, range);
 #else
         Trinity::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #endif
 
         Eluna::Push(L, target);
@@ -441,7 +441,7 @@ namespace LuaWorldObject
         Cell::VisitAllObjects(obj, searcher, range);
 #else
         Trinity::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #endif
 
         lua_createtable(L, list.size(), 0);
@@ -682,7 +682,7 @@ namespace LuaWorldObject
 #ifndef TRINITY
         Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, respawnDelay));
 #else
-        G3D::Quat rot = G3D::Matrix3::fromEulerAnglesZYX(o, 0.f, 0.f);
+        QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
         Eluna::Push(L, obj->SummonGameObject(entry, Position(x, y, z, o), rot, respawnDelay));
 #endif
         return 1;
