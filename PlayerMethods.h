@@ -1176,7 +1176,7 @@ namespace LuaPlayer
 #ifndef TRINITY
         Eluna::Push(L, player->GetMap()->GetUnit(player->GetComboTargetGuid()));
 #else
-        Eluna::Push(L, ObjectAccessor::GetUnit(*player, player->GetComboTarget()));
+        Eluna::Push(L, player->GetComboTarget());
 #endif
         return 1;
     }
