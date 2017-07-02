@@ -1892,11 +1892,7 @@ namespace LuaUnit
      */
     int ClearThreatList(lua_State* /*L*/, Unit* unit)
     {
-#ifdef MANGOS
         unit->GetThreatManager().clearReferences();
-#else
-        unit->getThreatManager().clearReferences();
-#endif
         return 0;
     }
     
@@ -2737,23 +2733,17 @@ namespace LuaUnit
     {
         Unit* victim = Eluna::CHECKOBJ<Unit>(L, 2);
         float threat = Eluna::CHECKVAL<float>(L, 3, true);
-        uint32 schoolMask = Eluna::CHECKVAL<uint32>(L, 4, 0);
-        uint32 spell = Eluna::CHECKVAL<uint32>(L, 5, 0);
-
-        if (schoolMask > SPELL_SCHOOL_MASK_ALL)
-        {
-            return luaL_argerror(L, 4, "valid SpellSchoolMask expected");
-        }
+        uint32 spell = Eluna::CHECKVAL<uint32>(L, 4, 0);
 
 #ifdef TRINITY
-        unit->AddThreat(victim, threat, (SpellSchoolMask)schoolMask, spell ? sSpellMgr->GetSpellInfo(spell) : NULL);
+        unit->GetThreatManager().AddThreat(victim, threat, spell ? sSpellMgr->GetSpellInfo(spell) : NULL, true, true);
 #else
 #ifdef CMANGOS
         SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
 #else
         SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
 #endif
-        unit->AddThreat(victim, threat, false, (SpellSchoolMask)schoolMask, spellEntry);
+        unit->AddThreat(victim, threat, false, spellEntry ? spellEntry->SchoolMask : SPELL_SCHOOL_MASK_NONE, spellEntry);
 #endif
         return 0;
     }

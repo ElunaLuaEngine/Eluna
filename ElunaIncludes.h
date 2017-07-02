@@ -141,11 +141,11 @@ typedef TemporarySummon TempSummon;
 typedef SpellEntry SpellInfo;
 enum SelectAggroTarget
 {
-    SELECT_TARGET_RANDOM = 0,   // Just selects a random target
-    SELECT_TARGET_TOPAGGRO,     // Selects targes from top aggro to bottom
-    SELECT_TARGET_BOTTOMAGGRO,  // Selects targets from bottom aggro to top
-    SELECT_TARGET_NEAREST,
-    SELECT_TARGET_FARTHEST
+    SELECT_TARGET_RANDOM = 0,  // just pick a random target
+    SELECT_TARGET_MAXTHREAT,   // prefer targets higher in the threat list
+    SELECT_TARGET_MINTHREAT,   // prefer targets lower in the threat list
+    SELECT_TARGET_MAXDISTANCE, // prefer targets further from us
+    SELECT_TARGET_MINDISTANCE  // prefer targets closer to us
 };
 #endif // TRINITY
 

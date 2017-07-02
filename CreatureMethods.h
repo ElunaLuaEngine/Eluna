@@ -669,11 +669,11 @@ namespace LuaCreature
      *
      *     enum SelectAggroTarget
      *     {
-     *         SELECT_TARGET_RANDOM = 0,  //Just selects a random target
-     *         SELECT_TARGET_TOPAGGRO,    //Selects targets from top aggro to bottom
-     *         SELECT_TARGET_BOTTOMAGGRO, //Selects targets from bottom aggro to top
-     *         SELECT_TARGET_NEAREST,
-     *         SELECT_TARGET_FARTHEST
+     *     SELECT_TARGET_RANDOM = 0,  // just pick a random target
+     *     SELECT_TARGET_MAXTHREAT,   // prefer targets higher in the threat list
+     *     SELECT_TARGET_MINTHREAT,   // prefer targets lower in the threat list
+     *     SELECT_TARGET_MAXDISTANCE, // prefer targets further from us
+     *     SELECT_TARGET_MINDISTANCE  // prefer targets closer to us
      *     };
      *
      * For example, if you wanted to select the third-farthest [Player]
@@ -687,88 +687,133 @@ namespace LuaCreature
      * @param uint32 position = 0 : used as an offset into the threat list. If `targetType` is random, used as the number of players from top of aggro to choose from
      * @param float distance = 0.0 : if positive, the maximum distance for the target. If negative, the minimum distance
      * @param int32 aura = 0 : if positive, the target must have this [Aura]. If negative, the the target must not have this Aura
+     * @param [Unit] except = nil : An unit that is excluded from the search
      * @return [Unit] target : the target, or `nil`
      */
     int GetAITarget(lua_State* L, Creature* creature)
     {
         uint32 targetType = Eluna::CHECKVAL<uint32>(L, 2);
-        bool playerOnly = Eluna::CHECKVAL<bool>(L, 3, false);
-        uint32 position = Eluna::CHECKVAL<uint32>(L, 4, 0);
-        float dist = Eluna::CHECKVAL<float>(L, 5, 0.0f);
-        int32 aura = Eluna::CHECKVAL<int32>(L, 6, 0);
+        bool m_playerOnly = Eluna::CHECKVAL<bool>(L, 3, false);
+        uint32 offset = Eluna::CHECKVAL<uint32>(L, 4, 0);
+        float m_dist = Eluna::CHECKVAL<float>(L, 5, 0.0f);
+        int32 m_aura = Eluna::CHECKVAL<int32>(L, 6, 0);
+        Unit* except = Eluna::CHECKOBJ<Unit>(L, 7, false);
 
-#ifdef MANGOS
-        ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
-#else
-        ThreatList const& threatlist = creature->getThreatManager().getThreatList();
-#endif
-        if (threatlist.empty())
-            return 1;
-        if (position >= threatlist.size())
+        ThreatManager& mgr = creature->GetThreatManager();
+        // shortcut: if we ignore the first <offset> elements, and there are at most <offset> elements, then we ignore ALL elements
+        if (mgr.GetThreatListSize() <= offset)
             return 1;
 
         std::list<Unit*> targetList;
-        for (ThreatList::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+        if (targetType == SELECT_TARGET_MAXDISTANCE || targetType == SELECT_TARGET_MINDISTANCE)
         {
-            Unit* target = (*itr)->getTarget();
-            if (!target)
-                continue;
-            if (playerOnly && target->GetTypeId() != TYPEID_PLAYER)
-                continue;
-            if (aura > 0 && !target->HasAura(aura))
-                continue;
-            else if (aura < 0 && target->HasAura(-aura))
-                continue;
-            if (dist > 0.0f && !creature->IsWithinDist(target, dist))
-                continue;
-            else if (dist < 0.0f && creature->IsWithinDist(target, -dist))
-                continue;
-            targetList.push_back(target);
+            for (ThreatReference* ref : mgr.GetUnsortedThreatList())
+            {
+                if (ref->IsOffline())
+                    continue;
+
+                targetList.push_back(ref->GetVictim());
+            }
+        }
+        else
+        {
+            Unit* currentVictim = mgr.GetCurrentVictim();
+            if (currentVictim)
+                targetList.push_back(currentVictim);
+
+            for (ThreatReference* ref : mgr.GetSortedThreatList())
+            {
+                if (ref->IsOffline())
+                    continue;
+
+                Unit* thisTarget = ref->GetVictim();
+                if (thisTarget != currentVictim)
+                    targetList.push_back(thisTarget);
+            }
         }
 
-        if (targetList.empty())
-            return 1;
-        if (position >= targetList.size())
+        // filter by predicate
+        auto predicate = [&, me = creature](Unit* target)
+        {
+            if (!creature)
+                return false;
+
+            if (!target)
+                return false;
+
+            if (target == except)
+                return false;
+
+            if (m_playerOnly && (target->GetTypeId() != TYPEID_PLAYER))
+                return false;
+
+            if (m_dist > 0.0f && !me->IsWithinCombatRange(target, m_dist))
+                return false;
+
+            if (m_dist < 0.0f && me->IsWithinCombatRange(target, -m_dist))
+                return false;
+
+            if (m_aura)
+            {
+                if (m_aura > 0)
+                {
+                    if (!target->HasAura(m_aura))
+                        return false;
+                }
+                else
+                {
+                    if (target->HasAura(-m_aura))
+                        return false;
+                }
+            }
+
+            return true;
+        };
+        targetList.remove_if([&predicate](Unit* target) { return !predicate(target); });
+
+        // shortcut: the list certainly isn't gonna get any larger after this point
+        if (targetList.size() <= offset)
             return 1;
 
-        if (targetType == SELECT_TARGET_NEAREST || targetType == SELECT_TARGET_FARTHEST)
-            targetList.sort(ElunaUtil::ObjectDistanceOrderPred(creature));
+        // right now, list is unsorted for DISTANCE types - re-sort by MAXDISTANCE
+        if (targetType == SELECT_TARGET_MAXDISTANCE || targetType == SELECT_TARGET_MINDISTANCE)
+            targetList.sort([creature, targetType](WorldObject const* left, WorldObject const* right) { return creature->GetDistanceOrder(left, right) == (targetType == SELECT_TARGET_MINDISTANCE);
+        });
+
+        // then reverse the sorting for MIN sortings
+        if (targetType == SELECT_TARGET_MINTHREAT)
+            targetList.reverse();
+
+        // now pop the first <offset> elements
+        while (offset)
+        {
+            targetList.pop_front();
+            --offset;
+        }
+
+        // maybe nothing fulfills the predicate
+        if (targetList.empty())
+            return 1;
 
         switch (targetType)
         {
-            case SELECT_TARGET_NEAREST:
-            case SELECT_TARGET_TOPAGGRO:
-            {
-                std::list<Unit*>::const_iterator itr = targetList.begin();
-                if (position)
-                    std::advance(itr, position);
-                Eluna::Push(L, *itr);
-            }
-            break;
-            case SELECT_TARGET_FARTHEST:
-            case SELECT_TARGET_BOTTOMAGGRO:
-            {
-                std::list<Unit*>::reverse_iterator ritr = targetList.rbegin();
-                if (position)
-                    std::advance(ritr, position);
-                Eluna::Push(L, *ritr);
-            }
-            break;
+            case SELECT_TARGET_MAXTHREAT:
+            case SELECT_TARGET_MINTHREAT:
+            case SELECT_TARGET_MAXDISTANCE:
+            case SELECT_TARGET_MINDISTANCE:
+                Eluna::Push(L, targetList.front());
+                return 1;
             case SELECT_TARGET_RANDOM:
-            {
-                std::list<Unit*>::const_iterator itr = targetList.begin();
-                if (position)
-                    std::advance(itr, urand(0, position));
-                else
-                    std::advance(itr, urand(0, targetList.size() - 1));
-                Eluna::Push(L, *itr);
-            }
-            break;
+                {
+                    auto it = std::begin(targetList);
+                    std::advance(it, urand(0, uint32(targetList.size()) - 1));
+                    Eluna::Push(L, *it);
+                    return 1;
+                }
             default:
                 luaL_argerror(L, 2, "SelectAggroTarget expected");
-                break;
+                return 1;
         }
-
         return 1;
     }
 
@@ -779,11 +824,7 @@ namespace LuaCreature
      */
     int GetAITargets(lua_State* L, Creature* creature)
     {
-#ifdef MANGOS
         ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
-#else
-        ThreatList const& threatlist = creature->getThreatManager().getThreatList();
-#endif
         lua_createtable(L, threatlist.size(), 0);
         int tbl = lua_gettop(L);
         uint32 i = 0;
@@ -807,11 +848,7 @@ namespace LuaCreature
      */
     int GetAITargetsCount(lua_State* L, Creature* creature)
     {
-#ifdef MANGOS
         Eluna::Push(L, creature->GetThreatManager().getThreatList().size());
-#else
-        Eluna::Push(L, creature->getThreatManager().getThreatList().size());
-#endif
         return 1;
     }
 
