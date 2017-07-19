@@ -1093,10 +1093,6 @@ ElunaRegister<Guild> GuildMethods[] =
     { "Disband", &LuaGuild::Disband },
     { "AddMember", &LuaGuild::AddMember },
     { "DeleteMember", &LuaGuild::DeleteMember },
-#ifndef CLASSIC
-    { "DepositBankMoney", &LuaGuild::DepositBankMoney },
-    { "WithdrawBankMoney", &LuaGuild::WithdrawBankMoney },
-#endif
 
     { NULL, NULL }
 };

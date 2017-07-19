@@ -293,48 +293,5 @@ namespace LuaGuild
 #endif
         return 0;
     }
-
-#ifndef CLASSIC
-    // Move to Player methods
-    /**
-     * Windraws money from the [Guild] bank
-     *
-     * @param [Player] player
-     * @param uint32 money
-     */
-    int WithdrawBankMoney(lua_State* L, Guild* guild)
-    {
-        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
-        uint32 money = Eluna::CHECKVAL<uint32>(L, 3);
-#ifndef TRINITY
-        if (guild->GetGuildBankMoney() < money)
-            return 0;
-        guild->SetBankMoney(guild->GetGuildBankMoney() - money);
-#else
-        guild->HandleMemberWithdrawMoney(player->GetSession(), money);
-#endif
-        return 0;
-    }
-
-    // Move to Player methods
-    /**
-     * Deposits money to the [Guild] bank
-     *
-     * @param [Player] player
-     * @param uint32 money
-     */
-    int DepositBankMoney(lua_State* L, Guild* guild)
-    {
-        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
-        uint32 money = Eluna::CHECKVAL<uint32>(L, 3);
-
-#ifndef TRINITY
-        guild->SetBankMoney(guild->GetGuildBankMoney() + money);
-#else
-        guild->HandleMemberDepositMoney(player->GetSession(), money);
-#endif
-        return 0;
-    }
-#endif
 };
 #endif
