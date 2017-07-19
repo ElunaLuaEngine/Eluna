@@ -192,7 +192,7 @@ namespace Hooks
         // Custom
         PLAYER_EVENT_ON_EQUIP                   =     29,       // (event, player, item, bag, slot)
         PLAYER_EVENT_ON_FIRST_LOGIN             =     30,       // (event, player)
-        PLAYER_EVENT_ON_CAN_USE_ITEM            =     31,       // (event, player, itemEntry) - Can return InventoryResult
+        PLAYER_EVENT_ON_CAN_USE_ITEM            =     31,       // (event, player, itemEntry) - Can return InventoryResult enum value
         PLAYER_EVENT_ON_LOOT_ITEM               =     32,       // (event, player, item, count)
         PLAYER_EVENT_ON_ENTER_COMBAT            =     33,       // (event, player, enemy)
         PLAYER_EVENT_ON_LEAVE_COMBAT            =     34,       // (event, player)
