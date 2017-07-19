@@ -320,5 +320,47 @@ namespace LuaMap
 
         return 0;
     }
+
+    /**
+    * Returns a table with all the current [Player]s in the map
+    *
+    *     enum TeamId
+    *     {
+    *         TEAM_ALLIANCE = 0,
+    *         TEAM_HORDE = 1,
+    *         TEAM_NEUTRAL = 2
+    *     };
+    *
+    * @param [TeamId] team : optional check team of the [Player], Alliance, Horde or Neutral (All)
+    * @return table mapPlayers
+    */
+    int GetPlayers(lua_State* L, Map* map)
+    {
+        uint32 team = Eluna::CHECKVAL<uint32>(L, 2, TEAM_NEUTRAL);
+
+        lua_newtable(L);
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        Map::PlayerList const& players = map->GetPlayers();
+        for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+        {
+#ifndef TRINITY
+            Player* player = itr->getSource();
+#else
+            Player* player = itr->GetSource();
+#endif
+            if (!player)
+                continue;
+            if (player->GetSession() && (team >= TEAM_NEUTRAL || player->GetTeamId() == team))
+            {
+                Eluna::Push(L, player);
+                lua_rawseti(L, tbl, ++i);
+            }
+        }
+
+        lua_settop(L, tbl);
+        return 1;
+    }
 };
 #endif
