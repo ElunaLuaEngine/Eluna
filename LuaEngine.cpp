@@ -1075,7 +1075,12 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, uint64 guid, uint
                 }
                 else
                 {
-                    ASSERT(guid != 0);
+                    if (guid == 0)
+                    {
+                        luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                        luaL_error(L, "guid was 0!");
+                        return 0; // Stack: (empty)
+                    }
 
                     auto key = UniqueObjectKey<Hooks::CreatureEvents>((Hooks::CreatureEvents)event_id, guid, instanceId);
                     bindingID = CreatureUniqueBindings->Insert(key, functionRef, shots);
