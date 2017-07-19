@@ -523,6 +523,8 @@ public:
     void OnShutdownCancel();
     void OnStartup();
     void OnShutdown();
+    void OnGameEventStart(uint32 eventid);
+    void OnGameEventStop(uint32 eventid);
 
     /* Battle Ground */
     void OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);

@@ -152,6 +152,9 @@ namespace Hooks
         // Eluna
         ELUNA_EVENT_ON_LUA_STATE_OPEN           =     33,       // (event) - triggers after all scripts are loaded
 
+        GAME_EVENT_START                        =     34,       // (event, gameeventid)
+        GAME_EVENT_STOP                         =     35,       // (event, gameeventid)
+
         SERVER_EVENT_COUNT
     };
 

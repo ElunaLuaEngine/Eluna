@@ -85,6 +85,20 @@ void Eluna::OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* o
     InvalidateObjects();
 }
 
+void Eluna::OnGameEventStart(uint32 eventid)
+{
+    START_HOOK(GAME_EVENT_START);
+    Push(eventid);
+    CallAllFunctions(ServerEventBindings, key);
+}
+
+void Eluna::OnGameEventStop(uint32 eventid)
+{
+    START_HOOK(GAME_EVENT_STOP);
+    Push(eventid);
+    CallAllFunctions(ServerEventBindings, key);
+}
+
 void Eluna::OnLuaStateClose()
 {
     START_HOOK(ELUNA_EVENT_ON_LUA_STATE_CLOSE);
