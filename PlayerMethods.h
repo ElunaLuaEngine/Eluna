@@ -3591,6 +3591,13 @@ namespace LuaPlayer
         uint32 rank = Eluna::CHECKVAL<uint32>(L, 3);
 
         player->LearnTalent(id, rank);
+        player->SendTalentsInfoData(false);
+
+#ifndef TRINITY
+        // if player has a pet, update owner talent auras
+        if (player->GetPet())
+            player->GetPet()->CastOwnerTalentAuras();
+#endif
         return 0;
     }
 
