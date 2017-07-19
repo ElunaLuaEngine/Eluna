@@ -1556,16 +1556,46 @@ namespace LuaUnit
      *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
      *     };
      *
+     * @param uint32 amount : new power amount
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
-     * @param uint32 power : new power amount
      */
     int SetPower(lua_State* L, Unit* unit)
     {
-        int type = Eluna::CHECKVAL<int>(L, 2, -1);
-        uint32 amt = Eluna::CHECKVAL<uint32>(L, 3);
+        uint32 amt = Eluna::CHECKVAL<uint32>(L, 2);
+        int type = Eluna::CHECKVAL<int>(L, 3, -1);
         Powers power = PowerSelectorHelper(L, unit, type);
 
         unit->SetPower(power, amt);
+        return 0;
+    }
+
+    /**
+     * modifies the [Unit]'s power amount for the given power type.
+     *
+     *     enum Powers
+     *     {
+     *         POWER_MANA        = 0,
+     *         POWER_RAGE        = 1,
+     *         POWER_FOCUS       = 2,
+     *         POWER_ENERGY      = 3,
+     *         POWER_HAPPINESS   = 4,
+     *         POWER_RUNE        = 5,
+     *         POWER_RUNIC_POWER = 6,
+     *         MAX_POWERS        = 7,
+     *         POWER_ALL         = 127,         // default for class?
+     *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
+     *     };
+     *
+     * @param int32 amount : amount to modify
+     * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
+     */
+    int ModifyPower(lua_State* L, Unit* unit)
+    {
+        int32 amt = Eluna::CHECKVAL<int32>(L, 2);
+        int type = Eluna::CHECKVAL<int>(L, 3, -1);
+        Powers power = PowerSelectorHelper(L, unit, type);
+
+        unit->ModifyPower(power, amt);
         return 0;
     }
 

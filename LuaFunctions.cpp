@@ -320,6 +320,7 @@ ElunaRegister<Unit> UnitMethods[] =
 #endif
     { "SetWaterWalk", &LuaUnit::SetWaterWalk },
     { "SetStandState", &LuaUnit::SetStandState },
+    { "ModifyPower", &LuaUnit::ModifyPower },
 
     // Boolean
     { "IsAlive", &LuaUnit::IsAlive },
