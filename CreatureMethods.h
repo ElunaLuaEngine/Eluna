@@ -920,16 +920,16 @@ namespace LuaCreature
     /**
      * Makes the [Creature] able to fly if enabled.
      *
-     * @param bool enable = true
+     * @param bool disable
      */
     int SetDisableGravity(lua_State* L, Creature* creature)
     {
-        bool enable = Eluna::CHECKVAL<bool>(L, 2, true);
+        bool disable = Eluna::CHECKVAL<bool>(L, 2);
 
 #ifdef TRINITY
-        creature->SetDisableGravity(!enable);
+        creature->SetDisableGravity(disable);
 #else
-        creature->SetLevitate(enable);
+        creature->SetLevitate(disable);
 #endif
         return 0;
     }
