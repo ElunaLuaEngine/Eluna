@@ -47,12 +47,13 @@ void ElunaEventProcessor::Update(uint32 diff)
 
         if (luaEvent->state == LUAEVENT_STATE_RUN)
         {
+            uint32 delay = luaEvent->delay;
             bool remove = luaEvent->repeats == 1;
             if (!remove)
                 AddEvent(luaEvent); // Reschedule before calling incase RemoveEvents used
 
             // Call the timed event
-            (*E)->OnTimedEvent(luaEvent->funcRef, luaEvent->delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
+            (*E)->OnTimedEvent(luaEvent->funcRef, delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
 
             if (!remove)
                 continue;
@@ -97,13 +98,14 @@ void ElunaEventProcessor::SetState(int eventId, LuaEventState state)
 
 void ElunaEventProcessor::AddEvent(LuaEvent* luaEvent)
 {
+    luaEvent->GenerateDelay();
     eventList.insert(std::pair<uint64, LuaEvent*>(m_time + luaEvent->delay, luaEvent));
     eventMap[luaEvent->funcRef] = luaEvent;
 }
 
-void ElunaEventProcessor::AddEvent(int funcRef, uint32 delay, uint32 repeats)
+void ElunaEventProcessor::AddEvent(int funcRef, uint32 min, uint32 max, uint32 repeats)
 {
-    AddEvent(new LuaEvent(funcRef, delay, repeats));
+    AddEvent(new LuaEvent(funcRef, min, max, repeats));
 }
 
 void ElunaEventProcessor::RemoveEvent(LuaEvent* luaEvent)

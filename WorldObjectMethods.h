@@ -778,27 +778,49 @@ namespace LuaWorldObject
      * Note that for [Creature] and [GameObject] the timed event timer ticks only if the creature is in sight of someone
      * For all [WorldObject]s the timed events are removed when the object is destoryed. This means that for example a [Player]'s events are removed on logout.
      *
-     *    local function Timed(eventid, delay, repeats, worldobject)
-     *        print(worldobject:GetName())
-     *    end
-     *    worldobject:RegisterEvent(Timed, 1000, 1) -- do it after 1 second once
+     *     local function Timed(eventid, delay, repeats, worldobject)
+     *         print(worldobject:GetName())
+     *     end
+     *     worldobject:RegisterEvent(Timed, 1000, 5) -- do it after 1 second 5 times
+     *     worldobject:RegisterEvent(Timed, {1000, 10000}, 0) -- do it after 1 to 10 seconds forever
+     *
+     * @proto eventId = (function, delay)
+     * @proto eventId = (function, delaytable)
+     * @proto eventId = (function, delay, repeats)
+     * @proto eventId = (function, delaytable, repeats)
      *
      * @param function function : function to trigger when the time has passed
      * @param uint32 delay : set time in milliseconds for the event to trigger
-     * @param uint32 repeats : how many times for the event to repeat, 0 is infinite
+     * @param table delaytable : a table `{min, max}` containing the minimum and maximum delay time
+     * @param uint32 repeats = 1 : how many times for the event to repeat, 0 is infinite
      * @return int eventId : unique ID for the timed event used to cancel it or nil
      */
     int RegisterEvent(lua_State* L, WorldObject* obj)
     {
         luaL_checktype(L, 2, LUA_TFUNCTION);
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 3);
-        uint32 repeats = Eluna::CHECKVAL<uint32>(L, 4);
+        uint32 min, max;
+        if (lua_istable(L, 3))
+        {
+            Eluna::Push(L, 1);
+            lua_gettable(L, 3);
+            min = Eluna::CHECKVAL<uint32>(L, -1);
+            Eluna::Push(L, 2);
+            lua_gettable(L, 3);
+            max = Eluna::CHECKVAL<uint32>(L, -1);
+            lua_pop(L, 2);
+        }
+        else
+            min = max = Eluna::CHECKVAL<uint32>(L, 3);
+        uint32 repeats = Eluna::CHECKVAL<uint32>(L, 4, 1);
+
+        if (min > max)
+            return luaL_argerror(L, 3, "min is bigger than max delay");
 
         lua_pushvalue(L, 2);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
         {
-            obj->elunaEvents->AddEvent(functionRef, delay, repeats);
+            obj->elunaEvents->AddEvent(functionRef, min, max, repeats);
             Eluna::Push(L, functionRef);
         }
         return 1;

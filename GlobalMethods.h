@@ -1303,22 +1303,43 @@ namespace LuaGlobalFunctions
      *
      * Repeats will decrease on each call if the event does not repeat indefinitely
      *
+     * @proto eventId = (function, delay)
+     * @proto eventId = (function, delaytable)
+     * @proto eventId = (function, delay, repeats)
+     * @proto eventId = (function, delaytable, repeats)
+     *
      * @param function function : function to trigger when the time has passed
      * @param uint32 delay : set time in milliseconds for the event to trigger
-     * @param uint32 repeats : how many times for the event to repeat, 0 is infinite
+     * @param table delaytable : a table `{min, max}` containing the minimum and maximum delay time
+     * @param uint32 repeats = 1 : how many times for the event to repeat, 0 is infinite
      * @return int eventId : unique ID for the timed event used to cancel it or nil
      */
     int CreateLuaEvent(lua_State* L)
     {
         luaL_checktype(L, 1, LUA_TFUNCTION);
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 repeats = Eluna::CHECKVAL<uint32>(L, 3);
+        uint32 min, max;
+        if (lua_istable(L, 2))
+        {
+            Eluna::Push(L, 1);
+            lua_gettable(L, 2);
+            min = Eluna::CHECKVAL<uint32>(L, -1);
+            Eluna::Push(L, 2);
+            lua_gettable(L, 2);
+            max = Eluna::CHECKVAL<uint32>(L, -1);
+            lua_pop(L, 2);
+        }
+        else
+            min = max = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 repeats = Eluna::CHECKVAL<uint32>(L, 3, 1);
+
+        if (min > max)
+            return luaL_argerror(L, 2, "min is bigger than max delay");
 
         lua_pushvalue(L, 1);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
         {
-            Eluna::GetEluna(L)->eventMgr->globalProcessor->AddEvent(functionRef, delay, repeats);
+            Eluna::GetEluna(L)->eventMgr->globalProcessor->AddEvent(functionRef, min, max, repeats);
             Eluna::Push(L, functionRef);
         }
         return 1;
