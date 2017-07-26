@@ -251,6 +251,8 @@ ElunaRegister<Unit> UnitMethods[] =
     { "GetGender", &LuaUnit::GetGender },
     { "GetRace", &LuaUnit::GetRace },
     { "GetClass", &LuaUnit::GetClass },
+    { "GetRaceMask", &LuaUnit::GetRaceMask },
+    { "GetClassMask", &LuaUnit::GetClassMask },
     { "GetRaceAsString", &LuaUnit::GetRaceAsString },
     { "GetClassAsString", &LuaUnit::GetClassAsString },
     { "GetAura", &LuaUnit::GetAura },

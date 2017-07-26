@@ -1059,6 +1059,28 @@ namespace LuaUnit
     }
 
     /**
+    * Returns the race mask
+    *
+    * @return uint32 racemask
+    */
+    int GetRaceMask(lua_State* L, Unit* unit)
+    {
+        Eluna::Push(L, unit->getRaceMask());
+        return 1;
+    }
+
+    /**
+    * Returns the class mask
+    *
+    * @return uint32 classmask
+    */
+    int GetClassMask(lua_State* L, Unit* unit)
+    {
+        Eluna::Push(L, unit->getClassMask());
+        return 1;
+    }
+
+    /**
      * Returns the [Unit]'s creature type ID like wolf or humanoid.
      *
      * @return uint32 creatureType
