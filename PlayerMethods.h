@@ -1694,7 +1694,11 @@ namespace LuaPlayer
         uint16 currVal = Eluna::CHECKVAL<uint16>(L, 4);
         uint16 maxVal = Eluna::CHECKVAL<uint16>(L, 5);
 
+#ifdef TRINITY
         player->SetSkill(id, step, currVal, maxVal);
+#else
+        player->SetSkill(id, currVal, maxVal, step);
+#endif
         return 0;
     }
 
