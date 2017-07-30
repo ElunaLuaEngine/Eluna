@@ -1159,10 +1159,18 @@ namespace LuaGlobalFunctions
      * Executes a SQL query on the world database and returns an [ElunaQuery].
      *
      * The query is always executed synchronously
-     *   (i.e. when this function returns the query has already been executed).
+     *   (i.e. execution halts until the query has finished and then results are returned).
+     *
+     *     local Q = WorldDBQuery("SELECT entry, name FROM creature_template LIMIT 10")
+     *     if Q then
+     *         repeat
+     *             local entry, name = Q:GetUInt32(0), Q:GetString(1)
+     *             print(entry, name)
+     *         until not Q:NextRow()
+     *     end
      *
      * @param string sql : query to execute
-     * @return [ElunaQuery] results
+     * @return [ElunaQuery] results or nil if no rows found or nil if no rows found
      */
     int WorldDBQuery(lua_State* L)
     {
@@ -1193,6 +1201,8 @@ namespace LuaGlobalFunctions
      * Any results produced are ignored.
      * If you need results from the query, use [Global:WorldDBQuery] instead.
      *
+     *     WorldDBExecute("DELETE FROM my_table")
+     *
      * @param string sql : query to execute
      */
     int WorldDBExecute(lua_State* L)
@@ -1206,10 +1216,12 @@ namespace LuaGlobalFunctions
      * Executes a SQL query on the character database and returns an [ElunaQuery].
      *
      * The query is always executed synchronously
-     *   (i.e. when this function returns the query has already been executed).
+     *   (i.e. execution halts until the query has finished and then results are returned).
+     *
+     * For an example see [Global:WorldDBQuery].
      *
      * @param string sql : query to execute
-     * @return [ElunaQuery] results
+     * @return [ElunaQuery] results or nil if no rows found
      */
     int CharDBQuery(lua_State* L)
     {
@@ -1235,10 +1247,12 @@ namespace LuaGlobalFunctions
      * Executes a SQL query on the character database.
      *
      * The query may be executed *asynchronously* (at a later, unpredictable time).
-     * If you need to execute the query synchronously, use [Global:WorldDBQuery] instead.
+     * If you need to execute the query synchronously, use [Global:CharDBQuery] instead.
      *
      * Any results produced are ignored.
-     * If you need results from the query, use [Global:WorldDBQuery] instead.
+     * If you need results from the query, use [Global:CharDBQuery] instead.
+     *
+     *     CharDBExecute("DELETE FROM my_table")
      *
      * @param string sql : query to execute
      */
@@ -1253,10 +1267,12 @@ namespace LuaGlobalFunctions
      * Executes a SQL query on the login database and returns an [ElunaQuery].
      *
      * The query is always executed synchronously
-     *   (i.e. when this function returns the query has already been executed).
+     *   (i.e. execution halts until the query has finished and then results are returned).
+     *
+     * For an example see [Global:WorldDBQuery].
      *
      * @param string sql : query to execute
-     * @return [ElunaQuery] results
+     * @return [ElunaQuery] results or nil if no rows found
      */
     int AuthDBQuery(lua_State* L)
     {
@@ -1282,10 +1298,12 @@ namespace LuaGlobalFunctions
      * Executes a SQL query on the login database.
      *
      * The query may be executed *asynchronously* (at a later, unpredictable time).
-     * If you need to execute the query synchronously, use [Global:WorldDBQuery] instead.
+     * If you need to execute the query synchronously, use [Global:AuthDBQuery] instead.
      *
      * Any results produced are ignored.
-     * If you need results from the query, use [Global:WorldDBQuery] instead.
+     * If you need results from the query, use [Global:AuthDBQuery] instead.
+     *
+     *     AuthDBExecute("DELETE FROM my_table")
      *
      * @param string sql : query to execute
      */
