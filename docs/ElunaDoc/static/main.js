@@ -497,9 +497,7 @@
                         '</span></td></tr>';
                 });
             } else {
-                output += 'No results :( <a href="https://duckduckgo.com/?q=' +
-                    encodeURIComponent('eluna ' + query.query) +
-                    '">Try on DuckDuckGo?</a>';
+                output += 'No results - Request function at <a href="https://github.com/ElunaLuaEngine/Eluna/issues">Eluna issue tracker</a>';
             }
 
             output += "</p>";
