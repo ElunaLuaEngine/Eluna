@@ -1636,7 +1636,7 @@ namespace LuaGlobalFunctions
             if (save)
             {
                 Creature* creature = new Creature();
-                if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, x, y, z, o))
+                if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, pos))
                 {
                     delete creature;
                     Eluna::Push(L);
@@ -1652,7 +1652,7 @@ namespace LuaGlobalFunctions
                 creature->CleanupsBeforeDelete();
                 delete creature;
                 creature = new Creature();
-                if (!creature->LoadCreatureFromDB(db_guid, map))
+                if (!creature->LoadFromDB(db_guid, map, true, true))
                 {
                     delete creature;
                     Eluna::Push(L);
@@ -1723,14 +1723,14 @@ namespace LuaGlobalFunctions
 
                 object = new GameObject();
                 // this will generate a new lowguid if the object is in an instance
-                if (!object->LoadGameObjectFromDB(guidLow, map))
+                if (!object->LoadFromDB(guidLow, map, true))
                 {
                     delete object;
                     Eluna::Push(L);
                     return 1;
                 }
 
-                eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGOData(guidLow));
+                eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGameObjectData(guidLow));
             }
             else
                 map->AddToMap(object);
