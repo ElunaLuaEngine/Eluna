@@ -355,7 +355,7 @@ void Eluna::AddScriptPath(std::string filename, const std::string& fullpath)
     filename = filename.substr(0, extDot);
 
     // check extension and add path to scripts to load
-    if (ext != ".lua" && ext != ".dll" && ext != ".ext")
+    if (ext != ".lua" && ext != ".dll" && ext != ".so" && ext != ".ext")
         return;
     bool extension = ext == ".ext";
 
@@ -383,7 +383,6 @@ void Eluna::GetScripts(std::string path)
     if (boost::filesystem::exists(someDir) && boost::filesystem::is_directory(someDir))
     {
         lua_requirepath +=
-            path + "/?;" +
             path + "/?.lua;" +
             path + "/?.ext;" +
             path + "/?.dll;" +
@@ -425,7 +424,6 @@ void Eluna::GetScripts(std::string path)
         return;
 
     lua_requirepath +=
-        path + "/?;" +
         path + "/?.lua;" +
         path + "/?.ext;" +
         path + "/?.dll;" +
