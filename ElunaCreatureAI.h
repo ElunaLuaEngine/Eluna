@@ -41,7 +41,11 @@ struct ElunaCreatureAI : ScriptedAI
         if (justSpawned)
         {
             justSpawned = false;
+#ifdef TRINITY
+            JustAppeared();
+#else
             JustRespawned();
+#endif
         }
 
         if (!movepoints.empty())
@@ -140,12 +144,21 @@ struct ElunaCreatureAI : ScriptedAI
     }
 #endif
 
+#ifdef TRINITY
+    // Called when creature appears in the world (spawn, respawn, grid load etc...)
+    void JustAppeared() override
+    {
+        if (!sEluna->JustRespawned(me))
+            ScriptedAI::JustAppeared();
+    }
+#else
     // Called when creature is spawned or respawned (for reseting variables)
     void JustRespawned() override
     {
         if (!sEluna->JustRespawned(me))
             ScriptedAI::JustRespawned();
     }
+#endif
 
     // Called at reaching home after evade
     void JustReachedHome() override
