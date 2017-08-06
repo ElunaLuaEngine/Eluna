@@ -733,7 +733,7 @@ namespace LuaCreature
         }
 
         // filter by predicate
-        auto predicate = [&, me = creature](Unit* target)
+        auto predicate = [&, creature](Unit* target)
         {
             if (!creature)
                 return false;
@@ -747,10 +747,10 @@ namespace LuaCreature
             if (m_playerOnly && (target->GetTypeId() != TYPEID_PLAYER))
                 return false;
 
-            if (m_dist > 0.0f && !me->IsWithinCombatRange(target, m_dist))
+            if (m_dist > 0.0f && !creature->IsWithinCombatRange(target, m_dist))
                 return false;
 
-            if (m_dist < 0.0f && me->IsWithinCombatRange(target, -m_dist))
+            if (m_dist < 0.0f && creature->IsWithinCombatRange(target, -m_dist))
                 return false;
 
             if (m_aura)
