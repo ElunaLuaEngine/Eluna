@@ -27,22 +27,6 @@ namespace LuaCreature
     }
 
     /**
-     * Returns `true` if the [Creature] can regenerate its health out-of-combat,
-     *   and returns `false` otherwise.
-     *
-     * @return bool regeneratesHealth
-     */
-    int CanRegenerateHealth(lua_State* L, Creature* creature)
-    {
-#ifndef TRINITY
-        Eluna::Push(L, creature->IsRegeneratingHealth());
-#else
-        Eluna::Push(L, creature->isRegeneratingHealth());
-#endif
-        return 1;
-    }
-
-    /**
      * Returns `true` if the [Creature] completes the [Quest] with the ID `questID`,
      *   and returns `false` otherwise.
      *

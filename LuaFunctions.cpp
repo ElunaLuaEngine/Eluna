@@ -819,7 +819,6 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "CanAssistTo", &LuaCreature::CanAssistTo },
     { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },
     { "CanCompleteQuest", &LuaCreature::CanCompleteQuest },
-    { "CanRegenerateHealth", &LuaCreature::CanRegenerateHealth },
     { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
 #ifdef TRINITY
     { "IsDamageEnoughForLootingAndReward", &LuaCreature::IsDamageEnoughForLootingAndReward },
