@@ -561,6 +561,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "IsInGroup", &LuaPlayer::IsInGroup },
     { "IsInGuild", &LuaPlayer::IsInGuild },
     { "IsGM", &LuaPlayer::IsGM },
+    { "IsImmuneToDamage", &LuaPlayer::IsImmuneToDamage },
     { "IsAlliance", &LuaPlayer::IsAlliance },
     { "IsHorde", &LuaPlayer::IsHorde },
 #ifndef CLASSIC
