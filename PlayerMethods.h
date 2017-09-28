@@ -428,11 +428,15 @@ namespace LuaPlayer
         return 1;
     }
 #endif
-
+    
+    /**
+     * Returns 'true' if the [Player] is immune to everything.
+     *
+     * @return bool isImmune
+     */
     int IsImmuneToDamage(lua_State* L, Player* player)
     {
         Eluna::Push(L, player->isTotalImmune());
-
         return 1;
     }
 
