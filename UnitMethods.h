@@ -92,22 +92,6 @@ namespace LuaUnit
     }
 
     /**
-     * Returns true if the [WorldObject] is within given radius of the [Unit].
-     *
-     * @param [WorldObject] obj
-     * @param float radius
-     * @return bool withinDist
-     */
-    int IsWithinDistInMap(lua_State* L, Unit* unit)
-    {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(L, 2);
-        float radius = Eluna::CHECKVAL<float>(L, 3);
-
-        Eluna::Push(L, unit->IsWithinDistInMap(obj, radius));
-        return 1;
-    }
-
-    /**
      * Returns true if the [Unit] is in an accessible place for the given [Creature].
      *
      * @param [WorldObject] obj

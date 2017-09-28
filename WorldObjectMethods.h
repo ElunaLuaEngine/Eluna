@@ -476,7 +476,7 @@ namespace LuaWorldObject
     int GetDistance(lua_State* L, WorldObject* obj)
     {
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
-        if (target && target->IsInWorld())
+        if (target)
             Eluna::Push(L, obj->GetDistance(target));
         else
         {
@@ -508,7 +508,7 @@ namespace LuaWorldObject
         float x, y, z;
         obj->GetPosition(x, y, z);
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
-        if (target && target->IsInWorld())
+        if (target)
         {
             float x2, y2, z2;
             target->GetPosition(x2, y2, z2);
@@ -544,7 +544,7 @@ namespace LuaWorldObject
     int GetDistance2d(lua_State* L, WorldObject* obj)
     {
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
-        if (target && target->IsInWorld())
+        if (target)
             Eluna::Push(L, obj->GetDistance2d(target));
         else
         {
@@ -574,7 +574,7 @@ namespace LuaWorldObject
         float x, y, z;
         obj->GetPosition(x, y, z);
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
-        if (target && target->IsInWorld())
+        if (target)
         {
             float x2, y2, z2;
             target->GetPosition(x2, y2, z2);
@@ -633,7 +633,7 @@ namespace LuaWorldObject
     {
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
 
-        if (target && target->IsInWorld())
+        if (target)
             Eluna::Push(L, obj->GetAngle(target));
         else
         {
@@ -874,6 +874,207 @@ namespace LuaWorldObject
             Eluna::Push(L, obj->IsWithinLOS(x, y, z));
         }
 
+        return 1;
+    }
+
+    /**
+     * Returns true if the [WorldObject]s are on the same map
+     *
+     * @param [WorldObject] worldobject
+     * @return bool isInMap
+     */
+    int IsInMap(lua_State* L, WorldObject* obj)
+    {
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, true);
+        Eluna::Push(L, obj->IsInMap(target));
+        return 1;
+    }
+
+    /**
+     * Returns true if the point is in the given distance of the [WorldObject]
+     *
+     * Notice that the distance is measured from the edge of the [WorldObject].
+     *
+     * @param float x
+     * @param float y
+     * @param float z
+     * @param float distance
+     * @return bool isInDistance
+     */
+    int IsWithinDist3d(lua_State* L, WorldObject* obj)
+    {
+        float x = Eluna::CHECKVAL<float>(L, 2);
+        float y = Eluna::CHECKVAL<float>(L, 3);
+        float z = Eluna::CHECKVAL<float>(L, 4);
+        float dist = Eluna::CHECKVAL<float>(L, 5);
+        Eluna::Push(L, obj->IsWithinDist3d(x, y, z, dist));
+        return 1;
+    }
+
+    /**
+     * Returns true if the point is in the given distance of the [WorldObject]
+     *
+     * The distance is measured only in x,y coordinates.
+     * Notice that the distance is measured from the edge of the [WorldObject].
+     *
+     * @param float x
+     * @param float y
+     * @param float distance
+     * @return bool isInDistance
+     */
+    int IsWithinDist2d(lua_State* L, WorldObject* obj)
+    {
+        float x = Eluna::CHECKVAL<float>(L, 2);
+        float y = Eluna::CHECKVAL<float>(L, 3);
+        float dist = Eluna::CHECKVAL<float>(L, 4);
+        Eluna::Push(L, obj->IsWithinDist2d(x, y, dist));
+        return 1;
+    }
+
+    /**
+     * Returns true if the target is in the given distance of the [WorldObject]
+     *
+     * Notice that the distance is measured from the edge of the [WorldObject]s.
+     *
+     * @param [WorldObject] target
+     * @param float distance
+     * @param bool is3D = true : if false, only x,y coordinates used for checking
+     * @return bool isInDistance
+     */
+    int IsWithinDist(lua_State* L, WorldObject* obj)
+    {
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, true);
+        float distance = Eluna::CHECKVAL<float>(L, 3);
+        float is3D = Eluna::CHECKVAL<bool>(L, 4, true);
+        Eluna::Push(L, obj->IsWithinDist(target, distance, is3D));
+        return 1;
+    }
+
+    /**
+     * Returns true if the [WorldObject] is on the same map and within given distance
+     *
+     * Notice that the distance is measured from the edge of the [WorldObject]s.
+     *
+     * @param [WorldObject] target
+     * @param float distance
+     * @param bool is3D = true : if false, only x,y coordinates used for checking
+     * @return bool isInDistance
+     */
+    int IsWithinDistInMap(lua_State* L, WorldObject* obj)
+    {
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2);
+        float distance = Eluna::CHECKVAL<float>(L, 3);
+        float is3D = Eluna::CHECKVAL<bool>(L, 4, true);
+
+        Eluna::Push(L, obj->IsWithinDistInMap(target, distance));
+        return 1;
+    }
+
+    /**
+     * Returns true if the target is within given range
+     *
+     * Notice that the distance is measured from the edge of the [WorldObject]s.
+     *
+     * @param [WorldObject] target
+     * @param float minrange
+     * @param float maxrange
+     * @param bool is3D = true : if false, only x,y coordinates used for checking
+     * @return bool isInDistance
+     */
+    int IsInRange(lua_State* L, WorldObject* obj)
+    {
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2);
+        float minrange = Eluna::CHECKVAL<float>(L, 3);
+        float maxrange = Eluna::CHECKVAL<float>(L, 4);
+        float is3D = Eluna::CHECKVAL<bool>(L, 5, true);
+
+        Eluna::Push(L, obj->IsInRange(target, minrange, maxrange, is3D));
+        return 1;
+    }
+
+    /**
+     * Returns true if the point is within given range
+     *
+     * Notice that the distance is measured from the edge of the [WorldObject].
+     *
+     * @param float x
+     * @param float y
+     * @param float minrange
+     * @param float maxrange
+     * @return bool isInDistance
+     */
+    int IsInRange2d(lua_State* L, WorldObject* obj)
+    {
+        float x = Eluna::CHECKVAL<float>(L, 2);
+        float y = Eluna::CHECKVAL<float>(L, 3);
+        float minrange = Eluna::CHECKVAL<float>(L, 4);
+        float maxrange = Eluna::CHECKVAL<float>(L, 5);
+
+        Eluna::Push(L, obj->IsInRange2d(x, y, minrange, maxrange));
+        return 1;
+    }
+
+    /**
+     * Returns true if the point is within given range
+     *
+     * Notice that the distance is measured from the edge of the [WorldObject].
+     *
+     * @param float x
+     * @param float y
+     * @param float z
+     * @param float minrange
+     * @param float maxrange
+     * @return bool isInDistance
+     */
+    int IsInRange3d(lua_State* L, WorldObject* obj)
+    {
+        float x = Eluna::CHECKVAL<float>(L, 2);
+        float y = Eluna::CHECKVAL<float>(L, 3);
+        float z = Eluna::CHECKVAL<float>(L, 4);
+        float minrange = Eluna::CHECKVAL<float>(L, 5);
+        float maxrange = Eluna::CHECKVAL<float>(L, 6);
+
+        Eluna::Push(L, obj->IsInRange3d(x, y, z, minrange, maxrange));
+        return 1;
+    }
+
+    /**
+     * Returns true if the target is in the given arc in front of the [WorldObject]
+     *
+     * @param [WorldObject] target
+     * @param float arc = pi
+     * @return bool isInFront
+     */
+    int IsInFront(lua_State* L, WorldObject* obj)
+    {
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2);
+        float arc = Eluna::CHECKVAL<float>(L, 3, static_cast<float>(M_PI));
+
+#ifdef MANGOS
+        Eluna::Push(L, obj->IsInFront(target, arc));
+#else
+        Eluna::Push(L, obj->isInFront(target, arc));
+#endif
+        return 1;
+    }
+
+    /**
+     * Returns true if the target is in the given arc behind the [WorldObject]
+     *
+     * @param [WorldObject] target
+     * @param float arc = pi
+     * @return bool isInBack
+     */
+    int IsInBack(lua_State* L, WorldObject* obj)
+    {
+        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2);
+        float arc = Eluna::CHECKVAL<float>(L, 3, static_cast<float>(M_PI));
+
+#ifdef MANGOS
+        Eluna::Push(L, obj->IsInBack(target, arc));
+#else
+        Eluna::Push(L, obj->isInBack(target, arc));
+#endif
         return 1;
     }
 
