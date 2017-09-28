@@ -119,22 +119,6 @@ void Eluna::LoadScriptPaths()
     ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size() + lua_extensions.size()), ElunaUtil::GetTimeDiff(oldMSTime));
 }
 
-#ifdef TRINITY
-class ElunaAIUpdateWorker
-{
-public:
-    void Visit(std::unordered_map<ObjectGuid, Creature*>& creatureMap)
-    {
-        for (auto const& p : creatureMap)
-            if (p.second->IsInWorld())
-                p.second->AIM_Initialize();
-    }
-
-    template<class T>
-    void Visit(std::unordered_map<ObjectGuid, T*>&) { }
-};
-#endif
-
 void Eluna::_ReloadEluna()
 {
     LOCK_ELUNA;
@@ -156,16 +140,6 @@ void Eluna::_ReloadEluna()
 
     // Run scripts from laoded paths
     sEluna->RunScripts();
-
-#ifdef TRINITY
-    // Re initialize creature AI restoring C++ AI or applying lua AI
-    sMapMgr->DoForAllMaps([](Map* map)
-    {
-        ElunaAIUpdateWorker worker;
-        TypeContainerVisitor<ElunaAIUpdateWorker, MapStoredObjectTypesContainer> visitor(worker);
-        visitor.Visit(map->GetObjectsStore());
-    });
-#endif
 
     reload = false;
 }
