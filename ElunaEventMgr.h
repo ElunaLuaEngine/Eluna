@@ -9,7 +9,11 @@
 
 #include "ElunaUtility.h"
 #include "Common.h"
+#ifdef TRINITY
 #include "Random.h"
+#else
+#include "Util.h"
+#endif
 #include <map>
 
 #ifdef TRINITY
