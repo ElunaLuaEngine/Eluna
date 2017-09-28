@@ -139,14 +139,6 @@ typedef ThreatContainer::StorageType ThreatList;
 
 typedef TemporarySummon TempSummon;
 typedef SpellEntry SpellInfo;
-enum SelectAggroTarget
-{
-    SELECT_TARGET_RANDOM = 0,  // just pick a random target
-    SELECT_TARGET_MAXTHREAT,   // prefer targets higher in the threat list
-    SELECT_TARGET_MINTHREAT,   // prefer targets lower in the threat list
-    SELECT_TARGET_MAXDISTANCE, // prefer targets further from us
-    SELECT_TARGET_MINDISTANCE  // prefer targets closer to us
-};
 #endif // TRINITY
 
 #endif // _ELUNA_INCLUDES_H
