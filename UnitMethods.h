@@ -2779,7 +2779,11 @@ namespace LuaUnit
         unit->AddThreat(victim, threat, false, spellEntry ? spellEntry->SchoolMask : SPELL_SCHOOL_MASK_NONE, spellEntry);
 #else
         SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
+#ifdef CLASSIC
         unit->AddThreat(victim, threat, false, spellEntry ? GetSchoolMask(spellEntry->School) : SPELL_SCHOOL_MASK_NONE, spellEntry);
+#else
+        unit->AddThreat(victim, threat, false, spellEntry ? static_cast<SpellSchoolMask>(spellEntry->SchoolMask) : SPELL_SCHOOL_MASK_NONE, spellEntry);
+#endif
 #endif
 #endif
         return 0;
