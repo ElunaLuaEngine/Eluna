@@ -3522,9 +3522,8 @@ namespace LuaPlayer
      *
      * @param string prefix
      * @param string message
-     * @param uint8 channel
+     * @param [ChatMsg] channel
      * @param [Player] receiver
-     * @param string fullMsg
      *
      */
     int SendAddonMessage(lua_State* L, Player* player)
