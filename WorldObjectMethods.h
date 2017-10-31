@@ -966,7 +966,7 @@ namespace LuaWorldObject
         float distance = Eluna::CHECKVAL<float>(L, 3);
         bool is3D = Eluna::CHECKVAL<bool>(L, 4, true);
 
-        Eluna::Push(L, obj->IsWithinDistInMap(target, distance));
+        Eluna::Push(L, obj->IsWithinDistInMap(target, distance, is3D));
         return 1;
     }
 
