@@ -945,7 +945,7 @@ namespace LuaWorldObject
     {
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, true);
         float distance = Eluna::CHECKVAL<float>(L, 3);
-        float is3D = Eluna::CHECKVAL<bool>(L, 4, true);
+        bool is3D = Eluna::CHECKVAL<bool>(L, 4, true);
         Eluna::Push(L, obj->IsWithinDist(target, distance, is3D));
         return 1;
     }
@@ -964,7 +964,7 @@ namespace LuaWorldObject
     {
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2);
         float distance = Eluna::CHECKVAL<float>(L, 3);
-        float is3D = Eluna::CHECKVAL<bool>(L, 4, true);
+        bool is3D = Eluna::CHECKVAL<bool>(L, 4, true);
 
         Eluna::Push(L, obj->IsWithinDistInMap(target, distance));
         return 1;
@@ -986,7 +986,7 @@ namespace LuaWorldObject
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2);
         float minrange = Eluna::CHECKVAL<float>(L, 3);
         float maxrange = Eluna::CHECKVAL<float>(L, 4);
-        float is3D = Eluna::CHECKVAL<bool>(L, 5, true);
+        bool is3D = Eluna::CHECKVAL<bool>(L, 5, true);
 
         Eluna::Push(L, obj->IsInRange(target, minrange, maxrange, is3D));
         return 1;
