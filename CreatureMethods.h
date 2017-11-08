@@ -440,7 +440,7 @@ namespace LuaCreature
     int GetCurrentWaypointId(lua_State* L, Creature* creature)
     {
 #ifdef TRINITY
-        Eluna::Push(L, creature->GetCurrentWaypointID());
+        Eluna::Push(L, creature->GetCurrentWaypointInfo().first);
 #else
         Eluna::Push(L, creature->GetMotionMaster()->getLastReachedWaypoint());
 #endif
