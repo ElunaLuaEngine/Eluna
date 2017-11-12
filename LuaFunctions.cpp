@@ -108,12 +108,14 @@ luaL_Reg GlobalMethods[] =
     { "PrintInfo", &LuaGlobalFunctions::PrintInfo },
     { "PrintError", &LuaGlobalFunctions::PrintError },
     { "PrintDebug", &LuaGlobalFunctions::PrintDebug },
+    { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
 
     // Boolean
     { "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },
     { "IsEquipmentPos", &LuaGlobalFunctions::IsEquipmentPos },
     { "IsBankPos", &LuaGlobalFunctions::IsBankPos },
     { "IsBagPos", &LuaGlobalFunctions::IsBagPos },
+    { "IsGameEventActive", &LuaGlobalFunctions::IsGameEventActive },
 
     // Other
     { "ReloadEluna", &LuaGlobalFunctions::ReloadEluna },
@@ -139,6 +141,8 @@ luaL_Reg GlobalMethods[] =
     { "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
     { "CreateInt64", &LuaGlobalFunctions::CreateLongLong },
     { "CreateUint64", &LuaGlobalFunctions::CreateULongLong },
+    { "StartGameEvent", &LuaGlobalFunctions::StartGameEvent },
+    { "StopGameEvent", &LuaGlobalFunctions::StopGameEvent },
 
     { NULL, NULL }
 };

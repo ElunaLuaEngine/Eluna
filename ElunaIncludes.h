@@ -40,6 +40,7 @@
 
 #ifdef TRINITY
 #include "Config.h"
+#include "GameEventMgr.h"
 #include "GroupMgr.h"
 #include "ScriptedCreature.h"
 #include "SpellInfo.h"
