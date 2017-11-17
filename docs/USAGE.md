@@ -66,7 +66,7 @@ Check out the configuration file for settings if you want to tweak the logging s
 
 ### Global functions
 Global functions are functions you can run from anywhere in a script file and they do not require any object to be run.
-In addition to normal global functions lua provides like `print` Eluna has it's own gobal functions. You can find them in the documentation under `global` class: [global functions](http://eluna.emudevs.com/Global/index.html).
+In addition to normal global functions lua provides like `print` Eluna has it's own gobal functions. You can find them in the documentation under `global` class: [global functions](http://elunaluaengine.github.io/Global/index.html).
 
 ```lua
 -- print the return value of GetLuaEngine function
@@ -74,7 +74,7 @@ print(GetLuaEngine())
 ```
 
 ### Member functions
-Member functions, also called methods, are functions that require an userdata object to run. There are several different classes of objects that have different member functions. You can find all the member functions and their documentations from the [Eluna documentation](http://eluna.emudevs.com/).
+Member functions, also called methods, are functions that require an userdata object to run. There are several different classes of objects that have different member functions. You can find all the member functions and their documentations from the [Eluna documentation](http://elunaluaengine.github.io/).
 
 Classes in C++ inherit each other. In Eluna member functions are also inherited. For example objects of classes `Player` and `Creature` inherit all methods from `Unit` class.
 
@@ -96,7 +96,7 @@ RegisterCreatureEvent(entry, on_combat, OnCombat)
 ### Registering functions to events
 Scripts register functions to events and the functions are executed when the event happens.
 There are special global functions in Eluna API for registering functions for events.
-You should be able to find all such functions from [Eluna documentation](http://eluna.emudevs.com/) by searching `register`.
+You should be able to find all such functions from [Eluna documentation](http://elunaluaengine.github.io/) by searching `register`.
 
 Functions used to register other functions for events need the ID of the event you want the hook to be registered for passed to them. You can find these ID numbers from the registering function documentation page.
 
@@ -104,7 +104,7 @@ Eluna passes some arguments to the functions executed. The arguments are always 
 
 Some events allow the registered function to return different values. Sometimes you can return more than one value. The possibility to return is documented on the registering function's documentation page. Simply using the `return` keyword returns normally as if the function would end.
 
-For example in this script we register the function `OnCombat` to be run on event `1`, which triggers on combat, for the creature entry `6`. All needed information can be found here: http://eluna.emudevs.com/Global/RegisterCreatureEvent.html
+For example in this script we register the function `OnCombat` to be run on event `1`, which triggers on combat, for the creature entry `6`. All needed information can be found here: http://elunaluaengine.github.io/Global/RegisterCreatureEvent.html
 ```lua
 local entry = 6
 local on_combat = 1
