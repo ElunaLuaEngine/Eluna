@@ -70,6 +70,15 @@ struct ElunaCreatureAI : ScriptedAI
         }
     }
 
+#ifdef TRINITY
+    // Called for reaction when initially engaged - this will always happen _after_ JustEnteredCombat
+    // Called at creature aggro either by MoveInLOS or Attack Start
+    void JustEngagedWith(Unit* target) override
+    {
+        if (!sEluna->EnterCombat(me, target))
+            ScriptedAI::JustEngagedWith(target);
+    }
+#else
     //Called for reaction at enter to combat if not in combat yet (enemy can be NULL)
     //Called at creature aggro either by MoveInLOS or Attack Start
     void EnterCombat(Unit* target) override
@@ -77,6 +86,7 @@ struct ElunaCreatureAI : ScriptedAI
         if (!sEluna->EnterCombat(me, target))
             ScriptedAI::EnterCombat(target);
     }
+#endif
 
     // Called at any Damage from any attacker (before damage apply)
     void DamageTaken(Unit* attacker, uint32& damage) override

@@ -2371,7 +2371,24 @@ namespace LuaUnit
         Item* castItem = Eluna::CHECKOBJ<Item>(L, 8, false);
         uint64 originalCaster = Eluna::CHECKVAL<uint64>(L, 9, 0);
 
+#ifdef TRINITY
+        CastSpellExtraArgs args;
+        if (has_bp0)
+            args.SpellValueOverrides.AddMod(SPELLVALUE_BASE_POINT0, bp0);
+        if (has_bp1)
+            args.SpellValueOverrides.AddMod(SPELLVALUE_BASE_POINT1, bp1);
+        if (has_bp2)
+            args.SpellValueOverrides.AddMod(SPELLVALUE_BASE_POINT2, bp2);
+        if (triggered)
+            args.TriggerFlags = TRIGGERED_FULL_MASK;
+        if (castItem)
+            args.SetCastItem(castItem);
+        if (originalCaster)
+            args.SetOriginalCaster(ObjectGuid(originalCaster));
+        unit->CastSpell(target, spell, args);
+#else
         unit->CastCustomSpell(target, spell, has_bp0 ? &bp0 : NULL, has_bp1 ? &bp1 : NULL, has_bp2 ? &bp2 : NULL, triggered, castItem, NULL, ObjectGuid(originalCaster));
+#endif
         return 0;
     }
     
@@ -2393,8 +2410,15 @@ namespace LuaUnit
         bool triggered = Eluna::CHECKVAL<bool>(L, 6, true);
 #ifdef CMANGOS
         unit->CastSpell(_x, _y, _z, spell, TRIGGERED_OLD_TRIGGERED);
-#else
+#endif
+#ifdef MANGOS
         unit->CastSpell(_x, _y, _z, spell, triggered);
+#endif
+#ifdef TRINITY
+        CastSpellExtraArgs args;
+        if (triggered)
+            args.TriggerFlags = TRIGGERED_FULL_MASK;
+        unit->CastSpell(Position(_x, _y, _z), spell, args);
 #endif
         return 0;
     }
