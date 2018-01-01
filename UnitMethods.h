@@ -2345,61 +2345,6 @@ namespace LuaUnit
     }
 
     /**
-     * Casts the [Spell] at target [Unit] with custom basepoints or casters.
-     * See also [Unit:CastSpell].
-     *
-     * @param [Unit] target = nil
-     * @param uint32 spell
-     * @param bool triggered = false
-     * @param int32 bp0 = nil : custom basepoints for [Spell] effect 1. If nil, no change is made
-     * @param int32 bp1 = nil : custom basepoints for [Spell] effect 2. If nil, no change is made
-     * @param int32 bp2 = nil : custom basepoints for [Spell] effect 3. If nil, no change is made
-     * @param [Item] castItem = nil
-     * @param uint64 originalCaster = 0
-     */
-    int CastCustomSpell(lua_State* L, Unit* unit)
-    {
-        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2, false);
-        uint32 spell = Eluna::CHECKVAL<uint32>(L, 3);
-        bool triggered = Eluna::CHECKVAL<bool>(L, 4, false);
-        bool has_bp0 = !lua_isnoneornil(L, 5);
-        int32 bp0 = Eluna::CHECKVAL<int32>(L, 5, 0);
-        bool has_bp1 = !lua_isnoneornil(L, 6);
-        int32 bp1 = Eluna::CHECKVAL<int32>(L, 6, 0);
-        bool has_bp2 = !lua_isnoneornil(L, 7);
-        int32 bp2 = Eluna::CHECKVAL<int32>(L, 7, 0);
-        Item* castItem = Eluna::CHECKOBJ<Item>(L, 8, false);
-        uint64 originalCaster = Eluna::CHECKVAL<uint64>(L, 9, 0);
-
-        unit->CastCustomSpell(target, spell, has_bp0 ? &bp0 : NULL, has_bp1 ? &bp1 : NULL, has_bp2 ? &bp2 : NULL, triggered, castItem, NULL, ObjectGuid(originalCaster));
-        return 0;
-    }
-    
-    /**
-     * Makes the [Unit] cast the spell to the given coordinates, used for area effect spells.
-     *
-     * @param float x
-     * @param float y
-     * @param float z
-     * @param uint32 spell : entry of a spell
-     * @param bool triggered = false : if true the spell is instant and has no cost
-     */
-    int CastSpellAoF(lua_State* L, Unit* unit)
-    {
-        float _x = Eluna::CHECKVAL<float>(L, 2);
-        float _y = Eluna::CHECKVAL<float>(L, 3);
-        float _z = Eluna::CHECKVAL<float>(L, 4);
-        uint32 spell = Eluna::CHECKVAL<uint32>(L, 5);
-        bool triggered = Eluna::CHECKVAL<bool>(L, 6, true);
-#ifdef CMANGOS
-        unit->CastSpell(_x, _y, _z, spell, TRIGGERED_OLD_TRIGGERED);
-#else
-        unit->CastSpell(_x, _y, _z, spell, triggered);
-#endif
-        return 0;
-    }
-
-    /**
      * Clears the [Unit]'s combat
      */
     int ClearInCombat(lua_State* /*L*/, Unit* unit)
