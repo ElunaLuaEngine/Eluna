@@ -395,8 +395,6 @@ ElunaRegister<Unit> UnitMethods[] =
     { "SendUnitSay", &LuaUnit::SendUnitSay },
     { "SendUnitYell", &LuaUnit::SendUnitYell },
     { "CastSpell", &LuaUnit::CastSpell },
-    { "CastCustomSpell", &LuaUnit::CastCustomSpell },
-    { "CastSpellAoF", &LuaUnit::CastSpellAoF },
     { "Kill", &LuaUnit::Kill },
     { "StopSpellCast", &LuaUnit::StopSpellCast },
     { "InterruptSpell", &LuaUnit::InterruptSpell },
