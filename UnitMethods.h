@@ -2330,8 +2330,12 @@ namespace LuaUnit
         bool triggered = Eluna::CHECKVAL<bool>(L, 4, false);
 #ifdef CMANGOS
         SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
-#else
+#endif
+#ifdef MANGOS
         SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
+#endif
+#ifdef TRINITY
+        SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(spell);
 #endif
         if (!spellEntry)
             return 0;
@@ -2487,38 +2491,42 @@ namespace LuaUnit
      */
     int AddAura(lua_State* L, Unit* unit)
     {
-        uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 spell = Eluna::CHECKVAL<uint32>(L, 2);
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 3);
 #ifdef CMANGOS
-        SpellEntry const* spellInfo = GetSpellStore()->LookupEntry<SpellEntry>(spellId);
-#else
-        SpellEntry const* spellInfo = sSpellStore.LookupEntry(spellId);
+        SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
 #endif
-        if (!spellInfo)
+#ifdef MANGOS
+        SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
+#endif
+#ifdef TRINITY
+        SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(spell);
+#endif
+        if (!spellEntry)
             return 1;
 
 #ifndef TRINITY
-        if (!IsSpellAppliesAura(spellInfo) && !IsSpellHaveEffect(spellInfo, SPELL_EFFECT_PERSISTENT_AREA_AURA))
+        if (!IsSpellAppliesAura(spellEntry) && !IsSpellHaveEffect(spellEntry, SPELL_EFFECT_PERSISTENT_AREA_AURA))
             return 1;
 
-        SpellAuraHolder* holder = CreateSpellAuraHolder(spellInfo, target, unit);
+        SpellAuraHolder* holder = CreateSpellAuraHolder(spellEntry, target, unit);
 
         for (uint32 i = 0; i < MAX_EFFECT_INDEX; ++i)
         {
-            uint8 eff = spellInfo->Effect[i];
+            uint8 eff = spellEntry->Effect[i];
             if (eff >= TOTAL_SPELL_EFFECTS)
                 continue;
             if (IsAreaAuraEffect(eff) ||
                 eff == SPELL_EFFECT_APPLY_AURA ||
                 eff == SPELL_EFFECT_PERSISTENT_AREA_AURA)
             {
-                Aura* aur = CreateAura(spellInfo, SpellEffIndex(i), NULL, holder, target);
+                Aura* aur = CreateAura(spellEntry, SpellEffIndex(i), NULL, holder, target);
                 holder->AddAura(aur, SpellEffIndex(i));
             }
         }
         Eluna::Push(L, target->AddSpellAuraHolder(holder));
 #else
-        Eluna::Push(L, unit->AddAura(spellId, target));
+        Eluna::Push(L, unit->AddAura(spell, target));
 #endif
         return 1;
     }
