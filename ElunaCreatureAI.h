@@ -72,10 +72,10 @@ struct ElunaCreatureAI : ScriptedAI
 
     //Called for reaction at enter to combat if not in combat yet (enemy can be NULL)
     //Called at creature aggro either by MoveInLOS or Attack Start
-    void EnterCombat(Unit* target) override
+    void JustEngagedWith(Unit* target) override
     {
         if (!sEluna->EnterCombat(me, target))
-            ScriptedAI::EnterCombat(target);
+            ScriptedAI::JustEngagedWith(target);
     }
 
     // Called at any Damage from any attacker (before damage apply)
