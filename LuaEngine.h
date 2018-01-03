@@ -364,7 +364,7 @@ public:
     bool OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code);
     bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, Creature* pCreature, Quest const* pQuest, uint32 opt);
-    uint32 GetDialogStatus(const Player* pPlayer, const Creature* pCreature);
+    void GetDialogStatus(const Player* pPlayer, const Creature* pCreature);
 
     bool OnSummoned(Creature* creature, Unit* summoner);
     bool UpdateAI(Creature* me, const uint32 diff);
@@ -397,7 +397,7 @@ public:
     bool OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action, const char* code);
     bool OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest, uint32 opt);
-    uint32 GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject);
+    void GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject);
 #ifndef CLASSIC
 #ifndef TBC
     void OnDestroyed(GameObject* pGameObject, Player* pPlayer);
