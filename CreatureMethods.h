@@ -692,8 +692,12 @@ namespace LuaCreature
 
 #ifdef CMANGOS
         ThreatList const& threatlist = creature->getThreatManager().getThreatList();
-#else
+#endif
+#ifdef MANGOS
         ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
+#endif
+#ifdef TRINITY
+        auto const& threatlist = creature->GetThreatManager().GetThreatenedByMeList();
 #endif
         if (threatlist.empty())
             return 1;
@@ -701,9 +705,13 @@ namespace LuaCreature
             return 1;
 
         std::list<Unit*> targetList;
-        for (ThreatList::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+        for (auto itr = threatlist.begin(); itr != threatlist.end(); ++itr)
         {
+#ifdef TRINITY
+            Unit* target = itr->second->GetOwner();
+#else
             Unit* target = (*itr)->getTarget();
+#endif
             if (!target)
                 continue;
             if (playerOnly && target->GetTypeId() != TYPEID_PLAYER)
@@ -772,13 +780,21 @@ namespace LuaCreature
      */
     int GetAITargets(lua_State* L, Creature* creature)
     {
+#ifdef TRINITY
+        auto const& threatlist = creature->GetThreatManager().GetThreatenedByMeList();
+#else
         ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
+#endif
         lua_createtable(L, threatlist.size(), 0);
         int tbl = lua_gettop(L);
         uint32 i = 0;
-        for (ThreatList::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+        for (auto itr = threatlist.begin(); itr != threatlist.end(); ++itr)
         {
+#ifdef TRINITY
+            Unit* target = itr->second->GetOwner();
+#else
             Unit* target = (*itr)->getTarget();
+#endif
             if (!target)
                 continue;
             Eluna::Push(L, target);
@@ -796,7 +812,11 @@ namespace LuaCreature
      */
     int GetAITargetsCount(lua_State* L, Creature* creature)
     {
+#ifdef TRINITY
+        Eluna::Push(L, creature->GetThreatManager().GetThreatenedByMeList().size());
+#else
         Eluna::Push(L, creature->GetThreatManager().getThreatList().size());
+#endif
         return 1;
     }
 

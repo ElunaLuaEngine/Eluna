@@ -103,7 +103,6 @@ typedef Opcodes                 OpcodesList;
 #define eAuctionMgr             (sAuctionMgr)
 #define eObjectAccessor()       ObjectAccessor::
 #define REGEN_TIME_FULL
-typedef ThreatContainer::StorageType ThreatList;
 
 #ifdef CATA
 #define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS

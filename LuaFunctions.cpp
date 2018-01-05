@@ -270,7 +270,6 @@ ElunaRegister<Unit> UnitMethods[] =
     { "GetRaceAsString", &LuaUnit::GetRaceAsString },
     { "GetClassAsString", &LuaUnit::GetClassAsString },
     { "GetAura", &LuaUnit::GetAura },
-    { "GetCombatTime", &LuaUnit::GetCombatTime },
     { "GetFaction", &LuaUnit::GetFaction },
     { "GetCurrentSpell", &LuaUnit::GetCurrentSpell },
     { "GetCreatureType", &LuaUnit::GetCreatureType },

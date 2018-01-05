@@ -1178,17 +1178,6 @@ namespace LuaUnit
     }
 
     /**
-     * Returns the [Unit]'s combat timer
-     *
-     * @return uint32 combatTimer
-     */
-    int GetCombatTime(lua_State* L, Unit* unit)
-    {
-        Eluna::Push(L, unit->GetCombatTimer());
-        return 1;
-    }
-
-    /**
      * Returns a table containing friendly [Unit]'s within given range of the [Unit].
      *
      * @param float range = 533.333 : search radius
@@ -1928,7 +1917,11 @@ namespace LuaUnit
      */
     int ClearThreatList(lua_State* /*L*/, Unit* unit)
     {
+#ifdef TRINITY
+        unit->GetThreatManager().ClearAllThreat();
+#else
         unit->GetThreatManager().clearReferences();
+#endif
         return 0;
     }
     
