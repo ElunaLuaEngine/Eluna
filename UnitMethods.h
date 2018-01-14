@@ -2371,11 +2371,11 @@ namespace LuaUnit
 #ifdef TRINITY
         CastSpellExtraArgs args;
         if (has_bp0)
-            args.SpellValueOverrides.AddMod(SPELLVALUE_BASE_POINT0, bp0);
+            args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp0);
         if (has_bp1)
-            args.SpellValueOverrides.AddMod(SPELLVALUE_BASE_POINT1, bp1);
+            args.AddSpellMod(SPELLVALUE_BASE_POINT1, bp1);
         if (has_bp2)
-            args.SpellValueOverrides.AddMod(SPELLVALUE_BASE_POINT2, bp2);
+            args.AddSpellMod(SPELLVALUE_BASE_POINT2, bp2);
         if (triggered)
             args.TriggerFlags = TRIGGERED_FULL_MASK;
         if (castItem)
