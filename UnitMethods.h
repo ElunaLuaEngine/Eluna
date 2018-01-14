@@ -2636,10 +2636,11 @@ namespace LuaUnit
         // flat melee damage without resistence/etc reduction
         if (school == MAX_SPELL_SCHOOL)
         {
-            unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
 #ifdef TRINITY
+            Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
             unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_HIT, 0);
 #else
+            unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
             unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
 #endif
             return 0;
@@ -2649,7 +2650,7 @@ namespace LuaUnit
 
 #ifdef TRINITY
         if (Unit::IsDamageReducedByArmor(schoolmask))
-            damage = unit->CalcArmorReducedDamage(target, damage, NULL, BASE_ATTACK);
+            damage = Unit::CalcArmorReducedDamage(unit, target, damage, NULL, BASE_ATTACK);
 #else
         if (schoolmask & SPELL_SCHOOL_MASK_NORMAL)
             damage = unit->CalcArmorReducedDamage(target, damage);
@@ -2670,7 +2671,11 @@ namespace LuaUnit
             uint32 absorb = dmgInfo.GetAbsorb();
             uint32 resist = dmgInfo.GetResist();
             unit->DealDamageMods(target, damage, &absorb);
+#ifdef TRINITY
+            Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
+#else
             unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
+#endif
             unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
             return 0;
         }
@@ -2683,7 +2688,11 @@ namespace LuaUnit
             return false;
 
         SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
-        damage = unit->SpellDamageBonusDone(target, spellInfo, damage, SPELL_DIRECT_DAMAGE);
+#ifdef TRINITY
+        damage = unit->SpellDamageBonusDone(target, spellInfo, damage, SPELL_DIRECT_DAMAGE, {});
+#else
+        damage = unit->SpellDamageBonusDone(target, spellInfo, damage, SPELL_DIRECT_DAMAGE;
+#endif
         damage = target->SpellDamageBonusTaken(unit, spellInfo, damage, SPELL_DIRECT_DAMAGE);
 
         unit->CalculateSpellDamageTaken(&dmgInfo, damage, spellInfo);
@@ -2763,7 +2772,7 @@ namespace LuaUnit
 #ifndef TRINITY
         unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
 #else
-        unit->Kill(target, durLoss);
+        Unit::Kill(unit, target, durLoss);
 #endif
         return 0;
     }
