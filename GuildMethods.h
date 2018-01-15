@@ -25,15 +25,21 @@ namespace LuaGuild
         int tbl = lua_gettop(L);
         uint32 i = 0;
 
+#ifdef MANGOS
+        eObjectAccessor()DoForAllPlayers([&](Player* player)
+        {
+            if (player->IsInWorld() && player->GetGuildId() == guild->GetId())
+            {
+                Eluna::Push(L, player);
+                lua_rawseti(L, tbl, ++i);
+            }
+        });
+#else
         {
 #ifdef TRINITY
             boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
 #else
-#ifdef MANGOS
-            ACE_READ_GUARD_RETURN(HashMapHolder<Player>::LockType, g, HashMapHolder<Player>::GetLock(), 0)
-#else
             HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
-#endif
 #endif
             const HashMapHolder<Player>::MapType& m = eObjectAccessor()GetPlayers();
             for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
@@ -48,7 +54,7 @@ namespace LuaGuild
                 }
             }
         }
-
+#endif
         lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
