@@ -15,6 +15,7 @@
 #include "Chat.h"
 #include "Channel.h"
 #include "DBCStores.h"
+#include "GameEventMgr.h"
 #include "GossipDef.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
@@ -117,6 +118,7 @@ typedef Opcodes                 OpcodesList;
 #define eObjectMgr              (&sObjectMgr)
 #define eAccountMgr             (&sAccountMgr)
 #define eAuctionMgr             (&sAuctionMgr)
+#define eGameEventMgr           (&sGameEventMgr)
 #define eObjectAccessor()       sObjectAccessor.
 #define SERVER_MSG_STRING       SERVER_MSG_CUSTOM
 #define TOTAL_LOCALES           MAX_LOCALE

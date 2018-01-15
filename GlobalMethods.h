@@ -468,7 +468,6 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-#ifdef TRINITY
     /**
      * Returns the currently active game events.
      *
@@ -479,7 +478,7 @@ namespace LuaGlobalFunctions
         lua_newtable(L);
         int tbl = lua_gettop(L);
         uint32 counter = 1;
-        GameEventMgr::ActiveEvents const& activeEvents = sGameEventMgr->GetActiveEventList();
+        GameEventMgr::ActiveEvents const& activeEvents = eGameEventMgr->GetActiveEventList();
 
         for (GameEventMgr::ActiveEvents::const_iterator i = activeEvents.begin(); i != activeEvents.end(); ++i)
         {
@@ -492,7 +491,6 @@ namespace LuaGlobalFunctions
         lua_settop(L, tbl);
         return 1;
     }
-#endif
 
     static int RegisterEntryHelper(lua_State* L, int regtype)
     {
@@ -2383,7 +2381,6 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-#ifdef TRINITY
     /**
      * Returns `true` if the event is currently active, otherwise `false`.
      *
@@ -2394,10 +2391,9 @@ namespace LuaGlobalFunctions
     {
         uint16 eventId = Eluna::CHECKVAL<uint16>(L, 1);
 
-        Eluna::Push(L, sGameEventMgr->IsActiveEvent(eventId));
+        Eluna::Push(L, eGameEventMgr->IsActiveEvent(eventId));
         return 1;
     }
-#endif
 
     /**
      * Returns the server's current time.
@@ -2469,7 +2465,6 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
-#ifdef TRINITY
     /**
     * Starts the event by eventId, if force is set, the event will force start regardless of previous event state.
     *
@@ -2481,7 +2476,7 @@ namespace LuaGlobalFunctions
         uint16 eventId = Eluna::CHECKVAL<uint16>(L, 1);
         bool force = Eluna::CHECKVAL<bool>(L, 2, false);
 
-        sGameEventMgr->StartEvent(eventId, force);
+        eGameEventMgr->StartEvent(eventId, force);
         return 0;
     }
 
@@ -2496,10 +2491,9 @@ namespace LuaGlobalFunctions
         uint16 eventId = Eluna::CHECKVAL<uint16>(L, 1);
         bool force = Eluna::CHECKVAL<bool>(L, 2, false);
 
-        sGameEventMgr->StopEvent(eventId, force);
+        eGameEventMgr->StopEvent(eventId, force);
         return 0;
     }
-#endif
 
     /**
      * Returns an object representing a `long long` (64-bit) value.
