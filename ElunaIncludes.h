@@ -102,6 +102,7 @@ typedef Opcodes                 OpcodesList;
 #define eObjectMgr              (sObjectMgr)
 #define eAccountMgr             (sAccountMgr)
 #define eAuctionMgr             (sAuctionMgr)
+#define eGameEventMgr           (sGameEventMgr)
 #define eObjectAccessor()       ObjectAccessor::
 #define REGEN_TIME_FULL
 
