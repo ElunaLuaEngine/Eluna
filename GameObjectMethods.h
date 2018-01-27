@@ -126,6 +126,8 @@ namespace LuaGameObject
     /**
      * Returns the [Player] that can loot the [GameObject]
      *
+     * Not the original looter and may be nil.
+     *
      * @return [Player] player
      */
     int GetLootRecipient(lua_State* L, GameObject* go)
@@ -136,6 +138,8 @@ namespace LuaGameObject
 
     /**
      * Returns the [Group] that can loot the [GameObject]
+     *
+     * Not the original looter and may be nil.
      *
      * @return [Group] group
      */
