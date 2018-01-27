@@ -1012,7 +1012,12 @@ namespace LuaCreature
      */
     int SetInCombatWithZone(lua_State* /*L*/, Creature* creature)
     {
+#ifdef TRINITY
+        if (creature->IsAIEnabled)
+            creature->AI()->DoZoneInCombat();
+#else
         creature->SetInCombatWithZone();
+#endif
         return 0;
     }
 
