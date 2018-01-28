@@ -266,11 +266,11 @@ class hash_helper
 public:
     typedef std::size_t result_type;
 
-    template <typename... T>
-    static inline result_type hash(T const &... t)
+    template <typename T1, typename T2, typename... T>
+    static inline result_type hash(T1 const & t1, T2 const & t2, T const &... t)
     {
         result_type seed = 0;
-        _hash_combine(seed, t...);
+        _hash_combine(seed, t1, t2, t...);
         return seed;
     }
 
@@ -294,11 +294,11 @@ private:
         seed ^= hash(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
 
-    template <typename H, typename... T>
-    static inline void _hash_combine(result_type& seed, H const & h, T const &... t)
+    template <typename H, typename T1, typename... T>
+    static inline void _hash_combine(result_type& seed, H const & h, T1 const & t1, T const &... t)
     {
         _hash_combine(seed, h);
-        _hash_combine(seed, t...);
+        _hash_combine(seed, t1, t...);
     }
 };
 
