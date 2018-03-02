@@ -16,7 +16,6 @@ Additionally see you desired core's documentation and installation instructions 
 2. Choose the git address of your desired core and patch below and clone the core with `git clone <address>`.  
 For example `git clone https://github.com/ElunaLuaEngine/ElunaTrinityWotlk.git`
    * TrinityCore WoTLK: `https://github.com/ElunaLuaEngine/ElunaTrinityWotlk.git`
-   * TrinityCore Cataclysm: `https://github.com/ElunaLuaEngine/ElunaTrinityCata.git`
    * cMaNGOS Classic: `https://github.com/ElunaLuaEngine/ElunaMangosClassic.git`
    * cMaNGOS TBC: `https://github.com/ElunaLuaEngine/ElunaMangosTbc.git`
    * cMaNGOS WoTLK: `https://github.com/ElunaLuaEngine/ElunaMangosWotlk.git`
