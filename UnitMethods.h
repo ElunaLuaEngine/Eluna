@@ -850,7 +850,7 @@ namespace LuaUnit
     {
 #ifdef TRINITY
         if (powerType == -1)
-            return unit->getPowerType();
+            return unit->GetPowerType();
 #else
         if (powerType == -1)
             return unit->GetPowerType();
@@ -976,7 +976,7 @@ namespace LuaUnit
     int GetPowerType(lua_State* L, Unit* unit)
     {
 #ifdef TRINITY
-        Eluna::Push(L, unit->getPowerType());
+        Eluna::Push(L, unit->GetPowerType());
 #else
         Eluna::Push(L, unit->GetPowerType());
 #endif
@@ -1650,7 +1650,7 @@ namespace LuaUnit
             return luaL_argerror(L, 2, "valid Powers expected");
 
 #ifdef TRINITY
-        unit->setPowerType((Powers)type);
+        unit->SetPowerType((Powers)type);
 #else
         unit->SetPowerType((Powers)type);
 #endif
