@@ -21,7 +21,7 @@ using namespace Hooks;
         return RETVAL;\
     LOCK_ELUNA
 
-bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget)
+bool Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget)
 {
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_DUMMY_EFFECT, pTarget->GetEntry(), false);
     Push(pCaster);

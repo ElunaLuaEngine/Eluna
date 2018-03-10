@@ -30,7 +30,7 @@ using namespace Hooks;
         return RETVAL;\
     LOCK_ELUNA
 
-bool Eluna::OnDummyEffect(Unit* pCaster, uint32 spellId, SpellEffIndex effIndex, GameObject* pTarget)
+bool Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, GameObject* pTarget)
 {
     START_HOOK_WITH_RETVAL(GAMEOBJECT_EVENT_ON_DUMMY_EFFECT, pTarget->GetEntry(), false);
     Push(pCaster);
@@ -78,19 +78,19 @@ void Eluna::GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject
 
 #ifndef CLASSIC
 #ifndef TBC
-void Eluna::OnDestroyed(GameObject* pGameObject, Player* pPlayer)
+void Eluna::OnDestroyed(GameObject* pGameObject, WorldObject* attacker)
 {
     START_HOOK(GAMEOBJECT_EVENT_ON_DESTROYED, pGameObject->GetEntry());
     Push(pGameObject);
-    Push(pPlayer);
+    Push(attacker);
     CallAllFunctions(GameObjectEventBindings, key);
 }
 
-void Eluna::OnDamaged(GameObject* pGameObject, Player* pPlayer)
+void Eluna::OnDamaged(GameObject* pGameObject, WorldObject* attacker)
 {
     START_HOOK(GAMEOBJECT_EVENT_ON_DAMAGED, pGameObject->GetEntry());
     Push(pGameObject);
-    Push(pPlayer);
+    Push(attacker);
     CallAllFunctions(GameObjectEventBindings, key);
 }
 #endif

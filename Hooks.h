@@ -301,8 +301,8 @@ namespace Hooks
         GAMEOBJECT_EVENT_ON_QUEST_ACCEPT                = 4,    // (event, player, go, quest) - Can return true
         GAMEOBJECT_EVENT_ON_QUEST_REWARD                = 5,    // (event, player, go, quest, opt) - Can return true
         GAMEOBJECT_EVENT_ON_DIALOG_STATUS               = 6,    // (event, player, go)
-        GAMEOBJECT_EVENT_ON_DESTROYED                   = 7,    // (event, go, player)
-        GAMEOBJECT_EVENT_ON_DAMAGED                     = 8,    // (event, go, player)
+        GAMEOBJECT_EVENT_ON_DESTROYED                   = 7,    // (event, go, attacker)
+        GAMEOBJECT_EVENT_ON_DAMAGED                     = 8,    // (event, go, attacker)
         GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE           = 9,    // (event, go, state)
         GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED            = 10,   // (event, go, state)
         // UNUSED                                       = 11,   // (event, gameobject)
