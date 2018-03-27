@@ -3646,7 +3646,7 @@ namespace LuaPlayer
      * @param string msg : label on the gossip item
      * @param uint32 sender : number passed to gossip handlers
      * @param uint32 intid : number passed to gossip handlers
-     * @param uint32 code = false : show text input on click if true
+     * @param bool code = false : show text input on click if true
      * @param string popup = nil : if non empty string, a popup with given text shown on click
      * @param uint32 money = 0 : required money in copper
      */
