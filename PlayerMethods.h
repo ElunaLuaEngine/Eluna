@@ -780,8 +780,7 @@ namespace LuaPlayer
     }
 #endif
 
-#ifndef CATA
-#ifndef CLASSIC
+#if defined(TBC) || defined (WOTLK)
     /**
      * Returns the [Player]s current amount of Arena Points
      *
@@ -803,7 +802,6 @@ namespace LuaPlayer
         Eluna::Push(L, player->GetHonorPoints());
         return 1;
     }
-#endif
 
     /**
      * Returns the [Player]s current shield block value
@@ -1900,8 +1898,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#ifndef CATA
-#ifndef CLASSIC
+#if defined(TBC) || defined(WOTLK)
     /**
      * Sets the [Player]s Arena Points to the amount specified
      *
@@ -1925,7 +1922,6 @@ namespace LuaPlayer
         player->SetHonorPoints(honorP);
         return 0;
     }
-#endif
 #endif
 
 #ifdef CLASSIC
@@ -2111,8 +2107,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#ifndef CATA
-#ifndef CLASSIC
+#if defined(TBC) || defined(WOTLK)
     /**
      * Adds or detracts from the [Player]s current Arena Points
      *
@@ -2138,7 +2133,6 @@ namespace LuaPlayer
         player->ModifyHonorPoints(amount);
         return 0;
     }
-#endif
 #endif
 
     /**

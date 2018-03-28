@@ -152,7 +152,7 @@ namespace LuaGuild
         return 1;
     }
 
-#ifndef CATA
+#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     /**
      * Sets the leader of this [Guild]
      *

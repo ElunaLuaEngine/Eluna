@@ -834,7 +834,7 @@ namespace LuaCreature
         return 1;
     }
 
-#ifndef CATA
+#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     /**
      * Returns the [Creature]'s shield block value.
      *
