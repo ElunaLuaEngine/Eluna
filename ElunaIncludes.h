@@ -127,7 +127,7 @@ typedef Opcodes                 OpcodesList;
 #define MAX_TALENT_SPECS        MAX_TALENT_SPEC_COUNT
 #define TEAM_NEUTRAL            TEAM_INDEX_NEUTRAL
 
-#ifndef CLASSIC
+#if defined(TBC) || (defined(WOTLK) && !defined(MANGOS)) || defined(CATA)
 #define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
 #endif
 
@@ -135,7 +135,7 @@ typedef Opcodes                 OpcodesList;
 #define SPELL_AURA_MOD_KILL_XP_PCT  SPELL_AURA_MOD_XP_PCT
 #endif
 
-#if defined(WOTLK) && !defined(MANGOS)
+#if defined(CATA) || defined(MISTS) || (defined(WOTLK) && !defined(MANGOS))
 #define UNIT_BYTE2_FLAG_SANCTUARY   UNIT_BYTE2_FLAG_SUPPORTABLE
 #endif
 

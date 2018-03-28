@@ -450,11 +450,9 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetGuild", &LuaPlayer::GetGuild },
     { "GetAccountId", &LuaPlayer::GetAccountId },
     { "GetAccountName", &LuaPlayer::GetAccountName },
-#ifndef CATA
-#ifndef CLASSIC
+#if defined (TBC) || defined (WOTLK)
     { "GetArenaPoints", &LuaPlayer::GetArenaPoints },
     { "GetHonorPoints", &LuaPlayer::GetHonorPoints },
-#endif
 #endif
     { "GetLifetimeKills", &LuaPlayer::GetLifetimeKills },
     { "GetPlayerIP", &LuaPlayer::GetPlayerIP },
@@ -514,7 +512,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetCorpse", &LuaPlayer::GetCorpse },
     { "GetGossipTextId", &LuaPlayer::GetGossipTextId },
     { "GetQuestRewardStatus", &LuaPlayer::GetQuestRewardStatus },
-#ifndef CATA
+#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
 #endif
 #ifdef CLASSIC
@@ -534,11 +532,9 @@ ElunaRegister<Player> PlayerMethods[] =
     { "UnsetKnownTitle", &LuaPlayer::UnsetKnownTitle },
 #endif
     { "SetBindPoint", &LuaPlayer::SetBindPoint },
-#ifndef CATA
-#ifndef CLASSIC
+#if defined(TBC) || defined(WOTLK)
     { "SetArenaPoints", &LuaPlayer::SetArenaPoints },
     { "SetHonorPoints", &LuaPlayer::SetHonorPoints },
-#endif
 #endif
 #ifdef CLASSIC
     { "SetHonorStoredKills", &LuaPlayer::SetHonorStoredKills },
@@ -708,11 +704,9 @@ ElunaRegister<Player> PlayerMethods[] =
     { "DurabilityPointLossForEquipSlot", &LuaPlayer::DurabilityPointLossForEquipSlot },
     { "DurabilityRepairAll", &LuaPlayer::DurabilityRepairAll },
     { "DurabilityRepair", &LuaPlayer::DurabilityRepair },
-#ifndef CATA
-#ifndef CLASSIC
+#if defined(TBC) || defined(WOTLK)
     { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
     { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
-#endif
 #endif
     { "LeaveBattleground", &LuaPlayer::LeaveBattleground },
     // {"BindToInstance", &LuaPlayer::BindToInstance},                                      // :BindToInstance() - UNDOCUMENTED - Binds the player to the current instance
@@ -784,7 +778,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetLootRecipient", &LuaCreature::GetLootRecipient },
     { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },
     { "GetNPCFlags", &LuaCreature::GetNPCFlags },
-#ifndef CATA
+#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
 #endif
     { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
@@ -956,7 +950,7 @@ ElunaRegister<Item> ItemMethods[] =
     { "IsEquipped", &LuaItem::IsEquipped },
     { "HasQuest", &LuaItem::HasQuest },
     { "IsPotion", &LuaItem::IsPotion },
-#ifndef CATA
+#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
     { "IsArmorVellum", &LuaItem::IsArmorVellum },
 #endif
@@ -1097,7 +1091,7 @@ ElunaRegister<Guild> GuildMethods[] =
     { "SetBankTabText", &LuaGuild::SetBankTabText },
 #endif
     { "SetMemberRank", &LuaGuild::SetMemberRank },
-#ifndef CATA
+#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     { "SetLeader", &LuaGuild::SetLeader },
 #endif
 

@@ -195,7 +195,7 @@ namespace LuaItem
         return 1;
     }
 
-#ifndef CATA
+#if defined CLASSIC || defined(TBC) || defined(WOTLK)
     /**
      * Returns 'true' if the [Item] is a weapon vellum, 'false' otherwise
      *
@@ -271,7 +271,7 @@ namespace LuaItem
 #ifndef CLASSIC
         if (int32 itemRandPropId = item->GetItemRandomPropertyId())
         {
-#ifdef CATA
+#if defined(CATA) || defined (MISTS)
             char* suffix = NULL;
 #else
             char* const* suffix = NULL;
