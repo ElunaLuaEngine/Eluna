@@ -802,7 +802,8 @@ namespace LuaPlayer
         Eluna::Push(L, player->GetHonorPoints());
         return 1;
     }
-
+#endif
+#if defined(CLASSIC) || defined(TBC) || defined (WOTLK)
     /**
      * Returns the [Player]s current shield block value
      *
