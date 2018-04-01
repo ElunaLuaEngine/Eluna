@@ -7,6 +7,10 @@
 #ifndef GLOBALMETHODS_H
 #define GLOBALMETHODS_H
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 #include "BindingMap.h"
 
 /***
@@ -123,7 +127,7 @@ namespace LuaGlobalFunctions
      */
     int GetGameTime(lua_State* L)
     {
-#ifdef TRINITY
+#if defined TRINITY && !defined SUNWELL
         Eluna::Push(L, GameTime::GetGameTime());
 #else
         Eluna::Push(L, eWorld->GetGameTime());
@@ -170,7 +174,11 @@ namespace LuaGlobalFunctions
 #else
         {
 #ifdef TRINITY
+#ifdef USING_BOOST
             boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+#else
+			TRINITY_READ_GUARD(HashMapHolder<Player>::LockType, *HashMapHolder<Player>::GetLock());
+#endif
 #else
             HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
 #endif
@@ -456,7 +464,7 @@ namespace LuaGlobalFunctions
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(L, 2, "valid LocaleConstant expected");
 
-#ifdef TRINITY
+#if defined TRINITY && !defined SUNWELL
         AreaTableEntry const* areaEntry = sAreaTableStore.LookupEntry(areaOrZoneId);
 #else
         AreaTableEntry const* areaEntry = GetAreaEntryByAreaID(areaOrZoneId);
@@ -1468,7 +1476,7 @@ namespace LuaGlobalFunctions
         }
 #endif
 
-#ifndef TRINITY
+#ifndef TRINITY 
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
         {
@@ -1668,7 +1676,11 @@ namespace LuaGlobalFunctions
             if (save)
             {
                 Creature* creature = new Creature();
+#ifndef SUNWELL
                 if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, pos))
+#else
+				if (!creature->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_UNIT), map, phase, entry, 0, x, y, z, o))
+#endif
                 {
                     delete creature;
                     Eluna::Push(L);
@@ -1676,15 +1688,21 @@ namespace LuaGlobalFunctions
                 }
 
                 creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
-
-                uint32 db_guid = creature->GetSpawnId();
-
+#ifndef SUNWELL
+				uint32 db_guid = creature->GetSpawnId();
+#else
+				uint32 db_guid = creature->GetDBTableGUIDLow();
+#endif
                 // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells()
                 // current "creature" variable is deleted and created fresh new, otherwise old values might trigger asserts or cause undefined behavior
                 creature->CleanupsBeforeDelete();
                 delete creature;
                 creature = new Creature();
-                if (!creature->LoadFromDB(db_guid, map, true, true))
+#ifndef SUNWELL
+				if (!creature->LoadFromDB(db_guid, map, true, true))
+#else
+				if (!creature->LoadFromDB(db_guid, map))
+#endif
                 {
                     delete creature;
                     Eluna::Push(L);
@@ -1730,10 +1748,14 @@ namespace LuaGlobalFunctions
             }
 
             GameObject* object = new GameObject;
+#ifndef SUNWELL
             uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
-
-            QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
-            if (!object->Create(guidLow, objectInfo->entry, map, phase, Position(x, y, z, o), rot, 0, GO_STATE_READY))
+			QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
+			if (!object->Create(guidLow, objectInfo->entry, map, phase, Position(x, y, z, o), rot, 0, GO_STATE_READY))
+#else
+			uint32 guidLow = sObjectMgr->GenerateLowGuid(HIGHGUID_GAMEOBJECT);
+			if (!object->Create(guidLow, entry, map, phase, x, y, z, o, G3D::Quat(0.0f, 0.0f, 0.0f, 0.0f), 100, GO_STATE_READY))
+#endif
             {
                 delete object;
                 Eluna::Push(L);
@@ -1747,22 +1769,32 @@ namespace LuaGlobalFunctions
             {
                 // fill the gameobject data and save to the db
                 object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
+#ifndef SUNWELL
                 guidLow = object->GetSpawnId();
-
+#else
+				guidLow = object->GetDBTableGUIDLow();
+#endif
                 // delete the old object and do a clean load from DB with a fresh new GameObject instance.
                 // this is required to avoid weird behavior and memory leaks
                 delete object;
 
                 object = new GameObject();
                 // this will generate a new lowguid if the object is in an instance
+#ifndef SUNWELL
                 if (!object->LoadFromDB(guidLow, map, true))
+#else
+				if (!object->LoadFromDB(guidLow, map))
+#endif
                 {
                     delete object;
                     Eluna::Push(L);
                     return 1;
                 }
-
+#ifndef SUNWELL
                 eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGameObjectData(guidLow));
+#else
+				eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGOData(guidLow));
+#endif
             }
             else
                 map->AddToMap(object);
@@ -1870,7 +1902,7 @@ namespace LuaGlobalFunctions
 #if defined(CATA) || defined(MISTS)
             eObjectMgr->RemoveVendorItem(entry, (*itr)->item, 1);
 #else
-#ifdef TRINITY
+#if defined TRINITY && !defined SUNWELL
             eObjectMgr->RemoveVendorItem(entry, itr->item);
 #else
             eObjectMgr->RemoveVendorItem(entry, (*itr)->item);
@@ -1918,8 +1950,8 @@ namespace LuaGlobalFunctions
         switch (banMode)
         {
             case BAN_ACCOUNT:
-#ifdef TRINITY
-                if (!Utf8ToUpperOnlyLatin(nameOrIP))
+#if defined TRINITY && !defined SUNWELL
+				if (!Utf8ToUpperOnlyLatin(nameOrIP))
                     return 0;
 #else
                 if (!AccountMgr::normalizeString(nameOrIP))
@@ -1937,8 +1969,14 @@ namespace LuaGlobalFunctions
             default:
                 return 0;
         }
-
+#ifndef SUNWELL
         eWorld->BanAccount((BanMode)banMode, nameOrIP, duration, reason, whoBanned);
+#else
+		std::stringstream ss;
+		ss << duration << "s";
+
+		eWorld->BanAccount((BanMode)banMode, nameOrIP, ss.str(), reason, whoBanned);
+#endif
         return 0;
     }
 
@@ -2204,8 +2242,8 @@ namespace LuaGlobalFunctions
                 // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, node, key, value
             }
             TaxiPathNodeEntry entry;
-#ifdef TRINITY
-            // mandatory
+#if defined TRINITY && !defined SUNWELL
+			// mandatory
             entry.MapID = Eluna::CHECKVAL<uint32>(L, start);
             entry.LocX = Eluna::CHECKVAL<float>(L, start + 1);
             entry.LocY = Eluna::CHECKVAL<float>(L, start + 2);
@@ -2253,8 +2291,8 @@ namespace LuaGlobalFunctions
         {
             TaxiPathNodeEntry& entry = *it;
             TaxiNodesEntry* nodeEntry = new TaxiNodesEntry();
-#ifdef TRINITY
-            entry.PathID = pathId;
+#if defined TRINITY && !defined SUNWELL
+			entry.PathID = pathId;
             entry.NodeIndex = nodeId;
             nodeEntry->ID = index;
             nodeEntry->map_id = entry.MapID;
@@ -2276,7 +2314,11 @@ namespace LuaGlobalFunctions
             nodeEntry->MountCreatureID[0] = mountH;
             nodeEntry->MountCreatureID[1] = mountA;
             sTaxiNodesStore.SetEntry(nodeId++, nodeEntry);
+#ifndef SUNWELL
             sTaxiPathNodesByPath[pathId].set(index++, new TaxiPathNodeEntry(entry));
+#else
+			sTaxiPathNodesByPath[pathId][index++] = new TaxiPathNodeEntry(entry);
+#endif
 #endif
         }
         if (startNode >= nodeId)
@@ -3083,4 +3125,9 @@ namespace LuaGlobalFunctions
         return 0;
     }
 }
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif
+
 #endif

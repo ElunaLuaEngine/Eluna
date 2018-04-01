@@ -7,6 +7,10 @@
 #ifndef ITEMMETHODS_H
 #define ITEMMETHODS_H
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 /***
  * Inherits all methods from: [Object]
  */
@@ -745,4 +749,8 @@ namespace LuaItem
         return 0;
     }
 };
+
+#if defined TRINITY && defined SUNWELL
+#undef TRINITY
+#endif
 #endif

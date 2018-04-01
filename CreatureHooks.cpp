@@ -11,6 +11,10 @@
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 using namespace Hooks;
 
 #define START_HOOK(EVENT, CREATURE) \
@@ -329,5 +333,9 @@ bool Eluna::OwnerAttacked(Creature* me, Unit* target)
     Push(target);
     return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
 }
+
+#if defined TRINITY && defined SUNWELL
+#undef TRINITY
+#endif
 
 #endif // TRINITY

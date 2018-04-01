@@ -9,6 +9,10 @@
 #ifndef CLASSIC
 #ifndef TBC
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 /***
  * Inherits all methods from: none
  */
@@ -109,6 +113,10 @@ namespace LuaVehicle
         return 0;
     }
 }
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif
 
 #endif // CLASSIC
 #endif // TBC

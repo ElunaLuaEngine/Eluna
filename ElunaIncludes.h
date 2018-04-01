@@ -39,7 +39,7 @@
 #include "WorldPacket.h"
 #include "WorldSession.h"
 
-#ifdef TRINITY
+#if defined TRINITY || defined SUNWELL
 #include "Config.h"
 #include "GameEventMgr.h"
 #include "GroupMgr.h"
@@ -47,11 +47,12 @@
 #include "SpellInfo.h"
 #include "WeatherMgr.h"
 #include "Battleground.h"
-#include "GitRevision.h"
-#include "SpellHistory.h"
 #include "MotionMaster.h"
 #include "DatabaseEnv.h"
 #include "Bag.h"
+#elif defined TRINITY
+#include "GitRevision.h"
+#include "SpellHistory.h"
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #else
@@ -111,7 +112,21 @@ typedef Opcodes                 OpcodesList;
 #endif
 #endif
 
-#ifndef TRINITY
+#ifdef SUNWELL
+#define CORE_NAME               "AyaseCore"
+#define CORE_VERSION			""
+#define eWorld                  (sWorld)
+#define eMapMgr                 (sMapMgr)
+#define eConfigMgr              (sConfigMgr)
+#define eGuildMgr               (sGuildMgr)
+#define eObjectMgr              (sObjectMgr)
+#define eAccountMgr             (sAccountMgr)
+#define eAuctionMgr             (sAuctionMgr)
+#define eGameEventMgr           (sGameEventMgr)
+#define eObjectAccessor()       ObjectAccessor::
+#endif
+
+#if !defined TRINITY && !defined SUNWELL
 #define eWorld                  (&sWorld)
 #define eMapMgr                 (&sMapMgr)
 #define eConfigMgr              (&sConfig)

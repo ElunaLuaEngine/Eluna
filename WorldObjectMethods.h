@@ -7,6 +7,10 @@
 #ifndef WORLDOBJECTMETHODS_H
 #define WORLDOBJECTMETHODS_H
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 /***
  * Inherits all methods from: [Object]
  */
@@ -186,6 +190,9 @@ namespace LuaWorldObject
 #ifndef TRINITY
         MaNGOS::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
+#elif defined SUNWELL
+		Trinity::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+		obj->VisitNearbyObject(range,searcher);
 #else
         Trinity::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
         Cell::VisitAllObjects(obj, searcher, range);
@@ -215,6 +222,9 @@ namespace LuaWorldObject
 #ifndef TRINITY
         MaNGOS::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
+#elif defined SUNWELL
+		Trinity::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+		obj->VisitNearbyObject(range, searcher);
 #else
         Trinity::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
         Cell::VisitAllObjects(obj, searcher, range);
@@ -246,6 +256,9 @@ namespace LuaWorldObject
 #ifndef TRINITY
         MaNGOS::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
+#elif defined SUNWELL
+		Trinity::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+		obj->VisitNearbyObject(range, searcher);
 #else
         Trinity::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
         Cell::VisitAllObjects(obj, searcher, range);
@@ -275,6 +288,9 @@ namespace LuaWorldObject
 #ifndef TRINITY
         MaNGOS::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
+#elif defined SUNWELL
+		Trinity::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+		obj->VisitNearbyObject(range, searcher);
 #else
         Trinity::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
         Cell::VisitAllObjects(obj, searcher, range);
@@ -316,6 +332,9 @@ namespace LuaWorldObject
 #ifndef TRINITY
         MaNGOS::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
+#elif defined SUNWELL
+		Trinity::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+		obj->VisitNearbyObject(range, searcher);
 #else
         Trinity::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
         Cell::VisitAllObjects(obj, searcher, range);
@@ -355,6 +374,9 @@ namespace LuaWorldObject
 #ifndef TRINITY
         MaNGOS::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
+#elif defined SUNWELL
+		Trinity::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+		obj->VisitNearbyObject(range, searcher);
 #else
         Trinity::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
         Cell::VisitAllObjects(obj, searcher, range);
@@ -402,6 +424,9 @@ namespace LuaWorldObject
 #ifndef TRINITY
         MaNGOS::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitAllObjects(obj, searcher, range);
+#elif defined SUNWELL
+		Trinity::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+		obj->VisitNearbyObject(range, searcher);
 #else
         Trinity::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
         Cell::VisitAllObjects(obj, searcher, range);
@@ -439,6 +464,9 @@ namespace LuaWorldObject
 #ifndef TRINITY
         MaNGOS::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitAllObjects(obj, searcher, range);
+#elif defined SUNWELL
+		Trinity::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+		obj->VisitNearbyObject(range, searcher);
 #else
         Trinity::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
         Cell::VisitAllObjects(obj, searcher, range);
@@ -681,6 +709,8 @@ namespace LuaWorldObject
         uint32 respawnDelay = Eluna::CHECKVAL<uint32>(L, 7, 30);
 #ifndef TRINITY
         Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, respawnDelay));
+#elif defined SUNWELL
+		Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, 0, 0, 0, 0, respawnDelay));
 #else
         QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
         Eluna::Push(L, obj->SummonGameObject(entry, Position(x, y, z, o), rot, respawnDelay));
@@ -1161,4 +1191,8 @@ namespace LuaWorldObject
         return 0;
     }
 };
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif
+
 #endif

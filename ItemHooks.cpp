@@ -11,6 +11,10 @@
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
 
+#ifdef SUNWELL 
+#define TRINITY
+#endif
+
 using namespace Hooks;
 
 #define START_HOOK_WITH_RETVAL(EVENT, ENTRY, RETVAL) \
@@ -123,3 +127,7 @@ bool Eluna::OnRemove(Player* pPlayer, Item* pItem)
     Push(pItem);
     return CallAllFunctionsBool(ItemEventBindings, key);
 }
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif

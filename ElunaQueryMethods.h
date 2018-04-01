@@ -7,6 +7,10 @@
 #ifndef QUERYMETHODS_H
 #define QUERYMETHODS_H
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 #ifndef TRINITY
 #define RESULT  result
 #else
@@ -308,12 +312,21 @@ namespace LuaQuery
                 // MYSQL_TYPE_LONGLONG Interpreted as string for lua
                 switch (row[i].GetType())
                 {
+#ifndef SUNWELL
                     case DatabaseFieldTypes::Int8:
                     case DatabaseFieldTypes::Int16:
                     case DatabaseFieldTypes::Int32:
                     case DatabaseFieldTypes::Int64:
                     case DatabaseFieldTypes::Float:
                     case DatabaseFieldTypes::Double:
+#else
+				case MYSQL_TYPE_TINY:
+				case MYSQL_TYPE_SHORT:
+				case MYSQL_TYPE_INT24:
+				case MYSQL_TYPE_LONG:
+				case MYSQL_TYPE_FLOAT:
+				case MYSQL_TYPE_DOUBLE:
+#endif
                         Eluna::Push(L, strtod(str, NULL));
                         break;
                     default:
@@ -355,5 +368,9 @@ namespace LuaQuery
     }
 };
 #undef RESULT
+
+#if defined TRINITY && defined SUNWELL
+#undef TRINITY
+#endif
 
 #endif

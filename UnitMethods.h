@@ -7,6 +7,10 @@
 #ifndef UNITMETHODS_H
 #define UNITMETHODS_H
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 /***
  * Inherits all methods from: [Object], [WorldObject]
  */
@@ -794,8 +798,8 @@ namespace LuaUnit
      */
     int GetStandState(lua_State* L, Unit* unit)
     {
-#ifdef TRINITY
-        Eluna::Push(L, unit->GetStandState());
+#if defined TRINITY && !defined SUNWELL
+		Eluna::Push(L, unit->GetStandState());
 #else
         Eluna::Push(L, unit->getStandState());
 #endif
@@ -849,8 +853,12 @@ namespace LuaUnit
     Powers PowerSelectorHelper(lua_State* L, Unit* unit, int powerType = -1)
     {
 #ifdef TRINITY
-        if (powerType == -1)
-            return unit->GetPowerType();
+		if (powerType == -1)
+#ifndef SUNWELL
+			return unit->GetPowerType();
+#else
+			return unit->getPowerType();
+#endif
 #else
         if (powerType == -1)
             return unit->GetPowerType();
@@ -976,7 +984,11 @@ namespace LuaUnit
     int GetPowerType(lua_State* L, Unit* unit)
     {
 #ifdef TRINITY
+#ifndef SUNWELL
         Eluna::Push(L, unit->GetPowerType());
+#else
+		Eluna::Push(L, unit->getPowerType());
+#endif
 #else
         Eluna::Push(L, unit->GetPowerType());
 #endif
@@ -1152,8 +1164,8 @@ namespace LuaUnit
      */
     int GetFaction(lua_State* L, Unit* unit)
     {
-#ifdef TRINITY
-        Eluna::Push(L, unit->GetFaction());
+#if defined TRINITY && !defined SUNWELL
+		Eluna::Push(L, unit->GetFaction());
 #else
         Eluna::Push(L, unit->getFaction());
 #endif
@@ -1195,7 +1207,11 @@ namespace LuaUnit
 #else
         Trinity::AnyFriendlyUnitInObjectRangeCheck checker(unit, unit, range);
         Trinity::UnitListSearcher<Trinity::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
-        Cell::VisitAllObjects(unit, searcher, range);
+#ifndef SUNWELL
+		Cell::VisitAllObjects(unit, searcher, range);
+#else
+		unit->VisitNearbyObject(range, searcher);
+#endif
 #endif
         ElunaUtil::ObjectGUIDCheck guidCheck(unit->GET_GUID());
         list.remove_if(guidCheck);
@@ -1232,7 +1248,11 @@ namespace LuaUnit
 #else
         Trinity::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, unit, range);
         Trinity::UnitListSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
-        Cell::VisitAllObjects(unit, searcher, range);
+#ifndef SUNWELL
+		Cell::VisitAllObjects(unit, searcher, range);
+#else
+		unit->VisitNearbyObject(range, searcher);
+#endif
 #endif
         ElunaUtil::ObjectGUIDCheck guidCheck(unit->GET_GUID());
         list.remove_if(guidCheck);
@@ -1475,7 +1495,7 @@ namespace LuaUnit
     int SetFaction(lua_State* L, Unit* unit)
     {
         uint32 factionId = Eluna::CHECKVAL<uint32>(L, 2);
-#ifdef TRINITY
+#if defined TRINITY && !defined SUNWELL
         unit->SetFaction(factionId);
 #else
         unit->setFaction(factionId);
@@ -1650,7 +1670,11 @@ namespace LuaUnit
             return luaL_argerror(L, 2, "valid Powers expected");
 
 #ifdef TRINITY
+#ifndef SUNWELL
         unit->SetPowerType((Powers)type);
+#else
+		unit->setPowerType((Powers)type);
+#endif
 #else
         unit->SetPowerType((Powers)type);
 #endif
@@ -1797,13 +1821,22 @@ namespace LuaUnit
         if (apply)
         {
             unit->SetByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
-            for (Unit::ControlList::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
+#ifndef SUNWELL
+			for (Unit::ControlList::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
+#else
+			for (Unit::ControlSet::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
+#endif
                 (*itr)->SetByteValue(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
         }
         else
         {
             unit->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
+#ifndef SUNWELL
             for (Unit::ControlList::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
+#else
+			for (Unit::ControlSet::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
+
+#endif
                 (*itr)->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
         }
 #endif
@@ -1918,7 +1951,11 @@ namespace LuaUnit
     int ClearThreatList(lua_State* /*L*/, Unit* unit)
     {
 #ifdef TRINITY
-        unit->GetThreatManager().ClearAllThreat();
+#ifndef SUNWELL
+		unit->GetThreatManager().ClearAllThreat();
+#else
+		unit->getThreatManager().clearReferences();
+#endif // !SUNWELL
 #else
         unit->GetThreatManager().clearReferences();
 #endif
@@ -2208,7 +2245,7 @@ namespace LuaUnit
         float maxHeight = Eluna::CHECKVAL<float>(L, 6);
         uint32 id = Eluna::CHECKVAL<uint32>(L, 7, 0);
 
-#if (defined(CMANGOS) || defined(MANGOS)) && defined(WOTLK)
+#if (defined(CMANGOS) || defined(MANGOS) || defined(SUNWELL)) && defined(WOTLK)
         unit->GetMotionMaster()->MoveJump(x, y, z, zSpeed, maxHeight, id);
 #else
         Position pos(x, y, z);
@@ -2233,8 +2270,8 @@ namespace LuaUnit
         Player* receiver = Eluna::CHECKOBJ<Player>(L, 4);
         bool bossWhisper = Eluna::CHECKVAL<bool>(L, 5, false);
         if (std::string(msg).length() > 0)
-#ifdef TRINITY
-            unit->Whisper(msg, (Language)lang, receiver, bossWhisper);
+#if defined TRINITY && !defined SUNWELL
+			unit->Whisper(msg, (Language)lang, receiver, bossWhisper);
 #else
             unit->MonsterWhisper(msg, receiver, bossWhisper);
 #endif
@@ -2254,7 +2291,7 @@ namespace LuaUnit
         Unit* receiver = Eluna::CHECKOBJ<Unit>(L, 3, false);
         bool bossEmote = Eluna::CHECKVAL<bool>(L, 4, false);
         if (std::string(msg).length() > 0)
-#ifdef TRINITY
+#if defined TRINITY && !defined SUNWELL
             unit->TextEmote(msg, receiver, bossEmote);
 #else
             unit->MonsterTextEmote(msg, receiver, bossEmote);
@@ -2273,8 +2310,8 @@ namespace LuaUnit
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
         uint32 language = Eluna::CHECKVAL<uint32>(L, 3);
         if (std::string(msg).length() > 0)
-#ifdef TRINITY
-            unit->Say(msg, (Language)language, unit);
+#if defined TRINITY && !defined SUNWELL
+			unit->Say(msg, (Language)language, unit);
 #else
             unit->MonsterSay(msg, language, unit);
 #endif
@@ -2292,8 +2329,8 @@ namespace LuaUnit
         const char* msg = Eluna::CHECKVAL<const char*>(L, 2);
         uint32 language = Eluna::CHECKVAL<uint32>(L, 3);
         if (std::string(msg).length() > 0)
-#ifdef TRINITY
-            unit->Yell(msg, (Language)language, unit);
+#if defined TRINITY && !defined SUNWELL
+			unit->Yell(msg, (Language)language, unit);
 #else
             unit->MonsterYell(msg, language, unit);
 #endif
@@ -2368,8 +2405,8 @@ namespace LuaUnit
         Item* castItem = Eluna::CHECKOBJ<Item>(L, 8, false);
         uint64 originalCaster = Eluna::CHECKVAL<uint64>(L, 9, 0);
 
-#ifdef TRINITY
-        CastSpellExtraArgs args;
+#if defined TRINITY && !defined SUNWELL
+		CastSpellExtraArgs args;
         if (has_bp0)
             args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp0);
         if (has_bp1)
@@ -2408,11 +2445,11 @@ namespace LuaUnit
 #ifdef CMANGOS
         unit->CastSpell(_x, _y, _z, spell, TRIGGERED_OLD_TRIGGERED);
 #endif
-#ifdef MANGOS
+#if defined MANGOS || defined SUNWELL
         unit->CastSpell(_x, _y, _z, spell, triggered);
 #endif
-#ifdef TRINITY
-        CastSpellExtraArgs args;
+#if defined TRINITY && !defined SUNWELL
+		CastSpellExtraArgs args;
         if (triggered)
             args.TriggerFlags = TRIGGERED_FULL_MASK;
         unit->CastSpell(Position(_x, _y, _z), spell, args);
@@ -2660,17 +2697,28 @@ namespace LuaUnit
         // melee damage by specific school
         if (!spell)
         {
-            DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE, BASE_ATTACK);
-            unit->CalcAbsorbResist(dmgInfo);
+#ifndef SUNWELL
+			DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE, BASE_ATTACK);
+			unit->CalcAbsorbResist(dmgInfo);
+			if (!dmgInfo.GetDamage())
+				damage = 0;
+			else
+				damage = dmgInfo.GetDamage();
 
-            if (!dmgInfo.GetDamage())
-                damage = 0;
-            else
-                damage = dmgInfo.GetDamage();
+			uint32 absorb = dmgInfo.GetAbsorb();
+			uint32 resist = dmgInfo.GetResist();
+			unit->DealDamageMods(target, damage, &absorb);
+#else
+			uint32 absorb = 0;
+			uint32 resist = 0;
+			unit->CalcAbsorbResist(unit, target, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
+			if (damage <= absorb + resist)
+				damage = 0;
+			else
+				damage -= absorb + resist;
 
-            uint32 absorb = dmgInfo.GetAbsorb();
-            uint32 resist = dmgInfo.GetResist();
-            unit->DealDamageMods(target, damage, &absorb);
+			unit->DealDamageMods(target, damage, &absorb);
+#endif // !SUNWELL     
 #ifdef TRINITY
             Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
 #else
@@ -2740,7 +2788,7 @@ namespace LuaUnit
         uint32 amount = Eluna::CHECKVAL<uint32>(L, 4);
         bool critical = Eluna::CHECKVAL<bool>(L, 5, false);
 
-#ifndef TRINITY
+#if !defined TRINITY && !defined SUNWELL
 #ifdef CMANGOS
         SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
 #else
@@ -2751,8 +2799,12 @@ namespace LuaUnit
 #else
         if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
         {
+#ifndef SUNWELL
             HealInfo healInfo(unit, target, amount, info, info->GetSchoolMask());
             unit->HealBySpell(healInfo, critical);
+#else
+			unit->HealBySpell(target, info, amount, critical);
+#endif
         }
 #endif
         return 0;
@@ -2799,22 +2851,29 @@ namespace LuaUnit
      * @param [SpellSchoolMask] schoolMask = 0 : [SpellSchoolMask] of the threat causer
      * @param uint32 spell = 0 : spell entry used for threat
      */
-    int AddThreat(lua_State* L, Unit* unit)
-    {
-        Unit* victim = Eluna::CHECKOBJ<Unit>(L, 2);
-        float threat = Eluna::CHECKVAL<float>(L, 3, true);
-        uint32 spell = Eluna::CHECKVAL<uint32>(L, 4, 0);
+	int AddThreat(lua_State* L, Unit* unit)
+	{
+		Unit* victim = Eluna::CHECKOBJ<Unit>(L, 2);
+		float threat = Eluna::CHECKVAL<float>(L, 3, true);
+		uint32 spell = Eluna::CHECKVAL<uint32>(L, 4, 0);
 
-#ifdef TRINITY
-        unit->GetThreatManager().AddThreat(victim, threat, spell ? sSpellMgr->GetSpellInfo(spell) : NULL, true, true);
+#if defined TRINITY && !defined SUNWELL
+		unit->GetThreatManager().AddThreat(victim, threat, spell ? sSpellMgr->GetSpellInfo(spell) : NULL, true, true);
 #else
 #ifdef CMANGOS
-        SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
-        unit->AddThreat(victim, threat, false, spellEntry ? spellEntry->SchoolMask : SPELL_SCHOOL_MASK_NONE, spellEntry);
+		SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
+		unit->AddThreat(victim, threat, false, spellEntry ? spellEntry->SchoolMask : SPELL_SCHOOL_MASK_NONE, spellEntry);
 #else
-        SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
+		SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
 #ifdef CLASSIC
-        unit->AddThreat(victim, threat, false, spellEntry ? GetSchoolMask(spellEntry->School) : SPELL_SCHOOL_MASK_NONE, spellEntry);
+		unit->AddThreat(victim, threat, false, spellEntry ? GetSchoolMask(spellEntry->School) : SPELL_SCHOOL_MASK_NONE, spellEntry);
+#elif defined SUNWELL
+		uint32 schoolMask = Eluna::CHECKVAL<uint32>(L, 5, 0);
+		if (schoolMask > SPELL_SCHOOL_MASK_ALL)
+		{
+			return luaL_argerror(L, 4, "valid SpellSchoolMask expected");
+		}
+		unit->AddThreat(victim, threat, (SpellSchoolMask)schoolMask, spell ? sSpellMgr->GetSpellInfo(spell) : NULL);
 #else
         unit->AddThreat(victim, threat, false, spellEntry ? static_cast<SpellSchoolMask>(spellEntry->SchoolMask) : SPELL_SCHOOL_MASK_NONE, spellEntry);
 #endif
@@ -2898,4 +2957,9 @@ namespace LuaUnit
     return 1;
     }*/
 };
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif
+
 #endif

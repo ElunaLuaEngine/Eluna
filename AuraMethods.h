@@ -7,6 +7,10 @@
 #ifndef AURAMETHODS_H
 #define AURAMETHODS_H
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 /***
  * The persistent effect of a [Spell] that remains on a [Unit] after the [Spell]
  *   has been cast.
@@ -208,4 +212,9 @@ namespace LuaAura
         return 0;
     }
 };
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif
+
 #endif

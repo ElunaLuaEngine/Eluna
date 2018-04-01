@@ -7,6 +7,10 @@
 #ifndef SPELLMETHODS_H
 #define SPELLMETHODS_H
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 /***
  * An instance of a spell, created when the spell is cast by a [Unit].
  *
@@ -190,4 +194,9 @@ namespace LuaSpell
         return 0;
     }
 };
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif
+
 #endif

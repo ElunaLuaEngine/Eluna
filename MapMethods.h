@@ -9,6 +9,10 @@
 
 #include "ElunaInstanceAI.h"
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 /***
  * A game map, e.g. Azeroth, Eastern Kingdoms, the Molten Core, etc.
  *
@@ -213,7 +217,12 @@ namespace LuaMap
         switch (GUID_HIPART(guid))
         {
             case HIGHGUID_PLAYER:
-                Eluna::Push(L, eObjectAccessor()GetPlayer(map, ObjectGuid(guid)));
+#ifndef SUNWELL
+				Eluna::Push(L, eObjectAccessor()GetPlayer(map, ObjectGuid(guid)));
+#else
+				Eluna::Push(L, map->GetPlayer(ObjectGuid(guid)));
+#endif // !SUNWELL
+
                 break;
             case HIGHGUID_TRANSPORT:
             case HIGHGUID_MO_TRANSPORT:
@@ -363,4 +372,9 @@ namespace LuaMap
         return 1;
     }
 };
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif
+
 #endif

@@ -7,6 +7,10 @@
 #ifndef QUESTMETHODS_H
 #define QUESTMETHODS_H
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 /***
  * Inherits all methods from: none
  */
@@ -184,4 +188,9 @@ namespace LuaQuest
         return 1;
     }*/
 };
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif
+
 #endif

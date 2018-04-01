@@ -7,6 +7,10 @@
 #ifndef GROUPMETHODS_H
 #define GROUPMETHODS_H
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 /***
  * Inherits all methods from: none
  */
@@ -401,4 +405,9 @@ namespace LuaGroup
         return 0;
     }*/
 };
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif
+
 #endif

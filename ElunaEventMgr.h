@@ -16,7 +16,7 @@
 #endif
 #include <map>
 
-#ifdef TRINITY
+#if defined(TRINITY) || defined(SUNWELL)
 #include "Define.h"
 #else
 #include "Platform/Define.h"
