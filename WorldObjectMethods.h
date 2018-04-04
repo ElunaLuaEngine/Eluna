@@ -634,12 +634,12 @@ namespace LuaWorldObject
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
 
         if (target)
-            Eluna::Push(L, obj->GetAngle(target));
+            Eluna::Push(L, obj->GetAbsoluteAngle(target));
         else
         {
             float x = Eluna::CHECKVAL<float>(L, 2);
             float y = Eluna::CHECKVAL<float>(L, 3);
-            Eluna::Push(L, obj->GetAngle(x, y));
+            Eluna::Push(L, obj->GetAbsoluteAngle(x, y));
         }
         return 1;
     }
