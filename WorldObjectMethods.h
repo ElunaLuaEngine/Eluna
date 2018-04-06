@@ -633,6 +633,16 @@ namespace LuaWorldObject
     {
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
 
+#ifdef TRINITY
+        if (target)
+            Eluna::Push(L, obj->GetAbsoluteAngle(target));
+        else
+        {
+            float x = Eluna::CHECKVAL<float>(L, 2);
+            float y = Eluna::CHECKVAL<float>(L, 3);
+            Eluna::Push(L, obj->GetAbsoluteAngle(x, y));
+        }
+#else
         if (target)
             Eluna::Push(L, obj->GetAngle(target));
         else
@@ -641,6 +651,7 @@ namespace LuaWorldObject
             float y = Eluna::CHECKVAL<float>(L, 3);
             Eluna::Push(L, obj->GetAngle(x, y));
         }
+#endif
         return 1;
     }
 
