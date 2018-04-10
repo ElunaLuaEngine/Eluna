@@ -7,6 +7,10 @@
 #ifndef GAMEOBJECTMETHODS_H
 #define GAMEOBJECTMETHODS_H
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 /***
  * Inherits all methods from: [Object], [WorldObject]
  */
@@ -161,7 +165,11 @@ namespace LuaGameObject
     int GetDBTableGUIDLow(lua_State* L, GameObject* go)
     {
 #ifdef TRINITY
+#ifndef SUNWELL
         Eluna::Push(L, go->GetSpawnId());
+#else
+		Eluna::Push(L, go->GetDBTableGUIDLow());
+#endif
 #else
         // on mangos based this is same as lowguid
         Eluna::Push(L, go->GetGUIDLow());
@@ -323,4 +331,9 @@ namespace LuaGameObject
         return 0;
     }
 };
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif
+
 #endif

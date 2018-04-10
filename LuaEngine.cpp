@@ -32,6 +32,10 @@
 #define USING_BOOST
 #endif
 
+#ifdef SUNWELL
+#undef USING_BOOST
+#endif
+
 #ifdef USING_BOOST
 #include <boost/filesystem.hpp>
 #else

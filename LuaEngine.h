@@ -13,7 +13,7 @@
 
 #include "Group.h"
 #include "Item.h"
-#ifndef TRINITY
+#if defined(TRINITY) || defined(SUNWELL)
 #include "Player.h"
 #endif
 #include "Weather.h"
@@ -28,7 +28,7 @@ extern "C"
 #include "lua.h"
 };
 
-#ifdef TRINITY
+#if defined(TRINITY) || defined(SUNWELL)
 struct ItemTemplate;
 typedef BattlegroundTypeId BattleGroundTypeId;
 #else
@@ -45,7 +45,7 @@ typedef int Difficulty;
 struct AreaTriggerEntry;
 class AuctionHouseObject;
 struct AuctionEntry;
-#ifdef TRINITY
+#if defined(TRINITY) || defined(SUNWELL)
 class Battleground;
 typedef Battleground BattleGround;
 #endif
@@ -54,12 +54,12 @@ class Corpse;
 class Creature;
 class CreatureAI;
 class GameObject;
-#ifdef TRINITY
+#if defined(TRINITY) || defined(SUNWELL)
 class GameObjectAI;
 #endif
 class Guild;
 class Group;
-#ifdef TRINITY
+#if defined(TRINITY) || defined(SUNWELL)
 class InstanceScript;
 typedef InstanceScript InstanceData;
 #else
@@ -72,7 +72,7 @@ class Player;
 class Quest;
 class Spell;
 class SpellCastTargets;
-#ifdef TRINITY
+#if defined(TRINITY) || defined(SUNWELL)
 class TempSummon;
 #else
 class TemporarySummon;
@@ -84,7 +84,7 @@ class Weather;
 class WorldPacket;
 #ifndef CLASSIC
 #ifndef TBC
-#ifdef TRINITY
+#if defined(TRINITY) || defined(SUNWELL)
 class Vehicle;
 #else
 class VehicleInfo;
@@ -115,7 +115,7 @@ struct LuaScript
 #define ELUNA_STATE_PTR     "Eluna State Ptr"
 #define LOCK_ELUNA Eluna::Guard __guard(Eluna::GetLock())
 
-#ifndef TRINITY
+#if !defined(TRINITY) || !defined(SUNWELL)
 #define TC_GAME_API
 #endif
 class TC_GAME_API Eluna

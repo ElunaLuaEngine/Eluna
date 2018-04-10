@@ -12,6 +12,10 @@
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
@@ -135,7 +139,11 @@ void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
     Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
+#ifndef SUNWELL
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+#else
+	Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
+#endif
     uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
@@ -162,7 +170,11 @@ void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
     Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
-    Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+#ifndef SUNWELL
+	Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+#else
+	Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
+#endif
     uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
@@ -189,8 +201,12 @@ void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
     Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
-    Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
-    uint32 expiretime = entry->expire_time;
+#ifndef SUNWELL
+	Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+#else
+	Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
+#endif
+	uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
     uint32 expiretime = entry->expireTime;
@@ -216,8 +232,12 @@ void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
     Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
-    Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
-    uint32 expiretime = entry->expire_time;
+#ifndef SUNWELL
+	Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+#else
+	Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
+#endif
+	uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
     uint32 expiretime = entry->expireTime;
@@ -348,3 +368,7 @@ void Eluna::OnRemove(Creature* creature)
     Push(creature);
     CallAllFunctions(ServerEventBindings, key);
 }
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif

@@ -7,6 +7,10 @@
 #ifndef GUILDMETHODS_H
 #define GUILDMETHODS_H
 
+#ifdef SUNWELL
+#define TRINITY
+#endif
+
 /***
  * Inherits all methods from: none
  */
@@ -37,7 +41,11 @@ namespace LuaGuild
 #else
         {
 #ifdef TRINITY
+#ifdef USING_BOOST
             boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+#else
+			TRINITY_READ_GUARD(HashMapHolder<Player>::LockType, *HashMapHolder<Player>::GetLock());
+#endif
 #else
             HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
 #endif
@@ -251,7 +259,7 @@ namespace LuaGuild
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         uint8 rankId = Eluna::CHECKVAL<uint8>(L, 3, GUILD_RANK_NONE);
 
-#ifdef TRINITY
+#if defined TRINITY && !defined SUNWELL
         SQLTransaction trans(nullptr);
         guild->AddMember(trans, player->GET_GUID(), rankId);
 #else
@@ -291,8 +299,8 @@ namespace LuaGuild
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         uint8 newRank = Eluna::CHECKVAL<uint8>(L, 3);
 
-#ifdef TRINITY
-        SQLTransaction trans(nullptr);
+#if defined TRINITY && !defined SUNWELL
+		SQLTransaction trans(nullptr);
         guild->ChangeMemberRank(trans, player->GET_GUID(), newRank);
 #else
         guild->ChangeMemberRank(player->GET_GUID(), newRank);
@@ -300,4 +308,9 @@ namespace LuaGuild
         return 0;
     }
 };
+
+#if defined SUNWELL && defined TRINITY
+#undef TRINITY
+#endif
+
 #endif

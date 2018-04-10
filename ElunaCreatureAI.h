@@ -8,12 +8,16 @@
 #define _ELUNA_CREATURE_AI_H
 
 #include "LuaEngine.h"
+#include "ScriptedCreature.h"
 
-#ifndef TRINITY
+#if !defined TRINITY && !defined SUNWELL 
 class AggressorAI;
 typedef AggressorAI ScriptedAI;
 #else
 struct ScriptedAI;
+#ifdef SUNWELL
+#define TRINITY
+#endif
 #endif
 
 struct ElunaCreatureAI : ScriptedAI
@@ -41,8 +45,8 @@ struct ElunaCreatureAI : ScriptedAI
         if (justSpawned)
         {
             justSpawned = false;
-#ifdef TRINITY
-            JustAppeared();
+#if defined TRINITY && !defined SUNWELL
+			JustAppeared();
 #else
             JustRespawned();
 #endif
@@ -70,7 +74,7 @@ struct ElunaCreatureAI : ScriptedAI
         }
     }
 
-#ifdef TRINITY
+#if defined TRINITY && !defined SUNWELL
     // Called for reaction when initially engaged - this will always happen _after_ JustEnteredCombat
     // Called at creature aggro either by MoveInLOS or Attack Start
     void JustEngagedWith(Unit* target) override
@@ -89,11 +93,19 @@ struct ElunaCreatureAI : ScriptedAI
 #endif
 
     // Called at any Damage from any attacker (before damage apply)
-    void DamageTaken(Unit* attacker, uint32& damage) override
+#if defined TRINITY && !defined SUNWELL
+	void DamageTaken(Unit* attacker, uint32& damage) override
+#elif defined SUNWELL
+	void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
+#endif
     {
         if (!sEluna->DamageTaken(me, attacker, damage))
+#if defined TRINITY && !defined SUNWELL
             ScriptedAI::DamageTaken(attacker, damage);
-    }
+#elif defined SUNWELL
+			ScriptedAI::DamageTaken(attacker, damage, damagetype, damageSchoolMask);
+#endif
+	}
 
     //Called at creature death
     void JustDied(Unit* killer) override
@@ -138,8 +150,8 @@ struct ElunaCreatureAI : ScriptedAI
             ScriptedAI::AttackStart(target);
     }
 
-#ifdef TRINITY
-    // Called for reaction at stopping attack at no attackers or targets
+#if defined TRINITY && !defined SUNWELL
+	// Called for reaction at stopping attack at no attackers or targets
     void EnterEvadeMode(EvadeReason /*why*/) override
     {
         if (!sEluna->EnterEvadeMode(me))
@@ -154,8 +166,8 @@ struct ElunaCreatureAI : ScriptedAI
     }
 #endif
 
-#ifdef TRINITY
-    // Called when creature appears in the world (spawn, respawn, grid load etc...)
+#if defined TRINITY && !defined SUNWELL
+	// Called when creature appears in the world (spawn, respawn, grid load etc...)
     void JustAppeared() override
     {
         if (!sEluna->JustRespawned(me))
@@ -228,7 +240,7 @@ struct ElunaCreatureAI : ScriptedAI
             ScriptedAI::IsSummonedBy(summoner);
     }
 
-    void SummonedCreatureDies(Creature* summon, Unit* killer) override
+	void SummonedCreatureDies(Creature* summon, Unit* killer) override
     {
         if (!sEluna->SummonedCreatureDies(me, summon, killer))
             ScriptedAI::SummonedCreatureDies(summon, killer);
@@ -253,5 +265,9 @@ struct ElunaCreatureAI : ScriptedAI
 #undef me
 #endif
 };
+
+#if defined TRINITY && defined SUNWELL
+#undef TRINITY
+#endif
 
 #endif
