@@ -111,7 +111,6 @@ struct LuaScript
     std::string modulepath;
 };
 
-#define ELUNA_OBJECT_STORE  "Eluna Object Store"
 #define ELUNA_STATE_PTR     "Eluna State Ptr"
 #define LOCK_ELUNA Eluna::Guard __guard(Eluna::GetLock())
 
@@ -140,6 +139,14 @@ private:
     // lua path variable for require() function
     static std::string lua_requirepath;
 
+    // A counter for lua event stacks that occur (see event_level).
+    // This is used to determine whether an object belongs to the current call stack or not.
+    // 0 is reserved for always belonging to the call stack
+    // 1 is reserved for a non valid callstackid
+    uint64 callstackid = 2;
+    // A counter for the amount of nested events. When the event_level
+    // reaches 0 we are about to return back to C++. At this point the
+    // objects used during the event stack are invalidated.
     uint32 event_level;
     // When a hook pushes arguments to be passed to event handlers,
     //  this is used to keep track of how many arguments were pushed.
@@ -312,6 +319,7 @@ public:
     bool ShouldReload() const { return reload; }
     bool IsEnabled() const { return enabled && IsInitialized(); }
     bool HasLuaState() const { return L != NULL; }
+    uint64 GetCallstackId() const { return callstackid; }
     int Register(lua_State* L, uint8 reg, uint32 entry, uint64 guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
 
     // Checks
