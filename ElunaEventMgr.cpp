@@ -16,6 +16,7 @@ extern "C"
 
 ElunaEventProcessor::ElunaEventProcessor(Eluna** _E, WorldObject* _obj) : m_time(0), obj(_obj), E(_E)
 {
+    // can be called from multiple threads
     if (obj)
     {
         EventMgr::Guard guard((*E)->eventMgr->GetLock());
@@ -25,7 +26,11 @@ ElunaEventProcessor::ElunaEventProcessor(Eluna** _E, WorldObject* _obj) : m_time
 
 ElunaEventProcessor::~ElunaEventProcessor()
 {
-    RemoveEvents_internal();
+    // can be called from multiple threads
+    {
+        LOCK_ELUNA;
+        RemoveEvents_internal();
+    }
 
     if (obj && Eluna::IsInitialized())
     {
