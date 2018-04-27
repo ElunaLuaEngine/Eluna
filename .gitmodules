@@ -1,0 +1,4 @@
+[submodule "LuaEngine"]
+	path = LuaEngine
+	url = https://github.com/AyaseCore/Eluna.git
+	branch = ElunaAzerothWotlk
