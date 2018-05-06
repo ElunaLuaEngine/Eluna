@@ -25,4 +25,4 @@ if( WIN32 )
 	endif()
 endif()
 
-install(DIRECTORY extensions DESTINATION "${BIN_DIR}/lua_scripts/")
+install(DIRECTORY "${CMAKE_MOD_ELUNA_ENGINE_DIR}/LuaEngine/extensions" DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/lua_scripts/")
