@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
@@ -2056,6 +2056,44 @@ namespace LuaPlayer
         player->SetMovement((PlayerMovementType)pType);
         return 0;
     }*/
+
+    /**
+    * Teaches the [Player]s pet the [Spell] specified by entry ID
+    *
+    * @param uint32 spellId
+    */
+    int LearnPetSpell(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        uint32 id = Eluna::CHECKVAL<uint32>(L, 2);
+
+        Pet* pet = player->GetPet();
+        if (pet)
+            pet->learnSpell(id);
+        return 0;
+    }
+
+    /**
+    * Removes the [Spell] from the [Player]s pet
+    *
+    * @param uint32 entry : entry of a [Spell]
+    * @param bool learnLowRank = true
+    * @param bool clear_ab = false
+    */
+    int RemovePetSpell(Eluna* /*E*/, lua_State* L, Player* player)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+        bool learn_low_rank = Eluna::CHECKVAL<bool>(L, 3, true);
+        bool clear_ab = Eluna::CHECKVAL<bool>(L, 4, false);
+
+        Pet* pet = player->GetPet();
+        if (pet)
+        {
+            if (pet->unlearnSpell(entry, learn_low_rank, clear_ab))
+                player->PetSpellInitialize();
+        }
+
+        return 0;
+    }
 
 #if (!defined(TBC) && !defined(CLASSIC))
     /**
