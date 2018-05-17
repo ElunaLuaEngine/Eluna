@@ -39,7 +39,14 @@
 #include "WorldPacket.h"
 #include "WorldSession.h"
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
+#include "GitRevision.h"
+#include "SpellHistory.h"
+#include <boost/thread/locks.hpp>
+#include <boost/thread/shared_mutex.hpp>
+#endif
+
+#if defined TRINITY || defined AZEROTHCORE
 #include "Config.h"
 #include "GameEventMgr.h"
 #include "GroupMgr.h"
@@ -50,11 +57,6 @@
 #include "MotionMaster.h"
 #include "DatabaseEnv.h"
 #include "Bag.h"
-#elif defined TRINITY
-#include "GitRevision.h"
-#include "SpellHistory.h"
-#include <boost/thread/locks.hpp>
-#include <boost/thread/shared_mutex.hpp>
 #else
 #include "Config/Config.h"
 #ifdef CMANGOS
