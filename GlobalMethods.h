@@ -1969,10 +1969,7 @@ namespace LuaGlobalFunctions
 #ifndef AZEROTHCORE
         eWorld->BanAccount((BanMode)banMode, nameOrIP, duration, reason, whoBanned);
 #else
-        std::stringstream ss;
-        ss << duration << "s";
-
-        eWorld->BanAccount((BanMode)banMode, nameOrIP, ss.str(), reason, whoBanned);
+        eWorld->BanAccount((BanMode)banMode, nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
 #endif
         return 0;
     }
