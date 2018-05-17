@@ -210,33 +210,33 @@ namespace LuaMap
 #if defined TRINITY || AZEROTHCORE
         switch (GUID_HIPART(guid))
         {
-        case HIGHGUID_PLAYER:
+            case HIGHGUID_PLAYER:
 #ifndef AZEROTHCORE
-            Eluna::Push(L, eObjectAccessor()GetPlayer(map, ObjectGuid(guid)));
+                Eluna::Push(L, eObjectAccessor()GetPlayer(map, ObjectGuid(guid)));
 #else
-            Eluna::Push(L, map->GetPlayer(ObjectGuid(guid)));
+                Eluna::Push(L, map->GetPlayer(ObjectGuid(guid)));
 #endif // !AZEROTHCORE
-            break;
-        case HIGHGUID_TRANSPORT:
-        case HIGHGUID_MO_TRANSPORT:
-        case HIGHGUID_GAMEOBJECT:
-            Eluna::Push(L, map->GetGameObject(ObjectGuid(guid)));
-            break;
-        case HIGHGUID_VEHICLE:
-        case HIGHGUID_UNIT:
-            Eluna::Push(L, map->GetCreature(ObjectGuid(guid)));
-            break;
-        case HIGHGUID_PET:
-            Eluna::Push(L, map->GetPet(ObjectGuid(guid)));
-            break;
-        case HIGHGUID_DYNAMICOBJECT:
-            Eluna::Push(L, map->GetDynamicObject(ObjectGuid(guid)));
-            break;
-        case HIGHGUID_CORPSE:
-            Eluna::Push(L, map->GetCorpse(ObjectGuid(guid)));
-            break;
-        default:
-            break;
+                break;
+            case HIGHGUID_TRANSPORT:
+            case HIGHGUID_MO_TRANSPORT:
+            case HIGHGUID_GAMEOBJECT:
+                Eluna::Push(L, map->GetGameObject(ObjectGuid(guid)));
+                break;
+            case HIGHGUID_VEHICLE:
+            case HIGHGUID_UNIT:
+                Eluna::Push(L, map->GetCreature(ObjectGuid(guid)));
+                break;
+            case HIGHGUID_PET:
+                Eluna::Push(L, map->GetPet(ObjectGuid(guid)));
+                break;
+            case HIGHGUID_DYNAMICOBJECT:
+                Eluna::Push(L, map->GetDynamicObject(ObjectGuid(guid)));
+                break;
+            case HIGHGUID_CORPSE:
+                Eluna::Push(L, map->GetCorpse(ObjectGuid(guid)));
+                break;
+            default:
+                break;
         }
 #else
         Eluna::Push(L, map->GetWorldObject(ObjectGuid(guid)));
