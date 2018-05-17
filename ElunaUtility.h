@@ -49,9 +49,6 @@ typedef QueryResult ElunaQuery;
 #define ELUNA_LOG_INFO(...)     sLog->outString(__VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    sLog->outError(__VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    sLog->outDebug(LOG_FILTER_NONE,__VA_ARGS__);
-#define TC_LOG_INFO(a, ...)     ELUNA_LOG_INFO(__VA_ARGS__)
-#define TC_LOG_ERROR(a, ...)    ELUNA_LOG_ERROR(__VA_ARGS__)
-#define TC_LOG_DEBUG(a, ...)    ELUNA_LOG_DEBUG(__VA_ARGS__)
 #define GET_GUID                GetGUID
 #else
 typedef QueryNamedResult ElunaQuery;

@@ -7,15 +7,11 @@
 #ifndef QUERYMETHODS_H
 #define QUERYMETHODS_H
 
-#ifndef TRINITY
-#define RESULT  result
+#if defined TRINITY || defined AZEROTHCORE
+#define RESULT  (*result)
 #else
-#define RESULT  (*result)
+#define RESULT  result
 #endif
-#ifdef AZEROTHCORE
-#undef RESULT
-#define RESULT  (*result)
-#endif //AZEROTHCORE
 
 /***
  * The result of a database query.

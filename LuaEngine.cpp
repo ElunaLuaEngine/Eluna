@@ -28,12 +28,8 @@
 
 // Some dummy includes containing BOOST_VERSION:
 // ObjectAccessor.h Config.h Log.h
-#ifndef MANGOS
+#if !defined MANGOS && !defined AZEROTHCORE
 #define USING_BOOST
-#endif
-
-#ifdef AZEROTHCORE
-#undef USING_BOOST
 #endif
 
 #ifdef USING_BOOST

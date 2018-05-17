@@ -22,11 +22,8 @@ struct ElunaCreatureAI : ScriptedAI
     bool justSpawned;
     // used to delay movementinform hook (WP hook)
     std::vector< std::pair<uint32, uint32> > movepoints;
-#ifndef TRINITY
+#if defined MANGOS || defined CMANGOS
 #define me  m_creature
-#endif
-#if AZEROTHCORE
-#undef me
 #endif
 
     ElunaCreatureAI(Creature* creature) : ScriptedAI(creature), justSpawned(true)
@@ -262,7 +259,7 @@ struct ElunaCreatureAI : ScriptedAI
     }
 #endif
 
-#ifndef TRINITY
+#if defined MANGOS || defined CMANGOS
 #undef me
 #endif
 };
