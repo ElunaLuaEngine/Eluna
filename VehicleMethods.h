@@ -26,7 +26,7 @@ namespace LuaVehicle
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, passenger->IsOnVehicle(vehicle->GetBase()));
 #else
-        Eluna::Push(L, vehicle->HasOnBoard(passenger)); 
+        Eluna::Push(L, vehicle->HasOnBoard(passenger));
 #endif
         return 1;
     }
@@ -41,7 +41,7 @@ namespace LuaVehicle
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, vehicle->GetBase());
 #else
-        Eluna::Push(L, vehicle->GetOwner()); 
+        Eluna::Push(L, vehicle->GetOwner());
 #endif
         return 1;
     }
@@ -56,7 +56,7 @@ namespace LuaVehicle
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, vehicle->GetVehicleInfo()->m_ID);
 #else
-        Eluna::Push(L, vehicle->GetVehicleEntry()->m_ID); 
+        Eluna::Push(L, vehicle->GetVehicleEntry()->m_ID);
 #endif
         return 1;
     }
@@ -104,7 +104,7 @@ namespace LuaVehicle
 #if defined TRINITY || AZEROTHCORE
         vehicle->RemovePassenger(passenger);
 #else
-        vehicle->UnBoard(passenger, false); 
+        vehicle->UnBoard(passenger, false);
 #endif
         return 0;
     }

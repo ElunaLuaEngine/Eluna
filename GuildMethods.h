@@ -86,7 +86,7 @@ namespace LuaGuild
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, eObjectAccessor()FindPlayer(guild->GetLeaderGUID()));
 #else
-        Eluna::Push(L, eObjectAccessor()FindPlayer(guild->GetLeaderGuid())); 
+        Eluna::Push(L, eObjectAccessor()FindPlayer(guild->GetLeaderGuid()));
 #endif
         return 1;
     }
@@ -101,7 +101,7 @@ namespace LuaGuild
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, guild->GetLeaderGUID());
 #else
-        Eluna::Push(L, guild->GetLeaderGuid()); 
+        Eluna::Push(L, guild->GetLeaderGuid());
 #endif
         return 1;
     }
@@ -149,7 +149,7 @@ namespace LuaGuild
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, guild->GetInfo());
 #else
-        Eluna::Push(L, guild->GetGINFO()); 
+        Eluna::Push(L, guild->GetGINFO());
 #endif
         return 1;
     }
@@ -167,7 +167,7 @@ namespace LuaGuild
 #if defined TRINITY || AZEROTHCORE
         guild->HandleSetLeader(player->GetSession(), player->GetName());
 #else
-        guild->SetLeader(player->GET_GUID()); 
+        guild->SetLeader(player->GET_GUID());
 #endif
         return 0;
     }
@@ -187,7 +187,7 @@ namespace LuaGuild
 #if defined TRINITY || AZEROTHCORE
         guild->SetBankTabText(tabId, text);
 #else
-        guild->SetGuildBankTabText(tabId, text); 
+        guild->SetGuildBankTabText(tabId, text);
 #endif
         return 0;
     }

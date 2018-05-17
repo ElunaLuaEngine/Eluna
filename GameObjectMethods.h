@@ -25,7 +25,7 @@ namespace LuaGameObject
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, go->hasQuest(questId));
 #else
-        Eluna::Push(L, go->HasQuest(questId)); 
+        Eluna::Push(L, go->HasQuest(questId));
 #endif
         return 1;
     }

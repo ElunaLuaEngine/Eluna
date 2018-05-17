@@ -79,7 +79,7 @@ namespace LuaSpell
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, spell->GetSpellInfo()->GetDuration());
 #else
-        Eluna::Push(L, GetSpellDuration(spell->m_spellInfo)); 
+        Eluna::Push(L, GetSpellDuration(spell->m_spellInfo));
 #endif
         return 1;
     }
@@ -102,7 +102,7 @@ namespace LuaSpell
         if (!(spell->m_targets.m_targetMask & TARGET_FLAG_DEST_LOCATION))
             return 3;
         float x, y, z;
-        spell->m_targets.getDestination(x, y, z); 
+        spell->m_targets.getDestination(x, y, z);
 #endif
         Eluna::Push(L, x);
         Eluna::Push(L, y);

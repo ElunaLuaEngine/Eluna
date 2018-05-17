@@ -52,7 +52,7 @@ namespace LuaQuery
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, RESULT->Fetch()[col].IsNull());
 #else
-        Eluna::Push(L, RESULT->Fetch()[col].IsNULL()); 
+        Eluna::Push(L, RESULT->Fetch()[col].IsNULL());
 #endif
         return 1;
     }

@@ -38,7 +38,7 @@ namespace LuaMap
     int IsBattleground(lua_State* L, Map* map)
     {
 #if defined TRINITY || AZEROTHCORE
-        Eluna::Push(L, map->IsBattleground()); 
+        Eluna::Push(L, map->IsBattleground());
 #else
         Eluna::Push(L, map->IsBattleGround());
 #endif
@@ -193,7 +193,7 @@ namespace LuaMap
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, map->GetAreaId(x, y, z));
 #else
-        Eluna::Push(L, map->GetTerrain()->GetAreaId(x, y, z)); 
+        Eluna::Push(L, map->GetTerrain()->GetAreaId(x, y, z));
 #endif
         return 1;
     }
@@ -352,7 +352,7 @@ namespace LuaMap
 #if defined TRINITY || AZEROTHCORE
             Player* player = itr->GetSource();
 #else
-            Player* player = itr->getSource(); 
+            Player* player = itr->getSource();
 #endif
             if (!player)
                 continue;

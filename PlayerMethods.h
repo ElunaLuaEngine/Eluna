@@ -2160,7 +2160,7 @@ namespace LuaPlayer
 #endif
         return 0;
     }
-    
+
     /**
      * Sends a summon request to the player from the given summoner
      *
@@ -2404,7 +2404,7 @@ namespace LuaPlayer
         uint32 difficulty = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
         if (difficulty < MAX_DIFFICULTY)
-#ifndef AZEROTHCORE 
+#ifndef AZEROTHCORE
             player->UnbindInstance(map, (Difficulty)difficulty);
 #else
             sInstanceSaveMgr->PlayerUnbindInstance(player->GetGUIDLow(), map, Difficulty(difficulty), true, player);
@@ -3483,7 +3483,7 @@ namespace LuaPlayer
             return spellInfo && spellInfo->GetCategory() == category;
         }, update);
 #else
-#ifndef AZEROTHCORE 
+#ifndef AZEROTHCORE
         player->RemoveSpellCategoryCooldown(category, update);
 #else
         player->RemoveCategoryCooldown(category);
@@ -3719,7 +3719,7 @@ namespace LuaPlayer
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
 #else
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _code);
-#endif  
+#endif
 #endif//TRINITY
         return 0;
     }

@@ -23,7 +23,7 @@ uint32 ElunaUtil::GetCurrTime()
 uint32 ElunaUtil::GetTimeDiff(uint32 oldMSTime)
 {
 #if !defined TRINITY && !AZEROTHCORE
-	return WorldTimer::getMSTimeDiff(oldMSTime, GetCurrTime());
+    return WorldTimer::getMSTimeDiff(oldMSTime, GetCurrTime());
 #else
     return GetMSTimeDiffToNow(oldMSTime);
 #endif

@@ -178,7 +178,7 @@ namespace LuaGroup
 #if defined TRINITY || AZEROTHCORE
             Player* member = itr->GetSource();
 #else
-            Player* member = itr->getSource(); 
+            Player* member = itr->getSource();
 #endif
 
             if (!member || !member->GetSession())
@@ -202,7 +202,7 @@ namespace LuaGroup
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, group->GetLeaderGUID());
 #else
-        Eluna::Push(L, group->GetLeaderGuid()); 
+        Eluna::Push(L, group->GetLeaderGuid());
 #endif
         return 1;
     }
@@ -234,7 +234,7 @@ namespace LuaGroup
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, group->GetMemberGUID(name));
 #else
-        Eluna::Push(L, group->GetMemberGuid(name)); 
+        Eluna::Push(L, group->GetMemberGuid(name));
 #endif
         return 1;
     }
@@ -322,7 +322,7 @@ namespace LuaGroup
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, group->RemoveMember(ObjectGuid(guid), (RemoveMethod)method));
 #else
-        Eluna::Push(L, group->RemoveMember(ObjectGuid(guid), method)); 
+        Eluna::Push(L, group->RemoveMember(ObjectGuid(guid), method));
 #endif
         return 1;
     }

@@ -38,7 +38,7 @@ namespace LuaBattleGround
 #ifndef AZEROTHCORE
         Eluna::Push(L, bg->GetAlivePlayersCountByTeam((Team)team));
 #else
-		Eluna::Push(L, bg->GetAlivePlayersCountByTeam((TeamId)team));
+        Eluna::Push(L, bg->GetAlivePlayersCountByTeam((TeamId)team));
 #endif
         return 1;
     }
@@ -109,7 +109,7 @@ namespace LuaBattleGround
 #ifndef AZEROTHCORE
         Eluna::Push(L, bg->GetFreeSlotsForTeam((Team)team));
 #else
-		Eluna::Push(L, bg->GetFreeSlotsForTeam((TeamId)team));
+        Eluna::Push(L, bg->GetFreeSlotsForTeam((TeamId)team));
 #endif
         return 1;
     }
@@ -146,7 +146,7 @@ namespace LuaBattleGround
 #ifndef AZEROTHCORE
         Eluna::Push(L, bg->GetTypeID());
 #else
-		Eluna::Push(L, bg->GetBgTypeID());
+        Eluna::Push(L, bg->GetBgTypeID());
 #endif
         return 1;
     }
@@ -181,9 +181,9 @@ namespace LuaBattleGround
     int GetMaxPlayers(lua_State* L, BattleGround* bg)
     {
 #ifndef AZEROTHCORE
-		Eluna::Push(L, bg->GetMaxPlayers());
+        Eluna::Push(L, bg->GetMaxPlayers());
 #else
-		Eluna::Push(L, bg->GetMaxPlayersPerTeam() * 2);
+        Eluna::Push(L, bg->GetMaxPlayersPerTeam() * 2);
 #endif
         return 1;
     }
@@ -196,9 +196,9 @@ namespace LuaBattleGround
     int GetMinPlayers(lua_State* L, BattleGround* bg)
     {
 #ifndef AZEROTHCORE
-		Eluna::Push(L, bg->GetMinPlayers());
+        Eluna::Push(L, bg->GetMinPlayers());
 #else
-		Eluna::Push(L, bg->GetMaxPlayersPerTeam() * 2);
+        Eluna::Push(L, bg->GetMaxPlayersPerTeam() * 2);
 #endif
         return 1;
     }

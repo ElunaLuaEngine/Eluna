@@ -116,7 +116,7 @@ typedef Opcodes                 OpcodesList;
 
 #ifdef AZEROTHCORE
 #define CORE_NAME               "AzerothCore"
-#define CORE_VERSION			""
+#define CORE_VERSION            ""
 #define eWorld                  (sWorld)
 #define eMapMgr                 (sMapMgr)
 #define eConfigMgr              (sConfigMgr)

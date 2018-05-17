@@ -120,7 +120,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->IsAuctioner());
 #else
-        Eluna::Push(L, unit->isAuctioner()); 
+        Eluna::Push(L, unit->isAuctioner());
 #endif
         return 1;
     }
@@ -428,7 +428,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetVehicle());
 #else
-        Eluna::Push(L, unit->IsBoarded()); 
+        Eluna::Push(L, unit->IsBoarded());
 #endif
         return 1;
     }
@@ -562,7 +562,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->HasUnitState(state));
 #else
-        Eluna::Push(L, unit->hasUnitState(state)); 
+        Eluna::Push(L, unit->hasUnitState(state));
 #endif
         return 1;
     }
@@ -606,7 +606,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetOwnerGUID());
 #else
-        Eluna::Push(L, unit->GetOwnerGuid()); 
+        Eluna::Push(L, unit->GetOwnerGuid());
 #endif
         return 1;
     }
@@ -632,7 +632,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetCreatorGUID());
 #else
-        Eluna::Push(L, unit->GetCreatorGuid()); 
+        Eluna::Push(L, unit->GetCreatorGuid());
 #endif
         return 1;
     }
@@ -647,7 +647,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetCharmerGUID());
 #else
-        Eluna::Push(L, unit->GetCharmerGuid()); 
+        Eluna::Push(L, unit->GetCharmerGuid());
 #endif
         return 1;
     }
@@ -662,7 +662,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetCharmGUID());
 #else
-        Eluna::Push(L, unit->GetCharmGuid()); 
+        Eluna::Push(L, unit->GetCharmGuid());
 #endif
         return 1;
     }
@@ -677,7 +677,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetPetGUID());
 #else
-        Eluna::Push(L, unit->GetPetGuid()); 
+        Eluna::Push(L, unit->GetPetGuid());
 #endif
         return 1;
     }
@@ -692,7 +692,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetCharmerOrOwnerGUID());
 #else
-        Eluna::Push(L, unit->GetCharmerOrOwnerGuid()); 
+        Eluna::Push(L, unit->GetCharmerOrOwnerGuid());
 #endif
         return 1;
     }
@@ -707,7 +707,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetCharmerOrOwnerOrOwnGUID());
 #else
-        Eluna::Push(L, unit->GetCharmerOrOwnerOrOwnGuid()); 
+        Eluna::Push(L, unit->GetCharmerOrOwnerOrOwnGuid());
 #endif
         return 1;
     }
@@ -756,7 +756,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetVictim());
 #else
-        Eluna::Push(L, unit->getVictim()); 
+        Eluna::Push(L, unit->getVictim());
 #endif
         return 1;
     }
@@ -1009,7 +1009,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetHealthPct());
 #else
-        Eluna::Push(L, unit->GetHealthPercent()); 
+        Eluna::Push(L, unit->GetHealthPercent());
 #endif
         return 1;
     }
@@ -1177,7 +1177,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetAura(spellID));
 #else
-        Eluna::Push(L, unit->GetAura(spellID, EFFECT_INDEX_0)); 
+        Eluna::Push(L, unit->GetAura(spellID, EFFECT_INDEX_0));
 #endif
         return 1;
     }
@@ -1245,7 +1245,7 @@ namespace LuaUnit
 #else
         MaNGOS::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, range);
         MaNGOS::UnitListSearcher<MaNGOS::AnyUnfriendlyUnitInObjectRangeCheck> searcher(list, checker);
-        Cell::VisitGridObjects(unit, searcher, range); 
+        Cell::VisitGridObjects(unit, searcher, range);
 #endif
         ElunaUtil::ObjectGUIDCheck guidCheck(unit->GET_GUID());
         list.remove_if(guidCheck);
@@ -1275,7 +1275,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetVehicleKit());
 #else
-        Eluna::Push(L, unit->GetVehicleInfo()); 
+        Eluna::Push(L, unit->GetVehicleInfo());
 #endif
         return 1;
     }
@@ -1298,7 +1298,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetCritterGUID());
 #else
-        Eluna::Push(L, unit->GetCritterGuid()); 
+        Eluna::Push(L, unit->GetCritterGuid());
 #endif
         return 1;
     }
@@ -1389,7 +1389,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->SetOwnerGUID(ObjectGuid(guid));
 #else
-        unit->SetOwnerGuid(ObjectGuid(guid)); 
+        unit->SetOwnerGuid(ObjectGuid(guid));
 #endif
         return 0;
     }
@@ -1475,7 +1475,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->SetSpeedRate((UnitMoveType)type, rate);
 #else
-        unit->SetSpeedRate((UnitMoveType)type, rate, forced); 
+        unit->SetSpeedRate((UnitMoveType)type, rate, forced);
 #endif
         return 0;
     }
@@ -1731,7 +1731,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->SetCreatorGUID(ObjectGuid(guid));
 #else
-        unit->SetCreatorGuid(ObjectGuid(guid)); 
+        unit->SetCreatorGuid(ObjectGuid(guid));
 #endif
         return 0;
     }
@@ -1747,7 +1747,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->SetCharmerGUID(ObjectGuid(guid));
 #else
-        unit->SetCharmerGuid(ObjectGuid(guid)); 
+        unit->SetCharmerGuid(ObjectGuid(guid));
 #endif
         return 0;
     }
@@ -1763,7 +1763,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->SetPetGUID(ObjectGuid(guid));
 #else
-        unit->SetPetGuid(ObjectGuid(guid)); 
+        unit->SetPetGuid(ObjectGuid(guid));
 #endif
         return 0;
     }
@@ -1779,7 +1779,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->SetWaterWalking(enable);
 #else
-        unit->SetWaterWalk(enable); 
+        unit->SetWaterWalk(enable);
 #endif
         return 0;
     }
@@ -1865,7 +1865,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->SetCritterGUID(ObjectGuid(guid));
 #else
-        unit->SetCritterGuid(ObjectGuid(guid)); 
+        unit->SetCritterGuid(ObjectGuid(guid));
 #endif
         return 0;
     }
@@ -1889,7 +1889,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->SetControlled(apply, UNIT_STATE_ROOT);
 #else
-        unit->SetRoot(apply); 
+        unit->SetRoot(apply);
 #endif
         return 0;
     }
@@ -1905,7 +1905,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->SetControlled(apply, UNIT_STATE_CONFUSED);
 #else
-        unit->SetConfused(apply); 
+        unit->SetConfused(apply);
 #endif
         return 0;
     }
@@ -1921,7 +1921,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->SetControlled(apply, UNIT_STATE_FLEEING);
 #else
-        unit->SetFeared(apply); 
+        unit->SetFeared(apply);
 #endif
         return 0;
     }
@@ -1980,7 +1980,7 @@ namespace LuaUnit
             unit->RemoveAurasByType(SPELL_AURA_MOUNTED);
 #else
             unit->Unmount();
-            unit->RemoveSpellsCausingAura(SPELL_AURA_MOUNTED); 
+            unit->RemoveSpellsCausingAura(SPELL_AURA_MOUNTED);
 #endif
         }
 
@@ -2129,7 +2129,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->GetMotionMaster()->MoveRandom(radius);
 #else
-        unit->GetMotionMaster()->MoveRandomAroundPoint(x, y, z, radius); 
+        unit->GetMotionMaster()->MoveRandomAroundPoint(x, y, z, radius);
 #endif
         return 0;
     }
@@ -2593,7 +2593,7 @@ namespace LuaUnit
         uint32 state = Eluna::CHECKVAL<uint32>(L, 2);
 
 #if defined TRINITY || AZEROTHCORE
-        unit->AddUnitState(state); 
+        unit->AddUnitState(state);
 #else
         unit->addUnitState(state);
 #endif
@@ -2612,7 +2612,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         unit->ClearUnitState(state);
 #else
-        unit->clearUnitState(state); 
+        unit->clearUnitState(state);
 #endif
         return 0;
     }
@@ -2842,7 +2842,7 @@ namespace LuaUnit
 #if defined TRINITY || AZEROTHCORE
         Unit::Kill(unit, target, durLoss);
 #else
-        unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss); 
+        unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
 #endif
         return 0;
     }

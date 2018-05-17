@@ -2052,7 +2052,7 @@ namespace LuaGlobalFunctions
             uint32 amount = Eluna::CHECKVAL<uint32>(L, ++i);
 
 #if defined TRINITY || AZEROTHCORE
-            ItemTemplate const* item_proto = eObjectMgr->GetItemTemplate(entry); 
+            ItemTemplate const* item_proto = eObjectMgr->GetItemTemplate(entry);
 #else
             ItemTemplate const* item_proto = ObjectMgr::GetItemPrototype(entry);
 #endif
@@ -2069,7 +2069,7 @@ namespace LuaGlobalFunctions
             if (Item* item = Item::CreateItem(entry, amount))
             {
 #if defined TRINITY || AZEROTHCORE
-                item->SaveToDB(trans); 
+                item->SaveToDB(trans);
 #else
                 item->SaveToDB();
 #endif
@@ -2082,7 +2082,7 @@ namespace LuaGlobalFunctions
         draft.SendMailTo(trans, MailReceiver(receiverGUIDLow), sender, MAIL_CHECK_MASK_NONE, delay);
         CharacterDatabase.CommitTransaction(trans);
 #else
-        draft.SendMailTo(MailReceiver(MAKE_NEW_GUID(receiverGUIDLow, 0, HIGHGUID_PLAYER)), sender); 
+        draft.SendMailTo(MailReceiver(MAKE_NEW_GUID(receiverGUIDLow, 0, HIGHGUID_PLAYER)), sender);
 #endif
         return 0;
     }

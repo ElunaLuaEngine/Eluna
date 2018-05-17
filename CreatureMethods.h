@@ -40,7 +40,7 @@ namespace LuaCreature
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, creature->hasInvolvedQuest(quest_id));
 #else
-        Eluna::Push(L, creature->HasInvolvedQuest(quest_id)); 
+        Eluna::Push(L, creature->HasInvolvedQuest(quest_id));
 #endif
         return 1;
     }
@@ -124,7 +124,7 @@ namespace LuaCreature
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, creature->hasLootRecipient());
 #else
-        Eluna::Push(L, creature->HasLootRecipient()); 
+        Eluna::Push(L, creature->HasLootRecipient());
 #endif
         return 1;
     }
@@ -193,7 +193,7 @@ namespace LuaCreature
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, creature->isElite());
 #else
-        Eluna::Push(L, creature->IsElite()); 
+        Eluna::Push(L, creature->IsElite());
 #endif
         return 1;
     }
@@ -245,7 +245,7 @@ namespace LuaCreature
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, creature->isWorldBoss());
 #else
-        Eluna::Push(L, creature->IsWorldBoss()); 
+        Eluna::Push(L, creature->IsWorldBoss());
 #endif
         return 1;
     }
@@ -306,7 +306,7 @@ namespace LuaCreature
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, creature->hasQuest(questId));
 #else
-        Eluna::Push(L, creature->HasQuest(questId)); 
+        Eluna::Push(L, creature->HasQuest(questId));
 #endif
         return 1;
     }
@@ -483,7 +483,7 @@ namespace LuaCreature
 #else
         float AttackDist = creature->GetAttackDistance(target);
         float ThreatRadius = sWorld.getConfig(CONFIG_FLOAT_THREAT_RADIUS);
-        Eluna::Push(L, ThreatRadius > AttackDist ? ThreatRadius : AttackDist); 
+        Eluna::Push(L, ThreatRadius > AttackDist ? ThreatRadius : AttackDist);
 #endif
         return 1;
     }
@@ -517,7 +517,7 @@ namespace LuaCreature
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, creature->GetLootRecipientGroup());
 #else
-        Eluna::Push(L, creature->GetGroupLootRecipient()); 
+        Eluna::Push(L, creature->GetGroupLootRecipient());
 #endif
         return 1;
     }
@@ -629,7 +629,7 @@ namespace LuaCreature
 #if defined TRINITY || AZEROTHCORE
         creature->GetHomePosition(x, y, z, o);
 #else
-        creature->GetRespawnCoord(x, y, z, &o); 
+        creature->GetRespawnCoord(x, y, z, &o);
 #endif
 
         Eluna::Push(L, x);
@@ -658,7 +658,7 @@ namespace LuaCreature
 #if defined TRINITY || AZEROTHCORE
         creature->SetHomePosition(x, y, z, o);
 #else
-        creature->SetRespawnCoord(x, y, z, o); 
+        creature->SetRespawnCoord(x, y, z, o);
 #endif
 
         return 0;
@@ -949,7 +949,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
 #if defined TRINITY || AZEROTHCORE
         creature->setDeathState((DeathState)state);
 #else
-        creature->SetDeathState((DeathState)state); 
+        creature->SetDeathState((DeathState)state);
 #endif
         return 0;
     }
@@ -1153,7 +1153,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
 #if defined TRINITY || AZEROTHCORE
         creature->DespawnOrUnsummon(msTimeToDespawn);
 #else
-        creature->ForcedDespawn(msTimeToDespawn); 
+        creature->ForcedDespawn(msTimeToDespawn);
 #endif
         return 0;
     }
@@ -1184,7 +1184,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
 #if defined TRINITY || AZEROTHCORE
         creature->GetMotionMaster()->MovePath(creature->GetWaypointPath(), true);
 #else
-        creature->GetMotionMaster()->MoveWaypoint(); 
+        creature->GetMotionMaster()->MoveWaypoint();
 #endif
         return 0;
     }
@@ -1252,7 +1252,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, creature->SelectVictim());
 #else
-        Eluna::Push(L, creature->SelectHostileTarget()); 
+        Eluna::Push(L, creature->SelectHostileTarget());
 #endif
         return 1;
     }
@@ -1271,7 +1271,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
 #if defined TRINITY || AZEROTHCORE
         creature->UpdateEntry(entry, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);
 #else
-        creature->UpdateEntry(entry, ALLIANCE, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL); 
+        creature->UpdateEntry(entry, ALLIANCE, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);
 #endif
         return 0;
     }

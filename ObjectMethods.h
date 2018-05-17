@@ -133,10 +133,10 @@ namespace LuaObject
      */
     int GetScale(lua_State* L, Object* obj)
     {
-#ifndef AZEROTHCORE 
+#ifndef AZEROTHCORE
         Eluna::Push(L, obj->GetObjectScale());
 #else
-		Eluna::Push(L, obj->GetFloatValue(OBJECT_FIELD_SCALE_X));
+        Eluna::Push(L, obj->GetFloatValue(OBJECT_FIELD_SCALE_X));
 #endif
         return 1;
     }

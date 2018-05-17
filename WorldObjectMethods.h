@@ -186,10 +186,10 @@ namespace LuaWorldObject
 #ifdef TRINITY
         Trinity::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
         Cell::VisitAllObjects(obj, searcher, range);
-        
+
 #elif AZEROTHCORE
-		Trinity::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-		obj->VisitNearbyObject(range,searcher);
+        Trinity::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        obj->VisitNearbyObject(range,searcher);
 #else
         MaNGOS::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
@@ -220,8 +220,8 @@ namespace LuaWorldObject
         Trinity::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
-		Trinity::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-		obj->VisitNearbyObject(range, searcher);
+        Trinity::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        obj->VisitNearbyObject(range, searcher);
 #else
         MaNGOS::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
@@ -254,12 +254,12 @@ namespace LuaWorldObject
         Trinity::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
-		Trinity::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-		obj->VisitNearbyObject(range, searcher);
+        Trinity::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        obj->VisitNearbyObject(range, searcher);
 #else
         MaNGOS::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
-        
+
 #endif
 
         Eluna::Push(L, target);
@@ -287,11 +287,11 @@ namespace LuaWorldObject
         Trinity::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
-		Trinity::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-		obj->VisitNearbyObject(range, searcher);
+        Trinity::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        obj->VisitNearbyObject(range, searcher);
 #else
         MaNGOS::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
-        Cell::VisitWorldObjects(obj, searcher, range); 
+        Cell::VisitWorldObjects(obj, searcher, range);
 #endif
 
         lua_createtable(L, list.size(), 0);
@@ -331,11 +331,11 @@ namespace LuaWorldObject
         Trinity::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
         Cell::VisitAllObjects(obj, searcher, range);
 #elif defined AZEROTHCORE
-		Trinity::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-		obj->VisitNearbyObject(range, searcher);
+        Trinity::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        obj->VisitNearbyObject(range, searcher);
 #else
         MaNGOS::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
-        Cell::VisitGridObjects(obj, searcher, range); 
+        Cell::VisitGridObjects(obj, searcher, range);
 #endif
 
         lua_createtable(L, list.size(), 0);
@@ -373,11 +373,11 @@ namespace LuaWorldObject
         Trinity::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
-		Trinity::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-		obj->VisitNearbyObject(range, searcher);
+        Trinity::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        obj->VisitNearbyObject(range, searcher);
 #else
         MaNGOS::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
-        Cell::VisitGridObjects(obj, searcher, range); 
+        Cell::VisitGridObjects(obj, searcher, range);
 #endif
 
         lua_createtable(L, list.size(), 0);
@@ -423,11 +423,11 @@ namespace LuaWorldObject
         Trinity::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
-		Trinity::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-		obj->VisitNearbyObject(range, searcher);
+        Trinity::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        obj->VisitNearbyObject(range, searcher);
 #else
         MaNGOS::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
-        Cell::VisitAllObjects(obj, searcher, range); 
+        Cell::VisitAllObjects(obj, searcher, range);
 #endif
 
         Eluna::Push(L, target);
@@ -463,11 +463,11 @@ namespace LuaWorldObject
         Trinity::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
-		Trinity::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-		obj->VisitNearbyObject(range, searcher);
+        Trinity::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        obj->VisitNearbyObject(range, searcher);
 #else
         MaNGOS::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
-        Cell::VisitAllObjects(obj, searcher, range); 
+        Cell::VisitAllObjects(obj, searcher, range);
 #endif
 
         lua_createtable(L, list.size(), 0);
@@ -721,7 +721,7 @@ namespace LuaWorldObject
 #elif AZEROTHCORE
         Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, 0, 0, 0, 0, respawnDelay));
 #else
-        Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, respawnDelay)); 
+        Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, respawnDelay));
 #endif
         return 1;
     }

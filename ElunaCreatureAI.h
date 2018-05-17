@@ -13,7 +13,7 @@
 struct ScriptedAI;
 #else
 class AggressorAI;
-typedef AggressorAI ScriptedAI; 
+typedef AggressorAI ScriptedAI;
 #endif
 
 struct ElunaCreatureAI : ScriptedAI

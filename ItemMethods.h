@@ -179,7 +179,7 @@ namespace LuaItem
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, item->hasQuest(quest));
 #else
-        Eluna::Push(L, item->HasQuest(quest)); 
+        Eluna::Push(L, item->HasQuest(quest));
 #endif
         return 1;
     }
@@ -318,7 +318,7 @@ namespace LuaItem
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, item->GetOwnerGUID());
 #else
-        Eluna::Push(L, item->GetOwnerGuid()); 
+        Eluna::Push(L, item->GetOwnerGuid());
 #endif
         return 1;
     }
@@ -633,7 +633,7 @@ namespace LuaItem
 #if defined TRINITY || AZEROTHCORE
         item->SetOwnerGUID(player->GET_GUID());
 #else
-        item->SetOwnerGuid(player->GET_GUID()); 
+        item->SetOwnerGuid(player->GET_GUID());
 #endif
         return 0;
     }
@@ -740,7 +740,7 @@ namespace LuaItem
         SQLTransaction trans = SQLTransaction(NULL);
         item->SaveToDB(trans);
 #else
-        item->SaveToDB(); 
+        item->SaveToDB();
 #endif
         return 0;
     }

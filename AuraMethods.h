@@ -40,7 +40,7 @@ namespace LuaAura
     int GetCasterGUID(lua_State* L, Aura* aura)
     {
 #if defined TRINITY || AZEROTHCORE
-        Eluna::Push(L, aura->GetCasterGUID()); 
+        Eluna::Push(L, aura->GetCasterGUID());
 #else
         Eluna::Push(L, aura->GetCasterGuid());
 #endif
@@ -68,7 +68,7 @@ namespace LuaAura
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, aura->GetDuration());
 #else
-        Eluna::Push(L, aura->GetAuraDuration()); 
+        Eluna::Push(L, aura->GetAuraDuration());
 #endif
         return 1;
     }
@@ -97,7 +97,7 @@ namespace LuaAura
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, aura->GetMaxDuration());
 #else
-        Eluna::Push(L, aura->GetAuraMaxDuration()); 
+        Eluna::Push(L, aura->GetAuraMaxDuration());
 #endif
         return 1;
     }
@@ -125,7 +125,7 @@ namespace LuaAura
 #if defined TRINITY || defined AZEROTHCORE
         Eluna::Push(L, aura->GetOwner());
 #else
-        Eluna::Push(L, aura->GetTarget()); 
+        Eluna::Push(L, aura->GetTarget());
 #endif
         return 1;
     }
@@ -146,7 +146,7 @@ namespace LuaAura
         aura->GetHolder()->UpdateAuraDuration();
 #else
         aura->GetHolder()->SendAuraUpdate(false);
-#endif     
+#endif
 #endif
         return 0;
     }
@@ -189,7 +189,7 @@ namespace LuaAura
 #if defined TRINITY || defined AZEROTHCORE
         aura->SetStackAmount(amount);
 #else
-        aura->GetHolder()->SetStackAmount(amount); 
+        aura->GetHolder()->SetStackAmount(amount);
 #endif
         return 0;
     }
@@ -200,7 +200,7 @@ namespace LuaAura
     int Remove(lua_State* L, Aura* aura)
     {
 #if defined TRINITY || defined AZEROTHCORE
-        aura->Remove(); 
+        aura->Remove();
 #else
         aura->GetTarget()->RemoveSpellAuraHolder(aura->GetHolder(), AURA_REMOVE_BY_CANCEL);
 #endif

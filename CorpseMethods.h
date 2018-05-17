@@ -24,7 +24,7 @@ namespace LuaCorpse
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, corpse->GetOwnerGUID());
 #else
-        Eluna::Push(L, corpse->GetOwnerGuid()); 
+        Eluna::Push(L, corpse->GetOwnerGuid());
 #endif
         return 1;
     }
