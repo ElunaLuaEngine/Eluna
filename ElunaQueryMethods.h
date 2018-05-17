@@ -317,11 +317,16 @@ namespace LuaQuery
                     case DatabaseFieldTypes::Double:
 #else
                     case MYSQL_TYPE_TINY:
+                    case MYSQL_TYPE_YEAR:
                     case MYSQL_TYPE_SHORT:
                     case MYSQL_TYPE_INT24:
                     case MYSQL_TYPE_LONG:
+                    case MYSQL_TYPE_LONGLONG:
+                    case MYSQL_TYPE_BIT:
                     case MYSQL_TYPE_FLOAT:
                     case MYSQL_TYPE_DOUBLE:
+                    case MYSQL_TYPE_DECIMAL:
+                    case MYSQL_TYPE_NEWDECIMAL:
 #endif
                         Eluna::Push(L, strtod(str, NULL));
                         break;
