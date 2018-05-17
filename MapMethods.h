@@ -37,10 +37,10 @@ namespace LuaMap
      */
     int IsBattleground(lua_State* L, Map* map)
     {
-#ifndef TRINITY
-        Eluna::Push(L, map->IsBattleGround());
+#if defined TRINITY || AZEROTHCORE
+        Eluna::Push(L, map->IsBattleground()); 
 #else
-        Eluna::Push(L, map->IsBattleground());
+        Eluna::Push(L, map->IsBattleGround());
 #endif
         return 1;
     }
@@ -190,10 +190,10 @@ namespace LuaMap
         float y = Eluna::CHECKVAL<float>(L, 3);
         float z = Eluna::CHECKVAL<float>(L, 4);
 
-#ifndef TRINITY
-        Eluna::Push(L, map->GetTerrain()->GetAreaId(x, y, z));
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, map->GetAreaId(x, y, z));
+#else
+        Eluna::Push(L, map->GetTerrain()->GetAreaId(x, y, z)); 
 #endif
         return 1;
     }
@@ -207,35 +207,39 @@ namespace LuaMap
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
 
-#ifndef TRINITY
-        Eluna::Push(L, map->GetWorldObject(ObjectGuid(guid)));
-#else
+#if defined TRINITY || AZEROTHCORE
         switch (GUID_HIPART(guid))
         {
-            case HIGHGUID_PLAYER:
-                Eluna::Push(L, eObjectAccessor()GetPlayer(map, ObjectGuid(guid)));
-                break;
-            case HIGHGUID_TRANSPORT:
-            case HIGHGUID_MO_TRANSPORT:
-            case HIGHGUID_GAMEOBJECT:
-                Eluna::Push(L, map->GetGameObject(ObjectGuid(guid)));
-                break;
-            case HIGHGUID_VEHICLE:
-            case HIGHGUID_UNIT:
-                Eluna::Push(L, map->GetCreature(ObjectGuid(guid)));
-                break;
-            case HIGHGUID_PET:
-                Eluna::Push(L, map->GetPet(ObjectGuid(guid)));
-                break;
-            case HIGHGUID_DYNAMICOBJECT:
-                Eluna::Push(L, map->GetDynamicObject(ObjectGuid(guid)));
-                break;
-            case HIGHGUID_CORPSE:
-                Eluna::Push(L, map->GetCorpse(ObjectGuid(guid)));
-                break;
-            default:
-                break;
+        case HIGHGUID_PLAYER:
+#ifndef AZEROTHCORE
+            Eluna::Push(L, eObjectAccessor()GetPlayer(map, ObjectGuid(guid)));
+#else
+            Eluna::Push(L, map->GetPlayer(ObjectGuid(guid)));
+#endif // !AZEROTHCORE
+            break;
+        case HIGHGUID_TRANSPORT:
+        case HIGHGUID_MO_TRANSPORT:
+        case HIGHGUID_GAMEOBJECT:
+            Eluna::Push(L, map->GetGameObject(ObjectGuid(guid)));
+            break;
+        case HIGHGUID_VEHICLE:
+        case HIGHGUID_UNIT:
+            Eluna::Push(L, map->GetCreature(ObjectGuid(guid)));
+            break;
+        case HIGHGUID_PET:
+            Eluna::Push(L, map->GetPet(ObjectGuid(guid)));
+            break;
+        case HIGHGUID_DYNAMICOBJECT:
+            Eluna::Push(L, map->GetDynamicObject(ObjectGuid(guid)));
+            break;
+        case HIGHGUID_CORPSE:
+            Eluna::Push(L, map->GetCorpse(ObjectGuid(guid)));
+            break;
+        default:
+            break;
         }
+#else
+        Eluna::Push(L, map->GetWorldObject(ObjectGuid(guid)));
 #endif
         return 1;
     }
@@ -263,7 +267,7 @@ namespace LuaMap
         uint32 weatherType = Eluna::CHECKVAL<uint32>(L, 3);
         float grade = Eluna::CHECKVAL<float>(L, 4);
 
-#if defined(TRINITY)
+#if defined TRINITY || AZEROTHCORE
         Weather* weather = WeatherMgr::FindWeather(zoneId);
         if (!weather)
             weather = WeatherMgr::AddWeather(zoneId);
@@ -286,7 +290,7 @@ namespace LuaMap
      */
     int GetInstanceData(lua_State* L, Map* map)
     {
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         ElunaInstanceAI* iAI = NULL;
         if (InstanceMap* inst = map->ToInstanceMap())
             iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
@@ -307,7 +311,7 @@ namespace LuaMap
      */
     int SaveInstanceData(lua_State* /*L*/, Map* map)
     {
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         ElunaInstanceAI* iAI = NULL;
         if (InstanceMap* inst = map->ToInstanceMap())
             iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
@@ -345,10 +349,10 @@ namespace LuaMap
         Map::PlayerList const& players = map->GetPlayers();
         for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
         {
-#ifndef TRINITY
-            Player* player = itr->getSource();
-#else
+#if defined TRINITY || AZEROTHCORE
             Player* player = itr->GetSource();
+#else
+            Player* player = itr->getSource(); 
 #endif
             if (!player)
                 continue;

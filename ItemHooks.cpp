@@ -79,18 +79,7 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_USE, pItem->GetEntry(), true);
     Push(pPlayer);
     Push(pItem);
-#ifndef TRINITY
-    if (GameObject* target = targets.getGOTarget())
-        Push(target);
-    else if (Item* target = targets.getItemTarget())
-        Push(target);
-    else if (Corpse* target = pPlayer->GetMap()->GetCorpse(targets.getCorpseTargetGuid()))
-        Push(target);
-    else if (Unit* target = targets.getUnitTarget())
-        Push(target);
-    else
-        Push();
-#else
+#if defined TRINITY || AZEROTHCORE
     if (GameObject* target = targets.GetGOTarget())
         Push(target);
     else if (Item* target = targets.GetItemTarget())
@@ -100,6 +89,17 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
     else if (Unit* target = targets.GetUnitTarget())
         Push(target);
     else if (WorldObject* target = targets.GetObjectTarget())
+        Push(target);
+    else
+        Push();
+#else
+    if (GameObject* target = targets.getGOTarget())
+        Push(target);
+    else if (Item* target = targets.getItemTarget())
+        Push(target);
+    else if (Corpse* target = pPlayer->GetMap()->GetCorpse(targets.getCorpseTargetGuid()))
+        Push(target);
+    else if (Unit* target = targets.getUnitTarget())
         Push(target);
     else
         Push();

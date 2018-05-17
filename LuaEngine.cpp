@@ -32,6 +32,10 @@
 #define USING_BOOST
 #endif
 
+#ifdef AZEROTHCORE
+#undef USING_BOOST
+#endif
+
 #ifdef USING_BOOST
 #include <boost/filesystem.hpp>
 #else
@@ -66,7 +70,7 @@ void Eluna::Initialize()
     LOCK_ELUNA;
     ASSERT(!IsInitialized());
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
     // For instance data the data column needs to be able to hold more than 255 characters (tinytext)
     // so we change it to TEXT automatically on startup
     CharacterDatabase.DirectExecute("ALTER TABLE `instance` CHANGE COLUMN `data` `data` TEXT NOT NULL");
@@ -519,7 +523,11 @@ void Eluna::RunScripts()
 void Eluna::InvalidateObjects()
 {
     ++callstackid;
+#ifdef AZEROTHCORE
+    ASSERT(callstackid && "Callstackid overflow");
+#else
     ASSERT(callstackid, "Callstackid overflow");
+#endif
 }
 
 void Eluna::Report(lua_State* _L)

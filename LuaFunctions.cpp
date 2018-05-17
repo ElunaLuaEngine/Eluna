@@ -502,7 +502,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetNextRandomRaidMember", &LuaPlayer::GetNextRandomRaidMember },
     { "GetOriginalGroup", &LuaPlayer::GetOriginalGroup },
     { "GetOriginalSubGroup", &LuaPlayer::GetOriginalSubGroup },
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
     { "GetChampioningFaction", &LuaPlayer::GetChampioningFaction },
 #endif
     { "GetLatency", &LuaPlayer::GetLatency },
@@ -561,7 +561,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SetPlayerLock", &LuaPlayer::SetPlayerLock },
     { "SetGender", &LuaPlayer::SetGender },
     { "SetSheath", &LuaPlayer::SetSheath },
-#ifndef TRINITY
+#if !defined TRINITY && !AZEROTHCORE
     { "SetFFA", &LuaPlayer::SetFFA },
 #endif
 
@@ -765,13 +765,15 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetScriptId", &LuaCreature::GetScriptId },
     { "GetAIName", &LuaCreature::GetAIName },
     { "GetScriptName", &LuaCreature::GetScriptName },
+#ifndef AZEROTHCORE
     { "GetAttackDistance", &LuaCreature::GetAttackDistance },
+#endif
     { "GetAggroRange", &LuaCreature::GetAggroRange },
     { "GetDefaultMovementType", &LuaCreature::GetDefaultMovementType },
     { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },
     { "GetWanderRadius", &LuaCreature::GetWanderRadius },
     { "GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId },
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
     { "GetWaypointPath", &LuaCreature::GetWaypointPath },
     { "GetLootMode", &LuaCreature::GetLootMode },
 #endif
@@ -794,7 +796,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "SetWanderRadius", &LuaCreature::SetWanderRadius },
     { "SetInCombatWithZone", &LuaCreature::SetInCombatWithZone },
     { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
     { "SetLootMode", &LuaCreature::SetLootMode },
 #endif
     { "SetNPCFlags", &LuaCreature::SetNPCFlags },
@@ -807,7 +809,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "IsWorldBoss", &LuaCreature::IsWorldBoss },
     { "IsRacialLeader", &LuaCreature::IsRacialLeader },
     { "IsCivilian", &LuaCreature::IsCivilian },
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
     { "IsTrigger", &LuaCreature::IsTrigger },
 #endif
     { "IsGuard", &LuaCreature::IsGuard },
@@ -817,7 +819,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "CanWalk", &LuaCreature::CanWalk },
     { "CanSwim", &LuaCreature::CanSwim },
     { "CanAggro", &LuaCreature::CanAggro },
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
     { "CanStartAttack", &LuaCreature::CanStartAttack },
 #endif
     { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },
@@ -827,7 +829,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },
     { "CanCompleteQuest", &LuaCreature::CanCompleteQuest },
     { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
     { "IsDamageEnoughForLootingAndReward", &LuaCreature::IsDamageEnoughForLootingAndReward },
     { "HasLootMode", &LuaCreature::HasLootMode },
 #endif
@@ -844,7 +846,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "DespawnOrUnsummon", &LuaCreature::DespawnOrUnsummon },
     { "Respawn", &LuaCreature::Respawn },
     { "AttackStart", &LuaCreature::AttackStart },
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
     { "AddLootMode", &LuaCreature::AddLootMode },
     { "ResetLootMode", &LuaCreature::ResetLootMode },
     { "RemoveLootMode", &LuaCreature::RemoveLootMode },
@@ -1249,7 +1251,9 @@ ElunaRegister<BattleGround> BattleGroundMethods[] =
     { "GetAlivePlayersCountByTeam", &LuaBattleGround::GetAlivePlayersCountByTeam },
     { "GetMap", &LuaBattleGround::GetMap },
     { "GetBonusHonorFromKillCount", &LuaBattleGround::GetBonusHonorFromKillCount },
+#ifndef AZEROTHCORE
     { "GetBracketId", &LuaBattleGround::GetBracketId },
+#endif
     { "GetEndTime", &LuaBattleGround::GetEndTime },
     { "GetFreeSlotsForTeam", &LuaBattleGround::GetFreeSlotsForTeam },
     { "GetInstanceId", &LuaBattleGround::GetInstanceId },
