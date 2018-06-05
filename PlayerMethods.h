@@ -3301,13 +3301,16 @@ namespace LuaPlayer
         float o = Eluna::CHECKVAL<float>(L, 6);
 #ifndef TRINITY
         if (player->IsTaxiFlying())
-#else
-        if (player->IsInFlight())
-#endif
         {
             player->GetMotionMaster()->MovementExpired();
             player->m_taxi.ClearTaxiDestinations();
         }
+#else
+        if (player->IsInFlight())
+            player->FinishTaxiFlight();
+        else
+            player->SaveRecallPosition();
+#endif
         Eluna::Push(L, player->TeleportTo(mapId, x, y, z, o));
         return 1;
     }
