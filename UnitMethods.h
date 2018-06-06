@@ -2090,8 +2090,12 @@ namespace LuaUnit
      */
     int MoveExpire(lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        unit->GetMotionMaster()->Clear();
+#else
         bool reset = Eluna::CHECKVAL<bool>(L, 2, true);
         unit->GetMotionMaster()->MovementExpired(reset);
+#endif
         return 0;
     }
 
@@ -2102,8 +2106,12 @@ namespace LuaUnit
      */
     int MoveClear(lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        unit->GetMotionMaster()->Clear();
+#else
         bool reset = Eluna::CHECKVAL<bool>(L, 2, true);
         unit->GetMotionMaster()->Clear(reset);
+#endif
         return 0;
     }
 

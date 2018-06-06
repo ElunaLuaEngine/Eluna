@@ -3348,15 +3348,24 @@ namespace LuaPlayer
         float y = Eluna::CHECKVAL<float>(L, 4);
         float z = Eluna::CHECKVAL<float>(L, 5);
         float o = Eluna::CHECKVAL<float>(L, 6);
-#if defined TRINITY || AZEROTHCORE
+#if defined AZEROTHCORE
         if (player->IsInFlight())
-#else
-        if (player->IsTaxiFlying())
-#endif
         {
             player->GetMotionMaster()->MovementExpired();
             player->m_taxi.ClearTaxiDestinations();
         }
+#elif defined TRINITY
+        if (player->IsInFlight())
+            player->FinishTaxiFlight();
+        else
+            player->SaveRecallPosition();
+#else
+        if (player->IsTaxiFlying())
+        {
+            player->GetMotionMaster()->MovementExpired();
+            player->m_taxi.ClearTaxiDestinations();
+        }
+#endif
         Eluna::Push(L, player->TeleportTo(mapId, x, y, z, o));
         return 1;
     }
