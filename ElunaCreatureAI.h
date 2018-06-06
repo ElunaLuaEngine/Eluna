@@ -9,11 +9,11 @@
 
 #include "LuaEngine.h"
 
-#ifndef TRINITY
+#if defined TRINITY || AZEROTHCORE
+struct ScriptedAI;
+#else
 class AggressorAI;
 typedef AggressorAI ScriptedAI;
-#else
-struct ScriptedAI;
 #endif
 
 struct ElunaCreatureAI : ScriptedAI
@@ -22,7 +22,7 @@ struct ElunaCreatureAI : ScriptedAI
     bool justSpawned;
     // used to delay movementinform hook (WP hook)
     std::vector< std::pair<uint32, uint32> > movepoints;
-#ifndef TRINITY
+#if defined MANGOS || defined CMANGOS
 #define me  m_creature
 #endif
 
@@ -60,7 +60,7 @@ struct ElunaCreatureAI : ScriptedAI
 
         if (!sEluna->UpdateAI(me, diff))
         {
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
             if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
                 ScriptedAI::UpdateAI(diff);
 #else
@@ -89,10 +89,20 @@ struct ElunaCreatureAI : ScriptedAI
 #endif
 
     // Called at any Damage from any attacker (before damage apply)
+#if AZEROTHCORE
+    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
+#else
     void DamageTaken(Unit* attacker, uint32& damage) override
+#endif
     {
         if (!sEluna->DamageTaken(me, attacker, damage))
+        {
+#if AZEROTHCORE
+            ScriptedAI::DamageTaken(attacker, damage, damagetype, damageSchoolMask);
+#else
             ScriptedAI::DamageTaken(attacker, damage);
+#endif
+        }
     }
 
     //Called at creature death
@@ -191,7 +201,7 @@ struct ElunaCreatureAI : ScriptedAI
             ScriptedAI::CorpseRemoved(respawnDelay);
     }
 
-#ifndef TRINITY
+#if !defined TRINITY && !AZEROTHCORE
     // Enables use of MoveInLineOfSight
     bool IsVisible(Unit* who) const override
     {
@@ -219,7 +229,7 @@ struct ElunaCreatureAI : ScriptedAI
             ScriptedAI::SpellHitTarget(target, spell);
     }
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
 
     // Called when the creature is summoned successfully by other creature
     void IsSummonedBy(Unit* summoner) override
@@ -249,7 +259,7 @@ struct ElunaCreatureAI : ScriptedAI
     }
 #endif
 
-#ifndef TRINITY
+#if defined MANGOS || defined CMANGOS
 #undef me
 #endif
 };

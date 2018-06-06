@@ -171,6 +171,8 @@ namespace LuaGlobalFunctions
         {
 #ifdef TRINITY
             boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+#elif AZEROTHCORE
+            TRINITY_READ_GUARD(HashMapHolder<Player>::LockType, *HashMapHolder<Player>::GetLock());
 #else
             HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
 #endif
@@ -181,10 +183,10 @@ namespace LuaGlobalFunctions
                 {
                     if (!player->IsInWorld())
                         continue;
-#ifndef TRINITY
-                    if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
-#else
+#if defined TRINITY || AZEROTHCORE
                     if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
+#else
+                    if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
 #endif
                     {
                         Eluna::Push(L, player);
@@ -456,7 +458,7 @@ namespace LuaGlobalFunctions
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(L, 2, "valid LocaleConstant expected");
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         AreaTableEntry const* areaEntry = sAreaTableStore.LookupEntry(areaOrZoneId);
 #else
         AreaTableEntry const* areaEntry = GetAreaEntryByAreaID(areaOrZoneId);
@@ -1208,7 +1210,7 @@ namespace LuaGlobalFunctions
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         ElunaQuery result = WorldDatabase.Query(query);
         if (result)
             Eluna::Push(L, new ElunaQuery(result));
@@ -1259,7 +1261,7 @@ namespace LuaGlobalFunctions
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         QueryResult result = CharacterDatabase.Query(query);
         if (result)
             Eluna::Push(L, new QueryResult(result));
@@ -1310,7 +1312,7 @@ namespace LuaGlobalFunctions
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         QueryResult result = LoginDatabase.Query(query);
         if (result)
             Eluna::Push(L, new QueryResult(result));
@@ -1468,7 +1470,7 @@ namespace LuaGlobalFunctions
         }
 #endif
 
-#ifndef TRINITY
+#if !defined TRINITY && !AZEROTHCORE
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
         {
@@ -1668,7 +1670,11 @@ namespace LuaGlobalFunctions
             if (save)
             {
                 Creature* creature = new Creature();
+#ifndef AZEROTHCORE
                 if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, pos))
+#else
+                if (!creature->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_UNIT), map, phase, entry, 0, x, y, z, o))
+#endif
                 {
                     delete creature;
                     Eluna::Push(L);
@@ -1677,14 +1683,21 @@ namespace LuaGlobalFunctions
 
                 creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
 
+#ifndef AZEROTHCORE
                 uint32 db_guid = creature->GetSpawnId();
-
+#else
+                uint32 db_guid = creature->GetDBTableGUIDLow();
+#endif
                 // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells()
                 // current "creature" variable is deleted and created fresh new, otherwise old values might trigger asserts or cause undefined behavior
                 creature->CleanupsBeforeDelete();
                 delete creature;
                 creature = new Creature();
+#ifndef AZEROTHCORE
                 if (!creature->LoadFromDB(db_guid, map, true, true))
+#else
+                if (!creature->LoadFromDB(db_guid, map))
+#endif
                 {
                     delete creature;
                     Eluna::Push(L);
@@ -1730,10 +1743,14 @@ namespace LuaGlobalFunctions
             }
 
             GameObject* object = new GameObject;
+#ifndef AZEROTHCORE
             uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
-
             QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
             if (!object->Create(guidLow, objectInfo->entry, map, phase, Position(x, y, z, o), rot, 0, GO_STATE_READY))
+#else
+            uint32 guidLow = sObjectMgr->GenerateLowGuid(HIGHGUID_GAMEOBJECT);
+            if (!object->Create(guidLow, entry, map, phase, x, y, z, o, G3D::Quat(0.0f, 0.0f, 0.0f, 0.0f), 100, GO_STATE_READY))
+#endif
             {
                 delete object;
                 Eluna::Push(L);
@@ -1747,7 +1764,11 @@ namespace LuaGlobalFunctions
             {
                 // fill the gameobject data and save to the db
                 object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
+#ifndef AZEROTHCORE
                 guidLow = object->GetSpawnId();
+#else
+                guidLow = object->GetDBTableGUIDLow();
+#endif
 
                 // delete the old object and do a clean load from DB with a fresh new GameObject instance.
                 // this is required to avoid weird behavior and memory leaks
@@ -1755,14 +1776,21 @@ namespace LuaGlobalFunctions
 
                 object = new GameObject();
                 // this will generate a new lowguid if the object is in an instance
+#ifndef AZEROTHCORE
                 if (!object->LoadFromDB(guidLow, map, true))
+#else
+                if (!object->LoadFromDB(guidLow, map))
+#endif
                 {
                     delete object;
                     Eluna::Push(L);
                     return 1;
                 }
-
+#ifndef AZEROTHCORE
                 eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGameObjectData(guidLow));
+#else
+                eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGOData(guidLow));
+#endif
             }
             else
                 map->AddToMap(object);
@@ -1809,15 +1837,7 @@ namespace LuaGlobalFunctions
         uint32 incrtime = Eluna::CHECKVAL<uint32>(L, 4);
         uint32 extendedcost = Eluna::CHECKVAL<uint32>(L, 5);
 
-#ifndef TRINITY
-        if (!eObjectMgr->IsVendorItemValid(false, "npc_vendor", entry, item, maxcount, incrtime, extendedcost, 0))
-            return 0;
-#ifndef CLASSIC
-        eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime, extendedcost);
-#else
-        eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime);
-#endif
-#else
+#if defined TRINITY || AZEROTHCORE
 #ifdef CATA
         if (!eObjectMgr->IsVendorItemValid(entry, item, maxcount, incrtime, extendedcost, 1))
             return 0;
@@ -1827,7 +1847,15 @@ namespace LuaGlobalFunctions
             return 0;
         eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime, extendedcost);
 #endif
+#else
+        if (!eObjectMgr->IsVendorItemValid(false, "npc_vendor", entry, item, maxcount, incrtime, extendedcost, 0))
+            return 0;
+#ifndef CLASSIC
+        eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime, extendedcost);
+#else
+        eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime);
 #endif
+#endif//TRINITY
         return 0;
     }
 
@@ -1938,7 +1966,11 @@ namespace LuaGlobalFunctions
                 return 0;
         }
 
+#ifndef AZEROTHCORE
         eWorld->BanAccount((BanMode)banMode, nameOrIP, duration, reason, whoBanned);
+#else
+        eWorld->BanAccount((BanMode)banMode, nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
+#endif
         return 0;
     }
 
@@ -1995,7 +2027,7 @@ namespace LuaGlobalFunctions
         MailSender sender(MAIL_NORMAL, senderGUIDLow, (MailStationery)stationary);
         MailDraft draft(subject, text);
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         if (cod)
             draft.AddCOD(cod);
         if (money)
@@ -2007,7 +2039,7 @@ namespace LuaGlobalFunctions
             draft.SetMoney(money);
 #endif
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         SQLTransaction trans = CharacterDatabase.BeginTransaction();
 #endif
         uint8 addedItems = 0;
@@ -2016,10 +2048,10 @@ namespace LuaGlobalFunctions
             uint32 entry = Eluna::CHECKVAL<uint32>(L, ++i);
             uint32 amount = Eluna::CHECKVAL<uint32>(L, ++i);
 
-#ifndef TRINITY
-            ItemTemplate const* item_proto = ObjectMgr::GetItemPrototype(entry);
-#else
+#if defined TRINITY || AZEROTHCORE
             ItemTemplate const* item_proto = eObjectMgr->GetItemTemplate(entry);
+#else
+            ItemTemplate const* item_proto = ObjectMgr::GetItemPrototype(entry);
 #endif
             if (!item_proto)
             {
@@ -2033,21 +2065,21 @@ namespace LuaGlobalFunctions
             }
             if (Item* item = Item::CreateItem(entry, amount))
             {
-#ifndef TRINITY
-                item->SaveToDB();
-#else
+#if defined TRINITY || AZEROTHCORE
                 item->SaveToDB(trans);
+#else
+                item->SaveToDB();
 #endif
                 draft.AddItem(item);
                 ++addedItems;
             }
         }
 
-#ifndef TRINITY
-        draft.SendMailTo(MailReceiver(MAKE_NEW_GUID(receiverGUIDLow, 0, HIGHGUID_PLAYER)), sender);
-#else
+#if defined TRINITY || AZEROTHCORE
         draft.SendMailTo(trans, MailReceiver(receiverGUIDLow), sender, MAIL_CHECK_MASK_NONE, delay);
         CharacterDatabase.CommitTransaction(trans);
+#else
+        draft.SendMailTo(MailReceiver(MAKE_NEW_GUID(receiverGUIDLow, 0, HIGHGUID_PLAYER)), sender);
 #endif
         return 0;
     }
@@ -2276,7 +2308,11 @@ namespace LuaGlobalFunctions
             nodeEntry->MountCreatureID[0] = mountH;
             nodeEntry->MountCreatureID[1] = mountA;
             sTaxiNodesStore.SetEntry(nodeId++, nodeEntry);
+#ifndef AZEROTHCORE
             sTaxiPathNodesByPath[pathId].set(index++, new TaxiPathNodeEntry(entry));
+#else
+            sTaxiPathNodesByPath[pathId][index++] = new TaxiPathNodeEntry(entry);
+#endif
 #endif
         }
         if (startNode >= nodeId)

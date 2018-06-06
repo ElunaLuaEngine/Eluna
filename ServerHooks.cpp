@@ -116,7 +116,11 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
 {
     START_HOOK_WITH_RETVAL(TRIGGER_EVENT_ON_TRIGGER, false);
     Push(pPlayer);
+#ifndef AZEROTHCORE
     Push(pTrigger->id);
+#else
+    Push(pTrigger->entry);
+#endif
     return CallAllFunctionsBool(ServerEventBindings, key);
 }
 
@@ -136,6 +140,9 @@ void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+    uint32 expiretime = entry->expire_time;
+#elif AZEROTHCORE
+    Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
     uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
@@ -164,6 +171,9 @@ void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
     uint32 expiretime = entry->expire_time;
+#elif AZEROTHCORE
+    Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
+    uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
     uint32 expiretime = entry->expireTime;
@@ -191,6 +201,9 @@ void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
     uint32 expiretime = entry->expire_time;
+#elif AZEROTHCORE
+    Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
+    uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
     uint32 expiretime = entry->expireTime;
@@ -217,6 +230,9 @@ void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
 #ifdef TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+    uint32 expiretime = entry->expire_time;
+#elif AZEROTHCORE
+    Item* item = eAuctionMgr->GetAItem(entry->item_guidlow);
     uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
@@ -246,10 +262,17 @@ void Eluna::OnOpenStateChange(bool open)
     CallAllFunctions(ServerEventBindings, key);
 }
 
+#ifndef AZEROTHCORE
 void Eluna::OnConfigLoad(bool reload)
+#else
+void Eluna::OnConfigLoad(bool reload, bool isBefore)
+#endif
 {
     START_HOOK(WORLD_EVENT_ON_CONFIG_LOAD);
     Push(reload);
+#ifdef AZEROTHCORE
+    Push(isBefore);
+#endif
     CallAllFunctions(ServerEventBindings, key);
 }
 

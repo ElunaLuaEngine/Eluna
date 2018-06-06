@@ -138,7 +138,7 @@ namespace LuaGroup
         if (Group* invitedgroup = player->GetGroupInvite())
             player->UninviteFromGroup();
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         bool success = group->AddMember(player);
         if (success)
             group->BroadcastGroupUpdate();
@@ -175,10 +175,10 @@ namespace LuaGroup
 
         for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
         {
-#ifndef TRINITY
-            Player* member = itr->getSource();
-#else
+#if defined TRINITY || AZEROTHCORE
             Player* member = itr->GetSource();
+#else
+            Player* member = itr->getSource();
 #endif
 
             if (!member || !member->GetSession())
@@ -199,10 +199,10 @@ namespace LuaGroup
      */
     int GetLeaderGUID(lua_State* L, Group* group)
     {
-#ifndef TRINITY
-        Eluna::Push(L, group->GetLeaderGuid());
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, group->GetLeaderGUID());
+#else
+        Eluna::Push(L, group->GetLeaderGuid());
 #endif
         return 1;
     }
@@ -231,10 +231,10 @@ namespace LuaGroup
     int GetMemberGUID(lua_State* L, Group* group)
     {
         const char* name = Eluna::CHECKVAL<const char*>(L, 2);
-#ifndef TRINITY
-        Eluna::Push(L, group->GetMemberGuid(name));
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, group->GetMemberGUID(name));
+#else
+        Eluna::Push(L, group->GetMemberGuid(name));
 #endif
         return 1;
     }
@@ -319,10 +319,10 @@ namespace LuaGroup
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
         uint32 method = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
-#ifndef TRINITY
-        Eluna::Push(L, group->RemoveMember(ObjectGuid(guid), method));
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, group->RemoveMember(ObjectGuid(guid), (RemoveMethod)method));
+#else
+        Eluna::Push(L, group->RemoveMember(ObjectGuid(guid), method));
 #endif
         return 1;
     }
@@ -401,4 +401,5 @@ namespace LuaGroup
         return 0;
     }*/
 };
+
 #endif

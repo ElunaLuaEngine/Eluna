@@ -52,10 +52,10 @@ namespace LuaQuest
     int HasFlag(lua_State* L, Quest* quest)
     {
         uint32 flag = Eluna::CHECKVAL<uint32>(L, 2);
-#ifndef TRINITY
-        Eluna::Push(L, quest->HasQuestFlag((QuestFlags)flag));
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, quest->HasFlag(flag));
+#else
+        Eluna::Push(L, quest->HasQuestFlag((QuestFlags)flag));
 #endif
         return 1;
     }
@@ -157,10 +157,10 @@ namespace LuaQuest
      */
     int GetFlags(lua_State* L, Quest* quest)
     {
-#ifndef TRINITY
-        Eluna::Push(L, quest->GetQuestFlags());
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, quest->GetFlags());
+#else
+        Eluna::Push(L, quest->GetQuestFlags());
 #endif
         return 1;
     }

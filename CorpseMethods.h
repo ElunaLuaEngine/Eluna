@@ -21,10 +21,10 @@ namespace LuaCorpse
      */
     int GetOwnerGUID(lua_State* L, Corpse* corpse)
     {
-#ifndef TRINITY
-        Eluna::Push(L, corpse->GetOwnerGuid());
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, corpse->GetOwnerGUID());
+#else
+        Eluna::Push(L, corpse->GetOwnerGuid());
 #endif
         return 1;
     }

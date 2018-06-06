@@ -301,7 +301,7 @@ bool Eluna::SpellHitTarget(Creature* me, Unit* target, SpellInfo const* spell)
     return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
 }
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
 
 bool Eluna::SummonedCreatureDies(Creature* me, Creature* summon, Unit* killer)
 {

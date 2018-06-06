@@ -7,10 +7,10 @@
 #ifndef QUERYMETHODS_H
 #define QUERYMETHODS_H
 
-#ifndef TRINITY
-#define RESULT  result
-#else
+#if defined TRINITY || defined AZEROTHCORE
 #define RESULT  (*result)
+#else
+#define RESULT  result
 #endif
 
 /***
@@ -45,10 +45,10 @@ namespace LuaQuery
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
 
-#ifndef TRINITY
-        Eluna::Push(L, RESULT->Fetch()[col].IsNULL());
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, RESULT->Fetch()[col].IsNull());
+#else
+        Eluna::Push(L, RESULT->Fetch()[col].IsNULL());
 #endif
         return 1;
     }
@@ -291,13 +291,13 @@ namespace LuaQuery
         lua_createtable(L, 0, col);
         int tbl = lua_gettop(L);
 
-#ifndef TRINITY
+#if !defined TRINITY && !AZEROTHCORE
         const QueryFieldNames& names = RESULT->GetFieldNames();
 #endif
 
         for (uint32 i = 0; i < col; ++i)
         {
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
             Eluna::Push(L, RESULT->GetFieldName(i));
 
             const char* str = row[i].GetCString();
@@ -308,12 +308,26 @@ namespace LuaQuery
                 // MYSQL_TYPE_LONGLONG Interpreted as string for lua
                 switch (row[i].GetType())
                 {
+#ifndef AZEROTHCORE
                     case DatabaseFieldTypes::Int8:
                     case DatabaseFieldTypes::Int16:
                     case DatabaseFieldTypes::Int32:
                     case DatabaseFieldTypes::Int64:
                     case DatabaseFieldTypes::Float:
                     case DatabaseFieldTypes::Double:
+#else
+                    case MYSQL_TYPE_TINY:
+                    case MYSQL_TYPE_YEAR:
+                    case MYSQL_TYPE_SHORT:
+                    case MYSQL_TYPE_INT24:
+                    case MYSQL_TYPE_LONG:
+                    case MYSQL_TYPE_LONGLONG:
+                    case MYSQL_TYPE_BIT:
+                    case MYSQL_TYPE_FLOAT:
+                    case MYSQL_TYPE_DOUBLE:
+                    case MYSQL_TYPE_DECIMAL:
+                    case MYSQL_TYPE_NEWDECIMAL:
+#endif
                         Eluna::Push(L, strtod(str, NULL));
                         break;
                     default:

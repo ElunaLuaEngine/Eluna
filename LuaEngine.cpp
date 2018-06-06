@@ -28,7 +28,7 @@
 
 // Some dummy includes containing BOOST_VERSION:
 // ObjectAccessor.h Config.h Log.h
-#ifndef MANGOS
+#if !defined MANGOS && !defined AZEROTHCORE
 #define USING_BOOST
 #endif
 
@@ -66,7 +66,7 @@ void Eluna::Initialize()
     LOCK_ELUNA;
     ASSERT(!IsInitialized());
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
     // For instance data the data column needs to be able to hold more than 255 characters (tinytext)
     // so we change it to TEXT automatically on startup
     CharacterDatabase.DirectExecute("ALTER TABLE `instance` CHANGE COLUMN `data` `data` TEXT NOT NULL");
@@ -519,7 +519,11 @@ void Eluna::RunScripts()
 void Eluna::InvalidateObjects()
 {
     ++callstackid;
+#ifdef AZEROTHCORE
+    ASSERT(callstackid && "Callstackid overflow");
+#else
     ASSERT(callstackid, "Callstackid overflow");
+#endif
 }
 
 void Eluna::Report(lua_State* _L)

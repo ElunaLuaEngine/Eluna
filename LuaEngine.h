@@ -13,7 +13,7 @@
 
 #include "Group.h"
 #include "Item.h"
-#ifndef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
 #include "Player.h"
 #endif
 #include "Weather.h"
@@ -28,7 +28,7 @@ extern "C"
 #include "lua.h"
 };
 
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
 struct ItemTemplate;
 typedef BattlegroundTypeId BattleGroundTypeId;
 #else
@@ -41,11 +41,14 @@ typedef SpellEntry SpellInfo;
 typedef int Difficulty;
 #endif
 #endif
-
+#ifndef AZEROTHCORE
 struct AreaTriggerEntry;
+#else
+typedef AreaTrigger AreaTriggerEntry;
+#endif
 class AuctionHouseObject;
 struct AuctionEntry;
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
 class Battleground;
 typedef Battleground BattleGround;
 #endif
@@ -54,12 +57,12 @@ class Corpse;
 class Creature;
 class CreatureAI;
 class GameObject;
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
 class GameObjectAI;
 #endif
 class Guild;
 class Group;
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
 class InstanceScript;
 typedef InstanceScript InstanceData;
 #else
@@ -72,7 +75,7 @@ class Player;
 class Quest;
 class Spell;
 class SpellCastTargets;
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
 class TempSummon;
 #else
 class TemporarySummon;
@@ -84,7 +87,7 @@ class Weather;
 class WorldPacket;
 #ifndef CLASSIC
 #ifndef TBC
-#ifdef TRINITY
+#if defined(TRINITY) || AZEROTHCORE
 class Vehicle;
 #else
 class VehicleInfo;
@@ -526,7 +529,11 @@ public:
 
     /* World */
     void OnOpenStateChange(bool open);
+#ifndef AZEROTHCORE
     void OnConfigLoad(bool reload);
+#else
+    void OnConfigLoad(bool reload, bool isBefore);
+#endif
     void OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask);
     void OnShutdownCancel();
     void OnStartup();
@@ -536,7 +543,11 @@ public:
 
     /* Battle Ground */
     void OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
+#if AZEROTHCORE
+    void OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, TeamId winner);
+#else
     void OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, Team winner);
+#endif
     void OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
     void OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
 };

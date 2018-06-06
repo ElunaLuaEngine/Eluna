@@ -13,7 +13,7 @@
 
 uint32 ElunaUtil::GetCurrTime()
 {
-#ifndef TRINITY
+#if !defined TRINITY && !AZEROTHCORE
     return WorldTimer::getMSTime();
 #else
     return getMSTime();
@@ -22,7 +22,7 @@ uint32 ElunaUtil::GetCurrTime()
 
 uint32 ElunaUtil::GetTimeDiff(uint32 oldMSTime)
 {
-#ifndef TRINITY
+#if !defined TRINITY && !AZEROTHCORE
     return WorldTimer::getMSTimeDiff(oldMSTime, GetCurrTime());
 #else
     return GetMSTimeDiffToNow(oldMSTime);
@@ -90,7 +90,7 @@ bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
             {
                 if (i_obj_fact)
                 {
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
                     if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))
                         return false;
 #else

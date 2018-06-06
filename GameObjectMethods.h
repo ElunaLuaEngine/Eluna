@@ -22,10 +22,10 @@ namespace LuaGameObject
     {
         uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
 
-#ifndef TRINITY
-        Eluna::Push(L, go->HasQuest(questId));
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, go->hasQuest(questId));
+#else
+        Eluna::Push(L, go->HasQuest(questId));
 #endif
         return 1;
     }
@@ -145,7 +145,7 @@ namespace LuaGameObject
      */
     int GetLootRecipientGroup(lua_State* L, GameObject* go)
     {
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, go->GetLootRecipientGroup());
 #else
         Eluna::Push(L, go->GetGroupLootRecipient());
@@ -162,6 +162,8 @@ namespace LuaGameObject
     {
 #ifdef TRINITY
         Eluna::Push(L, go->GetSpawnId());
+#elif AZEROTHCORE
+        Eluna::Push(L, go->GetDBTableGUIDLow());
 #else
         // on mangos based this is same as lowguid
         Eluna::Push(L, go->GetGUIDLow());
@@ -251,7 +253,7 @@ namespace LuaGameObject
         bool deldb = Eluna::CHECKVAL<bool>(L, 2, false);
 
         // cs_gobject.cpp copy paste
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         ObjectGuid ownerGuid = go->GetOwnerGUID();
 #else
         ObjectGuid ownerGuid = go->GetOwnerGuid();

@@ -39,10 +39,10 @@ namespace LuaAura
      */
     int GetCasterGUID(lua_State* L, Aura* aura)
     {
-#ifndef TRINITY
-        Eluna::Push(L, aura->GetCasterGuid());
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, aura->GetCasterGUID());
+#else
+        Eluna::Push(L, aura->GetCasterGuid());
 #endif
         return 1;
     }
@@ -65,10 +65,10 @@ namespace LuaAura
      */
     int GetDuration(lua_State* L, Aura* aura)
     {
-#ifndef TRINITY
-        Eluna::Push(L, aura->GetAuraDuration());
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, aura->GetDuration());
+#else
+        Eluna::Push(L, aura->GetAuraDuration());
 #endif
         return 1;
     }
@@ -94,10 +94,10 @@ namespace LuaAura
      */
     int GetMaxDuration(lua_State* L, Aura* aura)
     {
-#ifndef TRINITY
-        Eluna::Push(L, aura->GetAuraMaxDuration());
-#else
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, aura->GetMaxDuration());
+#else
+        Eluna::Push(L, aura->GetAuraMaxDuration());
 #endif
         return 1;
     }
@@ -122,10 +122,10 @@ namespace LuaAura
      */
     int GetOwner(lua_State* L, Aura* aura)
     {
-#ifndef TRINITY
-        Eluna::Push(L, aura->GetTarget());
-#else
+#if defined TRINITY || defined AZEROTHCORE
         Eluna::Push(L, aura->GetOwner());
+#else
+        Eluna::Push(L, aura->GetTarget());
 #endif
         return 1;
     }
@@ -138,15 +138,15 @@ namespace LuaAura
     int SetDuration(lua_State* L, Aura* aura)
     {
         int32 duration = Eluna::CHECKVAL<int32>(L, 2);
-#ifndef TRINITY
+#if defined TRINITY || defined AZEROTHCORE
+        aura->SetDuration(duration);
+#else
         aura->GetHolder()->SetAuraDuration(duration);
 #if (defined(TBC) || defined(CLASSIC))
         aura->GetHolder()->UpdateAuraDuration();
 #else
         aura->GetHolder()->SendAuraUpdate(false);
 #endif
-#else
-        aura->SetDuration(duration);
 #endif
         return 0;
     }
@@ -162,15 +162,15 @@ namespace LuaAura
     int SetMaxDuration(lua_State* L, Aura* aura)
     {
         int32 duration = Eluna::CHECKVAL<int32>(L, 2);
-#ifndef TRINITY
+#if defined TRINITY || defined AZEROTHCORE
+        aura->SetMaxDuration(duration);
+#else
         aura->GetHolder()->SetAuraMaxDuration(duration);
 #if (defined(TBC) || defined(CLASSIC))
         aura->GetHolder()->UpdateAuraDuration();
 #else
         aura->GetHolder()->SendAuraUpdate(false);
 #endif
-#else
-        aura->SetMaxDuration(duration);
 #endif
         return 0;
     }
@@ -186,10 +186,10 @@ namespace LuaAura
     int SetStackAmount(lua_State* L, Aura* aura)
     {
         uint8 amount = Eluna::CHECKVAL<uint8>(L, 2);
-#ifndef TRINITY
-        aura->GetHolder()->SetStackAmount(amount);
-#else
+#if defined TRINITY || defined AZEROTHCORE
         aura->SetStackAmount(amount);
+#else
+        aura->GetHolder()->SetStackAmount(amount);
 #endif
         return 0;
     }
@@ -199,10 +199,10 @@ namespace LuaAura
      */
     int Remove(lua_State* L, Aura* aura)
     {
-#ifndef TRINITY
-        aura->GetTarget()->RemoveSpellAuraHolder(aura->GetHolder(), AURA_REMOVE_BY_CANCEL);
-#else
+#if defined TRINITY || defined AZEROTHCORE
         aura->Remove();
+#else
+        aura->GetTarget()->RemoveSpellAuraHolder(aura->GetHolder(), AURA_REMOVE_BY_CANCEL);
 #endif
         Eluna::CHECKOBJ<ElunaObject>(L, 1)->Invalidate();
         return 0;
