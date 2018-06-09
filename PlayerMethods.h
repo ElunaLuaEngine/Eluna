@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
@@ -25,19 +25,24 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has a talent by ID in specified talent tree, 'false' otherwise.
+     * Returns 'true' if the [Player] has a talent by ID in specified spec, 'false' otherwise.
      *
-     * @param uint32 talentId : talent ID to check
-     * @param uint8 spec : specified talent tree
+     * @param uint32 spellId : talent spellId to check
+     * @param uint8 spec : specified spec. 0 for primary, 1 for secondary.
      * @return bool hasTalent
      */
     int HasTalent(lua_State* L, Player* player)
     {
-        uint32 talentId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
+#ifdef MANGOS
+        uint8 maxSpecs = MAX_TALENT_SPEC_COUNT;
+#else
+        uint8 maxSpecs = MAX_TALENT_SPECS;
+#endif
         uint8 spec = Eluna::CHECKVAL<uint8>(L, 3);
-        if (spec < MAX_TALENT_SPECS)
+        if (spec >= maxSpecs)
             return 1;
-        Eluna::Push(L, player->HasTalent(talentId, spec));
+        Eluna::Push(L, player->HasTalent(spellId, spec));
         return 1;
     }
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
@@ -1070,9 +1070,28 @@ namespace LuaUnit
     }
 
     /**
-     * Returns the [Unit]'s creature type ID like wolf or humanoid.
+     * Returns the [Unit]'s creature type ID (enumerated in CreatureType.dbc).
      *
-     * @return uint32 creatureType
+     * <pre>
+     * enum CreatureType
+     * {
+     *     CREATURE_TYPE_BEAST            = 1,
+     *     CREATURE_TYPE_DRAGONKIN        = 2,
+     *     CREATURE_TYPE_DEMON            = 3,
+     *     CREATURE_TYPE_ELEMENTAL        = 4,
+     *     CREATURE_TYPE_GIANT            = 5,
+     *     CREATURE_TYPE_UNDEAD           = 6,
+     *     CREATURE_TYPE_HUMANOID         = 7,
+     *     CREATURE_TYPE_CRITTER          = 8,
+     *     CREATURE_TYPE_MECHANICAL       = 9,
+     *     CREATURE_TYPE_NOT_SPECIFIED    = 10,
+     *     CREATURE_TYPE_TOTEM            = 11,
+     *     CREATURE_TYPE_NON_COMBAT_PET   = 12,     // This and below is TBC+ 
+     *     CREATURE_TYPE_GAS_CLOUD        = 13
+     * };
+     * </pre>
+     *
+     * @return [CreatureType] creatureType
      */
     int GetCreatureType(lua_State* L, Unit* unit)
     {
