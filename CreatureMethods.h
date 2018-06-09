@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
@@ -1312,5 +1312,75 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
         return 0;
     }
 #endif
+
+    /**
+     * Returns the [Creature]'s creature family ID (enumerated in CreatureFamily.dbc).
+     *
+     * <pre>
+     * enum CreatureFamily
+     * {
+     *     CREATURE_FAMILY_NONE                = 0,    // TrinityCore only
+     *     CREATURE_FAMILY_WOLF                = 1,
+     *     CREATURE_FAMILY_CAT                 = 2,
+     *     CREATURE_FAMILY_SPIDER              = 3,
+     *     CREATURE_FAMILY_BEAR                = 4,
+     *     CREATURE_FAMILY_BOAR                = 5,
+     *     CREATURE_FAMILY_CROCOLISK           = 6,
+     *     CREATURE_FAMILY_CARRION_BIRD        = 7,
+     *     CREATURE_FAMILY_CRAB                = 8,
+     *     CREATURE_FAMILY_GORILLA             = 9,
+     *     CREATURE_FAMILY_HORSE_CUSTOM        = 10,   // Does not exist in DBC but used for horse like beasts in DB
+     *     CREATURE_FAMILY_RAPTOR              = 11,
+     *     CREATURE_FAMILY_TALLSTRIDER         = 12,
+     *     CREATURE_FAMILY_FELHUNTER           = 15,
+     *     CREATURE_FAMILY_VOIDWALKER          = 16,
+     *     CREATURE_FAMILY_SUCCUBUS            = 17,
+     *     CREATURE_FAMILY_DOOMGUARD           = 19,
+     *     CREATURE_FAMILY_SCORPID             = 20,
+     *     CREATURE_FAMILY_TURTLE              = 21,
+     *     CREATURE_FAMILY_IMP                 = 23,
+     *     CREATURE_FAMILY_BAT                 = 24,
+     *     CREATURE_FAMILY_HYENA               = 25,
+     *     CREATURE_FAMILY_BIRD_OF_PREY        = 26,   // Named CREATURE_FAMILY_OWL in Mangos
+     *     CREATURE_FAMILY_WIND_SERPENT        = 27,
+     *     CREATURE_FAMILY_REMOTE_CONTROL      = 28,
+     *     CREATURE_FAMILY_FELGUARD            = 29,   // This and below is TBC+
+     *     CREATURE_FAMILY_DRAGONHAWK          = 30,
+     *     CREATURE_FAMILY_RAVAGER             = 31,
+     *     CREATURE_FAMILY_WARP_STALKER        = 32,
+     *     CREATURE_FAMILY_SPOREBAT            = 33,
+     *     CREATURE_FAMILY_NETHER_RAY          = 34,
+     *     CREATURE_FAMILY_SERPENT             = 35,
+     *     CREATURE_FAMILY_SEA_LION            = 36,   // TBC only
+     *     CREATURE_FAMILY_MOTH                = 37,   // This and below is WotLK+
+     *     CREATURE_FAMILY_CHIMAERA            = 38,
+     *     CREATURE_FAMILY_DEVILSAUR           = 39,
+     *     CREATURE_FAMILY_GHOUL               = 40,
+     *     CREATURE_FAMILY_SILITHID            = 41,
+     *     CREATURE_FAMILY_WORM                = 42,
+     *     CREATURE_FAMILY_RHINO               = 43,
+     *     CREATURE_FAMILY_WASP                = 44,
+     *     CREATURE_FAMILY_CORE_HOUND          = 45,
+     *     CREATURE_FAMILY_SPIRIT_BEAST        = 46
+     * };
+     * </pre>
+     *
+     * @return [CreatureFamily] creatureFamily
+     */
+    int GetCreatureFamily(lua_State* L, Creature* creature)
+    {
+        uint32 entry = creature->GetEntry();
+
+#if defined TRINITY || AZEROTHCORE
+        CreatureTemplate const* cInfo = sObjectMgr->GetCreatureTemplate(entry);
+        if (cInfo)
+            Eluna::Push(L, cInfo->family);
+#else
+        CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(entry);
+        if (cInfo)
+            Eluna::Push(L, cInfo->Family);
+#endif
+        return 1;
+    }
 };
 #endif
