@@ -68,13 +68,13 @@ namespace LuaUnit
      */
     int IsRooted(lua_State* L, Unit* unit)
     {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
+        Eluna::Push(L, unit->IsRooted() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT));
+#elif AZEROTHCORE
         Eluna::Push(L, unit->isInRoots() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT));
-#endif
-#ifdef CMANGOS
+#elif CMANGOS
         Eluna::Push(L, unit->isInRoots() || unit->IsRooted());
-#endif
-#ifdef MANGOS
+#elif MANGOS
         Eluna::Push(L, unit->IsInRoots() || unit->IsRooted());
 #endif
         return 1;
