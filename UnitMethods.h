@@ -1763,7 +1763,9 @@ namespace LuaUnit
     int SetCharmerGUID(lua_State* L, Unit* unit)
     {
         uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
+//		unit->SetCharmerGUID(ObjectGuid(guid));
+#elif AZEROTHCORE
         unit->SetCharmerGUID(ObjectGuid(guid));
 #else
         unit->SetCharmerGuid(ObjectGuid(guid));
