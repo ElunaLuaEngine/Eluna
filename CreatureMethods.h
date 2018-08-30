@@ -1038,7 +1038,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     int SetInCombatWithZone(lua_State* /*L*/, Creature* creature)
     {
 #if defined TRINITY || AZEROTHCORE
-        if (creature->IsAIEnabled)
+        if (creature->IsAIEnabled())
             creature->AI()->DoZoneInCombat();
 #else
         creature->SetInCombatWithZone();
