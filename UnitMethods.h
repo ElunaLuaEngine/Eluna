@@ -659,7 +659,9 @@ namespace LuaUnit
      */
     int GetCharmGUID(lua_State* L, Unit* unit)
     {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
+        Eluna::Push(L, unit->GetCharmedGUID());
+#elif AZEROTHCORE
         Eluna::Push(L, unit->GetCharmGUID());
 #else
         Eluna::Push(L, unit->GetCharmGuid());
