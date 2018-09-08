@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
@@ -68,8 +68,11 @@ namespace LuaUnit
      */
     int IsRooted(lua_State* L, Unit* unit)
     {
-#if defined TRINITY || AZEROTHCORE
+#ifdef AZEROTHCORE
         Eluna::Push(L, unit->isInRoots() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT));
+#endif
+#ifdef TRINITY
+        Eluna::Push(L, unit->IsRooted() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT));
 #endif
 #ifdef CMANGOS
         Eluna::Push(L, unit->isInRoots() || unit->IsRooted());
@@ -659,8 +662,10 @@ namespace LuaUnit
      */
     int GetCharmGUID(lua_State* L, Unit* unit)
     {
-#if defined TRINITY || AZEROTHCORE
+#if defined AZEROTHCORE
         Eluna::Push(L, unit->GetCharmGUID());
+#elif defined TRINITY
+        Eluna::Push(L, unit->GetCharmedGUID());
 #else
         Eluna::Push(L, unit->GetCharmGuid());
 #endif
@@ -1751,22 +1756,6 @@ namespace LuaUnit
         unit->SetCreatorGUID(ObjectGuid(guid));
 #else
         unit->SetCreatorGuid(ObjectGuid(guid));
-#endif
-        return 0;
-    }
-
-    /**
-     * Sets charmer GUID
-     *
-     * @param uint64 guid
-     */
-    int SetCharmerGUID(lua_State* L, Unit* unit)
-    {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
-#if defined TRINITY || AZEROTHCORE
-        unit->SetCharmerGUID(ObjectGuid(guid));
-#else
-        unit->SetCharmerGuid(ObjectGuid(guid));
 #endif
         return 0;
     }

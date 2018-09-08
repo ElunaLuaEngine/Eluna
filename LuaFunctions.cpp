@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
@@ -328,7 +328,6 @@ ElunaRegister<Unit> UnitMethods[] =
     { "SetSheath", &LuaUnit::SetSheath },
     { "SetCreatorGUID", &LuaUnit::SetCreatorGUID },
     { "SetMinionGUID", &LuaUnit::SetPetGUID },
-    { "SetCharmerGUID", &LuaUnit::SetCharmerGUID },
     { "SetPetGUID", &LuaUnit::SetPetGUID },
 #if (!defined(TBC) && !defined(CLASSIC))
     { "SetCritterGUID", &LuaUnit::SetCritterGUID },

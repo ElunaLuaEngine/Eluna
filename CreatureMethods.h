@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
@@ -1037,8 +1037,11 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      */
     int SetInCombatWithZone(lua_State* /*L*/, Creature* creature)
     {
-#if defined TRINITY || AZEROTHCORE
+#if defined AZEROTHCORE
         if (creature->IsAIEnabled)
+            creature->AI()->DoZoneInCombat();
+#elif defined TRINITY
+        if (creature->IsAIEnabled())
             creature->AI()->DoZoneInCombat();
 #else
         creature->SetInCombatWithZone();
