@@ -22,6 +22,7 @@
 #endif
 #else
 #include "Database/QueryResult.h"
+#include "Log.h"
 #endif
 
 #ifdef TRINITY
