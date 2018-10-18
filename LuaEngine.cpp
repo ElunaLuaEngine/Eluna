@@ -519,10 +519,10 @@ void Eluna::RunScripts()
 void Eluna::InvalidateObjects()
 {
     ++callstackid;
-#ifdef AZEROTHCORE
-    ASSERT(callstackid && "Callstackid overflow");
-#else
+#ifdef TRINITY
     ASSERT(callstackid, "Callstackid overflow");
+#else
+    ASSERT(callstackid && "Callstackid overflow");
 #endif
 }
 

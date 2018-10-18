@@ -13,7 +13,7 @@
 
 #include "Group.h"
 #include "Item.h"
-#if defined(TRINITY) || AZEROTHCORE
+#ifndef TRINITY
 #include "Player.h"
 #endif
 #include "Weather.h"
