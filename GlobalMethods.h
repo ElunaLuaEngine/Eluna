@@ -1895,7 +1895,7 @@ namespace LuaGlobalFunctions
         if (!items || items->Empty())
             return 0;
 
-        auto const & itemlist = items->m_items;
+        auto const itemlist = items->m_items;
         for (auto itr = itemlist.begin(); itr != itemlist.end(); ++itr)
 #if defined(CATA) || defined(MISTS)
             eObjectMgr->RemoveVendorItem(entry, (*itr)->item, 1);
