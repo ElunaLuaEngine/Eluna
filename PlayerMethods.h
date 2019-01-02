@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
@@ -2338,15 +2338,19 @@ namespace LuaPlayer
     }
 
     /**
-     * Sends a trainer window to the [Player] from the [WorldObject] specified
+     * Sends a trainer window to the [Player] from the [Creature] specified
      *
-     * @param [WorldObject] sender
+     * @param [Creature] sender
      */
     int SendTrainerList(lua_State* L, Player* player)
     {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(L, 2);
+        Creature* obj = Eluna::CHECKOBJ<Creature>(L, 2);
 
+#ifdef TRINITY
+        player->GetSession()->SendTrainerList(obj);
+#else
         player->GetSession()->SendTrainerList(obj->GET_GUID());
+#endif
         return 0;
     }
 
