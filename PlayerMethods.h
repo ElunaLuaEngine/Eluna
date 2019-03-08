@@ -3628,8 +3628,8 @@ namespace LuaPlayer
      */
     int KickPlayer(lua_State* /*L*/, Player* player)
     {
-        player->GetSession()->KickPlayer("KickFlyHack", true);
-	player->GetSession()->KickPlayer("KickWalkHack", true);
+        player->GetSession()->KickPlayer("true");
+	
         return 0;
     }
 
