@@ -3628,7 +3628,7 @@ namespace LuaPlayer
      */
     int KickPlayer(lua_State* /*L*/, Player* player)
     {
-        player->GetSession()->KickPlayer("true");
+        player->GetSession()->KickPlayer("");
 	
         return 0;
     }
