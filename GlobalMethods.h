@@ -1917,8 +1917,8 @@ namespace LuaGlobalFunctions
     int Kick(lua_State* L)
     {
         Player* player = Eluna::CHECKOBJ<Player>(L, 1);
-        player->GetSession()->KickPlayer("KickFlyHack", true);
-	    player->GetSession()->KickPlayer("KickWalkHack", true);
+        player->GetSession()->KickPlayer("true");
+	   
         return 0;
     }
 
