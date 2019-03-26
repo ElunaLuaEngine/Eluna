@@ -14,9 +14,9 @@
 
 enum BanMode
 {
-    BAN_ACCOUNT,
-    BAN_CHARACTER,
-    BAN_IP
+    BAN_ACCOUNT = 1,
+    BAN_CHARACTER = 2,
+    BAN_IP = 3
 };
 
 #endif
@@ -1991,13 +1991,13 @@ namespace LuaGlobalFunctions
         switch (banMode)
         {
             case BAN_ACCOUNT:
-                sBan->BanAccount(nameOrIP, duration, reason, whoBanned);
+                sBan->BanAccount(nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
             break;
             case BAN_CHARACTER:
-                sBan->BanAccountByPlayerName(nameOrIP, duration, reason, whoBanned);
+                sBan->BanAccountByPlayerName(nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
             break;
             case BAN_IP:
-                sBan->BanIP(nameOrIP, duration, reason, whoBanned);
+                sBan->BanIP(nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
             break;
         }
 #endif
