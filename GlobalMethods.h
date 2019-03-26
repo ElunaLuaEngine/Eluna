@@ -9,6 +9,17 @@
 
 #include "BindingMap.h"
 
+#ifdef AZEROTHCORE
+#include "BanManager.h"
+enum BanMode
+{
+    BAN_ACCOUNT = 1,
+    BAN_CHARACTER = 2,
+    BAN_IP = 3
+};
+
+#endif
+
 /***
  * These functions can be used anywhere at any time, including at start-up.
  */
@@ -1968,10 +1979,22 @@ namespace LuaGlobalFunctions
                 return 0;
         }
 
+
 #ifndef AZEROTHCORE
         eWorld->BanAccount((BanMode)banMode, nameOrIP, duration, reason, whoBanned);
 #else
-        eWorld->BanAccount((BanMode)banMode, nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
+        switch (banMode)
+        {
+            case BAN_ACCOUNT:
+                sBan->BanAccount(nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
+            break;
+            case BAN_CHARACTER:
+                sBan->BanAccountByPlayerName(nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
+            break;
+            case BAN_IP:
+                sBan->BanIP(nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
+            break;
+        }
 #endif
         return 0;
     }
