@@ -11,7 +11,6 @@
 
 #ifdef AZEROTHCORE
 #include "BanManager.h"
-
 enum BanMode
 {
     BAN_ACCOUNT = 1,
