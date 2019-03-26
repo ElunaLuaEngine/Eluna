@@ -1953,11 +1953,7 @@ namespace LuaGlobalFunctions
     {
         int banMode = Eluna::CHECKVAL<int>(L, 1);
         std::string nameOrIP = Eluna::CHECKVAL<std::string>(L, 2);
-#ifdef AZEROTHCORE
-        std::string duration = Eluna::CHECKVAL<std::string>(L, 3);
-#elif
         uint32 duration = Eluna::CHECKVAL<uint32>(L, 3);
-#endif
         const char* reason = Eluna::CHECKVAL<const char*>(L, 4, "");
         const char* whoBanned = Eluna::CHECKVAL<const char*>(L, 5, "");
 
