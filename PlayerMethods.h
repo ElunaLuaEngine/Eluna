@@ -2474,6 +2474,7 @@ namespace LuaPlayer
      */
     int LeaveBattleground(lua_State* L, Player* player)
     {
+        (void)L; // ensure that the variable is referenced in order to pass compiler checks
 #ifndef AZEROTHCORE
         bool teleToEntryPoint = Eluna::CHECKVAL<bool>(L, 2, true);
         player->LeaveBattleground(teleToEntryPoint);
@@ -3493,6 +3494,7 @@ namespace LuaPlayer
     {
         uint32 category = Eluna::CHECKVAL<uint32>(L, 2);
         bool update = Eluna::CHECKVAL<bool>(L, 3, true);
+        (void)update; // ensure that the variable is referenced in order to pass compiler checks
 
 #ifdef TRINITY
         player->GetSpellHistory()->ResetCooldowns([category](SpellHistory::CooldownStorageType::iterator itr) -> bool

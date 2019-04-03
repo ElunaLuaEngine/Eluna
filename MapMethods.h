@@ -263,6 +263,7 @@ namespace LuaMap
      */
     int SetWeather(lua_State* L, Map* map)
     {
+        (void)map; // ensure that the variable is referenced in order to pass compiler checks
         uint32 zoneId = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 weatherType = Eluna::CHECKVAL<uint32>(L, 3);
         float grade = Eluna::CHECKVAL<float>(L, 4);
