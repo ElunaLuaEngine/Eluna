@@ -593,7 +593,7 @@ namespace LuaCreature
         else
             Eluna::Push(L, 0);
 #elif AZEROTHCORE
-        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell))
+        if (sSpellMgr->GetSpellInfo(spell))
             Eluna::Push(L, creature->GetSpellCooldown(spell));
         else
             Eluna::Push(L, 0);

@@ -135,7 +135,7 @@ namespace LuaGroup
             return 1;
         }
 
-        if (Group* invitedgroup = player->GetGroupInvite())
+        if (player->GetGroupInvite())
             player->UninviteFromGroup();
 
 #if defined TRINITY || AZEROTHCORE
