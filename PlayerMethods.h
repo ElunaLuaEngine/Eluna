@@ -3986,9 +3986,9 @@ namespace LuaPlayer
         if (player->GetGroup() || invited->GetGroup())
             return 0;
 
-        if (Group* invitedgroup = player->GetGroupInvite())
+        if (player->GetGroupInvite())
             player->UninviteFromGroup();
-        if (Group* invitedgroup = invited->GetGroupInvite())
+        if (invited->GetGroupInvite())
             invited->UninviteFromGroup();
 
         // Try create new group
