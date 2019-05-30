@@ -231,12 +231,21 @@ struct ElunaCreatureAI : ScriptedAI
 
 #if defined TRINITY || AZEROTHCORE
 
+#if defined TRINITY
+    // Called when the creature is summoned successfully by other creature
+    void IsSummonedBy(WorldObject* summoner) override
+    {
+        if (!summoner->ToUnit() || !sEluna->OnSummoned(me, summoner->ToUnit()))
+            ScriptedAI::IsSummonedBy(summoner);
+    }
+#else
     // Called when the creature is summoned successfully by other creature
     void IsSummonedBy(Unit* summoner) override
     {
         if (!sEluna->OnSummoned(me, summoner))
             ScriptedAI::IsSummonedBy(summoner);
     }
+#endif
 
     void SummonedCreatureDies(Creature* summon, Unit* killer) override
     {
