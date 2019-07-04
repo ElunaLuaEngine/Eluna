@@ -836,7 +836,11 @@ namespace LuaUnit
      */
     int GetLevel(lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        Eluna::Push(L, unit->GetLevel());
+#else
         Eluna::Push(L, unit->getLevel());
+#endif
         return 1;
     }
     
@@ -1026,7 +1030,11 @@ namespace LuaUnit
      */
     int GetGender(lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        Eluna::Push(L, unit->GetGender());
+#else
         Eluna::Push(L, unit->getGender());
+#endif
         return 1;
     }
 
@@ -1037,7 +1045,11 @@ namespace LuaUnit
      */
     int GetRace(lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        Eluna::Push(L, unit->GetRace());
+#else
         Eluna::Push(L, unit->getRace());
+#endif
         return 1;
     }
 
@@ -1048,7 +1060,11 @@ namespace LuaUnit
      */
     int GetClass(lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        Eluna::Push(L, unit->GetClass());
+#else
         Eluna::Push(L, unit->getClass());
+#endif
         return 1;
     }
 
@@ -1059,7 +1075,11 @@ namespace LuaUnit
     */
     int GetRaceMask(lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        Eluna::Push(L, unit->GetRaceMask());
+#else
         Eluna::Push(L, unit->getRaceMask());
+#endif
         return 1;
     }
 
@@ -1070,7 +1090,11 @@ namespace LuaUnit
     */
     int GetClassMask(lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        Eluna::Push(L, unit->GetClassMask());
+#else
         Eluna::Push(L, unit->getClassMask());
+#endif
         return 1;
     }
 
@@ -1131,7 +1155,11 @@ namespace LuaUnit
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(L, 2, "valid LocaleConstant expected");
 
+#ifdef TRINITY
+        const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->GetClass());
+#else
         const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->getClass());
+#endif
         if (!entry)
             return 1;
 
@@ -1166,7 +1194,11 @@ namespace LuaUnit
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(L, 2, "valid LocaleConstant expected");
 
+#ifdef TRINITY
+        const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->GetRace());
+#else
         const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->getRace());
+#endif
         if (!entry)
             return 1;
 

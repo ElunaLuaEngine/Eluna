@@ -307,7 +307,11 @@ namespace LuaItem
             item->GetEnchantmentId(BONUS_ENCHANTMENT_SLOT) << ":" <<
 #endif
             item->GetItemRandomPropertyId() << ":" << item->GetItemSuffixFactor() << ":" <<
+#ifdef TRINITY
+            (uint32)item->GetOwner()->GetLevel() << "|h[" << name << "]|h|r";
+#else
             (uint32)item->GetOwner()->getLevel() << "|h[" << name << "]|h|r";
+#endif
 
         Eluna::Push(L, oss.str());
         return 1;
