@@ -2214,15 +2214,6 @@ namespace LuaPlayer
     }
 
     /**
-     * Creates the [Player]'s corpse
-     */
-    int CreateCorpse(lua_State* /*L*/, Player* player)
-    {
-        player->CreateCorpse();
-        return 0;
-    }
-
-    /**
      * Rewards the given quest entry for the [Player] if he has completed it.
      *
      * @param uint32 entry : quest entry

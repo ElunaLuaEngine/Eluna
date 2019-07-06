@@ -733,7 +733,6 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SpawnBones", &LuaPlayer::SpawnBones },
     { "RemovedInsignia", &LuaPlayer::RemovedInsignia },
     { "SendGuildInvite", &LuaPlayer::SendGuildInvite },
-    { "CreateCorpse", &LuaPlayer::CreateCorpse },
     { "Mute", &LuaPlayer::Mute },
     { "SummonPlayer", &LuaPlayer::SummonPlayer },
     { "SaveToDB", &LuaPlayer::SaveToDB },
