@@ -1702,7 +1702,11 @@ namespace LuaPlayer
     {
         uint8 race = Eluna::CHECKVAL<uint8>(L, 2);
 
+#ifdef TRINITY
+        player->SetFactionForRace(race);
+#else
         player->setFactionForRace(race);
+#endif
         return 0;
     }
 
