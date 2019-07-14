@@ -1945,7 +1945,7 @@ namespace LuaGlobalFunctions
      * @param uint32 duration : duration (in seconds) of the ban
      * @param string reason = "" : ban reason, this is optional
      * @param string whoBanned = "" : the [Player]'s name that banned the account, character or IP, this is optional
-     * @return int result : status of the ban. 0 if success, 1 if syntax error, 2 if target not found, 3 if ban already exists, nil if unknown result
+     * @return int result : status of the ban. 0 if success, 1 if syntax error, 2 if target not found, 3 if a longer ban already exists, nil if unknown result
      */
     int Ban(lua_State* L)
     {
@@ -2016,9 +2016,15 @@ namespace LuaGlobalFunctions
         case BanReturn::BAN_NOTFOUND:
             Eluna::Push(L, 2);
             break;
+#ifdef AZEROTHCORE
+        case BanReturn::BAN_LONGER_EXISTS:
+            Eluna::Push(L, 3);
+            break;
+#else
         case BanReturn::BAN_EXISTS:
             Eluna::Push(L, 3);
             break;
+#endif
         }
         return 1;
     }
