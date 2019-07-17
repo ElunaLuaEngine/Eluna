@@ -267,11 +267,17 @@ namespace LuaGameObject
             owner->RemoveGameObject(go, false);
         }
 
+        if (deldb)
+        {
+#ifdef TRINITY
+            GameObject::DeleteFromDB(go->GetSpawnId());
+#else
+            go->DeleteFromDB();
+#endif
+        }
+
         go->SetRespawnTime(0);
         go->Delete();
-
-        if (deldb)
-            go->DeleteFromDB();
 
         Eluna::CHECKOBJ<ElunaObject>(L, 1)->Invalidate();
         return 0;
