@@ -1,5 +1,5 @@
 # mod-LuaEngine
- english | [中文说明](README_CN.md)
+[english](README.md) | [中文说明](README_CN.md) | [Español](README_ES.md)
 
 a Eluna module for AzerothCore.
 

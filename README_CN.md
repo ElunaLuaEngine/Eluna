@@ -1,5 +1,5 @@
 # mod-LuaEngine
-[english](README.md) | 中文
+[english](README.md) | [中文说明](README_CN.md) | [Español](README_ES.md)
 
 一个用于AzerothCore的ELUNA模块.
 
