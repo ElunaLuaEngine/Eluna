@@ -16,5 +16,5 @@ How to install:
 5. cmake again  
 6. rebuild. 
 
-Eluna API : [http://www.elunaengine.com/](http://www.elunaengine.com/)
-
+Eluna API : 
+[http://elunaluaengine.github.io/](http://elunaluaengine.github.io/)
