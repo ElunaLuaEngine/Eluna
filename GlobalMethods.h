@@ -1964,7 +1964,7 @@ namespace LuaGlobalFunctions
         switch (banMode)
         {
             case BAN_ACCOUNT:
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
                 if (!Utf8ToUpperOnlyLatin(nameOrIP))
                     return luaL_argerror(L, 2, "invalid account name");
 #else
