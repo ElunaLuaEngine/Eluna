@@ -183,7 +183,7 @@ namespace LuaGlobalFunctions
 #ifdef TRINITY
             boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
 #elif defined(AZEROTHCORE)
-            TRINITY_READ_GUARD(HashMapHolder<Player>::LockType, *HashMapHolder<Player>::GetLock());
+            ACORE_READ_GUARD(HashMapHolder<Player>::LockType, *HashMapHolder<Player>::GetLock());
 #else
             HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
 #endif
@@ -1964,7 +1964,7 @@ namespace LuaGlobalFunctions
         switch (banMode)
         {
             case BAN_ACCOUNT:
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
                 if (!Utf8ToUpperOnlyLatin(nameOrIP))
                     return luaL_argerror(L, 2, "invalid account name");
 #else
