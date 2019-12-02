@@ -1254,8 +1254,8 @@ namespace LuaUnit
         Trinity::UnitListSearcher<Trinity::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
         Cell::VisitAllObjects(unit, searcher, range);
 #elif AZEROTHCORE
-        Trinity::AnyFriendlyUnitInObjectRangeCheck checker(unit, unit, range);
-        Trinity::UnitListSearcher<Trinity::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
+        acore::AnyFriendlyUnitInObjectRangeCheck checker(unit, unit, range);
+        acore::UnitListSearcher<acore::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
         unit->VisitNearbyObject(range, searcher);
 #else
         MaNGOS::AnyFriendlyUnitInObjectRangeCheck checker(unit, range);
@@ -1295,8 +1295,8 @@ namespace LuaUnit
         Trinity::UnitListSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
         Cell::VisitAllObjects(unit, searcher, range);
 #elif AZEROTHCORE
-        Trinity::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, unit, range);
-        Trinity::UnitListSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
+        acore::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, unit, range);
+        acore::UnitListSearcher<acore::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
         unit->VisitNearbyObject(range, searcher);
 #else
         MaNGOS::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, range);
