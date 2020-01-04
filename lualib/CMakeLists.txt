@@ -26,3 +26,9 @@ target_include_directories(lualib
     ${PUBLIC_INCLUDES}
   PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR})
+
+if (APPLE)
+  target_compile_definitions(lualib PUBLIC LUA_USE_MACOSX)
+elseif (UNIX)
+  target_compile_definitions(lualib PUBLIC LUA_USE_LINUX)
+endif()
