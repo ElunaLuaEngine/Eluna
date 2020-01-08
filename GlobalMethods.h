@@ -87,6 +87,22 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+#if defined(MANGOS) || (CMANGOS)
+    /**
+     * Returns emulator mangosd.conf RealmID or default
+     * Grumbo was HERE!
+     * - For cMaNGOS returns the realmID.
+     * - for MaNGOS returns the realmID.
+     *
+     * @return UInt8 realmID
+     */
+    int GetRealmID(lua_State* L)
+    {
+        Eluna::Push(L, realmID);
+        return 1;
+    }
+#endif
+
     /**
      * Returns [Quest] template
      *
