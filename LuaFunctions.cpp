@@ -79,6 +79,7 @@ luaL_Reg GlobalMethods[] =
     { "GetCoreName", &LuaGlobalFunctions::GetCoreName },
     { "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion },
     { "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion },
+	{ "GetRealmID", &LuaGlobalFunctions::GetRealmID },
     { "GetQuest", &LuaGlobalFunctions::GetQuest },
     { "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID },
     { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName },
