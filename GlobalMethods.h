@@ -2020,7 +2020,7 @@ namespace LuaGlobalFunctions
         case BanReturn::BAN_LONGER_EXISTS:
             Eluna::Push(L, 3);
             break;
-#else
+#elif TRINITY
         case BanReturn::BAN_EXISTS:
             Eluna::Push(L, 3);
             break;
