@@ -33,14 +33,14 @@ using namespace Hooks;
             return RETVAL;\
     LOCK_ELUNA
 
-bool Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Creature* pTarget)
+void Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Creature* pTarget)
 {
-    START_HOOK_WITH_RETVAL(CREATURE_EVENT_ON_DUMMY_EFFECT, pTarget, false);
+    START_HOOK(CREATURE_EVENT_ON_DUMMY_EFFECT, pTarget);
     Push(pCaster);
     Push(spellId);
     Push(effIndex);
     Push(pTarget);
-    return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
+    CallAllFunctions(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
 }
 
 bool Eluna::OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest)

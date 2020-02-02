@@ -13,6 +13,14 @@
 
 using namespace Hooks;
 
+#define START_HOOK(EVENT, ENTRY) \
+    if (!IsEnabled())\
+        return;\
+    auto key = EntryKey<ItemEvents>(EVENT, ENTRY);\
+    if (!ItemEventBindings->HasBindingsFor(key))\
+        return;\
+    LOCK_ELUNA
+
 #define START_HOOK_WITH_RETVAL(EVENT, ENTRY, RETVAL) \
     if (!IsEnabled())\
         return RETVAL;\
@@ -21,14 +29,14 @@ using namespace Hooks;
         return RETVAL;\
     LOCK_ELUNA
 
-bool Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget)
+void Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget)
 {
-    START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_DUMMY_EFFECT, pTarget->GetEntry(), false);
+    START_HOOK(ITEM_EVENT_ON_DUMMY_EFFECT, pTarget->GetEntry());
     Push(pCaster);
     Push(spellId);
     Push(effIndex);
     Push(pTarget);
-    return CallAllFunctionsBool(ItemEventBindings, key);
+    CallAllFunctions(ItemEventBindings, key);
 }
 
 bool Eluna::OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest)
