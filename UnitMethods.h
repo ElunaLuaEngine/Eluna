@@ -2129,11 +2129,13 @@ namespace LuaUnit
      *
      * @param bool reset = true : cleans movement
      */
-    int MoveExpire(lua_State* L, Unit* unit)
-    {
 #ifdef TRINITY
+    int MoveExpire(lua_State* /*L*/, Unit* unit)
+    {
         unit->GetMotionMaster()->Clear();
 #else
+    int MoveExpire(lua_State* L, Unit* unit)
+    {
         bool reset = Eluna::CHECKVAL<bool>(L, 2, true);
         unit->GetMotionMaster()->MovementExpired(reset);
 #endif
@@ -2145,11 +2147,13 @@ namespace LuaUnit
      *
      * @param bool reset = true : clean movement
      */
-    int MoveClear(lua_State* L, Unit* unit)
-    {
 #ifdef TRINITY
+    int MoveClear(lua_State* /*L*/, Unit* unit)
+    {
         unit->GetMotionMaster()->Clear();
 #else
+    int MoveClear(lua_State* L, Unit* unit)
+    {
         bool reset = Eluna::CHECKVAL<bool>(L, 2, true);
         unit->GetMotionMaster()->Clear(reset);
 #endif
