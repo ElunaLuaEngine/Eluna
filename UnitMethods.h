@@ -2132,6 +2132,7 @@ namespace LuaUnit
     int MoveExpire(lua_State* L, Unit* unit)
     {
 #ifdef TRINITY
+        (void) L; // ensure that the variable is referenced in order to pass compiler checks
         unit->GetMotionMaster()->Clear();
 #else
         bool reset = Eluna::CHECKVAL<bool>(L, 2, true);
@@ -2148,6 +2149,7 @@ namespace LuaUnit
     int MoveClear(lua_State* L, Unit* unit)
     {
 #ifdef TRINITY
+        (void) L; // ensure that the variable is referenced in order to pass compiler checks
         unit->GetMotionMaster()->Clear();
 #else
         bool reset = Eluna::CHECKVAL<bool>(L, 2, true);
