@@ -247,7 +247,11 @@ namespace LuaPlayer
      */
     int CanSpeak(lua_State* L, Player* player)
     {
+#ifdef TRINITY
+        Eluna::Push(L, player->GetSession()->CanSpeak());
+#else
         Eluna::Push(L, player->CanSpeak());
+#endif
         return 1;
     }
 
