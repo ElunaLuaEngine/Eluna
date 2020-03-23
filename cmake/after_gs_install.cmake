@@ -1,6 +1,9 @@
-CollectIncludeDirectories(
-  ${CMAKE_MOD_ELUNA_ENGINE_DIR}
-  PUBLIC_INCLUDES)
+set(PUBLIC_INCLUDES
+    ${PUBLIC_INCLUDES}
+    ${CMAKE_MOD_ELUNA_ENGINE_DIR}/LuaEngine
+    ${CMAKE_MOD_ELUNA_ENGINE_DIR}/lualib
+    ${CMAKE_MOD_ELUNA_ENGINE_DIR}/src
+)
 
 target_include_directories(game-interface
   INTERFACE
