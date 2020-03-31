@@ -2094,7 +2094,9 @@ namespace LuaGlobalFunctions
             draft.SetMoney(money);
 #endif
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
+        CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
+#elif defined AZEROTHCORE
         SQLTransaction trans = CharacterDatabase.BeginTransaction();
 #endif
         uint8 addedItems = 0;
