@@ -254,7 +254,7 @@ namespace LuaGuild
         uint8 rankId = Eluna::CHECKVAL<uint8>(L, 3, GUILD_RANK_NONE);
 
 #ifdef TRINITY
-        SQLTransaction trans(nullptr);
+        CharacterDatabaseTransaction trans(nullptr);
         guild->AddMember(trans, player->GET_GUID(), rankId);
 #else
         guild->AddMember(player->GET_GUID(), rankId);
@@ -273,7 +273,10 @@ namespace LuaGuild
         Player* player = Eluna::CHECKOBJ<Player>(L, 2);
         bool isDisbanding = Eluna::CHECKVAL<bool>(L, 3, false);
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
+        CharacterDatabaseTransaction trans(nullptr);
+        guild->DeleteMember(trans, player->GET_GUID(), isDisbanding);
+#elif defined AZEROTHCORE
         SQLTransaction trans(nullptr);
         guild->DeleteMember(trans, player->GET_GUID(), isDisbanding);
 #else
@@ -294,7 +297,7 @@ namespace LuaGuild
         uint8 newRank = Eluna::CHECKVAL<uint8>(L, 3);
 
 #ifdef TRINITY
-        SQLTransaction trans(nullptr);
+        CharacterDatabaseTransaction trans(nullptr);
         guild->ChangeMemberRank(trans, player->GET_GUID(), newRank);
 #else
         guild->ChangeMemberRank(player->GET_GUID(), newRank);
