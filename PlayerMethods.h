@@ -3629,7 +3629,11 @@ namespace LuaPlayer
      */
     int KickPlayer(lua_State* /*L*/, Player* player)
     {
+#ifdef TRINITY
+        player->GetSession()->KickPlayer("PlayerMethods::KickPlayer Kick the player");
+#else
         player->GetSession()->KickPlayer();
+#endif
         return 0;
     }
 
