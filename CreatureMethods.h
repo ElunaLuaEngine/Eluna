@@ -1062,7 +1062,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     {
         float dist = Eluna::CHECKVAL<float>(L, 2);
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         creature->SetWanderDistance(dist);
 #else
         creature->SetRespawnRadius(dist);
