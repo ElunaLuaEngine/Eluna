@@ -39,6 +39,32 @@ void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, 
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void Eluna::OnCraftSkillChange(Player* pPlayer, uint32 spellid, uint32& skillAmount)
+{
+    START_HOOK(PLAYER_EVENT_ON_CRAFT_SKILL_CHANGE);
+    Push(pPlayer);
+    Push(spellid);
+    Push(skillAmount);
+    int amountIndex = lua_gettop(L) - 1;
+    int n = SetupStack(PlayerEventBindings, key, 3);
+
+    while (n > 0)
+    {
+        int r = CallOneFunction(n--, 3, 1);
+
+        if (lua_isnumber(L, r))
+        {
+            skillAmount = CHECKVAL<uint32>(L, r);
+            // Update the stack for subsequent calls.
+            ReplaceArgument(skillAmount, amountIndex);
+        }
+
+        lua_pop(L, 1);
+    }
+
+    CleanUpStack(3);
+}
+
 bool Eluna::OnCommand(Player* player, const char* text)
 {
     // If from console, player is NULL

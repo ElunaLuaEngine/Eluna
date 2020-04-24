@@ -201,7 +201,7 @@ namespace Hooks
         PLAYER_EVENT_ON_LOOT_MONEY              =     37,       // (event, player, amount)
         PLAYER_EVENT_ON_QUEST_ABANDON           =     38,       // (event, player, questId)
         PLAYER_EVENT_ON_LEARN_TALENTS           =     39,       // (event, player, talentId, talentRank, spellid)
-        // UNUSED                               =     40,       // (event, player)
+        PLAYER_EVENT_ON_CRAFT_SKILL_CHANGE      =     40,       // (event, player, craftSpellId, craftSkillAmount) - Can return new skill amount
         // UNUSED                               =     41,       // (event, player)
         PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - player is nil if command used from console. Can return false
 
