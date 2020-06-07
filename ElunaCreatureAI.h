@@ -215,19 +215,37 @@ struct ElunaCreatureAI : ScriptedAI
             ScriptedAI::MoveInLineOfSight(who);
     }
 
+#if defined TRINITY
+    // Called when hit by a spell
+    void SpellHit(WorldObject* caster, SpellInfo const* spell) override
+    {
+        if (!sEluna->SpellHit(me, caster->ToUnit(), spell))
+            ScriptedAI::SpellHit(caster, spell);
+    }
+#else
     // Called when hit by a spell
     void SpellHit(Unit* caster, SpellInfo const* spell) override
     {
         if (!sEluna->SpellHit(me, caster, spell))
             ScriptedAI::SpellHit(caster, spell);
     }
+#endif
 
+#if defined TRINITY
+    // Called when spell hits a target
+    void SpellHitTarget(WorldObject* target, SpellInfo const* spell) override
+    {
+        if (!sEluna->SpellHitTarget(me, target->ToUnit(), spell))
+            ScriptedAI::SpellHitTarget(target, spell);
+    }
+#else
     // Called when spell hits a target
     void SpellHitTarget(Unit* target, SpellInfo const* spell) override
     {
         if (!sEluna->SpellHitTarget(me, target, spell))
             ScriptedAI::SpellHitTarget(target, spell);
     }
+#endif
 
 #if defined TRINITY || AZEROTHCORE
 
