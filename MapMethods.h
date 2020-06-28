@@ -186,11 +186,16 @@ namespace LuaMap
      */
     int GetAreaId(lua_State* L, Map* map)
     {
+#if defined TRINITY
+        uint32 phaseMask = Eluna::CHECKVAL<uint32>(L, 4, 1);
+#endif
         float x = Eluna::CHECKVAL<float>(L, 2);
         float y = Eluna::CHECKVAL<float>(L, 3);
         float z = Eluna::CHECKVAL<float>(L, 4);
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
+        Eluna::Push(L, map->GetAreaId(phaseMask, x, y, z));
+#elif defined AZEROTHCORE
         Eluna::Push(L, map->GetAreaId(x, y, z));
 #else
         Eluna::Push(L, map->GetTerrain()->GetAreaId(x, y, z));
