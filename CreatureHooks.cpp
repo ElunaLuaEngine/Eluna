@@ -282,7 +282,7 @@ void Eluna::On_Reset(Creature* me) // Not an override, custom
 }
 
 // Called when hit by a spell
-bool Eluna::SpellHit(Creature* me, Unit* caster, SpellInfo const* spell)
+bool Eluna::SpellHit(Creature* me, WorldObject* caster, SpellInfo const* spell)
 {
     START_HOOK_WITH_RETVAL(CREATURE_EVENT_ON_HIT_BY_SPELL, me, false);
     Push(me);
@@ -292,7 +292,7 @@ bool Eluna::SpellHit(Creature* me, Unit* caster, SpellInfo const* spell)
 }
 
 // Called when spell hits a target
-bool Eluna::SpellHitTarget(Creature* me, Unit* target, SpellInfo const* spell)
+bool Eluna::SpellHitTarget(Creature* me, WorldObject* target, SpellInfo const* spell)
 {
     START_HOOK_WITH_RETVAL(CREATURE_EVENT_ON_SPELL_HIT_TARGET, me, false);
     Push(me);
