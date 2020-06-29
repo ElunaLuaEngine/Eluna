@@ -179,27 +179,21 @@ namespace LuaMap
     /**
      * Returns the area ID of the [Map] at the specified X, Y, and Z coordinates.
      *
-     * @param uint32 phaseMask (for TRINITY)
      * @param float x
      * @param float y
      * @param float z
+     * @param uint32 phasemask = PHASEMASK_NORMAL
      * @return uint32 areaId
      */
     int GetAreaId(lua_State* L, Map* map)
     {
-#if defined TRINITY
-        uint32 phaseMask = Eluna::CHECKVAL<uint32>(L, 2);
-        float x = Eluna::CHECKVAL<float>(L, 3);
-        float y = Eluna::CHECKVAL<float>(L, 4);
-        float z = Eluna::CHECKVAL<float>(L, 5);
-#else
         float x = Eluna::CHECKVAL<float>(L, 2);
         float y = Eluna::CHECKVAL<float>(L, 3);
         float z = Eluna::CHECKVAL<float>(L, 4);
-#endif
-
 #if defined TRINITY
-        Eluna::Push(L, map->GetAreaId(phaseMask, x, y, z));
+        float phasemask = Eluna::CHECKVAL<uint32>(L, 5, PHASEMASK_NORMAL);
+
+        Eluna::Push(L, map->GetAreaId(phasemask, x, y, z));
 #elif defined AZEROTHCORE
         Eluna::Push(L, map->GetAreaId(x, y, z));
 #else

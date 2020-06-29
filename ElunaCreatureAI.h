@@ -224,7 +224,11 @@ struct ElunaCreatureAI : ScriptedAI
     }
 #else
     // Called when hit by a spell
+#if defined TRINITY
+    void SpellHit(WorldObject* caster, SpellInfo const* spell) override
+#else
     void SpellHit(Unit* caster, SpellInfo const* spell) override
+#endif
     {
         if (!sEluna->SpellHit(me, caster, spell))
             ScriptedAI::SpellHit(caster, spell);
@@ -240,7 +244,11 @@ struct ElunaCreatureAI : ScriptedAI
     }
 #else
     // Called when spell hits a target
+#if defined TRINITY
+    void SpellHitTarget(WorldObject* target, SpellInfo const* spell) override
+#else
     void SpellHitTarget(Unit* target, SpellInfo const* spell) override
+#endif
     {
         if (!sEluna->SpellHitTarget(me, target, spell))
             ScriptedAI::SpellHitTarget(target, spell);
