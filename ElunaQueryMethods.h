@@ -306,7 +306,7 @@ namespace LuaQuery
             else
             {
                 // MYSQL_TYPE_LONGLONG Interpreted as string for lua
-                switch (row[i]->GetType())
+                switch (FieldTypeToString(row[i]->Type))
                 {
                     case DatabaseFieldTypes::Int8:
                     case DatabaseFieldTypes::Int16:
