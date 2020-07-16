@@ -307,7 +307,9 @@ namespace LuaQuery
             {
                 // MYSQL_TYPE_LONGLONG Interpreted as string for lua
 #ifndef AZEROTHCORE
-                if (row[i].IsNumeric())
+                char* end;
+                strtod(str, &end);
+                if (end == NULL)
                 {
                     Eluna::Push(L, strtod(str, NULL));
                     break;
