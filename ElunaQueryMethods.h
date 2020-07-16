@@ -306,16 +306,20 @@ namespace LuaQuery
             else
             {
                 // MYSQL_TYPE_LONGLONG Interpreted as string for lua
+#ifndef AZEROTHCORE
+                if (row[i].IsNumeric())
+                {
+                    Eluna::Push(L, strtod(str, NULL));
+                    break;
+                }
+                else
+                {
+                    Eluna::Push(L, str);
+                    break;
+                }
+#else
                 switch (row[i].GetType())
                 {
-#ifndef AZEROTHCORE
-                    case DatabaseFieldTypes::Int8:
-                    case DatabaseFieldTypes::Int16:
-                    case DatabaseFieldTypes::Int32:
-                    case DatabaseFieldTypes::Int64:
-                    case DatabaseFieldTypes::Float:
-                    case DatabaseFieldTypes::Double:
-#else
                     case MYSQL_TYPE_TINY:
                     case MYSQL_TYPE_YEAR:
                     case MYSQL_TYPE_SHORT:
@@ -327,14 +331,14 @@ namespace LuaQuery
                     case MYSQL_TYPE_DOUBLE:
                     case MYSQL_TYPE_DECIMAL:
                     case MYSQL_TYPE_NEWDECIMAL:
-#endif
                         Eluna::Push(L, strtod(str, NULL));
                         break;
                     default:
                         Eluna::Push(L, str);
                         break;
-        }
-    }
+                }
+#endif
+            }
 #else
             Eluna::Push(L, names[i]);
 
