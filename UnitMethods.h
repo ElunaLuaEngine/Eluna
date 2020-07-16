@@ -1163,7 +1163,11 @@ namespace LuaUnit
         if (!entry)
             return 1;
 
+#ifdef TRINITY
+        Eluna::Push(L, entry->Name[locale]);
+#else
         Eluna::Push(L, entry->name[locale]);
+#endif
         return 1;
     }
 
@@ -1202,7 +1206,11 @@ namespace LuaUnit
         if (!entry)
             return 1;
 
+#ifdef TRINITY
+        Eluna::Push(L, entry->Name[locale]);
+#else
         Eluna::Push(L, entry->name[locale]);
+#endif
         return 1;
     }
 

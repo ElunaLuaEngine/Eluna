@@ -53,7 +53,9 @@ namespace LuaVehicle
      */
     int GetEntry(lua_State* L, Vehicle* vehicle)
     {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
+        Eluna::Push(L, vehicle->GetVehicleInfo()->ID);
+#elif defined AZEROTHCORE
         Eluna::Push(L, vehicle->GetVehicleInfo()->m_ID);
 #else
         Eluna::Push(L, vehicle->GetVehicleEntry()->m_ID);
