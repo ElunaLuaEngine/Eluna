@@ -1161,8 +1161,10 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     {
         uint32 msTimeToDespawn = Eluna::CHECKVAL<uint32>(L, 2, 0);
 
-#if defined TRINITY || AZEROTHCORE
-        creature->DespawnOrUnsummon(msTimeToDespawn);
+#if defined TRINITY
+        creature->DespawnOrUnsummon(Milliseconds(msTimeToDespawn));
+#elif defined AZEROTHCORE
+            creature->DespawnOrUnsummon(msTimeToDespawn);
 #else
         creature->ForcedDespawn(msTimeToDespawn);
 #endif

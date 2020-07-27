@@ -804,7 +804,13 @@ namespace LuaWorldObject
             default:
                 return luaL_argerror(L, 7, "valid SpawnType expected");
         }
+
+#if defined TRINITY
+        Eluna::Push(L, obj->SummonCreature(entry, x, y, z, o, type, Milliseconds(despawnTimer)));
+#else
         Eluna::Push(L, obj->SummonCreature(entry, x, y, z, o, type, despawnTimer));
+#endif
+
         return 1;
     }
 
