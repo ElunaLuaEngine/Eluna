@@ -215,40 +215,30 @@ struct ElunaCreatureAI : ScriptedAI
             ScriptedAI::MoveInLineOfSight(who);
     }
 
-#if defined TRINITY
     // Called when hit by a spell
+#if defined TRINITY
     void SpellHit(WorldObject* caster, SpellInfo const* spell) override
     {
         if (!sEluna->SpellHit(me, caster->ToUnit(), spell))
             ScriptedAI::SpellHit(caster, spell);
     }
 #else
-    // Called when hit by a spell
-#if defined TRINITY
-    void SpellHit(WorldObject* caster, SpellInfo const* spell) override
-#else
     void SpellHit(Unit* caster, SpellInfo const* spell) override
-#endif
     {
         if (!sEluna->SpellHit(me, caster, spell))
             ScriptedAI::SpellHit(caster, spell);
     }
 #endif
 
-#if defined TRINITY
     // Called when spell hits a target
+#if defined TRINITY
     void SpellHitTarget(WorldObject* target, SpellInfo const* spell) override
     {
         if (!sEluna->SpellHitTarget(me, target->ToUnit(), spell))
             ScriptedAI::SpellHitTarget(target, spell);
     }
 #else
-    // Called when spell hits a target
-#if defined TRINITY
-    void SpellHitTarget(WorldObject* target, SpellInfo const* spell) override
-#else
     void SpellHitTarget(Unit* target, SpellInfo const* spell) override
-#endif
     {
         if (!sEluna->SpellHitTarget(me, target, spell))
             ScriptedAI::SpellHitTarget(target, spell);
@@ -257,15 +247,14 @@ struct ElunaCreatureAI : ScriptedAI
 
 #if defined TRINITY || AZEROTHCORE
 
-#if defined TRINITY
     // Called when the creature is summoned successfully by other creature
+#if defined TRINITY
     void IsSummonedBy(WorldObject* summoner) override
     {
         if (!summoner->ToUnit() || !sEluna->OnSummoned(me, summoner->ToUnit()))
             ScriptedAI::IsSummonedBy(summoner);
     }
 #else
-    // Called when the creature is summoned successfully by other creature
     void IsSummonedBy(Unit* summoner) override
     {
         if (!sEluna->OnSummoned(me, summoner))
