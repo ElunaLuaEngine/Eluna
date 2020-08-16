@@ -2044,7 +2044,6 @@ namespace LuaUnit
     int Emote(lua_State* L, Unit* unit)
     {
 #if defined TRINITY
-        enum Emote : uint32;
         unit->HandleEmoteCommand(static_cast<Emote>(Eluna::CHECKVAL<uint32>(L, 2)));
 #else
         unit->HandleEmoteCommand(Eluna::CHECKVAL<uint32>(L, 2));
