@@ -2046,6 +2046,10 @@ namespace LuaUnit
 #if defined TRINITY
         /* need to be fix */
         // unit->HandleEmoteCommand(static_cast<Emote>(Eluna::CHECKVAL<uint32>(L, 2)));
+
+        /* to suppress when fixed */
+        uint32 emoteId = Eluna::CHECKVAL<uint32>(L, 2);
+        unit->SetUInt32Value(UNIT_NPC_EMOTESTATE, emoteId);
 #else
         unit->HandleEmoteCommand(Eluna::CHECKVAL<uint32>(L, 2));
 #endif
