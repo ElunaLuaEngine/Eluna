@@ -2057,6 +2057,22 @@ namespace LuaPlayer
             player->SetTitle(t, false);
         return 0;
     }
+
+
+    /**
+     * Adds the specified achievement to the [Player]s
+     *
+     * @param uint32 achievementid
+     */
+    int SetAchievement(lua_State* L, Player* player)
+    {
+        uint32 id = Eluna::CHECKVAL<uint32>(L, 2);
+        AchievementEntry const* t = sAchievementStore.LookupEntry(id);
+        if (t)
+            player->CompletedAchievement(t);
+        return 0;
+    }
+
 #endif
 
 #if !defined TRINITY && !AZEROTHCORE
