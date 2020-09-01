@@ -273,6 +273,8 @@ namespace LuaItem
         {
 #if defined(CATA) || defined (MISTS)
             char* suffix = NULL;
+#elif defined TRINITY
+            char const* const* suffix = NULL;
 #else
             char* const* suffix = NULL;
 #endif
