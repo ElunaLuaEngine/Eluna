@@ -274,7 +274,7 @@ namespace LuaItem
 #if defined(CATA) || defined (MISTS)
             char* suffix = NULL;
 #elif defined TRINITY
-            char const* const* suffix = NULL;
+            std::array<char const*, 16> const* suffix = NULL;
 #else
             char* const* suffix = NULL;
 #endif
@@ -283,7 +283,7 @@ namespace LuaItem
                 const ItemRandomSuffixEntry* itemRandEntry = sItemRandomSuffixStore.LookupEntry(-item->GetItemRandomPropertyId());
                 if (itemRandEntry)
 #if defined TRINITY
-                    suffix = itemRandEntry->Name;
+                    suffix = &itemRandEntry->Name;
 #else
                     suffix = itemRandEntry->nameSuffix;
 #endif
@@ -293,7 +293,7 @@ namespace LuaItem
                 const ItemRandomPropertiesEntry* itemRandEntry = sItemRandomPropertiesStore.LookupEntry(item->GetItemRandomPropertyId());
                 if (itemRandEntry)
 #if defined TRINITY
-                    suffix = itemRandEntry->Name;
+                    suffix = &itemRandEntry->Name;
 #else
                     suffix = itemRandEntry->nameSuffix;
 #endif
@@ -301,7 +301,11 @@ namespace LuaItem
             if (suffix)
             {
                 name += ' ';
+#if defined TRINITY
+                name += (*suffix)[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
+#else
                 name += suffix[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
+#endif
             }
         }
 #endif
