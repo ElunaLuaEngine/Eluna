@@ -715,6 +715,7 @@ ElunaRegister<Player> PlayerMethods[] =
 #if (!defined(TBC) && !defined(CLASSIC))
     { "ResetAchievements", &LuaPlayer::ResetAchievements },
 #endif
+    { "SendVendorWindow", &LuaPlayer::SendVendorWindow },
     { "KickPlayer", &LuaPlayer::KickPlayer },
     { "LogoutPlayer", &LuaPlayer::LogoutPlayer },
     { "SendTrainerList", &LuaPlayer::SendTrainerList },

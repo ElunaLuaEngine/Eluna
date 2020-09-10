@@ -3624,6 +3624,17 @@ namespace LuaPlayer
         return 0;
     }
 
+     /**
+     * Shows vendor window to [Player]
+     */
+    int SendVendorWindow(lua_State* L, Player* player)
+    {
+        Unit* sendTo = sEluna->CHECKOBJ<Unit>(L, 2);
+        uint32 creatureEntry = Eluna::CHECKVAL<uint32>(L, 3);
+        player->GetSession()->SendListInventory(sendTo->GET_GUID(), creatureEntry);
+        return 0;
+    }
+
     /**
      * Kicks the [Player] from the server
      */
