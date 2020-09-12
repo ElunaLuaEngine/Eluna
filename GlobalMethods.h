@@ -52,6 +52,24 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Returns emulator .conf RealmID
+     *
+     * - for MaNGOS returns the realmID as it is stored in the core.
+     * - for TrinityCore returns the realmID as it is in the conf file.
+     * @return uint32 realm ID
+     */
+
+    int GetRealmID(lua_State* L)
+    {
+#ifdef MANGOS
+        Eluna::Push(L, eWorld->GetRealmID());
+#else
+        Eluna::Push(L, sConfigMgr->GetIntDefault("RealmID", 1));
+#endif
+        return 1;
+    }
+
+    /**
      * Returns emulator version
      *
      * - For TrinityCore returns the date of the last revision, e.g. `2015-08-26 22:53:12 +0300`
