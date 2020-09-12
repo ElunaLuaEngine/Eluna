@@ -713,27 +713,28 @@ namespace LuaCreature
 
 #ifdef CMANGOS
         ThreatList const& threatlist = creature->getThreatManager().getThreatList();
-#endif
-#ifdef MANGOS
+#elif MANGOS
         ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
-#endif
-#ifdef TRINITY
-        auto const& threatlist = creature->GetThreatManager().GetThreatenedByMeList();
-#endif
-#ifdef AZEROTHCORE
+#elif TRINITY
+        auto const& threatlist = creature->GetThreatManager().GetSortedThreatList();
+#elif AZEROTHCORE
         auto const& threatlist = creature->getThreatManager().getThreatList();
 #endif
-
+#ifndef TRINITY
         if (threatlist.empty())
             return 1;
         if (position >= threatlist.size())
             return 1;
-
+#endif
         std::list<Unit*> targetList;
-        for (auto itr = threatlist.begin(); itr != threatlist.end(); ++itr)
-        {
 #ifdef TRINITY
-            Unit* target = itr->second->GetOwner();
+        for (ThreatReference const* itr : threatlist)
+#else
+        for (auto itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+#endif
+            {
+#ifdef TRINITY
+            Unit* target = itr->GetVictim();
 #else
             Unit* target = (*itr)->getTarget();
 #endif
