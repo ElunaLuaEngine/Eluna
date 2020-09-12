@@ -274,24 +274,40 @@ namespace LuaItem
 #if defined(CATA) || defined (MISTS)
             char* suffix = NULL;
 #else
+#ifdef TRINITY
+            std::array<char const*, 16> const* suffix = NULL;
+#elif
             char* const* suffix = NULL;
+#endif
 #endif
             if (itemRandPropId < 0)
             {
                 const ItemRandomSuffixEntry* itemRandEntry = sItemRandomSuffixStore.LookupEntry(-item->GetItemRandomPropertyId());
                 if (itemRandEntry)
+#ifdef TRINITY
+                    suffix = &itemRandEntry->Name;
+#else
                     suffix = itemRandEntry->nameSuffix;
+#endif
             }
             else
             {
                 const ItemRandomPropertiesEntry* itemRandEntry = sItemRandomPropertiesStore.LookupEntry(item->GetItemRandomPropertyId());
                 if (itemRandEntry)
+#ifdef TRINITY
+                    suffix = &itemRandEntry->Name;
+#else
                     suffix = itemRandEntry->nameSuffix;
+#endif
             }
             if (suffix)
             {
                 name += ' ';
+#if defined TRINITY
+                name += (*suffix)[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
+#else
                 name += suffix[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
+#endif
             }
         }
 #endif
