@@ -87,17 +87,18 @@ jobs:
       - name: Check startup errors
         run: source ./apps/ci/ci-error-check.sh
 
-  mangos-zero-Eluna:
+  mangos-Eluna:
     strategy:
       fail-fast: false
       matrix:
         eluna: [ON, OFF]
+        patch: [zero, one, two]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
-          repository: mangoszero/server
+          repository: mangos${{ matrix.patch }}/server
           ref: master
       - uses: actions/checkout@v2
         with:
@@ -108,7 +109,7 @@ jobs:
         run: |
           mkdir bin
           cd bin
-          cmake .. -DELUNA=$ELUNA -DCMAKE_INSTALL_PREFIX=install -DSOAP=1 -DPLAYERBOTS=1 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/
+          cmake .. -DELUNA=$ELUNA -DCMAKE_INSTALL_PREFIX=install -DSOAP=1 -DPLAYERBOTS=0 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/
           cd ..
       - name: Build
         run: |
