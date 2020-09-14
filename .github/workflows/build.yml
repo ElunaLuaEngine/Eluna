@@ -43,7 +43,6 @@ jobs:
         cd bin/check_install/bin
         ./authserver --version
         ./worldserver --version
-        name: core-build
 
   AC-Eluna:
     strategy:
@@ -68,7 +67,7 @@ jobs:
         with:
           path: modules/mod-eluna-lua-engine/LuaEngine
       - name: Cache
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v2
         with:
           path: /home/runner/.ccache
           key: ccache:${{ matrix.compiler }}:${{ github.ref }}:${{ github.sha }}
