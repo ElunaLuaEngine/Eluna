@@ -51,22 +51,22 @@ jobs:
       matrix:
         compiler: [clang10]
     runs-on: ubuntu-20.04
-    name: ${{ matrix.compiler }}
     env:
       COMPILER: ${{ matrix.compiler }}
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: 'azerothcore/azerothcore-wotlk'
+          submodules: recursive
+          repository: azerothcore/azerothcore-wotlk
           ref: 'master'
-          submodules: 'recursive'
       - uses: actions/checkout@v2
         with:
           submodules: false
-          path: 'modules/mod-eluna-lua-engine'
+          repository: azerothcore/mod-eluna-lua-engine
+          path: modules/mod-eluna-lua-engine
       - uses: actions/checkout@v2
         with:
-          path: 'modules/mod-eluna-lua-engine/LuaEngine'
+          path: modules/mod-eluna-lua-engine/LuaEngine
       - name: Cache
         uses: actions/cache@v1.1.2
         with:
@@ -87,3 +87,32 @@ jobs:
         run: source ./apps/ci/ci-worldserver-dry-run.sh
       - name: Check startup errors
         run: source ./apps/ci/ci-error-check.sh
+
+  mangos-zero-Eluna:
+    strategy:
+      fail-fast: false
+      matrix:
+        eluna: [ON, OFF]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          repository: mangoszero/server
+          ref: master
+      - uses: actions/checkout@v2
+        with:
+          path: src/modules/Eluna
+      - name: Configure
+        env:
+          ELUNA: ${{ matrix.eluna }}
+        run: |
+          mkdir bin
+          cd bin
+          cmake .. -DELUNA=$ELUNA -DCMAKE_INSTALL_PREFIX=install -DSOAP=1 -DPLAYERBOTS=1 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/
+          cd ..
+      - name: Build
+        run: |
+          cd bin
+          make -j4
+          make install
