@@ -1,0 +1,118 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  TC-Eluna:
+    strategy:
+      fail-fast: false
+      matrix:
+        eluna: [ON, OFF]
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: false
+        repository: ElunaLuaEngine/ElunaTrinityWotlk
+    - uses: actions/checkout@v2
+      with:
+        path: src/server/game/LuaEngine
+    - name: Dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -yq libboost-all-dev
+    - name: Setup
+      env:
+        ELUNA: ${{ matrix.eluna }}
+      run: |
+        mkdir bin
+        cd bin
+        cmake ../ -DELUNA=$ELUNA -DWITH_WARNINGS=1 -DWITH_COREDEBUG=0 -DUSE_COREPCH=1 -DUSE_SCRIPTPCH=1 -DTOOLS=1 -DSCRIPTS=dynamic -DSERVERS=1 -DNOJEM=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_C_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_INSTALL_PREFIX=check_install -DBUILD_TESTING=1
+        cd ..
+    - name: Build
+      run: |
+        cd bin
+        make -j 4 -k && make install
+    - name: Unit tests
+      run: |
+        cd bin
+        make test
+    - name: Check executables
+      run: |
+        cd bin/check_install/bin
+        ./authserver --version
+        ./worldserver --version
+
+  AC-Eluna:
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [clang10]
+    runs-on: ubuntu-20.04
+    env:
+      COMPILER: ${{ matrix.compiler }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          repository: azerothcore/azerothcore-wotlk
+          ref: 'master'
+      - uses: actions/checkout@v2
+        with:
+          submodules: false
+          repository: azerothcore/mod-eluna-lua-engine
+          path: modules/mod-eluna-lua-engine
+      - uses: actions/checkout@v2
+        with:
+          path: modules/mod-eluna-lua-engine/LuaEngine
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/.ccache
+          key: ccache:${{ matrix.compiler }}:${{ github.ref }}:${{ github.sha }}
+          restore-keys: |
+            ccache:${{ matrix.compiler }}:${{ github.ref }}
+            ccache:${{ matrix.compiler }}
+      - name: Configure OS
+        run: source ./apps/ci/ci-install.sh
+        env:
+          CONTINUOUS_INTEGRATION: true
+      - name: Import db
+        run: source ./apps/ci/ci-import-db.sh
+      - name: Build
+        run: source ./apps/ci/ci-compile.sh
+      - name: Dry run
+        run: source ./apps/ci/ci-worldserver-dry-run.sh
+      - name: Check startup errors
+        run: source ./apps/ci/ci-error-check.sh
+
+  mangos-Eluna:
+    strategy:
+      fail-fast: false
+      matrix:
+        eluna: [ON, OFF]
+        patch: [zero, one, two]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          repository: mangos${{ matrix.patch }}/server
+          ref: master
+      - uses: actions/checkout@v2
+        with:
+          path: src/modules/Eluna
+      - name: Configure
+        env:
+          ELUNA: ${{ matrix.eluna }}
+        run: |
+          mkdir bin
+          cd bin
+          cmake .. -DELUNA=$ELUNA -DCMAKE_INSTALL_PREFIX=install -DSOAP=1 -DPLAYERBOTS=0 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/
+          cd ..
+      - name: Build
+        run: |
+          cd bin
+          make -j4
+          make install
