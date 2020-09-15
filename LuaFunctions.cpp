@@ -659,6 +659,8 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SendPacket", &LuaPlayer::SendPacket },
     { "SendAddonMessage", &LuaPlayer::SendAddonMessage },
     { "ModifyMoney", &LuaPlayer::ModifyMoney },
+    { "LearnAllRecipes", &LuaPlayer::LearnAllRecipes },
+    { "CreatePet", &LuaPlayer::CreatePet },
     { "LearnSpell", &LuaPlayer::LearnSpell },
     { "LearnTalent", &LuaPlayer::LearnTalent },
     { "RemoveItem", &LuaPlayer::RemoveItem },

@@ -14,6 +14,89 @@ namespace LuaPlayer
 {
 #if (!defined(TBC) && !defined(CLASSIC))
     /**
+    * Creates an [Creature] and links it to the [Player] as a pet
+    *
+    * @param [entry] creature entry
+    */
+    int CreatePet(lua_State* L, Player* player)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+
+        Creature *creatureTarget = player->SummonCreature(entry, player->GetPositionX(), player->GetPositionY() + 2, player->GetPositionZ(), player->GetOrientation(), TEMPSUMMON_CORPSE_TIMED_DESPAWN, 500);
+        if (!creatureTarget) return 0;
+
+        Pet* pet = player->CreateTamedPetFrom(creatureTarget, 0);
+        if (!pet) return 0;
+
+        // kill the spawned creature
+        creatureTarget->setDeathState(JUST_DIED);
+        creatureTarget->RemoveCorpse();
+        creatureTarget->SetHealth(0);                       // adjust for GM view
+
+        pet->SetPower(POWER_HAPPINESS, 1048000);
+
+        // allows the use of level up gfx
+        pet->SetUInt32Value(UNIT_FIELD_LEVEL, player->getLevel() - 1);
+        pet->GetMap()->AddToMap(pet->ToCreature());
+
+        // level creature up for gfx
+        pet->SetUInt32Value(UNIT_FIELD_LEVEL, player->getLevel());
+
+
+        if (!pet->InitStatsForLevel(player->getLevel())) pet->UpdateAllStats();
+
+        // sets the creature as pet for the player
+        player->SetMinion(pet, true);
+
+        pet->SavePetToDB(PET_SAVE_AS_CURRENT);
+        pet->InitTalentForLevel();
+        player->PetSpellInitialize();
+
+        return 0;
+    }
+
+    /**
+    * [player] learns all recipes from [skillId]
+    *
+    * @param [skillId] skill to learn recipes from
+    */
+    int LearnAllRecipes(lua_State* L, Player* player)
+    {      
+        uint32 skillId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 classmask = player->getClassMask();
+
+        for (uint32 j = 0; j < sSkillLineAbilityStore.GetNumRows(); ++j)
+        {
+            SkillLineAbilityEntry const* skillLine = sSkillLineAbilityStore.LookupEntry(j);
+            if (!skillLine)
+                continue;
+
+            // wrong skill
+            if (skillLine->skillId != skillId)
+                continue;
+
+            // not high rank
+            if (skillLine->forward_spellid)
+                continue;
+
+            // skip racial skills
+            if (skillLine->racemask != 0)
+                continue;
+
+            // skip wrong class skills
+            if (skillLine->classmask && (skillLine->classmask & classmask) == 0)
+                continue;
+
+            SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(skillLine->spellId);
+            if (!spellInfo || !SpellMgr::IsSpellValid(spellInfo, player, false))
+                continue;
+
+            player->LearnSpell(skillLine->spellId, false);
+        }
+        return 0;
+    }
+
+    /**
      * Returns 'true' if the [Player] can Titan Grip, 'false' otherwise.
      *
      * @return bool canTitanGrip
