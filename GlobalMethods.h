@@ -62,7 +62,7 @@ namespace LuaGlobalFunctions
     int GetRealmID(lua_State* L)
     {
 #ifdef MANGOS
-        Eluna::Push(L, eWorld->GetRealmID());
+        Eluna::Push(L, realmID);
 #else
         Eluna::Push(L, sConfigMgr->GetIntDefault("RealmID", 1));
 #endif
