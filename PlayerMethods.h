@@ -2059,6 +2059,7 @@ namespace LuaPlayer
     }
 
 
+#if defined(TRINITY) || defined(AZEROTHCORE)
     /**
      * Adds the specified achievement to the [Player]s
      *
@@ -2072,6 +2073,7 @@ namespace LuaPlayer
             player->CompletedAchievement(t);
         return 0;
     }
+#endif
 
 #endif
 
