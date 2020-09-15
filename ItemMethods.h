@@ -276,7 +276,7 @@ namespace LuaItem
 #else
 #ifdef TRINITY
             std::array<char const*, 16> const* suffix = NULL;
-#elif
+#else
             char* const* suffix = NULL;
 #endif
 #endif

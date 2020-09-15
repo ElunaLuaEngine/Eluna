@@ -601,7 +601,9 @@ ElunaRegister<Player> PlayerMethods[] =
     // {"HasPendingBind", &LuaPlayer::HasPendingBind},                                      // :HasPendingBind() - UNDOCUMENTED - Returns true if the player has a pending instance bind
 #if (!defined(TBC) && !defined(CLASSIC))
     { "HasAchieved", &LuaPlayer::HasAchieved },
+#if defined(TRINITY) || defined(AZEROTHCORE)
     { "SetAchievement", &LuaPlayer::SetAchievement },
+#endif
 #endif
     { "CanUninviteFromGroup", &LuaPlayer::CanUninviteFromGroup },
     { "IsRested", &LuaPlayer::IsRested },

@@ -62,7 +62,7 @@ namespace LuaGlobalFunctions
     int GetRealmID(lua_State* L)
     {
 #ifdef MANGOS
-        Eluna::Push(L, eWorld->GetRealmID());
+        Eluna::Push(L, realmID);
 #else
         Eluna::Push(L, sConfigMgr->GetIntDefault("RealmID", 1));
 #endif
@@ -495,7 +495,11 @@ namespace LuaGlobalFunctions
         if (!areaEntry)
             return luaL_argerror(L, 1, "valid Area or Zone ID expected");
 
+#if defined(TRINITY)
         Eluna::Push(L, areaEntry->AreaName[locale]);
+#else
+        Eluna::Push(L, areaEntry->area_name[locale]);
+#endif
         return 1;
     }
 
