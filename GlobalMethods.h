@@ -52,6 +52,24 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Returns emulator .conf RealmID
+     *
+     * - for MaNGOS returns the realmID as it is stored in the core.
+     * - for TrinityCore returns the realmID as it is in the conf file.
+     * @return uint32 realm ID
+     */
+
+    int GetRealmID(lua_State* L)
+    {
+#ifdef MANGOS
+        Eluna::Push(L, realmID);
+#else
+        Eluna::Push(L, sConfigMgr->GetIntDefault("RealmID", 1));
+#endif
+        return 1;
+    }
+
+    /**
      * Returns emulator version
      *
      * - For TrinityCore returns the date of the last revision, e.g. `2015-08-26 22:53:12 +0300`
@@ -181,7 +199,7 @@ namespace LuaGlobalFunctions
 #else
         {
 #ifdef TRINITY
-            boost::shared_lock<boost::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+            std::shared_lock<std::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
 #elif defined(AZEROTHCORE)
             ACORE_READ_GUARD(HashMapHolder<Player>::LockType, *HashMapHolder<Player>::GetLock());
 #else
@@ -477,7 +495,11 @@ namespace LuaGlobalFunctions
         if (!areaEntry)
             return luaL_argerror(L, 1, "valid Area or Zone ID expected");
 
+#if defined(TRINITY)
+        Eluna::Push(L, areaEntry->AreaName[locale]);
+#else
         Eluna::Push(L, areaEntry->area_name[locale]);
+#endif
         return 1;
     }
 
@@ -2300,10 +2322,10 @@ namespace LuaGlobalFunctions
             TaxiPathNodeEntry entry;
 #ifdef TRINITY
             // mandatory
-            entry.MapID = Eluna::CHECKVAL<uint32>(L, start);
-            entry.LocX = Eluna::CHECKVAL<float>(L, start + 1);
-            entry.LocY = Eluna::CHECKVAL<float>(L, start + 2);
-            entry.LocZ = Eluna::CHECKVAL<float>(L, start + 3);
+            entry.ContinentID = Eluna::CHECKVAL<uint32>(L, start);
+            entry.Loc.X = Eluna::CHECKVAL<float>(L, start + 1);
+            entry.Loc.Y = Eluna::CHECKVAL<float>(L, start + 2);
+            entry.Loc.Z = Eluna::CHECKVAL<float>(L, start + 3);
             // optional
             entry.Flags = Eluna::CHECKVAL<uint32>(L, start + 4, 0);
             entry.Delay = Eluna::CHECKVAL<uint32>(L, start + 5, 0);
@@ -2351,10 +2373,10 @@ namespace LuaGlobalFunctions
             entry.PathID = pathId;
             entry.NodeIndex = nodeId;
             nodeEntry->ID = index;
-            nodeEntry->map_id = entry.MapID;
-            nodeEntry->x = entry.LocX;
-            nodeEntry->y = entry.LocY;
-            nodeEntry->z = entry.LocZ;
+            nodeEntry->ContinentID = entry.ContinentID;
+            nodeEntry->Pos.X = entry.Loc.X;
+            nodeEntry->Pos.Y = entry.Loc.Y;
+            nodeEntry->Pos.Z = entry.Loc.Z;
             nodeEntry->MountCreatureID[0] = mountH;
             nodeEntry->MountCreatureID[1] = mountA;
             sTaxiNodesStore.SetEntry(nodeId++, nodeEntry);
@@ -2381,10 +2403,16 @@ namespace LuaGlobalFunctions
             return 1;
         sTaxiPathSetBySource[startNode][nodeId - 1] = TaxiPathBySourceAndDestination(pathId, price);
         TaxiPathEntry* pathEntry = new TaxiPathEntry();
+#ifdef TRINITY
+        pathEntry->FromTaxiNode = startNode;
+        pathEntry->ToTaxiNode = nodeId - 1;
+        pathEntry->Cost = price;
+#else
         pathEntry->from = startNode;
         pathEntry->to = nodeId - 1;
-        pathEntry->ID = pathId;
         pathEntry->price = price;
+#endif
+        pathEntry->ID = pathId;
         sTaxiPathStore.SetEntry(pathId, pathEntry);
         Eluna::Push(L, pathId);
         return 1;

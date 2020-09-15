@@ -2057,6 +2057,24 @@ namespace LuaPlayer
             player->SetTitle(t, false);
         return 0;
     }
+
+
+#if defined(TRINITY) || defined(AZEROTHCORE)
+    /**
+     * Adds the specified achievement to the [Player]s
+     *
+     * @param uint32 achievementid
+     */
+    int SetAchievement(lua_State* L, Player* player)
+    {
+        uint32 id = Eluna::CHECKVAL<uint32>(L, 2);
+        AchievementEntry const* t = sAchievementStore.LookupEntry(id);
+        if (t)
+            player->CompletedAchievement(t);
+        return 0;
+    }
+#endif
+
 #endif
 
 #if !defined TRINITY && !AZEROTHCORE
@@ -2262,10 +2280,11 @@ namespace LuaPlayer
         WorldPacket data(MSG_AUCTION_HELLO, 12);
 #ifdef TRINITY
         data << uint64(unit->GetGUID().GetCounter());
+        data << uint32(ahEntry->ID);
 #else
         data << uint64(unit->GetGUIDLow());
-#endif
         data << uint32(ahEntry->houseId);
+#endif
         data << uint8(1);
 #ifdef CMANGOS
         player->GetSession()->SendPacket(data);
@@ -3312,11 +3331,19 @@ namespace LuaPlayer
         {
             if (SkillLineEntry const* entry = sSkillLineStore.LookupEntry(i))
             {
+#ifdef TRINITY
+                if (entry->CategoryID == SKILL_CATEGORY_LANGUAGES || entry->CategoryID == SKILL_CATEGORY_GENERIC)
+                    continue;
+
+                if (player->HasSkill(entry->ID))
+                    player->UpdateSkill(entry->ID, step);
+#else
                 if (entry->categoryId == SKILL_CATEGORY_LANGUAGES || entry->categoryId == SKILL_CATEGORY_GENERIC)
                     continue;
 
                 if (player->HasSkill(entry->id))
                     player->UpdateSkill(entry->id, step);
+#endif
             }
         }
 
