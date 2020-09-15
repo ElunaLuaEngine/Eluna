@@ -1163,7 +1163,11 @@ namespace LuaUnit
         if (!entry)
             return 1;
 
+#ifdef TRINITY
+        Eluna::Push(L, entry->Name[locale]);
+#else
         Eluna::Push(L, entry->name[locale]);
+#endif
         return 1;
     }
 
@@ -1202,7 +1206,11 @@ namespace LuaUnit
         if (!entry)
             return 1;
 
+#ifdef TRINITY
+        Eluna::Push(L, entry->Name[locale]);
+#else
         Eluna::Push(L, entry->name[locale]);
+#endif
         return 1;
     }
 
@@ -2033,9 +2041,14 @@ namespace LuaUnit
      *
      * @param uint32 emoteId
      */
-    int Emote(lua_State* L, Unit* unit)
+    int PerformEmote(lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        Emote emote = static_cast<Emote>(Eluna::CHECKVAL<uint32>(L, 2));
+        unit->HandleEmoteCommand(emote);
+#else
         unit->HandleEmoteCommand(Eluna::CHECKVAL<uint32>(L, 2));
+#endif
         return 0;
     }
 

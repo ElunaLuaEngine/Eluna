@@ -9,6 +9,7 @@
 #include "lmarshal.h"
 
 
+#ifndef TRINITY
 void ElunaInstanceAI::Initialize()
 {
     LOCK_ELUNA;
@@ -22,6 +23,7 @@ void ElunaInstanceAI::Initialize()
 
     sEluna->OnInitialize(this);
 }
+#endif
 
 void ElunaInstanceAI::Load(const char* data)
 {
@@ -82,7 +84,9 @@ void ElunaInstanceAI::Load(const char* data)
                 lua_pop(L, 1);
                 // Stack: (empty)
 
+#ifndef TRINITY
                 Initialize();
+#endif
             }
         }
         else
@@ -92,7 +96,9 @@ void ElunaInstanceAI::Load(const char* data)
             lua_pop(L, 1);
             // Stack: (empty)
 
+#ifndef TRINITY
             Initialize();
+#endif
         }
 
         delete[] decodedData;
@@ -100,7 +106,10 @@ void ElunaInstanceAI::Load(const char* data)
     else
     {
         ELUNA_LOG_ERROR("Error while decoding instance data: Data is not valid base-64");
+
+#ifndef TRINITY
         Initialize();
+#endif
     }
 }
 

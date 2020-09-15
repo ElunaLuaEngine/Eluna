@@ -116,10 +116,13 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
 {
     START_HOOK_WITH_RETVAL(TRIGGER_EVENT_ON_TRIGGER, false);
     Push(pPlayer);
-#ifndef AZEROTHCORE
-    Push(pTrigger->id);
-#else
+#ifdef TRINITY
+    Push(pTrigger->ID);
+#elif AZEROTHCORE
     Push(pTrigger->entry);
+#else
+    Push(pTrigger->id);
+    
 #endif
     return CallAllFunctionsBool(ServerEventBindings, key);
 }

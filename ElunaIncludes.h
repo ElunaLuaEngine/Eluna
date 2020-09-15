@@ -42,8 +42,6 @@
 #if defined TRINITY
 #include "GitRevision.h"
 #include "SpellHistory.h"
-#include <boost/thread/locks.hpp>
-#include <boost/thread/shared_mutex.hpp>
 #endif
 
 #if defined TRINITY || defined AZEROTHCORE
