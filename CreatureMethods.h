@@ -842,7 +842,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     {
 #if defined(TRINITY)
         Eluna::Push(L, creature->GetThreatManager().GetThreatenedByMeList().size());
-#elif defiend(AZEROTHCORE)
+#elif defined(AZEROTHCORE)
         Eluna::Push(L, creature->getThreatManager().getThreatList().size());
 #else
         Eluna::Push(L, creature->GetThreatManager().getThreatList().size());
@@ -951,7 +951,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     {
         int32 state = Eluna::CHECKVAL<int32>(L, 2);
 
-#if defined defined(TRINITY) || defined(AZEROTHCORE)
+#if defined(TRINITY) || defined(AZEROTHCORE)
         creature->setDeathState((DeathState)state);
 #else
         creature->SetDeathState((DeathState)state);
