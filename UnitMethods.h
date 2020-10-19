@@ -1507,7 +1507,7 @@ namespace LuaUnit
     }
 
     /**
-     * Sets the [Unit]'s speed of given [UnitMoveType] to given rate.
+     * Sets the [Unit]'s speed of given [UnitMoveType] to given speed.
      * If forced, packets sent to clients forcing the visual change.
      *
      * <pre>
@@ -1537,11 +1537,81 @@ namespace LuaUnit
         (void)forced; // ensure that the variable is referenced in order to pass compiler checks
         if (type >= MAX_MOVE_TYPE)
             return luaL_argerror(L, 2, "valid UnitMoveType expected");
-#if defined TRINITY || AZEROTHCORE
-        unit->SetSpeedRate((UnitMoveType)type, rate);
-#else
-        unit->SetSpeedRate((UnitMoveType)type, rate, forced);
-#endif
+
+        unit->SetSpeed(UnitMoveType(type), rate, forced);
+        return 0;
+    }
+
+    /**
+     * Sets the [Unit]'s speed of given [UnitMoveType] to given rate.
+     *
+     * <pre>
+     * enum UnitMoveType
+     * {
+     *     MOVE_WALK           = 0,
+     *     MOVE_RUN            = 1,
+     *     MOVE_RUN_BACK       = 2,
+     *     MOVE_SWIM           = 3,
+     *     MOVE_SWIM_BACK      = 4,
+     *     MOVE_TURN_RATE      = 5,
+     *     MOVE_FLIGHT         = 6,
+     *     MOVE_FLIGHT_BACK    = 7,
+     *     MOVE_PITCH_RATE     = 8
+     * };
+     * </pre>
+     *
+     * @param [UnitMoveType] type
+     * @param float rate
+     */
+    int SetSpeedRate(lua_State* L, Unit* unit)
+    {
+        uint32 type = Eluna::CHECKVAL<uint32>(L, 2);
+        float rate = Eluna::CHECKVAL<float>(L, 3);
+
+        if (type >= MAX_MOVE_TYPE)
+            return luaL_argerror(L, 2, "valid UnitMoveType expected");
+
+        unit->SetSpeedRate(UnitMoveType(type), rate);
+        return 0;
+    }
+
+    /**
+     * NOT DOC FOR THE MOMENT
+     *
+     */
+
+
+    /**
+     * Set the [Unit]'s default speed of given [UnitMoveType]
+     *
+          * <pre>
+     * enum UnitMoveType
+     * {
+     *     MOVE_WALK           = 0,
+     *     MOVE_RUN            = 1,
+     *     MOVE_RUN_BACK       = 2,
+     *     MOVE_SWIM           = 3,
+     *     MOVE_SWIM_BACK      = 4,
+     *     MOVE_TURN_RATE      = 5,
+     *     MOVE_FLIGHT         = 6,
+     *     MOVE_FLIGHT_BACK    = 7,
+     *     MOVE_PITCH_RATE     = 8
+     * };
+     * </pre>
+     *
+     * @param [UnitMoveType] type
+     * @param bool apply = true
+     */
+    int UpdateSpeed(lua_State* L, Unit* unit)
+    {
+        uint32 type = Eluna::CHECKVAL<uint32>(L, 2);
+        bool apply = Eluna::CHECKVAL<bool>(L, 3, true);
+
+
+        if (type >= MAX_MOVE_TYPE)
+            return luaL_argerror(L, 2, "valid UnitMoveType expected");
+
+        unit->UpdateSpeed(UnitMoveType(type), apply);
         return 0;
     }
 
@@ -2965,6 +3035,7 @@ namespace LuaUnit
         return 0;
     }
 
+
     /*int RestoreDisplayId(lua_State* L, Unit* unit)
     {
         unit->RestoreDisplayId();
@@ -3039,5 +3110,881 @@ namespace LuaUnit
     Eluna::Push(L, summon);
     return 1;
     }*/
+
+
+
+
+
+        /*
+
+
+            CUSTOM by @iThorgrim for WARLUNA
+
+        */
+
+    #ifdef AZEROTHCORE
+        /**
+         * Returns true if the [Unit] is command attack.
+         *
+         * @return bool IsCommandAttack
+         */
+        int IsCommandAttack(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->GetCharmInfo()->IsCommandAttack());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is command follow.
+         *
+         * @return bool IsCommandFollow
+         */
+        int IsCommandFollow(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->GetCharmInfo()->IsCommandFollow());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is at stay.
+         *
+         * @return bool IsAtStay
+         */
+        int IsAtStay(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->GetCharmInfo()->IsAtStay());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is following.
+         *
+         * @return bool IsFollowing
+         */
+        int IsFollowing(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->GetCharmInfo()->IsFollowing());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is returning.
+         *
+         * @return bool IsReturning
+         */
+        int IsReturning(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->GetCharmInfo()->IsReturning());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is attack ready.
+         *
+         * @param [WeaponAttackType] type
+         * @return bool isAttackReady
+         */
+        int IsAttackReady(lua_State* L, Unit* unit)
+        {
+            uint32 type = Eluna::CHECKVAL<uint32>(L, 2);
+            if (type >= 3)
+                return luaL_argerror(L, 2, "valid WeaponAttackType expected");
+
+            Eluna::Push(L, unit->isAttackReady(WeaponAttackType(type)));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is within combat range.
+         *
+         * @param [Unit] target
+         * @param float maxrange
+         * @return bool IsWithinCombatRange
+         */
+        int IsWithinCombatRange(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+            float maxrange = Eluna::CHECKVAL<float>(L, 3);
+
+            Eluna::Push(L, unit->IsWithinCombatRange(target, maxrange));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is within melee range.
+         *
+         * @param [WorldObject] target
+         * @param float maxrange
+         * @return bool IsWithinMeleeRange
+         */
+        int IsWithinMeleeRange(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+            float maxrange = Eluna::CHECKVAL<float>(L, 3);
+
+            Eluna::Push(L, unit->IsWithinMeleeRange(target, maxrange));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is summon type creature.
+         *
+         * @return bool IsSummon
+         */
+        int IsSummon(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsSummon());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is guardian type creature.
+         *
+         * @return bool IsGuardian
+         */
+        int IsGuardian(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsGuardian());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is pet type creature.
+         *
+         * @return bool IsPet
+         */
+        int IsPet(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsPet());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is hunter pet type creature.
+         *
+         * @return bool IsHunterPet
+         */
+        int IsHunterPet(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsHunterPet());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is totem type creature.
+         *
+         * @return bool IsTotem
+         */
+        int IsTotem(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsTotem());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is vehicle type creature.
+         *
+         * @return bool IsVehicle
+         */
+        int IsVehicle(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsVehicle());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is hostile of target.
+         *
+         * @param [Unit] target
+         * @return bool IsHostileTo
+         */
+        int IsHostileTo(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+            Eluna::Push(L, unit->IsHostileTo(target));
+            return 1;
+        }
+
+        /**
+        * Returns true if the [Unit] is hostile to [Player]'s.
+        *
+        * @return bool IsHostileToPlayers
+        */
+        int IsHostileToPlayers(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsHostileToPlayers());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is friendly of target.
+         *
+         * @param [Unit] target
+         * @return bool IsFriendlyTo
+         */
+        int IsFriendlyTo(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+            Eluna::Push(L, unit->IsFriendlyTo(target));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is neutral to all.
+         *
+         * @return bool IsNeutralToAll
+         */
+        int IsNeutralToAll(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsNeutralToAll());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is in party with target.
+         *
+         * @param [Unit] target
+         * @return bool IsInPartyWith
+         */
+        int IsInPartyWith(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+            Eluna::Push(L, unit->IsInPartyWith(target));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is in raid with target.
+         *
+         * @param [Unit] target
+         * @return bool IsInRaidWith
+         */
+        int IsInRaidWith(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+            Eluna::Push(L, unit->IsInRaidWith(target));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is contested guard.
+         *
+         * @return bool IsContestedGuard
+         */
+        int IsContestedGuard(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsContestedGuard());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is in Sanctuary map or area.
+         *
+         * @return bool IsInSanctuary
+         */
+        int IsInSanctuary(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsInSanctuary());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] flagged for FFA PvP.
+         *
+         * @return bool IsFFAPvP
+         */
+        int IsFFAPvP(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsFFAPvP());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] state is sit.
+         *
+         * @return bool IsSitState
+         */
+        int IsSitState(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsSitState());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is a critter.
+         *
+         * @return bool IsCritter
+         */
+        int IsCritter(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsCritter());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is in flight.
+         *
+         * @return bool IsInFlight
+         */
+        int IsInFlight(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsInFlight());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is in combat with target.
+         *
+         * @param [Unit] target
+         * @return bool IsInCombatWith
+         */
+        int IsInCombatWith(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+            Eluna::Push(L, unit->IsInCombatWith(target));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is pet in combat.
+         *
+         * @return bool IsPetInCombat
+         */
+        int IsPetInCombat(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsPetInCombat());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is feared.
+         *
+         * @return bool isFeared
+         */
+        int IsFeared(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->isFeared());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is polymorphed.
+         *
+         * @return bool IsPolymorphed
+         */
+        int IsPolymorphed(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsPolymorphed());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is frozen.
+         *
+         * @return bool isFrozen
+         */
+        int IsFrozen(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->isFrozen());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is frozen.
+         *
+         * @param [Unit] by target
+         * @param bool checkfakedeath,
+         * @return bool isTargetableForAttack
+         */
+        int IsTargetableForAttack(lua_State* L, Unit* unit)
+        {
+            Unit* bytarget = Eluna::CHECKOBJ<Unit>(L, 3);
+            bool checkfakedeath = Eluna::CHECKVAL<bool>(L, 2, true);
+
+            Eluna::Push(L, unit->isTargetableForAttack(checkfakedeath, bytarget));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is a valid attack for the target.
+         *
+         * @param [Unit] by target
+         * @return bool IsValidAttackTarget
+         */
+        int IsValidAttackTarget(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+
+            Eluna::Push(L, unit->IsValidAttackTarget(target));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is a valid assist for the target.
+         *
+         * @param [Unit] by target
+         * @return bool IsValidAssistTarget
+         */
+        int IsValidAssistTarget(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+
+            Eluna::Push(L, unit->IsValidAssistTarget(target));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is levitating.
+         *
+         * @return bool IsLevitating
+         */
+        int IsLevitating(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsLevitating());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is walking.
+         *
+         * @return bool IsWalking
+         */
+        int IsWalking(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsWalking());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is controlled by player.
+         *
+         * @return bool IsControlledByPlayer
+         */
+        int IsControlledByPlayer(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsControlledByPlayer());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is created by player.
+         *
+         * @return bool IsCreatedByPlayer
+         */
+        int IsCreatedByPlayer(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsCreatedByPlayer());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is charmed owned by player or player.
+         *
+         * @return bool IsCharmedOwnedByPlayerOrPlayer
+         */
+        int IsCharmedOwnedByPlayerOrPlayer(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsCharmedOwnedByPlayerOrPlayer());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is possessed.
+         *
+         * @return bool isPossessed
+         */
+        int IsPossessed(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->isPossessed());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is possessed by player.
+         *
+         * @return bool isPossessedByPlayer
+         */
+        int IsPossessedByPlayer(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->isPossessedByPlayer());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is possessing.
+         *
+         * @return bool isPossessing
+         */
+        int IsPossessing(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->isPossessing());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is non melee spell cast.
+         *
+         * @param bool withDelayed
+         * @param bool skipChanneled
+         * @param bool skipAutorepeat
+         * @param bool isAutoshoot
+         * @param bool skipInstant
+         * @return bool IsNonMeleeSpellCast
+         */
+        int IsNonMeleeSpellCast(lua_State* L, Unit* unit)
+        {
+            bool withdelayed = Eluna::CHECKVAL<bool>(L, 2, true);
+            bool skipchanneled = Eluna::CHECKVAL<bool>(L, 3, true);
+            bool skipautorepeat = Eluna::CHECKVAL<bool>(L, 4, true);
+            bool isautoshoot = Eluna::CHECKVAL<bool>(L, 5, true);
+            bool skipinstant = Eluna::CHECKVAL<bool>(L, 6, true);
+
+            Eluna::Push(L, unit->IsNonMeleeSpellCast(withdelayed, skipchanneled, skipautorepeat, isautoshoot, skipinstant));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is in feral form.
+         *
+         * @return bool IsInFeralForm
+         */
+        int IsInFeralForm(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsInFeralForm());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is in disallowed mount form.
+         *
+         * @return bool IsInDisallowedMountForm
+         */
+        int IsInDisallowedMountForm(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsInDisallowedMountForm());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is in front in map.
+         *
+         * @param [Unit] target
+         * @param float distance
+         * @param float arc
+         * @return bool isInFrontInMap
+         */
+        int IsInFrontInMap(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+            float distance = Eluna::CHECKVAL<float>(L, 3);
+            float arc = Eluna::CHECKVAL<float>(L, 4);
+
+            Eluna::Push(L, unit->isInFrontInMap(target, distance, arc));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is in back in map.
+         *
+         * @param [Unit] target
+         * @param float distance
+         * @param float arc
+         * @return bool isInBackInMap
+         */
+        int IsInBackInMap(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+            float distance = Eluna::CHECKVAL<float>(L, 3);
+            float arc = Eluna::CHECKVAL<float>(L, 4);
+
+            Eluna::Push(L, unit->isInBackInMap(target, distance, arc));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is visible.
+         *
+         * @return bool isInBackInMap
+         */
+        int IsVisible(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsVisible());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is under last mana use effect.
+         *
+         * @return bool IsUnderLastManaUseEffect
+         */
+        int IsUnderLastManaUseEffect(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsUnderLastManaUseEffect());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is immuned to spell.
+         *
+         * @param [Spell] spell
+         * @return bool IsImmunedToSpell
+         */
+        int IsImmunedToSpell(lua_State* L, Unit* unit)
+        {
+            const SpellInfo* spellId = Eluna::CHECKOBJ<SpellInfo>(L, 2);
+            Eluna::Push(L, unit->IsImmunedToSpell(spellId));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is immuned to damage.
+         *
+         * @param [Spell] spell
+         * @return bool IsImmunedToDamage
+         */
+        int IsImmunedToDamage(lua_State* L, Unit* unit)
+        {
+            const SpellInfo* spellId = Eluna::CHECKOBJ<SpellInfo>(L, 2);
+            Eluna::Push(L, unit->IsImmunedToDamage(spellId));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is immuned to school.
+         *
+         * @param [Spell] spell
+         * @return bool IsImmunedToSchool
+         */
+        int IsImmunedToSchool(lua_State* L, Unit* unit)
+        {
+            uint32 damageschoolmask = Eluna::CHECKVAL<uint32>(L, 2);
+
+            Eluna::Push(L, unit->IsImmunedToSchool(SpellSchoolMask(damageschoolmask)));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is immuned to damage or school.
+         *
+         * @param [Spell] spell
+         * @return bool IsImmunedToDamageOrSchool
+         */
+        int IsImmunedToDamageOrSchool(lua_State* L, Unit* unit)
+        {
+            const SpellInfo* spellId = Eluna::CHECKOBJ<SpellInfo>(L, 2);
+            Eluna::Push(L, unit->IsImmunedToDamageOrSchool(spellId));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is immuned to spell effect.
+         *
+         * @param [Spell] spell
+         * @param int index
+         * @return bool IsImmunedToSpellEffect
+         */
+        int IsImmunedToSpellEffect(lua_State* L, Unit* unit)
+        {
+            const SpellInfo* spellId = Eluna::CHECKOBJ<SpellInfo>(L, 2);
+            uint32 index = Eluna::CHECKVAL<uint32>(L, 3);
+
+            Eluna::Push(L, unit->IsImmunedToSpellEffect(spellId, index));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is damage reduced by armor.
+         *
+         * @param int damageschoolmask
+         * @param [Spell] spell
+         * @param int effIndex
+         * @return bool IsDamageReducedByArmor
+         */
+        int IsDamageReducedByArmor(lua_State* L, Unit* unit)
+        {
+            uint32 damageschoolmask = Eluna::CHECKVAL<uint32>(L, 2);
+            const SpellInfo* spellId = Eluna::CHECKOBJ<SpellInfo>(L, 3);
+            uint8 effIndex = Eluna::CHECKVAL<uint8>(L, 4, MAX_SPELL_EFFECTS);
+
+            Eluna::Push(L, unit->IsDamageReducedByArmor(SpellSchoolMask(damageschoolmask), spellId, effIndex));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is pet aura.
+         *
+         * @return bool IsPetAura
+         */
+        int IsPetAura(lua_State* L, Unit* unit)
+        {
+            Aura* aura = Eluna::CHECKOBJ<Aura>(L, 3);
+
+            Eluna::Push(L, unit->IsPetAura(aura));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is ai enabled.
+         *
+         * @return bool IsAIEnabled
+         */
+        int IsAIEnabled(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsAIEnabled);
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is moving.
+         *
+         * @return bool isMoving
+         */
+        int IsMoving(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->isMoving());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is turning.
+         *
+         * @return bool isTurning
+         */
+        int IsTurning(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->isTurning());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is hovering.
+         *
+         * @return bool IsHovering
+         */
+        int IsHovering(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsHovering());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is swimming.
+         *
+         * @return bool isSwimming
+         */
+        int IsSwimming(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->isSwimming());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is flying.
+         *
+         * @return bool IsFlying
+         */
+        int IsFlying(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsFlying());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is falling.
+         *
+         * @return bool IsFalling
+         */
+        int IsFalling(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsFalling());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is being loaded.
+         *
+         * @return bool isBeingLoaded
+         */
+        int IsBeingLoaded(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->isBeingLoaded());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is during remove from world.
+         *
+         * @return bool IsDuringRemoveFromWorld
+         */
+        int IsDuringRemoveFromWorld(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsDuringRemoveFromWorld());
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is target not acceptable by mmaps.
+         *
+         * @return bool isTargetNotAcceptableByMMaps
+         */
+        int IsTargetNotAcceptableByMMaps(lua_State* L, Unit* unit)
+        {
+            Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+            uint32 time = Eluna::CHECKVAL<uint32>(L, 3);
+            uint64 guid = Eluna::CHECKVAL<uint64>(L, 4, 0);
+
+            Eluna::Push(L, unit->isTargetNotAcceptableByMMaps(guid, time, target));
+            return 1;
+        }
+
+        /**
+         * Returns true if the [Unit] is outdoors.
+         *
+         * @return bool IsOutdoors
+         */
+        int IsOutdoors(lua_State* L, Unit* unit)
+        {
+            Eluna::Push(L, unit->IsOutdoors());
+            return 1;
+        }
+
+
+        /**
+
+            MAKE IsAlwaysVisibleFor && IsAlwaysDetectableFor PUBLIC
+
+        */
+
+        /**
+         * Returns true if the [Unit] is always visible for target.
+         *
+         * @return bool IsAlwaysVisibleFor
+
+
+        int IsAlwaysVisibleFor(lua_State* L, Unit* unit)
+        {
+            WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2);
+
+            Eluna::Push(L, unit->IsAlwaysVisibleFor(target));
+            return 1;
+        }
+
+
+        /**
+         * Returns true if the [Unit] is always detectable for target.
+         *
+         * @return bool IsAlwaysDetectableFor
+
+
+        int IsAlwaysDetectableFor(lua_State* L, Unit* unit)
+        {
+            WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2);
+
+            Eluna::Push(L, unit->IsAlwaysDetectableFor(target));
+            return 1;
+        }
+
+        */
+    #endif
 };
 #endif
