@@ -1573,8 +1573,9 @@ namespace LuaUnit
         if (newlevel < 1)
             return 0;
 
-        if (newlevel > STRONG_MAX_LEVEL)
-            newlevel = STRONG_MAX_LEVEL;
+        /* error: comparison is always false due to limited range of data type */
+//        if (newlevel > STRONG_MAX_LEVEL)
+//            newlevel = STRONG_MAX_LEVEL;
 
         if (Player* player = unit->ToPlayer())
         {
