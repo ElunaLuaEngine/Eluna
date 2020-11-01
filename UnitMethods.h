@@ -1571,11 +1571,7 @@ namespace LuaUnit
         uint8 newlevel = Eluna::CHECKVAL<uint8>(L, 2);
 
         if (newlevel < 1)
-            return 0;
-
-        /* error: comparison is always false due to limited range of data type */
-//        if (newlevel > STRONG_MAX_LEVEL)
-//            newlevel = STRONG_MAX_LEVEL;
+            return luaL_argerror(L, 2, "level cannot be below 1");
 
         if (Player* player = unit->ToPlayer())
         {
