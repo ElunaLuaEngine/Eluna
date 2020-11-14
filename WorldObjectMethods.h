@@ -736,8 +736,8 @@ namespace LuaWorldObject
      *         TEMPSUMMON_TIMED_DESPAWN               = 3, // despawns after a specified time
      *         TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT = 4, // despawns after a specified time after the creature is out of combat
      *         TEMPSUMMON_CORPSE_DESPAWN              = 5, // despawns instantly after death
-     *         TEMPSUMMON_CORPSE_TIMED_DESPAWN        = 6, // despawns after a specified time after death
-     *         TEMPSUMMON_DEAD_DESPAWN                = 7, // despawns when the creature disappears
+     *         TEMPSPAWN_CORPSE_TIMED_DESPAWN        = 6, // despawns after a specified time after death
+     *         TEMPSPAWN_DEAD_DESPAWN                = 7, // despawns when the creature disappears
      *         TEMPSUMMON_MANUAL_DESPAWN              = 8, // despawns when UnSummon() is called
      *         TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN = 9, // despawns after a specified time (OOC) OR when the creature dies
      *         TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN   = 10 // despawns after a specified time (OOC) OR when the creature disappears
@@ -762,43 +762,43 @@ namespace LuaWorldObject
         uint32 spawnType = Eluna::CHECKVAL<uint32>(L, 7, 8);
         uint32 despawnTimer = Eluna::CHECKVAL<uint32>(L, 8, 0);
 
-        TempSummonType type;
+        TempSpawnType type;
         switch (spawnType)
         {
             case 1:
-                type = TEMPSUMMON_TIMED_OR_DEAD_DESPAWN;
+                type = TEMPSPAWN_TIMED_OR_DEAD_DESPAWN;
                 break;
             case 2:
-                type = TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN;
+                type = TEMPSPAWN_TIMED_OR_CORPSE_DESPAWN;
                 break;
             case 3:
-                type = TEMPSUMMON_TIMED_DESPAWN;
+                type = TEMPSPAWN_TIMED_DESPAWN;
                 break;
             case 4:
 #if defined TRINITY || AZEROTHCORE
                 type = TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT;
 #else
-                type = TEMPSUMMON_TIMED_OOC_DESPAWN;
+                type = TEMPSPAWN_TIMED_OOC_DESPAWN;
 #endif
                 break;
             case 5:
-                type = TEMPSUMMON_CORPSE_DESPAWN;
+                type = TEMPSPAWN_CORPSE_DESPAWN;
                 break;
             case 6:
-                type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
+                type = TEMPSPAWN_CORPSE_TIMED_DESPAWN;
                 break;
             case 7:
-                type = TEMPSUMMON_DEAD_DESPAWN;
+                type = TEMPSPAWN_DEAD_DESPAWN;
                 break;
             case 8:
-                type = TEMPSUMMON_MANUAL_DESPAWN;
+                type = TEMPSPAWN_MANUAL_DESPAWN;
                 break;
 #if !defined TRINITY && !AZEROTHCORE
             case 9:
-                type = TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN;
+                type = TEMPSPAWN_TIMED_OOC_OR_CORPSE_DESPAWN;
                 break;
             case 10:
-                type = TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN;
+                type = TEMPSPAWN_TIMED_OOC_OR_DEAD_DESPAWN;
                 break;
 #endif
             default:
