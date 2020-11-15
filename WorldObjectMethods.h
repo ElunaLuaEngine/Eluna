@@ -762,7 +762,11 @@ namespace LuaWorldObject
         uint32 spawnType = Eluna::CHECKVAL<uint32>(L, 7, 8);
         uint32 despawnTimer = Eluna::CHECKVAL<uint32>(L, 8, 0);
 
+#if defined TRINITY || AZEROTHCORE
+        TempSummonType type;
+#else
         TempSpawnType type;
+#endif
         switch (spawnType)
         {
             case 1:
