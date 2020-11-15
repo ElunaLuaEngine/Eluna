@@ -736,8 +736,8 @@ namespace LuaWorldObject
      *         TEMPSUMMON_TIMED_DESPAWN               = 3, // despawns after a specified time
      *         TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT = 4, // despawns after a specified time after the creature is out of combat
      *         TEMPSUMMON_CORPSE_DESPAWN              = 5, // despawns instantly after death
-     *         TEMPSPAWN_CORPSE_TIMED_DESPAWN        = 6, // despawns after a specified time after death
-     *         TEMPSPAWN_DEAD_DESPAWN                = 7, // despawns when the creature disappears
+     *         TEMPSUMMON_CORPSE_TIMED_DESPAWN        = 6, // despawns after a specified time after death
+     *         TEMPSUMMON_DEAD_DESPAWN                = 7, // despawns when the creature disappears
      *         TEMPSUMMON_MANUAL_DESPAWN              = 8, // despawns when UnSummon() is called
      *         TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN = 9, // despawns after a specified time (OOC) OR when the creature dies
      *         TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN   = 10 // despawns after a specified time (OOC) OR when the creature disappears
@@ -764,9 +764,37 @@ namespace LuaWorldObject
 
 #if defined TRINITY || AZEROTHCORE
         TempSummonType type;
+        switch (spawnType)
+        {
+            case 1:
+                type = TEMPSUMMON_TIMED_OR_DEAD_DESPAWN;
+                break;
+            case 2:
+                type = TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN;
+                break;
+            case 3:
+                type = TEMPSUMMON_TIMED_DESPAWN;
+                break;
+            case 4:
+                type = TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT;
+                break;
+            case 5:
+                type = TEMPSUMMON_CORPSE_DESPAWN;
+                break;
+            case 6:
+                type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
+                break;
+            case 7:
+                type = TEMPSUMMON_DEAD_DESPAWN;
+                break;
+            case 8:
+                type = TEMPSUMMON_MANUAL_DESPAWN;
+                break;
+            default:
+                return luaL_argerror(L, 7, "valid SpawnType expected");
+        }
 #else
         TempSpawnType type;
-#endif
         switch (spawnType)
         {
             case 1:
@@ -779,11 +807,7 @@ namespace LuaWorldObject
                 type = TEMPSPAWN_TIMED_DESPAWN;
                 break;
             case 4:
-#if defined TRINITY || AZEROTHCORE
-                type = TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT;
-#else
                 type = TEMPSPAWN_TIMED_OOC_DESPAWN;
-#endif
                 break;
             case 5:
                 type = TEMPSPAWN_CORPSE_DESPAWN;
@@ -797,17 +821,16 @@ namespace LuaWorldObject
             case 8:
                 type = TEMPSPAWN_MANUAL_DESPAWN;
                 break;
-#if !defined TRINITY && !AZEROTHCORE
             case 9:
                 type = TEMPSPAWN_TIMED_OOC_OR_CORPSE_DESPAWN;
                 break;
             case 10:
                 type = TEMPSPAWN_TIMED_OOC_OR_DEAD_DESPAWN;
                 break;
-#endif
             default:
                 return luaL_argerror(L, 7, "valid SpawnType expected");
         }
+#endif
 #ifdef TRINITY
         Eluna::Push(L, obj->SummonCreature(entry, x, y, z, o, type, Seconds(despawnTimer)));
 #else
