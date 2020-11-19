@@ -61,9 +61,15 @@ private:
     std::string lastSaveData;
 
 public:
+#if defined TRINITY
+    ElunaInstanceAI(InstanceMap* map) : InstanceData(map)
+    {
+    }
+#else
     ElunaInstanceAI(Map* map) : InstanceData(map)
     {
     }
+#endif
 
 #ifndef TRINITY
     void Initialize() override;
