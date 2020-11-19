@@ -1256,7 +1256,7 @@ InstanceData* Eluna::GetInstanceData(InstanceMap* map)
     return NULL;
 }
 
-bool Eluna::HasInstanceData(InstanceMap const* map)
+bool Eluna::HasInstanceData(InstanceMap* map)
 {
     if (!map->Instanceable())
         return continentDataRefs.find(map->GetId()) != continentDataRefs.end();
@@ -1264,7 +1264,7 @@ bool Eluna::HasInstanceData(InstanceMap const* map)
         return instanceDataRefs.find(map->GetInstanceId()) != instanceDataRefs.end();
 }
 
-void Eluna::CreateInstanceData(InstanceMap const* map)
+void Eluna::CreateInstanceData(InstanceMap* map)
 {
     ASSERT(lua_istable(L, -1));
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
