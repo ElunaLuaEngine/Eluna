@@ -1236,6 +1236,67 @@ CreatureAI* Eluna::GetAI(Creature* creature)
     return NULL;
 }
 
+#if defined TRINITY
+InstanceData* Eluna::GetInstanceData(InstanceMap* map)
+{
+    if (!IsEnabled())
+        return NULL;
+
+    for (int i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
+    {
+        Hooks::InstanceEvents event_id = (Hooks::InstanceEvents)i;
+
+        auto key = EntryKey<Hooks::InstanceEvents>(event_id, map->GetId());
+
+        if (MapEventBindings->HasBindingsFor(key) ||
+            InstanceEventBindings->HasBindingsFor(key))
+            return new ElunaInstanceAI(map);
+    }
+
+    return NULL;
+}
+
+bool Eluna::HasInstanceData(InstanceMap const* map)
+{
+    if (!map->Instanceable())
+        return continentDataRefs.find(map->GetId()) != continentDataRefs.end();
+    else
+        return instanceDataRefs.find(map->GetInstanceId()) != instanceDataRefs.end();
+}
+
+void Eluna::CreateInstanceData(InstanceMap const* map)
+{
+    ASSERT(lua_istable(L, -1));
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+
+    if (!map->Instanceable())
+    {
+        uint32 mapId = map->GetId();
+
+        // If there's another table that was already stored for the map, unref it.
+        auto mapRef = continentDataRefs.find(mapId);
+        if (mapRef != continentDataRefs.end())
+        {
+            luaL_unref(L, LUA_REGISTRYINDEX, mapRef->second);
+        }
+
+        continentDataRefs[mapId] = ref;
+    }
+    else
+    {
+        uint32 instanceId = map->GetInstanceId();
+
+        // If there's another table that was already stored for the instance, unref it.
+        auto instRef = instanceDataRefs.find(instanceId);
+        if (instRef != instanceDataRefs.end())
+        {
+            luaL_unref(L, LUA_REGISTRYINDEX, instRef->second);
+        }
+
+        instanceDataRefs[instanceId] = ref;
+    }
+}
+#else
 InstanceData* Eluna::GetInstanceData(Map* map)
 {
     if (!IsEnabled())
@@ -1295,6 +1356,7 @@ void Eluna::CreateInstanceData(Map const* map)
         instanceDataRefs[instanceId] = ref;
     }
 }
+#endif
 
 /*
  * Unrefs the instanceId related events and data
