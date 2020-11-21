@@ -347,7 +347,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature);
 #if defined TRINITY
-    InstanceData* GetInstanceData((InstanceMap* map);
+    InstanceData* GetInstanceData(InstanceMap* map);
 #else
     InstanceData* GetInstanceData(Map* map);
 #endif
