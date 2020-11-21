@@ -297,13 +297,21 @@ public:
     /*
      * Returns `true` if Eluna has instance data for `map`.
      */
+#if defined TRINITY
+    bool HasInstanceData(InstanceMap const* map);
+#else
     bool HasInstanceData(Map const* map);
+#endif
 
     /*
      * Use the top element of the stack as the instance data table for `map`,
      *   then pops it off the stack.
      */
+#if defined TRINITY
+    void CreateInstanceData(InstanceMap const* map);
+#else
     void CreateInstanceData(Map const* map);
+#endif
 
     /*
      * Retrieve the instance data for the `Map` scripted by `ai` and push it
@@ -338,7 +346,11 @@ public:
     static ElunaObject* CHECKTYPE(lua_State* luastate, int narg, const char *tname, bool error = true);
 
     CreatureAI* GetAI(Creature* creature);
+#if defined TRINITY
+    InstanceData* GetInstanceData((InstanceMap* map);
+#else
     InstanceData* GetInstanceData(Map* map);
+#endif
     void FreeInstanceId(uint32 instanceId);
 
     /* Custom */
