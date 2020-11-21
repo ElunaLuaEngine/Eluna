@@ -1,4 +1,7 @@
-# mod-LuaEngine
+# ![logo](https://raw.githubusercontent.com/azerothcore/azerothcore.github.io/master/images/logo-github.png) AzerothCore
+## mod-LuaEngine
+- Latest build status with azerothcore: [![Build Status](https://github.com/azerothcore/mod-eluna-lua-engine/workflows/core-build/badge.svg?branch=master&event=push)](https://github.com/azerothcore/mod-eluna-lua-engine)
+
 [english](README.md) | [中文说明](README_CN.md) | [Español](README_ES.md)
 
 a Eluna module for AzerothCore.
