@@ -762,6 +762,7 @@ namespace LuaWorldObject
         uint32 spawnType = Eluna::CHECKVAL<uint32>(L, 7, 8);
         uint32 despawnTimer = Eluna::CHECKVAL<uint32>(L, 8, 0);
 
+#if defined TRINITY || AZEROTHCORE
         TempSummonType type;
         switch (spawnType)
         {
@@ -775,11 +776,7 @@ namespace LuaWorldObject
                 type = TEMPSUMMON_TIMED_DESPAWN;
                 break;
             case 4:
-#if defined TRINITY || AZEROTHCORE
                 type = TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT;
-#else
-                type = TEMPSUMMON_TIMED_OOC_DESPAWN;
-#endif
                 break;
             case 5:
                 type = TEMPSUMMON_CORPSE_DESPAWN;
@@ -793,17 +790,47 @@ namespace LuaWorldObject
             case 8:
                 type = TEMPSUMMON_MANUAL_DESPAWN;
                 break;
-#if !defined TRINITY && !AZEROTHCORE
-            case 9:
-                type = TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN;
-                break;
-            case 10:
-                type = TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN;
-                break;
-#endif
             default:
                 return luaL_argerror(L, 7, "valid SpawnType expected");
         }
+#else
+        TempSpawnType type;
+        switch (spawnType)
+        {
+            case 1:
+                type = TEMPSPAWN_TIMED_OR_DEAD_DESPAWN;
+                break;
+            case 2:
+                type = TEMPSPAWN_TIMED_OR_CORPSE_DESPAWN;
+                break;
+            case 3:
+                type = TEMPSPAWN_TIMED_DESPAWN;
+                break;
+            case 4:
+                type = TEMPSPAWN_TIMED_OOC_DESPAWN;
+                break;
+            case 5:
+                type = TEMPSPAWN_CORPSE_DESPAWN;
+                break;
+            case 6:
+                type = TEMPSPAWN_CORPSE_TIMED_DESPAWN;
+                break;
+            case 7:
+                type = TEMPSPAWN_DEAD_DESPAWN;
+                break;
+            case 8:
+                type = TEMPSPAWN_MANUAL_DESPAWN;
+                break;
+            case 9:
+                type = TEMPSPAWN_TIMED_OOC_OR_CORPSE_DESPAWN;
+                break;
+            case 10:
+                type = TEMPSPAWN_TIMED_OOC_OR_DEAD_DESPAWN;
+                break;
+            default:
+                return luaL_argerror(L, 7, "valid SpawnType expected");
+        }
+#endif
 #ifdef TRINITY
         Eluna::Push(L, obj->SummonCreature(entry, x, y, z, o, type, Seconds(despawnTimer)));
 #else
