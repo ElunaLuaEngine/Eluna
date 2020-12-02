@@ -226,8 +226,7 @@ namespace LuaObject
     int GetUInt64Value(lua_State* L, Object* obj)
     {
         uint16 index = Eluna::CHECKVAL<uint16>(L, 2);
-        obj->GetUInt64Value(index);
-        return 0;
+        return obj->GetUInt64Value(index);
     }
 
     /**
