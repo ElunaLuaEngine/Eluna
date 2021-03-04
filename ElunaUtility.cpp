@@ -10,6 +10,9 @@
 #include "Unit.h"
 #include "GameObject.h"
 #include "DBCStores.h"
+#ifdef MANGOS
+#include "Timer.h"
+#endif
 
 uint32 ElunaUtil::GetCurrTime()
 {
