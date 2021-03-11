@@ -2158,7 +2158,7 @@ namespace LuaGlobalFunctions
 #endif
                 draft.AddItem(item);
 
-                if (!mailGUID > 0)
+                if (mailGUID <= 0)
                 {
                     mailGUID = item->GetGUIDLow();
                     Eluna::Push(L, mailGUID);
