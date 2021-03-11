@@ -2158,19 +2158,16 @@ namespace LuaGlobalFunctions
 #endif
                 draft.AddItem(item);
 
+
+                if (mailGUID <= 0)
+                {
 #if defined AZEROTHCORE
-                if (mailGUID <= 0)
-                {
                     mailGUID = item->GetGUIDLow();
-                    Eluna::Push(L, mailGUID);
-                }
 #elif defined TRINITY
-                if (mailGUID <= 0)
-                {
                     mailGUID = item->GetGUID();
+#endif
                     Eluna::Push(L, mailGUID);
                 }
-#endif
                 ++addedItems;
             }
         }
