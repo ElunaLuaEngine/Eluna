@@ -2158,12 +2158,19 @@ namespace LuaGlobalFunctions
 #endif
                 draft.AddItem(item);
 
+#if defined AZEROTHCORE
                 if (mailGUID <= 0)
                 {
                     mailGUID = item->GetGUIDLow();
                     Eluna::Push(L, mailGUID);
                 }
-
+#elif defined TRINITY
+                if (mailGUID <= 0)
+                {
+                    mailGUID = item->GetGUID();
+                    Eluna::Push(L, mailGUID);
+                }
+#endif
                 ++addedItems;
             }
         }
@@ -2175,7 +2182,11 @@ namespace LuaGlobalFunctions
 #else
         draft.SendMailTo(MailReceiver(receiverPlayer, MAKE_NEW_GUID(receiverGUIDLow, 0, HIGHGUID_PLAYER)), sender);
 #endif
+#if defined TRINITY || AZEROTHCORE
         return 1;
+#else
+        return 0;
+#endif
     }
 
     /**
