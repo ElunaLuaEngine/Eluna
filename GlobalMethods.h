@@ -2128,7 +2128,6 @@ namespace LuaGlobalFunctions
         SQLTransaction trans = CharacterDatabase.BeginTransaction();
 #endif
         uint8 addedItems = 0;
-        uint32 mailGUID = 0;
         while (addedItems <= MAX_MAIL_ITEMS && i + 2 <= argAmount)
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, ++i);
@@ -2157,17 +2156,9 @@ namespace LuaGlobalFunctions
                 item->SaveToDB();
 #endif
                 draft.AddItem(item);
-
-
-                if (mailGUID <= 0)
-                {
 #if defined AZEROTHCORE
-                    mailGUID = item->GetGUIDLow();
-#elif defined TRINITY
-                    mailGUID = item->GetGUID();
+                Eluna::Push(L, item->GetGUIDLow());
 #endif
-                    Eluna::Push(L, mailGUID);
-                }
                 ++addedItems;
             }
         }
@@ -2179,8 +2170,8 @@ namespace LuaGlobalFunctions
 #else
         draft.SendMailTo(MailReceiver(receiverPlayer, MAKE_NEW_GUID(receiverGUIDLow, 0, HIGHGUID_PLAYER)), sender);
 #endif
-#if defined TRINITY || AZEROTHCORE
-        return 1;
+#if defined AZEROTHCORE
+        return addedItems;
 #else
         return 0;
 #endif
