@@ -2156,7 +2156,9 @@ namespace LuaGlobalFunctions
                 item->SaveToDB();
 #endif
                 draft.AddItem(item);
-#if defined AZEROTHCORE
+#if defined TRINITY
+                Eluna::Push(L, item->GetGUID().GetCounter());
+#else
                 Eluna::Push(L, item->GetGUIDLow());
 #endif
                 ++addedItems;
@@ -2170,11 +2172,7 @@ namespace LuaGlobalFunctions
 #else
         draft.SendMailTo(MailReceiver(receiverPlayer, MAKE_NEW_GUID(receiverGUIDLow, 0, HIGHGUID_PLAYER)), sender);
 #endif
-#if defined AZEROTHCORE
         return addedItems;
-#else
-        return 0;
-#endif
     }
 
     /**
