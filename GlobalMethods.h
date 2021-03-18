@@ -199,7 +199,13 @@ namespace LuaGlobalFunctions
         });
 #else
         {
+#ifdef TRINITY
             std::shared_lock<std::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+#elif defined(AZEROTHCORE)
+            std::shared_lock<std::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+#else
+        HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
+#endif
             const HashMapHolder<Player>::MapType& m = eObjectAccessor()GetPlayers();
             for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
             {
