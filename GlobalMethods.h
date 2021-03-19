@@ -2093,6 +2093,7 @@ namespace LuaGlobalFunctions
      * @param uint32 cod = 0 : cod money amount
      * @param uint32 entry = 0 : entry of an [Item] to send with mail
      * @param uint32 amount = 0 : amount of the [Item] to send with mail
+     * @return uint32 itemGUIDlow : low GUID of the item. Up to 12 values returned, returns nil if no further items are sent
      */
     int SendMail(lua_State* L)
     {
