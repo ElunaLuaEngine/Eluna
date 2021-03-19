@@ -2692,19 +2692,17 @@ namespace LuaPlayer
      * Removes the [Spell] from the [Player]
      *
      * @param uint32 entry : entry of a [Spell]
-     * @param bool disabled = false
-     * @param bool learnLowRank = true
      */
     int RemoveSpell(lua_State* L, Player* player)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
-        bool disabled = Eluna::CHECKVAL<bool>(L, 3, false);
-        bool learn_low_rank = Eluna::CHECKVAL<bool>(L, 4, true);
 
 #ifdef TRINITY
-        player->RemoveSpell(entry, disabled, learn_low_rank);
+        player->RemoveSpell(entry);
+#elif defined (AZEROTHCORE)
+        player->removeSpell(entry, SPEC_MASK_ALL, false);
 #else
-        player->removeSpell(entry, disabled, learn_low_rank);
+        player->removeSpell(entry);
 #endif
         return 0;
     }
