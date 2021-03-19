@@ -2463,10 +2463,14 @@ namespace LuaPlayer
             for (BoundInstancesMap::const_iterator itr = binds.begin(); itr != binds.end();)
             {
                 if (itr->first != player->GetMapId())
-                    //player->UnbindInstance(itr, Difficulty(i));
+                {
                     sInstanceSaveMgr->PlayerUnbindInstance(player->GetGUIDLow(), itr->first, Difficulty(i), true, player);
+                    itr = binds.begin();
+                }
                 else
+                {
                     ++itr;
+                }
             }
         }
 #else
