@@ -235,6 +235,18 @@ namespace LuaCreature
     }
 
     /**
+     * Returns `true` if the [Creature]'s flags_extra includes Dungeon Boss (0x1000000),
+     *   and returns `false` otherwise.
+     *
+     * @return bool isDungeonBoss
+     */
+    int IsDungeonBoss(lua_State* L, Creature* creature)
+    {
+        Eluna::Push(L, creature->IsDungeonBoss());
+        return 1;
+    }
+
+    /**
      * Returns `true` if the [Creature]'s rank is Boss,
      *   and returns `false` otherwise.
      *

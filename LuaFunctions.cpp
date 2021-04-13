@@ -809,6 +809,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "SetEquipmentSlots", &LuaCreature::SetEquipmentSlots },
 
     // Boolean
+    { "IsDungeonBoss", &LuaCreature::IsWorldBoss },
     { "IsWorldBoss", &LuaCreature::IsWorldBoss },
     { "IsRacialLeader", &LuaCreature::IsRacialLeader },
     { "IsCivilian", &LuaCreature::IsCivilian },
