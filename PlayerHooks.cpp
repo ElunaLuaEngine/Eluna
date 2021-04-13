@@ -106,6 +106,15 @@ void Eluna::OnQuestAbandon(Player* pPlayer, uint32 questId)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void Eluna::OnQuestComplete(Player* pPlayer, Creature* creature, Quest const* pQuest)
+{
+    START_HOOK(PLAYER_EVENT_ON_QUEST_COMPLETE);
+    Push(pPlayer);
+    Push(creature);
+    Push(questId);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
 void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
 {
     START_HOOK(PLAYER_EVENT_ON_EQUIP);
