@@ -242,7 +242,11 @@ namespace LuaCreature
      */
     int IsDungeonBoss(lua_State* L, Creature* creature)
     {
+#if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->IsDungeonBoss());
+#else
+        Eluna::Push(L, creature->IsWorldBoss());
+#endif
         return 1;
     }
 
