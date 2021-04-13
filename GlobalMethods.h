@@ -700,7 +700,7 @@ namespace LuaGlobalFunctions
      *     // UNUSED                               =     40,       // (event, player)
      *     // UNUSED                               =     41,       // (event, player)
      *     PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - player is nil if command used from console. Can return false
-     *     PLAYER_EVENT_ON_QUEST_COMPLETE          =     43,       // (event, player, creature, quest)
+     *     PLAYER_EVENT_ON_QUEST_COMPLETE          =     43,       // (event, player, gameobject, quest)
      * };
      * </pre>
      *
