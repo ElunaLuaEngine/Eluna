@@ -878,6 +878,24 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
         return 1;
     }
 
+    /**
+     * Returns the [Creature]'s Extra flags.
+     *
+     * These are used to control whether the NPC is a civilian, uses pathfinding,
+     *   if it's a guard, etc.
+     *
+     * @return [ExtraFlags] extraFlags
+     */
+    int GetExtraFlags(lua_State* L, Creature* creature)
+    {
+#if defined(TRINITY) || defined(AZEROTHCORE)
+        Eluna::Push(L, creature->GetCreatureTemplate()->flags_extra);
+#else
+        Eluna::Push(L, creature->GetCreatureInfo()->ExtraFlags);
+#endif
+        return 1;
+    }
+
 #if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     /**
      * Returns the [Creature]'s shield block value.
