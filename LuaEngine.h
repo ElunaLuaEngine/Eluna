@@ -460,7 +460,7 @@ public:
     void OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea);
     void OnMapChanged(Player* pPlayer);
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
-    void OnQuestComplete(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
+    void OnQuestComplete(Player* pPlayer, Object* pObject, Quest const* pQuest);
 
 #ifndef CLASSIC
 #ifndef TBC

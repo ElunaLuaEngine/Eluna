@@ -106,11 +106,11 @@ void Eluna::OnQuestAbandon(Player* pPlayer, uint32 questId)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-void Eluna::OnQuestComplete(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest)
+void Eluna::OnQuestComplete(Player* pPlayer, Object* pObject, Quest const* pQuest)
 {
     START_HOOK(PLAYER_EVENT_ON_QUEST_COMPLETE);
     Push(pPlayer);
-    Push(pGameObject);
+    Push(pObject);
     Push(pQuest);
     CallAllFunctions(PlayerEventBindings, key);
 }
