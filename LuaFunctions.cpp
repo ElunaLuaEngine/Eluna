@@ -783,7 +783,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },
     { "GetNPCFlags", &LuaCreature::GetNPCFlags },
 #if defined(TRINITY) || defined(AZEROTHCORE)
-    { "GetExtraFlags", &LuaCreature::GetNPCFlags },
+    { "GetExtraFlags", &LuaCreature::GetExtraFlags },
 #endif
 #if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
