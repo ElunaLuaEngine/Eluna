@@ -544,3 +544,11 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     CleanUpStack(5);
     return result;
 }
+
+void Eluna::OnExploreNewArea(Player* pPlayer, uint32 areaId)
+{
+    START_HOOK(PLAYER_EVENT_ON_EXPLORE_NEW_AREA);
+    Push(pPlayer);
+    Push(areaId);
+    CallAllFunctions(PlayerEventBindings, key);
+}

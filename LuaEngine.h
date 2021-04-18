@@ -460,6 +460,7 @@ public:
     void OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea);
     void OnMapChanged(Player* pPlayer);
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
+    void OnExploreNewArea(Player* pPlayer, uint32 areaId);
 
 #ifndef CLASSIC
 #ifndef TBC
