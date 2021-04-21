@@ -924,7 +924,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      */
     int GetDBTableGUIDLow(lua_State* L, Creature* creature)
     {
-#if defined(TRINITY)
+#if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->GetSpawnId());
 #else
         // on mangos based this is same as lowguid

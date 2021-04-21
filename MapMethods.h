@@ -205,45 +205,41 @@ namespace LuaMap
     /**
      * Returns a [WorldObject] by its GUID from the map if it is spawned.
      *
-     * @param uint64 guid
+     * @param ObjectGuid guid
      */
     int GetWorldObject(lua_State* L, Map* map)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
 
 #if defined TRINITY || AZEROTHCORE
-        switch (GUID_HIPART(guid))
+        switch (guid.GetHigh())
         {
             case HIGHGUID_PLAYER:
-#ifndef AZEROTHCORE
-                Eluna::Push(L, eObjectAccessor()GetPlayer(map, ObjectGuid(guid)));
-#else
-                Eluna::Push(L, map->GetPlayer(ObjectGuid(guid)));
-#endif // !AZEROTHCORE
+                Eluna::Push(L, eObjectAccessor()GetPlayer(map, guid));
                 break;
             case HIGHGUID_TRANSPORT:
             case HIGHGUID_MO_TRANSPORT:
             case HIGHGUID_GAMEOBJECT:
-                Eluna::Push(L, map->GetGameObject(ObjectGuid(guid)));
+                Eluna::Push(L, map->GetGameObject(guid));
                 break;
             case HIGHGUID_VEHICLE:
             case HIGHGUID_UNIT:
-                Eluna::Push(L, map->GetCreature(ObjectGuid(guid)));
+                Eluna::Push(L, map->GetCreature(guid));
                 break;
             case HIGHGUID_PET:
-                Eluna::Push(L, map->GetPet(ObjectGuid(guid)));
+                Eluna::Push(L, map->GetPet(guid));
                 break;
             case HIGHGUID_DYNAMICOBJECT:
-                Eluna::Push(L, map->GetDynamicObject(ObjectGuid(guid)));
+                Eluna::Push(L, map->GetDynamicObject(guid));
                 break;
             case HIGHGUID_CORPSE:
-                Eluna::Push(L, map->GetCorpse(ObjectGuid(guid)));
+                Eluna::Push(L, map->GetCorpse(guid));
                 break;
             default:
                 break;
         }
 #else
-        Eluna::Push(L, map->GetWorldObject(ObjectGuid(guid)));
+        Eluna::Push(L, map->GetWorldObject(guid));
 #endif
         return 1;
     }

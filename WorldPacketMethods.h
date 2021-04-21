@@ -163,11 +163,11 @@ namespace LuaPacket
     /**
      * Reads and returns an unsigned 64-bit integer value from the [WorldPacket].
      *
-     * @return uint64 value : value returned as string
+     * @return ObjectGuid value : value returned as string
      */
     int ReadGUID(lua_State* L, WorldPacket* packet)
     {
-        uint64 guid;
+        ObjectGuid guid;
         (*packet) >> guid;
         Eluna::Push(L, guid);
         return 1;
@@ -189,11 +189,11 @@ namespace LuaPacket
     /**
      * Writes an unsigned 64-bit integer value to the [WorldPacket].
      *
-     * @param uint64 value : the value to be written to the [WorldPacket]
+     * @param ObjectGuid value : the value to be written to the [WorldPacket]
      */
     int WriteGUID(lua_State* L, WorldPacket* packet)
     {
-        uint64 guid = Eluna::CHECKVAL<uint64>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
         (*packet) << guid;
         return 0;
     }

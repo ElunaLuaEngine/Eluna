@@ -160,10 +160,8 @@ namespace LuaGameObject
      */
     int GetDBTableGUIDLow(lua_State* L, GameObject* go)
     {
-#ifdef TRINITY
+#if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, go->GetSpawnId());
-#elif AZEROTHCORE
-        Eluna::Push(L, go->GetDBTableGUIDLow());
 #else
         // on mangos based this is same as lowguid
         Eluna::Push(L, go->GetGUIDLow());
