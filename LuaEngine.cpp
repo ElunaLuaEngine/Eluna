@@ -749,6 +749,10 @@ void Eluna::Push(lua_State* luastate, Object const* obj)
             ElunaTemplate<Object>::Push(luastate, obj);
     }
 }
+void Eluna::Push(lua_State* luastate, ObjectGuid const guid)
+{
+    ElunaTemplate<unsigned long long>::Push(luastate, new unsigned long long(guid.GetRawValue()));
+}
 
 static int CheckIntegerRange(lua_State* luastate, int narg, int min, int max)
 {
@@ -851,6 +855,10 @@ template<> unsigned long Eluna::CHECKVAL<unsigned long>(lua_State* luastate, int
 {
     return static_cast<unsigned long>(CHECKVAL<unsigned long long>(luastate, narg));
 }
+template<> ObjectGuid Eluna::CHECKVAL<ObjectGuid>(lua_State* luastate, int narg)
+{
+    return ObjectGuid(uint64((CHECKVAL<unsigned long long>(luastate, narg))));
+}
 
 template<> Object* Eluna::CHECKOBJ<Object>(lua_State* luastate, int narg, bool error)
 {
@@ -936,7 +944,7 @@ static void createCancelCallback(lua_State* L, uint64 bindingID, BindingMap<K>* 
 }
 
 // Saves the function reference ID given to the register type's store for given entry under the given event
-int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, uint64 guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
+int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
 {
     uint64 bindingID;
 
@@ -1037,7 +1045,7 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, uint64 guid, uint
                 }
                 else
                 {
-                    if (guid == 0)
+                    if (guid.IsEmpty())
                     {
                         luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
                         luaL_error(L, "guid was 0!");
@@ -1167,7 +1175,7 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, uint64 guid, uint
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     std::ostringstream oss;
-    oss << "regtype " << static_cast<uint32>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " << guid << ", instance " << instanceId;
+    oss << "regtype " << static_cast<uint32>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " << guid.GetRawValue() << ", instance " << instanceId;
     luaL_error(L, "Unknown event type (%s)", oss.str().c_str());
     return 0;
 }

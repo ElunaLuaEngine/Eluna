@@ -188,7 +188,7 @@ private:
     // Some helpers for hooks to call event handlers.
     // The bodies of the templates are in HookHelpers.h, so if you want to use them you need to #include "HookHelpers.h".
     template<typename K1, typename K2> int SetupStack(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, int number_of_arguments);
-                                       int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);          
+                                       int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
                                        void CleanUpStack(int number_of_arguments);
     template<typename T>               void ReplaceArgument(T value, uint8 index);
     template<typename K1, typename K2> void CallAllFunctions(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2);
@@ -223,6 +223,7 @@ private:
     void Push(const double value)               { Push(L, value); ++push_counter; }
     void Push(const std::string& value)         { Push(L, value); ++push_counter; }
     void Push(const char* value)                { Push(L, value); ++push_counter; }
+    void Push(ObjectGuid const value)           { Push(L, value); ++push_counter; }
     template<typename T>
     void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
 
@@ -288,6 +289,7 @@ public:
     static void Push(lua_State* luastate, Unit const* unit);
     static void Push(lua_State* luastate, Pet const* pet);
     static void Push(lua_State* luastate, TempSummon const* summon);
+    static void Push(lua_State* luastate, ObjectGuid const guid);
     template<typename T>
     static void Push(lua_State* luastate, T const* ptr)
     {
@@ -323,7 +325,7 @@ public:
     bool IsEnabled() const { return enabled && IsInitialized(); }
     bool HasLuaState() const { return L != NULL; }
     uint64 GetCallstackId() const { return callstackid; }
-    int Register(lua_State* L, uint8 reg, uint32 entry, uint64 guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
+    int Register(lua_State* L, uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* luastate, int narg);
@@ -345,7 +347,7 @@ public:
     void OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj);
     bool OnCommand(Player* player, const char* text);
     void OnWorldUpdate(uint32 diff);
-    void OnLootItem(Player* pPlayer, Item* pItem, uint32 count, uint64 guid);
+    void OnLootItem(Player* pPlayer, Item* pItem, uint32 count, ObjectGuid guid);
     void OnLootMoney(Player* pPlayer, uint32 amount);
     void OnFirstLogin(Player* pPlayer);
     void OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
@@ -449,7 +451,7 @@ public:
     bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Channel* pChannel);
     bool OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, Player* pReceiver);
     void OnEmote(Player* pPlayer, uint32 emote);
-    void OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint64 guid);
+    void OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, ObjectGuid guid);
     void OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck);
     void OnLogin(Player* pPlayer);
     void OnLogout(Player* pPlayer);
@@ -498,12 +500,12 @@ public:
     void OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playerGuid, uint32 itemOrMoney, uint16 itemStackCount, uint8 destTabId);
 
     /* Group */
-    void OnAddMember(Group* group, uint64 guid);
-    void OnInviteMember(Group* group, uint64 guid);
-    void OnRemoveMember(Group* group, uint64 guid, uint8 method);
-    void OnChangeLeader(Group* group, uint64 newLeaderGuid, uint64 oldLeaderGuid);
+    void OnAddMember(Group* group, ObjectGuid guid);
+    void OnInviteMember(Group* group, ObjectGuid guid);
+    void OnRemoveMember(Group* group, ObjectGuid guid, uint8 method);
+    void OnChangeLeader(Group* group, ObjectGuid newLeaderGuid, ObjectGuid oldLeaderGuid);
     void OnDisband(Group* group);
-    void OnCreate(Group* group, uint64 leaderGuid, GroupType groupType);
+    void OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType);
 
     /* Map */
     void OnCreate(Map* map);

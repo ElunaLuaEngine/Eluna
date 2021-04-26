@@ -20,7 +20,7 @@ using namespace Hooks;
         return;\
     LOCK_ELUNA
 
-void Eluna::OnAddMember(Group* group, uint64 guid)
+void Eluna::OnAddMember(Group* group, ObjectGuid guid)
 {
     START_HOOK(GROUP_EVENT_ON_MEMBER_ADD);
     Push(group);
@@ -28,7 +28,7 @@ void Eluna::OnAddMember(Group* group, uint64 guid)
     CallAllFunctions(GroupEventBindings, key);
 }
 
-void Eluna::OnInviteMember(Group* group, uint64 guid)
+void Eluna::OnInviteMember(Group* group, ObjectGuid guid)
 {
     START_HOOK(GROUP_EVENT_ON_MEMBER_INVITE);
     Push(group);
@@ -36,7 +36,7 @@ void Eluna::OnInviteMember(Group* group, uint64 guid)
     CallAllFunctions(GroupEventBindings, key);
 }
 
-void Eluna::OnRemoveMember(Group* group, uint64 guid, uint8 method)
+void Eluna::OnRemoveMember(Group* group, ObjectGuid guid, uint8 method)
 {
     START_HOOK(GROUP_EVENT_ON_MEMBER_REMOVE);
     Push(group);
@@ -45,7 +45,7 @@ void Eluna::OnRemoveMember(Group* group, uint64 guid, uint8 method)
     CallAllFunctions(GroupEventBindings, key);
 }
 
-void Eluna::OnChangeLeader(Group* group, uint64 newLeaderGuid, uint64 oldLeaderGuid)
+void Eluna::OnChangeLeader(Group* group, ObjectGuid newLeaderGuid, ObjectGuid oldLeaderGuid)
 {
     START_HOOK(GROUP_EVENT_ON_LEADER_CHANGE);
     Push(group);
@@ -61,7 +61,7 @@ void Eluna::OnDisband(Group* group)
     CallAllFunctions(GroupEventBindings, key);
 }
 
-void Eluna::OnCreate(Group* group, uint64 leaderGuid, GroupType groupType)
+void Eluna::OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType)
 {
     START_HOOK(GROUP_EVENT_ON_CREATE);
     Push(group);

@@ -163,8 +163,8 @@ namespace LuaObject
      * the same GUID but not on the same map.
      * 
      * On TrinityCore this value is unique across all maps
-     *
-     * @return uint64 guid
+     * 
+     * @return ObjectGuid guid
      */
     int GetGUID(lua_State* L, Object* obj)
     {
@@ -186,7 +186,7 @@ namespace LuaObject
      */
     int GetGUIDLow(lua_State* L, Object* obj)
     {
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, obj->GetGUID().GetCounter());
 #else
         Eluna::Push(L, obj->GetGUIDLow());

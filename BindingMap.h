@@ -251,10 +251,10 @@ template <typename T>
 struct UniqueObjectKey
 {
     T event_id;
-    uint64 guid;
+    ObjectGuid guid;
     uint32 instance_id;
 
-    UniqueObjectKey(T event_id, uint64 guid, uint32 instance_id) :
+    UniqueObjectKey(T event_id, ObjectGuid guid, uint32 instance_id) :
         event_id(event_id),
         guid(guid),
         instance_id(instance_id)
@@ -367,7 +367,7 @@ namespace std
 
         hash_helper::result_type operator()(argument_type const& k) const
         {
-            return hash_helper::hash(k.event_id, k.instance_id, k.guid);
+            return hash_helper::hash(k.event_id, k.instance_id, k.guid.GetRawValue());
         }
     };
 }

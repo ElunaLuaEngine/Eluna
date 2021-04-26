@@ -59,7 +59,7 @@ bool Eluna::OnCommand(Player* player, const char* text)
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 
-void Eluna::OnLootItem(Player* pPlayer, Item* pItem, uint32 count, uint64 guid)
+void Eluna::OnLootItem(Player* pPlayer, Item* pItem, uint32 count, ObjectGuid guid)
 {
     START_HOOK(PLAYER_EVENT_ON_LOOT_ITEM);
     Push(pPlayer);
@@ -311,7 +311,7 @@ void Eluna::OnEmote(Player* pPlayer, uint32 emote)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-void Eluna::OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, uint64 guid)
+void Eluna::OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, ObjectGuid guid)
 {
     START_HOOK(PLAYER_EVENT_ON_TEXT_EMOTE);
     Push(pPlayer);
