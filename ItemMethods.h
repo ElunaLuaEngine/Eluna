@@ -756,11 +756,8 @@ namespace LuaItem
      */
     int SaveToDB(lua_State* /*L*/, Item* item)
     {
-#if defined TRINITY
+#if defined TRINITY || defined AZEROTHCORE
         CharacterDatabaseTransaction trans = CharacterDatabaseTransaction(nullptr);
-        item->SaveToDB(trans);
-#elif defined AZEROTHCORE
-        SQLTransaction trans = SQLTransaction(NULL);
         item->SaveToDB(trans);
 #else
         item->SaveToDB();

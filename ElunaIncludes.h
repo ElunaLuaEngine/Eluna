@@ -40,13 +40,13 @@
 #include "WorldSession.h"
 
 #if defined TRINITY
-#include "GitRevision.h"
 #include "SpellHistory.h"
 #endif
 
 #if defined TRINITY || defined AZEROTHCORE
 #include "Config.h"
 #include "GameEventMgr.h"
+#include "GitRevision.h"
 #include "GroupMgr.h"
 #include "ScriptedCreature.h"
 #include "SpellInfo.h"
@@ -95,26 +95,15 @@ typedef Opcodes                 OpcodesList;
 
 #ifdef TRINITY
 #define CORE_NAME               "TrinityCore"
-#define CORE_VERSION            (GitRevision::GetDate())
-#define eWorld                  (sWorld)
-#define eMapMgr                 (sMapMgr)
-#define eConfigMgr              (sConfigMgr)
-#define eGuildMgr               (sGuildMgr)
-#define eObjectMgr              (sObjectMgr)
-#define eAccountMgr             (sAccountMgr)
-#define eAuctionMgr             (sAuctionMgr)
-#define eGameEventMgr           (sGameEventMgr)
-#define eObjectAccessor()       ObjectAccessor::
 #define REGEN_TIME_FULL
-
-#ifdef CATA
-#define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
-#endif
 #endif
 
 #ifdef AZEROTHCORE
 #define CORE_NAME               "AzerothCore"
-#define CORE_VERSION            ""
+#endif
+
+#if defined TRINITY || defined AZEROTHCORE
+#define CORE_VERSION            (GitRevision::GetFullVersion())
 #define eWorld                  (sWorld)
 #define eMapMgr                 (sMapMgr)
 #define eConfigMgr              (sConfigMgr)
@@ -124,6 +113,10 @@ typedef Opcodes                 OpcodesList;
 #define eAuctionMgr             (sAuctionMgr)
 #define eGameEventMgr           (sGameEventMgr)
 #define eObjectAccessor()       ObjectAccessor::
+#endif
+
+#ifdef CATA
+#define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
 #endif
 
 #if !defined TRINITY && !AZEROTHCORE

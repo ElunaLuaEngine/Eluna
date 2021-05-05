@@ -114,13 +114,18 @@ struct LuaScript
     std::string modulepath;
 };
 
-#define ELUNA_STATE_PTR     "Eluna State Ptr"
+#define ELUNA_STATE_PTR "Eluna State Ptr"
 #define LOCK_ELUNA Eluna::Guard __guard(Eluna::GetLock())
 
-#ifndef TRINITY
-#define TC_GAME_API
+#if defined(TRINITY)
+#define ELUNA_GAME_API TC_GAME_API
+#elif defined(AZEROTHCORE)
+#define ELUNA_GAME_API AC_GAME_API
+#else
+#define ELUNA_GAME_API
 #endif
-class TC_GAME_API Eluna
+
+class ELUNA_GAME_API Eluna
 {
 public:
     typedef std::list<LuaScript> ScriptList;
