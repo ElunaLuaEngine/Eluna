@@ -116,7 +116,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
 
 void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result)
 {
-    START_HOOK_PACKET(PACKET_EVENT_ON_PACKET_SEND, packet.GetOpcode());
+    START_HOOK_PACKET(PACKET_EVENT_ON_PACKET_RECEIVE, packet.GetOpcode());
     Push(new WorldPacket(packet));
     Push(player);
     int n = SetupStack(PacketEventBindings, key, 2);
