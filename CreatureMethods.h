@@ -15,12 +15,25 @@
 namespace LuaCreature
 {
     /**
+     * Sets whether the [Creature] can regenerate health or not.
+     *
+     * @param bool enable = true : `true` to enable health regeneration, `false` to disable it
+     */
+    int SetRegeneratingHealth(lua_State* L, Creature* creature)
+    {
+        bool enable = Eluna::CHECKVAL<bool>(L, 2, true);
+
+        creature->SetRegeneratingHealth(enable);
+        return 0;
+    }
+
+    /**
      * Returns `true` if the [Creature] is set to not give reputation when killed,
      *   and returns `false` otherwise.
      *
      * @return bool reputationDisabled
      */
-    int IsReputationGainDisabled(lua_State* L, Creature* creature)
+    int IsReputationGainDisabled(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->IsReputationGainDisabled());
         return 1;
@@ -33,7 +46,7 @@ namespace LuaCreature
      * @param uint32 questID : the ID of a [Quest]
      * @return bool completesQuest
      */
-    int CanCompleteQuest(lua_State* L, Creature* creature)
+    int CanCompleteQuest(lua_State *L, Creature *creature)
     {
         uint32 quest_id = Eluna::CHECKVAL<uint32>(L, 2);
 
@@ -52,7 +65,7 @@ namespace LuaCreature
      * @param bool mustBeDead = false : if `true`, only returns `true` if the [Creature] is also dead. Otherwise, it must be alive.
      * @return bool targetable
      */
-    int IsTargetableForAttack(lua_State* L, Creature* creature)
+    int IsTargetableForAttack(lua_State *L, Creature *creature)
     {
         bool mustBeDead = Eluna::CHECKVAL<bool>(L, 2, false);
 
@@ -73,10 +86,10 @@ namespace LuaCreature
      * @param bool checkFaction = true : if `true`, the [Creature] must be the same faction as `friend` to assist
      * @return bool canAssist
      */
-    int CanAssistTo(lua_State* L, Creature* creature)
+    int CanAssistTo(lua_State *L, Creature *creature)
     {
-        Unit* u = Eluna::CHECKOBJ<Unit>(L, 2);
-        Unit* enemy = Eluna::CHECKOBJ<Unit>(L, 3);
+        Unit *u = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit *enemy = Eluna::CHECKOBJ<Unit>(L, 3);
         bool checkfaction = Eluna::CHECKVAL<bool>(L, 4, true);
 
         Eluna::Push(L, creature->CanAssistTo(u, enemy, checkfaction));
@@ -89,7 +102,7 @@ namespace LuaCreature
      *
      * @return bool searchedForAssistance
      */
-    int HasSearchedAssistance(lua_State* L, Creature* creature)
+    int HasSearchedAssistance(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->HasSearchedAssistance());
         return 1;
@@ -101,9 +114,9 @@ namespace LuaCreature
      *
      * @return bool tapped
      */
-    int IsTappedBy(lua_State* L, Creature* creature)
+    int IsTappedBy(lua_State *L, Creature *creature)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        Player *player = Eluna::CHECKOBJ<Player>(L, 2);
 
 #if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->isTappedBy(player));
@@ -119,7 +132,7 @@ namespace LuaCreature
      *
      * @return bool hasLootRecipient
      */
-    int HasLootRecipient(lua_State* L, Creature* creature)
+    int HasLootRecipient(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->hasLootRecipient());
@@ -135,7 +148,7 @@ namespace LuaCreature
      *
      * @return bool canAggro
      */
-    int CanAggro(lua_State* L, Creature* creature)
+    int CanAggro(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, !creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC));
@@ -152,7 +165,7 @@ namespace LuaCreature
      *
      * @return bool canSwim
      */
-    int CanSwim(lua_State* L, Creature* creature)
+    int CanSwim(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->CanSwim());
         return 1;
@@ -164,7 +177,7 @@ namespace LuaCreature
      *
      * @return bool canWalk
      */
-    int CanWalk(lua_State* L, Creature* creature)
+    int CanWalk(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->CanWalk());
         return 1;
@@ -176,7 +189,7 @@ namespace LuaCreature
      *
      * @return bool inEvadeMode
      */
-    int IsInEvadeMode(lua_State* L, Creature* creature)
+    int IsInEvadeMode(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->IsInEvadeMode());
         return 1;
@@ -188,7 +201,7 @@ namespace LuaCreature
      *
      * @return bool isElite
      */
-    int IsElite(lua_State* L, Creature* creature)
+    int IsElite(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->isElite());
@@ -204,7 +217,7 @@ namespace LuaCreature
      *
      * @return bool isGuard
      */
-    int IsGuard(lua_State* L, Creature* creature)
+    int IsGuard(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->IsGuard());
         return 1;
@@ -216,7 +229,7 @@ namespace LuaCreature
      *
      * @return bool isCivilian
      */
-    int IsCivilian(lua_State* L, Creature* creature)
+    int IsCivilian(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->IsCivilian());
         return 1;
@@ -228,7 +241,7 @@ namespace LuaCreature
      *
      * @return bool isLeader
      */
-    int IsRacialLeader(lua_State* L, Creature* creature)
+    int IsRacialLeader(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->IsRacialLeader());
         return 1;
@@ -241,7 +254,7 @@ namespace LuaCreature
      * @return bool isDungeonBoss
      */
 #if defined(TRINITY) || defined(AZEROTHCORE)
-    int IsDungeonBoss(lua_State* L, Creature* creature)
+    int IsDungeonBoss(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->IsDungeonBoss());
         return 1;
@@ -254,7 +267,7 @@ namespace LuaCreature
      *
      * @return bool isWorldBoss
      */
-    int IsWorldBoss(lua_State* L, Creature* creature)
+    int IsWorldBoss(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->isWorldBoss());
@@ -271,17 +284,17 @@ namespace LuaCreature
      * @param uint32 spellId : the ID of a [Spell]
      * @return bool hasCooldown
      */
-    int HasCategoryCooldown(lua_State* L, Creature* creature)
+    int HasCategoryCooldown(lua_State *L, Creature *creature)
     {
         uint32 spell = Eluna::CHECKVAL<uint32>(L, 2);
 
 #if defined(TRINITY)
-        if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
+        if (const SpellInfo *info = sSpellMgr->GetSpellInfo(spell))
             Eluna::Push(L, info->GetCategory() && creature->GetSpellHistory()->HasCooldown(spell));
         else
             Eluna::Push(L, false);
 #elif defined(AZEROTHCORE)
-        if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
+        if (const SpellInfo *info = sSpellMgr->GetSpellInfo(spell))
             Eluna::Push(L, info->GetCategory() && creature->HasSpellCooldown(spell));
         else
             Eluna::Push(L, false);
@@ -298,7 +311,7 @@ namespace LuaCreature
      * @param uint32 spellId : the ID of a [Spell]
      * @return bool hasSpell
      */
-    int HasSpell(lua_State* L, Creature* creature)
+    int HasSpell(lua_State *L, Creature *creature)
     {
         uint32 id = Eluna::CHECKVAL<uint32>(L, 2);
 
@@ -313,7 +326,7 @@ namespace LuaCreature
      * @param uint32 questId : the ID of a [Quest]
      * @return bool hasQuest
      */
-    int HasQuest(lua_State* L, Creature* creature)
+    int HasQuest(lua_State *L, Creature *creature)
     {
         uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
 
@@ -332,7 +345,7 @@ namespace LuaCreature
      * @param uint32 spellId : the ID of a [Spell]
      * @return bool hasCooldown
      */
-    int HasSpellCooldown(lua_State* L, Creature* creature)
+    int HasSpellCooldown(lua_State *L, Creature *creature)
     {
         uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
 
@@ -350,7 +363,7 @@ namespace LuaCreature
      *
      * @return bool canFly
      */
-    int CanFly(lua_State* L, Creature* creature)
+    int CanFly(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->CanFly());
         return 1;
@@ -363,7 +376,7 @@ namespace LuaCreature
      *
      * @return bool canFly
      */
-    int IsTrigger(lua_State* L, Creature* creature)
+    int IsTrigger(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->IsTrigger());
         return 1;
@@ -374,7 +387,7 @@ namespace LuaCreature
      *
      * @return bool isDamagedEnough
      */
-    int IsDamageEnoughForLootingAndReward(lua_State* L, Creature* creature)
+    int IsDamageEnoughForLootingAndReward(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->IsDamageEnoughForLootingAndReward());
         return 1;
@@ -388,9 +401,9 @@ namespace LuaCreature
      * @param [Unit] target
      * @param bool force = true : force [Creature] to attack
      */
-    int CanStartAttack(lua_State* L, Creature* creature) // TODO: Implement core side
+    int CanStartAttack(lua_State *L, Creature *creature) // TODO: Implement core side
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit *target = Eluna::CHECKOBJ<Unit>(L, 2);
 #ifndef AZEROTHCORE
         bool force = Eluna::CHECKVAL<bool>(L, 3, true);
         Eluna::Push(L, creature->CanStartAttack(target, force));
@@ -406,7 +419,7 @@ namespace LuaCreature
      * @param uint16 lootMode
      * @return bool hasLootMode
      */
-    int HasLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    int HasLootMode(lua_State *L, Creature *creature) // TODO: Implement LootMode features
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);
 
@@ -423,7 +436,7 @@ namespace LuaCreature
      *
      * @return uint32 respawnDelay : the respawn delay, in seconds
      */
-    int GetRespawnDelay(lua_State* L, Creature* creature)
+    int GetRespawnDelay(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->GetRespawnDelay());
         return 1;
@@ -435,7 +448,7 @@ namespace LuaCreature
      *
      * @return float wanderRadius
      */
-    int GetWanderRadius(lua_State* L, Creature* creature)
+    int GetWanderRadius(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->GetWanderDistance());
@@ -451,7 +464,7 @@ namespace LuaCreature
      *
      * @return uint32 pathId
      */
-    int GetWaypointPath(lua_State* L, Creature* creature)
+    int GetWaypointPath(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->GetWaypointPath());
         return 1;
@@ -463,7 +476,7 @@ namespace LuaCreature
      *
      * @return uint32 wpId
      */
-    int GetCurrentWaypointId(lua_State* L, Creature* creature)
+    int GetCurrentWaypointId(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY)
         Eluna::Push(L, creature->GetCurrentWaypointInfo().first);
@@ -480,7 +493,7 @@ namespace LuaCreature
      *
      * @return [MovementGeneratorType] defaultMovementType
      */
-    int GetDefaultMovementType(lua_State* L, Creature* creature)
+    int GetDefaultMovementType(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->GetDefaultMovementType());
         return 1;
@@ -492,9 +505,9 @@ namespace LuaCreature
      * @param [Unit] target
      * @return float aggroRange
      */
-    int GetAggroRange(lua_State* L, Creature* creature)
+    int GetAggroRange(lua_State *L, Creature *creature)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit *target = Eluna::CHECKOBJ<Unit>(L, 2);
 
 #if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->GetAggroRange(target));
@@ -516,9 +529,9 @@ namespace LuaCreature
      * @param [Unit] target
      * @return float attackDistance
      */
-    int GetAttackDistance(lua_State* L, Creature* creature)
+    int GetAttackDistance(lua_State *L, Creature *creature)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit *target = Eluna::CHECKOBJ<Unit>(L, 2);
 
         Eluna::Push(L, creature->GetAttackDistance(target));
         return 1;
@@ -530,7 +543,7 @@ namespace LuaCreature
      *
      * @return [Group] lootRecipientGroup : the group or `nil`
      */
-    int GetLootRecipientGroup(lua_State* L, Creature* creature)
+    int GetLootRecipientGroup(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->GetLootRecipientGroup());
@@ -545,7 +558,7 @@ namespace LuaCreature
      *
      * @return [Player] lootRecipient : the player or `nil`
      */
-    int GetLootRecipient(lua_State* L, Creature* creature)
+    int GetLootRecipient(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->GetLootRecipient());
         return 1;
@@ -560,7 +573,7 @@ namespace LuaCreature
      *
      * @return string scriptName
      */
-    int GetScriptName(lua_State* L, Creature* creature)
+    int GetScriptName(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->GetScriptName());
         return 1;
@@ -575,7 +588,7 @@ namespace LuaCreature
      *
      * @return string AIName
      */
-    int GetAIName(lua_State* L, Creature* creature)
+    int GetAIName(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->GetAIName());
         return 1;
@@ -589,7 +602,7 @@ namespace LuaCreature
      *
      * @return uint32 scriptID
      */
-    int GetScriptId(lua_State* L, Creature* creature)
+    int GetScriptId(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->GetScriptId());
         return 1;
@@ -601,12 +614,12 @@ namespace LuaCreature
      * @param uint32 spellID
      * @return uint32 cooldown : the cooldown, in milliseconds
      */
-    int GetCreatureSpellCooldownDelay(lua_State* L, Creature* creature)
+    int GetCreatureSpellCooldownDelay(lua_State *L, Creature *creature)
     {
         uint32 spell = Eluna::CHECKVAL<uint32>(L, 2);
 
 #if defined(TRINITY)
-        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell))
+        if (SpellInfo const *spellInfo = sSpellMgr->GetSpellInfo(spell))
             Eluna::Push(L, creature->GetSpellHistory()->GetRemainingCooldown(spellInfo));
         else
             Eluna::Push(L, 0);
@@ -626,7 +639,7 @@ namespace LuaCreature
      *
      * @return uint32 corpseDelay : the delay, in seconds
      */
-    int GetCorpseDelay(lua_State* L, Creature* creature)
+    int GetCorpseDelay(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->GetCorpseDelay());
         return 1;
@@ -641,7 +654,7 @@ namespace LuaCreature
      * @return float z
      * @return float o
      */
-    int GetHomePosition(lua_State* L, Creature* creature)
+    int GetHomePosition(lua_State *L, Creature *creature)
     {
         float x, y, z, o;
 #if defined(TRINITY) || defined(AZEROTHCORE)
@@ -666,7 +679,7 @@ namespace LuaCreature
      * @param float z
      * @param float o
      */
-    int SetHomePosition(lua_State* L, Creature* creature)
+    int SetHomePosition(lua_State *L, Creature *creature)
     {
         float x = Eluna::CHECKVAL<float>(L, 2);
         float y = Eluna::CHECKVAL<float>(L, 3);
@@ -684,9 +697,9 @@ namespace LuaCreature
 
     enum SelectAggroTarget
     {
-        SELECT_TARGET_RANDOM = 0,   // Just selects a random target
-        SELECT_TARGET_TOPAGGRO,     // Selects targes from top aggro to bottom
-        SELECT_TARGET_BOTTOMAGGRO,  // Selects targets from bottom aggro to top
+        SELECT_TARGET_RANDOM = 0,  // Just selects a random target
+        SELECT_TARGET_TOPAGGRO,    // Selects targes from top aggro to bottom
+        SELECT_TARGET_BOTTOMAGGRO, // Selects targets from bottom aggro to top
         SELECT_TARGET_NEAREST,
         SELECT_TARGET_FARTHEST
     };
@@ -717,7 +730,7 @@ namespace LuaCreature
     * @param int32 aura = 0 : if positive, the target must have this [Aura]. If negative, the the target must not have this Aura
     * @return [Unit] target : the target, or `nil`
     */
-    int GetAITarget(lua_State* L, Creature* creature)
+    int GetAITarget(lua_State *L, Creature *creature)
     {
         uint32 targetType = Eluna::CHECKVAL<uint32>(L, 2);
         bool playerOnly = Eluna::CHECKVAL<bool>(L, 3, false);
@@ -726,13 +739,13 @@ namespace LuaCreature
         int32 aura = Eluna::CHECKVAL<int32>(L, 6, 0);
 
 #if defined(CMANGOS)
-        ThreatList const& threatlist = creature->getThreatManager().getThreatList();
+        ThreatList const &threatlist = creature->getThreatManager().getThreatList();
 #elif defined(MANGOS)
-        ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
+        ThreatList const &threatlist = creature->GetThreatManager().getThreatList();
 #elif defined(TRINITY)
-        auto const& threatlist = creature->GetThreatManager().GetSortedThreatList();
+        auto const &threatlist = creature->GetThreatManager().GetSortedThreatList();
 #elif defined(AZEROTHCORE)
-        auto const& threatlist = creature->getThreatManager().getThreatList();
+        auto const &threatlist = creature->getThreatManager().getThreatList();
 #endif
 #ifndef TRINITY
         if (threatlist.empty())
@@ -740,17 +753,17 @@ namespace LuaCreature
         if (position >= threatlist.size())
             return 1;
 #endif
-        std::list<Unit*> targetList;
+        std::list<Unit *> targetList;
 #if defined(TRINITY)
-        for (ThreatReference const* itr : threatlist)
+        for (ThreatReference const *itr : threatlist)
 #else
         for (auto itr = threatlist.begin(); itr != threatlist.end(); ++itr)
 #endif
-            {
+        {
 #if defined(TRINITY)
-            Unit* target = itr->GetVictim();
+            Unit *target = itr->GetVictim();
 #else
-            Unit* target = (*itr)->getTarget();
+            Unit *target = (*itr)->getTarget();
 #endif
             if (!target)
                 continue;
@@ -777,37 +790,37 @@ namespace LuaCreature
 
         switch (targetType)
         {
-            case SELECT_TARGET_NEAREST:
-            case SELECT_TARGET_TOPAGGRO:
-                {
-                    std::list<Unit*>::const_iterator itr = targetList.begin();
-                    if (position)
-                        std::advance(itr, position);
-                    Eluna::Push(L, *itr);
-                }
-                break;
-            case SELECT_TARGET_FARTHEST:
-            case SELECT_TARGET_BOTTOMAGGRO:
-                {
-                    std::list<Unit*>::reverse_iterator ritr = targetList.rbegin();
-                    if (position)
-                        std::advance(ritr, position);
-                    Eluna::Push(L, *ritr);
-                }
-                break;
-            case SELECT_TARGET_RANDOM:
-                {
-                    std::list<Unit*>::const_iterator itr = targetList.begin();
-                    if (position)
-                        std::advance(itr, urand(0, position));
-                    else
-                        std::advance(itr, urand(0, targetList.size() - 1));
-                    Eluna::Push(L, *itr);
-                }
-                break;
-            default:
-                luaL_argerror(L, 2, "SelectAggroTarget expected");
-                break;
+        case SELECT_TARGET_NEAREST:
+        case SELECT_TARGET_TOPAGGRO:
+        {
+            std::list<Unit *>::const_iterator itr = targetList.begin();
+            if (position)
+                std::advance(itr, position);
+            Eluna::Push(L, *itr);
+        }
+        break;
+        case SELECT_TARGET_FARTHEST:
+        case SELECT_TARGET_BOTTOMAGGRO:
+        {
+            std::list<Unit *>::reverse_iterator ritr = targetList.rbegin();
+            if (position)
+                std::advance(ritr, position);
+            Eluna::Push(L, *ritr);
+        }
+        break;
+        case SELECT_TARGET_RANDOM:
+        {
+            std::list<Unit *>::const_iterator itr = targetList.begin();
+            if (position)
+                std::advance(itr, urand(0, position));
+            else
+                std::advance(itr, urand(0, targetList.size() - 1));
+            Eluna::Push(L, *itr);
+        }
+        break;
+        default:
+            luaL_argerror(L, 2, "SelectAggroTarget expected");
+            break;
         }
 
         return 1;
@@ -818,14 +831,14 @@ namespace LuaCreature
      *
      * @return table targets
      */
-    int GetAITargets(lua_State* L, Creature* creature)
+    int GetAITargets(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY)
-        auto const& threatlist = creature->GetThreatManager().GetThreatenedByMeList();
+        auto const &threatlist = creature->GetThreatManager().GetThreatenedByMeList();
 #elif defined(AZEROTHCORE)
-auto const& threatlist = creature->getThreatManager().getThreatList();
+        auto const &threatlist = creature->getThreatManager().getThreatList();
 #else
-        ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
+        ThreatList const &threatlist = creature->GetThreatManager().getThreatList();
 #endif
         lua_createtable(L, threatlist.size(), 0);
         int tbl = lua_gettop(L);
@@ -833,9 +846,9 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
         for (auto itr = threatlist.begin(); itr != threatlist.end(); ++itr)
         {
 #if defined(TRINITY)
-            Unit* target = itr->second->GetOwner();
+            Unit *target = itr->second->GetOwner();
 #else
-            Unit* target = (*itr)->getTarget();
+            Unit *target = (*itr)->getTarget();
 #endif
             if (!target)
                 continue;
@@ -852,7 +865,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @return int targetsCount
      */
-    int GetAITargetsCount(lua_State* L, Creature* creature)
+    int GetAITargetsCount(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY)
         Eluna::Push(L, creature->GetThreatManager().GetThreatenedByMeList().size());
@@ -872,7 +885,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @return [NPCFlags] npcFlags
      */
-    int GetNPCFlags(lua_State* L, Creature* creature)
+    int GetNPCFlags(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->GetUInt32Value(UNIT_NPC_FLAGS));
         return 1;
@@ -886,7 +899,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @return [ExtraFlags] extraFlags
      */
-    int GetExtraFlags(lua_State* L, Creature* creature)
+    int GetExtraFlags(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->GetCreatureTemplate()->flags_extra);
@@ -902,7 +915,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @return uint32 shieldBlockValue
      */
-    int GetShieldBlockValue(lua_State* L, Creature* creature)
+    int GetShieldBlockValue(lua_State *L, Creature *creature)
     {
         Eluna::Push(L, creature->GetShieldBlockValue());
         return 1;
@@ -910,7 +923,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
 #endif
 
 #if defined(TRINITY) || defined(AZEROTHCORE)
-    int GetLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    int GetLootMode(lua_State *L, Creature *creature) // TODO: Implement LootMode features
     {
         Eluna::Push(L, creature->GetLootMode());
         return 1;
@@ -922,7 +935,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @return uint32 dbguid
      */
-    int GetDBTableGUIDLow(lua_State* L, Creature* creature)
+    int GetDBTableGUIDLow(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->GetSpawnId());
@@ -938,7 +951,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param [NPCFlags] flags
      */
-    int SetNPCFlags(lua_State* L, Creature* creature)
+    int SetNPCFlags(lua_State *L, Creature *creature)
     {
         uint32 flags = Eluna::CHECKVAL<uint32>(L, 2);
 
@@ -946,13 +959,12 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
         return 0;
     }
 
-
     /**
      * Makes the [Creature] able to fly if enabled.
      *
      * @param bool disable
      */
-    int SetDisableGravity(lua_State* L, Creature* creature)
+    int SetDisableGravity(lua_State *L, Creature *creature)
     {
         bool disable = Eluna::CHECKVAL<bool>(L, 2);
 
@@ -965,7 +977,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     }
 
 #if defined(TRINITY) || defined(AZEROTHCORE)
-    int SetLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    int SetLootMode(lua_State *L, Creature *creature) // TODO: Implement LootMode features
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);
 
@@ -979,7 +991,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param [DeathState] deathState
      */
-    int SetDeathState(lua_State* L, Creature* creature)
+    int SetDeathState(lua_State *L, Creature *creature)
     {
         int32 state = Eluna::CHECKVAL<int32>(L, 2);
 
@@ -996,7 +1008,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param bool enable = true : `true` to enable walking, `false` for running
      */
-    int SetWalk(lua_State* L, Creature* creature)           // TODO: Move same to Player ?
+    int SetWalk(lua_State *L, Creature *creature) // TODO: Move same to Player ?
     {
         bool enable = Eluna::CHECKVAL<bool>(L, 2, true);
 
@@ -1011,7 +1023,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      * @param uint32 off_hand : off hand [Item]'s entry
      * @param uint32 ranged : ranged [Item]'s entry
      */
-    int SetEquipmentSlots(lua_State* L, Creature* creature)
+    int SetEquipmentSlots(lua_State *L, Creature *creature)
     {
         uint32 main_hand = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 off_hand = Eluna::CHECKVAL<uint32>(L, 3);
@@ -1034,7 +1046,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param bool allow = true : `true` to allow aggro, `false` to disable aggro
      */
-    int SetAggroEnabled(lua_State* L, Creature* creature)
+    int SetAggroEnabled(lua_State *L, Creature *creature)
     {
         bool allow = Eluna::CHECKVAL<bool>(L, 2, true);
 
@@ -1058,7 +1070,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param bool disable = true : `true` to disable reputation, `false` to enable
      */
-    int SetDisableReputationGain(lua_State* L, Creature* creature)
+    int SetDisableReputationGain(lua_State *L, Creature *creature)
     {
         bool disable = Eluna::CHECKVAL<bool>(L, 2, true);
 
@@ -1072,7 +1084,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      * This is used by raid bosses to prevent Players from using out-of-combat
      *   actions once the encounter has begun.
      */
-    int SetInCombatWithZone(lua_State* /*L*/, Creature* creature)
+    int SetInCombatWithZone(lua_State * /*L*/, Creature *creature)
     {
 #if defined(AZEROTHCORE)
         if (creature->IsAIEnabled)
@@ -1091,7 +1103,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param float distance
      */
-    int SetWanderRadius(lua_State* L, Creature* creature)
+    int SetWanderRadius(lua_State *L, Creature *creature)
     {
         float dist = Eluna::CHECKVAL<float>(L, 2);
 
@@ -1108,7 +1120,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param uint32 delay : the delay, in seconds
      */
-    int SetRespawnDelay(lua_State* L, Creature* creature)
+    int SetRespawnDelay(lua_State *L, Creature *creature)
     {
         uint32 delay = Eluna::CHECKVAL<uint32>(L, 2);
 
@@ -1121,7 +1133,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param [MovementGeneratorType] type
      */
-    int SetDefaultMovementType(lua_State* L, Creature* creature)
+    int SetDefaultMovementType(lua_State *L, Creature *creature)
     {
         int32 type = Eluna::CHECKVAL<int32>(L, 2);
 
@@ -1134,7 +1146,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param bool enable = true : `true` to disable searching, `false` to allow
      */
-    int SetNoSearchAssistance(lua_State* L, Creature* creature)
+    int SetNoSearchAssistance(lua_State *L, Creature *creature)
     {
         bool val = Eluna::CHECKVAL<bool>(L, 2, true);
 
@@ -1147,7 +1159,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param bool enable = true : `true` to disable calling for help, `false` to enable
      */
-    int SetNoCallAssistance(lua_State* L, Creature* creature)
+    int SetNoCallAssistance(lua_State *L, Creature *creature)
     {
         bool val = Eluna::CHECKVAL<bool>(L, 2, true);
 
@@ -1160,7 +1172,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param bool enable = true : `true` to enable hovering, `false` to disable
      */
-    int SetHover(lua_State* L, Creature* creature)
+    int SetHover(lua_State *L, Creature *creature)
     {
         bool enable = Eluna::CHECKVAL<bool>(L, 2, true);
 
@@ -1190,7 +1202,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param uint32 delay = 0 : dely to despawn in milliseconds
      */
-    int DespawnOrUnsummon(lua_State* L, Creature* creature)
+    int DespawnOrUnsummon(lua_State *L, Creature *creature)
     {
         uint32 msTimeToDespawn = Eluna::CHECKVAL<uint32>(L, 2, 0);
 
@@ -1207,7 +1219,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     /**
      * Respawn this [Creature].
      */
-    int Respawn(lua_State* /*L*/, Creature* creature)
+    int Respawn(lua_State * /*L*/, Creature *creature)
     {
         creature->Respawn();
         return 0;
@@ -1216,7 +1228,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     /**
      * Remove this [Creature]'s corpse.
      */
-    int RemoveCorpse(lua_State* /*L*/, Creature* creature)
+    int RemoveCorpse(lua_State * /*L*/, Creature *creature)
     {
         creature->RemoveCorpse();
         return 0;
@@ -1225,7 +1237,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     /**
      * Make the [Creature] start following its waypoint path.
      */
-    int MoveWaypoint(lua_State* /*L*/, Creature* creature)
+    int MoveWaypoint(lua_State * /*L*/, Creature *creature)
     {
 #if defined(TRINITY) || defined(AZEROTHCORE)
         creature->GetMotionMaster()->MovePath(creature->GetWaypointPath(), true);
@@ -1238,7 +1250,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     /**
      * Make the [Creature] call for assistance in combat from other nearby [Creature]s.
      */
-    int CallAssistance(lua_State* /*L*/, Creature* creature)
+    int CallAssistance(lua_State * /*L*/, Creature *creature)
     {
         creature->CallAssistance();
         return 0;
@@ -1249,7 +1261,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param float radius
      */
-    int CallForHelp(lua_State* L, Creature* creature)
+    int CallForHelp(lua_State *L, Creature *creature)
     {
         float radius = Eluna::CHECKVAL<float>(L, 2);
 
@@ -1260,7 +1272,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     /**
      * Make the [Creature] flee combat to get assistance from a nearby friendly [Creature].
      */
-    int FleeToGetAssistance(lua_State* /*L*/, Creature* creature)
+    int FleeToGetAssistance(lua_State * /*L*/, Creature *creature)
     {
         creature->DoFleeToGetAssistance();
         return 0;
@@ -1271,9 +1283,9 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param [Unit] target
      */
-    int AttackStart(lua_State* L, Creature* creature)
+    int AttackStart(lua_State *L, Creature *creature)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit *target = Eluna::CHECKOBJ<Unit>(L, 2);
 
         creature->AI()->AttackStart(target);
         return 0;
@@ -1282,7 +1294,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     /**
      * Save the [Creature] in the database.
      */
-    int SaveToDB(lua_State* /*L*/, Creature* creature)
+    int SaveToDB(lua_State * /*L*/, Creature *creature)
     {
         creature->SaveToDB();
         return 0;
@@ -1293,7 +1305,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * This should be called every update cycle for the Creature's AI.
      */
-    int SelectVictim(lua_State* L, Creature* creature)
+    int SelectVictim(lua_State *L, Creature *creature)
     {
 #if defined(TRINITY) || defined(AZEROTHCORE)
         Eluna::Push(L, creature->SelectVictim());
@@ -1309,7 +1321,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      * @param uint32 entry : the Creature ID to transform into
      * @param uint32 dataGUIDLow = 0 : use this Creature's model and equipment instead of the defaults
      */
-    int UpdateEntry(lua_State* L, Creature* creature)
+    int UpdateEntry(lua_State *L, Creature *creature)
     {
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 dataGuidLow = Eluna::CHECKVAL<uint32>(L, 3, 0);
@@ -1326,7 +1338,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
     /**
      * Resets [Creature]'s loot mode to default
      */
-    int ResetLootMode(lua_State* /*L*/, Creature* creature) // TODO: Implement LootMode features
+    int ResetLootMode(lua_State * /*L*/, Creature *creature) // TODO: Implement LootMode features
     {
         creature->ResetLootMode();
         return 0;
@@ -1337,7 +1349,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param uint16 lootMode
      */
-    int RemoveLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    int RemoveLootMode(lua_State *L, Creature *creature) // TODO: Implement LootMode features
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);
 
@@ -1350,7 +1362,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @param uint16 lootMode
      */
-    int AddLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    int AddLootMode(lua_State *L, Creature *creature) // TODO: Implement LootMode features
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);
 
@@ -1413,16 +1425,16 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
      *
      * @return [CreatureFamily] creatureFamily
      */
-    int GetCreatureFamily(lua_State* L, Creature* creature)
+    int GetCreatureFamily(lua_State *L, Creature *creature)
     {
         uint32 entry = creature->GetEntry();
 
 #if defined(TRINITY) || defined(AZEROTHCORE)
-        CreatureTemplate const* cInfo = sObjectMgr->GetCreatureTemplate(entry);
+        CreatureTemplate const *cInfo = sObjectMgr->GetCreatureTemplate(entry);
         if (cInfo)
             Eluna::Push(L, cInfo->family);
 #else
-        CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(entry);
+        CreatureInfo const *cInfo = ObjectMgr::GetCreatureTemplate(entry);
         if (cInfo)
             Eluna::Push(L, cInfo->Family);
 #endif

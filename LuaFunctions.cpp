@@ -790,6 +790,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
 
     // Setters
+    { "SetRegeneratingHealth", &LuaCreature::SetRegeneratingHealth },
     { "SetHover", &LuaCreature::SetHover },
     { "SetDisableGravity", &LuaCreature::SetDisableGravity },
     { "SetAggroEnabled", &LuaCreature::SetAggroEnabled },
