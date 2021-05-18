@@ -1568,11 +1568,7 @@ namespace LuaPlayer
     int GetAccountName(lua_State* L, Player* player)
     {
         std::string accName;
-#ifndef AZEROTHCORE
-        if (eAccountMgr->GetName(player->GetSession()->GetAccountId(), accName))
-#else
-        if (AccountMgr::GetName(player->GetSession()->GetAccountId(), accName))
-#endif
+        if (sAccountMgr->GetName(player->GetSession()->GetAccountId(), accName))
             Eluna::Push(L, accName);
         return 1;
     }
