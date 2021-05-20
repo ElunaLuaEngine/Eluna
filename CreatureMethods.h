@@ -23,7 +23,11 @@ namespace LuaCreature
     {
         bool enable = Eluna::CHECKVAL<bool>(L, 2, true);
 
+#if defined(AZEROTHCORE)
         creature->SetRegeneratingHealth(enable);
+#else
+        creature->SetRegenerateHealth(enable);
+#endif
         return 0;
     }
 
