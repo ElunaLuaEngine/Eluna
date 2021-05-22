@@ -811,6 +811,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "SetEquipmentSlots", &LuaCreature::SetEquipmentSlots },
 
     // Boolean
+    { "IsRegeneratingHealth", &LuaCreature::IsRegeneratingHealth },
 #if defined(TRINITY) || defined(AZEROTHCORE)
     { "IsDungeonBoss", &LuaCreature::IsDungeonBoss },
 #endif
