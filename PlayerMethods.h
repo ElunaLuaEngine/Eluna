@@ -1571,7 +1571,7 @@ namespace LuaPlayer
 #ifndef AZEROTHCORE
         if (eAccountMgr->GetName(player->GetSession()->GetAccountId(), accName))
 #else
-        if (sAccountMgr->GetName(player->GetSession()->GetAccountId(), accName))
+        if (AccountMgr::GetName(player->GetSession()->GetAccountId(), accName))
 #endif
             Eluna::Push(L, accName);
         return 1;
