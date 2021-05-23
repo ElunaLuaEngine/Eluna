@@ -790,6 +790,9 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
 
     // Setters
+#if defined(TRINITY) || defined(AZEROTHCORE)
+    { "SetRegeneratingHealth", &LuaCreature::SetRegeneratingHealth },
+#endif
     { "SetHover", &LuaCreature::SetHover },
     { "SetDisableGravity", &LuaCreature::SetDisableGravity },
     { "SetAggroEnabled", &LuaCreature::SetAggroEnabled },
@@ -810,6 +813,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "SetEquipmentSlots", &LuaCreature::SetEquipmentSlots },
 
     // Boolean
+    { "IsRegeneratingHealth", &LuaCreature::IsRegeneratingHealth },
 #if defined(TRINITY) || defined(AZEROTHCORE)
     { "IsDungeonBoss", &LuaCreature::IsDungeonBoss },
 #endif

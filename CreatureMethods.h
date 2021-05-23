@@ -15,6 +15,43 @@
 namespace LuaCreature
 {
     /**
+     * Returns `true` if the [Creature] can regenerate health,
+     *   and returns `false` otherwise.
+     *
+     * @return bool isRegenerating
+     */
+    int IsRegeneratingHealth(lua_State* L, Creature* creature)
+    {
+#if defined(AZEROTHCORE)
+        Eluna::Push(L, creature->isRegeneratingHealth());
+#elif defined(TRINITY)
+        Eluna::Push(L, creature->CanRegenerateHealth());
+#else
+        Eluna::Push(L, creature->IsRegeneratingHealth());
+#endif
+        return 1;
+    }
+
+#if defined(TRINITY) || defined(AZEROTHCORE)
+    /**
+     * Sets whether the [Creature] can regenerate health or not.
+     *
+     * @param bool enable = true : `true` to enable health regeneration, `false` to disable it
+     */
+    int SetRegeneratingHealth(lua_State* L, Creature* creature)
+    {
+        bool enable = Eluna::CHECKVAL<bool>(L, 2, true);
+
+#if defined(AZEROTHCORE)
+        creature->SetRegeneratingHealth(enable);
+#else
+        creature->SetRegenerateHealth(enable);
+#endif
+        return 0;
+    }
+#endif
+
+    /**
      * Returns `true` if the [Creature] is set to not give reputation when killed,
      *   and returns `false` otherwise.
      *
