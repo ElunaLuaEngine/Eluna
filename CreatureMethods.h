@@ -32,6 +32,7 @@ namespace LuaCreature
         return 1;
     }
 
+#if defined(TRINITY) || defined(AZEROTHCORE)
     /**
      * Sets whether the [Creature] can regenerate health or not.
      *
@@ -48,6 +49,7 @@ namespace LuaCreature
 #endif
         return 0;
     }
+#endif
 
     /**
      * Returns `true` if the [Creature] is set to not give reputation when killed,
