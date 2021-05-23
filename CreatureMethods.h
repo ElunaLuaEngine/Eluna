@@ -27,7 +27,7 @@ namespace LuaCreature
 #elif defined(TRINITY)
         Eluna::Push(L, creature->CanRegenerateHealth());
 #else
-	Eluna::Push(L, creature->IsRegeneratingHealth());
+        Eluna::Push(L, creature->IsRegeneratingHealth());
 #endif
         return 1;
     }
