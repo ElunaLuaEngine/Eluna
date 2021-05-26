@@ -20,6 +20,7 @@ class ParameterDoc(object):
         'uint32': ('0', '4,294,967,295'),
         'int64': ('-9,223,372,036,854,775,808', '9,223,372,036,854,775,807'),
         'uint64': ('0', '18,446,744,073,709,551,615'),
+        'ObjectGuid': ('0', '18,446,744,073,709,551,615'),
     }
 
     @params(self=object, name=Nullable(unicode), data_type=str, description=unicode, default_value=Nullable(unicode))
@@ -42,7 +43,7 @@ class ParameterDoc(object):
             self.description = ''
 
         # If the data type is a C++ number, convert to Lua number and add range info to description.
-        if self.data_type in ['float', 'double', 'int', 'int8', 'uint8', 'int16', 'uint16', 'int32', 'uint32']:
+        if self.data_type in self.valid_ranges.keys():
             range = ParameterDoc.valid_ranges[self.data_type]
             if range:
                 self.description += '<p><em>Valid numbers</em>: integers from {0} to {1}.</p>'.format(range[0], range[1])
@@ -58,7 +59,7 @@ class ParameterDoc(object):
             self.data_type = '[' + self.data_type + ']'
 
         elif not self.data_type in ['nil', 'boolean', 'number', 'string', 'table', 'function', '...'] and self.data_type[:1] != '[':
-            print "Missing [] from data type `" + self.data_type + "`"
+            print "Missing angle brackets [] around the data type name: `" + self.data_type + "`"
 
 
 class MethodDoc(object):
