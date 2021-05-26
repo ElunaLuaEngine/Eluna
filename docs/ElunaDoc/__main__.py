@@ -160,9 +160,13 @@ if __name__ == '__main__':
         # Make a folder for the class.
         os.mkdir('build/' + class_.name)
         index_path = '{}/index.html'.format(class_.name)
+        sidebar_path = '{}/sidebar.js'.format(class_.name)
 
         # Render the class's index page.
         render('class.html', index_path, level=1, classes=classes, current_class=class_)
+
+        # Render the class's sidebar script.
+        render('sidebar.js', sidebar_path, level=1, classes=classes, current_class=class_)
 
         # Render each method's page.
         for method in class_.methods:
