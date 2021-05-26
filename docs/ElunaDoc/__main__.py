@@ -40,10 +40,9 @@ def make_renderer(template_path, link_parser_factory):
         template = env.get_template(template_name)
         static = make_static(level)
         root = make_root(level)
-        currdate = time.strftime("%d/%m/%Y")
 
         with open('build/' + output_path, 'w') as out:
-            out.write(template.render(level=level, static=static, root=root, currdate=currdate, **kwargs))
+            out.write(template.render(level=level, static=static, root=root, **kwargs))
 
     return inner
 
@@ -152,6 +151,8 @@ if __name__ == '__main__':
     render('index.html', 'index.html', level=0, classes=classes)
     # Render the search index.
     render('search-index.js', 'search-index.js', level=0, classes=classes)
+    # Render the date.
+    render('date.js', 'date.js', level=0, currdate=time.strftime("%d/%m/%Y"))
 
     for class_ in classes:
         print 'Rending pages for class {}...'.format(class_.name)
