@@ -983,6 +983,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
         return 0;
     }
 
+#if defined(TRINITY) || defined(AZEROTHCORE)
     /**
      * Sets the [Creature]'s ReactState to `state`.
      *
@@ -995,6 +996,7 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
         creature->SetReactState((ReactStates)state);
         return 0;
     }
+#endif
 
     /**
      * Makes the [Creature] able to fly if enabled.
