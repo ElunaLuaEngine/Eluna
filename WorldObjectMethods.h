@@ -189,7 +189,7 @@ namespace LuaWorldObject
 
 #elif AZEROTHCORE
         acore::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        obj->VisitNearbyObject(range,searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #else
         MaNGOS::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
@@ -221,7 +221,7 @@ namespace LuaWorldObject
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
         acore::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #else
         MaNGOS::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
@@ -255,7 +255,7 @@ namespace LuaWorldObject
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
         acore::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #else
         MaNGOS::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
@@ -288,7 +288,7 @@ namespace LuaWorldObject
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
         acore::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #else
         MaNGOS::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
@@ -332,7 +332,7 @@ namespace LuaWorldObject
         Cell::VisitAllObjects(obj, searcher, range);
 #elif defined AZEROTHCORE
         acore::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #else
         MaNGOS::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
@@ -374,7 +374,7 @@ namespace LuaWorldObject
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
         acore::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #else
         MaNGOS::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
@@ -424,7 +424,7 @@ namespace LuaWorldObject
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
         acore::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #else
         MaNGOS::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitAllObjects(obj, searcher, range);
@@ -464,7 +464,7 @@ namespace LuaWorldObject
         Cell::VisitAllObjects(obj, searcher, range);
 #elif AZEROTHCORE
         acore::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        obj->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(obj, searcher, range);
 #else
         MaNGOS::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitAllObjects(obj, searcher, range);
