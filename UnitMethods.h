@@ -1845,7 +1845,7 @@ namespace LuaUnit
     /**
      * Sets the [Unit] to set in combat with the [Unit] of given GUID.
      *
-     * @param ObjectGuid guid : unit to start combat with
+     * @param [Unit] enemy : the Unit to start combat with
      */
     int SetInCombatWith(lua_State* L, Unit* unit)
     {
