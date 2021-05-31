@@ -335,6 +335,7 @@ ElunaRegister<Unit> UnitMethods[] =
 #endif
     { "SetWaterWalk", &LuaUnit::SetWaterWalk },
     { "SetStandState", &LuaUnit::SetStandState },
+    { "SetInCombatWith", &LuaUnit::SetInCombatWith },
     { "ModifyPower", &LuaUnit::ModifyPower },
 
     // Boolean
