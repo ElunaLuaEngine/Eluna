@@ -1843,7 +1843,7 @@ namespace LuaUnit
     }
 
     /**
-     * Sets the [Unit] to set in combat with the [Unit] of given GUID.
+     * Sets the [Unit] in combat with the [Unit] of given GUID.
      *
      * @param [Unit] enemy : the Unit to start combat with
      */
