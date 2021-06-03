@@ -1264,7 +1264,7 @@ namespace LuaUnit
 #elif AZEROTHCORE
         Acore::AnyFriendlyUnitInObjectRangeCheck checker(unit, unit, range);
         Acore::UnitListSearcher<Acore::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
-        unit->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(unit, searcher, range);
 #else
         MaNGOS::AnyFriendlyUnitInObjectRangeCheck checker(unit, range);
         MaNGOS::UnitListSearcher<MaNGOS::AnyFriendlyUnitInObjectRangeCheck> searcher(list, checker);
@@ -1305,7 +1305,7 @@ namespace LuaUnit
 #elif AZEROTHCORE
         Acore::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, unit, range);
         Acore::UnitListSearcher<Acore::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
-        unit->VisitNearbyObject(range, searcher);
+        Cell::VisitAllObjects(unit, searcher, range);
 #else
         MaNGOS::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, range);
         MaNGOS::UnitListSearcher<MaNGOS::AnyUnfriendlyUnitInObjectRangeCheck> searcher(list, checker);
