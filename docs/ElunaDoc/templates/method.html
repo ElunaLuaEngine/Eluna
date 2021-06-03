@@ -23,9 +23,18 @@
 
 {% block sidebar %}
     <h2>{{ current_class.name }} Methods</h2>
-    {%- for method in current_class.methods %}
-    <a class="fn {{ 'current' if method == current_method }}" href="{{ root(current_class.name + '/' + method.name + '.html') }}">{{ method.name }}</a>
-    {%- endfor %}
+    <script src="sidebar.js"></script>
+    <script>
+      // Highlight current method by adding "current" class to it
+      var element = document.getElementById("{{ current_class.name + ':' + current_method.name }}");
+      if (element) {
+        var classname = "current";
+        arr = element.className.split(" ");
+        if (arr.indexOf(classname) == -1) {
+          element.className += " " + classname;
+        }
+      }
+    </script>
 {% endblock %}
 
 
