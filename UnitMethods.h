@@ -1842,6 +1842,18 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Sets the [Unit] in combat with the `enemy` [Unit].
+     *
+     * @param [Unit] enemy : the [Unit] to start combat with
+     */
+    int SetInCombatWith(lua_State* L, Unit* unit)
+    {
+        Unit* enemy = Eluna::CHECKOBJ<Unit>(L, 2);
+        unit->SetInCombatWith(enemy);
+        return 0;
+    }
+
 #if (!defined(TBC) && !defined(CLASSIC))
     /**
      * Sets the [Unit]'s FFA flag on or off.
