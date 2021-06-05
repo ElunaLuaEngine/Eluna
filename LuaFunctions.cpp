@@ -808,6 +808,9 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "SetLootMode", &LuaCreature::SetLootMode },
 #endif
     { "SetNPCFlags", &LuaCreature::SetNPCFlags },
+#if defined(TRINITY) || AZEROTHCORE
+    { "SetReactState", &LuaCreature::SetReactState },
+#endif
     { "SetDeathState", &LuaCreature::SetDeathState },
     { "SetWalk", &LuaCreature::SetWalk },
     { "SetHomePosition", &LuaCreature::SetHomePosition },

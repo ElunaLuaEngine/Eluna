@@ -983,6 +983,20 @@ auto const& threatlist = creature->getThreatManager().getThreatList();
         return 0;
     }
 
+#if defined(TRINITY) || defined(AZEROTHCORE)
+    /**
+     * Sets the [Creature]'s ReactState to `state`.
+     *
+     * @param [ReactState] state
+     */
+    int SetReactState(lua_State* L, Creature* creature)
+    {
+        uint32 state = Eluna::CHECKVAL<uint32>(L, 2);
+
+        creature->SetReactState((ReactStates)state);
+        return 0;
+    }
+#endif
 
     /**
      * Makes the [Creature] able to fly if enabled.
