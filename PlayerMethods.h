@@ -1400,6 +1400,7 @@ namespace LuaPlayer
     /**
      * Returns the database textID of the [WorldObject]'s gossip header text for the [Player]
      *
+     * @param WorldObject object
      * @return uint32 textId : key to npc_text database table
      */
     int GetGossipTextId(lua_State* L, Player* player)
@@ -2386,6 +2387,21 @@ namespace LuaPlayer
 #else
         player->GetSession()->SendGuildInvite(plr);
 #endif
+        return 0;
+    }
+
+    /**
+     * Sends an update for the world state to the [Player]
+     *
+     * @param uint32 field
+     * @param uint32 value
+     */
+    int SendUpdateWorldState(lua_State* L, Player* player)
+    {
+        uint32 field = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 value = Eluna::CHECKVAL<uint32>(L, 3);
+
+        player->SendUpdateWorldState(field, value);
         return 0;
     }
 

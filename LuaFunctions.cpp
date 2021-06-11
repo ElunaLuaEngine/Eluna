@@ -728,6 +728,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SendTabardVendorActivate", &LuaPlayer::SendTabardVendorActivate },
     { "SendSpiritResurrect", &LuaPlayer::SendSpiritResurrect },
     { "SendTaxiMenu", &LuaPlayer::SendTaxiMenu },
+    { "SendUpdateWorldState", &LuaPlayer::SendUpdateWorldState },
     { "RewardQuest", &LuaPlayer::RewardQuest },
     { "SendAuctionMenu", &LuaPlayer::SendAuctionMenu },
     { "SendShowMailBox", &LuaPlayer::SendShowMailBox },
