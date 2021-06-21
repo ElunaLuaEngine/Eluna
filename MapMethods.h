@@ -206,6 +206,7 @@ namespace LuaMap
      * Returns a [WorldObject] by its GUID from the map if it is spawned.
      *
      * @param ObjectGuid guid
+     * @return WorldObject object
      */
     int GetWorldObject(lua_State* L, Map* map)
     {
