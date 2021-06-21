@@ -1211,6 +1211,22 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Runs a command.
+     *
+     * @param string command : the command to run
+     */
+    int RunCommand(lua_State* L)
+    {
+        const char* command = Eluna::CHECKVAL<const char*>(L, 1);
+#if defined TRINITY || AZEROTHCORE
+        eWorld->QueueCliCommand(new CliCommandHolder(nullptr, command, nullptr, nullptr));
+#elif defined MANGOS
+        eWorld->QueueCliCommand(new CliCommandHolder(0, SEC_CONSOLE, nullptr, command, nullptr, nullptr));
+#endif
+        return 0;
+    }
+
+    /**
      * Sends a message to all [Player]s online.
      *
      * @param string message : message to send

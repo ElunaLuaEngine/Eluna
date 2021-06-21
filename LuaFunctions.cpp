@@ -120,6 +120,7 @@ luaL_Reg GlobalMethods[] =
 
     // Other
     { "ReloadEluna", &LuaGlobalFunctions::ReloadEluna },
+    { "RunCommand", &LuaGlobalFunctions::RunCommand },
     { "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage },
     { "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery },
     { "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute },
