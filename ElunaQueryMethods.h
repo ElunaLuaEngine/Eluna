@@ -308,7 +308,7 @@ namespace LuaQuery
                 // MYSQL_TYPE_LONGLONG Interpreted as string for lua
                 switch (row[i].GetType())
                 {
-#ifndef AZEROTHCORE
+#if defined TRINITY || AZEROTHCORE
                     case DatabaseFieldTypes::Int8:
                     case DatabaseFieldTypes::Int16:
                     case DatabaseFieldTypes::Int32:
