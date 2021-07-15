@@ -838,6 +838,8 @@ namespace LuaUnit
     {
 #ifdef TRINITY
         Eluna::Push(L, unit->GetLevel());
+#elif AZEROTHCORE
+        Eluna::Push(L, unit->GetLevel());
 #else
         Eluna::Push(L, unit->getLevel());
 #endif
@@ -1047,6 +1049,8 @@ namespace LuaUnit
     {
 #ifdef TRINITY
         Eluna::Push(L, unit->GetRace());
+#elif AZEROTHCORE
+        Eluna::Push(L, unit->GetRace());
 #else
         Eluna::Push(L, unit->getRace());
 #endif
@@ -1061,6 +1065,8 @@ namespace LuaUnit
     int GetClass(lua_State* L, Unit* unit)
     {
 #ifdef TRINITY
+        Eluna::Push(L, unit->GetClass());
+#elif AZEROTHCORE
         Eluna::Push(L, unit->GetClass());
 #else
         Eluna::Push(L, unit->getClass());
@@ -1199,6 +1205,8 @@ namespace LuaUnit
             return luaL_argerror(L, 2, "valid LocaleConstant expected");
 
 #ifdef TRINITY
+        const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->GetRace());
+#elif AZEROTHCORE
         const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->GetRace());
 #else
         const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->getRace());
