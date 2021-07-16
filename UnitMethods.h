@@ -1045,9 +1045,7 @@ namespace LuaUnit
      */
     int GetRace(lua_State* L, Unit* unit)
     {
-#ifdef TRINITY
-        Eluna::Push(L, unit->GetRace());
-#elif AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetRace());
 #else
         Eluna::Push(L, unit->getRace());
@@ -1062,9 +1060,7 @@ namespace LuaUnit
      */
     int GetClass(lua_State* L, Unit* unit)
     {
-#ifdef TRINITY
-        Eluna::Push(L, unit->GetClass());
-#elif AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetClass());
 #else
         Eluna::Push(L, unit->getClass());
@@ -1202,9 +1198,7 @@ namespace LuaUnit
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(L, 2, "valid LocaleConstant expected");
 
-#ifdef TRINITY
-        const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->GetRace());
-#elif AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->GetRace());
 #else
         const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->getRace());
@@ -1244,7 +1238,7 @@ namespace LuaUnit
     int GetAura(lua_State* L, Unit* unit)
     {
         uint32 spellID = Eluna::CHECKVAL<uint32>(L, 2);
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetAura(spellID));
 #else
         Eluna::Push(L, unit->GetAura(spellID, EFFECT_INDEX_0));
