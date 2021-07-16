@@ -71,7 +71,7 @@ jobs:
           CWARNINGS=ON
           CDEBUG=OFF
           CTYPE=Release
-          CSCRIPTS=ON
+          CSCRIPTS=static
           CUNIT_TESTS=ON
           CSERVERS=ON
           CTOOLS=ON
@@ -88,9 +88,9 @@ jobs:
           time sudo apt-get install -y git lsb-release sudo ccache
           time ./acore.sh install-deps
 
-          time sudo apt-get install -y clang-10
-          echo "CCOMPILERC=\"clang-10\"" >> ./conf/config.sh
-          echo "CCOMPILERCXX=\"clang++-10\"" >> ./conf/config.sh
+          time sudo apt-get install -y clang-11
+          echo "CCOMPILERC=\"clang-11\"" >> ./conf/config.sh
+          echo "CCOMPILERCXX=\"clang++-11\"" >> ./conf/config.sh
       - name: Import db
         run: source ./apps/ci/ci-import-db.sh
       - name: Build
