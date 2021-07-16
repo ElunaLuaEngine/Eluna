@@ -836,9 +836,7 @@ namespace LuaUnit
      */
     int GetLevel(lua_State* L, Unit* unit)
     {
-#ifdef TRINITY
-        Eluna::Push(L, unit->GetLevel());
-#elif AZEROTHCORE
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetLevel());
 #else
         Eluna::Push(L, unit->getLevel());
