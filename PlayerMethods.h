@@ -3734,6 +3734,15 @@ namespace LuaPlayer
     }
 
     /**
+     * Remove cooldowns on spells that have less than 10 minutes of cooldown from the [Player], similarly to when you enter an arena.
+     */
+    int RemoveArenaSpellCooldowns(lua_State* /*L*/, Player* player)
+    {
+        player->RemoveArenaSpellCooldowns();
+        return 0;
+    }
+
+    /**
      * Resurrects the [Player].
      *
      * @param float healthPercent = 100.0f
