@@ -5,7 +5,7 @@ extern "C"
 #include "lauxlib.h"
 };
 
-#if defined TRINITYCORE || defined AZEROTHCORE
+#if defined TRINITY || defined AZEROTHCORE
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #endif
 #include "libs/httplib.h"
@@ -29,40 +29,76 @@ HttpResponse::HttpResponse(int funcRef, int statusCode, const std::string& body,
 { }
 
 HttpManager::HttpManager()
-    : httpWorkQueue(16),
-    httpResponseQueue(16),
-    startedHttpWorkerThread(false),
-    httpCancelationToken(false),
-    httpCondVar(),
-    httpCondVarMutex(),
+    : workQueue(16),
+    responseQueue(16),
+    startedWorkerThread(false),
+    cancelationToken(false),
+    condVar(),
+    condVarMutex(),
     parseUrlRegex("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?")
 {
     StartHttpWorker();
 }
 
+HttpManager::~HttpManager()
+{
+    StopHttpWorker();
+}
+
 void HttpManager::PushRequest(HttpWorkItem* item)
 {
-    std::unique_lock<std::mutex> lock(httpCondVarMutex);
-    httpWorkQueue.push(item);
-    httpCondVar.notify_one();
+    std::unique_lock<std::mutex> lock(condVarMutex);
+    workQueue.push(item);
+    condVar.notify_one();
 }
 
 void HttpManager::StartHttpWorker()
 {
-    while (httpWorkQueue.front())
+    ClearQueues();
+
+    if (!startedWorkerThread)
     {
-        httpWorkQueue.pop();
+        cancelationToken.store(false);
+        workerThread = std::thread(&HttpManager::HttpWorkerThread, this);
+        startedWorkerThread = true;
     }
-    while (httpResponseQueue.front())
+}
+
+void HttpManager::ClearQueues()
+{
+    while (workQueue.front())
     {
-        httpResponseQueue.pop();
+        HttpWorkItem* item = *workQueue.front();
+        if (item != nullptr)
+        {
+            delete item;
+        }
+        workQueue.pop();
     }
 
-    if (!startedHttpWorkerThread)
+    while (responseQueue.front())
     {
-        httpWorkerThread = std::thread(&HttpManager::HttpWorkerThread, this);
-        startedHttpWorkerThread = true;
+        HttpResponse* item = *responseQueue.front();
+        if (item != nullptr)
+        {
+            delete item;
+        }
+        responseQueue.pop();
     }
+}
+
+void HttpManager::StopHttpWorker()
+{
+    if (!startedWorkerThread)
+    {
+        return;
+    }
+
+    cancelationToken.store(true);
+    condVar.notify_one();
+    workerThread.join();
+    ClearQueues();
+    startedWorkerThread = false;
 }
 
 void HttpManager::HttpWorkerThread()
@@ -70,21 +106,21 @@ void HttpManager::HttpWorkerThread()
     while (true)
     {
         {
-            std::unique_lock<std::mutex> lock(httpCondVarMutex);
-            httpCondVar.wait(lock, [&] { return httpWorkQueue.front(); });
+            std::unique_lock<std::mutex> lock(condVarMutex);
+            condVar.wait(lock, [&] { return workQueue.front() != nullptr || cancelationToken.load(); });
         }
 
-        if (!httpWorkQueue.front())
-        {
-            continue;
-        }
-        if (httpCancelationToken)
+        if (cancelationToken.load())
         {
             break;
         }
+        if (!workQueue.front())
+        {
+            continue;
+        }
 
-        HttpWorkItem* req = *httpWorkQueue.front();
-        httpWorkQueue.pop();
+        HttpWorkItem* req = *workQueue.front();
+        workQueue.pop();
         if (!req)
         {
             continue;
@@ -131,7 +167,7 @@ void HttpManager::HttpWorkerThread()
                 res = DoRequest(cli2, req, path);
             }
 
-            httpResponseQueue.push(new HttpResponse(req->funcRef, res->status, res->body, res->headers));
+            responseQueue.push(new HttpResponse(req->funcRef, res->status, res->body, res->headers));
         }
         catch (const std::exception& ex)
         {
@@ -203,10 +239,10 @@ bool HttpManager::ParseUrl(const std::string& url, std::string& host, std::strin
 
 void HttpManager::HandleHttpResponses()
 {
-    while (!httpResponseQueue.empty())
+    while (!responseQueue.empty())
     {
-        HttpResponse* res = *httpResponseQueue.front();
-        httpResponseQueue.pop();
+        HttpResponse* res = *responseQueue.front();
+        responseQueue.pop();
 
         if (res == nullptr)
         {

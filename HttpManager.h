@@ -35,23 +35,26 @@ class HttpManager
 {
 public:
     HttpManager();
+    ~HttpManager();
 
-    void PushRequest(HttpWorkItem* item);
     void StartHttpWorker();
+    void StopHttpWorker();
+    void PushRequest(HttpWorkItem* item);
     void HandleHttpResponses();
 
 private:
+    void ClearQueues();
     void HttpWorkerThread();
     bool ParseUrl(const std::string& url, std::string& host, std::string& path);
     httplib::Result DoRequest(httplib::Client& client, HttpWorkItem* req, const std::string& path);
 
-    rigtorp::SPSCQueue<HttpWorkItem*> httpWorkQueue;
-    rigtorp::SPSCQueue<HttpResponse*> httpResponseQueue;
-    std::thread httpWorkerThread;
-    bool startedHttpWorkerThread;
-    std::atomic_bool httpCancelationToken;
-    std::condition_variable httpCondVar;
-    std::mutex httpCondVarMutex;
+    rigtorp::SPSCQueue<HttpWorkItem*> workQueue;
+    rigtorp::SPSCQueue<HttpResponse*> responseQueue;
+    std::thread workerThread;
+    bool startedWorkerThread;
+    std::atomic_bool cancelationToken;
+    std::condition_variable condVar;
+    std::mutex condVarMutex;
     std::regex parseUrlRegex;
 };
 
