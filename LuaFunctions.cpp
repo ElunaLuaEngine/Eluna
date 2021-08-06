@@ -145,6 +145,7 @@ luaL_Reg GlobalMethods[] =
     { "CreateUint64", &LuaGlobalFunctions::CreateULongLong },
     { "StartGameEvent", &LuaGlobalFunctions::StartGameEvent },
     { "StopGameEvent", &LuaGlobalFunctions::StopGameEvent },
+    { "HttpRequest", &LuaGlobalFunctions::HttpRequest },
 
     { NULL, NULL }
 };

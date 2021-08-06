@@ -155,6 +155,7 @@ enabled(false),
 
 L(NULL),
 eventMgr(NULL),
+httpManager(),
 
 ServerEventBindings(NULL),
 PlayerEventBindings(NULL),
