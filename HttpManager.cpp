@@ -31,10 +31,10 @@ HttpResponse::HttpResponse(int funcRef, int statusCode, const std::string& body,
 HttpManager::HttpManager()
     : httpWorkQueue(16),
     httpResponseQueue(16),
-    httpCondVar(),
-    httpCondVarMutex(),
     startedHttpWorkerThread(false),
     httpCancelationToken(false),
+    httpCondVar(),
+    httpCondVarMutex(),
     parseUrlRegex("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?")
 {
     StartHttpWorker();
