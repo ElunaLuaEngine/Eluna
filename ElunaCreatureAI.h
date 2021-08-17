@@ -90,16 +90,20 @@ struct ElunaCreatureAI : ScriptedAI
 #endif
 
     // Called at any Damage from any attacker (before damage apply)
-#if AZEROTHCORE
+#if defined AZEROTHCORE
     void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
+#elif defined TRINITY
+    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damageType, SpellInfo const* spellInfo) override
 #else
     void DamageTaken(Unit* attacker, uint32& damage) override
 #endif
     {
         if (!sEluna->DamageTaken(me, attacker, damage))
         {
-#if AZEROTHCORE
+#if defined AZEROTHCORE
             ScriptedAI::DamageTaken(attacker, damage, damagetype, damageSchoolMask);
+#elif defined TRINITY
+            ScriptedAI::DamageTaken(attacker, damage, damageType, spellInfo);
 #else
             ScriptedAI::DamageTaken(attacker, damage);
 #endif
