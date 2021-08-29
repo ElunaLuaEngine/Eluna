@@ -2661,7 +2661,7 @@ namespace LuaGlobalFunctions
      * @proto (httpMethod, url, body, contentType, function)
      * @proto (httpMethod, url, body, contentType, headers, function)
      *
-     * @param string httpMethod : the HTTP method to use (possible values are: "GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+     * @param string httpMethod : the HTTP method to use (possible values are: `"GET"`, `"HEAD"`, `"POST"`, `"PUT"`, `"PATCH"`, `"DELETE"`, `"OPTIONS"`)
      * @param string url : the URL to query
      * @param table headers : a table with string key-value pairs containing the request headers
      * @param string body : the request's body (only used for POST, PUT and PATCH requests)
