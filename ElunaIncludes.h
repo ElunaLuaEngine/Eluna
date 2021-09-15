@@ -24,7 +24,6 @@
 #include "GuildMgr.h"
 #include "Language.h"
 #include "Mail.h"
-#include "MapManager.h"
 #include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "Opcodes.h"
@@ -41,6 +40,12 @@
 
 #if defined TRINITY
 #include "SpellHistory.h"
+#endif
+
+#if defined AZEROTHCORE
+#include "MapMgr.h"
+#else
+#include "MapManager.h"
 #endif
 
 #if defined TRINITY || defined AZEROTHCORE
