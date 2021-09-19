@@ -274,7 +274,7 @@ namespace LuaItem
 #if defined(CATA) || defined (MISTS)
             char* suffix = NULL;
 #else
-#ifdef TRINITY
+#if TRINITY || AZEROTHCORE
             std::array<char const*, 16> const* suffix = NULL;
 #else
             char* const* suffix = NULL;
@@ -284,7 +284,7 @@ namespace LuaItem
             {
                 const ItemRandomSuffixEntry* itemRandEntry = sItemRandomSuffixStore.LookupEntry(-item->GetItemRandomPropertyId());
                 if (itemRandEntry)
-#ifdef TRINITY
+#if TRINITY || AZEROTHCORE
                     suffix = &itemRandEntry->Name;
 #else
                     suffix = itemRandEntry->nameSuffix;
@@ -294,7 +294,7 @@ namespace LuaItem
             {
                 const ItemRandomPropertiesEntry* itemRandEntry = sItemRandomPropertiesStore.LookupEntry(item->GetItemRandomPropertyId());
                 if (itemRandEntry)
-#ifdef TRINITY
+#if TRINITY || AZEROTHCORE
                     suffix = &itemRandEntry->Name;
 #else
                     suffix = itemRandEntry->nameSuffix;
@@ -303,7 +303,7 @@ namespace LuaItem
             if (suffix)
             {
                 name += ' ';
-#if defined TRINITY
+#if TRINITY || AZEROTHCORE
                 name += (*suffix)[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
 #else
                 name += suffix[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
