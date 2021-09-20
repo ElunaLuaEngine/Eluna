@@ -2006,7 +2006,7 @@ namespace LuaUnit
 #ifdef TRINITY
         unit->GetThreatManager().ClearAllThreat();
 #elif AZEROTHCORE
-        unit->getThreatManager().clearReferences();
+        unit->getThreatMgr().clearReferences();
 #else
         unit->GetThreatManager().clearReferences();
 #endif
