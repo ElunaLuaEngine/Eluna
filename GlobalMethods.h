@@ -11,7 +11,7 @@
 
 #ifdef AZEROTHCORE
 
-#include "BanManager.h"
+#include "BanMgr.h"
 
 enum BanMode
 {
