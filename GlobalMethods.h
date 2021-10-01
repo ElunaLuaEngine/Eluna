@@ -65,6 +65,8 @@ namespace LuaGlobalFunctions
     {
 #ifdef MANGOS
         Eluna::Push(L, realmID);
+#elif defined(AZEROTHCORE)
+        Eluna::Push(L, sConfigMgr->GetOption<uint32>("RealmID", 1));
 #else
         Eluna::Push(L, sConfigMgr->GetIntDefault("RealmID", 1));
 #endif
