@@ -59,7 +59,11 @@ namespace LuaCreature
      */
     int IsReputationGainDisabled(lua_State* L, Creature* creature)
     {
-        Eluna::Push(L, creature->IsReputationGainDisabled());
+#ifndef CMANGOS
+		Eluna::Push(L, creature->IsReputationGainDisabled());
+#else
+        Eluna::Push(L, creature->IsNoReputation());
+#endif
         return 1;
     }
 
@@ -93,7 +97,7 @@ namespace LuaCreature
     {
         bool mustBeDead = Eluna::CHECKVAL<bool>(L, 2, false);
 
-#ifdef MANGOS
+#if defined(MANGOS) || defined(CMANGOS)
         Eluna::Push(L, creature->IsTargetableForAttack(mustBeDead));
 #else
         Eluna::Push(L, creature->isTargetableForAttack(mustBeDead));
@@ -174,7 +178,7 @@ namespace LuaCreature
      */
     int CanAggro(lua_State* L, Creature* creature)
     {
-#if defined(TRINITY) || defined(AZEROTHCORE)
+#if defined(TRINITY) || defined(AZEROTHCORE) || defined(CMANGOS)
         Eluna::Push(L, !creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC));
 #else
         // Eluna::Push(L, creature->CanInitiateAttack());
@@ -860,7 +864,9 @@ namespace LuaCreature
 #if defined(TRINITY)
         auto const& threatlist = creature->GetThreatManager().GetThreatenedByMeList();
 #elif defined(AZEROTHCORE)
-auto const& threatlist = creature->getThreatMgr().getThreatList();
+		auto const& threatlist = creature->getThreatMgr().getThreatList();
+#elif defined(CMANGOS)
+		auto const& threatlist = creature->getThreatManager().getThreatList();
 #else
         ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
 #endif
@@ -895,6 +901,8 @@ auto const& threatlist = creature->getThreatMgr().getThreatList();
         Eluna::Push(L, creature->GetThreatManager().GetThreatenedByMeList().size());
 #elif defined(AZEROTHCORE)
         Eluna::Push(L, creature->getThreatMgr().getThreatList().size());
+#elif defined(CMANGOS)
+        Eluna::Push(L, creature->getThreatManager().getThreatList().size());
 #else
         Eluna::Push(L, creature->GetThreatManager().getThreatList().size());
 #endif
@@ -1089,7 +1097,7 @@ auto const& threatlist = creature->getThreatMgr().getThreatList();
     {
         bool allow = Eluna::CHECKVAL<bool>(L, 2, true);
 
-#if defined(TRINITY) || defined(AZEROTHCORE)
+#if defined(TRINITY) || defined(AZEROTHCORE) || defined(CMANGOS)
         if (allow)
             creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
         else
@@ -1112,8 +1120,11 @@ auto const& threatlist = creature->getThreatMgr().getThreatList();
     int SetDisableReputationGain(lua_State* L, Creature* creature)
     {
         bool disable = Eluna::CHECKVAL<bool>(L, 2, true);
-
-        creature->SetDisableReputationGain(disable);
+#ifndef CMANGOS
+		creature->SetDisableReputationGain(disable);
+#else
+        creature->SetNoReputation(disable);
+#endif
         return 0;
     }
 
@@ -1365,7 +1376,7 @@ auto const& threatlist = creature->getThreatMgr().getThreatList();
         uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
         uint32 dataGuidLow = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
-#if defined(TRINITY) || defined(AZEROTHCORE)
+#if defined(TRINITY) || defined(AZEROTHCORE) || defined(CMANGOS)
         creature->UpdateEntry(entry, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);
 #else
         creature->UpdateEntry(entry, ALLIANCE, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);

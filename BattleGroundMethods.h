@@ -121,7 +121,11 @@ namespace LuaBattleGround
      */
     int GetInstanceId(lua_State* L, BattleGround* bg)
     {
+#ifdef CMANGOS
+        Eluna::Push(L, bg->GetInstanceId());
+#else
         Eluna::Push(L, bg->GetInstanceID());
+#endif
         return 1;
     }
 
@@ -143,7 +147,9 @@ namespace LuaBattleGround
      */
     int GetTypeId(lua_State* L, BattleGround* bg)
     {
-#ifndef AZEROTHCORE
+#ifdef CMANGOS
+        Eluna::Push(L, bg->GetTypeId());
+#elif !AZEROTHCORE
         Eluna::Push(L, bg->GetTypeID());
 #else
         Eluna::Push(L, bg->GetBgTypeID());

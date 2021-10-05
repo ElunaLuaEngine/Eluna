@@ -37,7 +37,11 @@ namespace LuaGameObject
      */
     int IsSpawned(lua_State* L, GameObject* go)
     {
+#ifdef CMANGOS
+        Eluna::Push(L, go->IsSpawned());
+#else
         Eluna::Push(L, go->isSpawned());
+#endif
         return 1;
     }
 
@@ -119,7 +123,11 @@ namespace LuaGameObject
      */
     int GetLootState(lua_State* L, GameObject* go)
     {
+#ifdef CMANGOS
+        Eluna::Push(L, go->GetLootState());
+#else
         Eluna::Push(L, go->getLootState());
+#endif
         return 1;
     }
 

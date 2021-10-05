@@ -1198,7 +1198,11 @@ namespace LuaWorldObject
             return 0;
 
         if (player)
+#ifndef CMANGOS
             obj->PlayDirectSound(soundId, player);
+#else
+            obj->PlayDirectSound(soundId, PlayPacketParameters(PLAY_TARGET, (Player const*)player));
+#endif
         else
             obj->PlayDirectSound(soundId);
         return 0;
@@ -1224,7 +1228,11 @@ namespace LuaWorldObject
             return 0;
 
         if (player)
+#ifndef CMANGOS
             obj->PlayDistanceSound(soundId, player);
+#else
+            obj->PlayDistanceSound(soundId, PlayPacketParameters(PLAY_TARGET, (Player const*)player));
+#endif
         else
             obj->PlayDistanceSound(soundId);
         return 0;
