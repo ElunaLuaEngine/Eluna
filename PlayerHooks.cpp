@@ -544,3 +544,11 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     CleanUpStack(5);
     return result;
 }
+
+void Eluna::OnPetAddedToWorld(Player* player, Creature* pet)
+{
+    START_HOOK(PLAYER_EVENT_ON_PET_ADDED_TO_WORLD);
+    Push(player);
+    Push(pet);
+    CallAllFunctions(PlayerEventBindings, key);
+}
