@@ -2303,7 +2303,7 @@ namespace LuaUnit
         float z = Eluna::CHECKVAL<float>(L, 5);
         bool genPath = Eluna::CHECKVAL<bool>(L, 6, true);
 #ifndef CMANGOS
-		unit->GetMotionMaster()->MovePoint(id, x, y, z, genPath);
+        unit->GetMotionMaster()->MovePoint(id, x, y, z, genPath);
 #else
         unit->GetMotionMaster()->MovePoint(id, x, y, z, FORCED_MOVEMENT_NONE, genPath);
 #endif
@@ -2794,7 +2794,7 @@ namespace LuaUnit
 #else
         if (schoolmask & SPELL_SCHOOL_MASK_NORMAL)
 #ifndef CMANGOS
-			damage = unit->CalcArmorReducedDamage(target, damage);
+            damage = unit->CalcArmorReducedDamage(target, damage);
 #else
             damage = unit->CalcArmorReducedDamage(unit, target, damage);
 #endif
@@ -2881,7 +2881,7 @@ namespace LuaUnit
         {
             uint32 absorb = 0;
 #ifndef CMANGOS
-			uint32 resist = 0;
+            uint32 resist = 0;
 #else
             int32 resist = 0;
 #endif
@@ -2893,7 +2893,7 @@ namespace LuaUnit
                 damage -= absorb + resist;
 
 #ifndef CMANGOS
-			unit->DealDamageMods(target, damage, &absorb);
+            unit->DealDamageMods(target, damage, &absorb);
             unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
 #else
             unit->DealDamageMods(unit, target, damage, &absorb, DIRECT_DAMAGE);
@@ -2958,7 +2958,7 @@ namespace LuaUnit
 #elif defined CMANGOS
         unit->DealDamage(unit, target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
 #else
-		unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
+        unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
 #endif
         return 0;
     }

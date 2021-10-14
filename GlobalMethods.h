@@ -1571,7 +1571,7 @@ namespace LuaGlobalFunctions
 
                 // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells();
 #ifndef CMANGOS
-				pCreature->LoadFromDB(db_guid, map);
+                pCreature->LoadFromDB(db_guid, map);
 #else
                 pCreature->LoadFromDB(db_guid, map, db_guid);
 #endif
@@ -1603,7 +1603,7 @@ namespace LuaGlobalFunctions
                 CreatureCreatePos pos(map, x, y, z, o, phase);
 #endif
 #ifndef CMANGOS
-				if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo, TEAM_NONE))
+                if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo, TEAM_NONE))
 #else
                 if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo))
 #endif
@@ -1678,7 +1678,7 @@ namespace LuaGlobalFunctions
 
                 // this will generate a new guid if the object is in an instance
 #ifndef CMANGOS
-				if (!pGameObj->LoadFromDB(db_lowGUID, map))
+                if (!pGameObj->LoadFromDB(db_lowGUID, map))
 #else
                 if (!pGameObj->LoadFromDB(db_lowGUID, map, db_lowGUID))
 #endif

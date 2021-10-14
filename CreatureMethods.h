@@ -60,7 +60,7 @@ namespace LuaCreature
     int IsReputationGainDisabled(lua_State* L, Creature* creature)
     {
 #ifndef CMANGOS
-		Eluna::Push(L, creature->IsReputationGainDisabled());
+        Eluna::Push(L, creature->IsReputationGainDisabled());
 #else
         Eluna::Push(L, creature->IsNoReputation());
 #endif
@@ -864,9 +864,9 @@ namespace LuaCreature
 #if defined(TRINITY)
         auto const& threatlist = creature->GetThreatManager().GetThreatenedByMeList();
 #elif defined(AZEROTHCORE)
-		auto const& threatlist = creature->getThreatMgr().getThreatList();
+        auto const& threatlist = creature->getThreatMgr().getThreatList();
 #elif defined(CMANGOS)
-		auto const& threatlist = creature->getThreatManager().getThreatList();
+        auto const& threatlist = creature->getThreatManager().getThreatList();
 #else
         ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
 #endif
@@ -1121,7 +1121,7 @@ namespace LuaCreature
     {
         bool disable = Eluna::CHECKVAL<bool>(L, 2, true);
 #ifndef CMANGOS
-		creature->SetDisableReputationGain(disable);
+        creature->SetDisableReputationGain(disable);
 #else
         creature->SetNoReputation(disable);
 #endif

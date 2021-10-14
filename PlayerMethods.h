@@ -915,7 +915,7 @@ namespace LuaPlayer
         float radius = Eluna::CHECKVAL<float>(L, 2);
 
 #ifndef CMANGOS
-		Eluna::Push(L, player->GetNextRandomRaidMember(radius));
+        Eluna::Push(L, player->GetNextRandomRaidMember(radius));
 #else
         Eluna::Push(L, player->GetNextRandomRaidMember(radius, SPELL_AURA_NONE));
 #endif
@@ -1674,7 +1674,7 @@ namespace LuaPlayer
         {
             player->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED | UNIT_FLAG_SILENCED);
 #ifndef CMANGOS
-			player->SetClientControl(player, 0);
+            player->SetClientControl(player, 0);
 #else
             player->UpdateClientControl(player, 0);
 #endif
@@ -1683,7 +1683,7 @@ namespace LuaPlayer
         {
             player->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED | UNIT_FLAG_SILENCED);
 #ifndef CMANGOS
-			player->SetClientControl(player, 1);
+            player->SetClientControl(player, 1);
 #else
             player->UpdateClientControl(player, 1);
 #endif
@@ -2248,7 +2248,7 @@ namespace LuaPlayer
         float x, y, z;
         summoner->GetPosition(x,y,z);
 #ifndef CMANGOS
-		player->SetSummonPoint(summoner->GetMapId(), x, y, z);
+        player->SetSummonPoint(summoner->GetMapId(), x, y, z);
 #else
         player->SetSummonPoint(summoner->GetMapId(), x, y, z, summoner->GetMasterGuid());
 #endif
@@ -2458,7 +2458,7 @@ namespace LuaPlayer
     {
         bool save = Eluna::CHECKVAL<bool>(L, 2, true);
 #ifndef CMANGOS
-		player->GetSession()->LogoutPlayer(save);
+        player->GetSession()->LogoutPlayer(save);
 #else
         player->GetSession()->LogoutPlayer();
 #endif
@@ -2949,7 +2949,7 @@ namespace LuaPlayer
                 if (CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(creature))
                     for (uint16 z = 0; z < creaturecount; ++z)
 #ifndef CMANGOS
-						player->KilledMonster(cInfo, ObjectGuid());
+                        player->KilledMonster(cInfo, ObjectGuid());
 #else
                         player->KilledMonster(cInfo, nullptr);
 #endif
@@ -3205,7 +3205,7 @@ namespace LuaPlayer
         Unit* victim = Eluna::CHECKOBJ<Unit>(L, 3, false);
 
 #ifndef CMANGOS
-		player->GiveXP(xp, victim);
+        player->GiveXP(xp, victim);
 #else
         player->GiveXP(xp, nullptr);
 #endif
@@ -3843,7 +3843,7 @@ namespace LuaPlayer
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, _icon, msg, _sender, _intid, _promptMsg, _money, _code);
 #else
 #if !defined(CLASSIC) && !defined(CMANGOS)
-		player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
+        player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
 #elif CMANGOS
         player->GetPlayerMenu()->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
 #else
@@ -3892,13 +3892,13 @@ namespace LuaPlayer
         {
             uint32 menu_id = Eluna::CHECKVAL<uint32>(L, 4);
 #ifndef CMANGOS
-			player->PlayerTalkClass->GetGossipMenu().SetMenuId(menu_id);
+            player->PlayerTalkClass->GetGossipMenu().SetMenuId(menu_id);
 #else
             player->GetPlayerMenu()->GetGossipMenu().SetMenuId(menu_id);
 #endif
         }
 #ifndef CMANGOS
-		player->PlayerTalkClass->SendGossipMenu(npc_text, sender->GET_GUID());
+        player->PlayerTalkClass->SendGossipMenu(npc_text, sender->GET_GUID());
 #else
         player->GetPlayerMenu()->SendGossipMenu(npc_text, sender->GET_GUID());
 #endif
@@ -3916,7 +3916,7 @@ namespace LuaPlayer
     int GossipClearMenu(lua_State* /*L*/, Player* player)
     {
 #ifndef CMANGOS
-		player->PlayerTalkClass->ClearMenus();
+        player->PlayerTalkClass->ClearMenus();
 #else
         player->GetPlayerMenu()->ClearMenus();
 #endif
@@ -4008,7 +4008,7 @@ namespace LuaPlayer
             return 0;
 
 #ifndef CMANGOS
-		player->PlayerTalkClass->SendQuestGiverQuestDetails(quest, player->GET_GUID(), activateAccept);
+        player->PlayerTalkClass->SendQuestGiverQuestDetails(quest, player->GET_GUID(), activateAccept);
 #else
         player->GetPlayerMenu()->SendQuestGiverQuestDetails(quest, player->GET_GUID(), activateAccept);
 #endif
@@ -4055,7 +4055,7 @@ namespace LuaPlayer
         // Get correct existing group if any
         Group* group = player->GetGroup();
 #ifndef CMANGOS
-		if (group && group->isBGGroup())
+        if (group && group->isBGGroup())
 #else
         if (group && group->isBattleGroup())
 #endif
