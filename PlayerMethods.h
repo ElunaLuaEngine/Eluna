@@ -3076,14 +3076,11 @@ namespace LuaPlayer
     {
         std::string text = Eluna::CHECKVAL<std::string>(L, 2);
         uint32 lang = Eluna::CHECKVAL<uint32>(L, 3);
-#ifdef TRINITY
-        Player* receiver = Eluna::CHECKOBJ<Player>(L, 4);
-#else
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 4);
-#endif
 #if defined(TRINITY) || defined(AZEROTHCORE)
+        Player* receiver = Eluna::CHECKOBJ<Player>(L, 4);
         player->Whisper(text, (Language)lang, receiver);
 #else
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 4);
         player->Whisper(text, lang, guid);
 #endif
         return 0;
