@@ -3081,7 +3081,7 @@ namespace LuaPlayer
 #else
         ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 4);
 #endif
-#ifdef TRINITY
+#if defined(TRINITY) || defined(AZEROTHCORE)
         player->Whisper(text, (Language)lang, receiver);
 #else
         player->Whisper(text, lang, guid);
@@ -3112,7 +3112,7 @@ namespace LuaPlayer
     {
         std::string text = Eluna::CHECKVAL<std::string>(L, 2);
         uint32 lang = Eluna::CHECKVAL<uint32>(L, 3);
-#ifdef TRINITY
+#if defined(TRINITY) || defined(AZEROTHCORE)
         player->Yell(text, (Language)lang);
 #else
         player->Yell(text, lang);
@@ -3130,7 +3130,7 @@ namespace LuaPlayer
     {
         std::string text = Eluna::CHECKVAL<std::string>(L, 2);
         uint32 lang = Eluna::CHECKVAL<uint32>(L, 3);
-#ifdef TRINITY
+#if defined(TRINITY) || defined(AZEROTHCORE)
         player->Say(text, (Language)lang);
 #else
         player->Say(text, lang);
