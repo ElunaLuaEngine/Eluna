@@ -1382,6 +1382,20 @@ namespace LuaPlayer
     }
 
     /**
+     * Returns a mailed [Item] by guid.
+     *
+     * @param ObjectGuid guid : an item guid
+     * @return [Item] item
+     */
+    int GetMailItem(lua_State* L, Player* player)
+    {
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
+
+        Eluna::Push(L, player->GetMItem(guid.GetCounter()));
+        return 1;
+    }
+
+    /**
      * Returns an [Item] from the player by entry.
      *
      * The item can be equipped, in bags or in bank.
