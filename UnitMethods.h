@@ -2657,6 +2657,17 @@ namespace LuaUnit
         return 0;
     }
 
+#if !defined(CLASSIC)
+    /**
+     * Removes all positive visible [Aura]'s from the [Unit].
+     */
+    int RemoveArenaAuras(lua_State* /*L*/, Unit* unit)
+    {
+        unit->RemoveArenaAuras();
+        return 0;
+    }
+#endif
+
     /**
      * Adds the given unit state for the [Unit].
      *
