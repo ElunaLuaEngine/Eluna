@@ -2638,6 +2638,90 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Performs a non-blocking HTTP request.
+     *
+     * When the passed callback function is called, the parameters `(status, body, headers)` are passed to it.
+     *
+     *     -- GET example (prints a random word)
+     *     HttpRequest("GET", "https://random-word-api.herokuapp.com/word", function(status, body, headers)
+     *         print("Random word: " .. string.sub(body, 3, body:len() - 2))
+     *     end)
+     *
+     *     -- POST example with JSON request body
+     *     HttpRequest("POST", "https://jsonplaceholder.typicode.com/posts", '{"userId": 1,"title": "Foo","body": "Bar!"}', "application/json", function(status, body, headers)
+     *         print(body)
+     *     end)
+     *
+     *     -- Example with request headers
+     *     HttpRequest("GET", "https://postman-echo.com/headers", { Accept = "application/json", ["User-Agent"] = "Eluna Lua Engine" }, function(status, body, headers)
+     *         print(body)
+     *     end)
+     *
+     * @proto (httpMethod, url, function)
+     * @proto (httpMethod, url, headers, function)
+     * @proto (httpMethod, url, body, contentType, function)
+     * @proto (httpMethod, url, body, contentType, headers, function)
+     *
+     * @param string httpMethod : the HTTP method to use (possible values are: `"GET"`, `"HEAD"`, `"POST"`, `"PUT"`, `"PATCH"`, `"DELETE"`, `"OPTIONS"`)
+     * @param string url : the URL to query
+     * @param table headers : a table with string key-value pairs containing the request headers
+     * @param string body : the request's body (only used for POST, PUT and PATCH requests)
+     * @param string contentType : the body's content-type
+     * @param function function : function that will be called when the request is executed
+     */
+    int HttpRequest(lua_State* L)
+    {
+        std::string httpVerb = Eluna::CHECKVAL<std::string>(L, 1);
+        std::string url = Eluna::CHECKVAL<std::string>(L, 2);
+        std::string body;
+        std::string bodyContentType;
+        httplib::Headers headers;
+
+        int headersIdx = 3;
+        int callbackIdx = 3;
+
+        if (!lua_istable(L, headersIdx) && lua_isstring(L, headersIdx) && lua_isstring(L, headersIdx + 1))
+        {
+            body = Eluna::CHECKVAL<std::string>(L, 3);
+            bodyContentType = Eluna::CHECKVAL<std::string>(L, 4);
+            headersIdx = 5;
+            callbackIdx = 5;
+        }
+
+        if (lua_istable(L, headersIdx))
+        {
+            ++callbackIdx;
+
+            lua_pushnil(L); // First key
+            while (lua_next(L, headersIdx) != 0)
+            {
+                // Uses 'key' (at index -2) and 'value' (at index -1)
+                if (lua_isstring(L, -2))
+                {
+                    std::string key(lua_tostring(L, -2));
+                    std::string value(lua_tostring(L, -1));
+                    headers.insert(std::pair<std::string, std::string>(key, value));
+                }
+                // Removes 'value'; keeps 'key' for next iteration
+                lua_pop(L, 1);
+            }
+        }
+
+        lua_pushvalue(L, callbackIdx);
+        int funcRef = luaL_ref(L, LUA_REGISTRYINDEX);
+        if (funcRef >= 0)
+        {
+            Eluna::GEluna->httpManager.PushRequest(new HttpWorkItem(funcRef, httpVerb, url, body, bodyContentType, headers));
+        }
+        else
+        {
+            luaL_argerror(L, callbackIdx, "unable to make a ref to function");
+        }
+
+        return 0;
+    }
+
+    /**
      * Returns an object representing a `long long` (64-bit) value.
      *
      * The value by default is 0, but can be initialized to a value by passing a number or long long as a string.
