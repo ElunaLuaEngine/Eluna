@@ -107,7 +107,12 @@ void Eluna::LoadScriptPaths()
     lua_scripts.clear();
     lua_extensions.clear();
 
+#if defined(AZEROTHCORE)
+    lua_folderpath = eConfigMgr->GetOption<std::string>("Eluna.ScriptPath", "lua_scripts");
+#else
     lua_folderpath = eConfigMgr->GetStringDefault("Eluna.ScriptPath", "lua_scripts");
+#endif
+
 #ifndef ELUNA_WINDOWS
     if (lua_folderpath[0] == '~')
         if (const char* home = getenv("HOME"))
@@ -215,7 +220,12 @@ void Eluna::CloseLua()
 
 void Eluna::OpenLua()
 {
+#if defined(AZEROTHCORE)
+    enabled = eConfigMgr->GetOption<bool>("Eluna.Enabled", true);
+#else
     enabled = eConfigMgr->GetBoolDefault("Eluna.Enabled", true);
+#endif
+
     if (!IsEnabled())
     {
         ELUNA_LOG_INFO("[Eluna]: Eluna is disabled in config");
@@ -583,7 +593,12 @@ bool Eluna::ExecuteCall(int params, int res)
         ASSERT(false); // stack probably corrupt
     }
 
+#if defined(AZEROTHCORE)
+    bool usetrace = eConfigMgr->GetOption<bool>("Eluna.TraceBack", false);
+#else
     bool usetrace = eConfigMgr->GetBoolDefault("Eluna.TraceBack", false);
+#endif
+
     if (usetrace)
     {
         lua_pushcfunction(L, &StackTrace);
