@@ -52,7 +52,11 @@ namespace LuaPacket
         uint32 opcode = Eluna::CHECKVAL<uint32>(L, 2);
         if (opcode >= NUM_MSG_TYPES)
             return luaL_argerror(L, 2, "valid opcode expected");
+#if defined CMANGOS && defined CLASSIC
+        packet->SetOpcode((Opcodes)opcode);
+#else
         packet->SetOpcode((OpcodesList)opcode);
+#endif
         return 0;
     }
 

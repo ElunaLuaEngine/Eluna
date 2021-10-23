@@ -3844,8 +3844,10 @@ namespace LuaPlayer
 #else
 #if !defined(CLASSIC) && !defined(CMANGOS)
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
-#elif CMANGOS
+#elif CMANGOS && !defined CLASSIC
         player->GetPlayerMenu()->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
+#elif CMANGOS && CLASSIC
+        player->GetPlayerMenu()->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _code);
 #else
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _code);
 #endif

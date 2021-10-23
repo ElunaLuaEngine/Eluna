@@ -1875,7 +1875,11 @@ namespace LuaGlobalFunctions
         if (opcode >= NUM_MSG_TYPES)
             return luaL_argerror(L, 1, "valid opcode expected");
 
+#if defined CMANGOS && defined CLASSIC
+        Eluna::Push(L, new WorldPacket((Opcodes)opcode, size));
+#else
         Eluna::Push(L, new WorldPacket((OpcodesList)opcode, size));
+#endif
         return 1;
     }
 
