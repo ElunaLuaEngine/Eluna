@@ -30,7 +30,7 @@ git clone https://github.com/azerothcore/mod-eluna-lua-engine.git
 
 1. 下载 [mod-eluna-lua-engine](https://github.com/azerothcore/mod-eluna-lua-engine/archive/master.zip)  
 2. 解压到你的`azerothcore-wotlk`源码中的**modules**文件夹中,请确保路径看起来是这样的`azerothcore-wotlk/modules/mod-eluna-lua-engine`
-3. 下载 [Eluna](https://github.com/ElunaLuaEngine/Eluna/archive/master.zip) 
+3. 下载 [Eluna](https://github.com/azerothcore/Eluna/archive/master.zip) 
 4. 把文件解压到 `mod-eluna-lua-engine/LuaEngine`. `LuaEngine.h`这个文件的路径看起来应该是这样的`mod-eluna-lua-engine/LuaEngine/LuaEngine.h`.
 
 ### 2) 生成
@@ -40,3 +40,6 @@ git clone https://github.com/azerothcore/mod-eluna-lua-engine.git
 
 Eluna API : 
 [http://elunaluaengine.github.io/](http://elunaluaengine.github.io/)
+Eluna 中文文档(重构): 
+[http://wiki.uiwow.com/doku.php/eluna:start](http://wiki.uiwow.com/doku.php/eluna:start)
+
