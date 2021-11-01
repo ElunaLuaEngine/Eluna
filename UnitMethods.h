@@ -1221,7 +1221,7 @@ namespace LuaUnit
      */
     int GetFaction(lua_State* L, Unit* unit)
     {
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, unit->GetFaction());
 #else
         Eluna::Push(L, unit->getFaction());
@@ -1553,7 +1553,7 @@ namespace LuaUnit
     int SetFaction(lua_State* L, Unit* unit)
     {
         uint32 factionId = Eluna::CHECKVAL<uint32>(L, 2);
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         unit->SetFaction(factionId);
 #else
         unit->setFaction(factionId);
