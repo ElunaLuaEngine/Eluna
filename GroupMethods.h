@@ -39,6 +39,7 @@ namespace LuaGroup
     /**
      * Returns 'true' if the [Player] is in a LFG group
      *
+     * @param ObjectGuid guid : guid of a possible player
      * @return bool isLFGGroup
      */
     int IsLFGGroup(lua_State* L, Group* group)
