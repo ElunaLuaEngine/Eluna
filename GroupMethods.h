@@ -37,7 +37,7 @@ namespace LuaGroup
     }
 
     /**
-     * Returns 'true' if the [Player] is in a LFG group
+     * Returns 'true' if the [Group] is a LFG group
      *
      * @return bool isLFGGroup
      */
