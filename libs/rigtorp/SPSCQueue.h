@@ -193,7 +193,7 @@ public:
   size_t capacity() const noexcept { return capacity_ - 1; }
 
 private:
-#ifdef __cpp_lib_hardware_interference_size
+#if defined(__cpp_lib_hardware_interference_size) && !defined(__APPLE__)
   static constexpr size_t kCacheLineSize =
       std::hardware_destructive_interference_size;
 #else
