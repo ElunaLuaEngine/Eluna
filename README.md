@@ -37,3 +37,18 @@ You need to run the cmake again and and rebuild the project.
 
 Eluna API : 
 [http://elunaluaengine.github.io/](http://elunaluaengine.github.io/)
+
+## How to update the Eluna version (for project mainteners)
+
+1) `cd` into `mod-eluna-lua-engine`
+2) `git checkout master`
+3) cd `LuaEngine`
+4) `git checkout master`
+5) `git pull`
+6) `cd ..` so you get back to `mod-eluna-lua-engine`
+7) `git checkout -b some-new-unique-branch-name`
+8) `git add LuaEngine`
+9) `git commit -m "feat: update Eluna version"`
+10) `git push`
+11) The terminal will tell you something like `fatal: The current branch some-new-unique-branch-name has no upstream branch.` and suggest the command to use, for example: `git push --set-upstream origin some-new-unique-branch-name`
+12) Open [the repo on Github](https://github.com/azerothcore/mod-eluna-lua-engine) and create a new PR
