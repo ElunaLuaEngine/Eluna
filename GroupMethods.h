@@ -37,6 +37,17 @@ namespace LuaGroup
     }
 
     /**
+     * Returns 'true' if the [Group] is a LFG group
+     *
+     * @return bool isLFGGroup
+     */
+    int IsLFGGroup(lua_State* L, Group* group)
+    {
+        Eluna::Push(L, group->isLFGGroup());
+        return 1;
+    }
+
+    /**
      * Returns 'true' if the [Group] is a raid [Group]
      *
      * @return bool isRaid
