@@ -858,19 +858,28 @@ namespace LuaCreature
     int GetAITargets(lua_State* L, Creature* creature)
     {
 #if defined(TRINITY)
-        auto const& threatlist = creature->GetThreatManager().GetThreatenedByMeList();
+        auto const& threatlist = creature->GetThreatManager().GetSortedThreatList();
 #elif defined(AZEROTHCORE)
-auto const& threatlist = creature->getThreatMgr().getThreatList();
+        auto const& threatlist = creature->getThreatMgr().getThreatList();
 #else
         ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
 #endif
+
+#if defined(TRINITY)
+        lua_createtable(L, creature->GetThreatManager().GetThreatListSize(), 0);
+#else
         lua_createtable(L, threatlist.size(), 0);
+#endif
         int tbl = lua_gettop(L);
         uint32 i = 0;
+#if defined(TRINITY)
+        for (ThreatReference const* itr : threatlist)
+#else
         for (auto itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+#endif
         {
 #if defined(TRINITY)
-            Unit* target = itr->second->GetOwner();
+            Unit* target = itr->GetVictim();
 #else
             Unit* target = (*itr)->getTarget();
 #endif
@@ -892,7 +901,7 @@ auto const& threatlist = creature->getThreatMgr().getThreatList();
     int GetAITargetsCount(lua_State* L, Creature* creature)
     {
 #if defined(TRINITY)
-        Eluna::Push(L, creature->GetThreatManager().GetThreatenedByMeList().size());
+        Eluna::Push(L, creature->GetThreatManager().GetThreatListSize());
 #elif defined(AZEROTHCORE)
         Eluna::Push(L, creature->getThreatMgr().getThreatList().size());
 #else
