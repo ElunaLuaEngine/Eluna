@@ -10,6 +10,8 @@
 #include "LuaEngine.h"
 #if defined(TRINITY) || AZEROTHCORE
 #include "InstanceScript.h"
+#elif defined CMANGOS
+#include "Maps/InstanceData.h"
 #else
 #include "InstanceData.h"
 #endif

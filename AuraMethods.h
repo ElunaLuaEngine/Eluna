@@ -54,7 +54,7 @@ namespace LuaAura
      */
     int GetCasterLevel(lua_State* L, Aura* aura)
     {
-#ifdef TRINITY
+#if defined(TRINITY) || CMANGOS
         Eluna::Push(L, aura->GetCaster()->GetLevel());
 #else
         Eluna::Push(L, aura->GetCaster()->getLevel());
@@ -192,6 +192,8 @@ namespace LuaAura
         uint8 amount = Eluna::CHECKVAL<uint8>(L, 2);
 #if defined TRINITY || defined AZEROTHCORE
         aura->SetStackAmount(amount);
+#elif defined CMANGOS
+        aura->GetHolder()->SetStackAmount(amount, aura->GetTarget());
 #else
         aura->GetHolder()->SetStackAmount(amount);
 #endif

@@ -54,7 +54,11 @@ namespace LuaGroup
      */
     int IsBGGroup(lua_State* L, Group* group)
     {
+#ifdef CMANGOS
+        Eluna::Push(L, group->isBattleGroup());        
+#else
         Eluna::Push(L, group->isBGGroup());
+#endif
         return 1;
     }
 

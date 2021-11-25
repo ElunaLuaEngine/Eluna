@@ -8,6 +8,7 @@
 #define _ELUNA_INCLUDES_H
 
 // Required
+#ifndef CMANGOS
 #include "AccountMgr.h"
 #include "AuctionHouseMgr.h"
 #include "Cell.h"
@@ -35,8 +36,39 @@
 #include "SpellAuras.h"
 #include "SpellMgr.h"
 #include "TemporarySummon.h"
-#include "WorldPacket.h"
 #include "WorldSession.h"
+#else
+#include "Accounts/AccountMgr.h"
+#include "AuctionHouse/AuctionHouseMgr.h"
+#include "Grids/Cell.h"
+#include "Grids/CellImpl.h"
+#include "Chat/Chat.h"
+#include "Chat/Channel.h"
+#include "Server/DBCStores.h"
+#include "GameEvents/GameEventMgr.h"
+#include "Entities/GossipDef.h"
+#include "Grids/GridNotifiers.h"
+#include "Grids/GridNotifiersImpl.h"
+#include "Groups/Group.h"
+#include "Guilds/Guild.h"
+#include "Guilds/GuildMgr.h"
+#include "Tools/Language.h"
+#include "Mails/Mail.h"
+#include "Maps/MapManager.h"
+#include "Globals/ObjectAccessor.h"
+#include "Globals/ObjectMgr.h"
+#include "Server/Opcodes.h"
+#include "Entities/Player.h"
+#include "Entities/Pet.h"
+#include "Reputation/ReputationMgr.h"
+#include "DBScripts/ScriptMgr.h"
+#include "Spells/Spell.h"
+#include "Spells/SpellAuras.h"
+#include "Spells/SpellMgr.h"
+#include "Entities/TemporarySpawn.h"
+#include "Server/WorldSession.h"
+#endif
+#include "WorldPacket.h"
 
 #if defined TRINITY
 #include "SpellHistory.h"
@@ -44,6 +76,8 @@
 
 #if defined AZEROTHCORE
 #include "MapMgr.h"
+#elif defined CMANGOS
+#include "Maps/MapManager.h"
 #else
 #include "MapManager.h"
 #endif
@@ -63,21 +97,33 @@
 #else
 #include "Config/Config.h"
 #ifdef CMANGOS
-#include "AI/AggressorAI.h"
+#include "AI/BaseAI/UnitAI.h"
 #else
 #include "AggressorAI.h"
 #endif
 #include "BattleGroundMgr.h"
+#ifndef CMANGOS
 #include "SQLStorages.h"
+#else
+#include "Server/SQLStorages.h"
+#endif
 #include "revision.h"
 #endif
 
 #if (!defined(TBC) && !defined(CLASSIC))
+#ifndef CMANGOS
 #include "Vehicle.h"
+#else
+#include "Entities/Vehicle.h"
+#endif
 #endif
 
 #ifndef CLASSIC
+#ifndef CMANGOS
 #include "ArenaTeam.h"
+#else
+#include "Arena/ArenaTeam.h"
+#endif
 #endif
 
 #ifndef CLASSIC
@@ -95,7 +141,7 @@ typedef Opcodes                 OpcodesList;
 
 #ifdef CMANGOS
 #define CORE_NAME               "cMaNGOS"
-#define CORE_VERSION            REVISION_DATE " " REVISION_TIME
+#define CORE_VERSION            REVISION_DATE " " REVISION_ID
 #endif
 
 #ifdef TRINITY
@@ -152,7 +198,11 @@ typedef Opcodes                 OpcodesList;
 #define UNIT_BYTE2_FLAG_SANCTUARY   UNIT_BYTE2_FLAG_SUPPORTABLE
 #endif
 
+#ifndef CMANGOS
 typedef TemporarySummon TempSummon;
+#else
+typedef TemporarySpawn TempSummon;
+#endif
 typedef SpellEntry SpellInfo;
 #endif // TRINITY
 

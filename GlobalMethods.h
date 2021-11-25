@@ -63,7 +63,7 @@ namespace LuaGlobalFunctions
 
     int GetRealmID(lua_State* L)
     {
-#ifdef MANGOS
+#if defined(MANGOS) || CMANGOS
         Eluna::Push(L, realmID);
 #else
         Eluna::Push(L, sConfigMgr->GetIntDefault("RealmID", 1));
@@ -212,7 +212,7 @@ namespace LuaGlobalFunctions
                 {
                     if (!player->IsInWorld())
                         continue;
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY || AZEROTHCORE || CMANGOS
                     if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
 #else
                     if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->isGameMaster()))
@@ -1570,7 +1570,11 @@ namespace LuaGlobalFunctions
                 uint32 db_guid = pCreature->GetGUIDLow();
 
                 // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells();
+#ifndef CMANGOS
                 pCreature->LoadFromDB(db_guid, map);
+#else
+                pCreature->LoadFromDB(db_guid, map, db_guid);
+#endif
 
                 map->Add(pCreature);
                 eObjectMgr->AddCreatureToGrid(db_guid, eObjectMgr->GetCreatureData(db_guid));
@@ -1588,14 +1592,21 @@ namespace LuaGlobalFunctions
                     return 1;
                 }
 
+#ifndef CMANGOS
                 TemporarySummon* pCreature = new TemporarySummon(ObjectGuid(uint64(0)));
+#else
+                TemporarySpawn* pCreature = new TemporarySpawn(ObjectGuid(uint64(0)));
+#endif
 #if (defined(TBC) || defined(CLASSIC))
                 CreatureCreatePos pos(map, x, y, z, o);
 #else
                 CreatureCreatePos pos(map, x, y, z, o, phase);
 #endif
-
+#ifndef CMANGOS
                 if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo, TEAM_NONE))
+#else
+                if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo))
+#endif
                 {
                     delete pCreature;
                     {
@@ -1666,7 +1677,11 @@ namespace LuaGlobalFunctions
 #endif
 
                 // this will generate a new guid if the object is in an instance
+#ifndef CMANGOS
                 if (!pGameObj->LoadFromDB(db_lowGUID, map))
+#else
+                if (!pGameObj->LoadFromDB(db_lowGUID, map, db_lowGUID))
+#endif
                 {
                     delete pGameObj;
                     Eluna::Push(L);
@@ -1860,7 +1875,11 @@ namespace LuaGlobalFunctions
         if (opcode >= NUM_MSG_TYPES)
             return luaL_argerror(L, 1, "valid opcode expected");
 
+#if defined CMANGOS && defined CLASSIC
+        Eluna::Push(L, new WorldPacket((Opcodes)opcode, size));
+#else
         Eluna::Push(L, new WorldPacket((OpcodesList)opcode, size));
+#endif
         return 1;
     }
 
@@ -2406,7 +2425,12 @@ namespace LuaGlobalFunctions
             nodeEntry->z = entry.z;
             nodeEntry->MountCreatureID[0] = mountH;
             nodeEntry->MountCreatureID[1] = mountA;
+#ifndef CMANGOS
             sTaxiNodesStore.SetEntry(nodeId++, nodeEntry);
+#else
+            sTaxiNodesStore.InsertEntry(nodeEntry, nodeId++);
+#endif
+
 #ifndef AZEROTHCORE
             sTaxiPathNodesByPath[pathId].set(index++, new TaxiPathNodeEntry(entry));
 #else
@@ -2428,7 +2452,11 @@ namespace LuaGlobalFunctions
         pathEntry->price = price;
 #endif
         pathEntry->ID = pathId;
+#ifndef CMANGOS
         sTaxiPathStore.SetEntry(pathId, pathEntry);
+#else
+        sTaxiPathStore.InsertEntry(pathEntry, pathId);
+#endif
         Eluna::Push(L, pathId);
         return 1;
     }
