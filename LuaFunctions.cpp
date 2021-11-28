@@ -1076,7 +1076,9 @@ ElunaRegister<Group> GroupMethods[] =
     { "RemoveMember", &LuaGroup::RemoveMember },
     { "Disband", &LuaGroup::Disband },
     { "IsFull", &LuaGroup::IsFull },
+#if !(defined(CLASSIC) || defined(TBC))
     { "IsLFGGroup", &LuaGroup::IsLFGGroup },
+#endif
     { "IsRaidGroup", &LuaGroup::IsRaidGroup },
     { "IsBGGroup", &LuaGroup::IsBGGroup },
     // {"IsBFGroup", &LuaGroup::IsBFGroup},                       // :IsBFGroup() - UNDOCUMENTED - Returns true if the group is a battlefield group
