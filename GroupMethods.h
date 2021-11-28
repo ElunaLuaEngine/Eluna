@@ -36,6 +36,7 @@ namespace LuaGroup
         return 1;
     }
 
+#if !(defined(CLASSIC) || defined(TBC))
     /**
      * Returns 'true' if the [Group] is a LFG group
      *
@@ -46,7 +47,8 @@ namespace LuaGroup
         Eluna::Push(L, group->isLFGGroup());
         return 1;
     }
-
+#endif
+    
     /**
      * Returns 'true' if the [Group] is a raid [Group]
      *
