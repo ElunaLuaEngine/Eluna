@@ -356,9 +356,9 @@ public:
     bool CanAreaTrigger(Player* player, AreaTrigger const* trigger) override
     {
         if (sEluna->OnAreaTrigger(player, trigger))
-            return false;
+            return true;
 
-        return true;
+        return false;
     }
 };
 
