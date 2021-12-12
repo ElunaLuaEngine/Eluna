@@ -1573,7 +1573,7 @@ namespace LuaGlobalFunctions
 #ifndef CMANGOS
                 pCreature->LoadFromDB(db_guid, map);
 #else
-                pCreature->LoadFromDB(db_guid, map, db_guid);
+                pCreature->LoadFromDB(db_guid, map, db_guid, 0);
 #endif
 
                 map->Add(pCreature);
@@ -1680,7 +1680,7 @@ namespace LuaGlobalFunctions
 #ifndef CMANGOS
                 if (!pGameObj->LoadFromDB(db_lowGUID, map))
 #else
-                if (!pGameObj->LoadFromDB(db_lowGUID, map, db_lowGUID))
+                if (!pGameObj->LoadFromDB(db_lowGUID, map, db_lowGUID, 0))
 #endif
                 {
                     delete pGameObj;
