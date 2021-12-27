@@ -4082,7 +4082,7 @@ namespace LuaPlayer
 #ifndef CMANGOS
         if (group && group->isBGGroup())
 #else
-        if (group && group->isBattleGroup())
+        if (group && group->IsBattleGroup())
 #endif
             group = player->GetOriginalGroup();
 
