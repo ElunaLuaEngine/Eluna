@@ -29,7 +29,7 @@ Optional: if you need to update Eluna to the latest version, you can `cd LuaEngi
 1. download [mod-eluna-lua-engine](https://github.com/azerothcore/mod-eluna-lua-engine/archive/master.zip)  
 2. extract it move the folder **mod-eluna-lua-engine** inside the **modules** folder of your azerothcore-wotlk sources
 3. download [Eluna](https://github.com/Azerothcore/Eluna/archive/master.zip) 
-4. extract it and move all the files inside the `Eluna-master` folder into the `mod-eluna-lua-engine/LuaEngine` folder. `LuaEngine.h` needs to be directly under `mod-eluna-lua-engine/LuaEngine` without any extra sub-folders.
+4. extract it and move all the files inside the `Eluna-master` folder into the `mod-eluna-lua-engine/src/LuaEngine` folder. `LuaEngine.h` needs to be directly under `mod-eluna-lua-engine/src/LuaEngine` without any extra sub-folders.
 
 ### 2) Build
 
