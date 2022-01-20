@@ -145,23 +145,31 @@ bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, 
 {
     START_HOOK_WITH_RETVAL(CreatureGossipBindings, GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry(), false);
 #ifdef CMANGOS
+    auto original_menu = *pPlayer->GetPlayerMenu();
     pPlayer->GetPlayerMenu()->ClearMenus();
 #else
+    auto original_menu = *pPlayer->PlayerTalkClass;
     pPlayer->PlayerTalkClass->ClearMenus();
 #endif
     Push(pPlayer);
     Push(pCreature);
     Push(sender);
     Push(action);
-    return CallAllFunctionsBool(CreatureGossipBindings, key, true);
+    auto preventDefault = CallAllFunctionsBool(CreatureGossipBindings, key, true);
+    if (!preventDefault) {
+        *pPlayer->PlayerTalkClass = original_menu;
+    }
+    return preventDefault;
 }
 
 bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code)
 {
     START_HOOK_WITH_RETVAL(CreatureGossipBindings, GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry(), false);
 #ifdef CMANGOS
+    auto original_menu = *pPlayer->GetPlayerMenu();
     pPlayer->GetPlayerMenu()->ClearMenus();
 #else
+    auto original_menu = *pPlayer->PlayerTalkClass;
     pPlayer->PlayerTalkClass->ClearMenus();
 #endif
     Push(pPlayer);
@@ -169,5 +177,9 @@ bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 send
     Push(sender);
     Push(action);
     Push(code);
-    return CallAllFunctionsBool(CreatureGossipBindings, key, true);
+    auto preventDefault = CallAllFunctionsBool(CreatureGossipBindings, key, true);
+    if (!preventDefault) {
+        *pPlayer->PlayerTalkClass = original_menu;
+    }
+    return preventDefault;
 }
