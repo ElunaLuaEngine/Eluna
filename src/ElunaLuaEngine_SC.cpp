@@ -904,6 +904,10 @@ public:
     void OnShutdown() override
     {
         sEluna->OnShutdown();
+    }
+
+    void OnAfterUnloadAllMaps() override
+    {
         Eluna::Uninitialize();
     }
 
