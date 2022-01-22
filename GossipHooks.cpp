@@ -157,7 +157,11 @@ bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, 
     Push(action);
     auto preventDefault = CallAllFunctionsBool(CreatureGossipBindings, key, true);
     if (!preventDefault) {
+#ifdef CMANGOS
+        *pPlayer->GetPlayerMenu() = original_menu;
+#else
         *pPlayer->PlayerTalkClass = original_menu;
+#endif
     }
     return preventDefault;
 }
@@ -179,7 +183,11 @@ bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 send
     Push(code);
     auto preventDefault = CallAllFunctionsBool(CreatureGossipBindings, key, true);
     if (!preventDefault) {
+#ifdef CMANGOS
+        *pPlayer->GetPlayerMenu() = original_menu;
+#else
         *pPlayer->PlayerTalkClass = original_menu;
+#endif
     }
     return preventDefault;
 }
