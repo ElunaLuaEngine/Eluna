@@ -129,3 +129,36 @@ jobs:
           cd bin
           make -j4
           make install
+          
+  cmangos-Eluna:
+    strategy:
+      fail-fast: false
+      matrix:
+        eluna: [ON, OFF]
+        patch: [classic, tbc, wotlk]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: false
+          repository: Niam5/mangos-${{ matrix.patch }}
+          ref: master
+      - uses: actions/checkout@v2
+        with:
+          path: src/game/LuaEngine
+      - name: Dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -yq libboost-all-dev
+      - name: Configure
+        env:
+          ELUNA: ${{ matrix.eluna }}
+        run: |
+          mkdir bin
+          cd bin
+          cmake .. -DBUILD_ELUNA=$ELUNA -DCMAKE_INSTALL_PREFIX=install -DBUILD_PLAYERBOT=OFF -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/
+          cd ..
+      - name: Build
+        run: |
+          cd bin
+          make -j4
+          make install
