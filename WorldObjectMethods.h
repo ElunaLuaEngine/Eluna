@@ -832,7 +832,7 @@ namespace LuaWorldObject
         }
 #endif
 #ifdef TRINITY
-        Eluna::Push(L, obj->SummonCreature(entry, x, y, z, o, type, Seconds(despawnTimer)));
+        Eluna::Push(L, obj->SummonCreature(entry, x, y, z, o, type, Milliseconds(despawnTimer)));
 #else
         Eluna::Push(L, obj->SummonCreature(entry, x, y, z, o, type, despawnTimer));
 #endif
