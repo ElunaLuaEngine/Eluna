@@ -118,14 +118,14 @@ void Eluna::LoadScriptPaths()
         if (const char* home = getenv("HOME"))
             lua_folderpath.replace(0, 1, home);
 #endif
-    ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", lua_folderpath.c_str());
+    ELUNA_LOG_INFO("[Eluna]: Searching scripts from `{}`", lua_folderpath);
     lua_requirepath.clear();
     GetScripts(lua_folderpath);
     // Erase last ;
     if (!lua_requirepath.empty())
         lua_requirepath.erase(lua_requirepath.end() - 1);
 
-    ELUNA_LOG_DEBUG("[Eluna]: Loaded %u scripts in %u ms", uint32(lua_scripts.size() + lua_extensions.size()), ElunaUtil::GetTimeDiff(oldMSTime));
+    ELUNA_LOG_DEBUG("[Eluna]: Loaded {} scripts in {} ms", lua_scripts.size() + lua_extensions.size(), ElunaUtil::GetTimeDiff(oldMSTime));
 }
 
 void Eluna::_ReloadEluna()
@@ -326,7 +326,7 @@ void Eluna::DestroyBindStores()
 
 void Eluna::AddScriptPath(std::string filename, const std::string& fullpath)
 {
-    ELUNA_LOG_DEBUG("[Eluna]: AddScriptPath Checking file `%s`", fullpath.c_str());
+    ELUNA_LOG_DEBUG("[Eluna]: AddScriptPath Checking file `{}`", fullpath);
 
     // split file name
     std::size_t extDot = filename.find_last_of('.');
@@ -349,13 +349,13 @@ void Eluna::AddScriptPath(std::string filename, const std::string& fullpath)
         lua_extensions.push_back(script);
     else
         lua_scripts.push_back(script);
-    ELUNA_LOG_DEBUG("[Eluna]: AddScriptPath add path `%s`", fullpath.c_str());
+    ELUNA_LOG_DEBUG("[Eluna]: AddScriptPath add path `{}`", fullpath);
 }
 
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
 void Eluna::GetScripts(std::string path)
 {
-    ELUNA_LOG_DEBUG("[Eluna]: GetScripts from path `%s`", path.c_str());
+    ELUNA_LOG_DEBUG("[Eluna]: GetScripts from path `{}`", path);
 
 #ifdef USING_BOOST
     boost::filesystem::path someDir(path);
@@ -480,7 +480,7 @@ void Eluna::RunScripts()
         // Check that no duplicate names exist
         if (loaded.find(it->filename) != loaded.end())
         {
-            ELUNA_LOG_ERROR("[Eluna]: Error loading `%s`. File with same name already loaded from `%s`, rename either file", it->filepath.c_str(), loaded[it->filename].c_str());
+            ELUNA_LOG_ERROR("[Eluna]: Error loading `{}`. File with same name already loaded from `{}`, rename either file", it->filepath, loaded[it->filename]);
             continue;
         }
         loaded[it->filename] = it->filepath;
@@ -490,7 +490,7 @@ void Eluna::RunScripts()
         if (!lua_isnoneornil(L, -1))
         {
             lua_pop(L, 1);
-            ELUNA_LOG_DEBUG("[Eluna]: `%s` was already loaded or required", it->filepath.c_str());
+            ELUNA_LOG_DEBUG("[Eluna]: `{}` was already loaded or required", it->filepath);
             continue;
         }
         lua_pop(L, 1);
@@ -499,7 +499,7 @@ void Eluna::RunScripts()
         if (luaL_loadfile(L, it->filepath.c_str()))
         {
             // Stack: package, modules, errmsg
-            ELUNA_LOG_ERROR("[Eluna]: Error loading `%s`", it->filepath.c_str());
+            ELUNA_LOG_ERROR("[Eluna]: Error loading `{}`", it->filepath);
             Report(L);
             // Stack: package, modules
             continue;
@@ -519,14 +519,14 @@ void Eluna::RunScripts()
             // Stack: package, modules
 
             // successfully loaded and ran file
-            ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `%s`", it->filepath.c_str());
+            ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `{}`", it->filepath);
             ++count;
             continue;
         }
     }
     // Stack: package, modules
     lua_pop(L, 2);
-    ELUNA_LOG_INFO("[Eluna]: Executed %u Lua scripts in %u ms", count, ElunaUtil::GetTimeDiff(oldMSTime));
+    ELUNA_LOG_INFO("[Eluna]: Executed {} Lua scripts in {} ms", count, ElunaUtil::GetTimeDiff(oldMSTime));
 
     OnLuaStateOpen();
 }
@@ -544,7 +544,7 @@ void Eluna::InvalidateObjects()
 void Eluna::Report(lua_State* _L)
 {
     const char* msg = lua_tostring(_L, -1);
-    ELUNA_LOG_ERROR("%s", msg);
+    ELUNA_LOG_ERROR("{}", msg);
     lua_pop(_L, 1);
 }
 
@@ -589,7 +589,7 @@ bool Eluna::ExecuteCall(int params, int res)
     // Check function type
     if (!lua_isfunction(L, base))
     {
-        ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is %s, not a function.", luaL_tolstring(L, base, NULL));
+        ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is {}, not a function.", luaL_tolstring(L, base, NULL));
         ASSERT(false); // stack probably corrupt
     }
 

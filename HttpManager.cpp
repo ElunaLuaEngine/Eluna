@@ -132,7 +132,7 @@ void HttpManager::HttpWorkerThread()
             std::string path;
 
             if (!ParseUrl(req->url, host, path)) {
-                ELUNA_LOG_ERROR("[Eluna]: Could not parse URL %s", req->url.c_str());
+                ELUNA_LOG_ERROR("[Eluna]: Could not parse URL {}", req->url);
                 continue;
             }
 
@@ -145,7 +145,7 @@ void HttpManager::HttpWorkerThread()
             httplib::Error err = res.error();
             if (err != httplib::Error::Success)
             {
-                ELUNA_LOG_ERROR("[Eluna]: HTTP request error: %s", httplib::to_string(err).c_str());
+                ELUNA_LOG_ERROR("[Eluna]: HTTP request error: {}", httplib::to_string(err));
                 continue;
             }
 
@@ -157,7 +157,7 @@ void HttpManager::HttpWorkerThread()
 
                 if (!ParseUrl(location, host, path))
                 {
-                    ELUNA_LOG_ERROR("[Eluna]: Could not parse URL after redirect: %s", location.c_str());
+                    ELUNA_LOG_ERROR("[Eluna]: Could not parse URL after redirect: {}", location);
                     continue;
                 }
                 httplib::Client cli2(host);
@@ -171,7 +171,7 @@ void HttpManager::HttpWorkerThread()
         }
         catch (const std::exception& ex)
         {
-            ELUNA_LOG_ERROR("[Eluna]: HTTP request error: %s", ex.what());
+            ELUNA_LOG_ERROR("[Eluna]: HTTP request error: {}", ex.what());
         }
 
         delete req;
@@ -210,7 +210,7 @@ httplib::Result HttpManager::DoRequest(httplib::Client& client, HttpWorkItem* re
         return client.Options(path, req->headers);
     }
 
-    ELUNA_LOG_ERROR("[Eluna]: HTTP request error: invalid HTTP verb %s", req->httpVerb.c_str());
+    ELUNA_LOG_ERROR("[Eluna]: HTTP request error: invalid HTTP verb {}", req->httpVerb));
     return client.Get(path, req->headers);
 }
 

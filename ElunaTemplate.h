@@ -28,7 +28,7 @@ public:
         int args = lua_gettop(L) - top;
         if (args < 0 || args > expected)
         {
-            ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
+            ELUNA_LOG_ERROR("[Eluna]: {} returned unexpected amount of arguments {} out of {}. Report to devs", l->name, args, expected);
             ASSERT(false);
         }
         lua_settop(L, top + expected);
@@ -263,7 +263,7 @@ public:
         ElunaObject** ptrHold = static_cast<ElunaObject**>(lua_newuserdata(L, sizeof(ElunaObject*)));
         if (!ptrHold)
         {
-            ELUNA_LOG_ERROR("%s could not create new userdata", tname);
+            ELUNA_LOG_ERROR("{} could not create new userdata", tname);
             lua_pushnil(L);
             return 1;
         }
@@ -274,7 +274,7 @@ public:
         lua_rawget(L, LUA_REGISTRYINDEX);
         if (!lua_istable(L, -1))
         {
-            ELUNA_LOG_ERROR("%s missing metatable", tname);
+            ELUNA_LOG_ERROR("{} missing metatable", tname);
             lua_pop(L, 2);
             lua_pushnil(L);
             return 1;
@@ -299,7 +299,7 @@ public:
             }
             else
             {
-                ELUNA_LOG_ERROR("%s", buff);
+                ELUNA_LOG_ERROR("{}", buff);
             }
             return NULL;
         }
@@ -332,7 +332,7 @@ public:
         int args = lua_gettop(L) - top;
         if (args < 0 || args > expected)
         {
-            ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
+            ELUNA_LOG_ERROR("[Eluna]: {} returned unexpected amount of arguments {} out of {}. Report to devs", l->name, args, expected);
             ASSERT(false);
         }
         lua_settop(L, top + expected);

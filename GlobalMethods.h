@@ -2586,7 +2586,7 @@ namespace LuaGlobalFunctions
      */
     int PrintInfo(lua_State* L)
     {
-        ELUNA_LOG_INFO("%s", GetStackAsString(L).c_str());
+        ELUNA_LOG_INFO("{}", GetStackAsString(L));
         return 0;
     }
 
@@ -2597,7 +2597,7 @@ namespace LuaGlobalFunctions
      */
     int PrintError(lua_State* L)
     {
-        ELUNA_LOG_ERROR("%s", GetStackAsString(L).c_str());
+        ELUNA_LOG_ERROR("{}", GetStackAsString(L));
         return 0;
     }
 
@@ -2608,7 +2608,7 @@ namespace LuaGlobalFunctions
      */
     int PrintDebug(lua_State* L)
     {
-        ELUNA_LOG_DEBUG("%s", GetStackAsString(L).c_str());
+        ELUNA_LOG_DEBUG("{}", GetStackAsString(L));
         return 0;
     }
 
