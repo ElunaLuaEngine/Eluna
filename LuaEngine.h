@@ -166,6 +166,11 @@ private:
     // lua path variable for require() function
     static std::string lua_requirepath;
 
+#if defined(ELUNA_MODULES)
+    // lua cpath variable for require() function
+    static std::string lua_requirecpath;
+#endif
+
     // A counter for lua event stacks that occur (see event_level).
     // This is used to determine whether an object belongs to the current call stack or not.
     // 0 is reserved for always belonging to the call stack
