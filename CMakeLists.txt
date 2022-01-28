@@ -87,7 +87,7 @@ foreach(dir ${modules_list})
     get_filename_component(module_name ${dir} NAME)
     file(GLOB sources_module ${dir}/*.c ${dir}/*.h)
 
-    if( ELUNA_MODULES and sources_module )
+    if( ELUNA_MODULES AND sources_module )
       add_library(${module_name} MODULE
         ${sources_module})
       target_include_directories(${module_name}
