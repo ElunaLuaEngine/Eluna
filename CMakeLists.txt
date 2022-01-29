@@ -85,7 +85,7 @@ file(GLOB modules_list LIST_DIRECTORIES true ${CMAKE_CURRENT_SOURCE_DIR}/modules
 foreach(dir ${modules_list})
   IF(IS_DIRECTORY ${dir})
     get_filename_component(module_name ${dir} NAME)
-    file(GLOB sources_module ${dir}/*.c ${dir}/*.h)
+    file(GLOB sources_module ${dir}/*.c ${dir}/*.cpp ${dir}/*.h ${dir}/*.hpp)
 
     if( ELUNA_MODULES AND sources_module )
       add_library(${module_name} MODULE
