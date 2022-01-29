@@ -14,8 +14,20 @@ int say_hello(lua_State *L) {
     return 1;
 }
 
+/*
+ * _Unload() is a magic function name which is called(if found) on every module
+ * when Eluna uninitializes(on server exit)
+ * 
+ * You do not need this, but you can use it to save files, cleanly exit threads, etc.
+ * 
+ */
+int _Unload(lua_State* L) {
+    return 0;
+}
+
 static const struct luaL_Reg functions [] = {
     {"say_hello", say_hello},
+    {"_Unload", _Unload},
     {NULL, NULL}
 };
 

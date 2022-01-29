@@ -349,6 +349,18 @@ public:
      */
     void PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCounter = true);
 
+    /*
+     * Iterates through the list of loaded modules in [package.loaded]
+     * and checks whether they have a magic function called "_Unload"
+     * If so, call it.
+     *
+     * This is called on worldserver exit and is meant so that modules
+     * can exit cleanly destroying threads and saving files if need to.
+     */
+#if defined(ELUNA_MODULES)
+    void RunModuleUnloads();
+#endif
+
     void RunScripts();
     bool ShouldReload() const { return reload; }
     bool IsEnabled() const { return enabled && IsInitialized(); }

@@ -201,6 +201,10 @@ Eluna::~Eluna()
 {
     ASSERT(IsInitialized());
 
+#if defined(ELUNA_MODULES)
+    RunModuleUnloads();
+#endif
+
     CloseLua();
 
     delete eventMgr;
@@ -1372,3 +1376,39 @@ void Eluna::PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCo
     if (incrementCounter)
         ++push_counter;
 }
+
+#if defined(ELUNA_MODULES)
+void Eluna::RunModuleUnloads()
+{
+    lua_getglobal(L, "package");
+    // Stack: package
+    luaL_getsubtable(L, -1, "loaded");
+    // Stack: package, modules
+    int modules = lua_gettop(L);
+
+    lua_pushnil(L);  // Push nil first to init lua_next
+    while (lua_next(L, modules) != 0) {
+        // Stack: package, modules, key, value
+        if (!lua_istable(L, -1))
+        {
+            lua_pop(L, 1);
+            continue;
+        }
+        lua_getfield(L, -1, "_Unload");
+        if (!lua_isfunction(L, -1))
+        {
+            lua_pop(L, 2);
+            continue;
+        }
+        // Stack: package, modules, key, value, function
+        int result = lua_pcall(L, 0, 0, 0);
+        if (result) // got errmsg
+            Report(L);
+        // Stack: package, modules, key, value
+        lua_pop(L, 1);
+        // Stack: package, modules, key
+    }
+    // Stack: package, modules
+    lua_pop(L, 2);
+}
+#endif
