@@ -251,9 +251,10 @@ void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
     CleanUpStack(3);
 }
 
-void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standing, bool incremental)
+bool Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standing, bool incremental)
 {
-    START_HOOK(PLAYER_EVENT_ON_REPUTATION_CHANGE);
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_REPUTATION_CHANGE, true);
+    bool result = true;
     Push(pPlayer);
     Push(factionID);
     Push(standing);
@@ -268,6 +269,8 @@ void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standin
         if (lua_isnumber(L, r))
         {
             standing = CHECKVAL<int32>(L, r);
+            if (standing == -1)
+                result = false;
             // Update the stack for subsequent calls.
             ReplaceArgument(standing, standingIndex);
         }
@@ -276,6 +279,7 @@ void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standin
     }
 
     CleanUpStack(4);
+    return result;
 }
 
 void Eluna::OnDuelRequest(Player* pTarget, Player* pChallenger)

@@ -450,7 +450,7 @@ public:
     void OnTalentsReset(Player* pPlayer, bool noCost);
     void OnMoneyChanged(Player* pPlayer, int32& amount);
     void OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim);
-    void OnReputationChange(Player* pPlayer, uint32 factionID, int32& standing, bool incremental);
+    bool OnReputationChange(Player* pPlayer, uint32 factionID, int32& standing, bool incremental);
     void OnDuelRequest(Player* pTarget, Player* pChallenger);
     void OnDuelStart(Player* pStarter, Player* pChallenger);
     void OnDuelEnd(Player* pWinner, Player* pLoser, DuelCompleteType type);

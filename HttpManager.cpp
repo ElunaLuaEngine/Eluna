@@ -210,7 +210,7 @@ httplib::Result HttpManager::DoRequest(httplib::Client& client, HttpWorkItem* re
         return client.Options(path, req->headers);
     }
 
-    ELUNA_LOG_ERROR("[Eluna]: HTTP request error: invalid HTTP verb {}", req->httpVerb));
+    ELUNA_LOG_ERROR("[Eluna]: HTTP request error: invalid HTTP verb {}", req->httpVerb);
     return client.Get(path, req->headers);
 }
 
