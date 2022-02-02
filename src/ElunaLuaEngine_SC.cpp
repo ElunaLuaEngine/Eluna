@@ -657,9 +657,9 @@ public:
         sEluna->OnGiveXP(player, amount, victim);
     }
 
-    void OnReputationChange(Player* player, uint32 factionID, int32& standing, bool incremental) override
+    bool OnReputationChange(Player* player, uint32 factionID, int32& standing, bool incremental) override
     {
-        sEluna->OnReputationChange(player, factionID, standing, incremental);
+        return sEluna->OnReputationChange(player, factionID, standing, incremental);
     }
 
     void OnDuelRequest(Player* target, Player* challenger) override
