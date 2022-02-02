@@ -1,14 +1,14 @@
 import os
 import shutil
-from types import FileType
+import typing
 from jinja2 import Environment, FileSystemLoader
 from typedecorator import params, returns
-from parser import ClassParser, MethodDoc
+from ElunaDoc.parser import ClassParser, MethodDoc
 import glob
 import time
 
 
-@returns([(str, FileType)])
+@returns([(str, typing.IO)])
 @params(search_path=str)
 def find_class_files(search_path):
     """Find and open all files containing Eluna class methods in `search_path`.
@@ -63,13 +63,13 @@ if __name__ == '__main__':
     shutil.copytree('ElunaDoc/static', 'build/static')
 
     # Load up all files with methods we need to parse.
-    print 'Finding Eluna method files...'
+    print('Finding Eluna method files...')
     class_files = find_class_files('../')
 
     # Parse all the method files.
     classes = []
     for f in class_files:
-        print 'Parsing file {}...'.format(f.name)
+        print(f'Parsing file {f.name}...')
         classes.append(ClassParser.parse_file(f))
         f.close()
 
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     render('date.js', 'date.js', level=0, currdate=time.strftime("%d/%m/%Y"))
 
     for class_ in classes:
-        print 'Rending pages for class {}...'.format(class_.name)
+        print(f'Rendering pages for class {class_.name}...')
 
         # Make a folder for the class.
         os.mkdir('build/' + class_.name)
