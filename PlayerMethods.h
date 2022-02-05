@@ -7,6 +7,8 @@
 #ifndef PLAYERMETHODS_H
 #define PLAYERMETHODS_H
 
+#include "GameTime.h"
+
 /***
  * Inherits all methods from: [Object], [WorldObject], [Unit]
  */
@@ -2246,11 +2248,9 @@ namespace LuaPlayer
         uint32 muteseconds = Eluna::CHECKVAL<uint32>(L, 2);
         /*const char* reason = luaL_checkstring(E, 2);*/ // Mangos does not have a reason field in database.
 
-        time_t muteTime = time(NULL) + muteseconds;
+        time_t muteTime = GameTime::GetGameTime().count() + muteseconds;
         player->GetSession()->m_muteTime = muteTime;
-        std::ostringstream oss;
-        oss << "UPDATE account SET mutetime = " << muteTime << " WHERE id = " << player->GetSession()->GetAccountId();
-        LoginDatabase.PExecute("%s", oss.str().c_str());
+        LoginDatabase.Execute("UPDATE account SET mutetime = {} WHERE id = {}", muteTime, player->GetSession()->GetAccountId());
         return 0;
     }
 

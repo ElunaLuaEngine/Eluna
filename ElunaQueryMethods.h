@@ -88,7 +88,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].GetBool());
+        Eluna::Push(L, RESULT->Fetch()[col].Get<bool>());
         return 1;
     }
 
@@ -102,7 +102,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].GetUInt8());
+        Eluna::Push(L, RESULT->Fetch()[col].Get<uint8>());
         return 1;
     }
 
@@ -116,7 +116,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].GetUInt16());
+        Eluna::Push(L, RESULT->Fetch()[col].Get<uint16>());
         return 1;
     }
 
@@ -130,7 +130,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].GetUInt32());
+        Eluna::Push(L, RESULT->Fetch()[col].Get<uint32>());
         return 1;
     }
 
@@ -144,7 +144,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].GetUInt64());
+        Eluna::Push(L, RESULT->Fetch()[col].Get<uint64>());
         return 1;
     }
 
@@ -158,7 +158,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].GetInt8());
+        Eluna::Push(L, RESULT->Fetch()[col].Get<int8>());
         return 1;
     }
 
@@ -172,7 +172,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].GetInt16());
+        Eluna::Push(L, RESULT->Fetch()[col].Get<int16>());
         return 1;
     }
 
@@ -186,7 +186,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].GetInt32());
+        Eluna::Push(L, RESULT->Fetch()[col].Get<int32>());
         return 1;
     }
 
@@ -200,7 +200,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].GetInt64());
+        Eluna::Push(L, RESULT->Fetch()[col].Get<int64>());
         return 1;
     }
 
@@ -214,7 +214,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].GetFloat());
+        Eluna::Push(L, RESULT->Fetch()[col].Get<float>());
         return 1;
     }
 
@@ -228,7 +228,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-        Eluna::Push(L, RESULT->Fetch()[col].GetDouble());
+        Eluna::Push(L, RESULT->Fetch()[col].Get<double>());
         return 1;
     }
 
@@ -242,12 +242,7 @@ namespace LuaQuery
     {
         uint32 col = Eluna::CHECKVAL<uint32>(L, 2);
         CheckFields(L, result);
-
-#ifndef TRINITY
-        Eluna::Push(L, RESULT->Fetch()[col].GetString());
-#else
-        Eluna::Push(L, RESULT->Fetch()[col].GetCString());
-#endif
+        Eluna::Push(L, RESULT->Fetch()[col].Get<std::string>());
         return 1;
     }
 
@@ -300,7 +295,8 @@ namespace LuaQuery
 #if defined TRINITY || AZEROTHCORE
             Eluna::Push(L, RESULT->GetFieldName(i));
 
-            const char* str = row[i].GetCString();
+            std::string _str = row[i].Get<std::string>();
+            const char* str = _str.c_str();
             if (row[i].IsNull() || !str)
                 Eluna::Push(L);
             else
