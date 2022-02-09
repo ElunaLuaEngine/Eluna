@@ -39,8 +39,9 @@ void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, 
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-bool Eluna::OnCommand(Player* player, const char* text)
+bool Eluna::OnCommand(ChatHandler& handler, const char* text)
 {
+    Player* player = handler.IsConsole() ? nullptr : handler.GetSession()->GetPlayer();
     // If from console, player is NULL
     if (!player || player->GetSession()->GetSecurity() >= SEC_ADMINISTRATOR)
     {
@@ -56,6 +57,7 @@ bool Eluna::OnCommand(Player* player, const char* text)
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_COMMAND, true);
     Push(player);
     Push(text);
+    Push(&handler);
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 

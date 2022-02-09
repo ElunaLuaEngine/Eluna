@@ -36,6 +36,7 @@ extern "C"
 #include "CorpseMethods.h"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
+#include "ChatHandlerMethods.h"
 
 luaL_Reg GlobalMethods[] =
 {
@@ -1296,6 +1297,26 @@ ElunaRegister<BattleGround> BattleGroundMethods[] =
     { NULL, NULL }
 };
 
+ElunaRegister<ChatHandler> ChatHandlerMethods[] =
+{
+    { "SendSysMessage", &LuaChatHandler::SendSysMessage },
+    { "IsConsole", &LuaChatHandler::IsConsole },
+    { "GetPlayer", &LuaChatHandler::GetPlayer },
+    { "SendGlobalSysMessage", &LuaChatHandler::SendGlobalSysMessage },
+    { "SendGlobalGMSysMessage", &LuaChatHandler::SendGlobalGMSysMessage },
+    { "HasLowerSecurity", &LuaChatHandler::HasLowerSecurity },
+    { "HasLowerSecurityAccount", &LuaChatHandler::HasLowerSecurityAccount },
+    { "GetSelectedPlayer", &LuaChatHandler::GetSelectedPlayer },
+    { "GetSelectedCreature", &LuaChatHandler::GetSelectedCreature },
+    { "GetSelectedUnit", &LuaChatHandler::GetSelectedUnit },
+    { "GetSelectedObject", &LuaChatHandler::GetSelectedObject },
+    { "GetSelectedPlayerOrSelf", &LuaChatHandler::GetSelectedPlayerOrSelf },
+    { "IsAvailable", &LuaChatHandler::IsAvailable },
+    { "HasSentErrorMessage", &LuaChatHandler::HasSentErrorMessage },
+
+    { NULL, NULL }
+};
+
 #if (!defined(TBC) && !defined(CLASSIC))
 // fix compile error about accessing vehicle destructor
 template<> int ElunaTemplate<Vehicle>::CollectGarbage(lua_State* L)
@@ -1428,6 +1449,9 @@ void RegisterFunctions(Eluna* E)
 
     ElunaTemplate<BattleGround>::Register(E, "BattleGround");
     ElunaTemplate<BattleGround>::SetMethods(E, BattleGroundMethods);
+
+    ElunaTemplate<ChatHandler>::Register(E, "ChatHandler");
+    ElunaTemplate<ChatHandler>::SetMethods(E, ChatHandlerMethods);
 
     ElunaTemplate<WorldPacket>::Register(E, "WorldPacket", true);
     ElunaTemplate<WorldPacket>::SetMethods(E, PacketMethods);
