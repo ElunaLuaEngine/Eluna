@@ -40,9 +40,9 @@ Core forks with required modifications for Eluna:
 
 [![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk)
 
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic) [Eluna cMaNGOS Classic](https://github.com/ElunaLuaEngine/ElunaMangosClassic)  
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc) [Eluna cMaNGOS TBC](https://github.com/ElunaLuaEngine/ElunaMangosTbc)  
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk) [Eluna cMaNGOS WotLK](https://github.com/ElunaLuaEngine/ElunaMangosWotlk)
+[Eluna cMaNGOS Classic](https://github.com/Niam5/mangos-classic) - maintained by [Niam5](https://github.com/Niam5)  
+[Eluna cMaNGOS TBC](https://github.com/Niam5/mangos-tbc) - maintained by [Niam5](https://github.com/Niam5)  
+[Eluna cMaNGOS WoTLK](https://github.com/Niam5/mangos-wotlk) - maintained by [Niam5](https://github.com/Niam5)  
 
 Core plugin modules for Eluna:
 
