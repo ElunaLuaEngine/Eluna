@@ -13,6 +13,7 @@
 
 #include "Group.h"
 #include "Item.h"
+#include "Chat.h"
 #ifndef TRINITY
 #include "Player.h"
 #endif
@@ -353,7 +354,7 @@ public:
 
     /* Custom */
     void OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj);
-    bool OnCommand(Player* player, const char* text);
+    bool OnCommand(ChatHandler& handler, const char* text);
     void OnWorldUpdate(uint32 diff);
     void OnLootItem(Player* pPlayer, Item* pItem, uint32 count, ObjectGuid guid);
     void OnLootMoney(Player* pPlayer, uint32 amount);
