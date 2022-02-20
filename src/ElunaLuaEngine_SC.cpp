@@ -332,7 +332,7 @@ public:
 
     bool CanExecuteCommand(ChatHandler& handler, std::string_view cmdStr) override
     {
-        if (!sEluna->OnCommand(handler.IsConsole() ? nullptr : handler.GetSession()->GetPlayer(), std::string(cmdStr).c_str()))
+        if (!sEluna->OnCommand(handler, std::string(cmdStr).c_str()))
         {
             return false;
         }
