@@ -27,4 +27,7 @@ extern "C"
     #define lua_load(L, buf_read, dec_buf, str, NULL) \
         lua_load(L, buf_read, dec_buf, str);
 #endif
+#ifdef LUAJIT_VERSION
+#define LUAJIT_ENABLE_LUA52COMPAT
+#endif
 #endif
