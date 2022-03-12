@@ -2422,7 +2422,9 @@ namespace LuaGlobalFunctions
         }
         if (startNode >= nodeId)
             return 1;
+#ifndef AZEROTHCORE
         sTaxiPathSetBySource[startNode][nodeId - 1] = TaxiPathBySourceAndDestination(pathId, price);
+#endif
         TaxiPathEntry* pathEntry = new TaxiPathEntry();
 #ifdef TRINITY
         pathEntry->FromTaxiNode = startNode;
@@ -2435,6 +2437,9 @@ namespace LuaGlobalFunctions
 #endif
         pathEntry->ID = pathId;
         sTaxiPathStore.SetEntry(pathId, pathEntry);
+#ifdef AZEROTHCORE
+        sTaxiPathSetBySource[startNode][nodeId - 1] = pathEntry;
+#endif
         Eluna::Push(L, pathId);
         return 1;
     }
