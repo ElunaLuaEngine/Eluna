@@ -440,6 +440,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "DealDamage", &LuaUnit::DealDamage },
     { "DealHeal", &LuaUnit::DealHeal },
     { "AddThreat", &LuaUnit::AddThreat },
+    { "ModifyThreatPct", &LuaUnit::ModifyThreatPct },
 
     { NULL, NULL }
 };
