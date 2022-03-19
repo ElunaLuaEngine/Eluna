@@ -2982,6 +2982,23 @@ namespace LuaUnit
         return 0;
     }
 
+   /**
+    * Modifies threat in pct to the [Unit] from the victim
+    *
+    * @param [Unit] victim : [Unit] that caused the threat
+    * @param int32 percent : threat amount in pct
+    */
+    int ModifyThreatPct(lua_State* L, Unit* unit)
+    {
+        Unit* victim = Eluna::CHECKOBJ<Unit>(L, 2);
+        int32 threatPct = Eluna::CHECKVAL<int32>(L, 3, true);
+
+#ifdef AZEROTHCORE
+        unit->getThreatMgr().modifyThreatPercent(victim, threatPct);
+#endif
+        return 0;
+    }
+
     /*int RestoreDisplayId(lua_State* L, Unit* unit)
     {
         unit->RestoreDisplayId();
