@@ -9,9 +9,9 @@ An [Eluna](https://github.com/ElunaLuaEngine/Eluna) module for AzerothCore.
 
 ### 1) Download the sources
 
-You can get the sources either using git (recommended) or downloading them manually.
+You can get the sources using git.
 
-#### download with git (recommended)
+#### download with git
 
 1. open a terminal inside your `azerothcore-wotlk` folder
 2. go inside the **modules** folder: `cd modules`
@@ -22,21 +22,15 @@ git clone https://github.com/azerothcore/mod-eluna-lua-engine.git
 4. go inside the **mod-eluna-lua-engine** folder: `cd mod-eluna-lua-engine`
 5. download the Eluna sources using `git submodule update --init`
 
-Optional: if you need to update Eluna to the latest version, you can `cd LuaEngine` and run `git pull` from there.
+Optional: if you need to update Eluna to the latest version, you can `cd src` and `cd LuaEngine` and run `git pull` from there.
 
-#### download manually 
-
-1. download [mod-eluna-lua-engine](https://github.com/azerothcore/mod-eluna-lua-engine/archive/master.zip)  
-2. extract it move the folder **mod-eluna-lua-engine** inside the **modules** folder of your azerothcore-wotlk sources
-3. download [Eluna](https://github.com/Azerothcore/Eluna/archive/master.zip) 
-4. extract it and move all the files inside the `Eluna-master` folder into the `mod-eluna-lua-engine/src/LuaEngine` folder. `LuaEngine.h` needs to be directly under `mod-eluna-lua-engine/src/LuaEngine` without any extra sub-folders.
 
 ### 2) Build
 
 You need to run the cmake again and and rebuild the project.
 
-Eluna API : 
-[http://elunaluaengine.github.io/](http://elunaluaengine.github.io/)
+Eluna API for AC: 
+[https://www.azerothcore.org/pages/eluna/index.html](https://www.azerothcore.org/pages/eluna/index.html)
 
 ## How to update the Eluna version (for project mainteners)
 
