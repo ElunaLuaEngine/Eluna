@@ -1,0 +1,4 @@
+[submodule "LuaEngine"]
+	path = src/LuaEngine
+	url = https://github.com/azerothcore/Eluna.git
+	branch = master
