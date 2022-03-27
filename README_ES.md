@@ -1,3 +1,9 @@
+# Esta traducción proviene de una versión desactualizada.
+##
+##
+##
+##
+
 # mod-LuaEngine
  [English](README.md) | [中文说明](README_CN.md) | [Español](README_ES.md)
 
