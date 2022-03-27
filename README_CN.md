@@ -1,3 +1,8 @@
+# 本译文源于一个过期的版本。
+##
+##
+##
+##
 
 # ![logo](https://raw.githubusercontent.com/azerothcore/azerothcore.github.io/master/images/logo-github.png) mod-eluna-lua-engine for AzerothCore
 - 最新版本在Azerothcore的构建状态: [![Build Status](https://github.com/azerothcore/mod-eluna-lua-engine/workflows/core-build/badge.svg?branch=master&event=push)](https://github.com/azerothcore/mod-eluna-lua-engine)
