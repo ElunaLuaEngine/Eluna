@@ -46,7 +46,7 @@ git clone https://github.com/azerothcore/Eluna.git mod-eluna
 
 ### 2) Build
 
-You need to run the cmake again and and rebuild the project.
+You need to run the cmake again and rebuild the project.
 
 Eluna API for AC: 
 [https://www.azerothcore.org/pages/eluna/index.html](https://www.azerothcore.org/pages/eluna/index.html)
