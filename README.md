@@ -1,4 +1,4 @@
-### [![Eluna](docs/Eluna.png)](https://github.com/ElunaLuaEngine/Eluna)
+### [![Eluna](src/LuaEngine/docs/Eluna.png)](https://github.com/ElunaLuaEngine/Eluna)
 
 ## About
 
@@ -6,47 +6,63 @@ Eluna Lua Engine &copy; is a lua engine embedded to World of Warcraft emulators.
 We are currently working hard to make Eluna better from inside and outside.  
 
 If you are having trouble with installation or scripts, please feel free to open an issue.
-For documentation and reference see [Eluna API](http://elunaluaengine.github.io/) and [Lua reference manual](http://www.lua.org/manual/5.2/).
+For documentation and reference see [Eluna API (AC version)](https://www.azerothcore.org/pages/eluna/index.html) and [Lua reference manual](http://www.lua.org/manual/5.2/).
 
-Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and use of Eluna. Please head over to their forums and show them some love!
 
 ## Community
 
-You can join the official Eluna Discord server, where you'll be able to find resources, releases and support provided by the community.
-
+You can join the official Eluna Discord server, where you'll be able to find resources, releases and support provided by the community:
 <a href="https://discord.gg/bjkCVWqqfX">
     <img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" />
 </a>
 
+The official Azerothcore Discord server offers a channel dedicated to lua development as well:
+<a href="https://discord.gg/gkt4y2x">
+    <img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" />
+</a>
+
+# ![logo](https://raw.githubusercontent.com/azerothcore/azerothcore.github.io/master/images/logo-github.png) mod-eluna for AzerothCore
+- Latest build status with azerothcore: [![Build Status](https://github.com/azerothcore/mod-eluna-lua-engine/workflows/core-build/badge.svg?branch=master&event=push)](https://github.com/azerothcore/mod-eluna-lua-engine)
+
+[english](README.md) | [中文说明](README_CN.md) | [Español](README_ES.md)
+
+An [Eluna](https://github.com/ElunaLuaEngine/Eluna) module for AzerothCore.
+
+
+## How to install:
+
+### 1) Download the sources
+
+You can get the sources using git.
+
+#### download with git
+
+1. open a terminal inside your `azerothcore-wotlk` folder
+2. go inside the **modules** folder: `cd modules`
+3. download the module sources using:
+```
+git clone https://github.com/azerothcore/Eluna.git mod-eluna
+```
+
+### 2) Build
+
+You need to run the cmake again and rebuild the project.
+
+Eluna API for AC: 
+[https://www.azerothcore.org/pages/eluna/index.html](https://www.azerothcore.org/pages/eluna/index.html)
+
+
 ## Documentation
 
-* [__Installation__](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/INSTALL.md)
 * [Getting started](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/USAGE.md)
 * [Eluna features](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/IMPL_DETAILS.md)
-* [Function documentation](http://elunaluaengine.github.io/)
+* [Function documentation (AC version)](https://www.azerothcore.org/pages/eluna/index.html)
 * [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/Hooks.h)
 * [Lua reference manual](http://www.lua.org/manual/5.2/)
 * [Forum - support, releases, guides](https://www.getmangos.eu/forums/forum/119-eluna-central/)
 * [Example scripts](https://github.com/ElunaLuaEngine/Scripts)
 * [Contributing](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/CONTRIBUTING.md)
 
-## Source
-Eluna source code: [Source](https://github.com/ElunaLuaEngine/Eluna)  
-Core forks with required modifications for Eluna:
-
-[![Build Status](https://api.travis-ci.org/mangoszero/server.svg)](https://travis-ci.org/mangoszero/server) [Official MaNGOS Zero with Eluna](https://github.com/mangoszero/server)  
-[![Build Status](https://api.travis-ci.org/mangosone/server.svg)](https://travis-ci.org/mangosone/server) [Official MaNGOS One with Eluna](https://github.com/mangosone/server)  
-[![Build Status](https://api.travis-ci.org/mangostwo/server.svg)](https://travis-ci.org/mangostwo/server) [Official MaNGOS Two with Eluna](https://github.com/mangostwo/server)
-
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk)
-
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic) [Eluna cMaNGOS Classic](https://github.com/ElunaLuaEngine/ElunaMangosClassic)  
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc) [Eluna cMaNGOS TBC](https://github.com/ElunaLuaEngine/ElunaMangosTbc)  
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk) [Eluna cMaNGOS WotLK](https://github.com/ElunaLuaEngine/ElunaMangosWotlk)
-
-Core plugin modules for Eluna:
-
-- [AzerothCore Eluna Module](https://github.com/azerothcore/mod-eluna-lua-engine)
 
 ## Links
 
@@ -57,10 +73,26 @@ Core plugin modules for Eluna:
 * [Lua.org](http://www.lua.org/)
 * [License](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/LICENSE.md)
 
-## Team
 
-* [Tommy (Easelm)](https://github.com/Easelm)
-* [Foereaper](https://github.com/Foereaper)
-* [Rochet2](https://github.com/Rochet2)
-* [Salja](https://github.com/Salja)
-* [Patman64](https://github.com/Patman64)
+## Additions from Eluna/master
+
+- Added HttpRequest method. https://github.com/azerothcore/Eluna/pull/2
+- Added RegisterPlayerEvent 43: `OnBeforePetAddedToWorld()` fires for pets and summoned creatures. https://github.com/azerothcore/Eluna/pull/3
+- Added Chat-Handler methods to player events. https://github.com/azerothcore/Eluna/pull/23
+- Exposed `ModifyThreatPct()`. https://github.com/azerothcore/Eluna/pull/25
+
+
+## How to update the Eluna version (for project mainteners)
+
+1) `cd` into `mod-eluna-lua-engine`
+2) `git checkout master`
+3) cd `LuaEngine`
+4) `git checkout master`
+5) `git pull`
+6) `cd ..` so you get back to `mod-eluna-lua-engine`
+7) `git checkout -b some-new-unique-branch-name`
+8) `git add LuaEngine`
+9) `git commit -m "feat: update Eluna version"`
+10) `git push`
+11) The terminal will tell you something like `fatal: The current branch some-new-unique-branch-name has no upstream branch.` and suggest the command to use, for example: `git push --set-upstream origin some-new-unique-branch-name`
+12) Open [the repo on Github](https://github.com/azerothcore/mod-eluna-lua-engine) and create a new PR
