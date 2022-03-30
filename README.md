@@ -41,7 +41,7 @@ You can get the sources using git.
 2. go inside the **modules** folder: `cd modules`
 3. download the module sources using:
 ```
-git clone https://github.com/azerothcore/Eluna.git mod-eluna
+git clone https://github.com/azerothcore/mod-eluna.git mod-eluna
 ```
 
 ### 2) Build
