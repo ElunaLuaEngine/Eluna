@@ -1,6 +1,8 @@
 name: core-build
 on:
   push:
+    branches:
+      - 'master'
   pull_request:
 
 jobs:
@@ -23,9 +25,9 @@ jobs:
         with:
           path: 'modules/mod-eluna'
       - name: Cache
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v2
         with:
-          path: /home/runner/.ccache
+          path: var/ccache
           key: ccache:${{ matrix.compiler }}:${{ github.ref }}:${{ github.sha }}
           restore-keys: |
             ccache:${{ matrix.compiler }}:${{ github.ref }}
