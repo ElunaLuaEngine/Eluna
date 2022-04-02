@@ -153,21 +153,12 @@ struct ElunaCreatureAI : ScriptedAI
             ScriptedAI::AttackStart(target);
     }
 
-#ifdef TRINITY
     // Called for reaction at stopping attack at no attackers or targets
     void EnterEvadeMode(EvadeReason /*why*/) override
     {
         if (!sEluna->EnterEvadeMode(me))
             ScriptedAI::EnterEvadeMode();
     }
-#else
-    // Called for reaction at stopping attack at no attackers or targets
-    void EnterEvadeMode() override
-    {
-        if (!sEluna->EnterEvadeMode(me))
-            ScriptedAI::EnterEvadeMode();
-    }
-#endif
 
 #ifdef TRINITY
     // Called when creature appears in the world (spawn, respawn, grid load etc...)
