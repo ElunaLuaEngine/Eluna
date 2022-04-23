@@ -613,7 +613,11 @@ namespace LuaUnit
      */
     int GetMountId(lua_State* L, Unit* unit)
     {
+#ifdef TRINITY
+        Eluna::Push(L, unit->GetMountDisplayId());
+#else
         Eluna::Push(L, unit->GetMountID());
+#endif
         return 1;
     }
 
@@ -1837,7 +1841,11 @@ namespace LuaUnit
     int SetStandState(lua_State* L, Unit* unit)
     {
         uint8 state = Eluna::CHECKVAL<uint8>(L, 2);
+#ifdef TRINITY
+        unit->SetStandState(UnitStandStateType(state));
+#else
         unit->SetStandState(state);
+#endif
         return 0;
     }
 
