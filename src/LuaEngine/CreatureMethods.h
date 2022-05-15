@@ -769,7 +769,7 @@ namespace LuaCreature
 #elif defined(TRINITY)
         auto const& threatlist = creature->GetThreatManager().GetSortedThreatList();
 #elif defined(AZEROTHCORE)
-        auto const& threatlist = creature->getThreatMgr().getThreatList();
+        auto const& threatlist = creature->GetThreatMgr().getThreatList();
 #endif
 #ifndef TRINITY
         if (threatlist.empty())
@@ -860,7 +860,7 @@ namespace LuaCreature
 #if defined(TRINITY)
         auto const& threatlist = creature->GetThreatManager().GetThreatenedByMeList();
 #elif defined(AZEROTHCORE)
-auto const& threatlist = creature->getThreatMgr().getThreatList();
+auto const& threatlist = creature->GetThreatMgr().getThreatList();
 #else
         ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
 #endif
@@ -894,7 +894,7 @@ auto const& threatlist = creature->getThreatMgr().getThreatList();
 #if defined(TRINITY)
         Eluna::Push(L, creature->GetThreatManager().GetThreatenedByMeList().size());
 #elif defined(AZEROTHCORE)
-        Eluna::Push(L, creature->getThreatMgr().getThreatList().size());
+        Eluna::Push(L, creature->GetThreatMgr().getThreatList().size());
 #else
         Eluna::Push(L, creature->GetThreatManager().getThreatList().size());
 #endif
