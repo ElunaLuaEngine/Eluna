@@ -2006,7 +2006,7 @@ namespace LuaUnit
 #ifdef TRINITY
         unit->GetThreatManager().ClearAllThreat();
 #elif AZEROTHCORE
-        unit->getThreatMgr().clearReferences();
+        unit->GetThreatMgr().clearReferences();
 #else
         unit->GetThreatManager().clearReferences();
 #endif
@@ -2994,7 +2994,7 @@ namespace LuaUnit
         int32 threatPct = Eluna::CHECKVAL<int32>(L, 3, true);
 
 #ifdef AZEROTHCORE
-        unit->getThreatMgr().modifyThreatPercent(victim, threatPct);
+        unit->GetThreatMgr().modifyThreatPercent(victim, threatPct);
 #endif
         return 0;
     }
