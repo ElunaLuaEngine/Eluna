@@ -20,6 +20,20 @@ using namespace Hooks;
         return;\
     LOCK_ELUNA
 
+void Eluna::BGAddPlayer(Player* player)
+{
+    START_HOOK(BG_EVENT_ON_ENTER);
+    Push(player);
+    CallAllFunctions(BGEventBindings, key);
+}
+
+void Eluna::BGRemovePlayer(Player* player)
+{
+    START_HOOK(BG_EVENT_ON_LEAVE);
+    Push(player);
+    CallAllFunctions(BGEventBindings, key);
+}
+
 void Eluna::OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
 {
     START_HOOK(BG_EVENT_ON_START);

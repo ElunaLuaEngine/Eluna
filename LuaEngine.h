@@ -550,6 +550,11 @@ public:
 #endif
     void OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
     void OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
+
+    /* Shinobi Custom */
+    void OnRemoveItem(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
+    void BGAddPlayer(Player* player);
+    void BGRemovePlayer(Player* player);
 };
 template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error);
 template<> Object* Eluna::CHECKOBJ<Object>(lua_State* L, int narg, bool error);

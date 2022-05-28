@@ -205,6 +205,9 @@ namespace Hooks
         // UNUSED                               =     41,       // (event, player)
         PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - player is nil if command used from console. Can return false
 
+        // Shinobi Custom
+        PLAYER_EVENT_ON_REMOVE_ITEM             =     43,       // (event, player, item, bag, slot)
+
         PLAYER_EVENT_COUNT
     };
 
@@ -335,6 +338,8 @@ namespace Hooks
         BG_EVENT_ON_END                                 = 2,    // (event, bg, bgId, instanceId, winner) - Needs to be added to TC
         BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId) - Needs to be added to TC
         BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+        BG_EVENT_ON_ENTER                               = 5,    // shinobi custom
+        BG_EVENT_ON_LEAVE                               = 6,    // shinobi custom
         BG_EVENT_COUNT
     };
 

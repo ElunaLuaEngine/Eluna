@@ -336,5 +336,18 @@ namespace LuaGameObject
         go->SetRespawnTime(respawn);
         return 0;
     }
+
+    int SetTempGameObjectScale(lua_State* L, GameObject* go)
+    {
+        float scale = Eluna::CHECKVAL<float>(L, 2);
+        bool forced = Eluna::CHECKVAL<bool>(L, 3);
+
+        go->SetFloatValue(OBJECT_FIELD_SCALE_X, scale);
+        go->DestroyForNearbyPlayers();
+        go->UpdateObjectVisibility(forced);
+        go->Refresh();
+
+        return 0;
+    }
 };
 #endif
