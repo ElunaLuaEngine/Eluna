@@ -45,7 +45,7 @@ namespace LuaGroup
     int IsLFGGroup(lua_State* L, Group* group)
     {
 #ifdef CMANGOS
-        Eluna::Push(L, group->IsLfgGroup());
+        Eluna::Push(L, group->IsLFGGroup());
 #else
         Eluna::Push(L, group->isLFGGroup());
 #endif
