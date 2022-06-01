@@ -32,7 +32,7 @@ def make_renderer(template_path, link_parser_factory):
     """Return a function that can be used to render Jinja2 templates from the `template_path` directory."""
 
     # Set up jinja2 environment to load templates from the templates folder.
-    env = Environment(loader=FileSystemLoader(template_path), extensions=['jinja2.ext.with_'])
+    env = Environment(loader=FileSystemLoader(template_path))
 
 
     def inner(template_name, output_path, level, **kwargs):
