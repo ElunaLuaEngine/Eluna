@@ -1416,7 +1416,7 @@ namespace LuaPlayer
     /**
      * Returns the database textID of the [WorldObject]'s gossip header text for the [Player]
      *
-     * @param WorldObject object
+     * @param [WorldObject] object
      * @return uint32 textId : key to npc_text database table
      */
     int GetGossipTextId(lua_State* L, Player* player)
