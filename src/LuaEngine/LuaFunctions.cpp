@@ -180,6 +180,7 @@ ElunaRegister<Object> ObjectMethods[] =
 
     // Boolean
     { "IsInWorld", &LuaObject::IsInWorld },
+    { "IsPlayer", &LuaObject::IsPlayer },
     { "HasFlag", &LuaObject::HasFlag },
 
     // Other
@@ -914,6 +915,7 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "Despawn", &LuaGameObject::Despawn },
     { "Respawn", &LuaGameObject::Respawn },
     { "SaveToDB", &LuaGameObject::SaveToDB },
+    { "AddLoot", &LuaGameObject::AddLoot },
 
     { NULL, NULL }
 };
