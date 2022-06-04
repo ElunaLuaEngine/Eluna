@@ -235,7 +235,6 @@ namespace LuaGameObject
         return 0;
     }
 
-
     /**
      * Adds an [Item] to the loot of a [GameObject]
      *

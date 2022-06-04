@@ -52,16 +52,18 @@ namespace LuaObject
     }
 
     /**
-     * Returns 'true' if the [Object] is a player, 'false' otherwise.
-     *
-     * @return bool IsPlayer
-     */
-    int IsPlayer(lua_State* L, Player* player)
+ * Returns 'true' if the [Object] is a player, 'false' otherwise.
+ *
+ * @return bool IsPlayer
+ */
+    int IsPlayer(lua_State* L, Object* obj)
     {
-        Eluna::Push(L, player->IsPlayer());
+#ifdef AZEROTHCORE //AC-only
+        Eluna::Push(L, obj->IsPlayer());
+#endif
         return 1;
     }
-    
+
     /**
      * Returns the data at the specified index, casted to a signed 32-bit integer.
      *
