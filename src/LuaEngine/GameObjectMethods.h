@@ -245,9 +245,7 @@ namespace LuaGameObject
 
     int AddLoot(lua_State* L, GameObject* go)
     {
-        int i = 0;
-        uint32 entry = Eluna::CHECKVAL<uint32>(L, ++i);
-        uint32 amount = Eluna::CHECKVAL<uint32>(L, ++i, 1);
+        int i = 1;
         int argAmount = lua_gettop(L);
 
 #if defined TRINITY || defined AZEROTHCORE
@@ -281,7 +279,7 @@ namespace LuaGameObject
 #else
                 item->SaveToDB();
 #endif
-                LootStoreItem storeItem = LootStoreItem(item->GetEntry(), 0, 100, 0, LOOT_MODE_DEFAULT, 0, 1, 1);
+                LootStoreItem storeItem(item->GetEntry(), 0, 100, 0, LOOT_MODE_DEFAULT, 0, item->GetCount(), item->GetCount());
                 go->loot.AddItem(storeItem);
 #if defined TRINITY || AZEROTHCORE
                 Eluna::Push(L, item->GetGUID().GetCounter());
@@ -291,6 +289,11 @@ namespace LuaGameObject
                 ++addedItems;
             }
         }
+
+#if defined TRINITY || AZEROTHCORE
+        CharacterDatabase.CommitTransaction(trans);
+#endif
+
         return addedItems;
     }
 
