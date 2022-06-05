@@ -247,7 +247,6 @@ namespace LuaGameObject
         int i = 1;
         int argAmount = lua_gettop(L);
 
-        uint8 addedItems = 0;
         while (i + 2 <= argAmount)
         {
             uint32 entry = Eluna::CHECKVAL<uint32>(L, ++i);
@@ -255,9 +254,8 @@ namespace LuaGameObject
 
             LootStoreItem storeItem(entry, 0, 100, 0, LOOT_MODE_DEFAULT, 0, amount, amount);
             go->loot.AddItem(storeItem);
-            ++addedItems;
         }
-        return addedItems;
+        return 0;
     }
 
     /**
