@@ -80,3 +80,4 @@ Eluna API for AC:
 - Added RegisterPlayerEvent 43: `OnBeforePetAddedToWorld()` fires for pets and summoned creatures. https://github.com/azerothcore/Eluna/pull/3
 - Added Chat-Handler methods to player events. https://github.com/azerothcore/Eluna/pull/23
 - Exposed `ModifyThreatPct()`. https://github.com/azerothcore/Eluna/pull/25
+- Exposed `Object:IsPlayer()`. https://github.com/azerothcore/Eluna/pull/42
