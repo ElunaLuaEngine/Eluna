@@ -52,6 +52,19 @@ namespace LuaObject
     }
 
     /**
+ * Returns 'true' if the [Object] is a player, 'false' otherwise.
+ *
+ * @return bool IsPlayer
+ */
+    int IsPlayer(lua_State* L, Object* obj)
+    {
+#ifdef AZEROTHCORE //AC-only
+        Eluna::Push(L, obj->IsPlayer());
+#endif
+        return 1;
+    }
+
+    /**
      * Returns the data at the specified index, casted to a signed 32-bit integer.
      *
      * @param uint16 index
@@ -156,14 +169,14 @@ namespace LuaObject
 
     /**
      * Returns the GUID of the [Object].
-     * 
+     *
      * GUID is an unique identifier for the object.
-     * 
+     *
      * However on MaNGOS and cMangos creatures and gameobjects inside different maps can share
      * the same GUID but not on the same map.
-     * 
+     *
      * On TrinityCore this value is unique across all maps
-     * 
+     *
      * @return ObjectGuid guid
      */
     int GetGUID(lua_State* L, Object* obj)
@@ -174,10 +187,10 @@ namespace LuaObject
 
     /**
      * Returns the low-part of the [Object]'s GUID.
-     * 
+     *
      * On TrinityCore all low GUIDs are different for all objects of the same type.
      * For example creatures in instances are assigned new GUIDs when the Map is created.
-     * 
+     *
      * On MaNGOS and cMaNGOS low GUIDs are unique only on the same map.
      * For example creatures in instances use the same low GUID assigned for that spawn in the database.
      * This is why to identify a creature you have to know the instanceId and low GUID. See [Map:GetIntstanceId]

@@ -180,6 +180,7 @@ ElunaRegister<Object> ObjectMethods[] =
 
     // Boolean
     { "IsInWorld", &LuaObject::IsInWorld },
+    { "IsPlayer", &LuaObject::IsPlayer },
     { "HasFlag", &LuaObject::HasFlag },
 
     // Other
