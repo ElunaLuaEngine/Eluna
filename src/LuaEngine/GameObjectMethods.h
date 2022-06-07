@@ -236,29 +236,6 @@ namespace LuaGameObject
     }
 
     /**
-     * Adds an [Item] to the loot of a [GameObject]
-     *
-     * @param uint32 entry : The entry of the [Item]
-     * @param uint32 amount = 1 : amount of the [Item] to add to the loot
-     */
-
-    int AddLoot(lua_State* L, GameObject* go)
-    {
-        int i = 1;
-        int argAmount = lua_gettop(L);
-
-        while (i + 2 <= argAmount)
-        {
-            uint32 entry = Eluna::CHECKVAL<uint32>(L, ++i);
-            uint32 amount = Eluna::CHECKVAL<uint32>(L, ++i);
-
-            LootStoreItem storeItem(entry, 0, 100, 0, LOOT_MODE_DEFAULT, 0, amount, amount);
-            go->loot.AddItem(storeItem);
-        }
-        return 0;
-    }
-
-    /**
      * Saves [GameObject] to the database
      *
      */
