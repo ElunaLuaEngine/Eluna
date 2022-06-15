@@ -367,12 +367,12 @@ class Eluna_GameEventScript : public GameEventScript
 public:
     Eluna_GameEventScript() : GameEventScript("Eluna_GameEventScript") { }
 
-    void OnEventStart(uint16 eventID)
+    void OnStart(uint16 eventID) override
     {
         sEluna->OnGameEventStart(eventID);
     }
 
-    void OnEventStop(uint16 eventID)
+    void OnStop(uint16 eventID) override
     {
         sEluna->OnGameEventStop(eventID);
     }
