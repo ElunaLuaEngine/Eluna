@@ -135,13 +135,13 @@ jobs:
       fail-fast: false
       matrix:
         eluna: [ON, OFF]
-        patch: [classic, tbc, wotlk]
+        patch: [Classic, TBC, WotLK]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: false
-          repository: Niam5/mangos-${{ matrix.patch }}
+          repository: Niam5/Eluna-CMaNGOS-${{ matrix.patch }}
           ref: master
       - uses: actions/checkout@v2
         with:
