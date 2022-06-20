@@ -731,6 +731,11 @@ public:
     {
         sEluna->OnFirstLogin(player);
     }
+
+    void OnLearnSpell(Player* player, uint32 spellId) override
+    {
+        sEluna->OnLearnSpell(player, spellId);
+    }
 };
 
 class Eluna_ServerScript : public ServerScript

@@ -558,3 +558,11 @@ void Eluna::OnPetAddedToWorld(Player* player, Creature* pet)
     Push(pet);
     CallAllFunctions(PlayerEventBindings, key);
 }
+
+void Eluna::OnLearnSpell(Player* player, uint32 spellId)
+{
+    START_HOOK(PLAYER_EVENT_ON_LEARN_SPELL);
+    Push(player);
+    Push(spellId);
+    CallAllFunctions(PlayerEventBindings, key);
+}
