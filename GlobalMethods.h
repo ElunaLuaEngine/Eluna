@@ -82,7 +82,11 @@ namespace LuaGlobalFunctions
      */
     int GetCoreVersion(lua_State* L)
     {
+#ifdef MANGOS
+        Eluna::Push(L, GitRevision::GetProjectRevision());
+#else
         Eluna::Push(L, CORE_VERSION);
+#endif
         return 1;
     }
 
