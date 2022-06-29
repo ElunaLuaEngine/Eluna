@@ -107,7 +107,11 @@
 #else
 #include "Server/SQLStorages.h"
 #endif
+#ifdef MANGOS
+#include "GitRevision.h"
+#else
 #include "revision.h"
+#endif
 #endif
 
 #if (!defined(TBC) && !defined(CLASSIC))
