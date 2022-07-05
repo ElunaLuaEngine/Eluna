@@ -566,3 +566,11 @@ void Eluna::OnLearnSpell(Player* player, uint32 spellId)
     Push(spellId);
     CallAllFunctions(PlayerEventBindings, key);
 }
+
+void Eluna::OnAchiComplete(Player* player, AchievementEntry const* achievement)
+{
+    START_HOOK(PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE);
+    Push(player);
+    Push(achievement);
+    CallAllFunctions(PlayerEventBindings, key);
+}

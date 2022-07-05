@@ -37,6 +37,7 @@ extern "C"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
 #include "ChatHandlerMethods.h"
+#include "AchievementMethods.h"
 
 luaL_Reg GlobalMethods[] =
 {
@@ -1319,6 +1320,13 @@ ElunaRegister<ChatHandler> ChatHandlerMethods[] =
     { NULL, NULL }
 };
 
+ElunaRegister<AchievementEntry> AchievementMethods[] =
+{
+    { "GetId", &LuaAchievement::GetId },
+
+    { NULL, NULL }
+};
+
 #if (!defined(TBC) && !defined(CLASSIC))
 // fix compile error about accessing vehicle destructor
 template<> int ElunaTemplate<Vehicle>::CollectGarbage(lua_State* L)
@@ -1460,6 +1468,9 @@ void RegisterFunctions(Eluna* E)
 
     ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery", true);
     ElunaTemplate<ElunaQuery>::SetMethods(E, QueryMethods);
+
+    ElunaTemplate<AchievementEntry>::Register(E, "AchievementEntry", true);
+    ElunaTemplate<AchievementEntry>::SetMethods(E, AchievementMethods);
 
     ElunaTemplate<long long>::Register(E, "long long", true);
 

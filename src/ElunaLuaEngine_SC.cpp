@@ -736,6 +736,11 @@ public:
     {
         sEluna->OnLearnSpell(player, spellId);
     }
+
+    void OnAchiComplete(Player* player, AchievementEntry const* achievement) override
+    {
+        sEluna->OnAchiComplete(player, achievement);
+    }
 };
 
 class Eluna_ServerScript : public ServerScript

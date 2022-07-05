@@ -706,7 +706,8 @@ namespace LuaGlobalFunctions
      *     // UNUSED                               =     41,       // (event, player)
      *     PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command, chatHandler) - player is nil if command used from console. Can return false
      *     PLAYER_EVENT_ON_PET_ADDED_TO_WORLD      =     43,       // (event, player, pet)
-     * *   PLAYER_EVENT_ON_LEARN_SPELL             =     44,       // (event, player, spellId)
+     *     PLAYER_EVENT_ON_LEARN_SPELL             =     44,       // (event, player, spellId)
+     *     PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE    =     45,       // (event, player, achievement)
      * };
      * </pre>
      *
