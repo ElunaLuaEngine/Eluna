@@ -916,6 +916,7 @@ ElunaRegister<GameObject> GameObjectMethods[] =
     { "Despawn", &LuaGameObject::Despawn },
     { "Respawn", &LuaGameObject::Respawn },
     { "SaveToDB", &LuaGameObject::SaveToDB },
+    { "AddLoot", &LuaGameObject::AddLoot },
 
     { NULL, NULL }
 };

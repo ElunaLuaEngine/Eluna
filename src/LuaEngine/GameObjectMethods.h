@@ -236,6 +236,69 @@ namespace LuaGameObject
     }
 
     /**
+    * Adds an [Item] to the loot of a [GameObject]
+    * Requires an gameobject with loot_template set to 0.
+    *
+    * @param uint32 entry : The entry of the [Item]
+    * @param uint32 amount = 1 : amount of the [Item] to add to the loot
+    * @return uint32 itemGUIDlow : low GUID of the [Item]
+    */
+
+    int AddLoot(lua_State* L, GameObject* go)
+    {
+        int i = 1;
+        int argAmount = lua_gettop(L);
+
+#if defined TRINITY || defined AZEROTHCORE
+        CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
+#endif
+        uint8 addedItems = 0;
+        while (i + 2 <= argAmount)
+        {
+            uint32 entry = Eluna::CHECKVAL<uint32>(L, ++i);
+            uint32 amount = Eluna::CHECKVAL<uint32>(L, ++i);
+
+#if defined TRINITY || AZEROTHCORE
+            ItemTemplate const* item_proto = eObjectMgr->GetItemTemplate(entry);
+#else
+            ItemTemplate const* item_proto = ObjectMgr::GetItemPrototype(entry);
+#endif
+            if (!item_proto)
+            {
+                luaL_error(L, "Item entry %d does not exist", entry);
+                continue;
+            }
+            if (amount < 1 || (item_proto->MaxCount > 0 && amount > uint32(item_proto->MaxCount)))
+            {
+                luaL_error(L, "Item entry %d has invalid amount %d", entry, amount);
+                continue;
+            }
+            if (Item* item = Item::CreateItem(entry, amount))
+            {
+#if defined TRINITY || AZEROTHCORE
+                item->SaveToDB(trans);
+#else
+                item->SaveToDB();
+#endif
+                LootStoreItem storeItem(item->GetEntry(), 0, 100, 0, LOOT_MODE_DEFAULT, 0, item->GetCount(), item->GetCount());
+                go->loot.AddItem(storeItem);
+#if defined TRINITY || AZEROTHCORE
+                Eluna::Push(L, item->GetGUID().GetCounter());
+#else
+                Eluna::Push(L, item->GetGUIDLow());
+#endif
+                ++addedItems;
+            }
+        }
+
+#if defined TRINITY || AZEROTHCORE
+        CharacterDatabase.CommitTransaction(trans);
+#endif
+
+        return addedItems;
+    }
+
+    /**
      * Saves [GameObject] to the database
      *
      */
