@@ -84,4 +84,4 @@ Eluna API for AC:
 - Added RegisterPlayerEvent 44: `PLAYER_EVENT_ON_LEARN_SPELL`. https://github.com/azerothcore/mod-eluna/pull/46
 - Added RegisterPlayerEvent 45: `PLAYER_ON_ACHIEVEMENT_COMPLETE`. https://github.com/azerothcore/mod-eluna/pull/47
 - Added vendor entry as argument to player:SendListInventory(object, vendorentry). https://github.com/azerothcore/mod-eluna/pull/48
-- Added `gameobject:AddLoot()` to add loot at runtime to an **empty** container.
+- Added `gameobject:AddLoot()` to add loot at runtime to an **empty** container. https://github.com/azerothcore/mod-eluna/pull/52
