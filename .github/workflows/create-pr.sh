@@ -10,6 +10,8 @@ git config --global user.name "$USER_NAME"
 echo "Cloning destination git repository"
 git clone "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_REPO.git" "$CLONE_DIR"
 cd "$CLONE_DIR"
+date=$(date '+%Y-%m-%d_%H-%M')
+DESTINATION_BASE_BRANCH="$DESTINATION_BASE_BRANCH-$date"
 git checkout "$DESTINATION_BASE_BRANCH"
 git pull origin "$DESTINATION_BASE_BRANCH"
 git checkout -b "$DESTINATION_HEAD_BRANCH"
