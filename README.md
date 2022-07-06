@@ -77,8 +77,10 @@ Eluna API for AC:
 ## Additions from Eluna/master
 
 - Added HttpRequest method. https://github.com/azerothcore/Eluna/pull/2
-- Added RegisterPlayerEvent 43: `OnPetAddedToWorld()` fires for pets and summoned creatures. https://github.com/azerothcore/Eluna/pull/3
+- Added RegisterPlayerEvent 43: `PLAYER_EVENT_ON_PET_ADDED_TO_WORLD` fires for pets and summoned creatures. https://github.com/azerothcore/Eluna/pull/3
 - Added Chat-Handler methods to player events. https://github.com/azerothcore/Eluna/pull/23
 - Exposed `ModifyThreatPct()`. https://github.com/azerothcore/Eluna/pull/25
 - Exposed `Object:IsPlayer()`. https://github.com/azerothcore/Eluna/pull/42
-- Added RegisterPlayerEvent 44: `OnPlayerLearnSpell`. https://github.com/azerothcore/mod-eluna/pull/46
+- Added RegisterPlayerEvent 44: `PLAYER_EVENT_ON_LEARN_SPELL`. https://github.com/azerothcore/mod-eluna/pull/46
+- Added RegisterPlayerEvent 45: `PLAYER_ON_ACHIEVEMENT_COMPLETE`. https://github.com/azerothcore/mod-eluna/pull/47
+- Added vendor entry as argument to player:SendListInventory(object, vendorentry). https://github.com/azerothcore/mod-eluna/pull/48
