@@ -650,7 +650,11 @@ void Eluna::Push(lua_State* luastate, const int i)
 }
 void Eluna::Push(lua_State* luastate, const unsigned int u)
 {
+#if LUA_VERSION_NUM >= 503
+    lua_pushinteger(luastate, u);
+#else
     lua_pushunsigned(luastate, u);
+#endif
 }
 void Eluna::Push(lua_State* luastate, const double d)
 {
