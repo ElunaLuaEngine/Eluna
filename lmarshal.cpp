@@ -1,7 +1,7 @@
 /*
  * lmarshal.c
  * A Lua library for serializing and deserializing Lua values
- * Richard Hundt <richardhundt@gmail.com>, Eluna Lua Engine <http://emudevs.com/>
+ * Richard Hundt <richardhundt@gmail.com>, Eluna Lua Engine <https://elunaluaengine.github.io/>
  *
  * License: MIT
  *
@@ -204,8 +204,8 @@ static void mar_encode_value(lua_State *L, mar_Buffer *buf, int val, size_t *idx
         }
         else {
             mar_Buffer rec_buf;
-            unsigned int i;
             lua_Debug ar;
+            decltype(ar.nups) i;
             lua_pop(L, 1); /* pop nil */
 
             lua_pushvalue(L, -1);
