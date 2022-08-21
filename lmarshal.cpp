@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cstdint>
+#include "ElunaCompat.h"
 
 extern "C" {
 #include "lua.h"
