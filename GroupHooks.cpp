@@ -17,8 +17,7 @@ using namespace Hooks;
         return;\
     auto key = EventKey<GroupEvents>(EVENT);\
     if (!GroupEventBindings->HasBindingsFor(key))\
-        return;\
-    LOCK_ELUNA
+        return;
 
 void Eluna::OnAddMember(Group* group, ObjectGuid guid)
 {

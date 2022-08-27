@@ -21,7 +21,6 @@ using namespace Hooks;
     auto instanceKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetInstanceId());\
     if (!MapEventBindings->HasBindingsFor(mapKey) && !InstanceEventBindings->HasBindingsFor(instanceKey))\
         return;\
-    LOCK_ELUNA;\
     PushInstanceData(L, AI);\
     Push(AI->instance)
 
@@ -32,7 +31,6 @@ using namespace Hooks;
     auto instanceKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetInstanceId());\
     if (!MapEventBindings->HasBindingsFor(mapKey) && !InstanceEventBindings->HasBindingsFor(instanceKey))\
         return RETVAL;\
-    LOCK_ELUNA;\
     PushInstanceData(L, AI);\
     Push(AI->instance)
 

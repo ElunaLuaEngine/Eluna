@@ -49,13 +49,13 @@ namespace LuaQuest
      * @param [QuestFlags] flag : all available flags can be seen above
      * @return bool hasFlag
      */
-    int HasFlag(lua_State* L, Quest* quest)
+    int HasFlag(Eluna* E, Quest* quest)
     {
-        uint32 flag = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 flag = Eluna::CHECKVAL<uint32>(E->L, 2);
 #if defined TRINITY || AZEROTHCORE
-        Eluna::Push(L, quest->HasFlag(flag));
+        E->Push(E->L, quest->HasFlag(flag));
 #else
-        Eluna::Push(L, quest->HasQuestFlag((QuestFlags)flag));
+        E->Push(E->L, quest->HasQuestFlag((QuestFlags)flag));
 #endif
         return 1;
     }
@@ -66,9 +66,9 @@ namespace LuaQuest
      *
      * @return bool isDaily
      */
-    int IsDaily(lua_State* L, Quest* quest)
+    int IsDaily(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->IsDaily());
+        E->Push(E->L, quest->IsDaily());
         return 1;
     }
 #endif
@@ -78,9 +78,9 @@ namespace LuaQuest
      *
      * @return bool isRepeatable
      */
-    int IsRepeatable(lua_State* L, Quest* quest)
+    int IsRepeatable(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->IsRepeatable());
+        E->Push(E->L, quest->IsRepeatable());
         return 1;
     }
 
@@ -89,9 +89,9 @@ namespace LuaQuest
      *
      * @return uint32 entryId
      */
-    int GetId(lua_State* L, Quest* quest)
+    int GetId(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetQuestId());
+        E->Push(E->L, quest->GetQuestId());
         return 1;
     }
 
@@ -100,9 +100,9 @@ namespace LuaQuest
      *
      * @return uint32 level
      */
-    int GetLevel(lua_State* L, Quest* quest)
+    int GetLevel(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetQuestLevel());
+        E->Push(E->L, quest->GetQuestLevel());
         return 1;
     }
 
@@ -111,9 +111,9 @@ namespace LuaQuest
      *
      * @return uint32 minLevel
      */
-    int GetMinLevel(lua_State* L, Quest* quest)
+    int GetMinLevel(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetMinLevel());
+        E->Push(E->L, quest->GetMinLevel());
         return 1;
     }
 
@@ -122,9 +122,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetNextQuestId(lua_State* L, Quest* quest)
+    int GetNextQuestId(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetNextQuestId());
+        E->Push(E->L, quest->GetNextQuestId());
         return 1;
     }
 
@@ -133,9 +133,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetPrevQuestId(lua_State* L, Quest* quest)
+    int GetPrevQuestId(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetPrevQuestId());
+        E->Push(E->L, quest->GetPrevQuestId());
         return 1;
     }
 
@@ -144,9 +144,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetNextQuestInChain(lua_State* L, Quest* quest)
+    int GetNextQuestInChain(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetNextQuestInChain());
+        E->Push(E->L, quest->GetNextQuestInChain());
         return 1;
     }
 
@@ -155,12 +155,12 @@ namespace LuaQuest
      *
      * @return [QuestFlags] flags
      */
-    int GetFlags(lua_State* L, Quest* quest)
+    int GetFlags(Eluna* E, Quest* quest)
     {
 #if defined TRINITY || AZEROTHCORE
-        Eluna::Push(L, quest->GetFlags());
+        E->Push(E->L, quest->GetFlags());
 #else
-        Eluna::Push(L, quest->GetQuestFlags());
+        E->Push(E->L, quest->GetQuestFlags());
 #endif
         return 1;
     }
@@ -172,15 +172,15 @@ namespace LuaQuest
      *
      * @return uint32 type
      */
-    int GetType(lua_State* L, Quest* quest)
+    int GetType(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetType());
+        E->Push(E->L, quest->GetType());
         return 1;
     }
 
-    /*int GetMaxLevel(lua_State* L, Quest* quest)
+    /*int GetMaxLevel(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetMaxLevel());
+        E->Push(E->L, quest->GetMaxLevel());
         return 1;
     }*/
 };

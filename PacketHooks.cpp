@@ -18,16 +18,14 @@ using namespace Hooks;
         return;\
     auto key = EventKey<ServerEvents>(EVENT);\
     if (!ServerEventBindings->HasBindingsFor(key))\
-        return;\
-    LOCK_ELUNA
+        return;
 
 #define START_HOOK_PACKET(EVENT, OPCODE) \
     if (!IsEnabled())\
         return;\
     auto key = EntryKey<PacketEvents>(EVENT, OPCODE);\
     if (!PacketEventBindings->HasBindingsFor(key))\
-        return;\
-    LOCK_ELUNA
+        return;
 
 bool Eluna::OnPacketSend(WorldSession* session, const WorldPacket& packet)
 {

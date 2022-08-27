@@ -19,16 +19,14 @@ using namespace Hooks;
         return;\
     auto key = EntryKey<GameObjectEvents>(EVENT, ENTRY);\
     if (!GameObjectEventBindings->HasBindingsFor(key))\
-        return;\
-    LOCK_ELUNA
+        return;
 
 #define START_HOOK_WITH_RETVAL(EVENT, ENTRY, RETVAL) \
     if (!IsEnabled())\
         return RETVAL;\
     auto key = EntryKey<GameObjectEvents>(EVENT, ENTRY);\
     if (!GameObjectEventBindings->HasBindingsFor(key))\
-        return RETVAL;\
-    LOCK_ELUNA
+        return RETVAL;
 
 void Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, GameObject* pTarget)
 {

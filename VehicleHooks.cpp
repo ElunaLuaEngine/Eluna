@@ -20,8 +20,7 @@ using namespace Hooks;
         return;\
     auto key = EventKey<VehicleEvents>(EVENT);\
     if (!VehicleEventBindings->HasBindingsFor(key))\
-        return;\
-    LOCK_ELUNA
+        return;
 
 void Eluna::OnInstall(Vehicle* vehicle)
 {

@@ -37,7 +37,7 @@ extern "C"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
 
-luaL_Reg GlobalMethods[] =
+ElunaGlobal::ElunaRegister GlobalMethods[] =
 {
     // Hooks
     { "RegisterPacketEvent", &LuaGlobalFunctions::RegisterPacketEvent },

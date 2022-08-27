@@ -17,8 +17,7 @@ using namespace Hooks;
         return;\
     auto key = EventKey<BGEvents>(EVENT);\
     if (!BGEventBindings->HasBindingsFor(key))\
-        return;\
-    LOCK_ELUNA
+        return;
 
 void Eluna::OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
 {
