@@ -22,7 +22,7 @@ int Eluna::SetupStack(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, cons
     ASSERT(key1.event_id == key2.event_id);
     // Stack: [arguments]
 
-    Push(key1.event_id);
+    HookPush(key1.event_id);
     this->push_counter = 0;
     ++number_of_arguments;
     // Stack: [arguments], event_id

@@ -215,22 +215,22 @@ private:
     }
 
     // Non-static pushes, to be used in hooks.
-    // These just call the correct static version with the main thread's Lua state.
-    void Push()                                 { Push(L); ++push_counter; }
-    void Push(const long long value)            { Push(L, value); ++push_counter; }
-    void Push(const unsigned long long value)   { Push(L, value); ++push_counter; }
-    void Push(const long value)                 { Push(L, value); ++push_counter; }
-    void Push(const unsigned long value)        { Push(L, value); ++push_counter; }
-    void Push(const int value)                  { Push(L, value); ++push_counter; }
-    void Push(const unsigned int value)         { Push(L, value); ++push_counter; }
-    void Push(const bool value)                 { Push(L, value); ++push_counter; }
-    void Push(const float value)                { Push(L, value); ++push_counter; }
-    void Push(const double value)               { Push(L, value); ++push_counter; }
-    void Push(const std::string& value)         { Push(L, value); ++push_counter; }
-    void Push(const char* value)                { Push(L, value); ++push_counter; }
-    void Push(ObjectGuid const value)           { Push(L, value); ++push_counter; }
+    // These just call the correct static version.
+    void HookPush()                                 { Push(L); ++push_counter; }
+    void HookPush(const long long value)            { Push(L, value); ++push_counter; }
+    void HookPush(const unsigned long long value)   { Push(L, value); ++push_counter; }
+    void HookPush(const long value)                 { Push(L, value); ++push_counter; }
+    void HookPush(const unsigned long value)        { Push(L, value); ++push_counter; }
+    void HookPush(const int value)                  { Push(L, value); ++push_counter; }
+    void HookPush(const unsigned int value)         { Push(L, value); ++push_counter; }
+    void HookPush(const bool value)                 { Push(L, value); ++push_counter; }
+    void HookPush(const float value)                { Push(L, value); ++push_counter; }
+    void HookPush(const double value)               { Push(L, value); ++push_counter; }
+    void HookPush(const std::string& value)         { Push(L, value); ++push_counter; }
+    void HookPush(const char* value)                { Push(L, value); ++push_counter; }
+    void HookPush(ObjectGuid const value)           { Push(L, value); ++push_counter; }
     template<typename T>
-    void Push(T const* ptr)                     { Push(L, ptr); ++push_counter; }
+    void HookPush(T const* ptr)                     { Push(L, ptr); ++push_counter; }
 
     int32 boundMapId;
 public:

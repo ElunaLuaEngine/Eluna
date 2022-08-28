@@ -22,9 +22,9 @@ using namespace Hooks;
 void Eluna::OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
 {
     START_HOOK(BG_EVENT_ON_START);
-    Push(bg);
-    Push(bgId);
-    Push(instanceId);
+    HookPush(bg);
+    HookPush(bgId);
+    HookPush(instanceId);
     CallAllFunctions(BGEventBindings, key);
 }
 
@@ -35,27 +35,27 @@ void Eluna::OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId
 #endif
 {
     START_HOOK(BG_EVENT_ON_END);
-    Push(bg);
-    Push(bgId);
-    Push(instanceId);
-    Push(winner);
+    HookPush(bg);
+    HookPush(bgId);
+    HookPush(instanceId);
+    HookPush(winner);
     CallAllFunctions(BGEventBindings, key);
 }
 
 void Eluna::OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
 {
     START_HOOK(BG_EVENT_ON_CREATE);
-    Push(bg);
-    Push(bgId);
-    Push(instanceId);
+    HookPush(bg);
+    HookPush(bgId);
+    HookPush(instanceId);
     CallAllFunctions(BGEventBindings, key);
 }
 
 void Eluna::OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
 {
     START_HOOK(BG_EVENT_ON_PRE_DESTROY);
-    Push(bg);
-    Push(bgId);
-    Push(instanceId);
+    HookPush(bg);
+    HookPush(bgId);
+    HookPush(instanceId);
     CallAllFunctions(BGEventBindings, key);
 }

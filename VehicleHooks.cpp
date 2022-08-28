@@ -25,39 +25,39 @@ using namespace Hooks;
 void Eluna::OnInstall(Vehicle* vehicle)
 {
     START_HOOK(VEHICLE_EVENT_ON_INSTALL);
-    Push(vehicle);
+    HookPush(vehicle);
     CallAllFunctions(VehicleEventBindings, key);
 }
 
 void Eluna::OnUninstall(Vehicle* vehicle)
 {
     START_HOOK(VEHICLE_EVENT_ON_UNINSTALL);
-    Push(vehicle);
+    HookPush(vehicle);
     CallAllFunctions(VehicleEventBindings, key);
 }
 
 void Eluna::OnInstallAccessory(Vehicle* vehicle, Creature* accessory)
 {
     START_HOOK(VEHICLE_EVENT_ON_INSTALL_ACCESSORY);
-    Push(vehicle);
-    Push(accessory);
+    HookPush(vehicle);
+    HookPush(accessory);
     CallAllFunctions(VehicleEventBindings, key);
 }
 
 void Eluna::OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId)
 {
     START_HOOK(VEHICLE_EVENT_ON_ADD_PASSENGER);
-    Push(vehicle);
-    Push(passenger);
-    Push(seatId);
+    HookPush(vehicle);
+    HookPush(passenger);
+    HookPush(seatId);
     CallAllFunctions(VehicleEventBindings, key);
 }
 
 void Eluna::OnRemovePassenger(Vehicle* vehicle, Unit* passenger)
 {
     START_HOOK(VEHICLE_EVENT_ON_REMOVE_PASSENGER);
-    Push(vehicle);
-    Push(passenger);
+    HookPush(vehicle);
+    HookPush(passenger);
     CallAllFunctions(VehicleEventBindings, key);
 }
 

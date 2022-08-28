@@ -30,19 +30,19 @@ using namespace Hooks;
 void Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget)
 {
     START_HOOK(ITEM_EVENT_ON_DUMMY_EFFECT, pTarget->GetEntry());
-    Push(pCaster);
-    Push(spellId);
-    Push(effIndex);
-    Push(pTarget);
+    HookPush(pCaster);
+    HookPush(spellId);
+    HookPush(effIndex);
+    HookPush(pTarget);
     CallAllFunctions(ItemEventBindings, key);
 }
 
 bool Eluna::OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest)
 {
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_QUEST_ACCEPT, pItem->GetEntry(), false);
-    Push(pPlayer);
-    Push(pItem);
-    Push(pQuest);
+    HookPush(pPlayer);
+    HookPush(pItem);
+    HookPush(pQuest);
     return CallAllFunctionsBool(ItemEventBindings, key);
 }
 
@@ -83,32 +83,32 @@ bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
 {
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_USE, pItem->GetEntry(), true);
-    Push(pPlayer);
-    Push(pItem);
+    HookPush(pPlayer);
+    HookPush(pItem);
 #if defined TRINITY || AZEROTHCORE
     if (GameObject* target = targets.GetGOTarget())
-        Push(target);
+        HookPush(target);
     else if (Item* target = targets.GetItemTarget())
-        Push(target);
+        HookPush(target);
     else if (Corpse* target = targets.GetCorpseTarget())
-        Push(target);
+        HookPush(target);
     else if (Unit* target = targets.GetUnitTarget())
-        Push(target);
+        HookPush(target);
     else if (WorldObject* target = targets.GetObjectTarget())
-        Push(target);
+        HookPush(target);
     else
-        Push();
+        HookPush();
 #else
     if (GameObject* target = targets.getGOTarget())
-        Push(target);
+        HookPush(target);
     else if (Item* target = targets.getItemTarget())
-        Push(target);
+        HookPush(target);
     else if (Corpse* target = pPlayer->GetMap()->GetCorpse(targets.getCorpseTargetGuid()))
-        Push(target);
+        HookPush(target);
     else if (Unit* target = targets.getUnitTarget())
-        Push(target);
+        HookPush(target);
     else
-        Push();
+        HookPush();
 #endif
 
     return CallAllFunctionsBool(ItemEventBindings, key, true);
@@ -117,15 +117,15 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
 bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
 {
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_EXPIRE, pProto->ItemId, false);
-    Push(pPlayer);
-    Push(pProto->ItemId);
+    HookPush(pPlayer);
+    HookPush(pProto->ItemId);
     return CallAllFunctionsBool(ItemEventBindings, key);
 }
 
 bool Eluna::OnRemove(Player* pPlayer, Item* pItem)
 {
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_REMOVE, pItem->GetEntry(), false);
-    Push(pPlayer);
-    Push(pItem);
+    HookPush(pPlayer);
+    HookPush(pItem);
     return CallAllFunctionsBool(ItemEventBindings, key);
 }

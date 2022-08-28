@@ -40,8 +40,8 @@ bool Eluna::OnPacketSend(WorldSession* session, const WorldPacket& packet)
 void Eluna::OnPacketSendAny(Player* player, const WorldPacket& packet, bool& result)
 {
     START_HOOK_SERVER(SERVER_EVENT_ON_PACKET_SEND);
-    Push(new WorldPacket(packet));
-    Push(player);
+    HookPush(new WorldPacket(packet));
+    HookPush(player);
     int n = SetupStack(ServerEventBindings, key, 2);
 
     while (n > 0)
@@ -60,8 +60,8 @@ void Eluna::OnPacketSendAny(Player* player, const WorldPacket& packet, bool& res
 void Eluna::OnPacketSendOne(Player* player, const WorldPacket& packet, bool& result)
 {
     START_HOOK_PACKET(PACKET_EVENT_ON_PACKET_SEND, packet.GetOpcode());
-    Push(new WorldPacket(packet));
-    Push(player);
+    HookPush(new WorldPacket(packet));
+    HookPush(player);
     int n = SetupStack(PacketEventBindings, key, 2);
 
     while (n > 0)
@@ -91,8 +91,8 @@ bool Eluna::OnPacketReceive(WorldSession* session, WorldPacket& packet)
 void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result)
 {
     START_HOOK_SERVER(SERVER_EVENT_ON_PACKET_RECEIVE);
-    Push(new WorldPacket(packet));
-    Push(player);
+    HookPush(new WorldPacket(packet));
+    HookPush(player);
     int n = SetupStack(ServerEventBindings, key, 2);
 
     while (n > 0)
@@ -115,8 +115,8 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
 void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result)
 {
     START_HOOK_PACKET(PACKET_EVENT_ON_PACKET_RECEIVE, packet.GetOpcode());
-    Push(new WorldPacket(packet));
-    Push(player);
+    HookPush(new WorldPacket(packet));
+    HookPush(player);
     int n = SetupStack(PacketEventBindings, key, 2);
 
     while (n > 0)
