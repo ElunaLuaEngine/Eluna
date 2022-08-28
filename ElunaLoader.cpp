@@ -12,6 +12,7 @@
 #include <filesystem>
 #include <fstream>
 #include <boost/filesystem.hpp>
+#include "MapManager.h"
 
 ElunaLoader::ElunaLoader()
 {
@@ -55,14 +56,17 @@ void ElunaLoader::LoadScripts()
 
     requiredMaps.clear();
     
-    std::string maps = sConfigMgr->GetStringDefault("Eluna.OnlyOnMaps", "");
+    std::string maps = eConfigMgr->GetStringDefault("Eluna.OnlyOnMaps", "");
     for (std::string_view mapIdStr : Trinity::Tokenize(maps, ',', false))
     {
         int32 mapId = Trinity::StringTo<int32>(mapIdStr).value_or(-1);
-        if(mapId >= 0)
+        if (mapId >= 0)
             requiredMaps.emplace_back(mapId);
-        //@todo: error message for being unable to read correctly
+        else
+            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, wrong config value?");
     }
+
+    preloadMaps = eConfigMgr->GetBoolDefault("Eluna.PreloadOnlyOnMaps", false);
 }
 
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
@@ -194,4 +198,17 @@ bool ElunaLoader::ShouldMapLoadEluna(uint32 id)
         return true;
 
     return (std::find(requiredMaps.begin(), requiredMaps.end(), id) != requiredMaps.end());
+}
+
+void ElunaLoader::PreloadElunaMaps()
+{
+    // Don't preload maps if not enabled or eluna has a state for every map.
+    if (!preloadMaps || !requiredMaps.size())
+        return;
+
+    for (uint32 mapId : requiredMaps)
+    {
+        // Creates the parent map for every entry in requiredMaps, will break if any emulator unloads parent maps.
+        sMapMgr->CreateBaseMap(mapId);
+    }
 }
