@@ -25,7 +25,7 @@ namespace LuaMap
      */
     int IsArena(Eluna* E, Map* map)
     {
-        E->Push(E->L, map->IsBattleArena());
+        E->Push(map->IsBattleArena());
         return 1;
     }
 #endif
@@ -38,9 +38,9 @@ namespace LuaMap
     int IsBattleground(Eluna* E, Map* map)
     {
 #if defined TRINITY || AZEROTHCORE
-        E->Push(E->L, map->IsBattleground());
+        E->Push(map->IsBattleground());
 #else
-        E->Push(E->L, map->IsBattleGround());
+        E->Push(map->IsBattleGround());
 #endif
         return 1;
     }
@@ -52,7 +52,7 @@ namespace LuaMap
      */
     int IsDungeon(Eluna* E, Map* map)
     {
-        E->Push(E->L, map->IsDungeon());
+        E->Push(map->IsDungeon());
         return 1;
     }
 
@@ -63,7 +63,7 @@ namespace LuaMap
      */
     int IsEmpty(Eluna* E, Map* map)
     {
-        E->Push(E->L, map->isEmpty());
+        E->Push(map->isEmpty());
         return 1;
     }
 
@@ -75,7 +75,7 @@ namespace LuaMap
      */
     int IsHeroic(Eluna* E, Map* map)
     {
-        E->Push(E->L, map->IsHeroic());
+        E->Push(map->IsHeroic());
         return 1;
     }
 #endif
@@ -87,7 +87,7 @@ namespace LuaMap
      */
     int IsRaid(Eluna* E, Map* map)
     {
-        E->Push(E->L, map->IsRaid());
+        E->Push(map->IsRaid());
         return 1;
     }
 
@@ -98,7 +98,7 @@ namespace LuaMap
      */
     int GetName(Eluna* E, Map* map)
     {
-        E->Push(E->L, map->GetMapName());
+        E->Push(map->GetMapName());
         return 1;
     }
 
@@ -122,7 +122,7 @@ namespace LuaMap
         float z = map->GetHeight(phasemask, x, y, MAX_HEIGHT);
 #endif
         if (z != INVALID_HEIGHT)
-            E->Push(E->L, z);
+            E->Push(z);
         return 1;
     }
 
@@ -136,9 +136,9 @@ namespace LuaMap
     int GetDifficulty(Eluna* E, Map* map)
     {
 #ifndef CLASSIC
-        E->Push(E->L, map->GetDifficulty());
+        E->Push(map->GetDifficulty());
 #else
-        E->Push(E->L, (Difficulty)0);
+        E->Push((Difficulty)0);
 #endif
         return 1;
     }
@@ -150,7 +150,7 @@ namespace LuaMap
      */
     int GetInstanceId(Eluna* E, Map* map)
     {
-        E->Push(E->L, map->GetInstanceId());
+        E->Push(map->GetInstanceId());
         return 1;
     }
 
@@ -161,7 +161,7 @@ namespace LuaMap
      */
     int GetPlayerCount(Eluna* E, Map* map)
     {
-        E->Push(E->L, map->GetPlayersCountExceptGMs());
+        E->Push(map->GetPlayersCountExceptGMs());
         return 1;
     }
 
@@ -172,7 +172,7 @@ namespace LuaMap
      */
     int GetMapId(Eluna* E, Map* map)
     {
-        E->Push(E->L, map->GetId());
+        E->Push(map->GetId());
         return 1;
     }
 
@@ -193,9 +193,9 @@ namespace LuaMap
 #if defined TRINITY || defined AZEROTHCORE
         float phasemask = Eluna::CHECKVAL<uint32>(E->L, 5, PHASEMASK_NORMAL);
 
-        E->Push(E->L, map->GetAreaId(phasemask, x, y, z));
+        E->Push(map->GetAreaId(phasemask, x, y, z));
 #else
-        E->Push(E->L, map->GetTerrain()->GetAreaId(x, y, z));
+        E->Push(map->GetTerrain()->GetAreaId(x, y, z));
 #endif
         return 1;
     }
@@ -214,31 +214,31 @@ namespace LuaMap
         switch (guid.GetHigh())
         {
             case HIGHGUID_PLAYER:
-                E->Push(E->L, eObjectAccessor()GetPlayer(map, guid));
+                E->Push(eObjectAccessor()GetPlayer(map, guid));
                 break;
             case HIGHGUID_TRANSPORT:
             case HIGHGUID_MO_TRANSPORT:
             case HIGHGUID_GAMEOBJECT:
-                E->Push(E->L, map->GetGameObject(guid));
+                E->Push(map->GetGameObject(guid));
                 break;
             case HIGHGUID_VEHICLE:
             case HIGHGUID_UNIT:
-                E->Push(E->L, map->GetCreature(guid));
+                E->Push(map->GetCreature(guid));
                 break;
             case HIGHGUID_PET:
-                E->Push(E->L, map->GetPet(guid));
+                E->Push(map->GetPet(guid));
                 break;
             case HIGHGUID_DYNAMICOBJECT:
-                E->Push(E->L, map->GetDynamicObject(guid));
+                E->Push(map->GetDynamicObject(guid));
                 break;
             case HIGHGUID_CORPSE:
-                E->Push(E->L, map->GetCorpse(guid));
+                E->Push(map->GetCorpse(guid));
                 break;
             default:
                 break;
         }
 #else
-        E->Push(E->L, map->GetWorldObject(guid));
+        E->Push(map->GetWorldObject(guid));
 #endif
         return 1;
     }
@@ -361,7 +361,7 @@ namespace LuaMap
                 continue;
             if (player->GetSession() && (team >= TEAM_NEUTRAL || player->GetTeamId() == team))
             {
-                E->Push(E->L, player);
+                E->Push(player);
                 lua_rawseti(E->L, tbl, ++i);
             }
         }

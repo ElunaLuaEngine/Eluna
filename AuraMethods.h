@@ -28,7 +28,7 @@ namespace LuaAura
      */
     int GetCaster(Eluna* E, Aura* aura)
     {
-        E->Push(E->L, aura->GetCaster());
+        E->Push(aura->GetCaster());
         return 1;
     }
 
@@ -40,9 +40,9 @@ namespace LuaAura
     int GetCasterGUID(Eluna* E, Aura* aura)
     {
 #if defined TRINITY || AZEROTHCORE
-        E->Push(E->L, aura->GetCasterGUID());
+        E->Push(aura->GetCasterGUID());
 #else
-        E->Push(E->L, aura->GetCasterGuid());
+        E->Push(aura->GetCasterGuid());
 #endif
         return 1;
     }
@@ -55,9 +55,9 @@ namespace LuaAura
     int GetCasterLevel(Eluna* E, Aura* aura)
     {
 #if defined(TRINITY) || CMANGOS
-        E->Push(E->L, aura->GetCaster()->GetLevel());
+        E->Push(aura->GetCaster()->GetLevel());
 #else
-        E->Push(E->L, aura->GetCaster()->getLevel());
+        E->Push(aura->GetCaster()->getLevel());
 #endif
         return 1;
     }
@@ -70,9 +70,9 @@ namespace LuaAura
     int GetDuration(Eluna* E, Aura* aura)
     {
 #if defined TRINITY || AZEROTHCORE
-        E->Push(E->L, aura->GetDuration());
+        E->Push(aura->GetDuration());
 #else
-        E->Push(E->L, aura->GetAuraDuration());
+        E->Push(aura->GetAuraDuration());
 #endif
         return 1;
     }
@@ -84,7 +84,7 @@ namespace LuaAura
      */
     int GetAuraId(Eluna* E, Aura* aura)
     {
-        E->Push(E->L, aura->GetId());
+        E->Push(aura->GetId());
         return 1;
     }
 
@@ -99,9 +99,9 @@ namespace LuaAura
     int GetMaxDuration(Eluna* E, Aura* aura)
     {
 #if defined TRINITY || AZEROTHCORE
-        E->Push(E->L, aura->GetMaxDuration());
+        E->Push(aura->GetMaxDuration());
 #else
-        E->Push(E->L, aura->GetAuraMaxDuration());
+        E->Push(aura->GetAuraMaxDuration());
 #endif
         return 1;
     }
@@ -115,7 +115,7 @@ namespace LuaAura
      */
     int GetStackAmount(Eluna* E, Aura* aura)
     {
-        E->Push(E->L, aura->GetStackAmount());
+        E->Push(aura->GetStackAmount());
         return 1;
     }
 
@@ -127,9 +127,9 @@ namespace LuaAura
     int GetOwner(Eluna* E, Aura* aura)
     {
 #if defined TRINITY || defined AZEROTHCORE
-        E->Push(E->L, aura->GetOwner());
+        E->Push(aura->GetOwner());
 #else
-        E->Push(E->L, aura->GetTarget());
+        E->Push(aura->GetTarget());
 #endif
         return 1;
     }

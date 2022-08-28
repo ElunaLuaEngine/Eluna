@@ -150,13 +150,14 @@ const char* ElunaInstanceAI::Save() const
 
 uint32 ElunaInstanceAI::GetData(uint32 key) const
 {
-    lua_State* L = instance->GetEluna()->L;
+    Eluna* E = instance->GetEluna();
+    lua_State* L = E->L;
     // Stack: (empty)
 
-    instance->GetEluna()->PushInstanceData(L, const_cast<ElunaInstanceAI*>(this), false);
+    E->PushInstanceData(L, const_cast<ElunaInstanceAI*>(this), false);
     // Stack: instance_data
 
-    Eluna::Push(L, key);
+    E->Push(key);
     // Stack: instance_data, key
 
     lua_gettable(L, -2);
@@ -171,14 +172,15 @@ uint32 ElunaInstanceAI::GetData(uint32 key) const
 
 void ElunaInstanceAI::SetData(uint32 key, uint32 value)
 {
-    lua_State* L = instance->GetEluna()->L;
+    Eluna* E = instance->GetEluna();
+    lua_State* L = E->L;
     // Stack: (empty)
 
-    instance->GetEluna()->PushInstanceData(L, this, false);
+    E->PushInstanceData(L, this, false);
     // Stack: instance_data
 
-    Eluna::Push(L, key);
-    Eluna::Push(L, value);
+    E->Push(key);
+    E->Push(value);
     // Stack: instance_data, key, value
 
     lua_settable(L, -3);
@@ -190,13 +192,14 @@ void ElunaInstanceAI::SetData(uint32 key, uint32 value)
 
 uint64 ElunaInstanceAI::GetData64(uint32 key) const
 {
-    lua_State* L = instance->GetEluna()->L;
+    Eluna* E = instance->GetEluna();
+    lua_State* L = E->L;
     // Stack: (empty)
 
-    instance->GetEluna()->PushInstanceData(L, const_cast<ElunaInstanceAI*>(this), false);
+    E->PushInstanceData(L, const_cast<ElunaInstanceAI*>(this), false);
     // Stack: instance_data
 
-    Eluna::Push(L, key);
+    E->Push(key);
     // Stack: instance_data, key
 
     lua_gettable(L, -2);
@@ -211,14 +214,15 @@ uint64 ElunaInstanceAI::GetData64(uint32 key) const
 
 void ElunaInstanceAI::SetData64(uint32 key, uint64 value)
 {
-    lua_State* L = instance->GetEluna()->L;
+    Eluna* E = instance->GetEluna();
+    lua_State* L = E->L;
     // Stack: (empty)
 
-    instance->GetEluna()->PushInstanceData(L, this, false);
+    E->PushInstanceData(L, this, false);
     // Stack: instance_data
 
-    Eluna::Push(L, key);
-    Eluna::Push(L, value);
+    E->Push(key);
+    E->Push(value);
     // Stack: instance_data, key, value
 
     lua_settable(L, -3);

@@ -152,15 +152,6 @@ void Eluna::OpenLua()
     // Register methods and functions
     RegisterFunctions(this);
 
-    //todo: this was added back to restore previous object cleaning that isn't possible due to not push eluna pointer to objects
-    // Create hidden table with weak values
-    lua_newtable(L);
-    lua_newtable(L);
-    lua_pushstring(L, "v");
-    lua_setfield(L, -2, "__mode");
-    lua_setmetatable(L, -2);
-    lua_setfield(L, LUA_REGISTRYINDEX, ELUNA_OBJECT_STORE);
-
     // Set lua require folder paths (scripts folder structure)
     lua_getglobal(L, "package");
     lua_pushstring(L, sElunaLoader->lua_requirepath.c_str());
@@ -298,7 +289,7 @@ void Eluna::RunScripts()
             {
                 // if result evaluates to false, change it to true
                 lua_pop(L, 1);
-                Push(L, true);
+                Push(true);
             }
             lua_setfield(L, modules, it->filename.c_str());
             // Stack: package, modules
@@ -318,18 +309,12 @@ void Eluna::RunScripts()
 
 void Eluna::InvalidateObjects()
 {
-    lua_pushstring(L, ELUNA_OBJECT_STORE);
-    lua_rawget(L, LUA_REGISTRYINDEX);
-    ASSERT(lua_istable(L, -1));
-
-    lua_pushnil(L);
-    while (lua_next(L, -2))
-    {
-        if (ElunaObject* elunaObj = CHECKOBJ<ElunaObject>(L, -1, false))
-            elunaObj->Invalidate();
-        lua_pop(L, 1);
-    }
-    lua_pop(L, 1);
+    ++callstackid;
+#ifdef TRINITY
+    ASSERT(callstackid, "Callstackid overflow");
+#else
+    ASSERT(callstackid && "Callstackid overflow");
+#endif
 }
 
 void Eluna::Report(lua_State* _L)
@@ -426,134 +411,134 @@ bool Eluna::ExecuteCall(int params, int res)
     return true;
 }
 
-void Eluna::Push(lua_State* luastate)
+void Eluna::Push()
 {
-    lua_pushnil(luastate);
+    lua_pushnil(L);
 }
-void Eluna::Push(lua_State* luastate, const long long l)
+void Eluna::Push(const long long l)
 {
-    ElunaTemplate<long long>::Push(luastate, new long long(l));
+    ElunaTemplate<long long>::Push(this, new long long(l));
 }
-void Eluna::Push(lua_State* luastate, const unsigned long long l)
+void Eluna::Push(const unsigned long long l)
 {
-    ElunaTemplate<unsigned long long>::Push(luastate, new unsigned long long(l));
+    ElunaTemplate<unsigned long long>::Push(this, new unsigned long long(l));
 }
-void Eluna::Push(lua_State* luastate, const long l)
+void Eluna::Push(const long l)
 {
-    Push(luastate, static_cast<long long>(l));
+    Push(static_cast<long long>(l));
 }
-void Eluna::Push(lua_State* luastate, const unsigned long l)
+void Eluna::Push(const unsigned long l)
 {
-    Push(luastate, static_cast<unsigned long long>(l));
+    Push(static_cast<unsigned long long>(l));
 }
-void Eluna::Push(lua_State* luastate, const int i)
+void Eluna::Push(const int i)
 {
-    lua_pushinteger(luastate, i);
+    lua_pushinteger(L, i);
 }
-void Eluna::Push(lua_State* luastate, const unsigned int u)
+void Eluna::Push(const unsigned int u)
 {
-    lua_pushunsigned(luastate, u);
+    lua_pushunsigned(L, u);
 }
-void Eluna::Push(lua_State* luastate, const double d)
+void Eluna::Push(const double d)
 {
-    lua_pushnumber(luastate, d);
+    lua_pushnumber(L, d);
 }
-void Eluna::Push(lua_State* luastate, const float f)
+void Eluna::Push(const float f)
 {
-    lua_pushnumber(luastate, f);
+    lua_pushnumber(L, f);
 }
-void Eluna::Push(lua_State* luastate, const bool b)
+void Eluna::Push(const bool b)
 {
-    lua_pushboolean(luastate, b);
+    lua_pushboolean(L, b);
 }
-void Eluna::Push(lua_State* luastate, const std::string& str)
+void Eluna::Push(const std::string& str)
 {
-    lua_pushstring(luastate, str.c_str());
+    lua_pushstring(L, str.c_str());
 }
-void Eluna::Push(lua_State* luastate, const char* str)
+void Eluna::Push(const char* str)
 {
-    lua_pushstring(luastate, str);
+    lua_pushstring(L, str);
 }
-void Eluna::Push(lua_State* luastate, Pet const* pet)
+void Eluna::Push(Pet const* pet)
 {
-    Push<Creature>(luastate, pet);
+    Push<Creature>(pet);
 }
-void Eluna::Push(lua_State* luastate, TempSummon const* summon)
+void Eluna::Push(TempSummon const* summon)
 {
-    Push<Creature>(luastate, summon);
+    Push<Creature>(summon);
 }
-void Eluna::Push(lua_State* luastate, Unit const* unit)
+void Eluna::Push(Unit const* unit)
 {
     if (!unit)
     {
-        Push(luastate);
+        Push();
         return;
     }
     switch (unit->GetTypeId())
     {
         case TYPEID_UNIT:
-            Push(luastate, unit->ToCreature());
+            Push(unit->ToCreature());
             break;
         case TYPEID_PLAYER:
-            Push(luastate, unit->ToPlayer());
+            Push(unit->ToPlayer());
             break;
         default:
-            ElunaTemplate<Unit>::Push(luastate, unit);
+            ElunaTemplate<Unit>::Push(this, unit);
     }
 }
-void Eluna::Push(lua_State* luastate, WorldObject const* obj)
+void Eluna::Push(WorldObject const* obj)
 {
     if (!obj)
     {
-        Push(luastate);
+        Push();
         return;
     }
     switch (obj->GetTypeId())
     {
         case TYPEID_UNIT:
-            Push(luastate, obj->ToCreature());
+            Push(obj->ToCreature());
             break;
         case TYPEID_PLAYER:
-            Push(luastate, obj->ToPlayer());
+            Push(obj->ToPlayer());
             break;
         case TYPEID_GAMEOBJECT:
-            Push(luastate, obj->ToGameObject());
+            Push(obj->ToGameObject());
             break;
         case TYPEID_CORPSE:
-            Push(luastate, obj->ToCorpse());
+            Push(obj->ToCorpse());
             break;
         default:
-            ElunaTemplate<WorldObject>::Push(luastate, obj);
+            ElunaTemplate<WorldObject>::Push(this, obj);
     }
 }
-void Eluna::Push(lua_State* luastate, Object const* obj)
+void Eluna::Push(Object const* obj)
 {
     if (!obj)
     {
-        Push(luastate);
+        Push();
         return;
     }
     switch (obj->GetTypeId())
     {
         case TYPEID_UNIT:
-            Push(luastate, obj->ToCreature());
+            Push(obj->ToCreature());
             break;
         case TYPEID_PLAYER:
-            Push(luastate, obj->ToPlayer());
+            Push(obj->ToPlayer());
             break;
         case TYPEID_GAMEOBJECT:
-            Push(luastate, obj->ToGameObject());
+            Push(obj->ToGameObject());
             break;
         case TYPEID_CORPSE:
-            Push(luastate, obj->ToCorpse());
+            Push(obj->ToCorpse());
             break;
         default:
-            ElunaTemplate<Object>::Push(luastate, obj);
+            ElunaTemplate<Object>::Push(this, obj);
     }
 }
-void Eluna::Push(lua_State* luastate, ObjectGuid const guid)
+void Eluna::Push(ObjectGuid const guid)
 {
-    ElunaTemplate<unsigned long long>::Push(luastate, new unsigned long long(guid.GetRawValue()));
+    ElunaTemplate<unsigned long long>::Push(this, new unsigned long long(guid.GetRawValue()));
 }
 
 static int CheckIntegerRange(lua_State* luastate, int narg, int min, int max)
@@ -737,7 +722,7 @@ static int cancelBinding(lua_State *L)
 template<typename K>
 static void createCancelCallback(Eluna* e, uint64 bindingID, BindingMap<K>* bindings)
 {
-    e->Push(e->L, bindingID);
+    e->Push(bindingID);
     lua_pushlightuserdata(e->L, bindings);
     // Stack: bindingID, bindings
 

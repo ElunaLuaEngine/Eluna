@@ -36,7 +36,7 @@ namespace LuaObject
         uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
         uint32 flag = Eluna::CHECKVAL<uint32>(E->L, 3);
 
-        E->Push(E->L, obj->HasFlag(index, flag));
+        E->Push(obj->HasFlag(index, flag));
         return 1;
     }
 
@@ -47,7 +47,7 @@ namespace LuaObject
      */
     int IsInWorld(Eluna* E, Object* obj)
     {
-        E->Push(E->L, obj->IsInWorld());
+        E->Push(obj->IsInWorld());
         return 1;
     }
 
@@ -60,7 +60,7 @@ namespace LuaObject
     int GetInt32Value(Eluna* E, Object* obj)
     {
         uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
-        E->Push(E->L, obj->GetInt32Value(index));
+        E->Push(obj->GetInt32Value(index));
         return 1;
     }
 
@@ -73,7 +73,7 @@ namespace LuaObject
     int GetUInt32Value(Eluna* E, Object* obj)
     {
         uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
-        E->Push(E->L, obj->GetUInt32Value(index));
+        E->Push(obj->GetUInt32Value(index));
         return 1;
     }
 
@@ -86,7 +86,7 @@ namespace LuaObject
     int GetFloatValue(Eluna* E, Object* obj)
     {
         uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
-        E->Push(E->L, obj->GetFloatValue(index));
+        E->Push(obj->GetFloatValue(index));
         return 1;
     }
 
@@ -103,7 +103,7 @@ namespace LuaObject
     {
         uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
         uint8 offset = Eluna::CHECKVAL<uint8>(E->L, 3);
-        E->Push(E->L, obj->GetByteValue(index, offset));
+        E->Push(obj->GetByteValue(index, offset));
         return 1;
     }
 
@@ -120,7 +120,7 @@ namespace LuaObject
     {
         uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
         uint8 offset = Eluna::CHECKVAL<uint8>(E->L, 3);
-        E->Push(E->L, obj->GetUInt16Value(index, offset));
+        E->Push(obj->GetUInt16Value(index, offset));
         return 1;
     }
 
@@ -134,9 +134,9 @@ namespace LuaObject
     int GetScale(Eluna* E, Object* obj)
     {
 #ifndef AZEROTHCORE
-        E->Push(E->L, obj->GetObjectScale());
+        E->Push(obj->GetObjectScale());
 #else
-        E->Push(E->L, obj->GetFloatValue(OBJECT_FIELD_SCALE_X));
+        E->Push(obj->GetFloatValue(OBJECT_FIELD_SCALE_X));
 #endif
         return 1;
     }
@@ -150,7 +150,7 @@ namespace LuaObject
      */
     int GetEntry(Eluna* E, Object* obj)
     {
-        E->Push(E->L, obj->GetEntry());
+        E->Push(obj->GetEntry());
         return 1;
     }
 
@@ -168,7 +168,7 @@ namespace LuaObject
      */
     int GetGUID(Eluna* E, Object* obj)
     {
-        E->Push(E->L, obj->GET_GUID());
+        E->Push(obj->GET_GUID());
         return 1;
     }
 
@@ -187,9 +187,9 @@ namespace LuaObject
     int GetGUIDLow(Eluna* E, Object* obj)
     {
 #if defined TRINITY || AZEROTHCORE
-        E->Push(E->L, obj->GetGUID().GetCounter());
+        E->Push(obj->GetGUID().GetCounter());
 #else
-        E->Push(E->L, obj->GetGUIDLow());
+        E->Push(obj->GetGUIDLow());
 #endif
         return 1;
     }
@@ -213,7 +213,7 @@ namespace LuaObject
      */
     int GetTypeId(Eluna* E, Object* obj)
     {
-        E->Push(E->L, obj->GetTypeId());
+        E->Push(obj->GetTypeId());
         return 1;
     }
 
@@ -226,7 +226,7 @@ namespace LuaObject
     int GetUInt64Value(Eluna* E, Object* obj)
     {
         uint16 index = Eluna::CHECKVAL<uint16>(E->L, 2);
-        E->Push(E->L, obj->GetUInt64Value(index));
+        E->Push(obj->GetUInt64Value(index));
         return 1;
     }
 
@@ -405,7 +405,7 @@ namespace LuaObject
      */
     int ToCorpse(Eluna* E, Object* obj)
     {
-        E->Push(E->L, obj->ToCorpse());
+        E->Push(obj->ToCorpse());
         return 1;
     }
 
@@ -418,7 +418,7 @@ namespace LuaObject
      */
     int ToGameObject(Eluna* E, Object* obj)
     {
-        E->Push(E->L, obj->ToGameObject());
+        E->Push(obj->ToGameObject());
         return 1;
     }
 
@@ -431,7 +431,7 @@ namespace LuaObject
      */
     int ToUnit(Eluna* E, Object* obj)
     {
-        E->Push(E->L, obj->ToUnit());
+        E->Push(obj->ToUnit());
         return 1;
     }
 
@@ -444,7 +444,7 @@ namespace LuaObject
      */
     int ToCreature(Eluna* E, Object* obj)
     {
-        E->Push(E->L, obj->ToCreature());
+        E->Push(obj->ToCreature());
         return 1;
     }
 
@@ -457,7 +457,7 @@ namespace LuaObject
      */
     int ToPlayer(Eluna* E, Object* obj)
     {
-        E->Push(E->L, obj->ToPlayer());
+        E->Push(obj->ToPlayer());
         return 1;
     }
 };

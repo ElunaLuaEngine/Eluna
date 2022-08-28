@@ -71,7 +71,7 @@ class ElunaObject
 {
 public:
     template<typename T>
-    ElunaObject(T* obj, bool manageMemory);
+    ElunaObject(Eluna* E, T* obj, bool manageMemory);
 
     ~ElunaObject()
     {
@@ -80,7 +80,7 @@ public:
     // Get wrapped object pointer
     void* GetObj() const { return object; }
     // Returns whether the object is valid or not
-    bool IsValid() const { return _isvalid; }
+    bool IsValid() const { return !callstackid || callstackid == E->GetCallstackId(); }
     // Returns whether the object can be invalidated or not
     bool CanInvalidate() const { return _invalidate; }
     // Returns pointer to the wrapped object's type name
@@ -97,7 +97,13 @@ public:
     void SetValid(bool valid)
     {
         ASSERT(!valid || (valid && object));
-        _isvalid = valid;
+        if (valid)
+            if (CanInvalidate())
+                callstackid = E->GetCallstackId();
+            else
+                callstackid = 0;
+        else
+            callstackid = 1;
     }
     // Sets whether the pointer will be invalidated at end of calls
     void SetValidation(bool invalidate)
@@ -108,11 +114,12 @@ public:
     void Invalidate()
     {
         if (CanInvalidate())
-            _isvalid = false;
+            callstackid = 1;
     }
 
 private:
-    bool _isvalid;
+    Eluna* E;
+    uint64 callstackid;
     bool _invalidate;
     void* object;
     const char* type_name;
@@ -268,43 +275,24 @@ public:
         lua_remove(E->L, -1);
     }
 
-    static int Push(lua_State* L, T const* obj)
+    static int Push(Eluna* E, T const* obj)
     {
+        lua_State* L = E->L;
         if (!obj)
         {
             lua_pushnil(L);
             return 1;
         }
 
-        void* obj_voidptr = static_cast<void*>(const_cast<T*>(obj));
-
-        lua_pushstring(L, ELUNA_OBJECT_STORE);
-        lua_rawget(L, LUA_REGISTRYINDEX);
-        ASSERT(lua_istable(L, -1));
-        lua_pushlightuserdata(L, obj_voidptr);
-        lua_rawget(L, -2);
-        if (ElunaObject* elunaObj = Eluna::CHECKTYPE(L, -1, tname, false))
-        {
-            // set userdata valid
-            elunaObj->SetValid(true);
-
-            // remove userdata_table, leave userdata
-            lua_remove(L, -2);
-            return 1;
-        }
-        lua_pop(L, 1);
-
-        // left userdata_table in stack
         // Create new userdata
         ElunaObject** ptrHold = static_cast<ElunaObject**>(lua_newuserdata(L, sizeof(ElunaObject*)));
         if (!ptrHold)
         {
             ELUNA_LOG_ERROR("%s could not create new userdata", tname);
-            lua_pop(L, 2);
             lua_pushnil(L);
             return 1;
         }
-        *ptrHold = new ElunaObject(const_cast<T*>(obj), manageMemory);
+        *ptrHold = new ElunaObject(E, const_cast<T*>(obj), manageMemory);
 
         // Set metatable for it
         lua_pushstring(L, tname);
@@ -312,15 +300,11 @@ public:
         if (!lua_istable(L, -1))
         {
             ELUNA_LOG_ERROR("%s missing metatable", tname);
-            lua_pop(L, 3);
+            lua_pop(L, 2);
             lua_pushnil(L);
             return 1;
         }
         lua_setmetatable(L, -2);
-        lua_pushlightuserdata(L, obj_voidptr);
-        lua_pushvalue(L, -2);
-        lua_rawset(L, -4);
-        lua_remove(L, -2);
         return 1;
     }
 
@@ -430,14 +414,14 @@ public:
     static int UnaryMinus(lua_State* L) { return ArithmeticError(L); }
     static int Concat(lua_State* L) { return luaL_error(L, "attempt to concatenate a %s value", tname); }
     static int Length(lua_State* L) { return luaL_error(L, "attempt to get length of a %s value", tname); }
-    static int Equal(lua_State* L) { Eluna::Push(L, Eluna::CHECKOBJ<T>(L, 1) == Eluna::CHECKOBJ<T>(L, 2)); return 1; }
+    static int Equal(lua_State* L) { Eluna::GetEluna(L)->Push(Eluna::CHECKOBJ<T>(L, 1) == Eluna::CHECKOBJ<T>(L, 2)); return 1; }
     static int Less(lua_State* L) { return CompareError(L); }
     static int LessOrEqual(lua_State* L) { return CompareError(L); }
     static int Call(lua_State* L) { return luaL_error(L, "attempt to call a %s value", tname); }
 };
 
 template<typename T>
-ElunaObject::ElunaObject(T* obj, bool manageMemory) : _isvalid(false), _invalidate(!manageMemory), object(obj), type_name(ElunaTemplate<T>::tname)
+ElunaObject::ElunaObject(Eluna* E, T* obj, bool manageMemory) : E(E), callstackid(1), _invalidate(!manageMemory), object(obj), type_name(ElunaTemplate<T>::tname)
 {
     SetValid(true);
 }

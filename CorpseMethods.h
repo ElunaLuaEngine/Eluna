@@ -22,9 +22,9 @@ namespace LuaCorpse
     int GetOwnerGUID(Eluna* E, Corpse* corpse)
     {
 #if defined TRINITY || AZEROTHCORE
-        E->Push(E->L, corpse->GetOwnerGUID());
+        E->Push(corpse->GetOwnerGUID());
 #else
-        E->Push(E->L, corpse->GetOwnerGuid());
+        E->Push(corpse->GetOwnerGuid());
 #endif
         return 1;
     }
@@ -36,7 +36,7 @@ namespace LuaCorpse
      */
     int GetGhostTime(Eluna* E, Corpse* corpse)
     {
-        E->Push(E->L, corpse->GetGhostTime());
+        E->Push(corpse->GetGhostTime());
         return 1;
     }
 
@@ -54,7 +54,7 @@ namespace LuaCorpse
      */
     int GetType(Eluna* E, Corpse* corpse)
     {
-        E->Push(E->L, corpse->GetType());
+        E->Push(corpse->GetType());
         return 1;
     }
 

@@ -135,7 +135,6 @@ struct LuaScript
     int32 mapId;
 };
 
-#define ELUNA_OBJECT_STORE  "Eluna Object Store"
 #define ELUNA_STATE_PTR "Eluna State Ptr"
 
 #if defined(TRINITY)
@@ -215,22 +214,22 @@ private:
     }
 
     // Non-static pushes, to be used in hooks.
-    // These just call the correct static version.
-    void HookPush()                                 { Push(L); ++push_counter; }
-    void HookPush(const long long value)            { Push(L, value); ++push_counter; }
-    void HookPush(const unsigned long long value)   { Push(L, value); ++push_counter; }
-    void HookPush(const long value)                 { Push(L, value); ++push_counter; }
-    void HookPush(const unsigned long value)        { Push(L, value); ++push_counter; }
-    void HookPush(const int value)                  { Push(L, value); ++push_counter; }
-    void HookPush(const unsigned int value)         { Push(L, value); ++push_counter; }
-    void HookPush(const bool value)                 { Push(L, value); ++push_counter; }
-    void HookPush(const float value)                { Push(L, value); ++push_counter; }
-    void HookPush(const double value)               { Push(L, value); ++push_counter; }
-    void HookPush(const std::string& value)         { Push(L, value); ++push_counter; }
-    void HookPush(const char* value)                { Push(L, value); ++push_counter; }
-    void HookPush(ObjectGuid const value)           { Push(L, value); ++push_counter; }
+    // They up the pushed value counter for hook helper functions.
+    void HookPush()                                 { Push(); ++push_counter; }
+    void HookPush(const long long value)            { Push(value); ++push_counter; }
+    void HookPush(const unsigned long long value)   { Push(value); ++push_counter; }
+    void HookPush(const long value)                 { Push(value); ++push_counter; }
+    void HookPush(const unsigned long value)        { Push(value); ++push_counter; }
+    void HookPush(const int value)                  { Push(value); ++push_counter; }
+    void HookPush(const unsigned int value)         { Push(value); ++push_counter; }
+    void HookPush(const bool value)                 { Push(value); ++push_counter; }
+    void HookPush(const float value)                { Push(value); ++push_counter; }
+    void HookPush(const double value)               { Push(value); ++push_counter; }
+    void HookPush(const std::string& value)         { Push(value); ++push_counter; }
+    void HookPush(const char* value)                { Push(value); ++push_counter; }
+    void HookPush(ObjectGuid const value)           { Push(value); ++push_counter; }
     template<typename T>
-    void HookPush(T const* ptr)                     { Push(L, ptr); ++push_counter; }
+    void HookPush(T const* ptr)                     { Push(ptr); ++push_counter; }
 
     int32 boundMapId;
 public:
@@ -270,29 +269,29 @@ public:
         return E;
     }
 
-    // Static pushes, can be used by anything, including methods.
-    static void Push(lua_State* luastate); // nil
-    static void Push(lua_State* luastate, const long long);
-    static void Push(lua_State* luastate, const unsigned long long);
-    static void Push(lua_State* luastate, const long);
-    static void Push(lua_State* luastate, const unsigned long);
-    static void Push(lua_State* luastate, const int);
-    static void Push(lua_State* luastate, const unsigned int);
-    static void Push(lua_State* luastate, const bool);
-    static void Push(lua_State* luastate, const float);
-    static void Push(lua_State* luastate, const double);
-    static void Push(lua_State* luastate, const std::string&);
-    static void Push(lua_State* luastate, const char*);
-    static void Push(lua_State* luastate, Object const* obj);
-    static void Push(lua_State* luastate, WorldObject const* obj);
-    static void Push(lua_State* luastate, Unit const* unit);
-    static void Push(lua_State* luastate, Pet const* pet);
-    static void Push(lua_State* luastate, TempSummon const* summon);
-    static void Push(lua_State* luastate, ObjectGuid const guid);
+    // can be used by anything, including methods.
+    void Push(); // nil
+    void Push(const long long);
+    void Push(const unsigned long long);
+    void Push(const long);
+    void Push(const unsigned long);
+    void Push(const int);
+    void Push(const unsigned int);
+    void Push(const bool);
+    void Push(const float);
+    void Push(const double);
+    void Push(const std::string&);
+    void Push(const char*);
+    void Push(Object const* obj);
+    void Push(WorldObject const* obj);
+    void Push(Unit const* unit);
+    void Push(Pet const* pet);
+    void Push(TempSummon const* summon);
+    void Push(ObjectGuid const guid);
     template<typename T>
-    static void Push(lua_State* luastate, T const* ptr)
+    void Push(T const* ptr)
     {
-        ElunaTemplate<T>::Push(luastate, ptr);
+        ElunaTemplate<T>::Push(this, ptr);
     }
 
     /*

@@ -52,7 +52,7 @@ void Eluna::ReplaceArgument(T value, uint8 index)
     ASSERT(index < lua_gettop(L) && index > 0);
     // Stack: event_id, [arguments], [functions], [results]
 
-    Eluna::Push(L, value);
+    Push(value);
     // Stack: event_id, [arguments], [functions], [results], value
 
     lua_replace(L, index + 1);
