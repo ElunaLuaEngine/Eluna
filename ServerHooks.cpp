@@ -311,6 +311,8 @@ void Eluna::OnShutdownCancel()
 
 void Eluna::OnWorldUpdate(uint32 diff)
 {
+    eventMgr->globalProcessor->Update(diff);
+
     START_HOOK(WORLD_EVENT_ON_UPDATE);
     Push(diff);
     CallAllFunctions(ServerEventBindings, key);
@@ -361,9 +363,11 @@ void Eluna::OnPlayerLeave(Map* map, Player* player)
 
 void Eluna::OnUpdate(Map* map, uint32 diff)
 {
+    // only update the globalProcessor if the map being updated is the parent map
+    if (map->IsParentMap())
+        eventMgr->globalProcessor->Update(diff);
+
     START_HOOK(MAP_EVENT_ON_UPDATE);
-    // enable this for multithread
-    // eventMgr->globalProcessor->Update(diff);
     Push(map);
     Push(diff);
     CallAllFunctions(ServerEventBindings, key);
