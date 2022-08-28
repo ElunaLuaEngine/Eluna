@@ -324,6 +324,7 @@ public:
     bool HasLuaState() const { return L != NULL; }
     uint64 GetCallstackId() const { return callstackid; }
     int Register(lua_State* L, uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
+    void UpdateEluna(uint32 diff);
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* luastate, int narg);
