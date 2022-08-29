@@ -10,6 +10,9 @@
 #include "BindingMap.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
+#include "ElunaLoader.h"
+#include <algorithm> // std::transform
+#include <cstdlib> // strtol
 
 using namespace Hooks;
 
@@ -44,9 +47,31 @@ bool Eluna::OnCommand(Player* player, const char* text)
     {
         std::string reload = text;
         std::transform(reload.begin(), reload.end(), reload.begin(), ::tolower);
-        if (reload.find("reload eluna") == 0)
+        const std::string reload_command = "reload eluna";
+        if (reload.find(reload_command) == 0)
         {
-            _ReloadEluna();
+            const int mapid_reload_all = -2; // reserved for reloading all states (default if no args)
+            const int mapid_reload_global = -1; // reserved for reloading global state
+            // otherwise reload the state of the specific mapid
+            // If a mapid is provided but does not match any map or reserved id then only script storage is loaded
+
+            int mapId = mapid_reload_all;
+            std::string args = reload.substr(reload_command.length());
+            if (!args.empty())
+                mapId = strtol(args.c_str(), nullptr, 10);
+
+            sElunaLoader->LoadScripts();
+            if (mapId == mapid_reload_global || mapId == mapid_reload_all)
+                sWorld->GetEluna()->ReloadEluna();
+            sMapMgr->DoForAllMaps([&](Map* map)
+                {
+                    if (mapId == mapid_reload_all || mapId == map->GetId())
+                    {
+                        if (map->GetEluna())
+                            map->GetEluna()->ReloadEluna();
+                    }
+                }
+            );
             return false;
         }
     }

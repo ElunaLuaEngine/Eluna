@@ -151,8 +151,12 @@ public:
     typedef std::list<LuaScript> ScriptList;
     typedef std::recursive_mutex LockType;
 
-    void _ReloadEluna();
+    void ReloadEluna() { reload = true; }
+
 private:
+
+    // Indicates that the lua state should be reloaded
+    bool reload = false;
 
     // A counter for lua event stacks that occur (see event_level).
     // This is used to determine whether an object belongs to the current call stack or not.
@@ -179,6 +183,10 @@ private:
     void CreateBindStores();
     void InvalidateObjects();
     bool ExecuteCall(int params, int res);
+
+    // Use ReloadEluna() to make eluna reload
+    // This is called on world update to reload eluna
+    void _ReloadEluna();
 
     static int StackTrace(lua_State *_L);
     static void Report(lua_State* _L);

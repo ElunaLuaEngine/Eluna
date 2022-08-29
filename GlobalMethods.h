@@ -1210,7 +1210,7 @@ namespace LuaGlobalFunctions
      */
     int ReloadEluna(Eluna* E)
     {
-        E->_ReloadEluna();
+        E->ReloadEluna();
         return 0;
     }
 
