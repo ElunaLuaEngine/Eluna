@@ -70,6 +70,8 @@ void Eluna::_ReloadEluna()
 
     // Run scripts from laoded paths
     RunScripts();
+
+    reload = false;
 }
 
 Eluna::Eluna(int32 mapId) :
@@ -969,6 +971,8 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, 
 
 void Eluna::UpdateEluna(uint32 diff)
 {
+    if (reload)
+        _ReloadEluna();
     eventMgr->globalProcessor->Update(diff);
 }
 
