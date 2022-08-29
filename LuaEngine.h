@@ -151,12 +151,6 @@ public:
     typedef std::list<LuaScript> ScriptList;
     typedef std::recursive_mutex LockType;
 
-    Eluna(int32 mapId);
-    ~Eluna();
-
-    // Prevent copy
-    Eluna(Eluna const&) = delete;
-    Eluna& operator=(const Eluna&) = delete;
     void _ReloadEluna();
 private:
 
@@ -342,6 +336,13 @@ public:
     void FreeInstanceId(uint32 instanceId);
 
     int32 GetBoundMapId() const { return boundMapId; }
+
+    Eluna(int32 mapId);
+    ~Eluna();
+
+    // Prevent copy
+    Eluna(Eluna const&) = delete;
+    Eluna& operator=(const Eluna&) = delete;
 
     /* Custom */
     void OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj);

@@ -2190,7 +2190,11 @@ namespace LuaUnit
      *
      * @param bool reset = true : clean movement
      */
+#ifdef TRINITY
+    int MoveClear(Eluna* /*E*/, Unit* unit)
+#else
     int MoveClear(Eluna* E, Unit* unit)
+#endif
     {
 #ifdef TRINITY
         unit->GetMotionMaster()->Clear();
