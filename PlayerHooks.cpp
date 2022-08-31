@@ -65,7 +65,7 @@ bool Eluna::OnCommand(Player* player, const char* text)
                 sWorld->GetEluna()->ReloadEluna();
             sMapMgr->DoForAllMaps([&](Map* map)
                 {
-                    if (mapId == mapid_reload_all || mapId == map->GetId())
+                    if (mapId == mapid_reload_all || mapId == static_cast<int>(map->GetId()))
                     {
                         if (map->GetEluna())
                             map->GetEluna()->ReloadEluna();

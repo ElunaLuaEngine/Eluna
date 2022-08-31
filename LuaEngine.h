@@ -172,6 +172,9 @@ private:
     uint8 push_counter;
     bool enabled;
 
+    // The map id that this Eluna object is tied to. -1 is reserved for objects without a bound map id.
+    int32 boundMapId;
+
     // Map from instance ID -> Lua table ref
     std::unordered_map<uint32, int> instanceDataRefs;
     // Map from map ID -> Lua table ref
@@ -233,7 +236,6 @@ private:
     template<typename T>
     void HookPush(T const* ptr)                     { Push(ptr); ++push_counter; }
 
-    int32 boundMapId;
 public:
 
     lua_State* L;
