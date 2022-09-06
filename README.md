@@ -46,7 +46,7 @@ Core forks with required modifications for Eluna:
 
 Core plugin modules for Eluna:
 
-- [AzerothCore Eluna Module](https://github.com/azerothcore/mod-eluna-lua-engine)
+- [AzerothCore Eluna Module](https://github.com/azerothcore/mod-eluna)
 
 ## Links
 
