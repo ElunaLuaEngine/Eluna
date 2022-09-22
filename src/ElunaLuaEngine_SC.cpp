@@ -741,6 +741,11 @@ public:
     {
         sEluna->OnAchiComplete(player, achievement);
     }
+
+    void OnFfaPvpStateUpdate(Player* player, bool IsFlaggedForFfaPvp) override
+    {
+        sEluna->OnFfaPvpStateUpdate(player, IsFlaggedForFfaPvp);
+    }
 };
 
 class Eluna_ServerScript : public ServerScript

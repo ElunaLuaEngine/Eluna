@@ -574,3 +574,12 @@ void Eluna::OnAchiComplete(Player* player, AchievementEntry const* achievement)
     Push(achievement);
     CallAllFunctions(PlayerEventBindings, key);
 }
+
+
+void Eluna::OnFfaPvpStateUpdate(Player* player, bool hasFfaPvp)
+{
+    START_HOOK(PLAYER_EVENT_ON_FFAPVP_CHANGE);
+    Push(player);
+    Push(hasFfaPvp);
+    CallAllFunctions(PlayerEventBindings, key);
+}
