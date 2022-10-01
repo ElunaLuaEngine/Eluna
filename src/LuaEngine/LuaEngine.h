@@ -469,6 +469,7 @@ public:
     void OnDelete(uint32 guid);
     void OnSave(Player* pPlayer);
     void OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapid, bool permanent);
+    void OnUpdateArea(Player* pPlayer, uint32 oldArea, uint32 newArea);
     void OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea);
     void OnMapChanged(Player* pPlayer);
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
