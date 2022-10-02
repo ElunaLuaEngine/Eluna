@@ -2777,7 +2777,7 @@ namespace LuaUnit
             damage = unit->CalcArmorReducedDamage(target, damage);
 #endif
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
         // melee damage by specific school
         if (!spell)
         {
@@ -2792,7 +2792,7 @@ namespace LuaUnit
             uint32 absorb = dmgInfo.GetAbsorb();
             uint32 resist = dmgInfo.GetResist();
             unit->DealDamageMods(target, damage, &absorb);
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
             Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
 #else
             unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
@@ -2807,9 +2807,13 @@ namespace LuaUnit
         SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
         if (!spellInfo)
             return 0;
-
+#ifdef AZEROTHCORE
+        SpellNonMeleeDamage dmgInfo(unit, target, spellInfo, spellInfo->GetSchoolMask());
+#else
         SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
-#ifdef TRINITY
+#endif
+
+#if defined TRINITY || AZEROTHCORE
         Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
 #else
         damage = unit->SpellDamageBonusDone(target, spellInfo, damage, SPELL_DIRECT_DAMAGE;
@@ -2818,37 +2822,6 @@ namespace LuaUnit
         unit->DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
 #endif
 
-        unit->SendSpellNonMeleeDamageLog(&dmgInfo);
-        unit->DealSpellDamage(&dmgInfo, true);
-        return 0;
-#elif AZEROTHCORE
-        if (!spell)
-        {
-            DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE);
-            unit->CalcAbsorbResist(dmgInfo);
-
-            if (!dmgInfo.GetDamage())
-                damage = 0;
-            else
-                damage = dmgInfo.GetDamage();
-
-            uint32 absorb = dmgInfo.GetAbsorb();
-            uint32 resist = dmgInfo.GetResist();
-            unit->DealDamageMods(target, damage, &absorb);
-            Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-            unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
-            return 0;
-        }
-
-        if (!spell)
-            return 0;
-
-        SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
-        if (!spellInfo)
-            return 0;
-
-        SpellNonMeleeDamage dmgInfo(unit, target, spellInfo, spellInfo->GetSchoolMask());
-        Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
         unit->SendSpellNonMeleeDamageLog(&dmgInfo);
         unit->DealSpellDamage(&dmgInfo, true);
         return 0;
