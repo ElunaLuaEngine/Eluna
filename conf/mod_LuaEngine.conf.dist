@@ -19,10 +19,16 @@
 #                    The path can be relative or absolute.
 #       Default:    "lua_scripts"
 #
+#   Eluna.PlayerAnnounceReload
+#       Description: Enable or disable whether the reload announcement is sent to players (Lowest security level).
+#       Default:    false - (disabled)
+#                   true  - (enabled)
+#
 
 Eluna.Enabled = true
 Eluna.TraceBack = false
 Eluna.ScriptPath = "lua_scripts"
+Eluna.PlayerAnnounceReload = false
 
 
 ###################################################################################################
