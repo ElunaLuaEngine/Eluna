@@ -1080,6 +1080,7 @@ ElunaRegister<Group> GroupMethods[] =
     { "GetMemberGroup", &LuaGroup::GetMemberGroup },
     { "GetMemberGUID", &LuaGroup::GetMemberGUID },
     { "GetMembersCount", &LuaGroup::GetMembersCount },
+    { "GetGroupType", &LuaGroup::GetGroupType },
 
     // Setters
     { "SetLeader", &LuaGroup::SetLeader },

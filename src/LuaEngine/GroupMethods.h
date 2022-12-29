@@ -262,6 +262,28 @@ namespace LuaGroup
     }
 
     /**
+     * Returns the type of this [Group]
+     *
+     * <pre>
+     * enum GroupType
+     * {
+     *     GROUPTYPE_NORMAL         = 0,
+     *     GROUPTYPE_BG             = 1,
+     *     GROUPTYPE_RAID           = 2,
+     *     GROUPTYPE_LFG_RESTRICTED = 4,
+     *     GROUPTYPE_LFG            = 8
+     * };
+     * </pre>
+     *
+     * @return [GroupType] groupType
+     */
+    int GetGroupType(lua_State* L, Group* group)
+    {
+        Eluna::Push(L, group->GetGroupType());
+        return 1;
+    }
+
+    /**
      * Returns the [Player]'s subgroup ID of this [Group]
      *
      * @param ObjectGuid guid : guid of the player

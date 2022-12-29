@@ -76,19 +76,30 @@ Eluna API for AC:
 
 ## Additions from Eluna/master
 
-- Added HttpRequest method. https://github.com/azerothcore/Eluna/pull/2
-- Added RegisterPlayerEvent 43: `PLAYER_EVENT_ON_PET_ADDED_TO_WORLD` fires for pets and summoned creatures. https://github.com/azerothcore/Eluna/pull/3
-- Added Chat-Handler methods to player events. https://github.com/azerothcore/Eluna/pull/23
-- Exposed `ModifyThreatPct()`. https://github.com/azerothcore/Eluna/pull/25
-- Exposed `Object:IsPlayer()`. https://github.com/azerothcore/Eluna/pull/42
-- Added RegisterPlayerEvent 44: `PLAYER_EVENT_ON_LEARN_SPELL`. https://github.com/azerothcore/mod-eluna/pull/46
-- Added RegisterPlayerEvent 45: `PLAYER_ON_ACHIEVEMENT_COMPLETE`. https://github.com/azerothcore/mod-eluna/pull/47
-- Added vendor entry as argument to player:SendListInventory(object, vendorentry). https://github.com/azerothcore/mod-eluna/pull/48
-- Added `gameobject:AddLoot()` to add loot at runtime to an **empty** container. https://github.com/azerothcore/mod-eluna/pull/52
-- Added RegisterPlayerEvent 46: `PLAYER_EVENT_ON_FFAPVP_CHANGE`. https://github.com/azerothcore/mod-eluna/pull/63
-- Added RegisterPlayerEvent 47: `PLAYER_EVENT_ON_UPDATE_AREA`. https://github.com/azerothcore/mod-eluna/pull/65
-- Added logging with `ELUNA_LOG_INFO` for `RunCommand()`: https://github.com/azerothcore/mod-eluna/pull/75
+### Player
+- Added `RegisterPlayerEvent` `43` (`PLAYER_EVENT_ON_PET_ADDED_TO_WORLD`) fires for pets and summoned creatures: https://github.com/azerothcore/mod-eluna/pull/3
+- Added `RegisterPlayerEvent` `44` (`PLAYER_EVENT_ON_LEARN_SPELL`): https://github.com/azerothcore/mod-eluna/pull/46
+- Added `RegisterPlayerEvent` `45` (`PLAYER_ON_ACHIEVEMENT_COMPLETE`): https://github.com/azerothcore/mod-eluna/pull/47
+- Added `RegisterPlayerEvent` `46` (`PLAYER_EVENT_ON_FFAPVP_CHANGE`): https://github.com/azerothcore/mod-eluna/pull/63
+- Added `RegisterPlayerEvent` `47` (`PLAYER_EVENT_ON_UPDATE_AREA`): https://github.com/azerothcore/mod-eluna/pull/65
 - Added `Player:GetMailCount()`: https://github.com/azerothcore/mod-eluna/pull/76
 - Added `Player:GetXP()`: https://github.com/azerothcore/mod-eluna/pull/77
 - Added `Player:GetAchievementCriteriaProgress()`: https://github.com/azerothcore/mod-eluna/pull/78
- 
+- Added vendor entry as argument to `Player:SendListInventory(object, vendorentry)`: https://github.com/azerothcore/mod-eluna/pull/48
+
+### Group
+- Added `Group:GetGroupType()`: https://github.com/azerothcore/mod-eluna/pull/82
+
+### Unit
+- Added `Unit:ModifyThreatPct()`: https://github.com/azerothcore/mod-eluna/pull/25
+
+### GameObject
+- Added `GameObject:AddLoot()` to add loot at runtime to an **empty** container: https://github.com/azerothcore/mod-eluna/pull/52
+
+### Object
+- Added `Object:IsPlayer()`: https://github.com/azerothcore/mod-eluna/pull/42
+
+### Misc
+- Added `HttpRequest()`: https://github.com/azerothcore/mod-eluna/pull/2
+- Added `ChatHandler` methods: https://github.com/azerothcore/mod-eluna/pull/23
+- Added logging with `ELUNA_LOG_INFO` for `RunCommand()`: https://github.com/azerothcore/mod-eluna/pull/75
