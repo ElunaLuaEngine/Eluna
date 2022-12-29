@@ -961,6 +961,17 @@ namespace LuaPlayer
     }
 
     /**
+     * Returns the [Player]'s experience points
+     *
+     * @return uint32 xp
+     */
+    int GetXP(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->GetUInt32Value(PLAYER_XP));
+        return 1;
+    }
+
+    /**
      * Returns rested experience bonus
      *
      * @param uint32 xp

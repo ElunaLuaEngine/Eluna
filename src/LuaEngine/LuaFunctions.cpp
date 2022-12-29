@@ -507,6 +507,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetDrunkValue", &LuaPlayer::GetDrunkValue },
     { "GetBattlegroundId", &LuaPlayer::GetBattlegroundId },
     { "GetBattlegroundTypeId", &LuaPlayer::GetBattlegroundTypeId },
+    { "GetXP", &LuaPlayer::GetXP },
     { "GetXPRestBonus", &LuaPlayer::GetXPRestBonus },
     { "GetGroupInvite", &LuaPlayer::GetGroupInvite },
     { "GetSubGroup", &LuaPlayer::GetSubGroup },
