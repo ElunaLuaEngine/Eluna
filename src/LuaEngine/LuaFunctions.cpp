@@ -471,6 +471,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetItemByPos", &LuaPlayer::GetItemByPos },
     { "GetItemByEntry", &LuaPlayer::GetItemByEntry },
     { "GetItemByGUID", &LuaPlayer::GetItemByGUID },
+    { "GetMailCount", &LuaPlayer::GetMailCount },
     { "GetMailItem", &LuaPlayer::GetMailItem },
     { "GetReputation", &LuaPlayer::GetReputation },
     { "GetEquippedItemBySlot", &LuaPlayer::GetEquippedItemBySlot },

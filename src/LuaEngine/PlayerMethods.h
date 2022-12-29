@@ -1417,6 +1417,26 @@ namespace LuaPlayer
     }
 
     /**
+     * Returns the amount of mails in the player's mailbox.
+     *
+     * @return uint32 mailCount
+     */
+    int GetMailCount(lua_State* L, Player* player)
+    {
+        const CharacterCacheEntry* cache = sCharacterCache->GetCharacterCacheByGuid(player->GetGUID());
+        if (cache)
+        {
+            Eluna::Push(L, static_cast<uint32>(cache->MailCount));
+        }
+        else
+        {
+            Eluna::Push(L, player->GetMailSize());
+        }
+
+        return 1;
+    }
+
+    /**
      * Returns a mailed [Item] by guid.
      *
      * @param ObjectGuid guid : an item guid
