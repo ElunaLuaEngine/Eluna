@@ -64,6 +64,28 @@ namespace LuaPlayer
 #endif
         return 1;
     }
+
+    /**
+     * Returns the progress of the [Player] for the specified achievement criteria.
+     *
+     * @param uint32 criteriaId
+     * @return uint32 progress : progress value or nil
+     */
+    int GetAchievementCriteriaProgress(lua_State* L, Player* player)
+    {
+        uint32 criteriaId = Eluna::CHECKVAL<uint32>(L, 2);
+        const AchievementCriteriaEntry* criteria = sAchievementCriteriaStore.LookupEntry(criteriaId);
+        CriteriaProgress* progress = player->GetAchievementMgr()->GetCriteriaProgress(criteria);
+        if (progress)
+        {
+            Eluna::Push(L, progress->counter);
+        }
+        else
+        {
+            Eluna::Push(L, (void*)nullptr);
+        }
+        return 1;
+    }
 #endif
 
     /**
