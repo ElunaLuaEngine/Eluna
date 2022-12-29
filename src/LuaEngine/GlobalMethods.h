@@ -1229,7 +1229,7 @@ namespace LuaGlobalFunctions
     {
         const char* command = Eluna::CHECKVAL<const char*>(L, 1);
 #if defined TRINITY || AZEROTHCORE
-        eWorld->QueueCliCommand(new CliCommandHolder(nullptr, command, [](void* obj, std::string_view view)
+        eWorld->QueueCliCommand(new CliCommandHolder(nullptr, command, [](void*, std::string_view view)
         {
             std::string str = { view.begin(), view.end() };
             str.erase(std::find_if(str.rbegin(), str.rend(), [](unsigned char ch) { return !std::isspace(ch); }).base(), str.end()); // Remove trailing spaces and line breaks
