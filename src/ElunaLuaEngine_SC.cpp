@@ -761,6 +761,11 @@ public:
     {
         return sEluna->OnCanInitTrade(player, target);
     }
+
+    bool CanSendMail(Player* player, ObjectGuid receiverGuid, ObjectGuid mailbox, std::string& subject, std::string& body, uint32 money, uint32 cod, Item* item) override
+    {
+        return sEluna->OnCanSendMail(player, receiverGuid, mailbox, subject, body, money, cod, item);
+    }
 };
 
 class Eluna_ServerScript : public ServerScript

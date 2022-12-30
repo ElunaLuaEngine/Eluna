@@ -599,3 +599,17 @@ bool Eluna::OnCanInitTrade(Player* player, Player* target)
     Push(target);
     return CallAllFunctionsBool(PlayerEventBindings, key);
 }
+
+bool Eluna::OnCanSendMail(Player* player, ObjectGuid receiverGuid, ObjectGuid mailbox, std::string& subject, std::string& body, uint32 money, uint32 cod, Item* item)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_SEND_MAIL, true);
+    Push(player);
+    Push(receiverGuid);
+    Push(mailbox);
+    Push(subject);
+    Push(body);
+    Push(money);
+    Push(cod);
+    Push(item);
+    return CallAllFunctionsBool(PlayerEventBindings, key);
+}
