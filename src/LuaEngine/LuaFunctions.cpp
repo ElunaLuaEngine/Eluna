@@ -98,6 +98,7 @@ luaL_Reg GlobalMethods[] =
     { "GetGUIDType", &LuaGlobalFunctions::GetGUIDType },
     { "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry },
     { "GetAreaName", &LuaGlobalFunctions::GetAreaName },
+    { "GetOwnerHalaa", &LuaGlobalFunctions::GetOwnerHalaa },
     { "bit_not", &LuaGlobalFunctions::bit_not },
     { "bit_xor", &LuaGlobalFunctions::bit_xor },
     { "bit_rshift", &LuaGlobalFunctions::bit_rshift },
@@ -148,6 +149,7 @@ luaL_Reg GlobalMethods[] =
     { "StartGameEvent", &LuaGlobalFunctions::StartGameEvent },
     { "StopGameEvent", &LuaGlobalFunctions::StopGameEvent },
     { "HttpRequest", &LuaGlobalFunctions::HttpRequest },
+    { "SetOwnerHalaa", &LuaGlobalFunctions::SetOwnerHalaa },
 
     { NULL, NULL }
 };
