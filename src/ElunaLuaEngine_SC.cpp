@@ -407,6 +407,11 @@ public:
     {
         sEluna->OnDisband(group);
     }
+
+    void OnCreate(Group* group, Player* leader) override
+    {
+        sEluna->OnCreate(group, leader->GetGUID(), group->GetGroupType());
+    }
 };
 
 class Eluna_GuildScript : public GuildScript
