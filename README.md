@@ -82,6 +82,7 @@ Eluna API for AC:
 - Added `RegisterPlayerEvent` `45` (`PLAYER_ON_ACHIEVEMENT_COMPLETE`): https://github.com/azerothcore/mod-eluna/pull/47
 - Added `RegisterPlayerEvent` `46` (`PLAYER_EVENT_ON_FFAPVP_CHANGE`): https://github.com/azerothcore/mod-eluna/pull/63
 - Added `RegisterPlayerEvent` `47` (`PLAYER_EVENT_ON_UPDATE_AREA`): https://github.com/azerothcore/mod-eluna/pull/65
+- Added `RegisterPlayerEvent` `48` (`PLAYER_EVENT_ON_CAN_INIT_TRADE`): https://github.com/azerothcore/mod-eluna/pull/83
 - Added `Player:GetMailCount()`: https://github.com/azerothcore/mod-eluna/pull/76
 - Added `Player:GetXP()`: https://github.com/azerothcore/mod-eluna/pull/77
 - Added `Player:GetAchievementCriteriaProgress()`: https://github.com/azerothcore/mod-eluna/pull/78

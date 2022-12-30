@@ -476,6 +476,7 @@ public:
     void OnLearnSpell(Player* player, uint32 spellId);
     void OnAchiComplete(Player* player, AchievementEntry const* achievement);
     void OnFfaPvpStateUpdate(Player* player, bool hasFfaPvp);
+    bool OnCanInitTrade(Player* player, Player* target);
 
 #ifndef CLASSIC
 #ifndef TBC

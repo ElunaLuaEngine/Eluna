@@ -584,11 +584,18 @@ void Eluna::OnAchiComplete(Player* player, AchievementEntry const* achievement)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-
 void Eluna::OnFfaPvpStateUpdate(Player* player, bool hasFfaPvp)
 {
     START_HOOK(PLAYER_EVENT_ON_FFAPVP_CHANGE);
     Push(player);
     Push(hasFfaPvp);
     CallAllFunctions(PlayerEventBindings, key);
+}
+
+bool Eluna::OnCanInitTrade(Player* player, Player* target)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_INIT_TRADE, true);
+    Push(player);
+    Push(target);
+    return CallAllFunctionsBool(PlayerEventBindings, key);
 }

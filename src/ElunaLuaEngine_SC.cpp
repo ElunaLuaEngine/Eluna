@@ -756,6 +756,11 @@ public:
     {
         sEluna->OnFfaPvpStateUpdate(player, IsFlaggedForFfaPvp);
     }
+
+    bool CanInitTrade(Player* player, Player* target) override
+    {
+        return sEluna->OnCanInitTrade(player, target);
+    }
 };
 
 class Eluna_ServerScript : public ServerScript
