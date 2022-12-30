@@ -643,6 +643,17 @@ namespace LuaItem
     }
 
     /**
+     * Returns the [ItemTemplate] for this [Item].
+     *
+     * @return ItemTemplate itemTemplate
+     */
+    int GetItemTemplate(lua_State* L, Item* item)
+    {
+        Eluna::Push(L, item->GetTemplate());
+        return 1;
+    }
+
+    /**
      * Sets the [Player] specified as the owner of the [Item]
      *
      * @param [Player] player : the [Player] specified

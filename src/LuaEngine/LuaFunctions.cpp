@@ -38,6 +38,7 @@ extern "C"
 #include "BattleGroundMethods.h"
 #include "ChatHandlerMethods.h"
 #include "AchievementMethods.h"
+#include "ItemTemplateMethods.h"
 
 luaL_Reg GlobalMethods[] =
 {
@@ -92,6 +93,7 @@ luaL_Reg GlobalMethods[] =
     { "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
     { "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID },
     { "GetItemGUID", &LuaGlobalFunctions::GetItemGUID },
+    { "GetItemTemplate", &LuaGlobalFunctions::GetItemTemplate },
     { "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID },
     { "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID },
     { "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow },
@@ -961,6 +963,7 @@ ElunaRegister<Item> ItemMethods[] =
 #endif
     { "GetItemSet", &LuaItem::GetItemSet },
     { "GetBagSize", &LuaItem::GetBagSize },
+    { "GetItemTemplate", &LuaItem::GetItemTemplate },
 
     // Setters
     { "SetOwner", &LuaItem::SetOwner },
@@ -999,6 +1002,27 @@ ElunaRegister<Item> ItemMethods[] =
     // Other
     { "SaveToDB", &LuaItem::SaveToDB },
 
+    { NULL, NULL }
+};
+
+ElunaRegister<ItemTemplate> ItemTemplateMethods[] =
+{
+    { "GetItemId", &LuaItemTemplate::GetItemId },
+    { "GetClass", &LuaItemTemplate::GetClass },
+    { "GetSubClass", &LuaItemTemplate::GetSubClass },
+    { "GetName", &LuaItemTemplate::GetName },
+    { "GetDisplayId", &LuaItemTemplate::GetDisplayId },
+    { "GetQuality", &LuaItemTemplate::GetQuality },
+    { "GetFlags", &LuaItemTemplate::GetFlags },
+    { "GetExtraFlags", &LuaItemTemplate::GetExtraFlags },
+    { "GetBuyCount", &LuaItemTemplate::GetBuyCount },
+    { "GetBuyPrice", &LuaItemTemplate::GetBuyPrice },
+    { "GetSellPrice", &LuaItemTemplate::GetSellPrice },
+    { "GetInventoryType", &LuaItemTemplate::GetInventoryType },
+    { "GetAllowableClass", &LuaItemTemplate::GetAllowableClass },
+    { "GetAllowableRace", &LuaItemTemplate::GetAllowableRace },
+    { "GetItemLevel", &LuaItemTemplate::GetItemLevel },
+    { "GetRequiredLevel", &LuaItemTemplate::GetRequiredLevel },
     { NULL, NULL }
 };
 
@@ -1435,6 +1459,9 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<Item>::Register(E, "Item");
     ElunaTemplate<Item>::SetMethods(E, ObjectMethods);
     ElunaTemplate<Item>::SetMethods(E, ItemMethods);
+
+    ElunaTemplate<ItemTemplate>::Register(E, "ItemTemplate");
+    ElunaTemplate<ItemTemplate>::SetMethods(E, ItemTemplateMethods);
 
 #ifndef CLASSIC
 #ifndef TBC

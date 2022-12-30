@@ -99,7 +99,12 @@ Eluna API for AC:
 ### Object
 - Added `Object:IsPlayer()`: https://github.com/azerothcore/mod-eluna/pull/42
 
+### Item
+- Added `Item:GetItemTemplate()`: https://github.com/azerothcore/mod-eluna/pull/84
+
 ### Misc
 - Added `HttpRequest()`: https://github.com/azerothcore/mod-eluna/pull/2
+- Added `GetItemTemplate(itemEntry)`: https://github.com/azerothcore/mod-eluna/pull/84
 - Added `ChatHandler` methods: https://github.com/azerothcore/mod-eluna/pull/23
+- Added `ItemTemplate` methods: https://github.com/azerothcore/mod-eluna/pull/84
 - Added logging with `ELUNA_LOG_INFO` for `RunCommand()`: https://github.com/azerothcore/mod-eluna/pull/75

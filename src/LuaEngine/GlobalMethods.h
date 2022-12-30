@@ -324,6 +324,13 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    int GetItemTemplate(lua_State* L)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+        Eluna::Push(L, eObjectMgr->GetItemTemplate(entry));
+        return 1;
+    }
+
     /**
      * Builds a [GameObject]'s GUID.
      *
