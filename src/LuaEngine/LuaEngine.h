@@ -20,6 +20,7 @@
 #include "Weather.h"
 #include "World.h"
 #include "Hooks.h"
+#include "LFG.h"
 #include "ElunaUtility.h"
 #include "HttpManager.h"
 #include <mutex>
@@ -478,6 +479,7 @@ public:
     void OnFfaPvpStateUpdate(Player* player, bool hasFfaPvp);
     bool OnCanInitTrade(Player* player, Player* target);
     bool OnCanSendMail(Player* player, ObjectGuid receiverGuid, ObjectGuid mailbox, std::string& subject, std::string& body, uint32 money, uint32 cod, Item* item);
+    bool OnCanJoinLfg(Player* player, uint8 roles, lfg::LfgDungeonSet& dungeons, const std::string& comment);
 
 #ifndef CLASSIC
 #ifndef TBC

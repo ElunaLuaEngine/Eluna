@@ -613,3 +613,25 @@ bool Eluna::OnCanSendMail(Player* player, ObjectGuid receiverGuid, ObjectGuid ma
     Push(item);
     return CallAllFunctionsBool(PlayerEventBindings, key);
 }
+
+bool Eluna::OnCanJoinLfg(Player* player, uint8 roles, lfg::LfgDungeonSet& dungeons, const std::string& comment)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_JOIN_LFG, true);
+    Push(player);
+    Push(roles);
+
+    lua_newtable(L);
+    int table = lua_gettop(L);
+    uint32 counter = 1;
+    for (uint32 dungeon : dungeons)
+    {
+        Eluna::Push(L, dungeon);
+        lua_rawseti(L, table, counter);
+        ++counter;
+    }
+    lua_settop(L, table);
+    ++push_counter;
+
+    Push(comment);
+    return CallAllFunctionsBool(PlayerEventBindings, key);
+}

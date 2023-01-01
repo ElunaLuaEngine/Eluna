@@ -766,6 +766,11 @@ public:
     {
         return sEluna->OnCanSendMail(player, receiverGuid, mailbox, subject, body, money, cod, item);
     }
+
+    bool CanJoinLfg(Player* player, uint8 roles, lfg::LfgDungeonSet& dungeons, const std::string& comment) override
+    {
+        return sEluna->OnCanJoinLfg(player, roles, dungeons, comment);
+    }
 };
 
 class Eluna_ServerScript : public ServerScript
