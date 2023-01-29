@@ -235,7 +235,7 @@ struct ElunaCreatureAI : ScriptedAI
 
 #if defined TRINITY || AZEROTHCORE
 
-#if defined TRINITY
+#if defined TRINITY || AZEROTHCORE
     // Called when the creature is summoned successfully by other creature
     void IsSummonedBy(WorldObject* summoner) override
     {
