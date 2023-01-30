@@ -370,6 +370,9 @@ public:
     void OnLuaStateOpen();
     bool OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel);
     void OnPetAddedToWorld(Player* player, Creature* pet);
+    void OnQuestRewardItem(Player* player, Item* item, uint32 count);
+    void OnCreateItem(Player* player, Item* item, uint32 count);
+    void OnStoreNewItem(Player* player, Item* item, uint32 count);
 
     /* Item */
     void OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget);

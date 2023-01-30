@@ -84,5 +84,8 @@ AC版的Eluna API:
 - 暴露方法 `Object:IsPlayer()`. https://github.com/azerothcore/Eluna/pull/42
 - 添加玩家注册事件44(当玩家学习技能时): `PLAYER_EVENT_ON_LEARN_SPELL`. https://github.com/azerothcore/mod-eluna/pull/46
 - 添加玩家注册事件45(当玩家完成成就时): `PLAYER_ON_ACHIEVEMENT_COMPLETE`。 https://github.com/azerothcore/mod-eluna/pull/47
+- 添加玩家注册事件51(当玩家获得任务奖励时) `PLAYER_EVENT_ON_QUEST_REWARD_ITEM`。https://github.com/azerothcore/mod-eluna/pull/88
+- 添加玩家注册事件52(当玩家创建物品时) `PLAYER_EVENT_ON_CREATE_ITEM`。https://github.com/azerothcore/mod-eluna/pull/88
+- 添加玩家注册事件53(当玩家创建物品实例时) `PLAYER_EVENT_ON_STORE_NEW_ITEM`。https://github.com/azerothcore/mod-eluna/pull/88
 - 新增参数*商人Id*到方法player:SendListInventory(object, vendorentry)中。 https://github.com/azerothcore/mod-eluna/pull/48
 - 添加方法`gameobject:AddLoot()`, 可以在线给**空**的容器中添加战利品。 https://github.com/azerothcore/mod-eluna/pull/52

@@ -635,3 +635,30 @@ bool Eluna::OnCanJoinLfg(Player* player, uint8 roles, lfg::LfgDungeonSet& dungeo
     Push(comment);
     return CallAllFunctionsBool(PlayerEventBindings, key);
 }
+
+void Eluna::OnQuestRewardItem(Player* player, Item* item, uint32 count)
+{
+    START_HOOK(PLAYER_EVENT_ON_QUEST_REWARD_ITEM);
+    Push(player);
+    Push(item);
+    Push(count);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
+void Eluna::OnCreateItem(Player* player, Item* item, uint32 count)
+{
+    START_HOOK(PLAYER_EVENT_ON_CREATE_ITEM);
+    Push(player);
+    Push(item);
+    Push(count);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
+void Eluna::OnStoreNewItem(Player* player, Item* item, uint32 count)
+{
+    START_HOOK(PLAYER_EVENT_ON_STORE_NEW_ITEM);
+    Push(player);
+    Push(item);
+    Push(count);
+    CallAllFunctions(PlayerEventBindings, key);
+}
