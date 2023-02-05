@@ -1861,7 +1861,7 @@ namespace LuaGlobalFunctions
                     Eluna::Push(L);
                     return 1;
                 }
-                
+
                 eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGameObjectData(guidLow));
             }
             else
