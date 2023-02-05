@@ -1861,11 +1861,8 @@ namespace LuaGlobalFunctions
                     Eluna::Push(L);
                     return 1;
                 }
-#ifndef AZEROTHCORE
+                
                 eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGameObjectData(guidLow));
-#else
-                eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGOData(guidLow));
-#endif
             }
             else
                 map->AddToMap(object);
