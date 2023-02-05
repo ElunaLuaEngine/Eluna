@@ -662,3 +662,11 @@ void Eluna::OnStoreNewItem(Player* player, Item* item, uint32 count)
     Push(count);
     CallAllFunctions(PlayerEventBindings, key);
 }
+
+void Eluna::OnPlayerCompleteQuest(Player* player, Quest const* quest)
+{
+    START_HOOK(PLAYER_EVENT_ON_COMPLETE_QUEST);
+    Push(player);
+    Push(quest);
+    CallAllFunctions(PlayerEventBindings, key);
+}

@@ -373,6 +373,7 @@ public:
     void OnQuestRewardItem(Player* player, Item* item, uint32 count);
     void OnCreateItem(Player* player, Item* item, uint32 count);
     void OnStoreNewItem(Player* player, Item* item, uint32 count);
+    void OnPlayerCompleteQuest(Player* player, Quest const* quest);
 
     /* Item */
     void OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget);

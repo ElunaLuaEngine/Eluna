@@ -215,6 +215,7 @@ namespace Hooks
         PLAYER_EVENT_ON_QUEST_REWARD_ITEM       =     51,       // (event, player, item, count)
         PLAYER_EVENT_ON_CREATE_ITEM             =     52,       // (event, player, item, count)
         PLAYER_EVENT_ON_STORE_NEW_ITEM          =     53,       // (event, player, item, count) 
+        PLAYER_EVENT_ON_COMPLETE_QUEST          =     54,       // (event, player, quest) 
 
         PLAYER_EVENT_COUNT
     };

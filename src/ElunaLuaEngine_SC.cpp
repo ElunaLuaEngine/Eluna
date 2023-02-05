@@ -786,6 +786,11 @@ public:
     {
         sEluna->OnStoreNewItem(player, item, count);
     }
+
+    void OnPlayerCompleteQuest(Player* player, Quest const* quest) override
+    {
+        sEluna->OnPlayerCompleteQuest(player, quest);
+    }
 };
 
 class Eluna_ServerScript : public ServerScript
