@@ -71,7 +71,7 @@ struct ElunaCreatureAI : ScriptedAI
         }
     }
 
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
     // Called for reaction when initially engaged - this will always happen _after_ JustEnteredCombat
     // Called at creature aggro either by MoveInLOS or Attack Start
     void JustEngagedWith(Unit* target) override
