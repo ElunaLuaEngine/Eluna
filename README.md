@@ -97,6 +97,7 @@ Eluna API for AC:
 
 ### Group
 - Added `Group:GetGroupType()`: https://github.com/azerothcore/mod-eluna/pull/82
+- Added `Group:SetMemberFlag()`: https://github.com/azerothcore/mod-eluna/pull/102
 
 ### Unit
 - Added `Unit:ModifyThreatPct()`: https://github.com/azerothcore/mod-eluna/pull/25

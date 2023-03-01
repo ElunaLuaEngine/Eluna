@@ -1112,6 +1112,7 @@ ElunaRegister<Group> GroupMethods[] =
     { "SetLeader", &LuaGroup::SetLeader },
     { "SetMembersGroup", &LuaGroup::SetMembersGroup },
     { "SetTargetIcon", &LuaGroup::SetTargetIcon },
+    { "SetMemberFlag", &LuaGroup::SetMemberFlag },
 
     // Boolean
     { "IsLeader", &LuaGroup::IsLeader },

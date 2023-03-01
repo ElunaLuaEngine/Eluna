@@ -428,6 +428,32 @@ namespace LuaGroup
         return 0;
     }
 
+    /**
+     * Sets or removes a flag for a [Group] member
+     * 
+     * <pre>
+     * enum GroupMemberFlags
+     * {
+     *     MEMBER_FLAG_ASSISTANT   = 0x01,
+     *     MEMBER_FLAG_MAINTANK    = 0x02,
+     *     MEMBER_FLAG_MAINASSIST  = 0x04,
+     * };
+     * </pre>
+     * 
+     * @param ObjectGuid target : GUID of the target
+     * @param bool apply : add the `flag` if `true`, remove the `flag` otherwise
+     * @param [GroupMemberFlags] flag : the flag to set or unset
+     */
+    int SetMemberFlag(lua_State* L, Group* group)
+    {
+        ObjectGuid target = Eluna::CHECKVAL<ObjectGuid>(L, 2);
+        bool apply = Eluna::CHECKVAL<bool>(L, 3);
+        GroupMemberFlags flag = static_cast<GroupMemberFlags>(Eluna::CHECKVAL<uint32>(L, 4));
+
+        group->SetGroupMemberFlag(target, apply, flag);
+        return 0;
+    }
+
     /*int ConvertToLFG(lua_State* L, Group* group) // TODO: Implementation
     {
         group->ConvertToLFG();
