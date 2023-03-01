@@ -1504,7 +1504,7 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery", true);
     ElunaTemplate<ElunaQuery>::SetMethods(E, QueryMethods);
 
-    ElunaTemplate<AchievementEntry>::Register(E, "AchievementEntry", true);
+    ElunaTemplate<AchievementEntry>::Register(E, "AchievementEntry");
     ElunaTemplate<AchievementEntry>::SetMethods(E, AchievementMethods);
 
     ElunaTemplate<long long>::Register(E, "long long", true);
