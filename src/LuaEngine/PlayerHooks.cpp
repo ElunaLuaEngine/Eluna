@@ -509,7 +509,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     Push(msg);
     Push(type);
     Push(lang);
-    Push(pChannel->GetChannelId());
+    Push(pChannel->IsConstant() ? static_cast<int32>(pChannel->GetChannelId()) : -static_cast<int32>(pChannel->GetChannelDBId()));
     int n = SetupStack(PlayerEventBindings, key, 5);
 
     while (n > 0)
