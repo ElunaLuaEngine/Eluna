@@ -791,6 +791,11 @@ public:
     {
         sEluna->OnPlayerCompleteQuest(player, quest);
     }
+
+    bool CanGroupInvite(Player* player, std::string& memberName) override
+    {
+        return sEluna->OnCanGroupInvite(player, memberName);
+    }
 };
 
 class Eluna_ServerScript : public ServerScript

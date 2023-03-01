@@ -670,3 +670,11 @@ void Eluna::OnPlayerCompleteQuest(Player* player, Quest const* quest)
     Push(quest);
     CallAllFunctions(PlayerEventBindings, key);
 }
+
+bool Eluna::OnCanGroupInvite(Player* player, std::string& memberName)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_GROUP_INVITE, true);
+    Push(player);
+    Push(memberName);
+    return CallAllFunctionsBool(PlayerEventBindings, key);
+}

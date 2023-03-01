@@ -484,6 +484,7 @@ public:
     bool OnCanInitTrade(Player* player, Player* target);
     bool OnCanSendMail(Player* player, ObjectGuid receiverGuid, ObjectGuid mailbox, std::string& subject, std::string& body, uint32 money, uint32 cod, Item* item);
     bool OnCanJoinLfg(Player* player, uint8 roles, lfg::LfgDungeonSet& dungeons, const std::string& comment);
+    bool OnCanGroupInvite(Player* player, std::string& memberName);
 
 #ifndef CLASSIC
 #ifndef TBC
