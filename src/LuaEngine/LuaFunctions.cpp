@@ -1355,6 +1355,7 @@ ElunaRegister<ChatHandler> ChatHandlerMethods[] =
 ElunaRegister<AchievementEntry> AchievementMethods[] =
 {
     { "GetId", &LuaAchievement::GetId },
+    { "GetName", &LuaAchievement::GetName },
 
     { NULL, NULL }
 };
