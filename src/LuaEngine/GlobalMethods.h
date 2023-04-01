@@ -1271,11 +1271,46 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    template <typename T>
+    int DBQueryAsync(lua_State* L, DatabaseWorkerPool<T>& db)
+    {
+        const char* query = Eluna::CHECKVAL<const char*>(L, 1);
+        luaL_checktype(L, 2, LUA_TFUNCTION);
+        lua_pushvalue(L, 2);
+        int funcRef = luaL_ref(L, LUA_REGISTRYINDEX);
+        if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
+        {
+            luaL_argerror(L, 2, "unable to make a ref to function");
+            return 0;
+        }
+
+        Eluna::GEluna->queryProcessor.AddCallback(db.AsyncQuery(query).WithCallback([L, funcRef](QueryResult result)
+            {
+                ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+
+                LOCK_ELUNA;
+
+                // Get function
+                lua_rawgeti(L, LUA_REGISTRYINDEX, funcRef);
+
+                // Push parameters
+                Eluna::Push(L, eq);
+
+                // Call function
+                Eluna::GEluna->ExecuteCall(1, 0);
+
+                luaL_unref(L, LUA_REGISTRYINDEX, funcRef);
+            }));
+
+        return 0;
+    }
+
     /**
      * Executes a SQL query on the world database and returns an [ElunaQuery].
      *
      * The query is always executed synchronously
      *   (i.e. execution halts until the query has finished and then results are returned).
+     * If you need to execute the query asynchronously, use [Global:WorldDBQueryAsync] instead.
      *
      *     local Q = WorldDBQuery("SELECT entry, name FROM creature_template LIMIT 10")
      *     if Q then
@@ -1309,13 +1344,36 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Executes an asynchronous SQL query on the world database and passes an [ElunaQuery] to a callback function.
+     *
+     * The query is executed asynchronously
+     *   (i.e. the server keeps running while the query is executed in parallel, and results are passed to a callback function).
+     * If you need to execute the query synchronously, use [Global:WorldDBQuery] instead.
+     *
+     *     WorldDBQueryAsync("SELECT entry, name FROM creature_template LIMIT 10", function(Q)
+     *         if Q then
+     *             repeat
+     *                 local entry, name = Q:GetUInt32(0), Q:GetString(1)
+     *                 print(entry, name)
+     *             until not Q:NextRow()
+     *         end
+     *     end)
+     *
+     * @param string sql : query to execute
+     */
+    int WorldDBQueryAsync(lua_State* L)
+    {
+        return DBQueryAsync(L, WorldDatabase);
+    }
+
+    /**
      * Executes a SQL query on the world database.
      *
      * The query may be executed *asynchronously* (at a later, unpredictable time).
      * If you need to execute the query synchronously, use [Global:WorldDBQuery] instead.
      *
      * Any results produced are ignored.
-     * If you need results from the query, use [Global:WorldDBQuery] instead.
+     * If you need results from the query, use [Global:WorldDBQuery] or [Global:WorldDBQueryAsync] instead.
      *
      *     WorldDBExecute("DELETE FROM my_table")
      *
@@ -1333,6 +1391,7 @@ namespace LuaGlobalFunctions
      *
      * The query is always executed synchronously
      *   (i.e. execution halts until the query has finished and then results are returned).
+     * If you need to execute the query asynchronously, use [Global:CharDBQueryAsync] instead.
      *
      * For an example see [Global:WorldDBQuery].
      *
@@ -1360,13 +1419,29 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Executes an asynchronous SQL query on the character database and passes an [ElunaQuery] to a callback function.
+     *
+     * The query is executed asynchronously
+     *   (i.e. the server keeps running while the query is executed in parallel, and results are passed to a callback function).
+     * If you need to execute the query synchronously, use [Global:CharDBQuery] instead.
+     *
+     * For an example see [Global:WorldDBQueryAsync].
+     *
+     * @param string sql : query to execute
+     */
+    int CharDBQueryAsync(lua_State* L)
+    {
+        return DBQueryAsync(L, CharacterDatabase);
+    }
+
+    /**
      * Executes a SQL query on the character database.
      *
      * The query may be executed *asynchronously* (at a later, unpredictable time).
      * If you need to execute the query synchronously, use [Global:CharDBQuery] instead.
      *
      * Any results produced are ignored.
-     * If you need results from the query, use [Global:CharDBQuery] instead.
+     * If you need results from the query, use [Global:CharDBQuery] or [Global:CharDBQueryAsync] instead.
      *
      *     CharDBExecute("DELETE FROM my_table")
      *
@@ -1384,6 +1459,7 @@ namespace LuaGlobalFunctions
      *
      * The query is always executed synchronously
      *   (i.e. execution halts until the query has finished and then results are returned).
+     * If you need to execute the query asynchronously, use [Global:AuthDBQueryAsync] instead.
      *
      * For an example see [Global:WorldDBQuery].
      *
@@ -1411,13 +1487,29 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Executes an asynchronous SQL query on the character database and passes an [ElunaQuery] to a callback function.
+     *
+     * The query is executed asynchronously
+     *   (i.e. the server keeps running while the query is executed in parallel, and results are passed to a callback function).
+     * If you need to execute the query synchronously, use [Global:AuthDBQuery] instead.
+     *
+     * For an example see [Global:WorldDBQueryAsync].
+     *
+     * @param string sql : query to execute
+     */
+    int AuthDBQueryAsync(lua_State* L)
+    {
+        return DBQueryAsync(L, LoginDatabase);
+    }
+
+    /**
      * Executes a SQL query on the login database.
      *
      * The query may be executed *asynchronously* (at a later, unpredictable time).
      * If you need to execute the query synchronously, use [Global:AuthDBQuery] instead.
      *
      * Any results produced are ignored.
-     * If you need results from the query, use [Global:AuthDBQuery] instead.
+     * If you need results from the query, use [Global:AuthDBQuery] or [Global:AuthDBQueryAsync] instead.
      *
      *     AuthDBExecute("DELETE FROM my_table")
      *

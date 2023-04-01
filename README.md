@@ -118,3 +118,4 @@ Eluna API for AC:
 - Added `ItemTemplate` methods: https://github.com/azerothcore/mod-eluna/pull/84
 - Added logging with `ELUNA_LOG_INFO` for `RunCommand()`: https://github.com/azerothcore/mod-eluna/pull/75
 - Added `GetOwnerHalaa` and `SetOwnerHalaa`: https://github.com/azerothcore/mod-eluna/pull/79
+- Added `WorldDBQueryAsync`, `CharDBQueryAsync` and `AuthDBQueryAsync`: https://github.com/azerothcore/mod-eluna/pull/113

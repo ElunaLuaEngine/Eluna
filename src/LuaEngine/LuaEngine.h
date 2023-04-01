@@ -240,6 +240,7 @@ public:
     lua_State* L;
     EventMgr* eventMgr;
     HttpManager httpManager;
+    QueryCallbackProcessor queryProcessor;
 
     BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
     BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;

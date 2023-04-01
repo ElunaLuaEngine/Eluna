@@ -164,6 +164,7 @@ enabled(false),
 L(NULL),
 eventMgr(NULL),
 httpManager(),
+queryProcessor(),
 
 ServerEventBindings(NULL),
 PlayerEventBindings(NULL),
