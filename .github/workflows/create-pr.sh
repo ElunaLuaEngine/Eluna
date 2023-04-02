@@ -23,7 +23,9 @@ cp -r "$SOURCE_FOLDER/." "$CLONE_DIR/$DESTINATION_FOLDER/"
 
 echo "Adding files"
 git add .
-if git status -- ":!date.js" | grep -q "Changes to be committed"
+echo "Git status:"
+git status -- ":!pages/eluna/date.js"
+if git status -- ":!pages/eluna/date.js" | grep -q "Changes to be committed"
 then
   echo "Adding git commit"
   git commit -m "$COMMIT_MESSAGE"
