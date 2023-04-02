@@ -54,11 +54,7 @@ namespace LuaAura
      */
     int GetCasterLevel(lua_State* L, Aura* aura)
     {
-#ifdef TRINITY
         Eluna::Push(L, aura->GetCaster()->GetLevel());
-#else
-        Eluna::Push(L, aura->GetCaster()->getLevel());
-#endif
         return 1;
     }
 

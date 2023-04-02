@@ -836,11 +836,7 @@ namespace LuaUnit
      */
     int GetLevel(lua_State* L, Unit* unit)
     {
-#ifdef TRINITY
         Eluna::Push(L, unit->GetLevel());
-#else
-        Eluna::Push(L, unit->getLevel());
-#endif
         return 1;
     }
 
