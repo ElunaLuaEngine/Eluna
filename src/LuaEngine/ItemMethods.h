@@ -266,7 +266,9 @@ namespace LuaItem
         const ItemTemplate* temp = item->GetTemplate();
         std::string name = temp->Name1;
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(temp->ItemId))
+        {
             ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(locale), name);
+        }
 
 #ifndef CLASSIC
         if (int32 itemRandPropId = item->GetItemRandomPropertyId())
@@ -284,34 +286,43 @@ namespace LuaItem
             {
                 const ItemRandomSuffixEntry* itemRandEntry = sItemRandomSuffixStore.LookupEntry(-item->GetItemRandomPropertyId());
                 if (itemRandEntry)
+                {
 #if TRINITY || AZEROTHCORE
                     suffix = &itemRandEntry->Name;
 #else
                     suffix = itemRandEntry->nameSuffix;
 #endif
+                }
             }
             else
             {
                 const ItemRandomPropertiesEntry* itemRandEntry = sItemRandomPropertiesStore.LookupEntry(item->GetItemRandomPropertyId());
                 if (itemRandEntry)
+                {
 #if TRINITY || AZEROTHCORE
                     suffix = &itemRandEntry->Name;
 #else
                     suffix = itemRandEntry->nameSuffix;
 #endif
+                }
             }
             if (suffix)
             {
-                name += ' ';
 #if TRINITY || AZEROTHCORE
-                name += (*suffix)[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
+                const char* suffixName = (*suffix)[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
 #else
-                name += suffix[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
+                const char* suffixName = suffix[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
 #endif
+                if (strcmp(suffixName, "") != 0)
+                {
+                    name += ' ';
+                    name += suffixName;
+                }
             }
         }
 #endif
 
+        Player* owner = item->GetOwner();
         std::ostringstream oss;
         oss << "|c" << std::hex << ItemQualityColors[temp->Quality] << std::dec <<
             "|Hitem:" << temp->ItemId << ":" <<
@@ -323,11 +334,7 @@ namespace LuaItem
             item->GetEnchantmentId(BONUS_ENCHANTMENT_SLOT) << ":" <<
 #endif
             item->GetItemRandomPropertyId() << ":" << item->GetItemSuffixFactor() << ":" <<
-#ifdef TRINITY
-            (uint32)item->GetOwner()->GetLevel() << "|h[" << name << "]|h|r";
-#else
-            (uint32)item->GetOwner()->getLevel() << "|h[" << name << "]|h|r";
-#endif
+            (uint32)(owner ? owner->GetLevel() : 0) << "|h[" << name << "]|h|r";
 
         Eluna::Push(L, oss.str());
         return 1;
