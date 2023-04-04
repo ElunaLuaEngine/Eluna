@@ -428,6 +428,7 @@ ElunaRegister<Unit> UnitMethods[] =
     // {"RemoveBindSightAuras", &LuaUnit::RemoveBindSightAuras},        // :RemoveBindSightAuras() - UNDOCUMENTED
     // {"RemoveCharmAuras", &LuaUnit::RemoveCharmAuras},                // :RemoveCharmAuras() - UNDOCUMENTED
     { "ClearThreatList", &LuaUnit::ClearThreatList },
+    { "GetThreatList", &LuaUnit::GetThreatList },
     { "ClearUnitState", &LuaUnit::ClearUnitState },
     { "AddUnitState", &LuaUnit::AddUnitState },
     // {"DisableMelee", &LuaUnit::DisableMelee},                        // :DisableMelee([disable]) - UNDOCUMENTED - if true, enables

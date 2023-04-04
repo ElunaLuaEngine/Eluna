@@ -2038,6 +2038,45 @@ namespace LuaUnit
     }
 
     /**
+     * Returns the [Unit]'s threat list.
+     *
+     * @return table threatList : table of [Unit]s in the threat list
+     */
+    int GetThreatList(lua_State* L, Unit* unit)
+    {
+        if (!unit->CanHaveThreatList())
+        {
+            Eluna::Push(L);
+            return 1;
+        }
+
+        ThreatContainer::StorageType const& list = unit->GetThreatMgr().GetThreatList();
+
+        lua_newtable(L);
+        int table = lua_gettop(L);
+        uint32 i = 1;
+        for (ThreatReference* item : list)
+        {
+            if (!item)
+            {
+                continue;
+            }
+            Unit* victim = item->GetVictim();
+            if (!victim)
+            {
+                continue;
+            }
+
+            Eluna::Push(L, victim);
+            lua_rawseti(L, table, i);
+            ++i;
+        }
+
+        lua_settop(L, table); // push table to top of stack
+        return 1;
+    }
+
+    /**
      * Mounts the [Unit] on the given displayID/modelID.
      *
      * @param uint32 displayId
