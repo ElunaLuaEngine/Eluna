@@ -1438,6 +1438,34 @@ namespace LuaUnit
     }
 
     /**
+     * Returns the [Unit]'s attackers.
+     *
+     * @return table attackers : table of [Unit]s attacking the unit
+     */
+    int GetAttackers(lua_State* L, Unit* unit)
+    {
+        const Unit::AttackerSet& attackers = unit->getAttackers();
+
+        lua_newtable(L);
+        int table = lua_gettop(L);
+        uint32 i = 1;
+        for (Unit* attacker : attackers)
+        {
+            if (!attacker)
+            {
+                continue;
+            }
+
+            Eluna::Push(L, attacker);
+            lua_rawseti(L, table, i);
+            ++i;
+        }
+
+        lua_settop(L, table); // push table to top of stack
+        return 1;
+    }
+
+    /**
      * Sets the [Unit]'s owner GUID to given GUID.
      *
      * @param ObjectGuid guid : new owner guid
