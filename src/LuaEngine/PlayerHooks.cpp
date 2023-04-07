@@ -678,3 +678,14 @@ bool Eluna::OnCanGroupInvite(Player* player, std::string& memberName)
     Push(memberName);
     return CallAllFunctionsBool(PlayerEventBindings, key);
 }
+
+void Eluna::OnGroupRollRewardItem(Player* player, Item* item, uint32 count, RollVote voteType, Roll* roll)
+{
+    START_HOOK(PLAYER_EVENT_ON_GROUP_ROLL_REWARD_ITEM);
+    Push(player);
+    Push(item);
+    Push(count);
+    Push(voteType);
+    Push(roll);
+    CallAllFunctions(PlayerEventBindings, key);
+}

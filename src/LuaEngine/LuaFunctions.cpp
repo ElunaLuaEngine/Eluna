@@ -39,6 +39,7 @@ extern "C"
 #include "ChatHandlerMethods.h"
 #include "AchievementMethods.h"
 #include "ItemTemplateMethods.h"
+#include "RollMethods.h"
 
 luaL_Reg GlobalMethods[] =
 {
@@ -1365,6 +1366,25 @@ ElunaRegister<AchievementEntry> AchievementMethods[] =
     { NULL, NULL }
 };
 
+ElunaRegister<Roll> RollMethods[] =
+{
+    { "GetItemGUID", &LuaRoll::GetItemGUID },
+    { "GetItemId", &LuaRoll::GetItemId },
+    { "GetItemRandomPropId", &LuaRoll::GetItemRandomPropId },
+    { "GetItemRandomSuffix", &LuaRoll::GetItemRandomSuffix },
+    { "GetItemCount", &LuaRoll::GetItemCount },
+    { "GetPlayerVote", &LuaRoll::GetPlayerVote },
+    { "GetPlayerVoteGUIDs", &LuaRoll::GetPlayerVoteGUIDs },
+    { "GetTotalPlayersRolling", &LuaRoll::GetTotalPlayersRolling },
+    { "GetTotalNeed", &LuaRoll::GetTotalNeed },
+    { "GetTotalGreed", &LuaRoll::GetTotalGreed },
+    { "GetTotalPass", &LuaRoll::GetTotalPass },
+    { "GetItemSlot", &LuaRoll::GetItemSlot },
+    { "GetRollVoteMask", &LuaRoll::GetRollVoteMask },
+
+    { NULL, NULL }
+};
+
 #if (!defined(TBC) && !defined(CLASSIC))
 // fix compile error about accessing vehicle destructor
 template<> int ElunaTemplate<Vehicle>::CollectGarbage(lua_State* L)
@@ -1512,6 +1532,9 @@ void RegisterFunctions(Eluna* E)
 
     ElunaTemplate<AchievementEntry>::Register(E, "AchievementEntry");
     ElunaTemplate<AchievementEntry>::SetMethods(E, AchievementMethods);
+
+    ElunaTemplate<Roll>::Register(E, "Roll");
+    ElunaTemplate<Roll>::SetMethods(E, RollMethods);
 
     ElunaTemplate<long long>::Register(E, "long long", true);
 

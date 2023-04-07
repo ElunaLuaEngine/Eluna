@@ -652,7 +652,7 @@ namespace LuaItem
     /**
      * Returns the [ItemTemplate] for this [Item].
      *
-     * @return ItemTemplate itemTemplate
+     * @return [ItemTemplate] itemTemplate
      */
     int GetItemTemplate(lua_State* L, Item* item)
     {

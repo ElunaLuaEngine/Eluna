@@ -728,6 +728,7 @@ namespace LuaGlobalFunctions
      *     PLAYER_EVENT_ON_STORE_NEW_ITEM          =     53,       //  (event, player, item, count)
      *     PLAYER_EVENT_ON_COMPLETE_QUEST          =     54,       // (event, player, quest)
      *     PLAYER_EVENT_ON_CAN_GROUP_INVITE        =     55,       // (event, player, memberName) - Can return false to prevent inviting
+     *     PLAYER_EVENT_ON_GROUP_ROLL_REWARD_ITEM  =     56,       // (event, player, item, count, voteType, roll)
      * };
      * </pre>
      *
