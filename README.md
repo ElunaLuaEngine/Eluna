@@ -95,6 +95,7 @@ Eluna API for AC:
 - Added `Player:GetXP()`: https://github.com/azerothcore/mod-eluna/pull/77
 - Added `Player:GetAchievementCriteriaProgress()`: https://github.com/azerothcore/mod-eluna/pull/78
 - Added vendor entry as argument to `Player:SendListInventory(object, vendorentry)`: https://github.com/azerothcore/mod-eluna/pull/48
+- Added `Player:GetPlayerSettingValue()` and `Player:UpdatePlayerSetting()`: https://github.com/azerothcore/mod-eluna/pull/125
 
 ### Group
 - Added `Group:GetGroupType()`: https://github.com/azerothcore/mod-eluna/pull/82
