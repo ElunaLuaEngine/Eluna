@@ -4199,6 +4199,17 @@ namespace LuaPlayer
         return 1;
     }
 
+    /**
+     * Returns the [Player] that is currently trading with this [Player]
+     *
+     * @return [Player] trader : the player trading, or nil
+     */
+    int GetTrader(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->GetTrader());
+        return 1;
+    }
+
     /*int BindToInstance(lua_State* L, Player* player)
     {
     player->BindToInstance();

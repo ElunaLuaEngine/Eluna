@@ -544,6 +544,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetHonorLastWeekStandingPos", &LuaPlayer::GetHonorLastWeekStandingPos },
 #endif
     { "GetPlayerSettingValue", &LuaPlayer::GetPlayerSettingValue },
+    { "GetTrader", &LuaPlayer::GetTrader },
 
     // Setters
     { "AdvanceSkillsToMax", &LuaPlayer::AdvanceSkillsToMax },
