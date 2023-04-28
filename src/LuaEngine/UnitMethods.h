@@ -1205,7 +1205,7 @@ namespace LuaUnit
 #ifdef TRINITY
         Eluna::Push(L, entry->Name[locale]);
 #else
-        Eluna::Push(L, entry->name[locale]);
+        Eluna::Push(L, entry->Name[locale]);
 #endif
         return 1;
     }
