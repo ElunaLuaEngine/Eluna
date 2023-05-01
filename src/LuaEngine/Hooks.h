@@ -171,7 +171,7 @@ namespace Hooks
         PLAYER_EVENT_ON_DUEL_REQUEST            =     9,        // (event, target, challenger)
         PLAYER_EVENT_ON_DUEL_START              =     10,       // (event, player1, player2)
         PLAYER_EVENT_ON_DUEL_END                =     11,       // (event, winner, loser, type)
-        PLAYER_EVENT_ON_GIVE_XP                 =     12,       // (event, player, amount, victim) - Can return new XP amount
+        PLAYER_EVENT_ON_GIVE_XP                 =     12,       // (event, player, amount, victim, source) - Can return new XP amount
         PLAYER_EVENT_ON_LEVEL_CHANGE            =     13,       // (event, player, oldLevel)
         PLAYER_EVENT_ON_MONEY_CHANGE            =     14,       // (event, player, amount) - Can return new money amount
         PLAYER_EVENT_ON_REPUTATION_CHANGE       =     15,       // (event, player, factionId, standing, incremental) - Can return new standing -> if standing == -1, it will prevent default action (rep gain)
