@@ -657,9 +657,9 @@ public:
         sEluna->OnMoneyChanged(player, amount);
     }
 
-    void OnGiveXP(Player* player, uint32& amount, Unit* victim) override
+    void OnGiveXP(Player* player, uint32& amount, Unit* victim, uint8 xpSource) override
     {
-        sEluna->OnGiveXP(player, amount, victim);
+        sEluna->OnGiveXP(player, amount, victim, xpSource);
     }
 
     bool OnReputationChange(Player* player, uint32 factionID, int32& standing, bool incremental) override
