@@ -1273,6 +1273,9 @@ namespace LuaGlobalFunctions
     }
 
     template <typename T>
+    /**
+     * {docs_ignore}
+     */
     int DBQueryAsync(lua_State* L, DatabaseWorkerPool<T>& db)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);

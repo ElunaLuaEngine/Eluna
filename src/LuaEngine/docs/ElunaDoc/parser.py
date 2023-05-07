@@ -246,7 +246,8 @@ class ClassParser(object):
             # Format the method name into each prototype.
             self.prototypes = [proto.format(self.method_name) for proto in self.prototypes]
 
-        self.methods.append(MethodDoc(self.method_name, self.description, self.prototypes, self.params, self.returned))
+        if not "{docs_ignore}" in self.description:
+            self.methods.append(MethodDoc(self.method_name, self.description, self.prototypes, self.params, self.returned))
 
     # Table of which handler is used to handle each regular expressions.
     regex_handlers = {
