@@ -1273,10 +1273,7 @@ namespace LuaGlobalFunctions
     }
 
     template <typename T>
-    /**
-     * {docs_ignore}
-     */
-    int DBQueryAsync(lua_State* L, DatabaseWorkerPool<T>& db)
+    static int DBQueryAsync(lua_State* L, DatabaseWorkerPool<T>& db)
     {
         const char* query = Eluna::CHECKVAL<const char*>(L, 1);
         luaL_checktype(L, 2, LUA_TFUNCTION);
@@ -1364,6 +1361,7 @@ namespace LuaGlobalFunctions
      *     end)
      *
      * @param string sql : query to execute
+     * @param function callback : function that will be called when the results are available
      */
     int WorldDBQueryAsync(lua_State* L)
     {
@@ -1432,6 +1430,7 @@ namespace LuaGlobalFunctions
      * For an example see [Global:WorldDBQueryAsync].
      *
      * @param string sql : query to execute
+     * @param function callback : function that will be called when the results are available
      */
     int CharDBQueryAsync(lua_State* L)
     {
@@ -1500,6 +1499,7 @@ namespace LuaGlobalFunctions
      * For an example see [Global:WorldDBQueryAsync].
      *
      * @param string sql : query to execute
+     * @param function callback : function that will be called when the results are available
      */
     int AuthDBQueryAsync(lua_State* L)
     {
