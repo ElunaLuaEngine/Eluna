@@ -1265,7 +1265,7 @@ namespace LuaUnit
         Acore::UnitListSearcher<Acore::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
         Cell::VisitAllObjects(unit, searcher, range);
 #elif CMANGOS
-        MaNGOS::AnyFriendlyUnitInObjectRangeCheck checker(unit, nullptr, range);
+        MaNGOS::AnyFriendlyUnitInObjectRangeCheck checker(unit, range);
         MaNGOS::UnitListSearcher<MaNGOS::AnyFriendlyUnitInObjectRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(unit, searcher, range);
 #else
