@@ -914,6 +914,30 @@ auto const& threatlist = creature->GetThreatMgr().GetThreatList();
         Eluna::Push(L, creature->GetUInt32Value(UNIT_NPC_FLAGS));
         return 1;
     }
+    
+    /**
+     * Returns the [Creature]'s Unit flags.
+     *
+     * These are used to control whether the NPC is attackable or not, among other things.
+     *
+     * @return [UnitFlags] unitFlags
+     */
+    int GetUnitFlags(lua_State* L, Creature* creature)
+    {
+        Eluna::Push(L, creature->GetUInt32Value(UNIT_FIELD_FLAGS));
+        return 1;
+    }
+
+    /**
+     * Returns the [Creature]'s Unit flags 2.
+     *
+     * @return [UnitFlags2] unitFlags2
+     */
+    int GetUnitFlagsTwo(lua_State* L, Creature* creature)
+    {
+        Eluna::Push(L, creature->GetUInt32Value(UNIT_FIELD_FLAGS_2));
+        return 1;
+    }
 
     /**
      * Returns the [Creature]'s Extra flags.
@@ -980,6 +1004,30 @@ auto const& threatlist = creature->GetThreatMgr().GetThreatList();
         uint32 flags = Eluna::CHECKVAL<uint32>(L, 2);
 
         creature->SetUInt32Value(UNIT_NPC_FLAGS, flags);
+        return 0;
+    }
+    
+    /**
+     * Sets the [Creature]'s Unit flags to `flags`.
+     *
+     * @param [UnitFlags] flags
+     */
+    int SetUnitFlags(lua_State* L, Creature* creature)
+    {
+        uint32 flags = Eluna::CHECKVAL<uint32>(L, 2);
+        creature->SetUInt32Value(UNIT_FIELD_FLAGS, flags);
+        return 0;
+    }
+
+    /**
+     * Sets the [Creature]'s Unit flags2 to `flags`.
+     *
+     * @param [UnitFlags2] flags
+     */
+    int SetUnitFlagsTwo(lua_State* L, Creature* creature)
+    {
+        uint32 flags = Eluna::CHECKVAL<uint32>(L, 2);
+        creature->SetUInt32Value(UNIT_FIELD_FLAGS_2, flags);
         return 0;
     }
 

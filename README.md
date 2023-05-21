@@ -91,6 +91,8 @@ Eluna API for AC:
 - Added `RegisterPlayerEvent` `54` (`PLAYER_EVENT_ON_COMPLETE_QUEST`): https://github.com/azerothcore/mod-eluna/pull/90
 - Added `RegisterPlayerEvent` `55` (`PLAYER_EVENT_ON_CAN_GROUP_INVITE`): https://github.com/azerothcore/mod-eluna/pull/100
 - Added `RegisterPlayerEvent` `56` (`PLAYER_EVENT_ON_GROUP_ROLL_REWARD_ITEM`): https://github.com/azerothcore/mod-eluna/pull/119
+- Added `RegisterPlayerEvent` `57` (`PLAYER_EVENT_ON_APPLY_AURA`): https://github.com/azerothcore/mod-eluna/pull/137
+- Added `RegisterPlayerEvent` `58` (`PLAYER_EVENT_ON_REMOVE_AURA`): https://github.com/azerothcore/mod-eluna/pull/137
 - Added `Player:GetMailCount()`: https://github.com/azerothcore/mod-eluna/pull/76
 - Added `Player:GetXP()`: https://github.com/azerothcore/mod-eluna/pull/77
 - Added `Player:GetAchievementCriteriaProgress()`: https://github.com/azerothcore/mod-eluna/pull/78
@@ -106,6 +108,10 @@ Eluna API for AC:
 - Added `Unit:ModifyThreatPct()`: https://github.com/azerothcore/mod-eluna/pull/25
 - Added `Unit:GetAttackers()`: https://github.com/azerothcore/mod-eluna/pull/116
 - Added `Unit:GetThreatList()`: https://github.com/azerothcore/mod-eluna/pull/117
+- Added `Unit:GetUnitFlags()`: https://github.com/azerothcore/mod-eluna/pull/137
+- Added `Unit:GetUnitFlagsTwo()`: https://github.com/azerothcore/mod-eluna/pull/137
+- Added `Unit:SetUnitFlags(flags)`: https://github.com/azerothcore/mod-eluna/pull/137
+- Added `Unit:SetUnitFlagsTwo(flags)`: https://github.com/azerothcore/mod-eluna/pull/137
 
 ### GameObject
 - Added `GameObject:AddLoot()` to add loot at runtime to an **empty** container: https://github.com/azerothcore/mod-eluna/pull/52
