@@ -472,6 +472,46 @@ namespace LuaPlayer
         Eluna::Push(L, player->isTotalImmune());
         return 1;
     }
+        
+    /**
+    * Returns 'true' if the [Player] satisfies all requirements to complete the quest entry.
+    *
+    * @param uint32 questId
+    * @return bool CanCompleteRepeatableQuest
+    */    
+    int CanCompleteRepeatableQuest(lua_State* L, Player* player)
+    {
+        uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
+        const Quest* quest = sObjectMgr->GetQuestTemplate(questId); // Retrieve the Quest object
+        if (!quest)
+        {
+            Eluna::Push(L, false);
+            return 0;
+        }
+
+        Eluna::Push(L, player->CanCompleteRepeatableQuest(quest));
+        return 1;
+    }
+
+    /**
+    * Returns 'true' if the [Player] satisfies all requirements to reward the quest entry.
+    *
+    * @param uint32 questId
+    * @return bool CanRewardQuest
+    */
+    int CanRewardQuest(lua_State* L, Player* player)
+    {
+        uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
+        const Quest* quest = sObjectMgr->GetQuestTemplate(questId); // Retrieve the Quest object
+        if (!quest)
+        {
+            Eluna::Push(L, false);
+            return 0;
+        }
+
+        Eluna::Push(L, player->CanRewardQuest(quest, true)); // Modify the second argument as needed
+        return 1;
+    }
 
     /**
      * Returns 'true' if the [Player] satisfies all requirements to complete the quest entry.

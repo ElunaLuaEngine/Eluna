@@ -606,6 +606,8 @@ ElunaRegister<Player> PlayerMethods[] =
 #ifndef CLASSIC
     { "IsInArenaTeam", &LuaPlayer::IsInArenaTeam },
 #endif
+    { "CanRewardQuest", &LuaPlayer::CanRewardQuest },
+    { "CanCompleteRepeatableQuest", &LuaPlayer::CanCompleteRepeatableQuest },
     { "CanCompleteQuest", &LuaPlayer::CanCompleteQuest },
     { "CanEquipItem", &LuaPlayer::CanEquipItem },
     { "IsFalling", &LuaPlayer::IsFalling },

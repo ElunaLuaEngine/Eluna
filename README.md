@@ -99,6 +99,8 @@ Eluna API for AC:
 - Added vendor entry as argument to `Player:SendListInventory(object, vendorentry)`: https://github.com/azerothcore/mod-eluna/pull/48
 - Added `Player:GetPlayerSettingValue()` and `Player:UpdatePlayerSetting()`: https://github.com/azerothcore/mod-eluna/pull/125
 - Added `Player:GetTrader()`: https://github.com/azerothcore/mod-eluna/pull/126
+- Added `Player:CanCompleteRepeatableQuest(questId)`: https://github.com/azerothcore/mod-eluna/pull/141
+- Added `Player:CanRewardQuest(questId)`: https://github.com/azerothcore/mod-eluna/pull/141
 
 ### Group
 - Added `Group:GetGroupType()`: https://github.com/azerothcore/mod-eluna/pull/82
