@@ -914,7 +914,7 @@ auto const& threatlist = creature->GetThreatMgr().GetThreatList();
         Eluna::Push(L, creature->GetUInt32Value(UNIT_NPC_FLAGS));
         return 1;
     }
-    
+
     /**
      * Returns the [Creature]'s Unit flags.
      *

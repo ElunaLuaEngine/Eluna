@@ -16,7 +16,7 @@ namespace LuaPlayer
 {
 #if (!defined(TBC) && !defined(CLASSIC))
     /**
-     * Returns 'true' if the [Player] can Titan Grip, 'false' otherwise.
+     * Returns `true` if the [Player] can Titan Grip, `false` otherwise.
      *
      * @return bool canTitanGrip
      */
@@ -27,7 +27,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has a talent by ID in specified spec, 'false' otherwise.
+     * Returns `true` if the [Player] has a talent by ID in specified spec, `false` otherwise.
      *
      * @param uint32 spellId : talent spellId to check
      * @param uint8 spec : specified spec. 0 for primary, 1 for secondary.
@@ -49,7 +49,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has completed the specified achievement, 'false' otherwise.
+     * Returns `true` if the [Player] has completed the specified achievement, `false` otherwise.
      *
      * @param uint32 achievementId
      * @return bool hasAchieved
@@ -89,7 +89,7 @@ namespace LuaPlayer
 #endif
 
     /**
-     * Returns 'true' if the [Player] has an active [Quest] by specific ID, 'false' otherwise.
+     * Returns `true` if the [Player] has an active [Quest] by specific ID, `false` otherwise.
      *
      * @param uint32 questId
      * @return bool hasQuest
@@ -103,7 +103,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has a skill by specific ID, 'false' otherwise.
+     * Returns `true` if the [Player] has a skill by specific ID, `false` otherwise.
      *
      * @param uint32 skill
      * @return bool hasSkill
@@ -117,7 +117,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has a [Spell] by specific ID, 'false' otherwise.
+     * Returns `true` if the [Player] has a [Spell] by specific ID, `false` otherwise.
      *
      * @param uint32 spellId
      * @return bool hasSpell
@@ -160,7 +160,7 @@ namespace LuaPlayer
 
 #ifndef CLASSIC
     /**
-     * Returns 'true' if the [Player] has a title by specific ID, 'false' otherwise.
+     * Returns `true` if the [Player] has a title by specific ID, `false` otherwise.
      *
      * @param uint32 titleId
      * @return bool hasTitle
@@ -176,7 +176,7 @@ namespace LuaPlayer
 #endif
     
     /**
-     * Returns 'true' if the [Player] has the given amount of item entry specified, 'false' otherwise.
+     * Returns `true` if the [Player] has the given amount of item entry specified, `false` otherwise.
      *
      * @param uint32 itemId : entry of the item
      * @param uint32 count = 1 : amount of items the player needs should have
@@ -193,7 +193,7 @@ namespace LuaPlayer
     }
     
     /**
-     * Returns 'true' if the [Player] has a quest for the item entry specified, 'false' otherwise.
+     * Returns `true` if the [Player] has a quest for the item entry specified, `false` otherwise.
      *
      * @param uint32 entry : entry of the item
      * @return bool hasQuest
@@ -207,7 +207,7 @@ namespace LuaPlayer
     }
     
     /**
-     * Returns 'true' if the [Player] can use the item or item entry specified, 'false' otherwise.
+     * Returns `true` if the [Player] can use the item or item entry specified, `false` otherwise.
      *
      * @proto canUse = (item)
      * @proto canUse = (entry)
@@ -233,7 +233,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Spell] specified by ID is currently on cooldown for the [Player], 'false' otherwise.
+     * Returns `true` if the [Spell] specified by ID is currently on cooldown for the [Player], `false` otherwise.
      *
      * @param uint32 spellId
      * @return bool hasSpellCooldown
@@ -251,7 +251,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] can share [Quest] specified by ID, 'false' otherwise.
+     * Returns `true` if the [Player] can share [Quest] specified by ID, `false` otherwise.
      *
      * @param uint32 entryId
      * @return bool hasSpellCooldown
@@ -265,7 +265,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] can currently communicate through chat, 'false' otherwise.
+     * Returns `true` if the [Player] can currently communicate through chat, `false` otherwise.
      *
      * @return bool canSpeak
      */
@@ -280,7 +280,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has permission to uninvite others from the current group, 'false' otherwise.
+     * Returns `true` if the [Player] has permission to uninvite others from the current group, `false` otherwise.
      *
      * @return bool canUninviteFromGroup
      */
@@ -292,7 +292,7 @@ namespace LuaPlayer
 
 #ifndef CLASSIC
     /**
-     * Returns 'true' if the [Player] can fly, 'false' otherwise.
+     * Returns `true` if the [Player] can fly, `false` otherwise.
      *
      * @return bool canFly
      */
@@ -342,7 +342,7 @@ namespace LuaPlayer
 #endif
 
     /**
-     * Returns 'true' if the [Player] is currently in water, 'false' otherwise.
+     * Returns `true` if the [Player] is currently in water, `false` otherwise.
      *
      * @return bool isInWater
      */
@@ -353,7 +353,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently moving, 'false' otherwise.
+     * Returns `true` if the [Player] is currently moving, `false` otherwise.
      *
      * @return bool isMoving
      */
@@ -394,7 +394,7 @@ namespace LuaPlayer
 
 #ifndef CLASSIC
     /**
-     * Returns 'true' if the [Player] is currently flying, 'false' otherwise.
+     * Returns `true` if the [Player] is currently flying, `false` otherwise.
      *
      * @return bool isFlying
      */
@@ -406,7 +406,7 @@ namespace LuaPlayer
 #endif
 
     /**
-     * Returns 'true' if the [Player] is in a [Group], 'false' otherwise.
+     * Returns `true` if the [Player] is in a [Group], `false` otherwise.
      *
      * @return bool isInGroup
      */
@@ -417,7 +417,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is in a [Guild], 'false' otherwise.
+     * Returns `true` if the [Player] is in a [Guild], `false` otherwise.
      *
      * @return bool isInGuild
      */
@@ -428,7 +428,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is a Game Master, 'false' otherwise.
+     * Returns `true` if the [Player] is a Game Master, `false` otherwise.
      *
      * Note: This is only true when GM tag is activated! For alternative see [Player:GetGMRank]
      *
@@ -446,7 +446,7 @@ namespace LuaPlayer
 
 #ifndef CLASSIC
     /**
-     * Returns 'true' if the [Player] is in an arena team specified by type, 'false' otherwise.
+     * Returns `true` if the [Player] is in an arena team specified by type, `false` otherwise.
      *
      * @param uint32 type
      * @return bool isInArenaTeam
@@ -461,9 +461,9 @@ namespace LuaPlayer
         return 1;
     }
 #endif
-    
+
     /**
-     * Returns 'true' if the [Player] is immune to everything.
+     * Returns `true` if the [Player] is immune to everything.
      *
      * @return bool isImmune
      */
@@ -472,13 +472,13 @@ namespace LuaPlayer
         Eluna::Push(L, player->isTotalImmune());
         return 1;
     }
-        
+
     /**
-    * Returns 'true' if the [Player] satisfies all requirements to complete the quest entry.
-    *
-    * @param uint32 questId
-    * @return bool CanCompleteRepeatableQuest
-    */    
+     * Returns `true` if the [Player] satisfies all requirements to complete the quest entry.
+     *
+     * @param uint32 questId
+     * @return bool CanCompleteRepeatableQuest
+     */
     int CanCompleteRepeatableQuest(lua_State* L, Player* player)
     {
         uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
@@ -494,11 +494,11 @@ namespace LuaPlayer
     }
 
     /**
-    * Returns 'true' if the [Player] satisfies all requirements to reward the quest entry.
-    *
-    * @param uint32 questId
-    * @return bool CanRewardQuest
-    */
+     * Returns `true` if the [Player] satisfies all requirements to reward the quest entry.
+     *
+     * @param uint32 questId
+     * @return bool CanRewardQuest
+     */
     int CanRewardQuest(lua_State* L, Player* player)
     {
         uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
@@ -514,7 +514,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] satisfies all requirements to complete the quest entry.
+     * Returns `true` if the [Player] satisfies all requirements to complete the quest entry.
      *
      * @param uint32 entry
      * @return bool canComplete
@@ -528,7 +528,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is a part of the Horde faction, 'false' otherwise.
+     * Returns `true` if the [Player] is a part of the Horde faction, `false` otherwise.
      *
      * @return bool isHorde
      */
@@ -543,7 +543,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is a part of the Alliance faction, 'false' otherwise.
+     * Returns `true` if the [Player] is a part of the Alliance faction, `false` otherwise.
      *
      * @return bool isAlliance
      */
@@ -558,7 +558,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is 'Do Not Disturb' flagged, 'false' otherwise.
+     * Returns `true` if the [Player] is 'Do Not Disturb' flagged, `false` otherwise.
      *
      * @return bool isDND
      */
@@ -569,7 +569,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is 'Away From Keyboard' flagged, 'false' otherwise.
+     * Returns `true` if the [Player] is 'Away From Keyboard' flagged, `false` otherwise.
      *
      * @return bool isAFK
      */
@@ -580,7 +580,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently falling, 'false' otherwise.
+     * Returns `true` if the [Player] is currently falling, `false` otherwise.
      *
      * @return bool isFalling
      */
@@ -598,7 +598,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently in the same raid as another [Player] by object, 'false' otherwise.
+     * Returns `true` if the [Player] is currently in the same raid as another [Player] by object, `false` otherwise.
      *
      * @param [Player] player
      * @return bool isInSameRaidWith
@@ -611,7 +611,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently in the same [Group] as another [Player] by object, 'false' otherwise.
+     * Returns `true` if the [Player] is currently in the same [Group] as another [Player] by object, `false` otherwise.
      *
      * @param [Player] player
      * @return bool isInSameGroupWith
@@ -624,7 +624,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is eligible for Honor or XP gain by [Unit] specified, 'false' otherwise.
+     * Returns `true` if the [Player] is eligible for Honor or XP gain by [Unit] specified, `false` otherwise.
      *
      * @param [Unit] unit
      * @return bool isHonorOrXPTarget
@@ -638,7 +638,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] can see anoter [Player] specified by object, 'false' otherwise.
+     * Returns `true` if the [Player] can see anoter [Player] specified by object, `false` otherwise.
      *
      * @param [Player] player
      * @return bool isVisibleForPlayer
@@ -658,7 +658,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] has taxi cheat activated, 'false' otherwise.
+     * Returns `true` if the [Player] has taxi cheat activated, `false` otherwise.
      *
      * @return bool isTaxiCheater
      */
@@ -679,7 +679,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is accepting whispers, 'false' otherwise.
+     * Returns `true` if the [Player] is accepting whispers, `false` otherwise.
      *
      * @return bool isAcceptingWhispers
      */
@@ -690,7 +690,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently rested, 'false' otherwise.
+     * Returns `true` if the [Player] is currently rested, `false` otherwise.
      *
      * @return bool isRested
      */
@@ -701,7 +701,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] is currently in a [BattleGround] queue, 'false' otherwise.
+     * Returns `true` if the [Player] is currently in a [BattleGround] queue, `false` otherwise.
      *
      * @return bool inBattlegroundQueue
      */
@@ -717,7 +717,7 @@ namespace LuaPlayer
 
 #ifndef CLASSIC
     /**
-     * Returns 'true' if the [Player] is currently in an arena, 'false' otherwise.
+     * Returns `true` if the [Player] is currently in an arena, `false` otherwise.
      *
      * @return bool inArena
      */
@@ -729,7 +729,7 @@ namespace LuaPlayer
 #endif
 
     /**
-     * Returns 'true' if the [Player] is currently in a [BattleGround], 'false' otherwise.
+     * Returns `true` if the [Player] is currently in a [BattleGround], `false` otherwise.
      *
      * @return bool inBattleGround
      */
@@ -744,7 +744,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] can block incomming attacks, 'false' otherwise.
+     * Returns `true` if the [Player] can block incomming attacks, `false` otherwise.
      *
      * @return bool canBlock
      */
@@ -755,7 +755,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player] can parry incomming attacks, 'false' otherwise.
+     * Returns `true` if the [Player] can parry incomming attacks, `false` otherwise.
      *
      * @return bool canParry
      */
@@ -1320,7 +1320,7 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns 'true' if the [Player]s [Quest] specified by entry ID has been rewarded, 'false' otherwise.
+     * Returns `true` if the [Player]s [Quest] specified by entry ID has been rewarded, `false` otherwise.
      *
      * @param uint32 questId
      * @return bool questRewardStatus
