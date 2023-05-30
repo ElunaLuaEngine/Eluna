@@ -486,7 +486,7 @@ namespace LuaPlayer
         if (!quest)
         {
             Eluna::Push(L, false);
-            return 0;
+            return 1;
         }
 
         Eluna::Push(L, player->CanCompleteRepeatableQuest(quest));
@@ -506,7 +506,7 @@ namespace LuaPlayer
         if (!quest)
         {
             Eluna::Push(L, false);
-            return 0;
+            return 1;
         }
 
         Eluna::Push(L, player->CanRewardQuest(quest, true)); // Modify the second argument as needed
