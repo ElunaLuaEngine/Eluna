@@ -2066,7 +2066,7 @@ namespace LuaGlobalFunctions
             return 0;
 
         auto const& itemlist = items->m_items;
-        for (auto itr = itemlist.begin(); itr != itemlist.end(); ++itr)
+        for (auto itr = itemlist.rbegin(); itr != itemlist.rend(); ++itr)
 #if defined(CATA) || defined(MISTS)
             eObjectMgr->RemoveVendorItem(entry, (*itr)->item, 1);
 #else
