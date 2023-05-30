@@ -477,7 +477,7 @@ namespace LuaPlayer
      * Returns `true` if the [Player] satisfies all requirements to complete the quest entry.
      *
      * @param uint32 questId
-     * @return bool CanCompleteRepeatableQuest
+     * @return bool canCompleteRepeatableQuest
      */
     int CanCompleteRepeatableQuest(lua_State* L, Player* player)
     {
@@ -497,7 +497,7 @@ namespace LuaPlayer
      * Returns `true` if the [Player] satisfies all requirements to reward the quest entry.
      *
      * @param uint32 questId
-     * @return bool CanRewardQuest
+     * @return bool canRewardQuest
      */
     int CanRewardQuest(lua_State* L, Player* player)
     {
