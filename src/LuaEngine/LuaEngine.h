@@ -23,6 +23,7 @@
 #include "LFG.h"
 #include "ElunaUtility.h"
 #include "HttpManager.h"
+#include "EventEmitter.h"
 #include <mutex>
 #include <memory>
 
@@ -241,6 +242,7 @@ public:
     EventMgr* eventMgr;
     HttpManager httpManager;
     QueryCallbackProcessor queryProcessor;
+    EventEmitter<void(std::string)> OnError;
 
     BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
     BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;

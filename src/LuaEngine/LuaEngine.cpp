@@ -579,6 +579,7 @@ int Eluna::StackTrace(lua_State *_L)
 
     // dirty stack?
     // Stack: errmsg, debug, tracemsg
+    sEluna->OnError(std::string(lua_tostring(_L, -1)));
     return 1;
 }
 
