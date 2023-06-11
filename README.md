@@ -91,6 +91,7 @@ Eluna API for AC:
 - Added `RegisterPlayerEvent` `54` (`PLAYER_EVENT_ON_COMPLETE_QUEST`): https://github.com/azerothcore/mod-eluna/pull/90
 - Added `RegisterPlayerEvent` `55` (`PLAYER_EVENT_ON_CAN_GROUP_INVITE`): https://github.com/azerothcore/mod-eluna/pull/100
 - Added `RegisterPlayerEvent` `56` (`PLAYER_EVENT_ON_GROUP_ROLL_REWARD_ITEM`): https://github.com/azerothcore/mod-eluna/pull/119
+- Added `RegisterPlayerEvent` `57` (`PLAYER_EVENT_ON_BG_DESERTION`): https://github.com/azerothcore/mod-eluna/pull/146
 - Added `Player:GetMailCount()`: https://github.com/azerothcore/mod-eluna/pull/76
 - Added `Player:GetXP()`: https://github.com/azerothcore/mod-eluna/pull/77
 - Added `Player:GetAchievementCriteriaProgress()`: https://github.com/azerothcore/mod-eluna/pull/78
