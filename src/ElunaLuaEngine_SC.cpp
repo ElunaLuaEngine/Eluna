@@ -801,16 +801,6 @@ public:
     {
         return sEluna->OnCanGroupInvite(player, memberName);
     }
-    
-    void OnApplyAura(Player* player, Aura* aura, bool isNewAura)
-    {
-        return sEluna->OnApplyAura(player, aura, isNewAura);
-    }
-
-    void OnRemoveAura(Player* player, Aura* aura, bool isExpired)
-    {
-        return sEluna->OnRemoveAura(player, aura, isExpired);
-    }
 };
 
 class Eluna_ServerScript : public ServerScript

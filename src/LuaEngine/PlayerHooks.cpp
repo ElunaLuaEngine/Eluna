@@ -690,21 +690,3 @@ void Eluna::OnGroupRollRewardItem(Player* player, Item* item, uint32 count, Roll
     Push(roll);
     CallAllFunctions(PlayerEventBindings, key);
 }
-
-void Eluna::OnApplyAura(Player* player, Aura* aura, bool isNewAura)
-{
-    START_HOOK(PLAYER_EVENT_ON_APPLY_AURA);
-    Push(player);
-    Push(aura);
-    Push(isNewAura);
-    CallAllFunctions(PlayerEventBindings, key);
-}
-
-void Eluna::OnRemoveAura(Player* player, Aura* aura, bool isExpired)
-{
-    START_HOOK(PLAYER_EVENT_ON_REMOVE_AURA);
-    Push(player);
-    Push(aura);
-    Push(isExpired);
-    CallAllFunctions(PlayerEventBindings, key);
-}
