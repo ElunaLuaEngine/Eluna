@@ -1486,7 +1486,11 @@ namespace LuaUnit
     int SetNativeDisplayId(lua_State* L, Unit* unit)
     {
         uint32 model = Eluna::CHECKVAL<uint32>(L, 2);
+#ifndef CATA
         unit->SetNativeDisplayId(model);
+#else
+        unit->SetDisplayId(model, true);
+#endif
         return 0;
     }
 

@@ -16,6 +16,9 @@
 #include "Chat.h"
 #include "Channel.h"
 #include "DBCStores.h"
+#if defined CATA && defined TRINITY
+#include "DB2Stores.h"
+#endif
 #include "GameEventMgr.h"
 #include "GossipDef.h"
 #include "GridNotifiers.h"
@@ -134,7 +137,10 @@
 #endif
 #endif
 
-#ifndef CLASSIC
+#if (defined(TRINITY) && defined(CATA))
+typedef OpcodeServer            OpcodesList;
+
+#elif !defined CLASSIC
 typedef Opcodes                 OpcodesList;
 #endif
 
@@ -161,6 +167,9 @@ typedef Opcodes                 OpcodesList;
 #ifdef TRINITY
 #define CORE_NAME               "TrinityCore"
 #define REGEN_TIME_FULL
+#ifdef CATA
+#define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
+#endif
 #endif
 
 #ifdef AZEROTHCORE

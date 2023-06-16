@@ -72,7 +72,11 @@ namespace LuaVehicle
         Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
         int8 seatId = Eluna::CHECKVAL<int8>(L, 3);
 
+#ifndef CATA
         vehicle->AddPassenger(passenger, seatId);
+#else
+        vehicle->AddVehiclePassenger(passenger, seatId);
+#endif
         return 0;
     }
 

@@ -61,6 +61,16 @@ void Eluna::OnDisband(Group* group)
     CallAllFunctions(GroupEventBindings, key);
 }
 
+#if defined (TRINITY) && defined (CATA)
+void Eluna::OnCreate(Group* group, ObjectGuid leaderGuid, GroupFlags groupType)
+{
+    START_HOOK(GROUP_EVENT_ON_CREATE);
+    Push(group);
+    Push(leaderGuid);
+    Push(groupType);
+    CallAllFunctions(GroupEventBindings, key);
+}
+#else
 void Eluna::OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType)
 {
     START_HOOK(GROUP_EVENT_ON_CREATE);
@@ -69,3 +79,4 @@ void Eluna::OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType)
     Push(groupType);
     CallAllFunctions(GroupEventBindings, key);
 }
+#endif

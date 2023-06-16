@@ -117,7 +117,9 @@ struct ElunaCreatureAI : CreatureAI
     // Called at any Damage from any attacker (before damage apply)
 #if defined AZEROTHCORE
     void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
-#elif defined(TRINITY) || CMANGOS
+#elif ((defined (TRINITY) || CMANGOS) && !defined CATA)
+    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damageType, SpellInfo const* spellInfo) override
+#elif defined CATA && defined CMANGOS
     void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damageType, SpellInfo const* spellInfo) override
 #else
     void DamageTaken(Unit* attacker, uint32& damage) override
@@ -127,7 +129,7 @@ struct ElunaCreatureAI : CreatureAI
         {
 #if defined AZEROTHCORE
             ScriptedAI::DamageTaken(attacker, damage, damagetype, damageSchoolMask);
-#elif defined TRINITY
+#elif defined TRINITY && !defined CATA
             ScriptedAI::DamageTaken(attacker, damage, damageType, spellInfo);
 #elif defined CMANGOS
             CreatureAI::DamageTaken(attacker, damage, damageType, spellInfo);
@@ -341,7 +343,7 @@ struct ElunaCreatureAI : CreatureAI
 
 #if defined TRINITY || AZEROTHCORE
 
-#if defined TRINITY
+#if defined TRINITY && !defined CATA
     // Called when the creature is summoned successfully by other creature
     void IsSummonedBy(WorldObject* summoner) override
     {

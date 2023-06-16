@@ -107,9 +107,14 @@ namespace LuaMap
     {
         float x = Eluna::CHECKVAL<float>(L, 2);
         float y = Eluna::CHECKVAL<float>(L, 3);
+#ifdef CATA
+        PhaseShift phase;
+        float z = map->GetHeight(phase, x, y, MAX_HEIGHT);
+#else
         uint32 phasemask = Eluna::CHECKVAL<uint32>(L, 4, 1);
 
         float z = map->GetHeight(phasemask, x, y, MAX_HEIGHT);
+#endif
         if (z != INVALID_HEIGHT)
             Eluna::Push(L, z);
         return 1;
@@ -175,9 +180,14 @@ namespace LuaMap
         float x = Eluna::CHECKVAL<float>(L, 2);
         float y = Eluna::CHECKVAL<float>(L, 3);
         float z = Eluna::CHECKVAL<float>(L, 4);
+#ifdef CATA
+        PhaseShift phase;
+        Eluna::Push(L, map->GetAreaId(phase, x, y, z));
+#else
         float phasemask = Eluna::CHECKVAL<uint32>(L, 5, PHASEMASK_NORMAL);
 
         Eluna::Push(L, map->GetAreaId(phasemask, x, y, z));
+#endif
         return 1;
     }
 
