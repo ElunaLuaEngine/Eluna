@@ -1227,6 +1227,8 @@ namespace LuaGlobalFunctions
         eWorld->QueueCliCommand(new CliCommandHolder(nullptr, command, [](void*, std::string_view) {}, [](void*, bool) {}));
 #elif defined MANGOS
         eWorld->QueueCliCommand(new CliCommandHolder(0, SEC_CONSOLE, nullptr, command, nullptr, nullptr));
+#elif defined CMANGOS
+        eWorld->QueueCliCommand(new CliCommandHolder(0, SEC_CONSOLE, command, nullptr, nullptr));
 #endif
         return 0;
     }
