@@ -17,8 +17,9 @@
 #include "Entities/Unit.h"
 #include "Entities/GameObject.h"
 #include "Server/DBCStores.h"
+#include "Util/Timer.h"
 #endif
-#if defined(MANGOS) || CMANGOS
+#if defined MANGOS
 #include "Timer.h"
 #endif
 

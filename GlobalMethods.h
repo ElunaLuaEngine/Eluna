@@ -82,7 +82,11 @@ namespace LuaGlobalFunctions
      */
     int GetCoreVersion(lua_State* L)
     {
+#ifdef MANGOS
+        Eluna::Push(L, GitRevision::GetProjectRevision());
+#else
         Eluna::Push(L, CORE_VERSION);
+#endif
         return 1;
     }
 
@@ -1219,9 +1223,12 @@ namespace LuaGlobalFunctions
     {
         const char* command = Eluna::CHECKVAL<const char*>(L, 1);
 #if defined TRINITY || AZEROTHCORE
-        eWorld->QueueCliCommand(new CliCommandHolder(nullptr, command, nullptr, nullptr));
+        // ignores output of the command
+        eWorld->QueueCliCommand(new CliCommandHolder(nullptr, command, [](void*, std::string_view) {}, [](void*, bool) {}));
 #elif defined MANGOS
         eWorld->QueueCliCommand(new CliCommandHolder(0, SEC_CONSOLE, nullptr, command, nullptr, nullptr));
+#elif defined CMANGOS
+        eWorld->QueueCliCommand(new CliCommandHolder(0, SEC_CONSOLE, command, nullptr, nullptr));
 #endif
         return 0;
     }
@@ -1551,8 +1558,11 @@ namespace LuaGlobalFunctions
                     Eluna::Push(L);
                     return 1;
                 }
-
+#ifdef CMANGOS
+                if (!pCreature->Create(lowguid, lowguid, pos, cinfo))
+#else
                 if (!pCreature->Create(lowguid, pos, cinfo))
+#endif
                 {
                     delete pCreature;
                     Eluna::Push(L);
@@ -1605,7 +1615,7 @@ namespace LuaGlobalFunctions
 #ifndef CMANGOS
                 if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo, TEAM_NONE))
 #else
-                if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo))
+                if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo))
 #endif
                 {
                     delete pCreature;
@@ -1653,8 +1663,12 @@ namespace LuaGlobalFunctions
                 }
 
                 GameObject* pGameObj = new GameObject;
-#if (defined(TBC) || defined(CLASSIC))
+#if ((defined(TBC) || defined(CLASSIC)) && !defined(CMANGOS))
                 if (!pGameObj->Create(db_lowGUID, gInfo->id, map, x, y, z, o))
+#elif ((defined(TBC) || defined(CLASSIC)) && defined(CMANGOS))
+                if (!pGameObj->Create(db_lowGUID, db_lowGUID, gInfo->id, map, x, y, z, o))
+#elif defined CMANGOS
+                if (!pGameObj->Create(db_lowGUID, db_lowGUID, gInfo->id, map, phase, x, y, z, o))
 #else
                 if (!pGameObj->Create(db_lowGUID, gInfo->id, map, phase, x, y, z, o))
 #endif
@@ -1701,8 +1715,12 @@ namespace LuaGlobalFunctions
             {
                 GameObject* pGameObj = new GameObject;
 
-#if (defined(TBC) || defined(CLASSIC))
+#if ((defined(TBC) || defined(CLASSIC)) && !defined(CMANGOS))
                 if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), entry, map, x, y, z, o))
+#elif ((defined(TBC) || defined(CLASSIC)) && defined(CMANGOS))
+                if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), entry, map, x, y, z, o))
+#elif defined CMANGOS
+                if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), entry, map, phase, x, y, z, o))
 #else
                 if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), entry, map, phase, x, y, z, o))
 #endif
@@ -2020,7 +2038,7 @@ namespace LuaGlobalFunctions
         switch (banMode)
         {
             case BAN_ACCOUNT:
-#if defined TRINITY || AZEROTHCORE
+#ifndef CMANGOS
                 if (!Utf8ToUpperOnlyLatin(nameOrIP))
                     return luaL_argerror(L, 2, "invalid account name");
 #else

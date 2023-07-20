@@ -37,6 +37,7 @@
 #include "SpellMgr.h"
 #include "TemporarySummon.h"
 #include "WorldSession.h"
+#include "WorldPacket.h"
 #else
 #include "Accounts/AccountMgr.h"
 #include "AuctionHouse/AuctionHouseMgr.h"
@@ -67,8 +68,8 @@
 #include "Spells/SpellMgr.h"
 #include "Entities/TemporarySpawn.h"
 #include "Server/WorldSession.h"
+#include "Server/WorldPacket.h"
 #endif
-#include "WorldPacket.h"
 
 #if defined TRINITY
 #include "SpellHistory.h"
@@ -76,9 +77,7 @@
 
 #if defined AZEROTHCORE
 #include "MapMgr.h"
-#elif defined CMANGOS
-#include "Maps/MapManager.h"
-#else
+#elif !defined CMANGOS
 #include "MapManager.h"
 #endif
 
@@ -107,7 +106,11 @@
 #else
 #include "Server/SQLStorages.h"
 #endif
+#ifdef MANGOS
+#include "GitRevision.h"
+#else
 #include "revision.h"
+#endif
 #endif
 
 #if (!defined(TBC) && !defined(CLASSIC))
@@ -185,10 +188,6 @@ typedef Opcodes                 OpcodesList;
 #define TARGETICONCOUNT         TARGET_ICON_COUNT
 #define MAX_TALENT_SPECS        MAX_TALENT_SPEC_COUNT
 #define TEAM_NEUTRAL            TEAM_INDEX_NEUTRAL
-
-#if defined(TBC) || defined(WOTLK) || defined(CATA)
-#define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
-#endif
 
 #ifdef TBC
 #define SPELL_AURA_MOD_KILL_XP_PCT  SPELL_AURA_MOD_XP_PCT

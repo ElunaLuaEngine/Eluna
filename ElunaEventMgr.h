@@ -11,6 +11,8 @@
 #include "Common.h"
 #ifdef TRINITY
 #include "Random.h"
+#elif defined CMANGOS
+#include "Util/Util.h"
 #else
 #include "Util.h"
 #endif

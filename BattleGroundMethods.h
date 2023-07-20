@@ -50,7 +50,7 @@ namespace LuaBattleGround
      */
     int GetMap(lua_State* L, BattleGround* bg)
     {
-        Eluna::Push(L, bg->GetBgMap());
+        Eluna::Push(L, static_cast<Map*>(bg->GetBgMap()));
         return 1;
     }
 

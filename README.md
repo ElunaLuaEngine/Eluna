@@ -31,22 +31,21 @@ You can join the official Eluna Discord server, where you'll be able to find res
 * [Contributing](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/CONTRIBUTING.md)
 
 ## Source
-Eluna source code: [Source](https://github.com/ElunaLuaEngine/Eluna)  
-Core forks with required modifications for Eluna:
+Eluna source code: [Source](https://github.com/ElunaLuaEngine/Eluna)
 
-[![Build Status](https://api.travis-ci.org/mangoszero/server.svg)](https://travis-ci.org/mangoszero/server) [Official MaNGOS Zero with Eluna](https://github.com/mangoszero/server)  
-[![Build Status](https://api.travis-ci.org/mangosone/server.svg)](https://travis-ci.org/mangosone/server) [Official MaNGOS One with Eluna](https://github.com/mangosone/server)  
-[![Build Status](https://api.travis-ci.org/mangostwo/server.svg)](https://travis-ci.org/mangostwo/server) [Official MaNGOS Two with Eluna](https://github.com/mangostwo/server)
+Core sources and forks with required modifications for Eluna:
 
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaTrinityWotlk) [Eluna TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk)
+[TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk) [![automerge](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk/actions/workflows/auto-merge.yml/badge.svg)](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk/actions/workflows/auto-merge.yml)
 
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosClassic) [Eluna cMaNGOS Classic](https://github.com/ElunaLuaEngine/ElunaMangosClassic)  
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosTbc) [Eluna cMaNGOS TBC](https://github.com/ElunaLuaEngine/ElunaMangosTbc)  
-[![Build Status](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk.png?branch=master)](https://travis-ci.org/ElunaLuaEngine/ElunaMangosWotlk) [Eluna cMaNGOS WotLK](https://github.com/ElunaLuaEngine/ElunaMangosWotlk)
+[Official MaNGOS Zero with Eluna](https://github.com/mangoszero/server)  
+[Official MaNGOS One with Eluna](https://github.com/mangosone/server)  
+[Official MaNGOS Two with Eluna](https://github.com/mangostwo/server)
 
-Core plugin modules for Eluna:
+[Eluna cMaNGOS Classic](https://github.com/Niam5/Eluna-CMaNGOS-Classic) - maintained by [Niam5](https://github.com/Niam5)  
+[Eluna cMaNGOS TBC](https://github.com/Niam5/Eluna-CMaNGOS-TBC) - maintained by [Niam5](https://github.com/Niam5)  
+[Eluna cMaNGOS WoTLK](https://github.com/Niam5/Eluna-CMaNGOS-WotLK) - maintained by [Niam5](https://github.com/Niam5)  
 
-- [AzerothCore Eluna Module](https://github.com/azerothcore/mod-eluna-lua-engine)
+[AzerothCore Eluna Module](https://github.com/azerothcore/mod-eluna)
 
 ## Links
 
