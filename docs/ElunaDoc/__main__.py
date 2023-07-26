@@ -63,8 +63,9 @@ if __name__ == '__main__':
     shutil.copytree('ElunaDoc/static', 'build/static')
 
     # Load up all files with methods we need to parse.
+    # Hard-coded to the TC files for now. Will have to add core support later on.
     print 'Finding Eluna method files...'
-    class_files = find_class_files('../')
+    class_files = find_class_files('../TrinityCore/')
 
     # Parse all the method files.
     classes = []

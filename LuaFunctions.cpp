@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2023 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -40,111 +40,111 @@ extern "C"
 luaL_Reg GlobalMethods[] =
 {
     // Hooks
-    { "RegisterPacketEvent", &LuaGlobalFunctions::RegisterPacketEvent },
-    { "RegisterServerEvent", &LuaGlobalFunctions::RegisterServerEvent },
-    { "RegisterPlayerEvent", &LuaGlobalFunctions::RegisterPlayerEvent },
-    { "RegisterGuildEvent", &LuaGlobalFunctions::RegisterGuildEvent },
-    { "RegisterGroupEvent", &LuaGlobalFunctions::RegisterGroupEvent },
-    { "RegisterCreatureEvent", &LuaGlobalFunctions::RegisterCreatureEvent },
-    { "RegisterUniqueCreatureEvent", &LuaGlobalFunctions::RegisterUniqueCreatureEvent },
-    { "RegisterCreatureGossipEvent", &LuaGlobalFunctions::RegisterCreatureGossipEvent },
-    { "RegisterGameObjectEvent", &LuaGlobalFunctions::RegisterGameObjectEvent },
-    { "RegisterGameObjectGossipEvent", &LuaGlobalFunctions::RegisterGameObjectGossipEvent },
-    { "RegisterItemEvent", &LuaGlobalFunctions::RegisterItemEvent },
-    { "RegisterItemGossipEvent", &LuaGlobalFunctions::RegisterItemGossipEvent },
-    { "RegisterPlayerGossipEvent", &LuaGlobalFunctions::RegisterPlayerGossipEvent },
-    { "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent },
-    { "RegisterMapEvent", &LuaGlobalFunctions::RegisterMapEvent },
-    { "RegisterInstanceEvent", &LuaGlobalFunctions::RegisterInstanceEvent },
+    { "RegisterPacketEvent", nullptr },
+    { "RegisterServerEvent", nullptr },
+    { "RegisterPlayerEvent", nullptr },
+    { "RegisterGuildEvent", nullptr },
+    { "RegisterGroupEvent", nullptr },
+    { "RegisterCreatureEvent", nullptr },
+    { "RegisterUniqueCreatureEvent", nullptr },
+    { "RegisterCreatureGossipEvent", nullptr },
+    { "RegisterGameObjectEvent", nullptr },
+    { "RegisterGameObjectGossipEvent", nullptr },
+    { "RegisterItemEvent", nullptr },
+    { "RegisterItemGossipEvent", nullptr },
+    { "RegisterPlayerGossipEvent", nullptr },
+    { "RegisterBGEvent", nullptr },
+    { "RegisterMapEvent", nullptr },
+    { "RegisterInstanceEvent", nullptr },
 
-    { "ClearBattleGroundEvents", &LuaGlobalFunctions::ClearBattleGroundEvents },
-    { "ClearCreatureEvents", &LuaGlobalFunctions::ClearCreatureEvents },
-    { "ClearUniqueCreatureEvents", &LuaGlobalFunctions::ClearUniqueCreatureEvents },
-    { "ClearCreatureGossipEvents", &LuaGlobalFunctions::ClearCreatureGossipEvents },
-    { "ClearGameObjectEvents", &LuaGlobalFunctions::ClearGameObjectEvents },
-    { "ClearGameObjectGossipEvents", &LuaGlobalFunctions::ClearGameObjectGossipEvents },
-    { "ClearGroupEvents", &LuaGlobalFunctions::ClearGroupEvents },
-    { "ClearGuildEvents", &LuaGlobalFunctions::ClearGuildEvents },
-    { "ClearItemEvents", &LuaGlobalFunctions::ClearItemEvents },
-    { "ClearItemGossipEvents", &LuaGlobalFunctions::ClearItemGossipEvents },
-    { "ClearPacketEvents", &LuaGlobalFunctions::ClearPacketEvents },
-    { "ClearPlayerEvents", &LuaGlobalFunctions::ClearPlayerEvents },
-    { "ClearPlayerGossipEvents", &LuaGlobalFunctions::ClearPlayerGossipEvents },
-    { "ClearServerEvents", &LuaGlobalFunctions::ClearServerEvents },
-    { "ClearMapEvents", &LuaGlobalFunctions::ClearMapEvents },
-    { "ClearInstanceEvents", &LuaGlobalFunctions::ClearInstanceEvents },
+    { "ClearBattleGroundEvents", nullptr },
+    { "ClearCreatureEvents", nullptr },
+    { "ClearUniqueCreatureEvents", nullptr },
+    { "ClearCreatureGossipEvents", nullptr },
+    { "ClearGameObjectEvents", nullptr },
+    { "ClearGameObjectGossipEvents", nullptr },
+    { "ClearGroupEvents", nullptr },
+    { "ClearGuildEvents", nullptr },
+    { "ClearItemEvents", nullptr },
+    { "ClearItemGossipEvents", nullptr },
+    { "ClearPacketEvents", nullptr },
+    { "ClearPlayerEvents", nullptr },
+    { "ClearPlayerGossipEvents", nullptr },
+    { "ClearServerEvents", nullptr },
+    { "ClearMapEvents", nullptr },
+    { "ClearInstanceEvents", nullptr },
 
     // Getters
-    { "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine },
-    { "GetCoreName", &LuaGlobalFunctions::GetCoreName },
-    { "GetRealmID", &LuaGlobalFunctions::GetRealmID },
-    { "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion },
-    { "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion },
-    { "GetQuest", &LuaGlobalFunctions::GetQuest },
-    { "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID },
-    { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName },
-    { "GetGameTime", &LuaGlobalFunctions::GetGameTime },
-    { "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld },
-    { "GetGuildByName", &LuaGlobalFunctions::GetGuildByName },
-    { "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID },
-    { "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
-    { "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID },
-    { "GetItemGUID", &LuaGlobalFunctions::GetItemGUID },
-    { "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID },
-    { "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID },
-    { "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow },
-    { "GetGUIDType", &LuaGlobalFunctions::GetGUIDType },
-    { "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry },
-    { "GetAreaName", &LuaGlobalFunctions::GetAreaName },
-    { "bit_not", &LuaGlobalFunctions::bit_not },
-    { "bit_xor", &LuaGlobalFunctions::bit_xor },
-    { "bit_rshift", &LuaGlobalFunctions::bit_rshift },
-    { "bit_lshift", &LuaGlobalFunctions::bit_lshift },
-    { "bit_or", &LuaGlobalFunctions::bit_or },
-    { "bit_and", &LuaGlobalFunctions::bit_and },
-    { "GetItemLink", &LuaGlobalFunctions::GetItemLink },
-    { "GetMapById", &LuaGlobalFunctions::GetMapById },
-    { "GetCurrTime", &LuaGlobalFunctions::GetCurrTime },
-    { "GetTimeDiff", &LuaGlobalFunctions::GetTimeDiff },
-    { "PrintInfo", &LuaGlobalFunctions::PrintInfo },
-    { "PrintError", &LuaGlobalFunctions::PrintError },
-    { "PrintDebug", &LuaGlobalFunctions::PrintDebug },
-    { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
+    { "GetLuaEngine", nullptr },
+    { "GetCoreName", nullptr },
+    { "GetRealmID", nullptr },
+    { "GetCoreVersion", nullptr },
+    { "GetCoreExpansion", nullptr },
+    { "GetQuest", nullptr },
+    { "GetPlayerByGUID", nullptr },
+    { "GetPlayerByName", nullptr },
+    { "GetGameTime", nullptr },
+    { "GetPlayersInWorld", nullptr },
+    { "GetGuildByName", nullptr },
+    { "GetGuildByLeaderGUID", nullptr },
+    { "GetPlayerCount", nullptr },
+    { "GetPlayerGUID", nullptr },
+    { "GetItemGUID", nullptr },
+    { "GetObjectGUID", nullptr },
+    { "GetUnitGUID", nullptr },
+    { "GetGUIDLow", nullptr },
+    { "GetGUIDType", nullptr },
+    { "GetGUIDEntry", nullptr },
+    { "GetAreaName", nullptr },
+    { "bit_not", nullptr },
+    { "bit_xor", nullptr },
+    { "bit_rshift", nullptr },
+    { "bit_lshift", nullptr },
+    { "bit_or", nullptr },
+    { "bit_and", nullptr },
+    { "GetItemLink", nullptr },
+    { "GetMapById", nullptr },
+    { "GetCurrTime", nullptr },
+    { "GetTimeDiff", nullptr },
+    { "PrintInfo", nullptr },
+    { "PrintError", nullptr },
+    { "PrintDebug", nullptr },
+    { "GetActiveGameEvents", nullptr },
 
     // Boolean
-    { "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },
-    { "IsEquipmentPos", &LuaGlobalFunctions::IsEquipmentPos },
-    { "IsBankPos", &LuaGlobalFunctions::IsBankPos },
-    { "IsBagPos", &LuaGlobalFunctions::IsBagPos },
-    { "IsGameEventActive", &LuaGlobalFunctions::IsGameEventActive },
+    { "IsInventoryPos", nullptr },
+    { "IsEquipmentPos", nullptr },
+    { "IsBankPos", nullptr },
+    { "IsBagPos", nullptr },
+    { "IsGameEventActive", nullptr },
 
     // Other
-    { "ReloadEluna", &LuaGlobalFunctions::ReloadEluna },
-    { "RunCommand", &LuaGlobalFunctions::RunCommand },
-    { "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage },
-    { "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery },
-    { "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute },
-    { "CharDBQuery", &LuaGlobalFunctions::CharDBQuery },
-    { "CharDBExecute", &LuaGlobalFunctions::CharDBExecute },
-    { "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery },
-    { "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute },
-    { "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
-    { "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
-    { "RemoveEvents", &LuaGlobalFunctions::RemoveEvents },
-    { "PerformIngameSpawn", &LuaGlobalFunctions::PerformIngameSpawn },
-    { "CreatePacket", &LuaGlobalFunctions::CreatePacket },
-    { "AddVendorItem", &LuaGlobalFunctions::AddVendorItem },
-    { "VendorRemoveItem", &LuaGlobalFunctions::VendorRemoveItem },
-    { "VendorRemoveAllItems", &LuaGlobalFunctions::VendorRemoveAllItems },
-    { "Kick", &LuaGlobalFunctions::Kick },
-    { "Ban", &LuaGlobalFunctions::Ban },
-    { "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers },
-    { "SendMail", &LuaGlobalFunctions::SendMail },
-    { "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
-    { "CreateInt64", &LuaGlobalFunctions::CreateLongLong },
-    { "CreateUint64", &LuaGlobalFunctions::CreateULongLong },
-    { "StartGameEvent", &LuaGlobalFunctions::StartGameEvent },
-    { "StopGameEvent", &LuaGlobalFunctions::StopGameEvent },
+    { "ReloadEluna", nullptr },
+    { "RunCommand", nullptr },
+    { "SendWorldMessage", nullptr },
+    { "WorldDBQuery", nullptr },
+    { "WorldDBExecute", nullptr },
+    { "CharDBQuery", nullptr },
+    { "CharDBExecute", nullptr },
+    { "AuthDBQuery", nullptr },
+    { "AuthDBExecute", nullptr },
+    { "CreateLuaEvent", nullptr },
+    { "RemoveEventById", nullptr },
+    { "RemoveEvents", nullptr },
+    { "PerformIngameSpawn", nullptr },
+    { "CreatePacket", nullptr },
+    { "AddVendorItem", nullptr },
+    { "VendorRemoveItem", nullptr },
+    { "VendorRemoveAllItems", nullptr },
+    { "Kick", nullptr },
+    { "Ban", nullptr },
+    { "SaveAllPlayers", nullptr },
+    { "SendMail", nullptr },
+    { "AddTaxiPath", nullptr },
+    { "CreateInt64", nullptr },
+    { "CreateUint64", nullptr },
+    { "StartGameEvent", nullptr },
+    { "StopGameEvent", nullptr },
 
     { NULL, NULL }
 };
@@ -152,41 +152,41 @@ luaL_Reg GlobalMethods[] =
 ElunaRegister<Object> ObjectMethods[] =
 {
     // Getters
-    { "GetEntry", &LuaObject::GetEntry },
-    { "GetGUID", &LuaObject::GetGUID },
-    { "GetGUIDLow", &LuaObject::GetGUIDLow },
-    { "GetInt32Value", &LuaObject::GetInt32Value },
-    { "GetUInt32Value", &LuaObject::GetUInt32Value },
-    { "GetFloatValue", &LuaObject::GetFloatValue },
-    { "GetByteValue", &LuaObject::GetByteValue },
-    { "GetUInt16Value", &LuaObject::GetUInt16Value },
-    { "GetUInt64Value", &LuaObject::GetUInt64Value },
-    { "GetScale", &LuaObject::GetScale },
-    { "GetTypeId", &LuaObject::GetTypeId },
+    { "GetEntry", nullptr },
+    { "GetGUID", nullptr },
+    { "GetGUIDLow", nullptr },
+    { "GetInt32Value", nullptr },
+    { "GetUInt32Value", nullptr },
+    { "GetFloatValue", nullptr },
+    { "GetByteValue", nullptr },
+    { "GetUInt16Value", nullptr },
+    { "GetUInt64Value", nullptr },
+    { "GetScale", nullptr },
+    { "GetTypeId", nullptr },
 
     // Setters
-    { "SetInt32Value", &LuaObject::SetInt32Value },
-    { "SetUInt32Value", &LuaObject::SetUInt32Value },
-    { "UpdateUInt32Value", &LuaObject::UpdateUInt32Value },
-    { "SetFloatValue", &LuaObject::SetFloatValue },
-    { "SetByteValue", &LuaObject::SetByteValue },
-    { "SetUInt16Value", &LuaObject::SetUInt16Value },
-    { "SetInt16Value", &LuaObject::SetInt16Value },
-    { "SetUInt64Value", &LuaObject::SetUInt64Value },
-    { "SetScale", &LuaObject::SetScale },
-    { "SetFlag", &LuaObject::SetFlag },
+    { "SetInt32Value", nullptr },
+    { "SetUInt32Value", nullptr },
+    { "UpdateUInt32Value", nullptr },
+    { "SetFloatValue", nullptr },
+    { "SetByteValue", nullptr },
+    { "SetUInt16Value", nullptr },
+    { "SetInt16Value", nullptr },
+    { "SetUInt64Value", nullptr },
+    { "SetScale", nullptr },
+    { "SetFlag", nullptr },
 
     // Boolean
-    { "IsInWorld", &LuaObject::IsInWorld },
-    { "HasFlag", &LuaObject::HasFlag },
+    { "IsInWorld", nullptr },
+    { "HasFlag", nullptr },
 
     // Other
-    { "ToGameObject", &LuaObject::ToGameObject },
-    { "ToUnit", &LuaObject::ToUnit },
-    { "ToCreature", &LuaObject::ToCreature },
-    { "ToPlayer", &LuaObject::ToPlayer },
-    { "ToCorpse", &LuaObject::ToCorpse },
-    { "RemoveFlag", &LuaObject::RemoveFlag },
+    { "ToGameObject", nullptr },
+    { "ToUnit", nullptr },
+    { "ToCreature", nullptr },
+    { "ToPlayer", nullptr },
+    { "ToCorpse", nullptr },
+    { "RemoveFlag", nullptr },
 
     { NULL, NULL }
 };
@@ -194,59 +194,59 @@ ElunaRegister<Object> ObjectMethods[] =
 ElunaRegister<WorldObject> WorldObjectMethods[] =
 {
     // Getters
-    { "GetName", &LuaWorldObject::GetName },
-    { "GetMap", &LuaWorldObject::GetMap },
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "GetPhaseMask", &LuaWorldObject::GetPhaseMask },
-    { "SetPhaseMask", &LuaWorldObject::SetPhaseMask },
-#endif
-    { "GetInstanceId", &LuaWorldObject::GetInstanceId },
-    { "GetAreaId", &LuaWorldObject::GetAreaId },
-    { "GetZoneId", &LuaWorldObject::GetZoneId },
-    { "GetMapId", &LuaWorldObject::GetMapId },
-    { "GetX", &LuaWorldObject::GetX },
-    { "GetY", &LuaWorldObject::GetY },
-    { "GetZ", &LuaWorldObject::GetZ },
-    { "GetO", &LuaWorldObject::GetO },
-    { "GetLocation", &LuaWorldObject::GetLocation },
-    { "GetPlayersInRange", &LuaWorldObject::GetPlayersInRange },
-    { "GetCreaturesInRange", &LuaWorldObject::GetCreaturesInRange },
-    { "GetGameObjectsInRange", &LuaWorldObject::GetGameObjectsInRange },
-    { "GetNearestPlayer", &LuaWorldObject::GetNearestPlayer },
-    { "GetNearestGameObject", &LuaWorldObject::GetNearestGameObject },
-    { "GetNearestCreature", &LuaWorldObject::GetNearestCreature },
-    { "GetNearObject", &LuaWorldObject::GetNearObject },
-    { "GetNearObjects", &LuaWorldObject::GetNearObjects },
-    { "GetDistance", &LuaWorldObject::GetDistance },
-    { "GetExactDistance", &LuaWorldObject::GetExactDistance },
-    { "GetDistance2d", &LuaWorldObject::GetDistance2d },
-    { "GetExactDistance2d", &LuaWorldObject::GetExactDistance2d },
-    { "GetRelativePoint", &LuaWorldObject::GetRelativePoint },
-    { "GetAngle", &LuaWorldObject::GetAngle },
+    { "GetName", nullptr },
+    { "GetMap", nullptr },
+                                        
+    { "GetPhaseMask", nullptr },
+    { "SetPhaseMask", nullptr },
+      
+    { "GetInstanceId", nullptr },
+    { "GetAreaId", nullptr },
+    { "GetZoneId", nullptr },
+    { "GetMapId", nullptr },
+    { "GetX", nullptr },
+    { "GetY", nullptr },
+    { "GetZ", nullptr },
+    { "GetO", nullptr },
+    { "GetLocation", nullptr },
+    { "GetPlayersInRange", nullptr },
+    { "GetCreaturesInRange", nullptr },
+    { "GetGameObjectsInRange", nullptr },
+    { "GetNearestPlayer", nullptr },
+    { "GetNearestGameObject", nullptr },
+    { "GetNearestCreature", nullptr },
+    { "GetNearObject", nullptr },
+    { "GetNearObjects", nullptr },
+    { "GetDistance", nullptr },
+    { "GetExactDistance", nullptr },
+    { "GetDistance2d", nullptr },
+    { "GetExactDistance2d", nullptr },
+    { "GetRelativePoint", nullptr },
+    { "GetAngle", nullptr },
 
     // Boolean
-    { "IsWithinLoS", &LuaWorldObject::IsWithinLoS },
-    { "IsInMap", &LuaWorldObject::IsInMap },
-    { "IsWithinDist3d", &LuaWorldObject::IsWithinDist3d },
-    { "IsWithinDist2d", &LuaWorldObject::IsWithinDist2d },
-    { "IsWithinDist", &LuaWorldObject::IsWithinDist },
-    { "IsWithinDistInMap", &LuaWorldObject::IsWithinDistInMap },
-    { "IsInRange", &LuaWorldObject::IsInRange },
-    { "IsInRange2d", &LuaWorldObject::IsInRange2d },
-    { "IsInRange3d", &LuaWorldObject::IsInRange3d },
-    { "IsInFront", &LuaWorldObject::IsInFront },
-    { "IsInBack", &LuaWorldObject::IsInBack },
+    { "IsWithinLoS", nullptr },
+    { "IsInMap", nullptr },
+    { "IsWithinDist3d", nullptr },
+    { "IsWithinDist2d", nullptr },
+    { "IsWithinDist", nullptr },
+    { "IsWithinDistInMap", nullptr },
+    { "IsInRange", nullptr },
+    { "IsInRange2d", nullptr },
+    { "IsInRange3d", nullptr },
+    { "IsInFront", nullptr },
+    { "IsInBack", nullptr },
 
     // Other
-    { "SummonGameObject", &LuaWorldObject::SummonGameObject },
-    { "SpawnCreature", &LuaWorldObject::SpawnCreature },
-    { "SendPacket", &LuaWorldObject::SendPacket },
-    { "RegisterEvent", &LuaWorldObject::RegisterEvent },
-    { "RemoveEventById", &LuaWorldObject::RemoveEventById },
-    { "RemoveEvents", &LuaWorldObject::RemoveEvents },
-    { "PlayMusic", &LuaWorldObject::PlayMusic },
-    { "PlayDirectSound", &LuaWorldObject::PlayDirectSound },
-    { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound },
+    { "SummonGameObject", nullptr },
+    { "SpawnCreature", nullptr },
+    { "SendPacket", nullptr },
+    { "RegisterEvent", nullptr },
+    { "RemoveEventById", nullptr },
+    { "RemoveEvents", nullptr },
+    { "PlayMusic", nullptr },
+    { "PlayDirectSound", nullptr },
+    { "PlayDistanceSound", nullptr },
 
     { NULL, NULL }
 };
@@ -254,190 +254,190 @@ ElunaRegister<WorldObject> WorldObjectMethods[] =
 ElunaRegister<Unit> UnitMethods[] =
 {
     // Getters
-    { "GetLevel", &LuaUnit::GetLevel },
-    { "GetHealth", &LuaUnit::GetHealth },
-    { "GetDisplayId", &LuaUnit::GetDisplayId },
-    { "GetNativeDisplayId", &LuaUnit::GetNativeDisplayId },
-    { "GetPower", &LuaUnit::GetPower },
-    { "GetMaxPower", &LuaUnit::GetMaxPower },
-    { "GetPowerType", &LuaUnit::GetPowerType },
-    { "GetMaxHealth", &LuaUnit::GetMaxHealth },
-    { "GetHealthPct", &LuaUnit::GetHealthPct },
-    { "GetPowerPct", &LuaUnit::GetPowerPct },
-    { "GetGender", &LuaUnit::GetGender },
-    { "GetRace", &LuaUnit::GetRace },
-    { "GetClass", &LuaUnit::GetClass },
-    { "GetRaceMask", &LuaUnit::GetRaceMask },
-    { "GetClassMask", &LuaUnit::GetClassMask },
-    { "GetRaceAsString", &LuaUnit::GetRaceAsString },
-    { "GetClassAsString", &LuaUnit::GetClassAsString },
-    { "GetAura", &LuaUnit::GetAura },
-    { "GetFaction", &LuaUnit::GetFaction },
-    { "GetCurrentSpell", &LuaUnit::GetCurrentSpell },
-    { "GetCreatureType", &LuaUnit::GetCreatureType },
-    { "GetMountId", &LuaUnit::GetMountId },
-    { "GetOwner", &LuaUnit::GetOwner },
-    { "GetFriendlyUnitsInRange", &LuaUnit::GetFriendlyUnitsInRange },
-    { "GetUnfriendlyUnitsInRange", &LuaUnit::GetUnfriendlyUnitsInRange },
-    { "GetOwnerGUID", &LuaUnit::GetOwnerGUID },
-    { "GetCreatorGUID", &LuaUnit::GetCreatorGUID },
-    { "GetMinionGUID", &LuaUnit::GetPetGUID },
-    { "GetCharmerGUID", &LuaUnit::GetCharmerGUID },
-    { "GetCharmGUID", &LuaUnit::GetCharmGUID },
-    { "GetPetGUID", &LuaUnit::GetPetGUID },
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "GetCritterGUID", &LuaUnit::GetCritterGUID },
-#endif
-    { "GetControllerGUID", &LuaUnit::GetControllerGUID },
-    { "GetControllerGUIDS", &LuaUnit::GetControllerGUIDS },
-    { "GetStandState", &LuaUnit::GetStandState },
-    { "GetVictim", &LuaUnit::GetVictim },
-    { "GetSpeed", &LuaUnit::GetSpeed },
-    { "GetStat", &LuaUnit::GetStat },
-    { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "GetVehicleKit", &LuaUnit::GetVehicleKit },
-    // {"GetVehicle", &LuaUnit::GetVehicle},                           // :GetVehicle() - UNDOCUMENTED - Gets the Vehicle kit of the vehicle the unit is on
-#endif
-    { "GetMovementType", &LuaUnit::GetMovementType },
+    { "GetLevel", nullptr },
+    { "GetHealth", nullptr },
+    { "GetDisplayId", nullptr },
+    { "GetNativeDisplayId", nullptr },
+    { "GetPower", nullptr },
+    { "GetMaxPower", nullptr },
+    { "GetPowerType", nullptr },
+    { "GetMaxHealth", nullptr },
+    { "GetHealthPct", nullptr },
+    { "GetPowerPct", nullptr },
+    { "GetGender", nullptr },
+    { "GetRace", nullptr },
+    { "GetClass", nullptr },
+    { "GetRaceMask", nullptr },
+    { "GetClassMask", nullptr },
+    { "GetRaceAsString", nullptr },
+    { "GetClassAsString", nullptr },
+    { "GetAura", nullptr },
+    { "GetFaction", nullptr },
+    { "GetCurrentSpell", nullptr },
+    { "GetCreatureType", nullptr },
+    { "GetMountId", nullptr },
+    { "GetOwner", nullptr },
+    { "GetFriendlyUnitsInRange", nullptr },
+    { "GetUnfriendlyUnitsInRange", nullptr },
+    { "GetOwnerGUID", nullptr },
+    { "GetCreatorGUID", nullptr },
+    { "GetMinionGUID", nullptr },
+    { "GetCharmerGUID", nullptr },
+    { "GetCharmGUID", nullptr },
+    { "GetPetGUID", nullptr },
+                                        
+    { "GetCritterGUID", nullptr },
+      
+    { "GetControllerGUID", nullptr },
+    { "GetControllerGUIDS", nullptr },
+    { "GetStandState", nullptr },
+    { "GetVictim", nullptr },
+    { "GetSpeed", nullptr },
+    { "GetStat", nullptr },
+    { "GetBaseSpellPower", nullptr },
+                                        
+    { "GetVehicleKit", nullptr },
+    { "GetVehicle", nullptr },
+      
+    { "GetMovementType", nullptr },
 
     // Setters
-    { "SetFaction", &LuaUnit::SetFaction },
-    { "SetLevel", &LuaUnit::SetLevel },
-    { "SetHealth", &LuaUnit::SetHealth },
-    { "SetMaxHealth", &LuaUnit::SetMaxHealth },
-    { "SetPower", &LuaUnit::SetPower },
-    { "SetMaxPower", &LuaUnit::SetMaxPower },
-    { "SetPowerType", &LuaUnit::SetPowerType },
-    { "SetDisplayId", &LuaUnit::SetDisplayId },
-    { "SetNativeDisplayId", &LuaUnit::SetNativeDisplayId },
-    { "SetFacing", &LuaUnit::SetFacing },
-    { "SetFacingToObject", &LuaUnit::SetFacingToObject },
-    { "SetSpeed", &LuaUnit::SetSpeed },
-    // {"SetStunned", &LuaUnit::SetStunned},                           // :SetStunned([enable]) - UNDOCUMENTED - Stuns or removes stun
-    {"SetRooted", &LuaUnit::SetRooted},
-    {"SetConfused", &LuaUnit::SetConfused},
-    {"SetFeared", &LuaUnit::SetFeared},
-    { "SetPvP", &LuaUnit::SetPvP },
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "SetFFA", &LuaUnit::SetFFA },
-    { "SetSanctuary", &LuaUnit::SetSanctuary },
-#endif
-    // {"SetCanFly", &LuaUnit::SetCanFly},                             // :SetCanFly(apply) - UNDOCUMENTED
-    // {"SetVisible", &LuaUnit::SetVisible},                           // :SetVisible(x) - UNDOCUMENTED
-    { "SetOwnerGUID", &LuaUnit::SetOwnerGUID },
-    { "SetName", &LuaUnit::SetName },
-    { "SetSheath", &LuaUnit::SetSheath },
-    { "SetCreatorGUID", &LuaUnit::SetCreatorGUID },
-    { "SetMinionGUID", &LuaUnit::SetPetGUID },
-    { "SetPetGUID", &LuaUnit::SetPetGUID },
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "SetCritterGUID", &LuaUnit::SetCritterGUID },
-#endif
-    { "SetWaterWalk", &LuaUnit::SetWaterWalk },
-    { "SetStandState", &LuaUnit::SetStandState },
-    { "SetInCombatWith", &LuaUnit::SetInCombatWith },
-    { "ModifyPower", &LuaUnit::ModifyPower },
+    { "SetFaction", nullptr },
+    { "SetLevel", nullptr },
+    { "SetHealth", nullptr },
+    { "SetMaxHealth", nullptr },
+    { "SetPower", nullptr },
+    { "SetMaxPower", nullptr },
+    { "SetPowerType", nullptr },
+    { "SetDisplayId", nullptr },
+    { "SetNativeDisplayId", nullptr },
+    { "SetFacing", nullptr },
+    { "SetFacingToObject", nullptr },
+    { "SetSpeed", nullptr },
+    { "SetStunned", nullptr },
+    { "SetRooted", nullptr },
+    { "SetConfused", nullptr },
+    { "SetFeared", nullptr },
+    { "SetPvP", nullptr },
+                                        
+    { "SetFFA", nullptr },
+    { "SetSanctuary", nullptr },
+      
+    { "SetCanFly", nullptr },
+    { "SetVisible", nullptr },
+    { "SetOwnerGUID", nullptr },
+    { "SetName", nullptr },
+    { "SetSheath", nullptr },
+    { "SetCreatorGUID", nullptr },
+    { "SetMinionGUID", nullptr },
+    { "SetPetGUID", nullptr },
+                                        
+    { "SetCritterGUID", nullptr },
+      
+    { "SetWaterWalk", nullptr },
+    { "SetStandState", nullptr },
+    { "SetInCombatWith", nullptr },
+    { "ModifyPower", nullptr },
 
     // Boolean
-    { "IsAlive", &LuaUnit::IsAlive },
-    { "IsDead", &LuaUnit::IsDead },
-    { "IsDying", &LuaUnit::IsDying },
-    { "IsPvPFlagged", &LuaUnit::IsPvPFlagged },
-    { "IsInCombat", &LuaUnit::IsInCombat },
-    { "IsBanker", &LuaUnit::IsBanker },
-    { "IsBattleMaster", &LuaUnit::IsBattleMaster },
-    { "IsCharmed", &LuaUnit::IsCharmed },
-    { "IsArmorer", &LuaUnit::IsArmorer },
-    { "IsAttackingPlayer", &LuaUnit::IsAttackingPlayer },
-    { "IsInWater", &LuaUnit::IsInWater },
-    { "IsUnderWater", &LuaUnit::IsUnderWater },
-    { "IsAuctioneer", &LuaUnit::IsAuctioneer },
-    { "IsGuildMaster", &LuaUnit::IsGuildMaster },
-    { "IsInnkeeper", &LuaUnit::IsInnkeeper },
-    { "IsTrainer", &LuaUnit::IsTrainer },
-    { "IsGossip", &LuaUnit::IsGossip },
-    { "IsTaxi", &LuaUnit::IsTaxi },
-    { "IsSpiritHealer", &LuaUnit::IsSpiritHealer },
-    { "IsSpiritGuide", &LuaUnit::IsSpiritGuide },
-    { "IsTabardDesigner", &LuaUnit::IsTabardDesigner },
-    { "IsServiceProvider", &LuaUnit::IsServiceProvider },
-    { "IsSpiritService", &LuaUnit::IsSpiritService },
-    { "HealthBelowPct", &LuaUnit::HealthBelowPct },
-    { "HealthAbovePct", &LuaUnit::HealthAbovePct },
-    { "IsMounted", &LuaUnit::IsMounted },
-    { "AttackStop", &LuaUnit::AttackStop },
-    { "Attack", &LuaUnit::Attack },
-    // {"IsVisible", &LuaUnit::IsVisible},                              // :IsVisible() - UNDOCUMENTED
-    // {"IsMoving", &LuaUnit::IsMoving},                                // :IsMoving() - UNDOCUMENTED
-    // {"IsFlying", &LuaUnit::IsFlying},                                // :IsFlying() - UNDOCUMENTED
-    { "IsStopped", &LuaUnit::IsStopped },
-    { "HasUnitState", &LuaUnit::HasUnitState },
-    { "IsQuestGiver", &LuaUnit::IsQuestGiver },
-    { "IsInAccessiblePlaceFor", &LuaUnit::IsInAccessiblePlaceFor },
-    { "IsVendor", &LuaUnit::IsVendor },
-    { "IsRooted", &LuaUnit::IsRooted },
-    { "IsFullHealth", &LuaUnit::IsFullHealth },
-    { "HasAura", &LuaUnit::HasAura },
-    { "IsCasting", &LuaUnit::IsCasting },
-    { "IsStandState", &LuaUnit::IsStandState },
-#ifndef CLASSIC
-    { "IsOnVehicle", &LuaUnit::IsOnVehicle },
-#endif
+    { "IsAlive", nullptr },
+    { "IsDead", nullptr },
+    { "IsDying", nullptr },
+    { "IsPvPFlagged", nullptr },
+    { "IsInCombat", nullptr },
+    { "IsBanker", nullptr },
+    { "IsBattleMaster", nullptr },
+    { "IsCharmed", nullptr },
+    { "IsArmorer", nullptr },
+    { "IsAttackingPlayer", nullptr },
+    { "IsInWater", nullptr },
+    { "IsUnderWater", nullptr },
+    { "IsAuctioneer", nullptr },
+    { "IsGuildMaster", nullptr },
+    { "IsInnkeeper", nullptr },
+    { "IsTrainer", nullptr },
+    { "IsGossip", nullptr },
+    { "IsTaxi", nullptr },
+    { "IsSpiritHealer", nullptr },
+    { "IsSpiritGuide", nullptr },
+    { "IsTabardDesigner", nullptr },
+    { "IsServiceProvider", nullptr },
+    { "IsSpiritService", nullptr },
+    { "HealthBelowPct", nullptr },
+    { "HealthAbovePct", nullptr },
+    { "IsMounted", nullptr },
+    { "AttackStop", nullptr },
+    { "Attack", nullptr },
+    { "IsVisible", nullptr },
+    { "IsMoving", nullptr },
+    { "IsFlying", nullptr },
+    { "IsStopped", nullptr },
+    { "HasUnitState", nullptr },
+    { "IsQuestGiver", nullptr },
+    { "IsInAccessiblePlaceFor", nullptr },
+    { "IsVendor", nullptr },
+    { "IsRooted", nullptr },
+    { "IsFullHealth", nullptr },
+    { "HasAura", nullptr },
+    { "IsCasting", nullptr },
+    { "IsStandState", nullptr },
+               
+    { "IsOnVehicle", nullptr },
+      
 
     // Other
-    { "AddAura", &LuaUnit::AddAura },
-    { "RemoveAura", &LuaUnit::RemoveAura },
-    { "RemoveAllAuras", &LuaUnit::RemoveAllAuras },
-#if !defined(CLASSIC)
-    { "RemoveArenaAuras", &LuaUnit::RemoveArenaAuras },
-#endif
-    { "ClearInCombat", &LuaUnit::ClearInCombat },
-    { "DeMorph", &LuaUnit::DeMorph },
-    { "SendUnitWhisper", &LuaUnit::SendUnitWhisper },
-    { "SendUnitEmote", &LuaUnit::SendUnitEmote },
-    { "SendUnitSay", &LuaUnit::SendUnitSay },
-    { "SendUnitYell", &LuaUnit::SendUnitYell },
-    { "CastSpell", &LuaUnit::CastSpell },
-    { "CastCustomSpell", &LuaUnit::CastCustomSpell },
-    { "CastSpellAoF", &LuaUnit::CastSpellAoF },
-    { "Kill", &LuaUnit::Kill },
-    { "StopSpellCast", &LuaUnit::StopSpellCast },
-    { "InterruptSpell", &LuaUnit::InterruptSpell },
-    { "SendChatMessageToPlayer", &LuaUnit::SendChatMessageToPlayer },
-    { "PerformEmote", &LuaUnit::PerformEmote },
-    { "EmoteState", &LuaUnit::EmoteState },
-    { "CountPctFromCurHealth", &LuaUnit::CountPctFromCurHealth },
-    { "CountPctFromMaxHealth", &LuaUnit::CountPctFromMaxHealth },
-    { "Dismount", &LuaUnit::Dismount },
-    { "Mount", &LuaUnit::Mount },
-    // {"RestoreDisplayId", &LuaUnit::RestoreDisplayId},                // :RestoreDisplayId() - UNDOCUMENTED
-    // {"RestoreFaction", &LuaUnit::RestoreFaction},                    // :RestoreFaction() - UNDOCUMENTED
-    // {"RemoveBindSightAuras", &LuaUnit::RemoveBindSightAuras},        // :RemoveBindSightAuras() - UNDOCUMENTED
-    // {"RemoveCharmAuras", &LuaUnit::RemoveCharmAuras},                // :RemoveCharmAuras() - UNDOCUMENTED
-    { "ClearThreatList", &LuaUnit::ClearThreatList },
-    { "ClearUnitState", &LuaUnit::ClearUnitState },
-    { "AddUnitState", &LuaUnit::AddUnitState },
-    // {"DisableMelee", &LuaUnit::DisableMelee},                        // :DisableMelee([disable]) - UNDOCUMENTED - if true, enables
-    // {"SummonGuardian", &LuaUnit::SummonGuardian},                    // :SummonGuardian(entry, x, y, z, o[, duration]) - UNDOCUMENTED - summons a guardian to location. Scales with summoner, is friendly to him and guards him.
-    { "NearTeleport", &LuaUnit::NearTeleport },
-    { "MoveIdle", &LuaUnit::MoveIdle },
-    { "MoveRandom", &LuaUnit::MoveRandom },
-    { "MoveHome", &LuaUnit::MoveHome },
-    { "MoveFollow", &LuaUnit::MoveFollow },
-    { "MoveChase", &LuaUnit::MoveChase },
-    { "MoveConfused", &LuaUnit::MoveConfused },
-    { "MoveFleeing", &LuaUnit::MoveFleeing },
-    { "MoveTo", &LuaUnit::MoveTo },
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "MoveJump", &LuaUnit::MoveJump },
-#endif
-    { "MoveStop", &LuaUnit::MoveStop },
-    { "MoveExpire", &LuaUnit::MoveExpire },
-    { "MoveClear", &LuaUnit::MoveClear },
-    { "DealDamage", &LuaUnit::DealDamage },
-    { "DealHeal", &LuaUnit::DealHeal },
-    { "AddThreat", &LuaUnit::AddThreat },
+    { "AddAura", nullptr },
+    { "RemoveAura", nullptr },
+    { "RemoveAllAuras", nullptr },
+                     
+    { "RemoveArenaAuras", nullptr },
+      
+    { "ClearInCombat", nullptr },
+    { "DeMorph", nullptr },
+    { "SendUnitWhisper", nullptr },
+    { "SendUnitEmote", nullptr },
+    { "SendUnitSay", nullptr },
+    { "SendUnitYell", nullptr },
+    { "CastSpell", nullptr },
+    { "CastCustomSpell", nullptr },
+    { "CastSpellAoF", nullptr },
+    { "Kill", nullptr },
+    { "StopSpellCast", nullptr },
+    { "InterruptSpell", nullptr },
+    { "SendChatMessageToPlayer", nullptr },
+    { "PerformEmote", nullptr },
+    { "EmoteState", nullptr },
+    { "CountPctFromCurHealth", nullptr },
+    { "CountPctFromMaxHealth", nullptr },
+    { "Dismount", nullptr },
+    { "Mount", nullptr },
+    { "RestoreDisplayId", nullptr },
+    { "RestoreFaction", nullptr },
+    { "RemoveBindSightAuras", nullptr },
+    { "RemoveCharmAuras", nullptr },
+    { "ClearThreatList", nullptr },
+    { "ClearUnitState", nullptr },
+    { "AddUnitState", nullptr },
+    { "DisableMelee", nullptr },
+    { "SummonGuardian", nullptr },
+    { "NearTeleport", nullptr },
+    { "MoveIdle", nullptr },
+    { "MoveRandom", nullptr },
+    { "MoveHome", nullptr },
+    { "MoveFollow", nullptr },
+    { "MoveChase", nullptr },
+    { "MoveConfused", nullptr },
+    { "MoveFleeing", nullptr },
+    { "MoveTo", nullptr },
+                                        
+    { "MoveJump", nullptr },
+      
+    { "MoveStop", nullptr },
+    { "MoveExpire", nullptr },
+    { "MoveClear", nullptr },
+    { "DealDamage", nullptr },
+    { "DealHeal", nullptr },
+    { "AddThreat", nullptr },
 
     { NULL, NULL }
 };
@@ -445,322 +445,322 @@ ElunaRegister<Unit> UnitMethods[] =
 ElunaRegister<Player> PlayerMethods[] =
 {
     // Getters
-    { "GetSelection", &LuaPlayer::GetSelection },
-    { "GetGMRank", &LuaPlayer::GetGMRank },
-    { "GetGuildId", &LuaPlayer::GetGuildId },
-    { "GetCoinage", &LuaPlayer::GetCoinage },
-    { "GetTeam", &LuaPlayer::GetTeam },
-    { "GetItemCount", &LuaPlayer::GetItemCount },
-    { "GetGroup", &LuaPlayer::GetGroup },
-    { "GetGuild", &LuaPlayer::GetGuild },
-    { "GetAccountId", &LuaPlayer::GetAccountId },
-    { "GetAccountName", &LuaPlayer::GetAccountName },
-#if defined (TBC) || defined (WOTLK)
-    { "GetArenaPoints", &LuaPlayer::GetArenaPoints },
-    { "GetHonorPoints", &LuaPlayer::GetHonorPoints },
-#endif
-    { "GetLifetimeKills", &LuaPlayer::GetLifetimeKills },
-    { "GetPlayerIP", &LuaPlayer::GetPlayerIP },
-    { "GetLevelPlayedTime", &LuaPlayer::GetLevelPlayedTime },
-    { "GetTotalPlayedTime", &LuaPlayer::GetTotalPlayedTime },
-    { "GetItemByPos", &LuaPlayer::GetItemByPos },
-    { "GetItemByEntry", &LuaPlayer::GetItemByEntry },
-    { "GetItemByGUID", &LuaPlayer::GetItemByGUID },
-    { "GetMailItem", &LuaPlayer::GetMailItem },
-    { "GetReputation", &LuaPlayer::GetReputation },
-    { "GetEquippedItemBySlot", &LuaPlayer::GetEquippedItemBySlot },
-    { "GetQuestLevel", &LuaPlayer::GetQuestLevel },
-    { "GetChatTag", &LuaPlayer::GetChatTag },
-    { "GetRestBonus", &LuaPlayer::GetRestBonus },
-#ifdef WOTLK
-    { "GetPhaseMaskForSpawn", &LuaPlayer::GetPhaseMaskForSpawn },
-#endif
-    { "GetReqKillOrCastCurrentCount", &LuaPlayer::GetReqKillOrCastCurrentCount },
-    { "GetQuestStatus", &LuaPlayer::GetQuestStatus },
-    { "GetInGameTime", &LuaPlayer::GetInGameTime },
-    { "GetComboPoints", &LuaPlayer::GetComboPoints },
-    { "GetComboTarget", &LuaPlayer::GetComboTarget },
-    { "GetGuildName", &LuaPlayer::GetGuildName },
-    { "GetFreeTalentPoints", &LuaPlayer::GetFreeTalentPoints },
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "GetActiveSpec", &LuaPlayer::GetActiveSpec },
-    { "GetSpecsCount", &LuaPlayer::GetSpecsCount },
-#endif
-    { "GetSpellCooldownDelay", &LuaPlayer::GetSpellCooldownDelay },
-    { "GetGuildRank", &LuaPlayer::GetGuildRank },
-    { "GetDifficulty", &LuaPlayer::GetDifficulty },
-    { "GetHealthBonusFromStamina", &LuaPlayer::GetHealthBonusFromStamina },
-    { "GetManaBonusFromIntellect", &LuaPlayer::GetManaBonusFromIntellect },
-    { "GetMaxSkillValue", &LuaPlayer::GetMaxSkillValue },
-    { "GetPureMaxSkillValue", &LuaPlayer::GetPureMaxSkillValue },
-    { "GetSkillValue", &LuaPlayer::GetSkillValue },
-    { "GetBaseSkillValue", &LuaPlayer::GetBaseSkillValue },
-    { "GetPureSkillValue", &LuaPlayer::GetPureSkillValue },
-    { "GetSkillPermBonusValue", &LuaPlayer::GetSkillPermBonusValue },
-    { "GetSkillTempBonusValue", &LuaPlayer::GetSkillTempBonusValue },
-    { "GetReputationRank", &LuaPlayer::GetReputationRank },
-    { "GetDrunkValue", &LuaPlayer::GetDrunkValue },
-    { "GetBattlegroundId", &LuaPlayer::GetBattlegroundId },
-    { "GetBattlegroundTypeId", &LuaPlayer::GetBattlegroundTypeId },
-    { "GetXPRestBonus", &LuaPlayer::GetXPRestBonus },
-    { "GetGroupInvite", &LuaPlayer::GetGroupInvite },
-    { "GetSubGroup", &LuaPlayer::GetSubGroup },
-    { "GetNextRandomRaidMember", &LuaPlayer::GetNextRandomRaidMember },
-    { "GetOriginalGroup", &LuaPlayer::GetOriginalGroup },
-    { "GetOriginalSubGroup", &LuaPlayer::GetOriginalSubGroup },
-#if defined(TRINITY) || AZEROTHCORE
-    { "GetChampioningFaction", &LuaPlayer::GetChampioningFaction },
-#endif
-    { "GetLatency", &LuaPlayer::GetLatency },
-    // {"GetRecruiterId", &LuaPlayer::GetRecruiterId},                            // :GetRecruiterId() - UNDOCUMENTED - Returns player's recruiter's ID
-    { "GetDbLocaleIndex", &LuaPlayer::GetDbLocaleIndex },
-    { "GetDbcLocale", &LuaPlayer::GetDbcLocale },
-    { "GetCorpse", &LuaPlayer::GetCorpse },
-    { "GetGossipTextId", &LuaPlayer::GetGossipTextId },
-    { "GetQuestRewardStatus", &LuaPlayer::GetQuestRewardStatus },
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
-    { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
-#endif
-#ifdef CLASSIC
-    { "GetHonorStoredKills", &LuaPlayer::GetHonorStoredKills },
-    { "GetRankPoints", &LuaPlayer::GetRankPoints },
-    { "GetHonorLastWeekStandingPos", &LuaPlayer::GetHonorLastWeekStandingPos },
-#endif
+    { "GetSelection", nullptr },
+    { "GetGMRank", nullptr },
+    { "GetGuildId", nullptr },
+    { "GetCoinage", nullptr },
+    { "GetTeam", nullptr },
+    { "GetItemCount", nullptr },
+    { "GetGroup", nullptr },
+    { "GetGuild", nullptr },
+    { "GetAccountId", nullptr },
+    { "GetAccountName", nullptr },
+                                    
+    { "GetArenaPoints", nullptr },
+    { "GetHonorPoints", nullptr },
+      
+    { "GetLifetimeKills", nullptr },
+    { "GetPlayerIP", nullptr },
+    { "GetLevelPlayedTime", nullptr },
+    { "GetTotalPlayedTime", nullptr },
+    { "GetItemByPos", nullptr },
+    { "GetItemByEntry", nullptr },
+    { "GetItemByGUID", nullptr },
+    { "GetMailItem", nullptr },
+    { "GetReputation", nullptr },
+    { "GetEquippedItemBySlot", nullptr },
+    { "GetQuestLevel", nullptr },
+    { "GetChatTag", nullptr },
+    { "GetRestBonus", nullptr },
+            
+    { "GetPhaseMaskForSpawn", nullptr },
+      
+    { "GetReqKillOrCastCurrentCount", nullptr },
+    { "GetQuestStatus", nullptr },
+    { "GetInGameTime", nullptr },
+    { "GetComboPoints", nullptr },
+    { "GetComboTarget", nullptr },
+    { "GetGuildName", nullptr },
+    { "GetFreeTalentPoints", nullptr },
+                                        
+    { "GetActiveSpec", nullptr },
+    { "GetSpecsCount", nullptr },
+      
+    { "GetSpellCooldownDelay", nullptr },
+    { "GetGuildRank", nullptr },
+    { "GetDifficulty", nullptr },
+    { "GetHealthBonusFromStamina", nullptr },
+    { "GetManaBonusFromIntellect", nullptr },
+    { "GetMaxSkillValue", nullptr },
+    { "GetPureMaxSkillValue", nullptr },
+    { "GetSkillValue", nullptr },
+    { "GetBaseSkillValue", nullptr },
+    { "GetPureSkillValue", nullptr },
+    { "GetSkillPermBonusValue", nullptr },
+    { "GetSkillTempBonusValue", nullptr },
+    { "GetReputationRank", nullptr },
+    { "GetDrunkValue", nullptr },
+    { "GetBattlegroundId", nullptr },
+    { "GetBattlegroundTypeId", nullptr },
+    { "GetXPRestBonus", nullptr },
+    { "GetGroupInvite", nullptr },
+    { "GetSubGroup", nullptr },
+    { "GetNextRandomRaidMember", nullptr },
+    { "GetOriginalGroup", nullptr },
+    { "GetOriginalSubGroup", nullptr },
+                                   
+    { "GetChampioningFaction", nullptr },
+      
+    { "GetLatency", nullptr },
+    { "GetRecruiterId", nullptr },
+    { "GetDbLocaleIndex", nullptr },
+    { "GetDbcLocale", nullptr },
+    { "GetCorpse", nullptr },
+    { "GetGossipTextId", nullptr },
+    { "GetQuestRewardStatus", nullptr },
+                                                      
+    { "GetShieldBlockValue", nullptr },
+      
+              
+    { "GetHonorStoredKills", nullptr },
+    { "GetRankPoints", nullptr },
+    { "GetHonorLastWeekStandingPos", nullptr },
+      
 
     // Setters
-    { "AdvanceSkillsToMax", &LuaPlayer::AdvanceSkillsToMax },
-    { "AdvanceSkill", &LuaPlayer::AdvanceSkill },
-    { "AdvanceAllSkills", &LuaPlayer::AdvanceAllSkills },
-    { "AddLifetimeKills", &LuaPlayer::AddLifetimeKills },
-    { "SetCoinage", &LuaPlayer::SetCoinage },
-#ifndef CLASSIC
-    { "SetKnownTitle", &LuaPlayer::SetKnownTitle },
-    { "UnsetKnownTitle", &LuaPlayer::UnsetKnownTitle },
-#endif
-    { "SetBindPoint", &LuaPlayer::SetBindPoint },
-#if defined(TBC) || defined(WOTLK)
-    { "SetArenaPoints", &LuaPlayer::SetArenaPoints },
-    { "SetHonorPoints", &LuaPlayer::SetHonorPoints },
-#endif
-#ifdef CLASSIC
-    { "SetHonorStoredKills", &LuaPlayer::SetHonorStoredKills },
-    { "SetRankPoints", &LuaPlayer::SetRankPoints },
-    { "SetHonorLastWeekStandingPos", &LuaPlayer::SetHonorLastWeekStandingPos },
-#endif
-    { "SetLifetimeKills", &LuaPlayer::SetLifetimeKills },
-    { "SetGameMaster", &LuaPlayer::SetGameMaster },
-    { "SetGMChat", &LuaPlayer::SetGMChat },
-    { "SetTaxiCheat", &LuaPlayer::SetTaxiCheat },
-    { "SetGMVisible", &LuaPlayer::SetGMVisible },
-    { "SetPvPDeath", &LuaPlayer::SetPvPDeath },
-    { "SetAcceptWhispers", &LuaPlayer::SetAcceptWhispers },
-    { "SetRestBonus", &LuaPlayer::SetRestBonus },
-    { "SetQuestStatus", &LuaPlayer::SetQuestStatus },
-    { "SetReputation", &LuaPlayer::SetReputation },
-    { "SetFreeTalentPoints", &LuaPlayer::SetFreeTalentPoints },
-    { "SetGuildRank", &LuaPlayer::SetGuildRank },
-    // {"SetMovement", &LuaPlayer::SetMovement},                  // :SetMovement(type) - UNDOCUMENTED - Sets player's movement type
-    { "SetSkill", &LuaPlayer::SetSkill },
-    { "SetFactionForRace", &LuaPlayer::SetFactionForRace },
-    { "SetDrunkValue", &LuaPlayer::SetDrunkValue },
-    { "SetAtLoginFlag", &LuaPlayer::SetAtLoginFlag },
-    { "SetPlayerLock", &LuaPlayer::SetPlayerLock },
-    { "SetGender", &LuaPlayer::SetGender },
-    { "SetSheath", &LuaPlayer::SetSheath },
-#if !defined TRINITY && !AZEROTHCORE
-    { "SetFFA", &LuaPlayer::SetFFA },
-#endif
+    { "AdvanceSkillsToMax", nullptr },
+    { "AdvanceSkill", nullptr },
+    { "AdvanceAllSkills", nullptr },
+    { "AddLifetimeKills", nullptr },
+    { "SetCoinage", nullptr },
+               
+    { "SetKnownTitle", nullptr },
+    { "UnsetKnownTitle", nullptr },
+      
+    { "SetBindPoint", nullptr },
+                                  
+    { "SetArenaPoints", nullptr },
+    { "SetHonorPoints", nullptr },
+      
+              
+    { "SetHonorStoredKills", nullptr },
+    { "SetRankPoints", nullptr },
+    { "SetHonorLastWeekStandingPos", nullptr },
+      
+    { "SetLifetimeKills", nullptr },
+    { "SetGameMaster", nullptr },
+    { "SetGMChat", nullptr },
+    { "SetTaxiCheat", nullptr },
+    { "SetGMVisible", nullptr },
+    { "SetPvPDeath", nullptr },
+    { "SetAcceptWhispers", nullptr },
+    { "SetRestBonus", nullptr },
+    { "SetQuestStatus", nullptr },
+    { "SetReputation", nullptr },
+    { "SetFreeTalentPoints", nullptr },
+    { "SetGuildRank", nullptr },
+    { "SetMovement", nullptr },
+    { "SetSkill", nullptr },
+    { "SetFactionForRace", nullptr },
+    { "SetDrunkValue", nullptr },
+    { "SetAtLoginFlag", nullptr },
+    { "SetPlayerLock", nullptr },
+    { "SetGender", nullptr },
+    { "SetSheath", nullptr },
+                                    
+    { "SetFFA", nullptr },
+      
 
     // Boolean
-    { "IsInGroup", &LuaPlayer::IsInGroup },
-    { "IsInGuild", &LuaPlayer::IsInGuild },
-    { "IsGM", &LuaPlayer::IsGM },
-    { "IsImmuneToDamage", &LuaPlayer::IsImmuneToDamage },
-    { "IsAlliance", &LuaPlayer::IsAlliance },
-    { "IsHorde", &LuaPlayer::IsHorde },
-#ifndef CLASSIC
-    { "HasTitle", &LuaPlayer::HasTitle },
-#endif
-    { "HasItem", &LuaPlayer::HasItem },
-    { "Teleport", &LuaPlayer::Teleport },
-    { "AddItem", &LuaPlayer::AddItem },
-#ifndef CLASSIC
-    { "IsInArenaTeam", &LuaPlayer::IsInArenaTeam },
-#endif
-    { "CanCompleteQuest", &LuaPlayer::CanCompleteQuest },
-    { "CanEquipItem", &LuaPlayer::CanEquipItem },
-    { "IsFalling", &LuaPlayer::IsFalling },
-    { "ToggleAFK", &LuaPlayer::ToggleAFK },
-    { "ToggleDND", &LuaPlayer::ToggleDND },
-    { "IsAFK", &LuaPlayer::IsAFK },
-    { "IsDND", &LuaPlayer::IsDND },
-    { "IsAcceptingWhispers", &LuaPlayer::IsAcceptingWhispers },
-    { "IsGMChat", &LuaPlayer::IsGMChat },
-    { "IsTaxiCheater", &LuaPlayer::IsTaxiCheater },
-    { "IsGMVisible", &LuaPlayer::IsGMVisible },
-    { "HasQuest", &LuaPlayer::HasQuest },
-    { "InBattlegroundQueue", &LuaPlayer::InBattlegroundQueue },
-    // {"IsImmuneToEnvironmentalDamage", &LuaPlayer::IsImmuneToEnvironmentalDamage},        // :IsImmuneToEnvironmentalDamage() - UNDOCUMENTED - Returns true if the player is immune to environmental damage
-    { "CanSpeak", &LuaPlayer::CanSpeak },
-    { "HasAtLoginFlag", &LuaPlayer::HasAtLoginFlag },
-    // {"InRandomLfgDungeon", &LuaPlayer::InRandomLfgDungeon},                              // :InRandomLfgDungeon() - UNDOCUMENTED - Returns true if the player is in a random LFG dungeon
-    // {"HasPendingBind", &LuaPlayer::HasPendingBind},                                      // :HasPendingBind() - UNDOCUMENTED - Returns true if the player has a pending instance bind
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "HasAchieved", &LuaPlayer::HasAchieved },
-#if defined(TRINITY) || defined(AZEROTHCORE)
-    { "SetAchievement", &LuaPlayer::SetAchievement },
-#endif
-#endif
-    { "CanUninviteFromGroup", &LuaPlayer::CanUninviteFromGroup },
-    { "IsRested", &LuaPlayer::IsRested },
-    // {"CanFlyInZone", &LuaPlayer::CanFlyInZone},                                          // :CanFlyInZone(mapid, zone) - UNDOCUMENTED - Returns true if the player can fly in the area
-    // {"IsNeverVisible", &LuaPlayer::IsNeverVisible},                                      // :IsNeverVisible() - UNDOCUMENTED - Returns true if the player is never visible
-    { "IsVisibleForPlayer", &LuaPlayer::IsVisibleForPlayer },
-    // {"IsUsingLfg", &LuaPlayer::IsUsingLfg},                                              // :IsUsingLfg() - UNDOCUMENTED - Returns true if the player is using LFG
-    { "HasQuestForItem", &LuaPlayer::HasQuestForItem },
-    { "HasQuestForGO", &LuaPlayer::HasQuestForGO },
-    { "CanShareQuest", &LuaPlayer::CanShareQuest },
-    // {"HasReceivedQuestReward", &LuaPlayer::HasReceivedQuestReward},                      // :HasReceivedQuestReward(entry) - UNDOCUMENTED - Returns true if the player has recieved the quest's reward
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "HasTalent", &LuaPlayer::HasTalent },
-#endif
-    { "IsInSameGroupWith", &LuaPlayer::IsInSameGroupWith },
-    { "IsInSameRaidWith", &LuaPlayer::IsInSameRaidWith },
-    { "IsGroupVisibleFor", &LuaPlayer::IsGroupVisibleFor },
-    { "HasSkill", &LuaPlayer::HasSkill },
-    { "IsHonorOrXPTarget", &LuaPlayer::IsHonorOrXPTarget },
-    { "CanParry", &LuaPlayer::CanParry },
-    { "CanBlock", &LuaPlayer::CanBlock },
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "CanTitanGrip", &LuaPlayer::CanTitanGrip },
-#endif
-    { "InBattleground", &LuaPlayer::InBattleground },
-#ifndef CLASSIC
-    { "InArena", &LuaPlayer::InArena },
-#endif
-    // {"IsOutdoorPvPActive", &LuaPlayer::IsOutdoorPvPActive},                              // :IsOutdoorPvPActive() - UNDOCUMENTED - Returns true if the player is outdoor pvp active
-    // {"IsARecruiter", &LuaPlayer::IsARecruiter},                                          // :IsARecruiter() - UNDOCUMENTED - Returns true if the player is a recruiter
-    { "CanUseItem", &LuaPlayer::CanUseItem },
-    { "HasSpell", &LuaPlayer::HasSpell },
-    { "HasSpellCooldown", &LuaPlayer::HasSpellCooldown },
-    { "IsInWater", &LuaPlayer::IsInWater },
-#ifndef CLASSIC
-    { "CanFly", &LuaPlayer::CanFly },
-#endif
-    { "IsMoving", &LuaPlayer::IsMoving },
-#ifndef CLASSIC
-    { "IsFlying", &LuaPlayer::IsFlying },
-#endif
+    { "IsInGroup", nullptr },
+    { "IsInGuild", nullptr },
+    { "IsGM", nullptr },
+    { "IsImmuneToDamage", nullptr },
+    { "IsAlliance", nullptr },
+    { "IsHorde", nullptr },
+               
+    { "HasTitle", nullptr },
+      
+    { "HasItem", nullptr },
+    { "Teleport", nullptr },
+    { "AddItem", nullptr },
+               
+    { "IsInArenaTeam", nullptr },
+      
+    { "CanCompleteQuest", nullptr },
+    { "CanEquipItem", nullptr },
+    { "IsFalling", nullptr },
+    { "ToggleAFK", nullptr },
+    { "ToggleDND", nullptr },
+    { "IsAFK", nullptr },
+    { "IsDND", nullptr },
+    { "IsAcceptingWhispers", nullptr },
+    { "IsGMChat", nullptr },
+    { "IsTaxiCheater", nullptr },
+    { "IsGMVisible", nullptr },
+    { "HasQuest", nullptr },
+    { "InBattlegroundQueue", nullptr },
+    { "IsImmuneToEnvironmentalDamage", nullptr },
+    { "CanSpeak", nullptr },
+    { "HasAtLoginFlag", nullptr },
+    { "InRandomLfgDungeon", nullptr },
+    { "HasPendingBind", nullptr },
+                                        
+    { "HasAchieved", nullptr },
+                                            
+    { "SetAchievement", nullptr },
+      
+      
+    { "CanUninviteFromGroup", nullptr },
+    { "IsRested", nullptr },
+    { "CanFlyInZone", nullptr },
+    { "IsNeverVisible", nullptr },
+    { "IsVisibleForPlayer", nullptr },
+    { "IsUsingLfg", nullptr },
+    { "HasQuestForItem", nullptr },
+    { "HasQuestForGO", nullptr },
+    { "CanShareQuest", nullptr },
+    { "HasReceivedQuestReward", nullptr },
+                                        
+    { "HasTalent", nullptr },
+      
+    { "IsInSameGroupWith", nullptr },
+    { "IsInSameRaidWith", nullptr },
+    { "IsGroupVisibleFor", nullptr },
+    { "HasSkill", nullptr },
+    { "IsHonorOrXPTarget", nullptr },
+    { "CanParry", nullptr },
+    { "CanBlock", nullptr },
+                                        
+    { "CanTitanGrip", nullptr },
+      
+    { "InBattleground", nullptr },
+               
+    { "InArena", nullptr },
+      
+    { "IsOutdoorPvPActive", nullptr },
+    { "IsARecruiter", nullptr },
+    { "CanUseItem", nullptr },
+    { "HasSpell", nullptr },
+    { "HasSpellCooldown", nullptr },
+    { "IsInWater", nullptr },
+               
+    { "CanFly", nullptr },
+      
+    { "IsMoving", nullptr },
+               
+    { "IsFlying", nullptr },
+      
 
     // Gossip
-    { "GossipMenuAddItem", &LuaPlayer::GossipMenuAddItem },
-    { "GossipSendMenu", &LuaPlayer::GossipSendMenu },
-    { "GossipComplete", &LuaPlayer::GossipComplete },
-    { "GossipClearMenu", &LuaPlayer::GossipClearMenu },
+    { "GossipMenuAddItem", nullptr },
+    { "GossipSendMenu", nullptr },
+    { "GossipComplete", nullptr },
+    { "GossipClearMenu", nullptr },
 
     // Other
-    { "SendBroadcastMessage", &LuaPlayer::SendBroadcastMessage },
-    { "SendAreaTriggerMessage", &LuaPlayer::SendAreaTriggerMessage },
-    { "SendNotification", &LuaPlayer::SendNotification },
-    { "SendPacket", &LuaPlayer::SendPacket },
-    { "SendAddonMessage", &LuaPlayer::SendAddonMessage },
-    { "ModifyMoney", &LuaPlayer::ModifyMoney },
-    { "LearnSpell", &LuaPlayer::LearnSpell },
-    { "LearnTalent", &LuaPlayer::LearnTalent },
-#if !defined(CLASSIC)
-    { "RemoveArenaSpellCooldowns", &LuaPlayer::RemoveArenaSpellCooldowns },
-#endif
-    { "RemoveItem", &LuaPlayer::RemoveItem },
-    { "RemoveLifetimeKills", &LuaPlayer::RemoveLifetimeKills },
-    { "ResurrectPlayer", &LuaPlayer::ResurrectPlayer },
-    { "EquipItem", &LuaPlayer::EquipItem },
-    { "ResetSpellCooldown", &LuaPlayer::ResetSpellCooldown },
-    { "ResetTypeCooldowns", &LuaPlayer::ResetTypeCooldowns },
-    { "ResetAllCooldowns", &LuaPlayer::ResetAllCooldowns },
-    { "GiveXP", &LuaPlayer::GiveXP },                                                       // :GiveXP(xp[, victim, pureXP, triggerHook]) - UNDOCUMENTED - Gives XP to the player. If pure is false, bonuses are count in. If triggerHook is false, GiveXp hook is not triggered.
-    // {"RemovePet", &LuaPlayer::RemovePet},                                                // :RemovePet([mode, returnreagent]) - UNDOCUMENTED - Removes the player's pet. Mode determines if the pet is saved and how
-    // {"SummonPet", &LuaPlayer::SummonPet},                                              // :SummonPet(entry, x, y, z, o, petType, despwtime) - Summons a pet for the player
-    { "Say", &LuaPlayer::Say },
-    { "Yell", &LuaPlayer::Yell },
-    { "TextEmote", &LuaPlayer::TextEmote },
-    { "Whisper", &LuaPlayer::Whisper },
-    { "CompleteQuest", &LuaPlayer::CompleteQuest },
-    { "IncompleteQuest", &LuaPlayer::IncompleteQuest },
-    { "FailQuest", &LuaPlayer::FailQuest },
-    { "AddQuest", &LuaPlayer::AddQuest },
-    { "RemoveQuest", &LuaPlayer::RemoveQuest },
-    // {"RemoveActiveQuest", &LuaPlayer::RemoveActiveQuest},                                // :RemoveActiveQuest(entry) - UNDOCUMENTED - Removes an active quest
-    // {"RemoveRewardedQuest", &LuaPlayer::RemoveRewardedQuest},                            // :RemoveRewardedQuest(entry) - UNDOCUMENTED - Removes a rewarded quest
-    { "AreaExploredOrEventHappens", &LuaPlayer::AreaExploredOrEventHappens },
-    { "GroupEventHappens", &LuaPlayer::GroupEventHappens },
-    { "KilledMonsterCredit", &LuaPlayer::KilledMonsterCredit },
-    // {"KilledPlayerCredit", &LuaPlayer::KilledPlayerCredit},                              // :KilledPlayerCredit() - UNDOCUMENTED - Satisfies a player kill for the player
-    // {"KillGOCredit", &LuaPlayer::KillGOCredit},                                          // :KillGOCredit(GOEntry[, GUID]) - UNDOCUMENTED - Credits the player for destroying a GO, guid is optional
-    { "TalkedToCreature", &LuaPlayer::TalkedToCreature },
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "ResetPetTalents", &LuaPlayer::ResetPetTalents },
-#endif
-    { "AddComboPoints", &LuaPlayer::AddComboPoints },
-    // {"GainSpellComboPoints", &LuaPlayer::GainSpellComboPoints},                          // :GainSpellComboPoints(amount) - UNDOCUMENTED - Player gains spell combo points
-    { "ClearComboPoints", &LuaPlayer::ClearComboPoints },
-    { "RemoveSpell", &LuaPlayer::RemoveSpell },
-    { "ResetTalents", &LuaPlayer::ResetTalents },
-    { "ResetTalentsCost", &LuaPlayer::ResetTalentsCost },
-    // {"AddTalent", &LuaPlayer::AddTalent},                                                // :AddTalent(spellid, spec, learning) - UNDOCUMENTED - Adds a talent spell for the player to given spec
-    { "RemoveFromGroup", &LuaPlayer::RemoveFromGroup },
-    { "KillPlayer", &LuaPlayer::KillPlayer },
-    { "DurabilityLossAll", &LuaPlayer::DurabilityLossAll },
-    { "DurabilityLoss", &LuaPlayer::DurabilityLoss },
-    { "DurabilityPointsLoss", &LuaPlayer::DurabilityPointsLoss },
-    { "DurabilityPointsLossAll", &LuaPlayer::DurabilityPointsLossAll },
-    { "DurabilityPointLossForEquipSlot", &LuaPlayer::DurabilityPointLossForEquipSlot },
-    { "DurabilityRepairAll", &LuaPlayer::DurabilityRepairAll },
-    { "DurabilityRepair", &LuaPlayer::DurabilityRepair },
-#if defined(TBC) || defined(WOTLK)
-    { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
-    { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
-#endif
-    { "LeaveBattleground", &LuaPlayer::LeaveBattleground },
-    // {"BindToInstance", &LuaPlayer::BindToInstance},                                      // :BindToInstance() - UNDOCUMENTED - Binds the player to the current instance
-    { "UnbindInstance", &LuaPlayer::UnbindInstance },
-    { "UnbindAllInstances", &LuaPlayer::UnbindAllInstances },
-    { "RemoveFromBattlegroundRaid", &LuaPlayer::RemoveFromBattlegroundRaid },
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "ResetAchievements", &LuaPlayer::ResetAchievements },
-#endif
-    { "KickPlayer", &LuaPlayer::KickPlayer },
-    { "LogoutPlayer", &LuaPlayer::LogoutPlayer },
-    { "SendTrainerList", &LuaPlayer::SendTrainerList },
-    { "SendListInventory", &LuaPlayer::SendListInventory },
-    { "SendShowBank", &LuaPlayer::SendShowBank },
-    { "SendTabardVendorActivate", &LuaPlayer::SendTabardVendorActivate },
-    { "SendSpiritResurrect", &LuaPlayer::SendSpiritResurrect },
-    { "SendTaxiMenu", &LuaPlayer::SendTaxiMenu },
-    { "SendUpdateWorldState", &LuaPlayer::SendUpdateWorldState },
-    { "RewardQuest", &LuaPlayer::RewardQuest },
-    { "SendAuctionMenu", &LuaPlayer::SendAuctionMenu },
-    { "SendShowMailBox", &LuaPlayer::SendShowMailBox },
-    { "StartTaxi", &LuaPlayer::StartTaxi },
-    { "GossipSendPOI", &LuaPlayer::GossipSendPOI },
-    { "GossipAddQuests", &LuaPlayer::GossipAddQuests },
-    { "SendQuestTemplate", &LuaPlayer::SendQuestTemplate },
-    { "SpawnBones", &LuaPlayer::SpawnBones },
-    { "RemovedInsignia", &LuaPlayer::RemovedInsignia },
-    { "SendGuildInvite", &LuaPlayer::SendGuildInvite },
-    { "Mute", &LuaPlayer::Mute },
-    { "SummonPlayer", &LuaPlayer::SummonPlayer },
-    { "SaveToDB", &LuaPlayer::SaveToDB },
-    { "GroupInvite", &LuaPlayer::GroupInvite },
-    { "GroupCreate", &LuaPlayer::GroupCreate },
-    { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
-#if !defined(CLASSIC) && !defined(TBC)
-    { "SendMovieStart", &LuaPlayer::SendMovieStart },
-#endif
-#ifdef CLASSIC
-    { "UpdateHonor", &LuaPlayer::UpdateHonor },
-    { "ResetHonor", &LuaPlayer::ResetHonor },
-    { "ClearHonorInfo", &LuaPlayer::ClearHonorInfo },
-#endif
+    { "SendBroadcastMessage", nullptr },
+    { "SendAreaTriggerMessage", nullptr },
+    { "SendNotification", nullptr },
+    { "SendPacket", nullptr },
+    { "SendAddonMessage", nullptr },
+    { "ModifyMoney", nullptr },
+    { "LearnSpell", nullptr },
+    { "LearnTalent", nullptr },
+                     
+    { "RemoveArenaSpellCooldowns", nullptr },
+      
+    { "RemoveItem", nullptr },
+    { "RemoveLifetimeKills", nullptr },
+    { "ResurrectPlayer", nullptr },
+    { "EquipItem", nullptr },
+    { "ResetSpellCooldown", nullptr },
+    { "ResetTypeCooldowns", nullptr },
+    { "ResetAllCooldowns", nullptr },
+    { "GiveXP", nullptr },
+    { "RemovePet", nullptr },
+    { "SummonPet", nullptr },
+    { "Say", nullptr },
+    { "Yell", nullptr },
+    { "TextEmote", nullptr },
+    { "Whisper", nullptr },
+    { "CompleteQuest", nullptr },
+    { "IncompleteQuest", nullptr },
+    { "FailQuest", nullptr },
+    { "AddQuest", nullptr },
+    { "RemoveQuest", nullptr },
+    { "RemoveActiveQuest", nullptr },
+    { "RemoveRewardedQuest", nullptr },
+    { "AreaExploredOrEventHappens", nullptr },
+    { "GroupEventHappens", nullptr },
+    { "KilledMonsterCredit", nullptr },
+    { "KilledPlayerCredit", nullptr },
+    { "KillGOCredit", nullptr },
+    { "TalkedToCreature", nullptr },
+                                        
+    { "ResetPetTalents", nullptr },
+      
+    { "AddComboPoints", nullptr },
+    { "GainSpellComboPoints", nullptr },
+    { "ClearComboPoints", nullptr },
+    { "RemoveSpell", nullptr },
+    { "ResetTalents", nullptr },
+    { "ResetTalentsCost", nullptr },
+    { "AddTalent", nullptr },
+    { "RemoveFromGroup", nullptr },
+    { "KillPlayer", nullptr },
+    { "DurabilityLossAll", nullptr },
+    { "DurabilityLoss", nullptr },
+    { "DurabilityPointsLoss", nullptr },
+    { "DurabilityPointsLossAll", nullptr },
+    { "DurabilityPointLossForEquipSlot", nullptr },
+    { "DurabilityRepairAll", nullptr },
+    { "DurabilityRepair", nullptr },
+                                  
+    { "ModifyHonorPoints", nullptr },
+    { "ModifyArenaPoints", nullptr },
+      
+    { "LeaveBattleground", nullptr },
+    { "BindToInstance", nullptr },
+    { "UnbindInstance", nullptr },
+    { "UnbindAllInstances", nullptr },
+    { "RemoveFromBattlegroundRaid", nullptr },
+                                        
+    { "ResetAchievements", nullptr },
+      
+    { "KickPlayer", nullptr },
+    { "LogoutPlayer", nullptr },
+    { "SendTrainerList", nullptr },
+    { "SendListInventory", nullptr },
+    { "SendShowBank", nullptr },
+    { "SendTabardVendorActivate", nullptr },
+    { "SendSpiritResurrect", nullptr },
+    { "SendTaxiMenu", nullptr },
+    { "SendUpdateWorldState", nullptr },
+    { "RewardQuest", nullptr },
+    { "SendAuctionMenu", nullptr },
+    { "SendShowMailBox", nullptr },
+    { "StartTaxi", nullptr },
+    { "GossipSendPOI", nullptr },
+    { "GossipAddQuests", nullptr },
+    { "SendQuestTemplate", nullptr },
+    { "SpawnBones", nullptr },
+    { "RemovedInsignia", nullptr },
+    { "SendGuildInvite", nullptr },
+    { "Mute", nullptr },
+    { "SummonPlayer", nullptr },
+    { "SaveToDB", nullptr },
+    { "GroupInvite", nullptr },
+    { "GroupCreate", nullptr },
+    { "SendCinematicStart", nullptr },
+                                      
+    { "SendMovieStart", nullptr },
+      
+              
+    { "UpdateHonor", nullptr },
+    { "ResetHonor", nullptr },
+    { "ClearHonorInfo", nullptr },
+      
 
     { NULL, NULL }
 };
@@ -768,117 +768,117 @@ ElunaRegister<Player> PlayerMethods[] =
 ElunaRegister<Creature> CreatureMethods[] =
 {
     // Getters
-    { "GetAITarget", &LuaCreature::GetAITarget },
-    { "GetAITargets", &LuaCreature::GetAITargets },
-    { "GetAITargetsCount", &LuaCreature::GetAITargetsCount },
-    { "GetHomePosition", &LuaCreature::GetHomePosition },
-    { "GetCorpseDelay", &LuaCreature::GetCorpseDelay },
-    { "GetCreatureSpellCooldownDelay", &LuaCreature::GetCreatureSpellCooldownDelay },
-    { "GetScriptId", &LuaCreature::GetScriptId },
-    { "GetAIName", &LuaCreature::GetAIName },
-    { "GetScriptName", &LuaCreature::GetScriptName },
-#ifndef AZEROTHCORE
-    { "GetAttackDistance", &LuaCreature::GetAttackDistance },
-#endif
-    { "GetAggroRange", &LuaCreature::GetAggroRange },
-    { "GetDefaultMovementType", &LuaCreature::GetDefaultMovementType },
-    { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },
-    { "GetWanderRadius", &LuaCreature::GetWanderRadius },
-    { "GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId },
-#if defined(TRINITY) || AZEROTHCORE
-    { "GetWaypointPath", &LuaCreature::GetWaypointPath },
-    { "GetLootMode", &LuaCreature::GetLootMode },
-#endif
-    { "GetLootRecipient", &LuaCreature::GetLootRecipient },
-    { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },
-    { "GetNPCFlags", &LuaCreature::GetNPCFlags },
-    { "GetExtraFlags", &LuaCreature::GetExtraFlags },
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
-    { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
-#endif
-    { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
-    { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
+    { "GetAITarget", nullptr },
+    { "GetAITargets", nullptr },
+    { "GetAITargetsCount", nullptr },
+    { "GetHomePosition", nullptr },
+    { "GetCorpseDelay", nullptr },
+    { "GetCreatureSpellCooldownDelay", nullptr },
+    { "GetScriptId", nullptr },
+    { "GetAIName", nullptr },
+    { "GetScriptName", nullptr },
+                   
+    { "GetAttackDistance", nullptr },
+      
+    { "GetAggroRange", nullptr },
+    { "GetDefaultMovementType", nullptr },
+    { "GetRespawnDelay", nullptr },
+    { "GetWanderRadius", nullptr },
+    { "GetCurrentWaypointId", nullptr },
+                                   
+    { "GetWaypointPath", nullptr },
+    { "GetLootMode", nullptr },
+      
+    { "GetLootRecipient", nullptr },
+    { "GetLootRecipientGroup", nullptr },
+    { "GetNPCFlags", nullptr },
+    { "GetExtraFlags", nullptr },
+                                                      
+    { "GetShieldBlockValue", nullptr },
+      
+    { "GetDBTableGUIDLow", nullptr },
+    { "GetCreatureFamily", nullptr },
 
     // Setters
-#if defined(TRINITY) || defined(AZEROTHCORE)
-    { "SetRegeneratingHealth", &LuaCreature::SetRegeneratingHealth },
-#endif
-    { "SetHover", &LuaCreature::SetHover },
-    { "SetDisableGravity", &LuaCreature::SetDisableGravity },
-    { "SetAggroEnabled", &LuaCreature::SetAggroEnabled },
-    { "SetNoCallAssistance", &LuaCreature::SetNoCallAssistance },
-    { "SetNoSearchAssistance", &LuaCreature::SetNoSearchAssistance },
-    { "SetDefaultMovementType", &LuaCreature::SetDefaultMovementType },
-    { "SetRespawnDelay", &LuaCreature::SetRespawnDelay },
-    { "SetWanderRadius", &LuaCreature::SetWanderRadius },
-    { "SetInCombatWithZone", &LuaCreature::SetInCombatWithZone },
-    { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
-#if defined(TRINITY) || AZEROTHCORE
-    { "SetLootMode", &LuaCreature::SetLootMode },
-#endif
-    { "SetNPCFlags", &LuaCreature::SetNPCFlags },
-#if defined(TRINITY) || AZEROTHCORE
-    { "SetReactState", &LuaCreature::SetReactState },
-#endif
-    { "SetDeathState", &LuaCreature::SetDeathState },
-    { "SetWalk", &LuaCreature::SetWalk },
-    { "SetHomePosition", &LuaCreature::SetHomePosition },
-    { "SetEquipmentSlots", &LuaCreature::SetEquipmentSlots },
+                                            
+    { "SetRegeneratingHealth", nullptr },
+      
+    { "SetHover", nullptr },
+    { "SetDisableGravity", nullptr },
+    { "SetAggroEnabled", nullptr },
+    { "SetNoCallAssistance", nullptr },
+    { "SetNoSearchAssistance", nullptr },
+    { "SetDefaultMovementType", nullptr },
+    { "SetRespawnDelay", nullptr },
+    { "SetWanderRadius", nullptr },
+    { "SetInCombatWithZone", nullptr },
+    { "SetDisableReputationGain", nullptr },
+                                   
+    { "SetLootMode", nullptr },
+      
+    { "SetNPCFlags", nullptr },
+                                   
+    { "SetReactState", nullptr },
+      
+    { "SetDeathState", nullptr },
+    { "SetWalk", nullptr },
+    { "SetHomePosition", nullptr },
+    { "SetEquipmentSlots", nullptr },
 
     // Boolean
-    { "IsRegeneratingHealth", &LuaCreature::IsRegeneratingHealth },
-#if defined(TRINITY) || defined(AZEROTHCORE)
-    { "IsDungeonBoss", &LuaCreature::IsDungeonBoss },
-#endif
-    { "IsWorldBoss", &LuaCreature::IsWorldBoss },
-    { "IsRacialLeader", &LuaCreature::IsRacialLeader },
-    { "IsCivilian", &LuaCreature::IsCivilian },
-#if defined(TRINITY) || AZEROTHCORE
-    { "IsTrigger", &LuaCreature::IsTrigger },
-#endif
-    { "IsGuard", &LuaCreature::IsGuard },
-    { "IsElite", &LuaCreature::IsElite },
-    { "IsInEvadeMode", &LuaCreature::IsInEvadeMode },
-    { "HasCategoryCooldown", &LuaCreature::HasCategoryCooldown },
-    { "CanWalk", &LuaCreature::CanWalk },
-    { "CanSwim", &LuaCreature::CanSwim },
-    { "CanAggro", &LuaCreature::CanAggro },
-#if defined(TRINITY) || AZEROTHCORE
-    { "CanStartAttack", &LuaCreature::CanStartAttack },
-#endif
-    { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },
-    { "IsTappedBy", &LuaCreature::IsTappedBy },
-    { "HasLootRecipient", &LuaCreature::HasLootRecipient },
-    { "CanAssistTo", &LuaCreature::CanAssistTo },
-    { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },
-    { "CanCompleteQuest", &LuaCreature::CanCompleteQuest },
-    { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
-#if defined(TRINITY) || AZEROTHCORE
-    { "IsDamageEnoughForLootingAndReward", &LuaCreature::IsDamageEnoughForLootingAndReward },
-    { "HasLootMode", &LuaCreature::HasLootMode },
-#endif
-    { "HasSpell", &LuaCreature::HasSpell },
-    { "HasQuest", &LuaCreature::HasQuest },
-    { "HasSpellCooldown", &LuaCreature::HasSpellCooldown },
-    { "CanFly", &LuaCreature::CanFly },
+    { "IsRegeneratingHealth", nullptr },
+                                            
+    { "IsDungeonBoss", nullptr },
+      
+    { "IsWorldBoss", nullptr },
+    { "IsRacialLeader", nullptr },
+    { "IsCivilian", nullptr },
+                                   
+    { "IsTrigger", nullptr },
+      
+    { "IsGuard", nullptr },
+    { "IsElite", nullptr },
+    { "IsInEvadeMode", nullptr },
+    { "HasCategoryCooldown", nullptr },
+    { "CanWalk", nullptr },
+    { "CanSwim", nullptr },
+    { "CanAggro", nullptr },
+                                   
+    { "CanStartAttack", nullptr },
+      
+    { "HasSearchedAssistance", nullptr },
+    { "IsTappedBy", nullptr },
+    { "HasLootRecipient", nullptr },
+    { "CanAssistTo", nullptr },
+    { "IsTargetableForAttack", nullptr },
+    { "CanCompleteQuest", nullptr },
+    { "IsReputationGainDisabled", nullptr },
+                                   
+    { "IsDamageEnoughForLootingAndReward", nullptr },
+    { "HasLootMode", nullptr },
+      
+    { "HasSpell", nullptr },
+    { "HasQuest", nullptr },
+    { "HasSpellCooldown", nullptr },
+    { "CanFly", nullptr },
 
     // Other
-    { "FleeToGetAssistance", &LuaCreature::FleeToGetAssistance },
-    { "CallForHelp", &LuaCreature::CallForHelp },
-    { "CallAssistance", &LuaCreature::CallAssistance },
-    { "RemoveCorpse", &LuaCreature::RemoveCorpse },
-    { "DespawnOrUnsummon", &LuaCreature::DespawnOrUnsummon },
-    { "Respawn", &LuaCreature::Respawn },
-    { "AttackStart", &LuaCreature::AttackStart },
-#if defined(TRINITY) || AZEROTHCORE
-    { "AddLootMode", &LuaCreature::AddLootMode },
-    { "ResetLootMode", &LuaCreature::ResetLootMode },
-    { "RemoveLootMode", &LuaCreature::RemoveLootMode },
-#endif
-    { "SaveToDB", &LuaCreature::SaveToDB },
-    { "SelectVictim", &LuaCreature::SelectVictim },
-    { "MoveWaypoint", &LuaCreature::MoveWaypoint },
-    { "UpdateEntry", &LuaCreature::UpdateEntry },
+    { "FleeToGetAssistance", nullptr },
+    { "CallForHelp", nullptr },
+    { "CallAssistance", nullptr },
+    { "RemoveCorpse", nullptr },
+    { "DespawnOrUnsummon", nullptr },
+    { "Respawn", nullptr },
+    { "AttackStart", nullptr },
+                                   
+    { "AddLootMode", nullptr },
+    { "ResetLootMode", nullptr },
+    { "RemoveLootMode", nullptr },
+      
+    { "SaveToDB", nullptr },
+    { "SelectVictim", nullptr },
+    { "MoveWaypoint", nullptr },
+    { "UpdateEntry", nullptr },
 
     { NULL, NULL }
 };
@@ -886,31 +886,31 @@ ElunaRegister<Creature> CreatureMethods[] =
 ElunaRegister<GameObject> GameObjectMethods[] =
 {
     // Getters
-    { "GetDisplayId", &LuaGameObject::GetDisplayId },
-    { "GetGoState", &LuaGameObject::GetGoState },
-    { "GetLootState", &LuaGameObject::GetLootState },
-    { "GetLootRecipient", &LuaGameObject::GetLootRecipient },
-    { "GetLootRecipientGroup", &LuaGameObject::GetLootRecipientGroup },
-    { "GetDBTableGUIDLow", &LuaGameObject::GetDBTableGUIDLow },
+    { "GetDisplayId", nullptr },
+    { "GetGoState", nullptr },
+    { "GetLootState", nullptr },
+    { "GetLootRecipient", nullptr },
+    { "GetLootRecipientGroup", nullptr },
+    { "GetDBTableGUIDLow", nullptr },
 
     // Setters
-    { "SetGoState", &LuaGameObject::SetGoState },
-    { "SetLootState", &LuaGameObject::SetLootState },
-    { "SetRespawnTime", &LuaGameObject::SetRespawnTime },
+    { "SetGoState", nullptr },
+    { "SetLootState", nullptr },
+    { "SetRespawnTime", nullptr },
 
     // Boolean
-    { "IsTransport", &LuaGameObject::IsTransport },
-    // {"IsDestructible", &LuaGameObject::IsDestructible},    // :IsDestructible() - UNDOCUMENTED
-    { "IsActive", &LuaGameObject::IsActive },
-    { "HasQuest", &LuaGameObject::HasQuest },
-    { "IsSpawned", &LuaGameObject::IsSpawned },
+    { "IsTransport", nullptr },
+    { "IsDestructible", nullptr },
+    { "IsActive", nullptr },
+    { "HasQuest", nullptr },
+    { "IsSpawned", nullptr },
 
     // Other
-    { "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },
-    { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },
-    { "Despawn", &LuaGameObject::Despawn },
-    { "Respawn", &LuaGameObject::Respawn },
-    { "SaveToDB", &LuaGameObject::SaveToDB },
+    { "RemoveFromWorld", nullptr },
+    { "UseDoorOrButton", nullptr },
+    { "Despawn", nullptr },
+    { "Respawn", nullptr },
+    { "SaveToDB", nullptr },
 
     { NULL, NULL }
 };
@@ -918,75 +918,75 @@ ElunaRegister<GameObject> GameObjectMethods[] =
 ElunaRegister<Item> ItemMethods[] =
 {
     // Getters
-    { "GetOwnerGUID", &LuaItem::GetOwnerGUID },
-    { "GetOwner", &LuaItem::GetOwner },
-    { "GetCount", &LuaItem::GetCount },
-    { "GetMaxStackCount", &LuaItem::GetMaxStackCount },
-    { "GetSlot", &LuaItem::GetSlot },
-    { "GetBagSlot", &LuaItem::GetBagSlot },
-    { "GetEnchantmentId", &LuaItem::GetEnchantmentId },
-    { "GetSpellId", &LuaItem::GetSpellId },
-    { "GetSpellTrigger", &LuaItem::GetSpellTrigger },
-    { "GetItemLink", &LuaItem::GetItemLink },
-    { "GetClass", &LuaItem::GetClass },
-    { "GetSubClass", &LuaItem::GetSubClass },
-    { "GetName", &LuaItem::GetName },
-    { "GetDisplayId", &LuaItem::GetDisplayId },
-    { "GetQuality", &LuaItem::GetQuality },
-    { "GetBuyCount", &LuaItem::GetBuyCount },
-    { "GetBuyPrice", &LuaItem::GetBuyPrice },
-    { "GetSellPrice", &LuaItem::GetSellPrice },
-    { "GetInventoryType", &LuaItem::GetInventoryType },
-    { "GetAllowableClass", &LuaItem::GetAllowableClass },
-    { "GetAllowableRace", &LuaItem::GetAllowableRace },
-    { "GetItemLevel", &LuaItem::GetItemLevel },
-    { "GetRequiredLevel", &LuaItem::GetRequiredLevel },
-#ifdef WOTLK
-    { "GetStatsCount", &LuaItem::GetStatsCount },
-#endif
-    { "GetRandomProperty", &LuaItem::GetRandomProperty },
-#ifndef CLASSIC
-    { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
-#endif
-    { "GetItemSet", &LuaItem::GetItemSet },
-    { "GetBagSize", &LuaItem::GetBagSize },
+    { "GetOwnerGUID", nullptr },
+    { "GetOwner", nullptr },
+    { "GetCount", nullptr },
+    { "GetMaxStackCount", nullptr },
+    { "GetSlot", nullptr },
+    { "GetBagSlot", nullptr },
+    { "GetEnchantmentId", nullptr },
+    { "GetSpellId", nullptr },
+    { "GetSpellTrigger", nullptr },
+    { "GetItemLink", nullptr },
+    { "GetClass", nullptr },
+    { "GetSubClass", nullptr },
+    { "GetName", nullptr },
+    { "GetDisplayId", nullptr },
+    { "GetQuality", nullptr },
+    { "GetBuyCount", nullptr },
+    { "GetBuyPrice", nullptr },
+    { "GetSellPrice", nullptr },
+    { "GetInventoryType", nullptr },
+    { "GetAllowableClass", nullptr },
+    { "GetAllowableRace", nullptr },
+    { "GetItemLevel", nullptr },
+    { "GetRequiredLevel", nullptr },
+            
+    { "GetStatsCount", nullptr },
+      
+    { "GetRandomProperty", nullptr },
+               
+    { "GetRandomSuffix", nullptr },
+      
+    { "GetItemSet", nullptr },
+    { "GetBagSize", nullptr },
 
     // Setters
-    { "SetOwner", &LuaItem::SetOwner },
-    { "SetBinding", &LuaItem::SetBinding },
-    { "SetCount", &LuaItem::SetCount },
+    { "SetOwner", nullptr },
+    { "SetBinding", nullptr },
+    { "SetCount", nullptr },
 
     // Boolean
-    { "IsSoulBound", &LuaItem::IsSoulBound },
-#if (!defined(TBC) && !defined(CLASSIC))
-    { "IsBoundAccountWide", &LuaItem::IsBoundAccountWide },
-#endif
-    { "IsBoundByEnchant", &LuaItem::IsBoundByEnchant },
-    { "IsNotBoundToPlayer", &LuaItem::IsNotBoundToPlayer },
-    { "IsLocked", &LuaItem::IsLocked },
-    { "IsBag", &LuaItem::IsBag },
-#ifndef CLASSIC
-    { "IsCurrencyToken", &LuaItem::IsCurrencyToken },
-#endif
-    { "IsNotEmptyBag", &LuaItem::IsNotEmptyBag },
-    { "IsBroken", &LuaItem::IsBroken },
-    { "CanBeTraded", &LuaItem::CanBeTraded },
-    { "IsInTrade", &LuaItem::IsInTrade },
-    { "IsInBag", &LuaItem::IsInBag },
-    { "IsEquipped", &LuaItem::IsEquipped },
-    { "HasQuest", &LuaItem::HasQuest },
-    { "IsPotion", &LuaItem::IsPotion },
-#if defined(WOTLK)
-    { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
-    { "IsArmorVellum", &LuaItem::IsArmorVellum },
-#endif
-    { "IsConjuredConsumable", &LuaItem::IsConjuredConsumable },
-    //{"IsRefundExpired", &LuaItem::IsRefundExpired},               // :IsRefundExpired() - UNDOCUMENTED - Returns true if the item's refund time has expired
-    { "SetEnchantment", &LuaItem::SetEnchantment },
-    { "ClearEnchantment", &LuaItem::ClearEnchantment },
+    { "IsSoulBound", nullptr },
+                                        
+    { "IsBoundAccountWide", nullptr },
+      
+    { "IsBoundByEnchant", nullptr },
+    { "IsNotBoundToPlayer", nullptr },
+    { "IsLocked", nullptr },
+    { "IsBag", nullptr },
+               
+    { "IsCurrencyToken", nullptr },
+      
+    { "IsNotEmptyBag", nullptr },
+    { "IsBroken", nullptr },
+    { "CanBeTraded", nullptr },
+    { "IsInTrade", nullptr },
+    { "IsInBag", nullptr },
+    { "IsEquipped", nullptr },
+    { "HasQuest", nullptr },
+    { "IsPotion", nullptr },
+                  
+    { "IsWeaponVellum", nullptr },
+    { "IsArmorVellum", nullptr },
+      
+    { "IsConjuredConsumable", nullptr },
+    { "IsRefundExpired", nullptr },
+    { "SetEnchantment", nullptr },
+    { "ClearEnchantment", nullptr },
 
     // Other
-    { "SaveToDB", &LuaItem::SaveToDB },
+    { "SaveToDB", nullptr },
 
     { NULL, NULL }
 };
@@ -994,22 +994,22 @@ ElunaRegister<Item> ItemMethods[] =
 ElunaRegister<Aura> AuraMethods[] =
 {
     // Getters
-    { "GetCaster", &LuaAura::GetCaster },
-    { "GetCasterGUID", &LuaAura::GetCasterGUID },
-    { "GetCasterLevel", &LuaAura::GetCasterLevel },
-    { "GetDuration", &LuaAura::GetDuration },
-    { "GetMaxDuration", &LuaAura::GetMaxDuration },
-    { "GetAuraId", &LuaAura::GetAuraId },
-    { "GetStackAmount", &LuaAura::GetStackAmount },
-    { "GetOwner", &LuaAura::GetOwner },
+    { "GetCaster", nullptr },
+    { "GetCasterGUID", nullptr },
+    { "GetCasterLevel", nullptr },
+    { "GetDuration", nullptr },
+    { "GetMaxDuration", nullptr },
+    { "GetAuraId", nullptr },
+    { "GetStackAmount", nullptr },
+    { "GetOwner", nullptr },
 
     // Setters
-    { "SetDuration", &LuaAura::SetDuration },
-    { "SetMaxDuration", &LuaAura::SetMaxDuration },
-    { "SetStackAmount", &LuaAura::SetStackAmount },
+    { "SetDuration", nullptr },
+    { "SetMaxDuration", nullptr },
+    { "SetStackAmount", nullptr },
 
     // Other
-    { "Remove", &LuaAura::Remove },
+    { "Remove", nullptr },
 
     { NULL, NULL }
 };
@@ -1017,24 +1017,24 @@ ElunaRegister<Aura> AuraMethods[] =
 ElunaRegister<Spell> SpellMethods[] =
 {
     // Getters
-    { "GetCaster", &LuaSpell::GetCaster },
-    { "GetCastTime", &LuaSpell::GetCastTime },
-    { "GetEntry", &LuaSpell::GetEntry },
-    { "GetDuration", &LuaSpell::GetDuration },
-    { "GetPowerCost", &LuaSpell::GetPowerCost },
-    { "GetTargetDest", &LuaSpell::GetTargetDest },
-    { "GetTarget", &LuaSpell::GetTarget },
+    { "GetCaster", nullptr },
+    { "GetCastTime", nullptr },
+    { "GetEntry", nullptr },
+    { "GetDuration", nullptr },
+    { "GetPowerCost", nullptr },
+    { "GetTargetDest", nullptr },
+    { "GetTarget", nullptr },
 
     // Setters
-    { "SetAutoRepeat", &LuaSpell::SetAutoRepeat },
+    { "SetAutoRepeat", nullptr },
 
     // Boolean
-    { "IsAutoRepeat", &LuaSpell::IsAutoRepeat },
+    { "IsAutoRepeat", nullptr },
 
     // Other
-    { "Cancel", &LuaSpell::Cancel },
-    { "Cast", &LuaSpell::Cast },
-    { "Finish", &LuaSpell::Finish },
+    { "Cancel", nullptr },
+    { "Cast", nullptr },
+    { "Finish", nullptr },
 
     { NULL, NULL }
 };
@@ -1042,22 +1042,22 @@ ElunaRegister<Spell> SpellMethods[] =
 ElunaRegister<Quest> QuestMethods[] =
 {
     // Getters
-    { "GetId", &LuaQuest::GetId },
-    { "GetLevel", &LuaQuest::GetLevel },
-    // {"GetMaxLevel", &LuaQuest::GetMaxLevel},                   // :GetMaxLevel() - UNDOCUMENTED - Returns the quest's max level
-    { "GetMinLevel", &LuaQuest::GetMinLevel },
-    { "GetNextQuestId", &LuaQuest::GetNextQuestId },
-    { "GetPrevQuestId", &LuaQuest::GetPrevQuestId },
-    { "GetNextQuestInChain", &LuaQuest::GetNextQuestInChain },
-    { "GetFlags", &LuaQuest::GetFlags },
-    { "GetType", &LuaQuest::GetType },
+    { "GetId", nullptr },
+    { "GetLevel", nullptr },
+    {"GetMaxLevel", nullptr },
+    { "GetMinLevel", nullptr },
+    { "GetNextQuestId", nullptr },
+    { "GetPrevQuestId", nullptr },
+    { "GetNextQuestInChain", nullptr },
+    { "GetFlags", nullptr },
+    { "GetType", nullptr },
 
     // Boolean
-    { "HasFlag", &LuaQuest::HasFlag },
-#ifndef CLASSIC
-    { "IsDaily", &LuaQuest::IsDaily },
-#endif
-    { "IsRepeatable", &LuaQuest::IsRepeatable },
+    { "HasFlag", nullptr },
+               
+    { "IsDaily", nullptr },
+      
+    { "IsRepeatable", nullptr },
 
     { NULL, NULL }
 };
@@ -1065,39 +1065,39 @@ ElunaRegister<Quest> QuestMethods[] =
 ElunaRegister<Group> GroupMethods[] =
 {
     // Getters
-    { "GetMembers", &LuaGroup::GetMembers },
-    { "GetLeaderGUID", &LuaGroup::GetLeaderGUID },
-    { "GetGUID", &LuaGroup::GetGUID },
-    { "GetMemberGroup", &LuaGroup::GetMemberGroup },
-    { "GetMemberGUID", &LuaGroup::GetMemberGUID },
-    { "GetMembersCount", &LuaGroup::GetMembersCount },
+    { "GetMembers", nullptr },
+    { "GetLeaderGUID", nullptr },
+    { "GetGUID", nullptr },
+    { "GetMemberGroup", nullptr },
+    { "GetMemberGUID", nullptr },
+    { "GetMembersCount", nullptr },
 
     // Setters
-    { "SetLeader", &LuaGroup::SetLeader },
-    { "SetMembersGroup", &LuaGroup::SetMembersGroup },
-    { "SetTargetIcon", &LuaGroup::SetTargetIcon },
+    { "SetLeader", nullptr },
+    { "SetMembersGroup", nullptr },
+    { "SetTargetIcon", nullptr },
 
     // Boolean
-    { "IsLeader", &LuaGroup::IsLeader },
-    { "AddMember", &LuaGroup::AddMember },
-    { "RemoveMember", &LuaGroup::RemoveMember },
-    { "Disband", &LuaGroup::Disband },
-    { "IsFull", &LuaGroup::IsFull },
-#if !(defined(CLASSIC) || defined(TBC))
-    { "IsLFGGroup", &LuaGroup::IsLFGGroup },
-#endif
-    { "IsRaidGroup", &LuaGroup::IsRaidGroup },
-    { "IsBGGroup", &LuaGroup::IsBGGroup },
-    // {"IsBFGroup", &LuaGroup::IsBFGroup},                       // :IsBFGroup() - UNDOCUMENTED - Returns true if the group is a battlefield group
-    { "IsMember", &LuaGroup::IsMember },
-    { "IsAssistant", &LuaGroup::IsAssistant },
-    { "SameSubGroup", &LuaGroup::SameSubGroup },
-    { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },
+    { "IsLeader", nullptr },
+    { "AddMember", nullptr },
+    { "RemoveMember", nullptr },
+    { "Disband", nullptr },
+    { "IsFull", nullptr },
+                                       
+    { "IsLFGGroup", nullptr },
+      
+    { "IsRaidGroup", nullptr },
+    { "IsBGGroup", nullptr },
+    { "IsBFGroup", nullptr },
+    { "IsMember", nullptr },
+    { "IsAssistant", nullptr },
+    { "SameSubGroup", nullptr },
+    { "HasFreeSlotSubGroup", nullptr },
 
     // Other
-    { "SendPacket", &LuaGroup::SendPacket },
-    // {"ConvertToLFG", &LuaGroup::ConvertToLFG},                 // :ConvertToLFG() - UNDOCUMENTED - Converts the group to an LFG group
-    { "ConvertToRaid", &LuaGroup::ConvertToRaid },
+    { "SendPacket", nullptr },
+    {"ConvertToLFG", nullptr},
+    { "ConvertToRaid", nullptr },
 
     { NULL, NULL }
 };
@@ -1105,30 +1105,30 @@ ElunaRegister<Group> GroupMethods[] =
 ElunaRegister<Guild> GuildMethods[] =
 {
     // Getters
-    { "GetMembers", &LuaGuild::GetMembers },
-    { "GetLeader", &LuaGuild::GetLeader },
-    { "GetLeaderGUID", &LuaGuild::GetLeaderGUID },
-    { "GetId", &LuaGuild::GetId },
-    { "GetName", &LuaGuild::GetName },
-    { "GetMOTD", &LuaGuild::GetMOTD },
-    { "GetInfo", &LuaGuild::GetInfo },
-    { "GetMemberCount", &LuaGuild::GetMemberCount },
+    { "GetMembers", nullptr },
+    { "GetLeader", nullptr },
+    { "GetLeaderGUID", nullptr },
+    { "GetId", nullptr },
+    { "GetName", nullptr },
+    { "GetMOTD", nullptr },
+    { "GetInfo", nullptr },
+    { "GetMemberCount", nullptr },
 
     // Setters
-#ifndef CLASSIC
-    { "SetBankTabText", &LuaGuild::SetBankTabText },
-#endif
-    { "SetMemberRank", &LuaGuild::SetMemberRank },
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
-    { "SetLeader", &LuaGuild::SetLeader },
-#endif
+               
+    { "SetBankTabText", nullptr },
+      
+    { "SetMemberRank", nullptr },
+                                                      
+    { "SetLeader", nullptr },
+      
 
     // Other
-    { "SendPacket", &LuaGuild::SendPacket },
-    { "SendPacketToRanked", &LuaGuild::SendPacketToRanked },
-    { "Disband", &LuaGuild::Disband },
-    { "AddMember", &LuaGuild::AddMember },
-    { "DeleteMember", &LuaGuild::DeleteMember },
+    { "SendPacket", nullptr },
+    { "SendPacketToRanked", nullptr },
+    { "Disband", nullptr },
+    { "AddMember", nullptr },
+    { "DeleteMember", nullptr },
 
     { NULL, NULL }
 };
@@ -1138,16 +1138,16 @@ ElunaRegister<Guild> GuildMethods[] =
 ElunaRegister<Vehicle> VehicleMethods[] =
 {
     // Getters
-    { "GetOwner", &LuaVehicle::GetOwner },
-    { "GetEntry", &LuaVehicle::GetEntry },
-    { "GetPassenger", &LuaVehicle::GetPassenger },
+    { "GetOwner", nullptr },
+    { "GetEntry", nullptr },
+    { "GetPassenger", nullptr },
 
     // Boolean
-    { "IsOnBoard", &LuaVehicle::IsOnBoard },
+    { "IsOnBoard", nullptr },
 
     // Other
-    { "AddPassenger", &LuaVehicle::AddPassenger },
-    { "RemovePassenger", &LuaVehicle::RemovePassenger },
+    { "AddPassenger", nullptr },
+    { "RemovePassenger", nullptr },
 
     { NULL, NULL }
 };
@@ -1157,25 +1157,25 @@ ElunaRegister<Vehicle> VehicleMethods[] =
 ElunaRegister<ElunaQuery> QueryMethods[] =
 {
     // Getters
-    { "GetColumnCount", &LuaQuery::GetColumnCount },
-    { "GetRowCount", &LuaQuery::GetRowCount },
-    { "GetRow", &LuaQuery::GetRow },
-    { "GetBool", &LuaQuery::GetBool },
-    { "GetUInt8", &LuaQuery::GetUInt8 },
-    { "GetUInt16", &LuaQuery::GetUInt16 },
-    { "GetUInt32", &LuaQuery::GetUInt32 },
-    { "GetUInt64", &LuaQuery::GetUInt64 },
-    { "GetInt8", &LuaQuery::GetInt8 },
-    { "GetInt16", &LuaQuery::GetInt16 },
-    { "GetInt32", &LuaQuery::GetInt32 },
-    { "GetInt64", &LuaQuery::GetInt64 },
-    { "GetFloat", &LuaQuery::GetFloat },
-    { "GetDouble", &LuaQuery::GetDouble },
-    { "GetString", &LuaQuery::GetString },
+    { "GetColumnCount", nullptr },
+    { "GetRowCount", nullptr },
+    { "GetRow", nullptr },
+    { "GetBool", nullptr },
+    { "GetUInt8", nullptr },
+    { "GetUInt16", nullptr },
+    { "GetUInt32", nullptr },
+    { "GetUInt64", nullptr },
+    { "GetInt8", nullptr },
+    { "GetInt16", nullptr },
+    { "GetInt32", nullptr },
+    { "GetInt64", nullptr },
+    { "GetFloat", nullptr },
+    { "GetDouble", nullptr },
+    { "GetString", nullptr },
 
     // Boolean
-    { "NextRow", &LuaQuery::NextRow },
-    { "IsNull", &LuaQuery::IsNull },
+    { "NextRow", nullptr },
+    { "IsNull", nullptr },
 
     { NULL, NULL }
 };
@@ -1183,35 +1183,35 @@ ElunaRegister<ElunaQuery> QueryMethods[] =
 ElunaRegister<WorldPacket> PacketMethods[] =
 {
     // Getters
-    { "GetOpcode", &LuaPacket::GetOpcode },
-    { "GetSize", &LuaPacket::GetSize },
+    { "GetOpcode", nullptr },
+    { "GetSize", nullptr },
 
     // Setters
-    { "SetOpcode", &LuaPacket::SetOpcode },
+    { "SetOpcode", nullptr },
 
     // Readers
-    { "ReadByte", &LuaPacket::ReadByte },
-    { "ReadUByte", &LuaPacket::ReadUByte },
-    { "ReadShort", &LuaPacket::ReadShort },
-    { "ReadUShort", &LuaPacket::ReadUShort },
-    { "ReadLong", &LuaPacket::ReadLong },
-    { "ReadULong", &LuaPacket::ReadULong },
-    { "ReadGUID", &LuaPacket::ReadGUID },
-    { "ReadString", &LuaPacket::ReadString },
-    { "ReadFloat", &LuaPacket::ReadFloat },
-    { "ReadDouble", &LuaPacket::ReadDouble },
+    { "ReadByte", nullptr },
+    { "ReadUByte", nullptr },
+    { "ReadShort", nullptr },
+    { "ReadUShort", nullptr },
+    { "ReadLong", nullptr },
+    { "ReadULong", nullptr },
+    { "ReadGUID", nullptr },
+    { "ReadString", nullptr },
+    { "ReadFloat", nullptr },
+    { "ReadDouble", nullptr },
 
     // Writers
-    { "WriteByte", &LuaPacket::WriteByte },
-    { "WriteUByte", &LuaPacket::WriteUByte },
-    { "WriteShort", &LuaPacket::WriteShort },
-    { "WriteUShort", &LuaPacket::WriteUShort },
-    { "WriteLong", &LuaPacket::WriteLong },
-    { "WriteULong", &LuaPacket::WriteULong },
-    { "WriteGUID", &LuaPacket::WriteGUID },
-    { "WriteString", &LuaPacket::WriteString },
-    { "WriteFloat", &LuaPacket::WriteFloat },
-    { "WriteDouble", &LuaPacket::WriteDouble },
+    { "WriteByte", nullptr },
+    { "WriteUByte", nullptr },
+    { "WriteShort", nullptr },
+    { "WriteUShort", nullptr },
+    { "WriteLong", nullptr },
+    { "WriteULong", nullptr },
+    { "WriteGUID", nullptr },
+    { "WriteString", nullptr },
+    { "WriteFloat", nullptr },
+    { "WriteDouble", nullptr },
 
     { NULL, NULL }
 };
@@ -1219,34 +1219,34 @@ ElunaRegister<WorldPacket> PacketMethods[] =
 ElunaRegister<Map> MapMethods[] =
 {
     // Getters
-    { "GetName", &LuaMap::GetName },
-    { "GetDifficulty", &LuaMap::GetDifficulty },
-    { "GetInstanceId", &LuaMap::GetInstanceId },
-    { "GetInstanceData", &LuaMap::GetInstanceData },
-    { "GetPlayerCount", &LuaMap::GetPlayerCount },
-    { "GetPlayers", &LuaMap::GetPlayers },
-    { "GetMapId", &LuaMap::GetMapId },
-    { "GetAreaId", &LuaMap::GetAreaId },
-    { "GetHeight", &LuaMap::GetHeight },
-    { "GetWorldObject", &LuaMap::GetWorldObject },
+    { "GetName", nullptr },
+    { "GetDifficulty", nullptr },
+    { "GetInstanceId", nullptr },
+    { "GetInstanceData", nullptr },
+    { "GetPlayerCount", nullptr },
+    { "GetPlayers", nullptr },
+    { "GetMapId", nullptr },
+    { "GetAreaId", nullptr },
+    { "GetHeight", nullptr },
+    { "GetWorldObject", nullptr },
 
     // Setters
-    { "SetWeather", &LuaMap::SetWeather },
+    { "SetWeather", nullptr },
 
     // Boolean
-#ifndef CLASSIC
-    { "IsArena", &LuaMap::IsArena },
-#endif
-    { "IsBattleground", &LuaMap::IsBattleground },
-    { "IsDungeon", &LuaMap::IsDungeon },
-    { "IsEmpty", &LuaMap::IsEmpty },
-#ifndef CLASSIC
-    { "IsHeroic", &LuaMap::IsHeroic },
-#endif
-    { "IsRaid", &LuaMap::IsRaid },
+               
+    { "IsArena", nullptr },
+      
+    { "IsBattleground", nullptr },
+    { "IsDungeon", nullptr },
+    { "IsEmpty", nullptr },
+               
+    { "IsHeroic", nullptr },
+      
+    { "IsRaid", nullptr },
 
     // Other
-    { "SaveInstanceData", &LuaMap::SaveInstanceData },
+    { "SaveInstanceData", nullptr },
 
     { NULL, NULL }
 };
@@ -1254,45 +1254,40 @@ ElunaRegister<Map> MapMethods[] =
 ElunaRegister<Corpse> CorpseMethods[] =
 {
     // Getters
-    { "GetOwnerGUID", &LuaCorpse::GetOwnerGUID },
-    { "GetGhostTime", &LuaCorpse::GetGhostTime },
-    { "GetType", &LuaCorpse::GetType },
+    { "GetOwnerGUID", nullptr },
+    { "GetGhostTime", nullptr },
+    { "GetType", nullptr },
 
     // Other
-    { "ResetGhostTime", &LuaCorpse::ResetGhostTime },
-    { "SaveToDB", &LuaCorpse::SaveToDB },
+    { "ResetGhostTime", nullptr },
+    { "SaveToDB", nullptr },
 
-    { NULL, NULL }
-};
-
-ElunaRegister<AuctionHouseEntry> AuctionMethods[] =
-{
     { NULL, NULL }
 };
 
 ElunaRegister<BattleGround> BattleGroundMethods[] =
 {
     // Getters
-    { "GetName", &LuaBattleGround::GetName },
-    { "GetAlivePlayersCountByTeam", &LuaBattleGround::GetAlivePlayersCountByTeam },
-    { "GetMap", &LuaBattleGround::GetMap },
-    { "GetBonusHonorFromKillCount", &LuaBattleGround::GetBonusHonorFromKillCount },
-#ifndef AZEROTHCORE
-    { "GetBracketId", &LuaBattleGround::GetBracketId },
-#endif
-    { "GetEndTime", &LuaBattleGround::GetEndTime },
-    { "GetFreeSlotsForTeam", &LuaBattleGround::GetFreeSlotsForTeam },
-    { "GetInstanceId", &LuaBattleGround::GetInstanceId },
-    { "GetMapId", &LuaBattleGround::GetMapId },
-    { "GetTypeId", &LuaBattleGround::GetTypeId },
-    { "GetMaxLevel", &LuaBattleGround::GetMaxLevel },
-    { "GetMinLevel", &LuaBattleGround::GetMinLevel },
-    { "GetMaxPlayers", &LuaBattleGround::GetMaxPlayers },
-    { "GetMinPlayers", &LuaBattleGround::GetMinPlayers },
-    { "GetMaxPlayersPerTeam", &LuaBattleGround::GetMaxPlayersPerTeam },
-    { "GetMinPlayersPerTeam", &LuaBattleGround::GetMinPlayersPerTeam },
-    { "GetWinner", &LuaBattleGround::GetWinner },
-    { "GetStatus", &LuaBattleGround::GetStatus },
+    { "GetName", nullptr },
+    { "GetAlivePlayersCountByTeam", nullptr },
+    { "GetMap", nullptr },
+    { "GetBonusHonorFromKillCount", nullptr },
+                   
+    { "GetBracketId", nullptr },
+      
+    { "GetEndTime", nullptr },
+    { "GetFreeSlotsForTeam", nullptr },
+    { "GetInstanceId", nullptr },
+    { "GetMapId", nullptr },
+    { "GetTypeId", nullptr },
+    { "GetMaxLevel", nullptr },
+    { "GetMinLevel", nullptr },
+    { "GetMaxPlayers", nullptr },
+    { "GetMinPlayers", nullptr },
+    { "GetMaxPlayersPerTeam", nullptr },
+    { "GetMinPlayersPerTeam", nullptr },
+    { "GetWinner", nullptr },
+    { "GetStatus", nullptr },
 
     { NULL, NULL }
 };
@@ -1359,82 +1354,79 @@ template<> int ElunaTemplate<long long>::ToString(lua_State* L)
 
 void RegisterFunctions(Eluna* E)
 {
-    ElunaGlobal::SetMethods(E, GlobalMethods);
+    ElunaGlobal::SetMethods(E, GlobalMethods, LuaGlobalFunctions::GlobalMethodsOverride);
 
     ElunaTemplate<Object>::Register(E, "Object");
-    ElunaTemplate<Object>::SetMethods(E, ObjectMethods);
+    ElunaTemplate<Object>::SetMethods(E, ObjectMethods, LuaObject::ObjectMethodsOverride);
 
     ElunaTemplate<WorldObject>::Register(E, "WorldObject");
-    ElunaTemplate<WorldObject>::SetMethods(E, ObjectMethods);
-    ElunaTemplate<WorldObject>::SetMethods(E, WorldObjectMethods);
+    ElunaTemplate<WorldObject>::SetMethods(E, ObjectMethods, LuaObject::ObjectMethodsOverride);
+    ElunaTemplate<WorldObject>::SetMethods(E, WorldObjectMethods, LuaWorldObject::WorldObjectMethodsOverride);
 
     ElunaTemplate<Unit>::Register(E, "Unit");
-    ElunaTemplate<Unit>::SetMethods(E, ObjectMethods);
-    ElunaTemplate<Unit>::SetMethods(E, WorldObjectMethods);
-    ElunaTemplate<Unit>::SetMethods(E, UnitMethods);
+    ElunaTemplate<Unit>::SetMethods(E, ObjectMethods, LuaObject::ObjectMethodsOverride);
+    ElunaTemplate<Unit>::SetMethods(E, WorldObjectMethods, LuaWorldObject::WorldObjectMethodsOverride);
+    ElunaTemplate<Unit>::SetMethods(E, UnitMethods, LuaUnit::UnitMethodsOverride);
 
     ElunaTemplate<Player>::Register(E, "Player");
-    ElunaTemplate<Player>::SetMethods(E, ObjectMethods);
-    ElunaTemplate<Player>::SetMethods(E, WorldObjectMethods);
-    ElunaTemplate<Player>::SetMethods(E, UnitMethods);
-    ElunaTemplate<Player>::SetMethods(E, PlayerMethods);
+    ElunaTemplate<Player>::SetMethods(E, ObjectMethods, LuaObject::ObjectMethodsOverride);
+    ElunaTemplate<Player>::SetMethods(E, WorldObjectMethods, LuaWorldObject::WorldObjectMethodsOverride);
+    ElunaTemplate<Player>::SetMethods(E, UnitMethods, LuaUnit::UnitMethodsOverride);
+    ElunaTemplate<Player>::SetMethods(E, PlayerMethods, LuaPlayer::PlayerMethodsOverride);
 
     ElunaTemplate<Creature>::Register(E, "Creature");
-    ElunaTemplate<Creature>::SetMethods(E, ObjectMethods);
-    ElunaTemplate<Creature>::SetMethods(E, WorldObjectMethods);
-    ElunaTemplate<Creature>::SetMethods(E, UnitMethods);
-    ElunaTemplate<Creature>::SetMethods(E, CreatureMethods);
+    ElunaTemplate<Creature>::SetMethods(E, ObjectMethods, LuaObject::ObjectMethodsOverride);
+    ElunaTemplate<Creature>::SetMethods(E, WorldObjectMethods, LuaWorldObject::WorldObjectMethodsOverride);
+    ElunaTemplate<Creature>::SetMethods(E, UnitMethods, LuaUnit::UnitMethodsOverride);
+    ElunaTemplate<Creature>::SetMethods(E, CreatureMethods, LuaCreature::CreatureMethodsOverride);
 
     ElunaTemplate<GameObject>::Register(E, "GameObject");
-    ElunaTemplate<GameObject>::SetMethods(E, ObjectMethods);
-    ElunaTemplate<GameObject>::SetMethods(E, WorldObjectMethods);
-    ElunaTemplate<GameObject>::SetMethods(E, GameObjectMethods);
+    ElunaTemplate<GameObject>::SetMethods(E, ObjectMethods, LuaObject::ObjectMethodsOverride);
+    ElunaTemplate<GameObject>::SetMethods(E, WorldObjectMethods, LuaWorldObject::WorldObjectMethodsOverride);
+    ElunaTemplate<GameObject>::SetMethods(E, GameObjectMethods, LuaGameObject::GameObjectMethodsOverride);
 
     ElunaTemplate<Corpse>::Register(E, "Corpse");
-    ElunaTemplate<Corpse>::SetMethods(E, ObjectMethods);
-    ElunaTemplate<Corpse>::SetMethods(E, WorldObjectMethods);
-    ElunaTemplate<Corpse>::SetMethods(E, CorpseMethods);
+    ElunaTemplate<Corpse>::SetMethods(E, ObjectMethods, LuaObject::ObjectMethodsOverride);
+    ElunaTemplate<Corpse>::SetMethods(E, WorldObjectMethods, LuaWorldObject::WorldObjectMethodsOverride);
+    ElunaTemplate<Corpse>::SetMethods(E, CorpseMethods, LuaCorpse::CorpseMethodsOverride);
 
     ElunaTemplate<Item>::Register(E, "Item");
-    ElunaTemplate<Item>::SetMethods(E, ObjectMethods);
-    ElunaTemplate<Item>::SetMethods(E, ItemMethods);
+    ElunaTemplate<Item>::SetMethods(E, ObjectMethods, LuaObject::ObjectMethodsOverride);
+    ElunaTemplate<Item>::SetMethods(E, ItemMethods, LuaItem::ItemMethodsOverride);
 
 #ifndef CLASSIC
 #ifndef TBC
     ElunaTemplate<Vehicle>::Register(E, "Vehicle");
-    ElunaTemplate<Vehicle>::SetMethods(E, VehicleMethods);
+    ElunaTemplate<Vehicle>::SetMethods(E, VehicleMethods, LuaVehicle::VehicleMethodsOverride);
 #endif
 #endif
 
     ElunaTemplate<Group>::Register(E, "Group");
-    ElunaTemplate<Group>::SetMethods(E, GroupMethods);
+    ElunaTemplate<Group>::SetMethods(E, GroupMethods, LuaGroup::GroupMethodsOverride);
 
     ElunaTemplate<Guild>::Register(E, "Guild");
-    ElunaTemplate<Guild>::SetMethods(E, GuildMethods);
+    ElunaTemplate<Guild>::SetMethods(E, GuildMethods, LuaGuild::GuildMethodsOverride);
 
     ElunaTemplate<Aura>::Register(E, "Aura");
-    ElunaTemplate<Aura>::SetMethods(E, AuraMethods);
+    ElunaTemplate<Aura>::SetMethods(E, AuraMethods, LuaAura::AuraMethodsOverride);
 
     ElunaTemplate<Spell>::Register(E, "Spell");
-    ElunaTemplate<Spell>::SetMethods(E, SpellMethods);
+    ElunaTemplate<Spell>::SetMethods(E, SpellMethods, LuaSpell::SpellMethodsOverride);
 
     ElunaTemplate<Quest>::Register(E, "Quest");
-    ElunaTemplate<Quest>::SetMethods(E, QuestMethods);
+    ElunaTemplate<Quest>::SetMethods(E, QuestMethods, LuaQuest::QuestMethodsOverride);
 
     ElunaTemplate<Map>::Register(E, "Map");
-    ElunaTemplate<Map>::SetMethods(E, MapMethods);
-
-    ElunaTemplate<AuctionHouseEntry>::Register(E, "AuctionHouseEntry");
-    ElunaTemplate<AuctionHouseEntry>::SetMethods(E, AuctionMethods);
+    ElunaTemplate<Map>::SetMethods(E, MapMethods, LuaMap::MapMethodsOverride);
 
     ElunaTemplate<BattleGround>::Register(E, "BattleGround");
-    ElunaTemplate<BattleGround>::SetMethods(E, BattleGroundMethods);
+    ElunaTemplate<BattleGround>::SetMethods(E, BattleGroundMethods, LuaBattleGround::BattleGroundMethodsOverride);
 
     ElunaTemplate<WorldPacket>::Register(E, "WorldPacket", true);
-    ElunaTemplate<WorldPacket>::SetMethods(E, PacketMethods);
+    ElunaTemplate<WorldPacket>::SetMethods(E, PacketMethods, LuaPacket::PacketMethodsOverride);
 
     ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery", true);
-    ElunaTemplate<ElunaQuery>::SetMethods(E, QueryMethods);
+    ElunaTemplate<ElunaQuery>::SetMethods(E, QueryMethods, LuaQuery::QueryMethodsOverride);
 
     ElunaTemplate<long long>::Register(E, "long long", true);
 
