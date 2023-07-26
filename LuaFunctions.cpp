@@ -1044,7 +1044,7 @@ ElunaRegister<Quest> QuestMethods[] =
     // Getters
     { "GetId", nullptr },
     { "GetLevel", nullptr },
-    {"GetMaxLevel", nullptr },
+    { "GetMaxLevel", nullptr },
     { "GetMinLevel", nullptr },
     { "GetNextQuestId", nullptr },
     { "GetPrevQuestId", nullptr },
@@ -1096,7 +1096,7 @@ ElunaRegister<Group> GroupMethods[] =
 
     // Other
     { "SendPacket", nullptr },
-    {"ConvertToLFG", nullptr},
+    { "ConvertToLFG", nullptr},
     { "ConvertToRaid", nullptr },
 
     { NULL, NULL }

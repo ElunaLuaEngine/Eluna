@@ -367,7 +367,7 @@ namespace LuaGroup
         return 0;
     }
 
-    int ConvertToLFG(lua_State* L, Group* group) // TODO: Implementation
+    int ConvertToLFG(lua_State* /*L*/, Group* group)
     {
         group->ConvertToLFG();
         return 0;

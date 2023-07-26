@@ -366,7 +366,7 @@ namespace LuaCreature
      * @param [Unit] target
      * @param bool force = true : force [Creature] to attack
      */
-    int CanStartAttack(lua_State* L, Creature* creature) // TODO: Implement core side
+    int CanStartAttack(lua_State* L, Creature* creature)
     {
         Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
         bool force = Eluna::CHECKVAL<bool>(L, 3, true);
@@ -381,7 +381,7 @@ namespace LuaCreature
      * @param uint16 lootMode
      * @return bool hasLootMode
      */
-    int HasLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    int HasLootMode(lua_State* L, Creature* creature)
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);
 
@@ -801,7 +801,7 @@ namespace LuaCreature
         return 1;
     }
 
-    int GetLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    int GetLootMode(lua_State* L, Creature* creature)
     {
         Eluna::Push(L, creature->GetLootMode());
         return 1;
@@ -858,7 +858,7 @@ namespace LuaCreature
         return 0;
     }
 
-    int SetLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    int SetLootMode(lua_State* L, Creature* creature)
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);
 
@@ -1155,7 +1155,7 @@ namespace LuaCreature
     /**
      * Resets [Creature]'s loot mode to default
      */
-    int ResetLootMode(lua_State* /*L*/, Creature* creature) // TODO: Implement LootMode features
+    int ResetLootMode(lua_State* /*L*/, Creature* creature)
     {
         creature->ResetLootMode();
         return 0;
@@ -1166,7 +1166,7 @@ namespace LuaCreature
      *
      * @param uint16 lootMode
      */
-    int RemoveLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    int RemoveLootMode(lua_State* L, Creature* creature)
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);
 
@@ -1179,7 +1179,7 @@ namespace LuaCreature
      *
      * @param uint16 lootMode
      */
-    int AddLootMode(lua_State* L, Creature* creature) // TODO: Implement LootMode features
+    int AddLootMode(lua_State* L, Creature* creature)
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(L, 2);
 
