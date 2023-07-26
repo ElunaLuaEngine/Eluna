@@ -2449,25 +2449,25 @@ namespace LuaUnit
         return 0;
     }
 
-    int RestoreDisplayId(lua_State* L, Unit* unit)
+    int RestoreDisplayId(lua_State* /*L*/, Unit* unit)
     {
         unit->RestoreDisplayId();
         return 0;
     }
 
-    int RestoreFaction(lua_State* L, Unit* unit)
+    int RestoreFaction(lua_State* /*L*/, Unit* unit)
     {
         unit->RestoreFaction();
         return 0;
     }
 
-    int RemoveBindSightAuras(lua_State* L, Unit* unit)
+    int RemoveBindSightAuras(lua_State* /*L*/, Unit* unit)
     {
         unit->RemoveBindSightAuras();
         return 0;
     }
 
-    int RemoveCharmAuras(lua_State* L, Unit* unit)
+    int RemoveCharmAuras(lua_State* /*L*/, Unit* unit)
     {
         unit->RemoveCharmAuras();
         return 0;
