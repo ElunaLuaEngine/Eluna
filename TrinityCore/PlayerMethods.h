@@ -3571,22 +3571,24 @@ namespace LuaPlayer
         return 0;
     }
 
-    int BindToInstance(lua_State* L, Player* player)
+    int BindToInstance(lua_State* /*L*/, Player* player)
     {
-    player->BindToInstance();
-    return 0;
+        player->BindToInstance();
+        return 0;
     }
 
     int AddTalent(lua_State* L, Player* player)
     {
-    uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
-    uint8 spec = Eluna::CHECKVAL<uint8>(L, 3);
-    bool learning = Eluna::CHECKVAL<bool>(L, 4, true);
-    if (spec >= MAX_TALENT_SPECS)
-    Eluna::Push(L, false);
-    else
-    Eluna::Push(L, player->AddTalent(spellId, spec, learning));
-    return 1;
+        uint32 spellId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint8 spec = Eluna::CHECKVAL<uint8>(L, 3);
+        bool learning = Eluna::CHECKVAL<bool>(L, 4, true);
+
+        if (spec >= MAX_TALENT_SPECS)
+            Eluna::Push(L, false);
+        else
+            Eluna::Push(L, player->AddTalent(spellId, spec, learning));
+
+        return 1;
     }
 
     /*int GainSpellComboPoints(lua_State* L, Player* player)
@@ -3606,7 +3608,7 @@ namespace LuaPlayer
         return 0;
     }
 
-    int KilledPlayerCredit(lua_State* L, Player* player)
+    int KilledPlayerCredit(lua_State* /*L*/, Player* player)
     {
         player->KilledPlayerCredit();
         return 0;
