@@ -7,7 +7,7 @@
 #ifndef MAPMETHODS_H
 #define MAPMETHODS_H
 
-#include "ElunaInstanceAI.h"
+#include "LuaEngine/ElunaInstanceAI.h"
 
 /***
  * A game map, e.g. Azeroth, Eastern Kingdoms, the Molten Core, etc.
@@ -388,12 +388,14 @@ namespace LuaMap
         { "SetWeather", &LuaMap::SetWeather },
 
         // Boolean
-        { "IsArena", &LuaMap::IsArena },
         { "IsBattleground", &LuaMap::IsBattleground },
         { "IsDungeon", &LuaMap::IsDungeon },
         { "IsEmpty", &LuaMap::IsEmpty },
-        { "IsHeroic", &LuaMap::IsHeroic },
         { "IsRaid", &LuaMap::IsRaid },
+#if defined(TBC) || defined(WOTLK)
+        { "IsArena", &LuaMap::IsArena },
+        { "IsHeroic", &LuaMap::IsHeroic },
+#endif
 
         // Other
         { "SaveInstanceData", &LuaMap::SaveInstanceData },

@@ -1243,8 +1243,6 @@ namespace LuaWorldObject
         // Getters
         { "GetName", &LuaWorldObject::GetName },
         { "GetMap", &LuaWorldObject::GetMap },
-        { "GetPhaseMask", &LuaWorldObject::GetPhaseMask },
-        { "SetPhaseMask", &LuaWorldObject::SetPhaseMask },
         { "GetInstanceId", &LuaWorldObject::GetInstanceId },
         { "GetAreaId", &LuaWorldObject::GetAreaId },
         { "GetZoneId", &LuaWorldObject::GetZoneId },
@@ -1268,6 +1266,10 @@ namespace LuaWorldObject
         { "GetExactDistance2d", &LuaWorldObject::GetExactDistance2d },
         { "GetRelativePoint", &LuaWorldObject::GetRelativePoint },
         { "GetAngle", &LuaWorldObject::GetAngle },
+#if defined(WOTLK)
+        { "GetPhaseMask", &LuaWorldObject::GetPhaseMask },
+        { "SetPhaseMask", &LuaWorldObject::SetPhaseMask },
+#endif
 
         // Boolean
         { "IsWithinLoS", &LuaWorldObject::IsWithinLoS },

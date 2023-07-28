@@ -1518,8 +1518,8 @@ namespace LuaCreature
         { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },
         { "GetWanderRadius", &LuaCreature::GetWanderRadius },
         { "GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId },
-        { "GetWaypointPath", &LuaCreature::GetWaypointPath },
-        { "GetLootMode", &LuaCreature::GetLootMode },
+        { "GetWaypointPath", nullptr }, // TC/Acore
+        { "GetLootMode", nullptr }, // TC/Acore
         { "GetLootRecipient", &LuaCreature::GetLootRecipient },
         { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },
         { "GetNPCFlags", &LuaCreature::GetNPCFlags },
@@ -1529,7 +1529,7 @@ namespace LuaCreature
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
 
         // Setters
-        { "SetRegeneratingHealth", &LuaCreature::SetRegeneratingHealth },
+        { "SetRegeneratingHealth", nullptr }, // TC/Acore
         { "SetHover", &LuaCreature::SetHover },
         { "SetDisableGravity", &LuaCreature::SetDisableGravity },
         { "SetAggroEnabled", &LuaCreature::SetAggroEnabled },
@@ -1540,9 +1540,9 @@ namespace LuaCreature
         { "SetWanderRadius", &LuaCreature::SetWanderRadius },
         { "SetInCombatWithZone", &LuaCreature::SetInCombatWithZone },
         { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
-        { "SetLootMode", &LuaCreature::SetLootMode },
+        { "SetLootMode", nullptr }, // TC/Acore
         { "SetNPCFlags", &LuaCreature::SetNPCFlags },
-        { "SetReactState", &LuaCreature::SetReactState },
+        { "SetReactState", nullptr }, // TC/Acore
         { "SetDeathState", &LuaCreature::SetDeathState },
         { "SetWalk", &LuaCreature::SetWalk },
         { "SetHomePosition", &LuaCreature::SetHomePosition },
@@ -1550,11 +1550,11 @@ namespace LuaCreature
 
         // Boolean
         { "IsRegeneratingHealth", &LuaCreature::IsRegeneratingHealth },
-        { "IsDungeonBoss", &LuaCreature::IsDungeonBoss },
+        { "IsDungeonBoss", nullptr }, // TC/Acore
         { "IsWorldBoss", &LuaCreature::IsWorldBoss },
         { "IsRacialLeader", &LuaCreature::IsRacialLeader },
         { "IsCivilian", &LuaCreature::IsCivilian },
-        { "IsTrigger", &LuaCreature::IsTrigger },
+        { "IsTrigger", nullptr }, // TC/Acore
         { "IsGuard", &LuaCreature::IsGuard },
         { "IsElite", &LuaCreature::IsElite },
         { "IsInEvadeMode", &LuaCreature::IsInEvadeMode },
@@ -1562,7 +1562,7 @@ namespace LuaCreature
         { "CanWalk", &LuaCreature::CanWalk },
         { "CanSwim", &LuaCreature::CanSwim },
         { "CanAggro", &LuaCreature::CanAggro },
-        { "CanStartAttack", &LuaCreature::CanStartAttack },
+        { "CanStartAttack", nullptr }, // TC/Acore
         { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },
         { "IsTappedBy", &LuaCreature::IsTappedBy },
         { "HasLootRecipient", &LuaCreature::HasLootRecipient },
@@ -1570,8 +1570,8 @@ namespace LuaCreature
         { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },
         { "CanCompleteQuest", &LuaCreature::CanCompleteQuest },
         { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
-        { "IsDamageEnoughForLootingAndReward", &LuaCreature::IsDamageEnoughForLootingAndReward },
-        { "HasLootMode", &LuaCreature::HasLootMode },
+        { "IsDamageEnoughForLootingAndReward", nullptr }, // TC/Acore
+        { "HasLootMode", nullptr }, // TC/Acore
         { "HasSpell", &LuaCreature::HasSpell },
         { "HasQuest", &LuaCreature::HasQuest },
         { "HasSpellCooldown", &LuaCreature::HasSpellCooldown },
@@ -1585,9 +1585,9 @@ namespace LuaCreature
         { "DespawnOrUnsummon", &LuaCreature::DespawnOrUnsummon },
         { "Respawn", &LuaCreature::Respawn },
         { "AttackStart", &LuaCreature::AttackStart },
-        { "AddLootMode", &LuaCreature::AddLootMode },
-        { "ResetLootMode", &LuaCreature::ResetLootMode },
-        { "RemoveLootMode", &LuaCreature::RemoveLootMode },
+        { "AddLootMode", nullptr }, // TC/Acore
+        { "ResetLootMode", nullptr }, // TC/Acore
+        { "RemoveLootMode", nullptr }, // TC/Acore
         { "SaveToDB", &LuaCreature::SaveToDB },
         { "SelectVictim", &LuaCreature::SelectVictim },
         { "MoveWaypoint", &LuaCreature::MoveWaypoint },
