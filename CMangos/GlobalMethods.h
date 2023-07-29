@@ -7,7 +7,7 @@
 #ifndef GLOBALMETHODS_H
 #define GLOBALMETHODS_H
 
-#include "BindingMap.h"
+#include "LuaEngine/BindingMap.h"
 
 #ifdef AZEROTHCORE
 

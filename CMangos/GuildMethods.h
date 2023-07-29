@@ -315,7 +315,9 @@ namespace LuaGuild
         { "GetMemberCount", &LuaGuild::GetMemberCount },
 
         // Setters
+#if defined(TBC) || defined(WOTLK)
         { "SetBankTabText", &LuaGuild::SetBankTabText },
+#endif
         { "SetMemberRank", &LuaGuild::SetMemberRank },
         { "SetLeader", &LuaGuild::SetLeader },
 

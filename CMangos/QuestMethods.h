@@ -199,7 +199,9 @@ namespace LuaQuest
 
         // Boolean
         { "HasFlag", &LuaQuest::HasFlag },
+#if defined(TBC) || defined(WOTLK)
         { "IsDaily", &LuaQuest::IsDaily },
+#endif
         { "IsRepeatable", &LuaQuest::IsRepeatable },
 
         { NULL, NULL }
