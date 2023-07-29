@@ -791,11 +791,15 @@ namespace LuaItem
         { "GetAllowableRace", &LuaItem::GetAllowableRace },
         { "GetItemLevel", &LuaItem::GetItemLevel },
         { "GetRequiredLevel", &LuaItem::GetRequiredLevel },
-        { "GetStatsCount", &LuaItem::GetStatsCount },
         { "GetRandomProperty", &LuaItem::GetRandomProperty },
-        { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
         { "GetItemSet", &LuaItem::GetItemSet },
         { "GetBagSize", &LuaItem::GetBagSize },
+#ifndef CLASSIC
+        { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
+#endif
+#ifdef WOTLK
+        { "GetStatsCount", &LuaItem::GetStatsCount },
+#endif
 
         // Setters
         { "SetOwner", &LuaItem::SetOwner },
@@ -804,12 +808,10 @@ namespace LuaItem
 
         // Boolean
         { "IsSoulBound", &LuaItem::IsSoulBound },
-        { "IsBoundAccountWide", &LuaItem::IsBoundAccountWide },
         { "IsBoundByEnchant", &LuaItem::IsBoundByEnchant },
         { "IsNotBoundToPlayer", &LuaItem::IsNotBoundToPlayer },
         { "IsLocked", &LuaItem::IsLocked },
         { "IsBag", &LuaItem::IsBag },
-        { "IsCurrencyToken", &LuaItem::IsCurrencyToken },
         { "IsNotEmptyBag", &LuaItem::IsNotEmptyBag },
         { "IsBroken", &LuaItem::IsBroken },
         { "CanBeTraded", &LuaItem::CanBeTraded },
@@ -818,12 +820,20 @@ namespace LuaItem
         { "IsEquipped", &LuaItem::IsEquipped },
         { "HasQuest", &LuaItem::HasQuest },
         { "IsPotion", &LuaItem::IsPotion },
-        { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
-        { "IsArmorVellum", &LuaItem::IsArmorVellum },
         { "IsConjuredConsumable", &LuaItem::IsConjuredConsumable },
         { "IsRefundExpired", nullptr }, // not implemented
         { "SetEnchantment", &LuaItem::SetEnchantment },
         { "ClearEnchantment", &LuaItem::ClearEnchantment },
+#ifndef CLASSIC
+        { "IsCurrencyToken", &LuaItem::IsCurrencyToken },
+#endif
+#if (!defined(TBC) && !defined(CLASSIC))
+        { "IsBoundAccountWide", &LuaItem::IsBoundAccountWide },
+#endif
+#if defined(WOTLK)
+        { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
+        { "IsArmorVellum", &LuaItem::IsArmorVellum },
+#endif
 
         // Other
         { "SaveToDB", &LuaItem::SaveToDB },

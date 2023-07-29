@@ -315,9 +315,11 @@ namespace LuaGuild
         { "GetMemberCount", &LuaGuild::GetMemberCount },
 
         // Setters
-        { "SetBankTabText", &LuaGuild::SetBankTabText },
         { "SetMemberRank", &LuaGuild::SetMemberRank },
         { "SetLeader", &LuaGuild::SetLeader },
+#ifndef CLASSIC
+        { "SetBankTabText", &LuaGuild::SetBankTabText },
+#endif
 
         // Other
         { "SendPacket", &LuaGuild::SendPacket },

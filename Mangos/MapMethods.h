@@ -388,13 +388,14 @@ namespace LuaMap
         { "SetWeather", &LuaMap::SetWeather },
 
         // Boolean
-        { "IsArena", &LuaMap::IsArena },
         { "IsBattleground", &LuaMap::IsBattleground },
         { "IsDungeon", &LuaMap::IsDungeon },
         { "IsEmpty", &LuaMap::IsEmpty },
-        { "IsHeroic", &LuaMap::IsHeroic },
         { "IsRaid", &LuaMap::IsRaid },
-
+#ifndef CLASSIC
+        { "IsArena", &LuaMap::IsArena },
+        { "IsHeroic", &LuaMap::IsHeroic },
+#endif
         // Other
         { "SaveInstanceData", &LuaMap::SaveInstanceData },
 

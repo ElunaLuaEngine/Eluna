@@ -3145,7 +3145,6 @@ namespace LuaUnit
         { "GetCharmerGUID", &LuaUnit::GetCharmerGUID },
         { "GetCharmGUID", &LuaUnit::GetCharmGUID },
         { "GetPetGUID", &LuaUnit::GetPetGUID },
-        { "GetCritterGUID", &LuaUnit::GetCritterGUID },
         { "GetControllerGUID", &LuaUnit::GetControllerGUID },
         { "GetControllerGUIDS", &LuaUnit::GetControllerGUIDS },
         { "GetStandState", &LuaUnit::GetStandState },
@@ -3153,9 +3152,12 @@ namespace LuaUnit
         { "GetSpeed", &LuaUnit::GetSpeed },
         { "GetStat", &LuaUnit::GetStat },
         { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
-        { "GetVehicleKit", &LuaUnit::GetVehicleKit },
         { "GetVehicle", nullptr }, // not implemented
         { "GetMovementType", &LuaUnit::GetMovementType },
+#if (!defined(TBC) && !defined(CLASSIC))
+        { "GetVehicleKit", &LuaUnit::GetVehicleKit },
+        { "GetCritterGUID", &LuaUnit::GetCritterGUID },
+#endif
 
         // Setters
         { "SetFaction", &LuaUnit::SetFaction },
@@ -3171,25 +3173,27 @@ namespace LuaUnit
         { "SetFacingToObject", &LuaUnit::SetFacingToObject },
         { "SetSpeed", &LuaUnit::SetSpeed },
         { "SetStunned", nullptr }, // not implemented
-        {"SetRooted", &LuaUnit::SetRooted},
-        {"SetConfused", &LuaUnit::SetConfused},
-        {"SetFeared", &LuaUnit::SetFeared},
+        { "SetRooted", &LuaUnit::SetRooted},
+        { "SetConfused", &LuaUnit::SetConfused},
+        { "SetFeared", &LuaUnit::SetFeared},
         { "SetPvP", &LuaUnit::SetPvP },
-        { "SetFFA", &LuaUnit::SetFFA },
-        { "SetSanctuary", &LuaUnit::SetSanctuary },
-        { "SetCanFly", &LuaUnit::SetCanFly },
-        { "SetVisible", &LuaUnit::SetVisible },
+        { "SetCanFly", nullptr }, // not implemented
+        { "SetVisible", nullptr }, // not implemented
         { "SetOwnerGUID", &LuaUnit::SetOwnerGUID },
         { "SetName", &LuaUnit::SetName },
         { "SetSheath", &LuaUnit::SetSheath },
         { "SetCreatorGUID", &LuaUnit::SetCreatorGUID },
         { "SetMinionGUID", &LuaUnit::SetPetGUID },
         { "SetPetGUID", &LuaUnit::SetPetGUID },
-        { "SetCritterGUID", &LuaUnit::SetCritterGUID },
         { "SetWaterWalk", &LuaUnit::SetWaterWalk },
         { "SetStandState", &LuaUnit::SetStandState },
         { "SetInCombatWith", &LuaUnit::SetInCombatWith },
         { "ModifyPower", &LuaUnit::ModifyPower },
+#if (!defined(TBC) && !defined(CLASSIC))
+        { "SetFFA", &LuaUnit::SetFFA },
+        { "SetSanctuary", &LuaUnit::SetSanctuary },
+        { "SetCritterGUID", &LuaUnit::SetCritterGUID },
+#endif
 
         // Boolean
         { "IsAlive", &LuaUnit::IsAlive },
@@ -3220,9 +3224,9 @@ namespace LuaUnit
         { "IsMounted", &LuaUnit::IsMounted },
         { "AttackStop", &LuaUnit::AttackStop },
         { "Attack", &LuaUnit::Attack },
-        { "IsVisible", &LuaUnit::IsVisible },
-        { "IsMoving", &LuaUnit::IsMoving },
-        { "IsFlying", &LuaUnit::IsFlying },
+        { "IsVisible", nullptr }, // not implemented,
+        { "IsMoving", nullptr }, // not implemented
+        { "IsFlying", nullptr }, // not implemented
         { "IsStopped", &LuaUnit::IsStopped },
         { "HasUnitState", &LuaUnit::HasUnitState },
         { "IsQuestGiver", &LuaUnit::IsQuestGiver },
@@ -3233,13 +3237,14 @@ namespace LuaUnit
         { "HasAura", &LuaUnit::HasAura },
         { "IsCasting", &LuaUnit::IsCasting },
         { "IsStandState", &LuaUnit::IsStandState },
+#if !defined(CLASSIC)
         { "IsOnVehicle", &LuaUnit::IsOnVehicle },
+#endif
 
         // Other
         { "AddAura", &LuaUnit::AddAura },
         { "RemoveAura", &LuaUnit::RemoveAura },
         { "RemoveAllAuras", &LuaUnit::RemoveAllAuras },
-        { "RemoveArenaAuras", &LuaUnit::RemoveArenaAuras },
         { "ClearInCombat", &LuaUnit::ClearInCombat },
         { "DeMorph", &LuaUnit::DeMorph },
         { "SendUnitWhisper", &LuaUnit::SendUnitWhisper },
@@ -3259,14 +3264,14 @@ namespace LuaUnit
         { "CountPctFromMaxHealth", &LuaUnit::CountPctFromMaxHealth },
         { "Dismount", &LuaUnit::Dismount },
         { "Mount", &LuaUnit::Mount },
-        { "RestoreDisplayId", &LuaUnit::RestoreDisplayId },
-        { "RestoreFaction", &LuaUnit::RestoreFaction },
-        { "RemoveBindSightAuras", &LuaUnit::RemoveBindSightAuras },
-        { "RemoveCharmAuras", &LuaUnit::RemoveCharmAuras },
+        { "RestoreDisplayId", nullptr }, // not implemented
+        { "RestoreFaction", nullptr }, // not implemented
+        { "RemoveBindSightAuras", nullptr }, // not implemented
+        { "RemoveCharmAuras", nullptr }, // not implemented
         { "ClearThreatList", &LuaUnit::ClearThreatList },
         { "ClearUnitState", &LuaUnit::ClearUnitState },
         { "AddUnitState", &LuaUnit::AddUnitState },
-        { "DisableMelee", &LuaUnit::DisableMelee },
+        { "DisableMelee", nullptr }, // not implemented
         { "SummonGuardian", nullptr }, // not implemented
         { "NearTeleport", &LuaUnit::NearTeleport },
         { "MoveIdle", &LuaUnit::MoveIdle },
@@ -3277,13 +3282,18 @@ namespace LuaUnit
         { "MoveConfused", &LuaUnit::MoveConfused },
         { "MoveFleeing", &LuaUnit::MoveFleeing },
         { "MoveTo", &LuaUnit::MoveTo },
-        { "MoveJump", &LuaUnit::MoveJump },
         { "MoveStop", &LuaUnit::MoveStop },
         { "MoveExpire", &LuaUnit::MoveExpire },
         { "MoveClear", &LuaUnit::MoveClear },
         { "DealDamage", &LuaUnit::DealDamage },
         { "DealHeal", &LuaUnit::DealHeal },
         { "AddThreat", &LuaUnit::AddThreat },
+#if !defined(CLASSIC)
+        { "RemoveArenaAuras", &LuaUnit::RemoveArenaAuras },
+#endif
+#if (!defined(TBC) && !defined(CLASSIC))
+        { "MoveJump", &LuaUnit::MoveJump },
+#endif
 
         { NULL, NULL }
     };

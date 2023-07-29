@@ -1243,8 +1243,10 @@ namespace LuaWorldObject
         // Getters
         { "GetName", &LuaWorldObject::GetName },
         { "GetMap", &LuaWorldObject::GetMap },
+#if (!defined(TBC) && !defined(CLASSIC))
         { "GetPhaseMask", &LuaWorldObject::GetPhaseMask },
         { "SetPhaseMask", &LuaWorldObject::SetPhaseMask },
+#endif
         { "GetInstanceId", &LuaWorldObject::GetInstanceId },
         { "GetAreaId", &LuaWorldObject::GetAreaId },
         { "GetZoneId", &LuaWorldObject::GetZoneId },

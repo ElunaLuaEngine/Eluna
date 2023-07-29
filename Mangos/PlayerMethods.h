@@ -4307,8 +4307,6 @@ namespace LuaPlayer
         { "GetGuild", &LuaPlayer::GetGuild },
         { "GetAccountId", &LuaPlayer::GetAccountId },
         { "GetAccountName", &LuaPlayer::GetAccountName },
-        { "GetArenaPoints", &LuaPlayer::GetArenaPoints },
-        { "GetHonorPoints", &LuaPlayer::GetHonorPoints },
         { "GetLifetimeKills", &LuaPlayer::GetLifetimeKills },
         { "GetPlayerIP", &LuaPlayer::GetPlayerIP },
         { "GetLevelPlayedTime", &LuaPlayer::GetLevelPlayedTime },
@@ -4322,7 +4320,6 @@ namespace LuaPlayer
         { "GetQuestLevel", &LuaPlayer::GetQuestLevel },
         { "GetChatTag", &LuaPlayer::GetChatTag },
         { "GetRestBonus", &LuaPlayer::GetRestBonus },
-        { "GetPhaseMaskForSpawn", &LuaPlayer::GetPhaseMaskForSpawn },
         { "GetReqKillOrCastCurrentCount", &LuaPlayer::GetReqKillOrCastCurrentCount },
         { "GetQuestStatus", &LuaPlayer::GetQuestStatus },
         { "GetInGameTime", &LuaPlayer::GetInGameTime },
@@ -4330,8 +4327,6 @@ namespace LuaPlayer
         { "GetComboTarget", &LuaPlayer::GetComboTarget },
         { "GetGuildName", &LuaPlayer::GetGuildName },
         { "GetFreeTalentPoints", &LuaPlayer::GetFreeTalentPoints },
-        { "GetActiveSpec", &LuaPlayer::GetActiveSpec },
-        { "GetSpecsCount", &LuaPlayer::GetSpecsCount },
         { "GetSpellCooldownDelay", &LuaPlayer::GetSpellCooldownDelay },
         { "GetGuildRank", &LuaPlayer::GetGuildRank },
         { "GetDifficulty", &LuaPlayer::GetDifficulty },
@@ -4354,18 +4349,31 @@ namespace LuaPlayer
         { "GetNextRandomRaidMember", &LuaPlayer::GetNextRandomRaidMember },
         { "GetOriginalGroup", &LuaPlayer::GetOriginalGroup },
         { "GetOriginalSubGroup", &LuaPlayer::GetOriginalSubGroup },
-        { "GetChampioningFaction", &LuaPlayer::GetChampioningFaction },
+        { "GetChampioningFaction", nullptr }, // not implemented
         { "GetLatency", &LuaPlayer::GetLatency },
-        { "GetRecruiterId", &LuaPlayer::GetRecruiterId },
+        { "GetRecruiterId", nullptr }, // not implemented
         { "GetDbLocaleIndex", &LuaPlayer::GetDbLocaleIndex },
         { "GetDbcLocale", &LuaPlayer::GetDbcLocale },
         { "GetCorpse", &LuaPlayer::GetCorpse },
         { "GetGossipTextId", &LuaPlayer::GetGossipTextId },
         { "GetQuestRewardStatus", &LuaPlayer::GetQuestRewardStatus },
         { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
-        { "GetHonorStoredKills", nullptr }, // classic only
-        { "GetRankPoints", nullptr }, // classic only
-        { "GetHonorLastWeekStandingPos", nullptr }, // classic only
+#if defined(CLASSIC)
+        { "GetHonorStoredKills", &LuaPlayer::GetHonorStoredKills },
+        { "GetRankPoints", &LuaPlayer::GetRankPoints },
+        { "GetHonorLastWeekStandingPos", &LuaPlayer::GetHonorLastWeekStandingPos },
+#endif
+#if defined(TBC) || defined (WOTLK)
+        { "GetArenaPoints", &LuaPlayer::GetArenaPoints },
+        { "GetHonorPoints", &LuaPlayer::GetHonorPoints },
+#endif
+#ifdef WOTLK
+        { "GetPhaseMaskForSpawn", &LuaPlayer::GetPhaseMaskForSpawn },
+#endif
+#if (!defined(TBC) && !defined(CLASSIC))
+        { "GetActiveSpec", &LuaPlayer::GetActiveSpec },
+        { "GetSpecsCount", &LuaPlayer::GetSpecsCount },
+#endif
 
         // Setters
         { "AdvanceSkillsToMax", &LuaPlayer::AdvanceSkillsToMax },
@@ -4373,14 +4381,7 @@ namespace LuaPlayer
         { "AdvanceAllSkills", &LuaPlayer::AdvanceAllSkills },
         { "AddLifetimeKills", &LuaPlayer::AddLifetimeKills },
         { "SetCoinage", &LuaPlayer::SetCoinage },
-        { "SetKnownTitle", &LuaPlayer::SetKnownTitle },
-        { "UnsetKnownTitle", &LuaPlayer::UnsetKnownTitle },
         { "SetBindPoint", &LuaPlayer::SetBindPoint },
-        { "SetArenaPoints", &LuaPlayer::SetArenaPoints },
-        { "SetHonorPoints", &LuaPlayer::SetHonorPoints },
-        { "SetHonorStoredKills", nullptr }, // classic only
-        { "SetRankPoints", nullptr }, // classic only
-        { "SetHonorLastWeekStandingPos", nullptr }, // classic only
         { "SetLifetimeKills", &LuaPlayer::SetLifetimeKills },
         { "SetGameMaster", &LuaPlayer::SetGameMaster },
         { "SetGMChat", &LuaPlayer::SetGMChat },
@@ -4393,7 +4394,7 @@ namespace LuaPlayer
         { "SetReputation", &LuaPlayer::SetReputation },
         { "SetFreeTalentPoints", &LuaPlayer::SetFreeTalentPoints },
         { "SetGuildRank", &LuaPlayer::SetGuildRank },
-        { "SetMovement", &LuaPlayer::SetMovement },
+        { "SetMovement", nullptr }, // not implemented
         { "SetSkill", &LuaPlayer::SetSkill },
         { "SetFactionForRace", &LuaPlayer::SetFactionForRace },
         { "SetDrunkValue", &LuaPlayer::SetDrunkValue },
@@ -4402,6 +4403,19 @@ namespace LuaPlayer
         { "SetGender", &LuaPlayer::SetGender },
         { "SetSheath", &LuaPlayer::SetSheath },
         { "SetFFA", nullptr }, // not implemented
+#if defined(CLASSIC)
+        { "SetHonorStoredKills", &LuaPlayer::SetHonorStoredKills },
+        { "SetRankPoints", &LuaPlayer::SetRankPoints },
+        { "SetHonorLastWeekStandingPos", &LuaPlayer::SetHonorLastWeekStandingPos },
+#endif
+#ifndef CLASSIC
+        { "SetKnownTitle", &LuaPlayer::SetKnownTitle },
+        { "UnsetKnownTitle", &LuaPlayer::UnsetKnownTitle },
+#endif
+#if defined(TBC) || defined(WOTLK)
+        { "SetArenaPoints", &LuaPlayer::SetArenaPoints },
+        { "SetHonorPoints", &LuaPlayer::SetHonorPoints },
+#endif
 
         // Boolean
         { "IsInGroup", &LuaPlayer::IsInGroup },
@@ -4410,11 +4424,9 @@ namespace LuaPlayer
         { "IsImmuneToDamage", &LuaPlayer::IsImmuneToDamage },
         { "IsAlliance", &LuaPlayer::IsAlliance },
         { "IsHorde", &LuaPlayer::IsHorde },
-        { "HasTitle", &LuaPlayer::HasTitle },
         { "HasItem", &LuaPlayer::HasItem },
         { "Teleport", &LuaPlayer::Teleport },
         { "AddItem", &LuaPlayer::AddItem },
-        { "IsInArenaTeam", &LuaPlayer::IsInArenaTeam },
         { "CanCompleteQuest", &LuaPlayer::CanCompleteQuest },
         { "CanEquipItem", &LuaPlayer::CanEquipItem },
         { "IsFalling", &LuaPlayer::IsFalling },
@@ -4428,24 +4440,21 @@ namespace LuaPlayer
         { "IsGMVisible", &LuaPlayer::IsGMVisible },
         { "HasQuest", &LuaPlayer::HasQuest },
         { "InBattlegroundQueue", &LuaPlayer::InBattlegroundQueue },
-        { "IsImmuneToEnvironmentalDamage", &LuaPlayer::IsImmuneToEnvironmentalDamage },
+        { "IsImmuneToEnvironmentalDamage", nullptr }, // not implemented
         { "CanSpeak", &LuaPlayer::CanSpeak },
         { "HasAtLoginFlag", &LuaPlayer::HasAtLoginFlag },
-        { "InRandomLfgDungeon", &LuaPlayer::InRandomLfgDungeon },
-        { "HasPendingBind", &LuaPlayer::HasPendingBind },
-        { "HasAchieved", &LuaPlayer::HasAchieved },
-        { "SetAchievement", &LuaPlayer::SetAchievement },
+        { "InRandomLfgDungeon", nullptr }, // not implemented
+        { "HasPendingBind", nullptr }, // not implemented
         { "CanUninviteFromGroup", &LuaPlayer::CanUninviteFromGroup },
         { "IsRested", &LuaPlayer::IsRested },
         { "CanFlyInZone", nullptr }, // not implemented
-        { "IsNeverVisible", &LuaPlayer::IsNeverVisible },
+        { "IsNeverVisible", nullptr }, // not implemented,
         { "IsVisibleForPlayer", &LuaPlayer::IsVisibleForPlayer },
-        { "IsUsingLfg", &LuaPlayer::IsUsingLfg },
+        { "IsUsingLfg", nullptr }, // not implemented,
         { "HasQuestForItem", &LuaPlayer::HasQuestForItem },
         { "HasQuestForGO", &LuaPlayer::HasQuestForGO },
         { "CanShareQuest", &LuaPlayer::CanShareQuest },
-        { "HasReceivedQuestReward", &LuaPlayer::HasReceivedQuestReward },
-        { "HasTalent", &LuaPlayer::HasTalent },
+        { "HasReceivedQuestReward", nullptr }, // not implemented,
         { "IsInSameGroupWith", &LuaPlayer::IsInSameGroupWith },
         { "IsInSameRaidWith", &LuaPlayer::IsInSameRaidWith },
         { "IsGroupVisibleFor", &LuaPlayer::IsGroupVisibleFor },
@@ -4453,18 +4462,28 @@ namespace LuaPlayer
         { "IsHonorOrXPTarget", &LuaPlayer::IsHonorOrXPTarget },
         { "CanParry", &LuaPlayer::CanParry },
         { "CanBlock", &LuaPlayer::CanBlock },
-        { "CanTitanGrip", &LuaPlayer::CanTitanGrip },
         { "InBattleground", &LuaPlayer::InBattleground },
-        { "InArena", &LuaPlayer::InArena },
-        { "IsOutdoorPvPActive", &LuaPlayer::IsOutdoorPvPActive },
-        { "IsARecruiter", &LuaPlayer::IsARecruiter },
+        { "IsOutdoorPvPActive", nullptr }, // not implemented,
+        { "IsARecruiter", nullptr }, // not implemented,
         { "CanUseItem", &LuaPlayer::CanUseItem },
         { "HasSpell", &LuaPlayer::HasSpell },
         { "HasSpellCooldown", &LuaPlayer::HasSpellCooldown },
         { "IsInWater", &LuaPlayer::IsInWater },
-        { "CanFly", &LuaPlayer::CanFly },
         { "IsMoving", &LuaPlayer::IsMoving },
+#ifndef CLASSIC
+        { "HasTitle", &LuaPlayer::HasTitle },
+        { "IsInArenaTeam", &LuaPlayer::IsInArenaTeam },
+        { "InArena", &LuaPlayer::InArena },
+        { "CanFly", &LuaPlayer::CanFly },
         { "IsFlying", &LuaPlayer::IsFlying },
+#endif
+#if (!defined(TBC) && !defined(CLASSIC))
+        { "HasAchieved", &LuaPlayer::HasAchieved },
+        { "SetAchievement", &LuaPlayer::SetAchievement },
+        { "HasTalent", &LuaPlayer::HasTalent },
+        { "CanTitanGrip", &LuaPlayer::CanTitanGrip },
+#endif
+
 
         // Gossip
         { "GossipMenuAddItem", &LuaPlayer::GossipMenuAddItem },
@@ -4481,7 +4500,6 @@ namespace LuaPlayer
         { "ModifyMoney", &LuaPlayer::ModifyMoney },
         { "LearnSpell", &LuaPlayer::LearnSpell },
         { "LearnTalent", &LuaPlayer::LearnTalent },
-        { "RemoveArenaSpellCooldowns", &LuaPlayer::RemoveArenaSpellCooldowns },
         { "RemoveItem", &LuaPlayer::RemoveItem },
         { "RemoveLifetimeKills", &LuaPlayer::RemoveLifetimeKills },
         { "ResurrectPlayer", &LuaPlayer::ResurrectPlayer },
@@ -4501,22 +4519,21 @@ namespace LuaPlayer
         { "FailQuest", &LuaPlayer::FailQuest },
         { "AddQuest", &LuaPlayer::AddQuest },
         { "RemoveQuest", &LuaPlayer::RemoveQuest },
-        { "RemoveActiveQuest", &LuaPlayer::RemoveActiveQuest },
-        { "RemoveRewardedQuest", &LuaPlayer::RemoveRewardedQuest },
+        { "RemoveActiveQuest", nullptr }, // not implemented
+        { "RemoveRewardedQuest", nullptr }, // not implemented
         { "AreaExploredOrEventHappens", &LuaPlayer::AreaExploredOrEventHappens },
         { "GroupEventHappens", &LuaPlayer::GroupEventHappens },
         { "KilledMonsterCredit", &LuaPlayer::KilledMonsterCredit },
-        { "KilledPlayerCredit", &LuaPlayer::KilledPlayerCredit },
-        { "KillGOCredit", &LuaPlayer::KillGOCredit },
+        { "KilledPlayerCredit", nullptr }, // not implemented
+        { "KillGOCredit", nullptr }, // not implemented
         { "TalkedToCreature", &LuaPlayer::TalkedToCreature },
-        { "ResetPetTalents", &LuaPlayer::ResetPetTalents },
         { "AddComboPoints", &LuaPlayer::AddComboPoints },
         { "GainSpellComboPoints", nullptr }, // not implemented
         { "ClearComboPoints", &LuaPlayer::ClearComboPoints },
         { "RemoveSpell", &LuaPlayer::RemoveSpell },
         { "ResetTalents", &LuaPlayer::ResetTalents },
         { "ResetTalentsCost", &LuaPlayer::ResetTalentsCost },
-        { "AddTalent", &LuaPlayer::AddTalent },
+        { "AddTalent", nullptr }, // not implemented
         { "RemoveFromGroup", &LuaPlayer::RemoveFromGroup },
         { "KillPlayer", &LuaPlayer::KillPlayer },
         { "DurabilityLossAll", &LuaPlayer::DurabilityLossAll },
@@ -4526,14 +4543,11 @@ namespace LuaPlayer
         { "DurabilityPointLossForEquipSlot", &LuaPlayer::DurabilityPointLossForEquipSlot },
         { "DurabilityRepairAll", &LuaPlayer::DurabilityRepairAll },
         { "DurabilityRepair", &LuaPlayer::DurabilityRepair },
-        { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
-        { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
         { "LeaveBattleground", &LuaPlayer::LeaveBattleground },
-        { "BindToInstance", &LuaPlayer::BindToInstance },
+        { "BindToInstance", nullptr }, // not implemented
         { "UnbindInstance", &LuaPlayer::UnbindInstance },
         { "UnbindAllInstances", &LuaPlayer::UnbindAllInstances },
         { "RemoveFromBattlegroundRaid", &LuaPlayer::RemoveFromBattlegroundRaid },
-        { "ResetAchievements", &LuaPlayer::ResetAchievements },
         { "KickPlayer", &LuaPlayer::KickPlayer },
         { "LogoutPlayer", &LuaPlayer::LogoutPlayer },
         { "SendTrainerList", &LuaPlayer::SendTrainerList },
@@ -4559,10 +4573,23 @@ namespace LuaPlayer
         { "GroupInvite", &LuaPlayer::GroupInvite },
         { "GroupCreate", &LuaPlayer::GroupCreate },
         { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
+#if defined(CLASSIC)
+        { "UpdateHonor", &LuaPlayer::UpdateHonor },
+        { "ResetHonor", &LuaPlayer::ResetHonor },
+        { "ClearHonorInfo", &LuaPlayer::ClearHonorInfo },
+#endif
+#ifndef CLASSIC
+        { "RemoveArenaSpellCooldowns", &LuaPlayer::RemoveArenaSpellCooldowns },
+#endif
+#if (!defined(TBC) && !defined(CLASSIC))
+        { "ResetPetTalents", &LuaPlayer::ResetPetTalents },
+        { "ResetAchievements", &LuaPlayer::ResetAchievements },
         { "SendMovieStart", &LuaPlayer::SendMovieStart },
-        { "UpdateHonor", nullptr }, // classic only
-        { "ResetHonor", nullptr },  // classic only
-        { "ClearHonorInfo", nullptr },  // classic only
+#endif
+#if defined(TBC) || defined(WOTLK)
+        { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
+        { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
+#endif
 
         { NULL, NULL }
     };

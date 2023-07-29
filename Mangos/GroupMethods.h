@@ -447,7 +447,6 @@ namespace LuaGroup
         { "RemoveMember", &LuaGroup::RemoveMember },
         { "Disband", &LuaGroup::Disband },
         { "IsFull", &LuaGroup::IsFull },
-        { "IsLFGGroup", &LuaGroup::IsLFGGroup },
         { "IsRaidGroup", &LuaGroup::IsRaidGroup },
         { "IsBGGroup", &LuaGroup::IsBGGroup },
         { "IsBFGroup", nullptr },   // not implemented
@@ -455,7 +454,9 @@ namespace LuaGroup
         { "IsAssistant", &LuaGroup::IsAssistant },
         { "SameSubGroup", &LuaGroup::SameSubGroup },
         { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },
-
+#if !(defined(CLASSIC) || defined(TBC))
+        { "IsLFGGroup", &LuaGroup::IsLFGGroup },
+#endif
         // Other
         { "SendPacket", &LuaGroup::SendPacket },
         { "ConvertToLFG", nullptr },    // not implemented
