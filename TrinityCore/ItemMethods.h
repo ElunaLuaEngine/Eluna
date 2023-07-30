@@ -710,7 +710,7 @@ namespace LuaItem
         return 0;
     }
     
-    ElunaRegister<Item> ItemMethodsOverride[] =
+    ElunaRegister<Item> ItemMethods[] =
     {
         // Getters
         { "GetOwnerGUID", &LuaItem::GetOwnerGUID },

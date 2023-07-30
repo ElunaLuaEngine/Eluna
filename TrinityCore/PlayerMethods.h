@@ -3659,7 +3659,7 @@ namespace LuaPlayer
         return 0;
     }
     
-    ElunaRegister<Player> PlayerMethodsOverride[] =
+    ElunaRegister<Player> PlayerMethods[] =
     {
         // Getters
         { "GetSelection", &LuaPlayer::GetSelection },
@@ -3728,9 +3728,6 @@ namespace LuaPlayer
         { "GetGossipTextId", &LuaPlayer::GetGossipTextId },
         { "GetQuestRewardStatus", &LuaPlayer::GetQuestRewardStatus },
         { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
-        { "GetHonorStoredKills", nullptr }, // classic only
-        { "GetRankPoints", nullptr }, // classic only
-        { "GetHonorLastWeekStandingPos", nullptr }, // classic only
 
         // Setters
         { "AdvanceSkillsToMax", &LuaPlayer::AdvanceSkillsToMax },
@@ -3743,9 +3740,6 @@ namespace LuaPlayer
         { "SetBindPoint", &LuaPlayer::SetBindPoint },
         { "SetArenaPoints", &LuaPlayer::SetArenaPoints },
         { "SetHonorPoints", &LuaPlayer::SetHonorPoints },
-        { "SetHonorStoredKills", nullptr }, // classic only
-        { "SetRankPoints", nullptr }, // classic only
-        { "SetHonorLastWeekStandingPos", nullptr }, // classic only
         { "SetLifetimeKills", &LuaPlayer::SetLifetimeKills },
         { "SetGameMaster", &LuaPlayer::SetGameMaster },
         { "SetGMChat", &LuaPlayer::SetGMChat },
@@ -3802,7 +3796,6 @@ namespace LuaPlayer
         { "SetAchievement", &LuaPlayer::SetAchievement },
         { "CanUninviteFromGroup", &LuaPlayer::CanUninviteFromGroup },
         { "IsRested", &LuaPlayer::IsRested },
-        { "CanFlyInZone", nullptr }, // not implemented
         { "IsNeverVisible", &LuaPlayer::IsNeverVisible },
         { "IsVisibleForPlayer", &LuaPlayer::IsVisibleForPlayer },
         { "IsUsingLfg", &LuaPlayer::IsUsingLfg },
@@ -3876,7 +3869,6 @@ namespace LuaPlayer
         { "TalkedToCreature", &LuaPlayer::TalkedToCreature },
         { "ResetPetTalents", &LuaPlayer::ResetPetTalents },
         { "AddComboPoints", &LuaPlayer::AddComboPoints },
-        { "GainSpellComboPoints", nullptr }, // not implemented
         { "ClearComboPoints", &LuaPlayer::ClearComboPoints },
         { "RemoveSpell", &LuaPlayer::RemoveSpell },
         { "ResetTalents", &LuaPlayer::ResetTalents },
@@ -3925,9 +3917,22 @@ namespace LuaPlayer
         { "GroupCreate", &LuaPlayer::GroupCreate },
         { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
         { "SendMovieStart", &LuaPlayer::SendMovieStart },
+
+        // Not implemented methods
+        { "GetHonorStoredKills", nullptr }, // classic only
+        { "GetRankPoints", nullptr }, // classic only
+        { "GetHonorLastWeekStandingPos", nullptr }, // classic only
+
+        { "SetHonorStoredKills", nullptr }, // classic only
+        { "SetRankPoints", nullptr }, // classic only
+        { "SetHonorLastWeekStandingPos", nullptr }, // classic only
+
+        { "CanFlyInZone", nullptr }, // not implemented
+
         { "UpdateHonor", nullptr }, // classic only
         { "ResetHonor", nullptr }, // classic only
         { "ClearHonorInfo", nullptr }, // classic only
+        { "GainSpellComboPoints", nullptr }, // not implemented
 
         { NULL, NULL }
     };

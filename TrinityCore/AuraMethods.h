@@ -169,7 +169,7 @@ namespace LuaAura
         return 0;
     }
     
-    ElunaRegister<Aura> AuraMethodsOverride[] =
+    ElunaRegister<Aura> AuraMethods[] =
     {
         // Getters
         { "GetCaster", &LuaAura::GetCaster },

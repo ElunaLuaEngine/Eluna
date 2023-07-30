@@ -2822,7 +2822,7 @@ namespace LuaGlobalFunctions
         return 0;
     }
     
-    luaL_Reg GlobalMethodsOverride[] =
+    luaL_Reg GlobalMethods[] =
     {
         // Hooks
         { "RegisterPacketEvent", &LuaGlobalFunctions::RegisterPacketEvent },

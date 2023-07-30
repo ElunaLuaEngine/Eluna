@@ -74,7 +74,7 @@ namespace LuaCorpse
         return 0;
     }
     
-    ElunaRegister<Corpse> CorpseMethodsOverride[] =
+    ElunaRegister<Corpse> CorpseMethods[] =
     {
         // Getters
         { "GetOwnerGUID", &LuaCorpse::GetOwnerGUID },

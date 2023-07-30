@@ -175,7 +175,7 @@ namespace LuaQuest
         return 1;
     }
     
-    ElunaRegister<Quest> QuestMethodsOverride[] =
+    ElunaRegister<Quest> QuestMethods[] =
     {
         // Getters
         { "GetId", &LuaQuest::GetId },

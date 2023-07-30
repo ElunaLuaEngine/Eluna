@@ -1092,7 +1092,7 @@ namespace LuaWorldObject
         return 0;
     }
     
-    ElunaRegister<WorldObject> WorldObjectMethodsOverride[] =
+    ElunaRegister<WorldObject> WorldObjectMethods[] =
     {
         // Getters
         { "GetName", &LuaWorldObject::GetName },

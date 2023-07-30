@@ -306,7 +306,7 @@ namespace LuaGameObject
         return 0;
     }
     
-    ElunaRegister<GameObject> GameObjectMethodsOverride[] =
+    ElunaRegister<GameObject> GameObjectMethods[] =
     {
         // Getters
         { "GetDisplayId", &LuaGameObject::GetDisplayId },

@@ -1252,7 +1252,7 @@ namespace LuaCreature
         return 1;
     }
     
-    ElunaRegister<Creature> CreatureMethodsOverride[] =
+    ElunaRegister<Creature> CreatureMethods[] =
     {
         // Getters
         { "GetAITarget", &LuaCreature::GetAITarget },

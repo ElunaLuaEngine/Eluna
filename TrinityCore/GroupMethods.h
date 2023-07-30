@@ -373,7 +373,7 @@ namespace LuaGroup
         return 0;
     }
     
-    ElunaRegister<Group> GroupMethodsOverride[] =
+    ElunaRegister<Group> GroupMethods[] =
     {
         // Getters
         { "GetMembers", &LuaGroup::GetMembers },

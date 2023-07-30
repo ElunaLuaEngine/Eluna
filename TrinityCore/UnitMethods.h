@@ -2525,7 +2525,7 @@ namespace LuaUnit
     return 1;
     }*/
     
-    ElunaRegister<Unit> UnitMethodsOverride[] =
+    ElunaRegister<Unit> UnitMethods[] =
     {
         // Getters
         { "GetLevel", &LuaUnit::GetLevel },
@@ -2681,7 +2681,6 @@ namespace LuaUnit
         { "ClearUnitState", &LuaUnit::ClearUnitState },
         { "AddUnitState", &LuaUnit::AddUnitState },
         { "DisableMelee", &LuaUnit::DisableMelee },
-        { "SummonGuardian", nullptr }, // not implemented
         { "NearTeleport", &LuaUnit::NearTeleport },
         { "MoveIdle", &LuaUnit::MoveIdle },
         { "MoveRandom", &LuaUnit::MoveRandom },
@@ -2698,6 +2697,9 @@ namespace LuaUnit
         { "DealDamage", &LuaUnit::DealDamage },
         { "DealHeal", &LuaUnit::DealHeal },
         { "AddThreat", &LuaUnit::AddThreat },
+
+        // Not implemented methods
+        { "SummonGuardian", nullptr }, // not implemented
 
         { NULL, NULL }
     };

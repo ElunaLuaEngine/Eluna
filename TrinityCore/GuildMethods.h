@@ -240,7 +240,7 @@ namespace LuaGuild
         return 0;
     }
     
-    ElunaRegister<Guild> GuildMethodsOverride[] =
+    ElunaRegister<Guild> GuildMethods[] =
     {
         // Getters
         { "GetMembers", &LuaGuild::GetMembers },

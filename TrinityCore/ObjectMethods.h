@@ -453,7 +453,7 @@ namespace LuaObject
         return 1;
     }
     
-    ElunaRegister<Object> ObjectMethodsOverride[] =
+    ElunaRegister<Object> ObjectMethods[] =
     {
         // Getters
         { "GetEntry", &LuaObject::GetEntry },

@@ -40,11 +40,10 @@ public:
         return expected;
     }
 
-    static void SetMethods(Eluna* E, luaL_Reg* methodTable, luaL_Reg* overrideTable)
+    static void SetMethods(Eluna* E, luaL_Reg* methodTable)
     {
         ASSERT(E);
         ASSERT(methodTable);
-        ASSERT(overrideTable);
 
         lua_pushglobaltable(E->L);
 
@@ -52,14 +51,6 @@ public:
         {
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
-            lua_pushcclosure(E->L, thunk, 1);
-            lua_rawset(E->L, -3);
-        }
-
-        for (; overrideTable && overrideTable->name && overrideTable->func; ++overrideTable)
-        {
-            lua_pushstring(E->L, overrideTable->name);
-            lua_pushlightuserdata(E->L, (void*)overrideTable);
             lua_pushcclosure(E->L, thunk, 1);
             lua_rawset(E->L, -3);
         }
@@ -243,32 +234,22 @@ public:
     }
 
     template<typename C>
-    static void SetMethods(Eluna* E, ElunaRegister<C>* methodTable, ElunaRegister<C>* overrideTable)
+    static void SetMethods(Eluna* E, ElunaRegister<C>* methodTable)
     {
         ASSERT(E);
         ASSERT(tname);
         ASSERT(methodTable);
-        ASSERT(overrideTable);
 
         // get metatable
         lua_pushstring(E->L, tname);
         lua_rawget(E->L, LUA_REGISTRYINDEX);
         ASSERT(lua_istable(E->L, -1));
 
-        // load all default player methods
+        // load all core-specific methods
         for (; methodTable && methodTable->name && methodTable->mfunc; ++methodTable)
         {
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
-            lua_pushcclosure(E->L, CallMethod, 1);
-            lua_rawset(E->L, -3);
-        }
-
-        // load core-specific overrides. Should probably check whether the defaults are there or not.
-        for (; overrideTable && overrideTable->name && overrideTable->mfunc; ++overrideTable)
-        {
-            lua_pushstring(E->L, overrideTable->name);
-            lua_pushlightuserdata(E->L, (void*)overrideTable);
             lua_pushcclosure(E->L, CallMethod, 1);
             lua_rawset(E->L, -3);
         }

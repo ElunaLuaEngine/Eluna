@@ -307,7 +307,7 @@ namespace LuaPacket
         return 0;
     }
     
-    ElunaRegister<WorldPacket> PacketMethodsOverride[] =
+    ElunaRegister<WorldPacket> PacketMethods[] =
     {
         // Getters
         { "GetOpcode", &LuaPacket::GetOpcode },
