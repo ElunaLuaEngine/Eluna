@@ -3111,7 +3111,7 @@ namespace LuaUnit
     return 1;
     }*/
     
-    ElunaRegister<Unit> UnitMethodsOverride[] =
+    ElunaRegister<Unit> UnitMethods[] =
     {
         // Getters
         { "GetLevel", &LuaUnit::GetLevel },
@@ -3152,7 +3152,6 @@ namespace LuaUnit
         { "GetSpeed", &LuaUnit::GetSpeed },
         { "GetStat", &LuaUnit::GetStat },
         { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
-        { "GetVehicle", nullptr }, // not implemented
         { "GetMovementType", &LuaUnit::GetMovementType },
 #if (!defined(TBC) && !defined(CLASSIC))
         { "GetVehicleKit", &LuaUnit::GetVehicleKit },
@@ -3172,13 +3171,10 @@ namespace LuaUnit
         { "SetFacing", &LuaUnit::SetFacing },
         { "SetFacingToObject", &LuaUnit::SetFacingToObject },
         { "SetSpeed", &LuaUnit::SetSpeed },
-        { "SetStunned", nullptr }, // not implemented
         { "SetRooted", &LuaUnit::SetRooted},
         { "SetConfused", &LuaUnit::SetConfused},
         { "SetFeared", &LuaUnit::SetFeared},
         { "SetPvP", &LuaUnit::SetPvP },
-        { "SetCanFly", nullptr }, // not implemented
-        { "SetVisible", nullptr }, // not implemented
         { "SetOwnerGUID", &LuaUnit::SetOwnerGUID },
         { "SetName", &LuaUnit::SetName },
         { "SetSheath", &LuaUnit::SetSheath },
@@ -3224,9 +3220,6 @@ namespace LuaUnit
         { "IsMounted", &LuaUnit::IsMounted },
         { "AttackStop", &LuaUnit::AttackStop },
         { "Attack", &LuaUnit::Attack },
-        { "IsVisible", nullptr }, // not implemented,
-        { "IsMoving", nullptr }, // not implemented
-        { "IsFlying", nullptr }, // not implemented
         { "IsStopped", &LuaUnit::IsStopped },
         { "HasUnitState", &LuaUnit::HasUnitState },
         { "IsQuestGiver", &LuaUnit::IsQuestGiver },
@@ -3264,15 +3257,9 @@ namespace LuaUnit
         { "CountPctFromMaxHealth", &LuaUnit::CountPctFromMaxHealth },
         { "Dismount", &LuaUnit::Dismount },
         { "Mount", &LuaUnit::Mount },
-        { "RestoreDisplayId", nullptr }, // not implemented
-        { "RestoreFaction", nullptr }, // not implemented
-        { "RemoveBindSightAuras", nullptr }, // not implemented
-        { "RemoveCharmAuras", nullptr }, // not implemented
         { "ClearThreatList", &LuaUnit::ClearThreatList },
         { "ClearUnitState", &LuaUnit::ClearUnitState },
         { "AddUnitState", &LuaUnit::AddUnitState },
-        { "DisableMelee", nullptr }, // not implemented
-        { "SummonGuardian", nullptr }, // not implemented
         { "NearTeleport", &LuaUnit::NearTeleport },
         { "MoveIdle", &LuaUnit::MoveIdle },
         { "MoveRandom", &LuaUnit::MoveRandom },
@@ -3294,6 +3281,21 @@ namespace LuaUnit
 #if (!defined(TBC) && !defined(CLASSIC))
         { "MoveJump", &LuaUnit::MoveJump },
 #endif
+
+        // Not implemented mehtods
+        { "GetVehicle", nullptr }, // not implemented
+        { "SetStunned", nullptr }, // not implemented
+        { "SetCanFly", nullptr }, // not implemented
+        { "SetVisible", nullptr }, // not implemented
+        { "IsVisible", nullptr }, // not implemented,
+        { "IsMoving", nullptr }, // not implemented
+        { "IsFlying", nullptr }, // not implemented
+        { "RestoreDisplayId", nullptr }, // not implemented
+        { "RestoreFaction", nullptr }, // not implemented
+        { "RemoveBindSightAuras", nullptr }, // not implemented
+        { "RemoveCharmAuras", nullptr }, // not implemented
+        { "DisableMelee", nullptr }, // not implemented
+        { "SummonGuardian", nullptr }, // not implemented
 
         { NULL, NULL }
     };

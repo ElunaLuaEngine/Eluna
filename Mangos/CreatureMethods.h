@@ -1500,7 +1500,7 @@ namespace LuaCreature
         return 1;
     }
     
-    ElunaRegister<Creature> CreatureMethodsOverride[] =
+    ElunaRegister<Creature> CreatureMethods[] =
     {
         // Getters
         { "GetAITarget", &LuaCreature::GetAITarget },
@@ -1518,8 +1518,6 @@ namespace LuaCreature
         { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },
         { "GetWanderRadius", &LuaCreature::GetWanderRadius },
         { "GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId },
-        { "GetWaypointPath", nullptr },   // not implemented
-        { "GetLootMode", nullptr },   // not implemented
         { "GetLootRecipient", &LuaCreature::GetLootRecipient },
         { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },
         { "GetNPCFlags", &LuaCreature::GetNPCFlags },
@@ -1529,7 +1527,6 @@ namespace LuaCreature
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
 
         // Setters
-        { "SetRegeneratingHealth", nullptr },   // not implemented
         { "SetHover", &LuaCreature::SetHover },
         { "SetDisableGravity", &LuaCreature::SetDisableGravity },
         { "SetAggroEnabled", &LuaCreature::SetAggroEnabled },
@@ -1540,9 +1537,7 @@ namespace LuaCreature
         { "SetWanderRadius", &LuaCreature::SetWanderRadius },
         { "SetInCombatWithZone", &LuaCreature::SetInCombatWithZone },
         { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
-        { "SetLootMode", nullptr },   // not implemented
         { "SetNPCFlags", &LuaCreature::SetNPCFlags },
-        { "SetReactState", nullptr },   // not implemented
         { "SetDeathState", &LuaCreature::SetDeathState },
         { "SetWalk", &LuaCreature::SetWalk },
         { "SetHomePosition", &LuaCreature::SetHomePosition },
@@ -1550,11 +1545,9 @@ namespace LuaCreature
 
         // Boolean
         { "IsRegeneratingHealth", &LuaCreature::IsRegeneratingHealth },
-        { "IsDungeonBoss", nullptr },   // not implemented
         { "IsWorldBoss", &LuaCreature::IsWorldBoss },
         { "IsRacialLeader", &LuaCreature::IsRacialLeader },
         { "IsCivilian", &LuaCreature::IsCivilian },
-        { "IsTrigger", nullptr },   // not implemented
         { "IsGuard", &LuaCreature::IsGuard },
         { "IsElite", &LuaCreature::IsElite },
         { "IsInEvadeMode", &LuaCreature::IsInEvadeMode },
@@ -1562,7 +1555,6 @@ namespace LuaCreature
         { "CanWalk", &LuaCreature::CanWalk },
         { "CanSwim", &LuaCreature::CanSwim },
         { "CanAggro", &LuaCreature::CanAggro },
-        { "CanStartAttack", nullptr },   // not implemented
         { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },
         { "IsTappedBy", &LuaCreature::IsTappedBy },
         { "HasLootRecipient", &LuaCreature::HasLootRecipient },
@@ -1570,8 +1562,6 @@ namespace LuaCreature
         { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },
         { "CanCompleteQuest", &LuaCreature::CanCompleteQuest },
         { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
-        { "IsDamageEnoughForLootingAndReward", nullptr },   // not implemented
-        { "HasLootMode", nullptr },   // not implemented
         { "HasSpell", &LuaCreature::HasSpell },
         { "HasQuest", &LuaCreature::HasQuest },
         { "HasSpellCooldown", &LuaCreature::HasSpellCooldown },
@@ -1585,13 +1575,25 @@ namespace LuaCreature
         { "DespawnOrUnsummon", &LuaCreature::DespawnOrUnsummon },
         { "Respawn", &LuaCreature::Respawn },
         { "AttackStart", &LuaCreature::AttackStart },
-        { "AddLootMode", nullptr },   // not implemented
-        { "ResetLootMode", nullptr },   // not implemented
-        { "RemoveLootMode", nullptr },   // not implemented
         { "SaveToDB", &LuaCreature::SaveToDB },
         { "SelectVictim", &LuaCreature::SelectVictim },
         { "MoveWaypoint", &LuaCreature::MoveWaypoint },
         { "UpdateEntry", &LuaCreature::UpdateEntry },
+
+        // Not implemented methods
+        { "GetWaypointPath", nullptr },   // not implemented
+        { "GetLootMode", nullptr },   // not implemented
+        { "SetRegeneratingHealth", nullptr },   // not implemented
+        { "SetLootMode", nullptr },   // not implemented
+        { "SetReactState", nullptr },   // not implemented
+        { "IsDungeonBoss", nullptr },   // not implemented
+        { "IsTrigger", nullptr },   // not implemented
+        { "CanStartAttack", nullptr },   // not implemented
+        { "IsDamageEnoughForLootingAndReward", nullptr },   // not implemented
+        { "HasLootMode", nullptr },   // not implemented
+        { "AddLootMode", nullptr },   // not implemented
+        { "ResetLootMode", nullptr },   // not implemented
+        { "RemoveLootMode", nullptr },   // not implemented
 
         { NULL, NULL }
     };

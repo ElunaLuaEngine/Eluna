@@ -4294,7 +4294,7 @@ namespace LuaPlayer
     return 0;
     }*/
     
-    ElunaRegister<Player> PlayerMethodsOverride[] =
+    ElunaRegister<Player> PlayerMethods[] =
     {
         // Getters
         { "GetSelection", &LuaPlayer::GetSelection },
@@ -4349,9 +4349,7 @@ namespace LuaPlayer
         { "GetNextRandomRaidMember", &LuaPlayer::GetNextRandomRaidMember },
         { "GetOriginalGroup", &LuaPlayer::GetOriginalGroup },
         { "GetOriginalSubGroup", &LuaPlayer::GetOriginalSubGroup },
-        { "GetChampioningFaction", nullptr }, // not implemented
         { "GetLatency", &LuaPlayer::GetLatency },
-        { "GetRecruiterId", nullptr }, // not implemented
         { "GetDbLocaleIndex", &LuaPlayer::GetDbLocaleIndex },
         { "GetDbcLocale", &LuaPlayer::GetDbcLocale },
         { "GetCorpse", &LuaPlayer::GetCorpse },
@@ -4394,7 +4392,6 @@ namespace LuaPlayer
         { "SetReputation", &LuaPlayer::SetReputation },
         { "SetFreeTalentPoints", &LuaPlayer::SetFreeTalentPoints },
         { "SetGuildRank", &LuaPlayer::SetGuildRank },
-        { "SetMovement", nullptr }, // not implemented
         { "SetSkill", &LuaPlayer::SetSkill },
         { "SetFactionForRace", &LuaPlayer::SetFactionForRace },
         { "SetDrunkValue", &LuaPlayer::SetDrunkValue },
@@ -4402,7 +4399,6 @@ namespace LuaPlayer
         { "SetPlayerLock", &LuaPlayer::SetPlayerLock },
         { "SetGender", &LuaPlayer::SetGender },
         { "SetSheath", &LuaPlayer::SetSheath },
-        { "SetFFA", nullptr }, // not implemented
 #if defined(CLASSIC)
         { "SetHonorStoredKills", &LuaPlayer::SetHonorStoredKills },
         { "SetRankPoints", &LuaPlayer::SetRankPoints },
@@ -4440,21 +4436,14 @@ namespace LuaPlayer
         { "IsGMVisible", &LuaPlayer::IsGMVisible },
         { "HasQuest", &LuaPlayer::HasQuest },
         { "InBattlegroundQueue", &LuaPlayer::InBattlegroundQueue },
-        { "IsImmuneToEnvironmentalDamage", nullptr }, // not implemented
         { "CanSpeak", &LuaPlayer::CanSpeak },
         { "HasAtLoginFlag", &LuaPlayer::HasAtLoginFlag },
-        { "InRandomLfgDungeon", nullptr }, // not implemented
-        { "HasPendingBind", nullptr }, // not implemented
         { "CanUninviteFromGroup", &LuaPlayer::CanUninviteFromGroup },
         { "IsRested", &LuaPlayer::IsRested },
-        { "CanFlyInZone", nullptr }, // not implemented
-        { "IsNeverVisible", nullptr }, // not implemented,
         { "IsVisibleForPlayer", &LuaPlayer::IsVisibleForPlayer },
-        { "IsUsingLfg", nullptr }, // not implemented,
         { "HasQuestForItem", &LuaPlayer::HasQuestForItem },
         { "HasQuestForGO", &LuaPlayer::HasQuestForGO },
         { "CanShareQuest", &LuaPlayer::CanShareQuest },
-        { "HasReceivedQuestReward", nullptr }, // not implemented,
         { "IsInSameGroupWith", &LuaPlayer::IsInSameGroupWith },
         { "IsInSameRaidWith", &LuaPlayer::IsInSameRaidWith },
         { "IsGroupVisibleFor", &LuaPlayer::IsGroupVisibleFor },
@@ -4463,8 +4452,6 @@ namespace LuaPlayer
         { "CanParry", &LuaPlayer::CanParry },
         { "CanBlock", &LuaPlayer::CanBlock },
         { "InBattleground", &LuaPlayer::InBattleground },
-        { "IsOutdoorPvPActive", nullptr }, // not implemented,
-        { "IsARecruiter", nullptr }, // not implemented,
         { "CanUseItem", &LuaPlayer::CanUseItem },
         { "HasSpell", &LuaPlayer::HasSpell },
         { "HasSpellCooldown", &LuaPlayer::HasSpellCooldown },
@@ -4508,8 +4495,6 @@ namespace LuaPlayer
         { "ResetTypeCooldowns", &LuaPlayer::ResetTypeCooldowns },
         { "ResetAllCooldowns", &LuaPlayer::ResetAllCooldowns },
         { "GiveXP", &LuaPlayer::GiveXP },
-        { "RemovePet", nullptr }, // not implemented
-        { "SummonPet", nullptr }, // not implemented
         { "Say", &LuaPlayer::Say },
         { "Yell", &LuaPlayer::Yell },
         { "TextEmote", &LuaPlayer::TextEmote },
@@ -4519,21 +4504,15 @@ namespace LuaPlayer
         { "FailQuest", &LuaPlayer::FailQuest },
         { "AddQuest", &LuaPlayer::AddQuest },
         { "RemoveQuest", &LuaPlayer::RemoveQuest },
-        { "RemoveActiveQuest", nullptr }, // not implemented
-        { "RemoveRewardedQuest", nullptr }, // not implemented
         { "AreaExploredOrEventHappens", &LuaPlayer::AreaExploredOrEventHappens },
         { "GroupEventHappens", &LuaPlayer::GroupEventHappens },
         { "KilledMonsterCredit", &LuaPlayer::KilledMonsterCredit },
-        { "KilledPlayerCredit", nullptr }, // not implemented
-        { "KillGOCredit", nullptr }, // not implemented
         { "TalkedToCreature", &LuaPlayer::TalkedToCreature },
         { "AddComboPoints", &LuaPlayer::AddComboPoints },
-        { "GainSpellComboPoints", nullptr }, // not implemented
         { "ClearComboPoints", &LuaPlayer::ClearComboPoints },
         { "RemoveSpell", &LuaPlayer::RemoveSpell },
         { "ResetTalents", &LuaPlayer::ResetTalents },
         { "ResetTalentsCost", &LuaPlayer::ResetTalentsCost },
-        { "AddTalent", nullptr }, // not implemented
         { "RemoveFromGroup", &LuaPlayer::RemoveFromGroup },
         { "KillPlayer", &LuaPlayer::KillPlayer },
         { "DurabilityLossAll", &LuaPlayer::DurabilityLossAll },
@@ -4544,7 +4523,6 @@ namespace LuaPlayer
         { "DurabilityRepairAll", &LuaPlayer::DurabilityRepairAll },
         { "DurabilityRepair", &LuaPlayer::DurabilityRepair },
         { "LeaveBattleground", &LuaPlayer::LeaveBattleground },
-        { "BindToInstance", nullptr }, // not implemented
         { "UnbindInstance", &LuaPlayer::UnbindInstance },
         { "UnbindAllInstances", &LuaPlayer::UnbindAllInstances },
         { "RemoveFromBattlegroundRaid", &LuaPlayer::RemoveFromBattlegroundRaid },
@@ -4590,6 +4568,30 @@ namespace LuaPlayer
         { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
         { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
 #endif
+
+        // Not implemented methods
+        { "GetChampioningFaction", nullptr }, // not implemented
+        { "GetRecruiterId", nullptr }, // not implemented
+        { "SetMovement", nullptr }, // not implemented
+        { "SetFFA", nullptr }, // not implemented
+        { "IsImmuneToEnvironmentalDamage", nullptr }, // not implemented
+        { "InRandomLfgDungeon", nullptr }, // not implemented
+        { "HasPendingBind", nullptr }, // not implemented
+        { "CanFlyInZone", nullptr }, // not implemented
+        { "IsNeverVisible", nullptr }, // not implemented,
+        { "IsUsingLfg", nullptr }, // not implemented,
+        { "HasReceivedQuestReward", nullptr }, // not implemented,
+        { "IsOutdoorPvPActive", nullptr }, // not implemented,
+        { "IsARecruiter", nullptr }, // not implemented,
+        { "RemovePet", nullptr }, // not implemented
+        { "SummonPet", nullptr }, // not implemented
+        { "RemoveActiveQuest", nullptr }, // not implemented
+        { "RemoveRewardedQuest", nullptr }, // not implemented
+        { "KilledPlayerCredit", nullptr }, // not implemented
+        { "KillGOCredit", nullptr }, // not implemented
+        { "GainSpellComboPoints", nullptr }, // not implemented
+        { "AddTalent", nullptr }, // not implemented
+        { "BindToInstance", nullptr }, // not implemented
 
         { NULL, NULL }
     };

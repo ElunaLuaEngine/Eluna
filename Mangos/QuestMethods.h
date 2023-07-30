@@ -184,12 +184,11 @@ namespace LuaQuest
         return 1;
     }*/
     
-    ElunaRegister<Quest> QuestMethodsOverride[] =
+    ElunaRegister<Quest> QuestMethods[] =
     {
         // Getters
         { "GetId", &LuaQuest::GetId },
         { "GetLevel", &LuaQuest::GetLevel },
-        { "GetMaxLevel", nullptr },  // not implemented
         { "GetMinLevel", &LuaQuest::GetMinLevel },
         { "GetNextQuestId", &LuaQuest::GetNextQuestId },
         { "GetPrevQuestId", &LuaQuest::GetPrevQuestId },
@@ -203,6 +202,9 @@ namespace LuaQuest
 #ifndef CLASSIC
         { "IsDaily", &LuaQuest::IsDaily },
 #endif
+
+        // Not implemented methods
+        { "GetMaxLevel", nullptr },  // not implemented
 
         { NULL, NULL }
     };

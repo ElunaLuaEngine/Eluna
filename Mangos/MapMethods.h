@@ -370,7 +370,7 @@ namespace LuaMap
         return 1;
     }
     
-    ElunaRegister<Map> MapMethodsOverride[] =
+    ElunaRegister<Map> MapMethods[] =
     {
         // Getters
         { "GetName", &LuaMap::GetName },

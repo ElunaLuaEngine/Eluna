@@ -426,7 +426,7 @@ namespace LuaGroup
         return 0;
     }*/
     
-    ElunaRegister<Group> GroupMethodsOverride[] =
+    ElunaRegister<Group> GroupMethods[] =
     {
         // Getters
         { "GetMembers", &LuaGroup::GetMembers },
@@ -449,7 +449,6 @@ namespace LuaGroup
         { "IsFull", &LuaGroup::IsFull },
         { "IsRaidGroup", &LuaGroup::IsRaidGroup },
         { "IsBGGroup", &LuaGroup::IsBGGroup },
-        { "IsBFGroup", nullptr },   // not implemented
         { "IsMember", &LuaGroup::IsMember },
         { "IsAssistant", &LuaGroup::IsAssistant },
         { "SameSubGroup", &LuaGroup::SameSubGroup },
@@ -459,8 +458,11 @@ namespace LuaGroup
 #endif
         // Other
         { "SendPacket", &LuaGroup::SendPacket },
-        { "ConvertToLFG", nullptr },    // not implemented
         { "ConvertToRaid", &LuaGroup::ConvertToRaid },
+
+        // Not implemented methods
+        { "IsBFGroup", nullptr },   // not implemented
+        { "ConvertToLFG", nullptr },    // not implemented
 
         { NULL, NULL }
     };
