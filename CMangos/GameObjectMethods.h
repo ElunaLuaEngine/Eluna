@@ -343,7 +343,7 @@ namespace LuaGameObject
         return 0;
     }
     
-    ElunaRegister<GameObject> GameObjectMethodsOverride[] =
+    ElunaRegister<GameObject> GameObjectMethods[] =
     {
         // Getters
         { "GetDisplayId", &LuaGameObject::GetDisplayId },
@@ -360,7 +360,6 @@ namespace LuaGameObject
 
         // Boolean
         { "IsTransport", &LuaGameObject::IsTransport },
-        { "IsDestructible", nullptr },  // Not implemented
         { "IsActive", &LuaGameObject::IsActive },
         { "HasQuest", &LuaGameObject::HasQuest },
         { "IsSpawned", &LuaGameObject::IsSpawned },
@@ -371,6 +370,9 @@ namespace LuaGameObject
         { "Despawn", &LuaGameObject::Despawn },
         { "Respawn", &LuaGameObject::Respawn },
         { "SaveToDB", &LuaGameObject::SaveToDB },
+
+        // Not implemented methods
+        { "IsDestructible", nullptr },  // Not implemented
 
         { NULL, NULL }
     };

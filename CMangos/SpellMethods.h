@@ -190,7 +190,7 @@ namespace LuaSpell
         return 0;
     }
     
-    ElunaRegister<Spell> SpellMethodsOverride[] =
+    ElunaRegister<Spell> SpellMethods[] =
     {
         // Getters
         { "GetCaster", &LuaSpell::GetCaster },

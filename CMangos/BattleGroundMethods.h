@@ -253,7 +253,7 @@ namespace LuaBattleGround
         return 1;
     }
     
-    ElunaRegister<BattleGround> BattleGroundMethodsOverride[] =
+    ElunaRegister<BattleGround> BattleGroundMethods[] =
     {
         // Getters
         { "GetName", &LuaBattleGround::GetName },

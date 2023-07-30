@@ -765,7 +765,7 @@ namespace LuaItem
         return 0;
     }
     
-    ElunaRegister<Item> ItemMethodsOverride[] =
+    ElunaRegister<Item> ItemMethods[] =
     {
         // Getters
         { "GetOwnerGUID", &LuaItem::GetOwnerGUID },
@@ -821,7 +821,6 @@ namespace LuaItem
         { "HasQuest", &LuaItem::HasQuest },
         { "IsPotion", &LuaItem::IsPotion },
         { "IsConjuredConsumable", &LuaItem::IsConjuredConsumable },
-        { "IsRefundExpired", nullptr }, // not implemented
         { "SetEnchantment", &LuaItem::SetEnchantment },
         { "ClearEnchantment", &LuaItem::ClearEnchantment },
 #if defined(TBC) || defined(WOTLK)
@@ -835,6 +834,9 @@ namespace LuaItem
 
         // Other
         { "SaveToDB", &LuaItem::SaveToDB },
+
+        // Not implemented methods
+        { "IsRefundExpired", nullptr }, // not implemented
 
         { NULL, NULL }
     };

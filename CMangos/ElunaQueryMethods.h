@@ -368,7 +368,7 @@ namespace LuaQuery
         return 1;
     }
     
-    ElunaRegister<ElunaQuery> QueryMethodsOverride[] =
+    ElunaRegister<ElunaQuery> QueryMethods[] =
     {
         // Getters
         { "GetColumnCount", &LuaQuery::GetColumnCount },

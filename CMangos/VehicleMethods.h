@@ -111,7 +111,7 @@ namespace LuaVehicle
         return 0;
     }
     
-    ElunaRegister<Vehicle> VehicleMethodsOverride[] =
+    ElunaRegister<Vehicle> VehicleMethods[] =
     {
         // Getters
         { "GetOwner", &LuaVehicle::GetOwner },
