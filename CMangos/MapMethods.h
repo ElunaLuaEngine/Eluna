@@ -37,11 +37,7 @@ namespace LuaMap
      */
     int IsBattleground(lua_State* L, Map* map)
     {
-#if defined TRINITY || AZEROTHCORE
-        Eluna::Push(L, map->IsBattleground());
-#else
         Eluna::Push(L, map->IsBattleGround());
-#endif
         return 1;
     }
 
@@ -190,13 +186,8 @@ namespace LuaMap
         float x = Eluna::CHECKVAL<float>(L, 2);
         float y = Eluna::CHECKVAL<float>(L, 3);
         float z = Eluna::CHECKVAL<float>(L, 4);
-#if defined TRINITY || defined AZEROTHCORE
-        float phasemask = Eluna::CHECKVAL<uint32>(L, 5, PHASEMASK_NORMAL);
 
-        Eluna::Push(L, map->GetAreaId(phasemask, x, y, z));
-#else
         Eluna::Push(L, map->GetTerrain()->GetAreaId(x, y, z));
-#endif
         return 1;
     }
 
@@ -210,36 +201,7 @@ namespace LuaMap
     {
         ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
 
-#if defined TRINITY || AZEROTHCORE
-        switch (guid.GetHigh())
-        {
-            case HIGHGUID_PLAYER:
-                Eluna::Push(L, eObjectAccessor()GetPlayer(map, guid));
-                break;
-            case HIGHGUID_TRANSPORT:
-            case HIGHGUID_MO_TRANSPORT:
-            case HIGHGUID_GAMEOBJECT:
-                Eluna::Push(L, map->GetGameObject(guid));
-                break;
-            case HIGHGUID_VEHICLE:
-            case HIGHGUID_UNIT:
-                Eluna::Push(L, map->GetCreature(guid));
-                break;
-            case HIGHGUID_PET:
-                Eluna::Push(L, map->GetPet(guid));
-                break;
-            case HIGHGUID_DYNAMICOBJECT:
-                Eluna::Push(L, map->GetDynamicObject(guid));
-                break;
-            case HIGHGUID_CORPSE:
-                Eluna::Push(L, map->GetCorpse(guid));
-                break;
-            default:
-                break;
-        }
-#else
         Eluna::Push(L, map->GetWorldObject(guid));
-#endif
         return 1;
     }
 
@@ -267,19 +229,8 @@ namespace LuaMap
         uint32 weatherType = Eluna::CHECKVAL<uint32>(L, 3);
         float grade = Eluna::CHECKVAL<float>(L, 4);
 
-#if defined TRINITY
-        if (Weather * weather = map->GetOrGenerateZoneDefaultWeather(zoneId))
-            weather->SetWeather((WeatherType)weatherType, grade);
-#elif defined AZEROTHCORE
-        Weather* weather = WeatherMgr::FindWeather(zoneId);
-        if (!weather)
-            weather = WeatherMgr::AddWeather(zoneId);
-        if (weather)
-            weather->SetWeather((WeatherType)weatherType, grade);
-#else
         if (Weather::IsValidWeatherType(weatherType))
             map->SetWeather(zoneId, (WeatherType)weatherType, grade, false);
-#endif
         return 0;
     }
 
@@ -293,13 +244,7 @@ namespace LuaMap
      */
     int GetInstanceData(lua_State* L, Map* map)
     {
-#if defined TRINITY || AZEROTHCORE
-        ElunaInstanceAI* iAI = NULL;
-        if (InstanceMap* inst = map->ToInstanceMap())
-            iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
-#else
         ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData());
-#endif
 
         if (iAI)
             Eluna::GetEluna(L)->PushInstanceData(L, iAI, false);
@@ -314,13 +259,7 @@ namespace LuaMap
      */
     int SaveInstanceData(lua_State* /*L*/, Map* map)
     {
-#if defined TRINITY || AZEROTHCORE
-        ElunaInstanceAI* iAI = NULL;
-        if (InstanceMap* inst = map->ToInstanceMap())
-            iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
-#else
         ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData());
-#endif
 
         if (iAI)
             iAI->SaveToDB();
@@ -352,11 +291,7 @@ namespace LuaMap
         Map::PlayerList const& players = map->GetPlayers();
         for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
         {
-#if defined TRINITY || AZEROTHCORE
-            Player* player = itr->GetSource();
-#else
             Player* player = itr->getSource();
-#endif
             if (!player)
                 continue;
             if (player->GetSession() && (team >= TEAM_NEUTRAL || player->GetTeamId() == team))

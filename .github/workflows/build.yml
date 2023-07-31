@@ -12,11 +12,11 @@ jobs:
         eluna: [ON]
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: false
         repository: ElunaLuaEngine/ElunaTrinityWotlk
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: src/server/game/LuaEngine
     - name: Dependencies
@@ -108,12 +108,12 @@ jobs:
         patch: [zero, one, two]
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
           repository: mangos${{ matrix.patch }}/server
           ref: master
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           path: src/modules/Eluna
       - name: Configure
@@ -122,7 +122,7 @@ jobs:
         run: |
           mkdir bin
           cd bin
-          cmake .. -DELUNA=$ELUNA -DCMAKE_INSTALL_PREFIX=install -DSOAP=1 -DPLAYERBOTS=0 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/
+          cmake .. -DSCRIPT_LIB_ELUNA=$ELUNA -DCMAKE_INSTALL_PREFIX=install -DSOAP=1 -DPLAYERBOTS=0 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/
           cd ..
       - name: Build
         run: |
@@ -135,19 +135,21 @@ jobs:
       fail-fast: false
       matrix:
         eluna: [ON, OFF]
-        patch: [Classic, TBC, WotLK]
-    runs-on: ubuntu-20.04
+        patch: [Classic, TBC, WotLK, Cata]
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: false
           repository: Niam5/Eluna-CMaNGOS-${{ matrix.patch }}
           ref: master
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           path: src/game/LuaEngine
-      - name: Dependencies
+      - name: Dependencies and Environment
         run: |
+          echo "CC=gcc-12" >> $GITHUB_ENV
+          echo "CXX=g++-12" >> $GITHUB_ENV
           sudo apt-get update && sudo apt-get install -yq libboost-all-dev
       - name: Configure
         env:

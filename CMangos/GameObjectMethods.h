@@ -22,11 +22,7 @@ namespace LuaGameObject
     {
         uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
 
-#if defined TRINITY || AZEROTHCORE
-        Eluna::Push(L, go->hasQuest(questId));
-#else
         Eluna::Push(L, go->HasQuest(questId));
-#endif
         return 1;
     }
 
@@ -37,11 +33,7 @@ namespace LuaGameObject
      */
     int IsSpawned(lua_State* L, GameObject* go)
     {
-#ifdef CMANGOS
         Eluna::Push(L, go->IsSpawned());
-#else
-        Eluna::Push(L, go->isSpawned());
-#endif
         return 1;
     }
 
@@ -66,12 +58,6 @@ namespace LuaGameObject
         Eluna::Push(L, go->isActiveObject());
         return 1;
     }
-
-    /*int IsDestructible(lua_State* L, GameObject* go) // TODO: Implementation core side
-    {
-        Eluna::Push(L, go->IsDestructibleBuilding());
-        return 1;
-    }*/
 
     /**
      * Returns display ID of the [GameObject]
@@ -123,11 +109,7 @@ namespace LuaGameObject
      */
     int GetLootState(lua_State* L, GameObject* go)
     {
-#ifdef CMANGOS
         Eluna::Push(L, go->GetLootState());
-#else
-        Eluna::Push(L, go->getLootState());
-#endif
         return 1;
     }
 
@@ -153,11 +135,7 @@ namespace LuaGameObject
      */
     int GetLootRecipientGroup(lua_State* L, GameObject* go)
     {
-#if defined TRINITY || AZEROTHCORE
-        Eluna::Push(L, go->GetLootRecipientGroup());
-#else
         Eluna::Push(L, go->GetGroupLootRecipient());
-#endif
         return 1;
     }
 
@@ -168,12 +146,8 @@ namespace LuaGameObject
      */
     int GetDBTableGUIDLow(lua_State* L, GameObject* go)
     {
-#if defined(TRINITY) || defined(AZEROTHCORE)
-        Eluna::Push(L, go->GetSpawnId());
-#else
         // on mangos based this is same as lowguid
         Eluna::Push(L, go->GetGUIDLow());
-#endif
         return 1;
     }
 
@@ -200,13 +174,7 @@ namespace LuaGameObject
         else if (state == 1)
             go->SetGoState(GO_STATE_READY);
         else if (state == 2)
-        {
-#ifdef TRINITY
-            go->SetGoState(GO_STATE_DESTROYED);
-#else
             go->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
-#endif
-        }
 
         return 0;
     }
@@ -265,11 +233,7 @@ namespace LuaGameObject
         bool deldb = Eluna::CHECKVAL<bool>(L, 2, false);
 
         // cs_gobject.cpp copy paste
-#if defined TRINITY || AZEROTHCORE
-        ObjectGuid ownerGuid = go->GetOwnerGUID();
-#else
         ObjectGuid ownerGuid = go->GetOwnerGuid();
-#endif
         if (ownerGuid)
         {
             Unit* owner = eObjectAccessor()GetUnit(*go, ownerGuid);
@@ -281,11 +245,7 @@ namespace LuaGameObject
 
         if (deldb)
         {
-#ifdef TRINITY
-            GameObject::DeleteFromDB(go->GetSpawnId());
-#else
             go->DeleteFromDB();
-#endif
         }
 
         go->SetRespawnTime(0);

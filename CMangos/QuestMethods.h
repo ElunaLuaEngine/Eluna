@@ -52,11 +52,8 @@ namespace LuaQuest
     int HasFlag(lua_State* L, Quest* quest)
     {
         uint32 flag = Eluna::CHECKVAL<uint32>(L, 2);
-#if defined TRINITY || AZEROTHCORE
-        Eluna::Push(L, quest->HasFlag(flag));
-#else
+
         Eluna::Push(L, quest->HasQuestFlag((QuestFlags)flag));
-#endif
         return 1;
     }
 
@@ -157,11 +154,7 @@ namespace LuaQuest
      */
     int GetFlags(lua_State* L, Quest* quest)
     {
-#if defined TRINITY || AZEROTHCORE
-        Eluna::Push(L, quest->GetFlags());
-#else
         Eluna::Push(L, quest->GetQuestFlags());
-#endif
         return 1;
     }
 
@@ -177,12 +170,6 @@ namespace LuaQuest
         Eluna::Push(L, quest->GetType());
         return 1;
     }
-
-    /*int GetMaxLevel(lua_State* L, Quest* quest)
-    {
-        Eluna::Push(L, quest->GetMaxLevel());
-        return 1;
-    }*/
     
     ElunaRegister<Quest> QuestMethods[] =
     {
