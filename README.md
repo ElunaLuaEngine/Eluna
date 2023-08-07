@@ -100,6 +100,7 @@ Eluna API for AC:
 - Added `Player:GetTrader()`: https://github.com/azerothcore/mod-eluna/pull/126
 - Added `Player:CanCompleteRepeatableQuest(questId)`: https://github.com/azerothcore/mod-eluna/pull/141
 - Added `Player:CanRewardQuest(questId)`: https://github.com/azerothcore/mod-eluna/pull/141
+- Added `Player:SetGlyph(glyphId, slotIndex)`: https://github.com/azerothcore/mod-eluna/pull/152
 
 ### Group
 - Added `Group:GetGroupType()`: https://github.com/azerothcore/mod-eluna/pull/82
