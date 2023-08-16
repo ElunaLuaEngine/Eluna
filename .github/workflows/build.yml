@@ -21,7 +21,8 @@ jobs:
         path: src/server/game/LuaEngine
     - name: Dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -yq libboost-all-dev
+        sudo apt-get update && sudo apt-get install -yq libboost-all-dev g++-10
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 --slave /usr/bin/g++ g++ /usr/bin/g++-10
     - name: Setup
       env:
         ELUNA: ${{ matrix.eluna }}
