@@ -2127,7 +2127,7 @@ namespace LuaUnit
      * @param float y
      * @param float z
      * @param uint32 spell : entry of a spell
-     * @param bool triggered = false : if true the spell is instant and has no cost
+     * @param bool triggered = true : if true the spell is instant and has no cost
      */
     int CastSpellAoF(lua_State* L, Unit* unit)
     {
