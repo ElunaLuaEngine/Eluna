@@ -4466,7 +4466,6 @@ namespace LuaPlayer
 #endif
 #if (!defined(TBC) && !defined(CLASSIC))
         { "HasAchieved", &LuaPlayer::HasAchieved },
-        { "SetAchievement", &LuaPlayer::SetAchievement },
         { "HasTalent", &LuaPlayer::HasTalent },
         { "CanTitanGrip", &LuaPlayer::CanTitanGrip },
 #endif
@@ -4592,6 +4591,7 @@ namespace LuaPlayer
         { "GainSpellComboPoints", nullptr }, // not implemented
         { "AddTalent", nullptr }, // not implemented
         { "BindToInstance", nullptr }, // not implemented
+        { "SetAchievement", nullptr }, // not implemented
 
         { NULL, NULL }
     };
