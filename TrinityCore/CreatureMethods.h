@@ -22,7 +22,11 @@ namespace LuaCreature
      */
     int IsRegeneratingHealth(lua_State* L, Creature* creature)
     {
+#ifdef CATA
+        Eluna::Push(L, creature->isRegeneratingHealth());
+#else
         Eluna::Push(L, creature->CanRegenerateHealth());
+#endif
         return 1;
     }
 
@@ -790,6 +794,7 @@ namespace LuaCreature
         return 1;
     }
 
+#ifndef CATA
     /**
      * Returns the [Creature]'s shield block value.
      *
@@ -800,6 +805,7 @@ namespace LuaCreature
         Eluna::Push(L, creature->GetShieldBlockValue());
         return 1;
     }
+#endif
 
     int GetLootMode(lua_State* L, Creature* creature)
     {
@@ -1276,7 +1282,11 @@ namespace LuaCreature
         { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },
         { "GetNPCFlags", &LuaCreature::GetNPCFlags },
         { "GetExtraFlags", &LuaCreature::GetExtraFlags },
+#ifndef CATA
         { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
+#else
+        { "GetShieldBlockValue", nullptr },
+#endif
         { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
 

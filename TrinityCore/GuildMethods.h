@@ -120,6 +120,7 @@ namespace LuaGuild
         return 1;
     }
 
+#ifndef CATA
     /**
      * Sets the leader of this [Guild]
      *
@@ -132,6 +133,7 @@ namespace LuaGuild
         guild->HandleSetLeader(player->GetSession(), player->GetName());
         return 0;
     }
+#endif
 
     /**
      * Sets the information of the bank tab specified
@@ -255,7 +257,11 @@ namespace LuaGuild
         // Setters
         { "SetBankTabText", &LuaGuild::SetBankTabText },
         { "SetMemberRank", &LuaGuild::SetMemberRank },
+#ifndef CATA
         { "SetLeader", &LuaGuild::SetLeader },
+#else
+        { "SetLeader", nullptr },
+#endif
 
         // Other
         { "SendPacket", &LuaGuild::SendPacket },

@@ -225,6 +225,33 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
     CleanUpStack(2);
 }
 
+#ifdef CATA
+void Eluna::OnMoneyChanged(Player* pPlayer, int64& amount)
+{
+    START_HOOK(PLAYER_EVENT_ON_MONEY_CHANGE);
+    Push(pPlayer);
+    Push(amount);
+    int amountIndex = lua_gettop(L);
+    int n = SetupStack(PlayerEventBindings, key, 2);
+
+    while (n > 0)
+    {
+        int r = CallOneFunction(n--, 2, 1);
+
+        if (lua_isnumber(L, r))
+        {
+            amount = CHECKVAL<int32>(L, r);
+            // Update the stack for subsequent calls.
+            ReplaceArgument(amount, amountIndex);
+        }
+
+        lua_pop(L, 1);
+    }
+
+    CleanUpStack(2);
+}
+#endif
+
 void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
 {
     START_HOOK(PLAYER_EVENT_ON_GIVE_XP);

@@ -165,7 +165,11 @@ namespace LuaQuest
      */
     int GetType(lua_State* L, Quest* quest)
     {
+#ifdef CATA
+        Eluna::Push(L, quest->GetQuestType());
+#else
         Eluna::Push(L, quest->GetType());
+#endif
         return 1;
     }
 

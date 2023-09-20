@@ -41,7 +41,12 @@ namespace LuaWorldObject
      */
     int GetPhaseMask(lua_State* L, WorldObject* obj)
     {
+#ifdef CATA
+        EventMap event;
+        Eluna::Push(L, event.GetPhaseMask());
+#else
         Eluna::Push(L, obj->GetPhaseMask());
+#endif
         return 1;
     }
 
@@ -54,8 +59,13 @@ namespace LuaWorldObject
     int SetPhaseMask(lua_State* L, WorldObject* obj)
     {
         uint32 phaseMask = Eluna::CHECKVAL<uint32>(L, 2);
+#ifdef CATA
+        EventMap event;
+        event.SetPhase(phaseMask);
+#else
         bool update = Eluna::CHECKVAL<bool>(L, 3, true);
         obj->SetPhaseMask(phaseMask, update);
+#endif
         return 0;
     }
 
@@ -590,6 +600,7 @@ namespace LuaWorldObject
     int GetAngle(lua_State* L, WorldObject* obj)
     {
         WorldObject* target = Eluna::CHECKOBJ<WorldObject>(L, 2, false);
+#ifndef CATA
         if (target)
             Eluna::Push(L, obj->GetAbsoluteAngle(target));
         else
@@ -598,6 +609,16 @@ namespace LuaWorldObject
             float y = Eluna::CHECKVAL<float>(L, 3);
             Eluna::Push(L, obj->GetAbsoluteAngle(x, y));
         }
+#else
+        if (target)
+            Eluna::Push(L, obj->GetAngle(target));
+        else
+        {
+            float x = Eluna::CHECKVAL<float>(L, 2);
+            float y = Eluna::CHECKVAL<float>(L, 3);
+            Eluna::Push(L, obj->GetAngle(x, y));
+        }
+#endif
 
         return 1;
     }
@@ -635,9 +656,14 @@ namespace LuaWorldObject
         float o = Eluna::CHECKVAL<float>(L, 6);
         uint32 respawnDelay = Eluna::CHECKVAL<uint32>(L, 7, 30);
 
+#ifndef CATA
         QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
 
         Eluna::Push(L, obj->SummonGameObject(entry, Position(x, y, z, o), rot, Seconds(respawnDelay)));
+#else
+        QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
+        Eluna::Push(L, obj->SummonGameObject(entry, x, y, z, o, rot, respawnDelay));
+#endif
         return 1;
     }
 
@@ -708,7 +734,11 @@ namespace LuaWorldObject
                 return luaL_argerror(L, 7, "valid SpawnType expected");
         }
 
+#ifndef CATA
         Eluna::Push(L, obj->SummonCreature(entry, x, y, z, o, type, Milliseconds(despawnTimer)));
+#else
+        Eluna::Push(L, obj->SummonCreature(entry, x, y, z, o, type, despawnTimer));
+#endif
         return 1;
     }
 
