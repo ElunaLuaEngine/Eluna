@@ -358,7 +358,7 @@ namespace LuaGroup
         ObjectGuid target = Eluna::CHECKVAL<ObjectGuid>(L, 3);
         ObjectGuid setter = Eluna::CHECKVAL<ObjectGuid>(L, 4, ObjectGuid());
 
-        if (icon >= TARGETICONCOUNT)
+        if (icon >= TARGET_ICONS_COUNT)
             return luaL_argerror(L, 2, "valid target icon expected");
 
 #if (defined(CLASSIC) || defined(TBC))
