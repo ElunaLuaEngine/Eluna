@@ -201,7 +201,7 @@ typedef Opcodes                 OpcodesList;
 #define eObjectAccessor()       sObjectAccessor.
 #define SERVER_MSG_STRING       SERVER_MSG_CUSTOM
 #define TOTAL_LOCALES           MAX_LOCALE
-#define TARGETICONCOUNT         TARGET_ICON_COUNT
+#define TARGET_ICONS_COUNT         TARGET_ICON_COUNT
 #define MAX_TALENT_SPECS        MAX_TALENT_SPEC_COUNT
 #define TEAM_NEUTRAL            TEAM_INDEX_NEUTRAL
 
