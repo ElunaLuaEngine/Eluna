@@ -176,6 +176,14 @@ void Eluna::OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void Eluna::OnPlayerKilledByEnvironment(Player* pKilled, uint8 damageType)
+{
+    START_HOOK(PLAYER_EVENT_ON_ENVIRONMENTAL_DEATH);
+    Push(pKilled);
+    Push(damageType);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
 void Eluna::OnLevelChanged(Player* pPlayer, uint8 oldLevel)
 {
     START_HOOK(PLAYER_EVENT_ON_LEVEL_CHANGE);
