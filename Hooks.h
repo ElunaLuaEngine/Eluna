@@ -202,14 +202,14 @@ namespace Hooks
         PLAYER_EVENT_ON_QUEST_ABANDON           =     38,       // (event, player, questId)
         PLAYER_EVENT_ON_LEARN_TALENTS           =     39,       // (event, player, talentId, talentRank, spellid)
         PLAYER_EVENT_ON_ENVIRONMENTAL_DEATH     =     40,       // (event, player, environmentalDamageType)
-        // UNUSED                               =     41,       // (event, player)
+        PLAYER_EVENT_ON_TRADE_ACCEPT            =     41,       // (event, player, target) - Can return false to interrupt trade
         PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - player is nil if command used from console. Can return false
         // UNUSED                               =     43,       // (event, player)
         PLAYER_EVENT_ON_LEARN_SPELL             =     44,       // (event, player, spellId)
         PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE    =     45,       // (event, player, achievementId)
         // UNUSED                               =     46,       // (event, player)
         PLAYER_EVENT_ON_UPDATE_AREA             =     47,       // (event, player, oldArea, newArea)
-        // UNUSED                               =     48,       // (event, player)
+        PLAYER_EVENT_ON_TRADE_INIT              =     48,       // (event, player, target) - Can return false to interrupt trade
         // UNUSED                               =     49,       // (event, player)
         // UNUSED                               =     50,       // (event, player)
         // UNUSED                               =     51,       // (event, player)

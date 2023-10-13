@@ -460,6 +460,22 @@ void Eluna::OnAchievementComplete(Player* player, uint32 achievementId)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+bool Eluna::OnTradeInit(Player* trader, Player* tradee)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_TRADE_INIT, true);
+    Push(trader);
+    Push(tradee);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+}
+
+bool Eluna::OnTradeAccept(Player* trader, Player* tradee)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_TRADE_ACCEPT, true);
+    Push(trader);
+    Push(tradee);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+}
+
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
 {
     if (lang == LANG_ADDON)
