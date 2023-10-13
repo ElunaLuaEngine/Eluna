@@ -387,6 +387,7 @@ public:
     bool OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel);
     bool OnTradeInit(Player* trader, Player* tradee);
     bool OnTradeAccept(Player* trader, Player* tradee);
+    bool OnSendMail(Player* sender, ObjectGuid recipientGuid);
 
     /* Item */
     void OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget);

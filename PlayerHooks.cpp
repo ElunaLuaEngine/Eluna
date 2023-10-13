@@ -476,6 +476,14 @@ bool Eluna::OnTradeAccept(Player* trader, Player* tradee)
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 
+bool Eluna::OnSendMail(Player* sender, ObjectGuid recipientGuid)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_SEND_MAIL, true);
+    Push(sender);
+    Push(recipientGuid);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+}
+
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
 {
     if (lang == LANG_ADDON)

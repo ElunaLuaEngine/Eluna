@@ -210,7 +210,7 @@ namespace Hooks
         // UNUSED                               =     46,       // (event, player)
         PLAYER_EVENT_ON_UPDATE_AREA             =     47,       // (event, player, oldArea, newArea)
         PLAYER_EVENT_ON_TRADE_INIT              =     48,       // (event, player, target) - Can return false to interrupt trade
-        // UNUSED                               =     49,       // (event, player)
+        PLAYER_EVENT_ON_SEND_MAIL               =     49,       // (event, player, recipientGuid)
         // UNUSED                               =     50,       // (event, player)
         // UNUSED                               =     51,       // (event, player)
         // UNUSED                               =     52,       // (event, player)
