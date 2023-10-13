@@ -41,7 +41,7 @@ void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, 
 
 void Eluna::OnLearnSpell(Player* pPlayer, uint32 spellId)
 {
-    START_HOOK(PLAYER_EVENT_ON_LEARN_TALENTS);
+    START_HOOK(PLAYER_EVENT_ON_LEARN_SPELL);
     Push(pPlayer);
     Push(spellId);
     CallAllFunctions(PlayerEventBindings, key);
