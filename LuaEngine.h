@@ -378,7 +378,9 @@ public:
     void OnRepop(Player* pPlayer);
     void OnResurrect(Player* pPlayer);
     void OnQuestAbandon(Player* pPlayer, uint32 questId);
+    void OnQuestStatusChanged(Player* pPlayer, uint32 questId, uint8 status);
     void OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, uint32 spellid);
+    void OnLearnSpell(Player* pPlayer, uint32 spellid);
     InventoryResult OnCanUseItem(const Player* pPlayer, uint32 itemEntry);
     void OnLuaStateClose();
     void OnLuaStateOpen();
@@ -392,6 +394,7 @@ public:
     bool OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
     bool OnExpire(Player* pPlayer, ItemTemplate const* pProto);
     bool OnRemove(Player* pPlayer, Item* item);
+    void OnAdd(Player* pPlayer, Item* item);
     void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code);
 
     /* Creature */
@@ -488,8 +491,10 @@ public:
     void OnSave(Player* pPlayer);
     void OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapid, bool permanent);
     void OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea);
+    void OnUpdateArea(Player* pPlayer, uint32 oldArea, uint32 newArea);
     void OnMapChanged(Player* pPlayer);
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
+    void OnAchievementComplete(Player* pPlayer, uint32 achievementId);
 
 #ifndef CLASSIC
 #ifndef TBC

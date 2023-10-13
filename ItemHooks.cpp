@@ -139,3 +139,11 @@ bool Eluna::OnRemove(Player* pPlayer, Item* pItem)
     Push(pItem);
     return CallAllFunctionsBool(ItemEventBindings, key);
 }
+
+void Eluna::OnAdd(Player* pPlayer, Item* pItem)
+{
+    START_HOOK(ITEM_EVENT_ON_ADD, pItem->GetEntry());
+    Push(pPlayer);
+    Push(pItem);
+    CallAllFunctions(ItemEventBindings, key);
+}

@@ -39,6 +39,14 @@ void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, 
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void Eluna::OnLearnSpell(Player* pPlayer, uint32 spellId)
+{
+    START_HOOK(PLAYER_EVENT_ON_LEARN_TALENTS);
+    Push(pPlayer);
+    Push(spellId);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
 bool Eluna::OnCommand(Player* player, const char* text)
 {
     // If from console, player is NULL
@@ -103,6 +111,15 @@ void Eluna::OnQuestAbandon(Player* pPlayer, uint32 questId)
     START_HOOK(PLAYER_EVENT_ON_QUEST_ABANDON);
     Push(pPlayer);
     Push(questId);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
+void Eluna::OnQuestStatusChanged(Player* pPlayer, uint32 questId, uint8 status)
+{
+    START_HOOK(PLAYER_EVENT_ON_QUEST_STATUS_CHANGED);
+    Push(pPlayer);
+    Push(questId);
+    Push(status);
     CallAllFunctions(PlayerEventBindings, key);
 }
 
@@ -419,10 +436,27 @@ void Eluna::OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void Eluna::OnUpdateArea(Player* pPlayer, uint32 oldArea, uint32 newArea)
+{
+    START_HOOK(PLAYER_EVENT_ON_UPDATE_AREA);
+    Push(pPlayer);
+    Push(oldArea);
+    Push(newArea);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
 void Eluna::OnMapChanged(Player* player)
 {
     START_HOOK(PLAYER_EVENT_ON_MAP_CHANGE);
     Push(player);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
+void Eluna::OnAchievementComplete(Player* player, uint32 achievementId)
+{
+    START_HOOK(PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE);
+    Push(player);
+    Push(achievementId);
     CallAllFunctions(PlayerEventBindings, key);
 }
 
