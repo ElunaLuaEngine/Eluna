@@ -56,6 +56,16 @@ typedef QueryResult ElunaQuery;
 #define ELUNA_LOG_INFO(...)     LOG_INFO("eluna", __VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    LOG_ERROR("eluna", __VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    LOG_DEBUG("eluna", __VA_ARGS__);
+#elif VMANGOS
+typedef QueryNamedResult ElunaQuery;
+#define ASSERT                  MANGOS_ASSERT
+#define ELUNA_LOG_INFO(...)     sLog.Out(LOG_ELUNA, LOG_LVL_BASIC,__VA_ARGS__);
+#define ELUNA_LOG_ERROR(...)    sLog.Out(LOG_ELUNA, LOG_LVL_ERROR,__VA_ARGS__);
+#define ELUNA_LOG_DEBUG(...)    sLog.Out(LOG_ELUNA, LOG_LVL_DEBUG,__VA_ARGS__);
+#define GET_GUID                GetObjectGuid
+#define GetGameObjectTemplate   GetGameObjectInfo
+#define GetItemTemplate         GetItemPrototype
+#define GetTemplate             GetProto
 #else
 typedef QueryNamedResult ElunaQuery;
 #define ASSERT                  MANGOS_ASSERT
@@ -68,7 +78,7 @@ typedef QueryNamedResult ElunaQuery;
 #define GetTemplate             GetProto
 #endif
 
-#if defined(TRINITY) || defined(AZEROTHCORE) || defined(MANGOS) || defined(CMANGOS)
+#if defined(TRINITY) || defined(AZEROTHCORE) || defined(MANGOS) || defined(CMANGOS) || defined(VMANGOS)
 #ifndef MAKE_NEW_GUID
 #define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
 #endif

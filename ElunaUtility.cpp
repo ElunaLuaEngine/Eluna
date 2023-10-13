@@ -25,7 +25,7 @@
 
 uint32 ElunaUtil::GetCurrTime()
 {
-#ifndef CMANGOS
+#if !defined CMANGOS && !defined VMANGOS
     return getMSTime();
 #else
     return WorldTimer::getMSTime();
@@ -34,7 +34,7 @@ uint32 ElunaUtil::GetCurrTime()
 
 uint32 ElunaUtil::GetTimeDiff(uint32 oldMSTime)
 {
-#ifndef CMANGOS
+#if !defined CMANGOS && !defined VMANGOS
     return GetMSTimeDiffToNow(oldMSTime);
 #else
     return WorldTimer::getMSTimeDiff(oldMSTime, WorldTimer::getMSTime());
@@ -67,7 +67,11 @@ ElunaUtil::WorldObjectInRangeCheck::WorldObjectInRangeCheck(bool nearest, WorldO
         if (GameObject const* go = i_obj->ToGameObject())
             i_obj_unit = go->GetOwner();
     if (!i_obj_unit)
+#ifndef VMANGOS
         i_obj_fact = sFactionTemplateStore.LookupEntry(14);
+#else
+        i_obj_fact = sObjectMgr.GetFactionTemplateEntry(14);
+#endif
 }
 WorldObject const& ElunaUtil::WorldObjectInRangeCheck::GetFocusObject() const
 {
@@ -97,7 +101,7 @@ bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
             {
                 if (i_obj_fact)
                 {
-#if ((defined TRINITY || AZEROTHCORE || CMANGOS) && !defined CATA)
+#if ((defined TRINITY || AZEROTHCORE || CMANGOS || VMANGOS) && !defined CATA)
                     if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))
                         return false;
 #elif defined CATA && defined TRINITY

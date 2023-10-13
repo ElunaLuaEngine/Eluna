@@ -104,6 +104,9 @@
 #elif defined CMANGOS
 #include "AI/BaseAI/UnitAI.h"
 #include "Server/SQLStorages.h"
+#elif defined VMANGOS
+#include "BasicAI.h"
+#include "Bag.h"
 #else
 #include "AggressorAI.h"
 #include "SQLStorages.h"
@@ -164,6 +167,12 @@ typedef Opcodes                 OpcodesList;
 #endif
 #endif
 
+#ifdef VMANGOS
+#define CORE_NAME               "vMaNGOS"
+#define CORE_VERSION            REVISION_HASH
+#define DEFAULT_LOCALE          LOCALE_enUS
+#endif
+
 #ifdef TRINITY
 #define CORE_NAME               "TrinityCore"
 #define REGEN_TIME_FULL
@@ -203,10 +212,12 @@ typedef Opcodes                 OpcodesList;
 #define TOTAL_LOCALES           MAX_LOCALE
 #define TARGETICONCOUNT         TARGET_ICON_COUNT
 #define MAX_TALENT_SPECS        MAX_TALENT_SPEC_COUNT
+#ifndef VMANGOS
 #define TEAM_NEUTRAL            TEAM_INDEX_NEUTRAL
+#endif
 
 
-#if defined(CATA) && !defined(MANGOS)
+#if ((defined(CATA) && !defined(MANGOS)) || defined VMANGOS)
 #define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
 #endif
 

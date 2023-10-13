@@ -16,6 +16,9 @@
 struct ScriptedAI;
 #elif defined CMANGOS
 class CreatureAI;
+#elif defined VMANGOS
+class BasicAI;
+typedef BasicAI ScriptedAI;
 #else
 class AggressorAI;
 typedef AggressorAI ScriptedAI;
@@ -31,7 +34,7 @@ struct ElunaCreatureAI : CreatureAI
     bool justSpawned;
     // used to delay movementinform hook (WP hook)
     std::vector< std::pair<uint32, uint32> > movepoints;
-#if defined MANGOS || defined CMANGOS
+#if defined MANGOS || defined CMANGOS || defined VMANGOS
 #define me  m_creature
 #endif
 #ifndef CMANGOS
@@ -78,7 +81,7 @@ struct ElunaCreatureAI : CreatureAI
 
         if (!sEluna->UpdateAI(me, diff))
         {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY || AZEROTHCORE || VMANGOS
             if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
                 ScriptedAI::UpdateAI(diff);
 #elif defined CMANGOS
@@ -290,7 +293,7 @@ struct ElunaCreatureAI : CreatureAI
 #endif
     }
 
-#if !defined TRINITY && !AZEROTHCORE
+#if !defined TRINITY && !AZEROTHCORE && !VMANGOS
     // Enables use of MoveInLineOfSight
     bool IsVisible(Unit* who) const override
     {
@@ -312,6 +315,8 @@ struct ElunaCreatureAI : CreatureAI
     // Called when hit by a spell
 #if defined TRINITY
     void SpellHit(WorldObject* caster, SpellInfo const* spell) override
+#elif defined VMANGOS
+    void SpellHit(Unit* caster, SpellInfo const* spell)
 #else
     void SpellHit(Unit* caster, SpellInfo const* spell) override
 #endif
