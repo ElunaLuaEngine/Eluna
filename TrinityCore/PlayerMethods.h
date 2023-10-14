@@ -373,6 +373,7 @@ namespace LuaPlayer
         return 1;
     }
 
+#ifndef CATA
     /**
      * Returns 'true' if the [Player] satisfies all requirements to complete the repeatable quest entry.
      *
@@ -410,6 +411,7 @@ namespace LuaPlayer
 
         return 1;
     }
+#endif
 
     /**
      * Returns 'true' if the [Player] is a part of the Horde faction, 'false' otherwise.
@@ -1546,6 +1548,7 @@ namespace LuaPlayer
         return 1;
     }
 
+#ifndef CATA
     /**
      * Returns the amount of mails in the [Player]s mailbox
      *
@@ -1578,7 +1581,8 @@ namespace LuaPlayer
         Eluna::Push(L, player->GetXPForNextLevel());
         return 1;
     }
-    
+#endif
+
     /**
      * Locks the player controls and disallows all movement and casting.
      *
@@ -3877,12 +3881,15 @@ namespace LuaPlayer
         { "GetQuestRewardStatus", &LuaPlayer::GetQuestRewardStatus },
 #ifndef CATA
         { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
-#else
-        { "GetShieldBlockValue", nullptr },
-#endif
         { "GetMailCount", &LuaPlayer::GetMailCount },
         { "GetXP", &LuaPlayer::GetXP },
         { "GetXPForNextLevel", &LuaPlayer::GetXPForNextLevel },
+#else
+        { "GetShieldBlockValue", nullptr },
+        { "GetMailCount", nullptr },
+        { "GetXP", nullptr },
+        { "GetXPForNextLevel", nullptr },
+#endif
 
         // Setters
 #ifndef CATA
@@ -3991,8 +3998,13 @@ namespace LuaPlayer
         { "CanFly", &LuaPlayer::CanFly },
         { "IsMoving", &LuaPlayer::IsMoving },
         { "IsFlying", &LuaPlayer::IsFlying },
+#ifndef CATA
         { "CanCompleteRepeatableQuest", &LuaPlayer::CanCompleteRepeatableQuest },
         { "CanRewardQuest", &LuaPlayer::CanRewardQuest },
+#elif
+        { "CanCompleteRepeatableQuest", nullptr },
+        { "CanRewardQuest", nullptr },
+#endif
 
         // Gossip
         { "GossipMenuAddItem", &LuaPlayer::GossipMenuAddItem },

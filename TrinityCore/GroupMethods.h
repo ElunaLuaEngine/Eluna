@@ -262,12 +262,14 @@ namespace LuaGroup
      * @param ObjectGuid guid : guid of the player
      * @return uint8 flags
      */
+#ifndef CATA
     int GetMemberFlags(lua_State* L, Group* group)
     {
         ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
         Eluna::Push(L, group->GetMemberFlags(guid));
         return 1;
     }
+#endif
 
     /**
      * Sets the leader of this [Group]
@@ -411,6 +413,7 @@ namespace LuaGroup
      * @param bool apply : add the `flag` if `true`, remove the `flag` otherwise
      * @param [GroupMemberFlags] flag : the flag to set or unset
      */
+#ifndef CATA
     int SetMemberFlag(lua_State* L, Group* group)
     {
         ObjectGuid target = Eluna::CHECKVAL<ObjectGuid>(L, 2);
@@ -420,6 +423,7 @@ namespace LuaGroup
         group->SetGroupMemberFlag(target, apply, flag);
         return 0;
     }
+#endif
 
     ElunaRegister<Group> GroupMethods[] =
     {
@@ -430,13 +434,21 @@ namespace LuaGroup
         { "GetMemberGroup", &LuaGroup::GetMemberGroup },
         { "GetMemberGUID", &LuaGroup::GetMemberGUID },
         { "GetMembersCount", &LuaGroup::GetMembersCount },
+#ifndef CATA
         { "GetMemberFlags", &LuaGroup::GetMemberFlags },
+#else
+        { "GetMemberFlags", nullptr },
+#endif
 
         // Setters
         { "SetLeader", &LuaGroup::SetLeader },
         { "SetMembersGroup", &LuaGroup::SetMembersGroup },
         { "SetTargetIcon", &LuaGroup::SetTargetIcon },
+#ifndef CATA
         { "SetMemberFlag", &LuaGroup::SetMemberFlag },
+#else
+        { "SetMemberFlag", nullptr },
+#endif
 
         // Boolean
         { "IsLeader", &LuaGroup::IsLeader },
