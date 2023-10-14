@@ -50,6 +50,7 @@ typedef QueryResult ElunaQuery;
 #endif
 
 #ifdef TRINITY
+#ifdef WOTLK
 #define ELUNA_LOG_TC_FMT(TC_LOG_MACRO, ...) \
     try { \
         std::string message = fmt::sprintf(__VA_ARGS__); \
@@ -60,6 +61,11 @@ typedef QueryResult ElunaQuery;
 #define ELUNA_LOG_INFO(...)     ELUNA_LOG_TC_FMT(TC_LOG_INFO, __VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    ELUNA_LOG_TC_FMT(TC_LOG_ERROR, __VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    ELUNA_LOG_TC_FMT(TC_LOG_DEBUG, __VA_ARGS__);
+#else
+#define ELUNA_LOG_INFO(...)     TC_LOG_INFO("eluna", __VA_ARGS__);
+#define ELUNA_LOG_ERROR(...)    TC_LOG_ERROR("eluna", __VA_ARGS__);
+#define ELUNA_LOG_DEBUG(...)    TC_LOG_DEBUG("eluna", __VA_ARGS__);
+#endif
 #elif defined(AZEROTHCORE)
 #define ELUNA_LOG_INFO(...)     LOG_INFO("eluna", __VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    LOG_ERROR("eluna", __VA_ARGS__);
