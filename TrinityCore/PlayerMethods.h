@@ -374,6 +374,44 @@ namespace LuaPlayer
     }
 
     /**
+     * Returns 'true' if the [Player] satisfies all requirements to complete the repeatable quest entry.
+     *
+     * @param uint32 entry
+     * @return bool canComplete
+     */
+    int CanCompleteRepeatableQuest(lua_State* L, Player* player)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+
+        Quest const* qInfo = sObjectMgr->GetQuestTemplate(entry);
+        if (qInfo)
+            Eluna::Push(L, player->CanCompleteRepeatableQuest(qInfo));
+        else
+            Eluna::Push(L, false);
+
+        return 1;
+    }
+
+    /**
+     * Returns 'true' if the [Player] satisfies all requirements to turn in the quest.
+     *
+     * @param uint32 entry
+     * @return bool canReward
+     */
+    int CanRewardQuest(lua_State* L, Player* player)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+
+        Quest const* qInfo = sObjectMgr->GetQuestTemplate(entry);
+        if (qInfo)
+            Eluna::Push(L, player->CanRewardQuest(qInfo, true));
+        else
+            Eluna::Push(L, false);
+
+        return 1;
+    }
+
+    /**
      * Returns 'true' if the [Player] is a part of the Horde faction, 'false' otherwise.
      *
      * @return bool isHorde
@@ -1505,6 +1543,39 @@ namespace LuaPlayer
     int GetNearbyGameObject(lua_State* L, Player* player)
     {
         Eluna::Push(L, ChatHandler(player->GetSession()).GetNearbyGameObject());
+        return 1;
+    }
+
+    /**
+     * Returns the amount of mails in the [Player]s mailbox
+     *
+     * @return uint32 count
+     */
+    int GetMailCount(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->GetMailSize());
+        return 1;
+    }
+
+    /**
+     * Returns the [Player]s current experience points
+     *
+     * @return uint32 xp
+     */
+    int GetXP(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->GetXP());
+        return 1;
+    }
+
+    /**
+     * Returns the [Player]s required experience points for next level
+     *
+     * @return uint32 xp
+     */
+    int GetXPForNextLevel(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->GetXPForNextLevel());
         return 1;
     }
     
@@ -3811,6 +3882,9 @@ namespace LuaPlayer
 #else
         { "GetShieldBlockValue", nullptr },
 #endif
+        { "GetMailCount", &LuaPlayer::GetMailCount },
+        { "GetXP", &LuaPlayer::GetXP },
+        { "GetXPForNextLevel", &LuaPlayer::GetXPForNextLevel },
 
         // Setters
 #ifndef CATA
@@ -3919,6 +3993,8 @@ namespace LuaPlayer
         { "CanFly", &LuaPlayer::CanFly },
         { "IsMoving", &LuaPlayer::IsMoving },
         { "IsFlying", &LuaPlayer::IsFlying },
+        { "CanCompleteRepeatableQuest", &LuaPlayer::CanCompleteRepeatableQuest },
+        { "CanRewardQuest", &LuaPlayer::CanRewardQuest },
 
         // Gossip
         { "GossipMenuAddItem", &LuaPlayer::GossipMenuAddItem },

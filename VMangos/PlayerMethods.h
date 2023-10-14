@@ -4465,6 +4465,11 @@ namespace LuaPlayer
         { "AddTalent", nullptr }, // not implemented
         { "BindToInstance", nullptr }, // not implemented
         { "SetAchievement", nullptr }, // not implemented
+        { "GetMailCount", nullptr }, // not implemented
+        { "GetXP", nullptr }, // not implemented
+        { "GetXPForNextLevel", nullptr }, // not implemented
+        { "CanCompleteRepeatableQuest", nullptr }, // not implemented
+        { "CanRewardQuest", nullptr }, // not implemented
 
         { NULL, NULL }
     };

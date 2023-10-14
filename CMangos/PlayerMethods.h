@@ -3975,6 +3975,11 @@ namespace LuaPlayer
         { "UpdateHonor", nullptr }, // classic only
         { "ResetHonor", nullptr },  // classic only
         { "ClearHonorInfo", nullptr },  // classic only
+        { "GetMailCount", nullptr }, // not implemented
+        { "GetXP", nullptr }, // not implemented
+        { "GetXPForNextLevel", nullptr }, // not implemented
+        { "CanCompleteRepeatableQuest", nullptr }, // not implemented
+        { "CanRewardQuest", nullptr }, // not implemented
 
         { NULL, NULL }
     };
