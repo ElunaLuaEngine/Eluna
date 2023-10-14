@@ -22,7 +22,6 @@
 #ifdef TRINITY
 #include "QueryResult.h"
 #include "Log.h"
-#include "fmt/printf.h"
 #ifdef CATA
 #include "Object.h"
 #endif
@@ -51,6 +50,7 @@ typedef QueryResult ElunaQuery;
 
 #ifdef TRINITY
 #ifdef WOTLK
+#include "fmt/printf.h"
 #define ELUNA_LOG_TC_FMT(TC_LOG_MACRO, ...) \
     try { \
         std::string message = fmt::sprintf(__VA_ARGS__); \
