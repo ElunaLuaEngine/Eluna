@@ -758,11 +758,11 @@ namespace LuaCreature
     /**
      * Returns the number of [Unit]s in this [Creature]'s threat list.
      *
-     * @return int targetsCount
+     * @return double targetsCount
      */
     int GetAITargetsCount(lua_State* L, Creature* creature)
     {
-        Eluna::Push(L, creature->GetThreatManager().GetThreatListSize());
+        Eluna::Push(L, (double)creature->GetThreatManager().GetThreatListSize());
         return 1;
     }
 
