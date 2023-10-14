@@ -248,6 +248,28 @@ namespace LuaGroup
     }
 
     /**
+     * Returns the [Group] members' flags
+     *
+     * <pre>
+     * enum GroupMemberFlags
+     * {
+     *     MEMBER_FLAG_ASSISTANT   = 1,
+     *     MEMBER_FLAG_MAINTANK    = 2,
+     *     MEMBER_FLAG_MAINASSIST  = 4
+     * };
+     * </pre>
+     * 
+     * @param ObjectGuid guid : guid of the player
+     * @return uint8 flags
+     */
+    int GetMemberFlags(lua_State* L, Group* group)
+    {
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
+        Eluna::Push(L, group->GetMemberFlags(guid));
+        return 1;
+    }
+
+    /**
      * Sets the leader of this [Group]
      *
      * @param ObjectGuid guid : guid of the new leader
@@ -372,7 +394,33 @@ namespace LuaGroup
         group->ConvertToLFG();
         return 0;
     }
-    
+
+    /**
+     * Sets or removes a flag for a [Group] member
+     *
+     * <pre>
+     * enum GroupMemberFlags
+     * {
+     *     MEMBER_FLAG_ASSISTANT   = 1,
+     *     MEMBER_FLAG_MAINTANK    = 2,
+     *     MEMBER_FLAG_MAINASSIST  = 4
+     * };
+     * </pre>
+     *
+     * @param ObjectGuid target : GUID of the target
+     * @param bool apply : add the `flag` if `true`, remove the `flag` otherwise
+     * @param [GroupMemberFlags] flag : the flag to set or unset
+     */
+    int SetMemberFlag(lua_State* L, Group* group)
+    {
+        ObjectGuid target = Eluna::CHECKVAL<ObjectGuid>(L, 2);
+        bool apply = Eluna::CHECKVAL<bool>(L, 3);
+        GroupMemberFlags flag = static_cast<GroupMemberFlags>(Eluna::CHECKVAL<uint32>(L, 4));
+
+        group->SetGroupMemberFlag(target, apply, flag);
+        return 0;
+    }
+
     ElunaRegister<Group> GroupMethods[] =
     {
         // Getters
@@ -382,11 +430,13 @@ namespace LuaGroup
         { "GetMemberGroup", &LuaGroup::GetMemberGroup },
         { "GetMemberGUID", &LuaGroup::GetMemberGUID },
         { "GetMembersCount", &LuaGroup::GetMembersCount },
+        { "GetMemberFlags", &LuaGroup::GetMemberFlags },
 
         // Setters
         { "SetLeader", &LuaGroup::SetLeader },
         { "SetMembersGroup", &LuaGroup::SetMembersGroup },
         { "SetTargetIcon", &LuaGroup::SetTargetIcon },
+        { "SetMemberFlag", &LuaGroup::SetMemberFlag },
 
         // Boolean
         { "IsLeader", &LuaGroup::IsLeader },

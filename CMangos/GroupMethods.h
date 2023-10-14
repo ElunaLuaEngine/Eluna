@@ -413,6 +413,8 @@ namespace LuaGroup
         // Not implemented methods
         { "IsBFGroup", nullptr },   // not implemented
         { "ConvertToLFG", nullptr },    // not implemented
+        { "GetMemberFlags", nullptr },    // not implemented
+        { "SetMemberFlag", nullptr },    // not implemented
 
         { NULL, NULL }
     };
