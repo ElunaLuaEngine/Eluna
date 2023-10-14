@@ -305,6 +305,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "GetStandState", &LuaUnit::GetStandState },
     { "GetVictim", &LuaUnit::GetVictim },
     { "GetSpeed", &LuaUnit::GetSpeed },
+    { "GetSpeedRate", &LuaUnit::GetSpeedRate },
     { "GetStat", &LuaUnit::GetStat },
     { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
 #if (!defined(TBC) && !defined(CLASSIC))
@@ -327,6 +328,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "SetFacing", &LuaUnit::SetFacing },
     { "SetFacingToObject", &LuaUnit::SetFacingToObject },
     { "SetSpeed", &LuaUnit::SetSpeed },
+    { "SetSpeedRate", &LuaUnit::SetSpeedRate },
     // {"SetStunned", &LuaUnit::SetStunned},                           // :SetStunned([enable]) - UNDOCUMENTED - Stuns or removes stun
     {"SetRooted", &LuaUnit::SetRooted},
     {"SetConfused", &LuaUnit::SetConfused},
