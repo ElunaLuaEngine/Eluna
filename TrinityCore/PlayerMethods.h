@@ -2092,9 +2092,7 @@ namespace LuaPlayer
 
         time_t muteTime = time(NULL) + muteseconds;
         player->GetSession()->m_muteTime = muteTime;
-        std::ostringstream oss;
-        oss << "UPDATE account SET mutetime = " << muteTime << " WHERE id = " << player->GetSession()->GetAccountId();
-        LoginDatabase.PExecute("%s", oss.str().c_str());
+        LoginDatabase.PExecute("UPDATE account SET mutetime = {} WHERE id = {}", muteTime, player->GetSession()->GetAccountId());
         return 0;
     }
 
