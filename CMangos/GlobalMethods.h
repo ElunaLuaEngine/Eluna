@@ -729,6 +729,7 @@ namespace LuaGlobalFunctions
      *     GROUP_EVENT_ON_LEADER_CHANGE            =     4,       // (event, group, newLeaderGuid, oldLeaderGuid)
      *     GROUP_EVENT_ON_DISBAND                  =     5,       // (event, group)
      *     GROUP_EVENT_ON_CREATE                   =     6,       // (event, group, leaderGuid, groupType)
+     *     GROUP_EVENT_ON_MEMBER_ACCEPT            =     7,       // (event, group, player) - Can return false to disable accepting
      *
      *     GROUP_EVENT_COUNT
      * };
