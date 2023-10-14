@@ -552,6 +552,7 @@ public:
 #else
     void OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType);
 #endif
+    bool OnMemberAccept(Group* group, Player* player);
 
     /* Map */
     void OnCreate(Map* map);
