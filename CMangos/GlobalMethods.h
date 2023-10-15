@@ -650,7 +650,7 @@ namespace LuaGlobalFunctions
      *     PLAYER_EVENT_ON_ENVIRONMENTAL_DEATH     =     40,       // (event, player, environmentalDamageType)
      *     PLAYER_EVENT_ON_TRADE_ACCEPT            =     41,       // (event, player, target) - Can return false to interrupt trade
      *     PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - player is nil if command used from console. Can return false
-     *     // UNUSED                               =     43,       // (event, player)
+     *     PLAYER_EVENT_ON_SKILL_CHANGE            =     43,       // (event, player, skillId, skillValue) - Returns new skill level value
      *     PLAYER_EVENT_ON_LEARN_SPELL             =     44,       // (event, player, spellId)
      *     PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE    =     45,       // (event, player, achievementId)
      *     // UNUSED                               =     46,       // (event, player)

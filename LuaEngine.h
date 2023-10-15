@@ -380,6 +380,7 @@ public:
     void OnQuestAbandon(Player* pPlayer, uint32 questId);
     void OnQuestStatusChanged(Player* pPlayer, uint32 questId, uint8 status);
     void OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, uint32 spellid);
+    void OnSkillChange(Player* pPlayer, uint32 skillId, uint32 skillValue);
     void OnLearnSpell(Player* pPlayer, uint32 spellid);
     InventoryResult OnCanUseItem(const Player* pPlayer, uint32 itemEntry);
     void OnLuaStateClose();
