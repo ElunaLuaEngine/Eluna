@@ -43,7 +43,7 @@ void Eluna::OnSkillChange(Player* pPlayer, uint32 skillId, uint32 skillValue)
 {
     START_HOOK(PLAYER_EVENT_ON_SKILL_CHANGE);
     Push(pPlayer);
-    Push(skillid);
+    Push(skillId);
     Push(skillValue);
     int valueIndex = lua_gettop(L) - 1;
     int n = SetupStack(PlayerEventBindings, key, 3);
