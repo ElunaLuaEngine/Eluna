@@ -436,8 +436,6 @@ namespace LuaGroup
         { "GetMembersCount", &LuaGroup::GetMembersCount },
 #ifndef CATA
         { "GetMemberFlags", &LuaGroup::GetMemberFlags },
-#else
-        { "GetMemberFlags", nullptr },
 #endif
 
         // Setters
@@ -446,8 +444,6 @@ namespace LuaGroup
         { "SetTargetIcon", &LuaGroup::SetTargetIcon },
 #ifndef CATA
         { "SetMemberFlag", &LuaGroup::SetMemberFlag },
-#else
-        { "SetMemberFlag", nullptr },
 #endif
 
         // Boolean
@@ -469,6 +465,11 @@ namespace LuaGroup
         { "SendPacket", &LuaGroup::SendPacket },
         { "ConvertToLFG", &LuaGroup::ConvertToLFG },
         { "ConvertToRaid", &LuaGroup::ConvertToRaid },
+
+#ifdef CATA //Not implemented in TCPP
+        { "GetMemberFlags", nullptr },
+        { "SetMemberFlag", nullptr },
+#endif
 
         { NULL, NULL }
     };

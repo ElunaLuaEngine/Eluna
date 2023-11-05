@@ -1284,8 +1284,6 @@ namespace LuaCreature
         { "GetExtraFlags", &LuaCreature::GetExtraFlags },
 #ifndef CATA
         { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
-#else
-        { "GetShieldBlockValue", nullptr },
 #endif
         { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
@@ -1354,6 +1352,10 @@ namespace LuaCreature
         { "SelectVictim", &LuaCreature::SelectVictim },
         { "MoveWaypoint", &LuaCreature::MoveWaypoint },
         { "UpdateEntry", &LuaCreature::UpdateEntry },
+
+#ifdef CATA //Not implemented in TCPP
+        { "GetShieldBlockValue", nullptr },
+#endif
 
         { NULL, NULL }
     };

@@ -259,8 +259,6 @@ namespace LuaGuild
         { "SetMemberRank", &LuaGuild::SetMemberRank },
 #ifndef CATA
         { "SetLeader", &LuaGuild::SetLeader },
-#else
-        { "SetLeader", nullptr },
 #endif
 
         // Other
@@ -269,6 +267,10 @@ namespace LuaGuild
         { "Disband", &LuaGuild::Disband },
         { "AddMember", &LuaGuild::AddMember },
         { "DeleteMember", &LuaGuild::DeleteMember },
+
+#ifdef CATA //Not implemented in TCPP
+        { "SetLeader", nullptr },
+#endif
 
         { NULL, NULL }
     };

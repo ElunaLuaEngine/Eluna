@@ -834,8 +834,6 @@ namespace LuaItem
         { "GetRequiredLevel", &LuaItem::GetRequiredLevel },
 #ifndef CATA
         { "GetStatsCount", &LuaItem::GetStatsCount },
-#else
-        { "GetStatsCount", nullptr },
 #endif
         { "GetRandomProperty", &LuaItem::GetRandomProperty },
         { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
@@ -867,10 +865,6 @@ namespace LuaItem
         { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
         { "IsArmorVellum", &LuaItem::IsArmorVellum },
         { "IsRefundExpired", &LuaItem::IsRefundExpired },
-#else
-        { "IsWeaponVellum", nullptr },
-        { "IsArmorVellum", nullptr },
-        { "IsRefundExpired", nullptr },
 #endif
         { "IsConjuredConsumable", &LuaItem::IsConjuredConsumable },
         { "SetEnchantment", &LuaItem::SetEnchantment },
@@ -878,6 +872,13 @@ namespace LuaItem
 
         // Other
         { "SaveToDB", &LuaItem::SaveToDB },
+
+#ifdef CATA //Not implemented in TCPP
+        { "GetStatsCount", nullptr },
+        { "IsWeaponVellum", nullptr },
+        { "IsArmorVellum", nullptr },
+        { "IsRefundExpired", nullptr },
+#endif
 
         { NULL, NULL }
     };
