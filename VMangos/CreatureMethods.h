@@ -1027,9 +1027,9 @@ namespace LuaCreature
         creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, off_hand);
         creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, ranged);
 #else
-        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_0, main_hand);
-        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_1, off_hand);
-        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_2, ranged);
+        creature->SetVirtualItem(BASE_ATTACK, main_hand);
+        creature->SetVirtualItem(OFF_ATTACK, off_hand);
+        creature->SetVirtualItem(RANGED_ATTACK, ranged);
 #endif
         return 0;
     }
