@@ -1022,15 +1022,9 @@ namespace LuaCreature
         uint32 off_hand = Eluna::CHECKVAL<uint32>(L, 3);
         uint32 ranged = Eluna::CHECKVAL<uint32>(L, 4);
 
-#if defined(TRINITY) || defined(AZEROTHCORE)
-        creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0, main_hand);
-        creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, off_hand);
-        creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, ranged);
-#else
-        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_0, main_hand);
-        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_1, off_hand);
-        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_2, ranged);
-#endif
+        creature->SetVirtualItem(BASE_ATTACK, main_hand);
+        creature->SetVirtualItem(OFF_ATTACK, off_hand);
+        creature->SetVirtualItem(RANGED_ATTACK, ranged);
         return 0;
     }
 
