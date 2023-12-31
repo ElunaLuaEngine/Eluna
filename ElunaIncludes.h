@@ -16,6 +16,9 @@
 #include "Chat.h"
 #include "Channel.h"
 #include "DBCStores.h"
+#if defined CATA && defined TRINITY
+#include "DB2Stores.h"
+#endif
 #include "GameEventMgr.h"
 #include "GossipDef.h"
 #include "GridNotifiers.h"
@@ -37,6 +40,7 @@
 #include "SpellMgr.h"
 #include "TemporarySummon.h"
 #include "WorldSession.h"
+#include "WorldPacket.h"
 #else
 #include "Accounts/AccountMgr.h"
 #include "AuctionHouse/AuctionHouseMgr.h"
@@ -67,8 +71,8 @@
 #include "Spells/SpellMgr.h"
 #include "Entities/TemporarySpawn.h"
 #include "Server/WorldSession.h"
+#include "Server/WorldPacket.h"
 #endif
-#include "WorldPacket.h"
 
 #if defined TRINITY
 #include "SpellHistory.h"
@@ -76,9 +80,7 @@
 
 #if defined AZEROTHCORE
 #include "MapMgr.h"
-#elif defined CMANGOS
-#include "Maps/MapManager.h"
-#else
+#elif !defined CMANGOS
 #include "MapManager.h"
 #endif
 
@@ -96,10 +98,18 @@
 #include "Bag.h"
 #else
 #include "Config/Config.h"
-#ifdef CMANGOS
+#if defined CMANGOS && defined CATA
+#include "AI/BaseAI/AggressorAI.h"
+#include "Server/SQLStorages.h"
+#elif defined CMANGOS
 #include "AI/BaseAI/UnitAI.h"
+#include "Server/SQLStorages.h"
+#elif defined VMANGOS
+#include "BasicAI.h"
+#include "Bag.h"
 #else
 #include "AggressorAI.h"
+#include "SQLStorages.h"
 #endif
 #include "BattleGroundMgr.h"
 #ifndef CMANGOS
@@ -130,7 +140,10 @@
 #endif
 #endif
 
-#ifndef CLASSIC
+#if (defined(TRINITY) && defined(CATA))
+typedef OpcodeServer            OpcodesList;
+
+#elif !defined CLASSIC
 typedef Opcodes                 OpcodesList;
 #endif
 
@@ -141,16 +154,31 @@ typedef Opcodes                 OpcodesList;
 #ifdef MANGOS
 #define CORE_NAME               "MaNGOS"
 #define CORE_VERSION            REVISION_NR
+#ifdef CATA
+#define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
+#endif
 #endif
 
 #ifdef CMANGOS
 #define CORE_NAME               "cMaNGOS"
 #define CORE_VERSION            REVISION_DATE " " REVISION_ID
+#ifdef CATA
+#define NUM_MSG_TYPES           MAX_OPCODE_TABLE_SIZE
+#endif
+#endif
+
+#ifdef VMANGOS
+#define CORE_NAME               "vMaNGOS"
+#define CORE_VERSION            REVISION_HASH
+#define DEFAULT_LOCALE          LOCALE_enUS
 #endif
 
 #ifdef TRINITY
 #define CORE_NAME               "TrinityCore"
 #define REGEN_TIME_FULL
+#ifdef CATA
+#define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
+#endif
 #endif
 
 #ifdef AZEROTHCORE
@@ -170,10 +198,6 @@ typedef Opcodes                 OpcodesList;
 #define eObjectAccessor()       ObjectAccessor::
 #endif
 
-#ifdef CATA
-#define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
-#endif
-
 #if !defined TRINITY && !AZEROTHCORE
 #define eWorld                  (&sWorld)
 #define eMapMgr                 (&sMapMgr)
@@ -188,10 +212,12 @@ typedef Opcodes                 OpcodesList;
 #define TOTAL_LOCALES           MAX_LOCALE
 #define TARGETICONCOUNT         TARGET_ICON_COUNT
 #define MAX_TALENT_SPECS        MAX_TALENT_SPEC_COUNT
+#ifndef VMANGOS
 #define TEAM_NEUTRAL            TEAM_INDEX_NEUTRAL
+#endif
 
 
-#if (defined(TBC) || defined(WOTLK) || defined(CATA)) && !defined(MANGOS)
+#if ((defined(CATA) && !defined(MANGOS)) || defined VMANGOS)
 #define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
 #endif
 

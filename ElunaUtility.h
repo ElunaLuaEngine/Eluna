@@ -49,13 +49,37 @@ typedef QueryResult ElunaQuery;
 #endif
 
 #ifdef TRINITY
+#ifdef WOTLK
+#include "fmt/printf.h"
+#define ELUNA_LOG_TC_FMT(TC_LOG_MACRO, ...) \
+    try { \
+        std::string message = fmt::sprintf(__VA_ARGS__); \
+        TC_LOG_MACRO("eluna", "{}", message); \
+    } catch (const std::exception& e) { \
+        TC_LOG_MACRO("eluna", "Failed to format log message: {}", e.what()); \
+    }
+#define ELUNA_LOG_INFO(...)     ELUNA_LOG_TC_FMT(TC_LOG_INFO, __VA_ARGS__);
+#define ELUNA_LOG_ERROR(...)    ELUNA_LOG_TC_FMT(TC_LOG_ERROR, __VA_ARGS__);
+#define ELUNA_LOG_DEBUG(...)    ELUNA_LOG_TC_FMT(TC_LOG_DEBUG, __VA_ARGS__);
+#else
 #define ELUNA_LOG_INFO(...)     TC_LOG_INFO("eluna", __VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    TC_LOG_ERROR("eluna", __VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    TC_LOG_DEBUG("eluna", __VA_ARGS__);
+#endif
 #elif defined(AZEROTHCORE)
 #define ELUNA_LOG_INFO(...)     LOG_INFO("eluna", __VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    LOG_ERROR("eluna", __VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    LOG_DEBUG("eluna", __VA_ARGS__);
+#elif VMANGOS
+typedef QueryNamedResult ElunaQuery;
+#define ASSERT                  MANGOS_ASSERT
+#define ELUNA_LOG_INFO(...)     sLog.Out(LOG_ELUNA, LOG_LVL_BASIC,__VA_ARGS__);
+#define ELUNA_LOG_ERROR(...)    sLog.Out(LOG_ELUNA, LOG_LVL_ERROR,__VA_ARGS__);
+#define ELUNA_LOG_DEBUG(...)    sLog.Out(LOG_ELUNA, LOG_LVL_DEBUG,__VA_ARGS__);
+#define GET_GUID                GetObjectGuid
+#define GetGameObjectTemplate   GetGameObjectInfo
+#define GetItemTemplate         GetItemPrototype
+#define GetTemplate             GetProto
 #else
 typedef QueryNamedResult ElunaQuery;
 #define ASSERT                  MANGOS_ASSERT
@@ -68,7 +92,7 @@ typedef QueryNamedResult ElunaQuery;
 #define GetTemplate             GetProto
 #endif
 
-#if defined(TRINITY) || defined(AZEROTHCORE) || defined(MANGOS) || defined(CMANGOS)
+#if defined(TRINITY) || defined(AZEROTHCORE) || defined(MANGOS) || defined(CMANGOS) || defined(VMANGOS)
 #ifndef MAKE_NEW_GUID
 #define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
 #endif

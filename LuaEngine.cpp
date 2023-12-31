@@ -31,9 +31,14 @@
 #error Eluna could not determine platform
 #endif
 
+#ifdef ELUNA_WINDOWS
+#include <windows.h>
+#include <fileapi.h>
+#endif
+
 // Some dummy includes containing BOOST_VERSION:
 // ObjectAccessor.h Config.h Log.h
-#if !defined MANGOS
+#if !defined MANGOS && !defined VMANGOS
 #define USING_BOOST
 #endif
 

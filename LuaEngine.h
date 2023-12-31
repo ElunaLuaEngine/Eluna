@@ -365,11 +365,17 @@ public:
     void OnRepop(Player* pPlayer);
     void OnResurrect(Player* pPlayer);
     void OnQuestAbandon(Player* pPlayer, uint32 questId);
+    void OnQuestStatusChanged(Player* pPlayer, uint32 questId, uint8 status);
     void OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, uint32 spellid);
+    void OnSkillChange(Player* pPlayer, uint32 skillId, uint32 skillValue);
+    void OnLearnSpell(Player* pPlayer, uint32 spellid);
     InventoryResult OnCanUseItem(const Player* pPlayer, uint32 itemEntry);
     void OnLuaStateClose();
     void OnLuaStateOpen();
     bool OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel);
+    bool OnTradeInit(Player* trader, Player* tradee);
+    bool OnTradeAccept(Player* trader, Player* tradee);
+    bool OnSendMail(Player* sender, ObjectGuid recipientGuid);
 
     /* Item */
     void OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget);
@@ -379,6 +385,7 @@ public:
     bool OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
     bool OnExpire(Player* pPlayer, ItemTemplate const* pProto);
     bool OnRemove(Player* pPlayer, Item* item);
+    void OnAdd(Player* pPlayer, Item* item);
     void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code);
 
     /* Creature */
@@ -447,10 +454,14 @@ public:
     void OnPVPKill(Player* pKiller, Player* pKilled);
     void OnCreatureKill(Player* pKiller, Creature* pKilled);
     void OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled);
+    void OnPlayerKilledByEnvironment(Player* pKilled, uint8 damageType);
     void OnLevelChanged(Player* pPlayer, uint8 oldLevel);
     void OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints);
     void OnTalentsReset(Player* pPlayer, bool noCost);
     void OnMoneyChanged(Player* pPlayer, int32& amount);
+#ifdef CATA
+    void OnMoneyChanged(Player* pPlayer, int64& amount);
+#endif
     void OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim);
     void OnReputationChange(Player* pPlayer, uint32 factionID, int32& standing, bool incremental);
     void OnDuelRequest(Player* pTarget, Player* pChallenger);
@@ -471,8 +482,10 @@ public:
     void OnSave(Player* pPlayer);
     void OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapid, bool permanent);
     void OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea);
+    void OnUpdateArea(Player* pPlayer, uint32 oldArea, uint32 newArea);
     void OnMapChanged(Player* pPlayer);
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
+    void OnAchievementComplete(Player* pPlayer, uint32 achievementId);
 
 #ifndef CLASSIC
 #ifndef TBC
@@ -505,7 +518,13 @@ public:
     void OnCreate(Guild* guild, Player* leader, const std::string& name);
     void OnDisband(Guild* guild);
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair);
+#ifdef CATA
+    void OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair);
+#endif
     void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount);
+#ifdef CATA
+    void OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount);
+#endif
     void OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId, bool isDestBank, uint8 destContainer, uint8 destSlotId);
     void OnEvent(Guild* guild, uint8 eventType, uint32 playerGuid1, uint32 playerGuid2, uint8 newRank);
     void OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playerGuid, uint32 itemOrMoney, uint16 itemStackCount, uint8 destTabId);
@@ -516,7 +535,12 @@ public:
     void OnRemoveMember(Group* group, ObjectGuid guid, uint8 method);
     void OnChangeLeader(Group* group, ObjectGuid newLeaderGuid, ObjectGuid oldLeaderGuid);
     void OnDisband(Group* group);
+#if defined (TRINITY) && defined (CATA)
+    void OnCreate(Group* group, ObjectGuid leaderGuid, GroupFlags groupType);
+#else
     void OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType);
+#endif
+    bool OnMemberAccept(Group* group, Player* player);
 
     /* Map */
     void OnCreate(Map* map);

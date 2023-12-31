@@ -42,6 +42,10 @@ add_known_module("bit32", "bit32 module")
 -- luajit
 add_known_module("bit", "bit module")
 add_known_module("jit", "jit module")
+-- lua5.3
+if _VERSION >= "Lua 5.3" then
+	add_known_module("utf8", "utf8 module")
+end
 
 
 local m_user_known_tables = {}
