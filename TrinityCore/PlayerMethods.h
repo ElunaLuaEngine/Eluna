@@ -3304,16 +3304,21 @@ namespace LuaPlayer
         uint8 channel = Eluna::CHECKVAL<uint8>(L, 4);
         Player* receiver = Eluna::CHECKOBJ<Player>(L, 5);
 
-        std::string fullmsg = prefix + "\t" + message;
-
         WorldPacket data(SMSG_MESSAGECHAT, 100);
         data << uint8(channel);
         data << int32(LANG_ADDON);
         data << player->GET_GUID();
         data << uint32(0);
         data << receiver->GET_GUID();
+#ifdef CATA
+        data << prefix;
+        data << uint32(message.length() + 1);
+        data << message;
+#else
+        std::string fullmsg = prefix + "\t" + message;
         data << uint32(fullmsg.length() + 1);
         data << fullmsg;
+#endif
         data << uint8(0);
 
         receiver->GetSession()->SendPacket(&data);
