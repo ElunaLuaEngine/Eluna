@@ -43,9 +43,9 @@ void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, 
 void Eluna::OnSkillChange(Player* pPlayer, uint32 skillId, uint32 skillValue)
 {
     START_HOOK(PLAYER_EVENT_ON_SKILL_CHANGE);
-    Push(pPlayer);
-    Push(skillId);
-    Push(skillValue);
+    HookPush(pPlayer);
+    HookPush(skillId);
+    HookPush(skillValue);
     int valueIndex = lua_gettop(L) - 1;
     int n = SetupStack(PlayerEventBindings, key, 3);
 
@@ -69,8 +69,8 @@ void Eluna::OnSkillChange(Player* pPlayer, uint32 skillId, uint32 skillValue)
 void Eluna::OnLearnSpell(Player* pPlayer, uint32 spellId)
 {
     START_HOOK(PLAYER_EVENT_ON_LEARN_SPELL);
-    Push(pPlayer);
-    Push(spellId);
+    HookPush(pPlayer);
+    HookPush(spellId);
     CallAllFunctions(PlayerEventBindings, key);
 }
 
@@ -166,9 +166,9 @@ void Eluna::OnQuestAbandon(Player* pPlayer, uint32 questId)
 void Eluna::OnQuestStatusChanged(Player* pPlayer, uint32 questId, uint8 status)
 {
     START_HOOK(PLAYER_EVENT_ON_QUEST_STATUS_CHANGED);
-    Push(pPlayer);
-    Push(questId);
-    Push(status);
+    HookPush(pPlayer);
+    HookPush(questId);
+    HookPush(status);
     CallAllFunctions(PlayerEventBindings, key);
 }
 
@@ -245,8 +245,8 @@ void Eluna::OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled)
 void Eluna::OnPlayerKilledByEnvironment(Player* pKilled, uint8 damageType)
 {
     START_HOOK(PLAYER_EVENT_ON_ENVIRONMENTAL_DEATH);
-    Push(pKilled);
-    Push(damageType);
+    HookPush(pKilled);
+    HookPush(damageType);
     CallAllFunctions(PlayerEventBindings, key);
 }
 
@@ -488,9 +488,9 @@ void Eluna::OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea)
 void Eluna::OnUpdateArea(Player* pPlayer, uint32 oldArea, uint32 newArea)
 {
     START_HOOK(PLAYER_EVENT_ON_UPDATE_AREA);
-    Push(pPlayer);
-    Push(oldArea);
-    Push(newArea);
+    HookPush(pPlayer);
+    HookPush(oldArea);
+    HookPush(newArea);
     CallAllFunctions(PlayerEventBindings, key);
 }
 
@@ -504,32 +504,32 @@ void Eluna::OnMapChanged(Player* player)
 void Eluna::OnAchievementComplete(Player* player, uint32 achievementId)
 {
     START_HOOK(PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE);
-    Push(player);
-    Push(achievementId);
+    HookPush(player);
+    HookPush(achievementId);
     CallAllFunctions(PlayerEventBindings, key);
 }
 
 bool Eluna::OnTradeInit(Player* trader, Player* tradee)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_TRADE_INIT, true);
-    Push(trader);
-    Push(tradee);
+    HookPush(trader);
+    HookPush(tradee);
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 
 bool Eluna::OnTradeAccept(Player* trader, Player* tradee)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_TRADE_ACCEPT, true);
-    Push(trader);
-    Push(tradee);
+    HookPush(trader);
+    HookPush(tradee);
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 
 bool Eluna::OnSendMail(Player* sender, ObjectGuid recipientGuid)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_SEND_MAIL, true);
-    Push(sender);
-    Push(recipientGuid);
+    HookPush(sender);
+    HookPush(recipientGuid);
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 

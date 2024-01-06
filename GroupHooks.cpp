@@ -24,8 +24,7 @@ using namespace Hooks;
         return RETVAL;\
     auto key = EventKey<GroupEvents>(EVENT);\
     if (!GroupEventBindings->HasBindingsFor(key))\
-        return RETVAL;\
-    LOCK_ELUNA
+        return RETVAL;
 
 void Eluna::OnAddMember(Group* group, ObjectGuid guid)
 {
@@ -91,7 +90,7 @@ void Eluna::OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType)
 bool Eluna::OnMemberAccept(Group* group, Player* player)
 {
     START_HOOK_WITH_RETVAL(GROUP_EVENT_ON_MEMBER_ACCEPT, true);
-    Push(group);
-    Push(player);
+    HookPush(group);
+    HookPush(player);
     return CallAllFunctionsBool(GroupEventBindings, key, true);
 }

@@ -191,14 +191,14 @@ private:
     // This is called on world update to reload eluna
     void _ReloadEluna();
 
-    static int StackTrace(lua_State *_L);
+    static int StackTrace(lua_State* _L);
     static void Report(lua_State* _L);
 
     // Some helpers for hooks to call event handlers.
     // The bodies of the templates are in HookHelpers.h, so if you want to use them you need to #include "HookHelpers.h".
     template<typename K1, typename K2> int SetupStack(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, int number_of_arguments);
-                                       int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
-                                       void CleanUpStack(int number_of_arguments);
+    int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
+    void CleanUpStack(int number_of_arguments);
     template<typename T>               void ReplaceArgument(T value, uint8 index);
     template<typename K1, typename K2> void CallAllFunctions(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2);
     template<typename K1, typename K2> bool CallAllFunctionsBool(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, bool default_value = false);
@@ -220,46 +220,46 @@ private:
 
     // Non-static pushes, to be used in hooks.
     // They up the pushed value counter for hook helper functions.
-    void HookPush()                                 { Push(); ++push_counter; }
-    void HookPush(const long long value)            { Push(value); ++push_counter; }
-    void HookPush(const unsigned long long value)   { Push(value); ++push_counter; }
-    void HookPush(const long value)                 { Push(value); ++push_counter; }
-    void HookPush(const unsigned long value)        { Push(value); ++push_counter; }
-    void HookPush(const int value)                  { Push(value); ++push_counter; }
-    void HookPush(const unsigned int value)         { Push(value); ++push_counter; }
-    void HookPush(const bool value)                 { Push(value); ++push_counter; }
-    void HookPush(const float value)                { Push(value); ++push_counter; }
-    void HookPush(const double value)               { Push(value); ++push_counter; }
-    void HookPush(const std::string& value)         { Push(value); ++push_counter; }
-    void HookPush(const char* value)                { Push(value); ++push_counter; }
-    void HookPush(ObjectGuid const value)           { Push(value); ++push_counter; }
+    void HookPush() { Push(); ++push_counter; }
+    void HookPush(const long long value) { Push(value); ++push_counter; }
+    void HookPush(const unsigned long long value) { Push(value); ++push_counter; }
+    void HookPush(const long value) { Push(value); ++push_counter; }
+    void HookPush(const unsigned long value) { Push(value); ++push_counter; }
+    void HookPush(const int value) { Push(value); ++push_counter; }
+    void HookPush(const unsigned int value) { Push(value); ++push_counter; }
+    void HookPush(const bool value) { Push(value); ++push_counter; }
+    void HookPush(const float value) { Push(value); ++push_counter; }
+    void HookPush(const double value) { Push(value); ++push_counter; }
+    void HookPush(const std::string& value) { Push(value); ++push_counter; }
+    void HookPush(const char* value) { Push(value); ++push_counter; }
+    void HookPush(ObjectGuid const value) { Push(value); ++push_counter; }
     template<typename T>
-    void HookPush(T const* ptr)                     { Push(ptr); ++push_counter; }
+    void HookPush(T const* ptr) { Push(ptr); ++push_counter; }
 
 public:
 
     lua_State* L;
     EventMgr* eventMgr;
 
-    BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
-    BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;
-    BindingMap< EventKey<Hooks::GuildEvents> >*      GuildEventBindings;
-    BindingMap< EventKey<Hooks::GroupEvents> >*      GroupEventBindings;
-    BindingMap< EventKey<Hooks::VehicleEvents> >*    VehicleEventBindings;
-    BindingMap< EventKey<Hooks::BGEvents> >*         BGEventBindings;
+    BindingMap< EventKey<Hooks::ServerEvents> >* ServerEventBindings;
+    BindingMap< EventKey<Hooks::PlayerEvents> >* PlayerEventBindings;
+    BindingMap< EventKey<Hooks::GuildEvents> >* GuildEventBindings;
+    BindingMap< EventKey<Hooks::GroupEvents> >* GroupEventBindings;
+    BindingMap< EventKey<Hooks::VehicleEvents> >* VehicleEventBindings;
+    BindingMap< EventKey<Hooks::BGEvents> >* BGEventBindings;
 
-    BindingMap< EntryKey<Hooks::PacketEvents> >*     PacketEventBindings;
-    BindingMap< EntryKey<Hooks::CreatureEvents> >*   CreatureEventBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >*     CreatureGossipBindings;
+    BindingMap< EntryKey<Hooks::PacketEvents> >* PacketEventBindings;
+    BindingMap< EntryKey<Hooks::CreatureEvents> >* CreatureEventBindings;
+    BindingMap< EntryKey<Hooks::GossipEvents> >* CreatureGossipBindings;
     BindingMap< EntryKey<Hooks::GameObjectEvents> >* GameObjectEventBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >*     GameObjectGossipBindings;
-    BindingMap< EntryKey<Hooks::ItemEvents> >*       ItemEventBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >*     ItemGossipBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >*     PlayerGossipBindings;
-    BindingMap< EntryKey<Hooks::InstanceEvents> >*   MapEventBindings;
-    BindingMap< EntryKey<Hooks::InstanceEvents> >*   InstanceEventBindings;
+    BindingMap< EntryKey<Hooks::GossipEvents> >* GameObjectGossipBindings;
+    BindingMap< EntryKey<Hooks::ItemEvents> >* ItemEventBindings;
+    BindingMap< EntryKey<Hooks::GossipEvents> >* ItemGossipBindings;
+    BindingMap< EntryKey<Hooks::GossipEvents> >* PlayerGossipBindings;
+    BindingMap< EntryKey<Hooks::InstanceEvents> >* MapEventBindings;
+    BindingMap< EntryKey<Hooks::InstanceEvents> >* InstanceEventBindings;
 
-    BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >*  CreatureUniqueBindings;
+    BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >* CreatureUniqueBindings;
 
     // Never returns nullptr
     static Eluna* GetEluna(lua_State* L)
@@ -339,7 +339,7 @@ public:
     {
         return ElunaTemplate<T>::Check(luastate, narg, error);
     }
-    static ElunaObject* CHECKTYPE(lua_State* luastate, int narg, const char *tname, bool error = true);
+    static ElunaObject* CHECKTYPE(lua_State* luastate, int narg, const char* tname, bool error = true);
 
     CreatureAI* GetAI(Creature* creature);
     InstanceData* GetInstanceData(Map* map);
