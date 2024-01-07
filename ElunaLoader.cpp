@@ -11,6 +11,7 @@
 #include "ElunaIncludes.h"
 #include <filesystem>
 #include <fstream>
+#include <sstream>
 #include <boost/filesystem.hpp>
 
 #include "MapManager.h"
@@ -58,14 +59,20 @@ void ElunaLoader::LoadScripts()
 
     ELUNA_LOG_INFO("[Eluna]: Loaded and precompiled %u scripts in %u ms", uint32(combined_scripts.size()), ElunaUtil::GetTimeDiff(oldMSTime));
     requiredMaps.clear();
-    std::string maps = eConfigMgr->GetStringDefault("Eluna.OnlyOnMaps", "");
-    for (std::string_view mapIdStr : Trinity::Tokenize(maps, ',', false))
+    std::istringstream maps(eConfigMgr->GetStringDefault("Eluna.OnlyOnMaps", ""));
+    while (maps.good())
     {
-        int32 mapId = Trinity::StringTo<int32>(mapIdStr).value_or(-1);
-        if (mapId >= 0)
+        std::string mapIdStr;
+        std::getline(maps, mapIdStr, ',');
+        if (maps.fail() || maps.bad())
+            break;
+        try {
+            uint32 mapId = std::stoul(mapIdStr);
             requiredMaps.emplace_back(mapId);
-        else
-            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, wrong config value?");
+        }
+        catch (std::exception&) {
+            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '%s'", mapIdStr.c_str());
+        }
     }
 
     preloadMaps = eConfigMgr->GetBoolDefault("Eluna.PreloadOnlyOnMaps", false);
