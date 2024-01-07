@@ -226,7 +226,7 @@ namespace LuaGameObject
      * Saves [GameObject] to the database
      *
      */
-    int SaveToDB(Eluna* E, GameObject* go)
+    int SaveToDB(Eluna* /*E*/, GameObject* go)
     {
         go->SaveToDB();
         return 0;
