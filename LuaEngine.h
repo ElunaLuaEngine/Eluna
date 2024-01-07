@@ -131,7 +131,6 @@ struct LuaScript
     std::string filename;
     std::string filepath;
     std::string modulepath;
-    std::string filedata;
     BytecodeBuffer bytecode;
     int32 mapId;
 };
@@ -191,9 +190,6 @@ private:
     // Use ReloadEluna() to make eluna reload
     // This is called on world update to reload eluna
     void _ReloadEluna();
-
-    static int StackTrace(lua_State* _L);
-    static void Report(lua_State* _L);
 
     // Some helpers for hooks to call event handlers.
     // The bodies of the templates are in HookHelpers.h, so if you want to use them you need to #include "HookHelpers.h".
@@ -261,6 +257,9 @@ public:
     BindingMap< EntryKey<Hooks::InstanceEvents> >* InstanceEventBindings;
 
     BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >* CreatureUniqueBindings;
+
+    static int StackTrace(lua_State* _L);
+    static void Report(lua_State* _L);
 
     // Never returns nullptr
     static Eluna* GetEluna(lua_State* L)

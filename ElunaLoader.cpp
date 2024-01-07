@@ -157,28 +157,26 @@ void ElunaLoader::ReadFiles(std::string path)
 bool ElunaLoader::CompileScript(lua_State* L, LuaScript& script)
 {
     // Attempt to load the file
-    int err = luaL_loadbuffer(L, script.filedata.c_str(), script.filedata.size(), script.filename.c_str());
+    int err = luaL_loadfile(L, script.filepath.c_str());
 
     // If something bad happened, try to find an error.
     if (err != LUA_OK)
     {
         ELUNA_LOG_ERROR("[Eluna]: CompileScript failed to load the Lua script `%s`.", script.filename.c_str());
+        Eluna::Report(L);
         return false;
     }
     ELUNA_LOG_DEBUG("[Eluna]: CompileScript loaded Lua script `%s`", script.filename.c_str());
-    BytecodeBuffer buffer;
 
     // Everything's OK so far, the script has been loaded, now we need to start dumping it to bytecode.
-    err = lua_dump(L, (lua_Writer)LoadBytecodeChunk, &buffer);
-    if (err || buffer.empty())
+    err = lua_dump(L, (lua_Writer)LoadBytecodeChunk, &script.bytecode);
+    if (err || script.bytecode.empty())
     {
         ELUNA_LOG_ERROR("[Eluna]: CompileScript failed to dump the Lua script `%s` to bytecode.", script.filename.c_str());
+        Eluna::Report(L);
         return false;
     }
     ELUNA_LOG_DEBUG("[Eluna]: CompileScript dumped Lua script `%s` to bytecode.", script.filename.c_str());
-
-    // Write buffer to bytecode
-    script.bytecode = buffer;
 
     // pop the loaded function from the stack
     lua_pop(L, 1);
@@ -201,23 +199,11 @@ void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::s
         return;
     bool extension = ext == ".ext";
 
-    // open file
-    std::ifstream file(fullpath, std::ios::in | std::ios::binary);
-    if (!file.is_open())
-        return;
-
-    // read contents
-    std::string content{ std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>() };
-
-    // close file
-    file.close();
-
     LuaScript script;
     script.fileext = ext;
     script.filename = filename;
     script.filepath = fullpath;
     script.modulepath = fullpath.substr(0, fullpath.length() - filename.length() - ext.length());
-    script.filedata = content;
     script.mapId = mapId;
 
     // if compilation fails, we don't add the script 
