@@ -87,6 +87,17 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Returns the map ID of the Lua state. Returns -1 for the "World" state.
+     *
+     * @return int32 mapId
+     */
+    int GetStateMapId(Eluna* E)
+    {
+        E->Push(E->GetBoundMapId());
+        return 1;
+    }
+
+    /**
      * Returns [Quest] template
      *
      * @param uint32 questId : [Quest] entry ID
@@ -2934,6 +2945,7 @@ namespace LuaGlobalFunctions
         { "GetRealmID", &LuaGlobalFunctions::GetRealmID },
         { "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion },
         { "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion },
+        { "GetStateMapId", &LuaGlobalFunctions::GetStateMapId },
         { "GetQuest", &LuaGlobalFunctions::GetQuest },
         { "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID },
         { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName },
