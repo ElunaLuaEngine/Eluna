@@ -132,6 +132,7 @@ struct LuaScript
     std::string filepath;
     std::string modulepath;
     std::string filedata;
+    BytecodeBuffer bytecode;
     int32 mapId;
 };
 

@@ -107,6 +107,8 @@ typedef QueryNamedResult ElunaQuery;
 #endif
 #endif
 
+typedef std::vector<uint8> BytecodeBuffer;
+
 class Unit;
 class WorldObject;
 struct FactionTemplateEntry;

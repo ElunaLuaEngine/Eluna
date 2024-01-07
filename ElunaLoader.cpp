@@ -12,7 +12,14 @@
 #include <filesystem>
 #include <fstream>
 #include <boost/filesystem.hpp>
+
 #include "MapManager.h"
+
+extern "C" {
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+}
 
 ElunaLoader::ElunaLoader()
 {
@@ -41,21 +48,16 @@ void ElunaLoader::LoadScripts()
         if (const char* home = getenv("HOME"))
             lua_folderpath.replace(0, 1, home);
 #endif
-    ELUNA_LOG_INFO("[Eluna]: Searching scripts from `%s`", lua_folderpath.c_str());
+    ELUNA_LOG_INFO("[Eluna]: Searching for scripts in `%s`", lua_folderpath.c_str());
     lua_requirepath.clear();
     ReadFiles(lua_folderpath);
-
-    // Combine extensions and lua scripts into one list for proper loading order.
     CombineLists();
-
     // Erase last ;
     if (!lua_requirepath.empty())
         lua_requirepath.erase(lua_requirepath.end() - 1);
 
-    ELUNA_LOG_INFO("[Eluna]: Loaded %u scripts in %u ms", uint32(combined_scripts.size()), ElunaUtil::GetTimeDiff(oldMSTime));
-
+    ELUNA_LOG_INFO("[Eluna]: Loaded and precompiled %u scripts in %u ms", uint32(combined_scripts.size()), ElunaUtil::GetTimeDiff(oldMSTime));
     requiredMaps.clear();
-    
     std::string maps = eConfigMgr->GetStringDefault("Eluna.OnlyOnMaps", "");
     for (std::string_view mapIdStr : Trinity::Tokenize(maps, ',', false))
     {
@@ -69,10 +71,22 @@ void ElunaLoader::LoadScripts()
     preloadMaps = eConfigMgr->GetBoolDefault("Eluna.PreloadOnlyOnMaps", false);
 }
 
+int ElunaLoader::LoadBytecodeChunk(lua_State* L, uint8* bytes, size_t len, BytecodeBuffer* buffer)
+{
+    for (size_t i = 0; i < len; i++)
+        buffer->push_back(bytes[i]);
+
+    return 0;
+}
+
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
 void ElunaLoader::ReadFiles(std::string path)
 {
     ELUNA_LOG_DEBUG("[Eluna]: GetScripts from path `%s`", path.c_str());
+
+    // Open a new Lua state to compile bytecode in
+    lua_State* L = luaL_newstate();
+    luaL_openlibs(L);
 
     boost::filesystem::path someDir(path);
     boost::filesystem::directory_iterator end_iter;
@@ -131,15 +145,49 @@ void ElunaLoader::ReadFiles(std::string path)
 
                 // was file, try add
                 std::string filename = dir_iter->path().filename().generic_string();
-                AddScriptPath(filename, fullpath, mapId);
+                ProcessScript(L, filename, fullpath, mapId);
             }
         }
     }
+
+    // close Lua state
+    lua_close(L);
 }
 
-void ElunaLoader::AddScriptPath(std::string filename, const std::string& fullpath, int32 mapId)
+bool ElunaLoader::CompileScript(lua_State* L, LuaScript& script)
 {
-    ELUNA_LOG_DEBUG("[Eluna]: AddScriptPath Checking file `%s`", fullpath.c_str());
+    // Attempt to load the file
+    int err = luaL_loadbuffer(L, script.filedata.c_str(), script.filedata.size(), script.filename.c_str());
+
+    // If something bad happened, try to find an error.
+    if (err != LUA_OK)
+    {
+        ELUNA_LOG_ERROR("[Eluna]: CompileScript failed to load the Lua script `%s`.", script.filename.c_str());
+        return false;
+    }
+    ELUNA_LOG_DEBUG("[Eluna]: CompileScript loaded Lua script `%s`", script.filename.c_str());
+    BytecodeBuffer buffer;
+
+    // Everything's OK so far, the script has been loaded, now we need to start dumping it to bytecode.
+    err = lua_dump(L, (lua_Writer)LoadBytecodeChunk, &buffer);
+    if (err || buffer.empty())
+    {
+        ELUNA_LOG_ERROR("[Eluna]: CompileScript failed to dump the Lua script `%s` to bytecode.", script.filename.c_str());
+        return false;
+    }
+    ELUNA_LOG_DEBUG("[Eluna]: CompileScript dumped Lua script `%s` to bytecode.", script.filename.c_str());
+
+    // Write buffer to bytecode
+    script.bytecode = buffer;
+
+    // pop the loaded function from the stack
+    lua_pop(L, 1);
+    return true;
+}
+
+void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::string& fullpath, int32 mapId)
+{
+    ELUNA_LOG_DEBUG("[Eluna]: ProcessScript checking file `%s`", fullpath.c_str());
 
     // split file name
     std::size_t extDot = filename.find_last_of('.');
@@ -172,11 +220,15 @@ void ElunaLoader::AddScriptPath(std::string filename, const std::string& fullpat
     script.filedata = content;
     script.mapId = mapId;
 
+    // if compilation fails, we don't add the script 
+    if (!CompileScript(L, script))
+        return;
+
     if (extension)
         lua_extensions.push_back(script);
     else
         lua_scripts.push_back(script);
-    ELUNA_LOG_DEBUG("[Eluna]: AddScriptPath add path `%s`", fullpath.c_str());
+    ELUNA_LOG_DEBUG("[Eluna]: ProcessScript processed `%s` successfully", fullpath.c_str());
 }
 
 static bool ScriptPathComparator(const LuaScript& first, const LuaScript& second)
