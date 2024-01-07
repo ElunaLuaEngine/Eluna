@@ -152,6 +152,7 @@ public:
     typedef std::recursive_mutex LockType;
 
     void ReloadEluna() { reload = true; }
+    bool ExecuteCall(int params, int res);
 
 private:
 
@@ -185,7 +186,6 @@ private:
     void DestroyBindStores();
     void CreateBindStores();
     void InvalidateObjects();
-    bool ExecuteCall(int params, int res);
 
     // Use ReloadEluna() to make eluna reload
     // This is called on world update to reload eluna
@@ -237,6 +237,9 @@ public:
 
     lua_State* L;
     EventMgr* eventMgr;
+
+    QueryCallbackProcessor queryProcessor;
+    QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 
     BindingMap< EventKey<Hooks::ServerEvents> >* ServerEventBindings;
     BindingMap< EventKey<Hooks::PlayerEvents> >* PlayerEventBindings;

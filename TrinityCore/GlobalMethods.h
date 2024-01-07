@@ -1266,6 +1266,36 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    int WorldDBQueryAsync(Eluna* E)
+    {
+        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        luaL_checktype(E->L, 2, LUA_TFUNCTION);
+        lua_pushvalue(E->L, 2);
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+        if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
+        {
+            luaL_argerror(E->L, 2, "unable to make a ref to function");
+            return 0;
+        }
+
+        E->GetQueryProcessor().AddCallback(WorldDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+        {
+            ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+
+            // Get function
+            lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+
+            // Push parameters
+            E->Push(eq);
+
+            // Call function
+            E->ExecuteCall(1, 0);
+
+            luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
+        }));
+        return 0;
+    }
+
     /**
      * Executes a SQL query on the character database and returns an [ElunaQuery].
      *
@@ -1310,6 +1340,36 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    int CharDBQueryAsync(Eluna* E)
+    {
+        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        luaL_checktype(E->L, 2, LUA_TFUNCTION);
+        lua_pushvalue(E->L, 2);
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+        if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
+        {
+            luaL_argerror(E->L, 2, "unable to make a ref to function");
+            return 0;
+        }
+
+        E->GetQueryProcessor().AddCallback(CharacterDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+        {
+            ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+
+            // Get function
+            lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+
+            // Push parameters
+            E->Push(eq);
+
+            // Call function
+            E->ExecuteCall(1, 0);
+
+            luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
+        }));
+        return 0;
+    }
+
     /**
      * Executes a SQL query on the login database and returns an [ElunaQuery].
      *
@@ -1351,6 +1411,36 @@ namespace LuaGlobalFunctions
     {
         const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
         LoginDatabase.Execute(query);
+        return 0;
+    }
+
+    int AuthDBQueryAsync(Eluna* E)
+    {
+        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        luaL_checktype(E->L, 2, LUA_TFUNCTION);
+        lua_pushvalue(E->L, 2);
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+        if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
+        {
+            luaL_argerror(E->L, 2, "unable to make a ref to function");
+            return 0;
+        }
+
+        E->GetQueryProcessor().AddCallback(LoginDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+        {
+            ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+
+            // Get function
+            lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+
+            // Push parameters
+            E->Push(eq);
+
+            // Call function
+            E->ExecuteCall(1, 0);
+
+            luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
+        }));
         return 0;
     }
 
@@ -2990,10 +3080,13 @@ namespace LuaGlobalFunctions
         { "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage },
         { "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery },
         { "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute },
+        { "WorldDBQueryAsync", &LuaGlobalFunctions::WorldDBQueryAsync },
         { "CharDBQuery", &LuaGlobalFunctions::CharDBQuery },
         { "CharDBExecute", &LuaGlobalFunctions::CharDBExecute },
+        { "CharDBQueryAsync", &LuaGlobalFunctions::CharDBQueryAsync },
         { "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery },
         { "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute },
+        { "AuthDBQueryAsync", &LuaGlobalFunctions::AuthDBQueryAsync },
         { "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
         { "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
         { "RemoveEvents", &LuaGlobalFunctions::RemoveEvents },

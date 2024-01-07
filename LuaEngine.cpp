@@ -971,9 +971,11 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, 
 
 void Eluna::UpdateEluna(uint32 diff)
 {
-    if (reload)
+    if (reload && !GetQueryProcessor().HasPendingCallbacks())
         _ReloadEluna();
+
     eventMgr->globalProcessor->Update(diff);
+    GetQueryProcessor().ProcessReadyCallbacks();
 }
 
 /*
