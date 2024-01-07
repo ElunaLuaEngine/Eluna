@@ -44,11 +44,10 @@ public:
     // lua path variable for require() function
     std::string lua_requirepath;
 
-    //std::vector<LuaScript> Scripts;
     typedef std::list<LuaScript> ScriptList;
     ScriptList lua_scripts;
     ScriptList lua_extensions;
-    ScriptList combined_scripts;
+    std::vector<LuaScript> combined_scripts;
     std::list<uint32> requiredMaps;
     bool preloadMaps;
 };

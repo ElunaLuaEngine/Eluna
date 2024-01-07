@@ -246,7 +246,7 @@ void Eluna::RunScripts()
     // Stack: package, modules
     int modules = lua_gettop(L);
 
-    for (ScriptList::const_iterator it = sElunaLoader->combined_scripts.begin(); it != sElunaLoader->combined_scripts.end(); ++it)
+    for (auto it = sElunaLoader->combined_scripts.begin(); it != sElunaLoader->combined_scripts.end(); ++it)
     {
         // check that the script file is either global or meant to be loaded for this map
         if (it->mapId != -1 && it->mapId != boundMapId)
