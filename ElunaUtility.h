@@ -160,25 +160,6 @@ namespace ElunaUtil
     };
 
     /*
-     * Usage:
-     * Inherit this class, then when needing lock, use
-     * Guard guard(GetLock());
-     *
-     * The lock is automatically released at end of scope
-     */
-    class Lockable
-    {
-    public:
-        typedef std::mutex LockType;
-        typedef std::lock_guard<LockType> Guard;
-
-        LockType& GetLock() { return _lock; }
-
-    private:
-        LockType _lock;
-    };
-
-    /*
      * Encodes `data` in Base-64 and store the result in `output`.
      */
     void EncodeData(const unsigned char* data, size_t input_length, std::string& output);

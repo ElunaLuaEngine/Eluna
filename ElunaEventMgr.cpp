@@ -20,26 +20,18 @@ extern "C"
 
 ElunaEventProcessor::ElunaEventProcessor(Eluna* _E, WorldObject* _obj) : m_time(0), obj(_obj), E(_E)
 {
-    // can be called from multiple threads
     if (obj)
-    {
-        EventMgr::Guard guard(E->eventMgr->GetLock());
         E->eventMgr->processors.insert(this);
-    }
 }
 
 ElunaEventProcessor::~ElunaEventProcessor()
 {
-    // can be called from multiple threads
     {
         RemoveEvents_internal();
     }
 
     if (obj)
-    {
-        EventMgr::Guard guard(E->eventMgr->GetLock());
         E->eventMgr->processors.erase(this);
-    }
 }
 
 void ElunaEventProcessor::Update(uint32 diff)
@@ -82,13 +74,6 @@ void ElunaEventProcessor::SetStates(LuaEventState state)
 
 void ElunaEventProcessor::RemoveEvents_internal()
 {
-    //if (!final)
-    //{
-    //    for (EventList::iterator it = eventList.begin(); it != eventList.end(); ++it)
-    //        it->second->to_Abort = true;
-    //    return;
-    //}
-
     for (EventList::iterator it = eventList.begin(); it != eventList.end(); ++it)
         RemoveEvent(it->second);
 
@@ -134,7 +119,6 @@ EventMgr::EventMgr(Eluna* _E) : globalProcessor(new ElunaEventProcessor(_E, NULL
 EventMgr::~EventMgr()
 {
     {
-        Guard guard(GetLock());
         if (!processors.empty())
             for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
                 (*it)->RemoveEvents_internal();
@@ -146,7 +130,6 @@ EventMgr::~EventMgr()
 
 void EventMgr::SetStates(LuaEventState state)
 {
-    Guard guard(GetLock());
     if (!processors.empty())
         for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
             (*it)->SetStates(state);
@@ -155,7 +138,6 @@ void EventMgr::SetStates(LuaEventState state)
 
 void EventMgr::SetState(int eventId, LuaEventState state)
 {
-    Guard guard(GetLock());
     if (!processors.empty())
         for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
             (*it)->SetState(eventId, state);

@@ -23,7 +23,7 @@ extern "C"
  * A set of bindings from keys of type `K` to Lua references.
  */
 template<typename K>
-class BindingMap : public ElunaUtil::Lockable
+class BindingMap
 {
 private:
     lua_State* L;
@@ -78,8 +78,6 @@ public:
      */
     uint64 Insert(const K& key, int ref, uint32 shots)
     {
-        Guard guard(GetLock());
-
         uint64 id = (++maxBindingID);
         BindingList& list = bindings[key];
         list.push_back(std::unique_ptr<Binding>(new Binding(L, id, ref, shots)));
@@ -92,8 +90,6 @@ public:
      */
     void Clear(const K& key)
     {
-        Guard guard(GetLock());
-
         if (bindings.empty())
             return;
 
@@ -118,8 +114,6 @@ public:
      */
     void Clear()
     {
-        Guard guard(GetLock());
-
         if (bindings.empty())
             return;
 
@@ -134,8 +128,6 @@ public:
      */
     void Remove(uint64 id)
     {
-        Guard guard(GetLock());
-
         auto iter = id_lookup_table.find(id);
         if (iter == id_lookup_table.end())
             return;
@@ -163,8 +155,6 @@ public:
      */
     bool HasBindingsFor(const K& key)
     {
-        Guard guard(GetLock());
-
         if (bindings.empty())
             return false;
 
@@ -181,8 +171,6 @@ public:
      */
     void PushRefsFor(const K& key)
     {
-        Guard guard(GetLock());
-
         if (bindings.empty())
             return;
 
