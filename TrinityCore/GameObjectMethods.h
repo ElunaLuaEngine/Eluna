@@ -282,7 +282,7 @@ namespace LuaGameObject
      *
      * The gameobject may be automatically respawned by the core
      */
-    int Despawn(Eluna* E, GameObject* go)
+    int Despawn(Eluna* /*E*/, GameObject* go)
     {
         go->SetLootState(GO_JUST_DEACTIVATED);
         return 0;
@@ -291,7 +291,7 @@ namespace LuaGameObject
     /**
      * Respawns a [GameObject]
      */
-    int Respawn(Eluna* E, GameObject* go)
+    int Respawn(Eluna* /*E*/, GameObject* go)
     {
         go->Respawn();
         return 0;
