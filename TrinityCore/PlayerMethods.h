@@ -7,6 +7,8 @@
 #ifndef PLAYERMETHODS_H
 #define PLAYERMETHODS_H
 
+#include "LuaValue.h"
+
 /***
  * Inherits all methods from: [Object], [WorldObject], [Unit]
  */
@@ -3811,6 +3813,11 @@ namespace LuaPlayer
         player->RemovePet(player->GetPet(), (PetSaveMode)mode, returnreagent);
         return 0;
     }
+
+    int Data(Eluna* E, Player* player)
+    {
+        return LuaVal::PushLuaVal(E->L, player->lua_data);
+    }
     
     ElunaRegister<Player> PlayerMethods[] =
     {
@@ -4091,6 +4098,8 @@ namespace LuaPlayer
         { "GroupCreate", &LuaPlayer::GroupCreate },
         { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
         { "SendMovieStart", &LuaPlayer::SendMovieStart },
+
+        { "Data", &LuaPlayer::Data },
 
         // Not implemented methods
         { "GetHonorStoredKills", nullptr }, // classic only

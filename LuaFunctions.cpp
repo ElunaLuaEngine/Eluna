@@ -176,4 +176,6 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<long long>::Register(E, "long long", true);
 
     ElunaTemplate<unsigned long long>::Register(E, "unsigned long long", true);
+
+    LuaVal::Register(E->L);
 }
