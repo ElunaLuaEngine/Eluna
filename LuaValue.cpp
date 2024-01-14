@@ -27,8 +27,6 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#pragma once
-
 #include "LuaValue.h"
 #include <stdio.h> // snprintf
 
@@ -37,7 +35,7 @@ extern "C"
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
-};
+}
 
 LuaVal* LuaVal::GetLuaVal(lua_State* L, int index) {
     if (LuaVal** ptr = static_cast<LuaVal**>(luaL_testudata(L, index, LUAVAL_MT_NAME)))
@@ -83,13 +81,13 @@ void LuaVal::Register(lua_State* L) {
 int LuaVal::lua_get(lua_State* L) {
     LuaVal* self = GetCheckLuaVal(L, 1);
     int arguments = std::max(2, lua_gettop(L));
-    WrappedMap const* p = std::get_if<WrappedMap>(&self->v);
+    WrappedMap const* p = std::get_if<WrappedMap>(&*self->v);
     if (!p)
         luaL_argerror(L, 1, "trying to index a non-table LuaVal");
     for (int i = 2; i <= arguments; ++i) {
         auto& map = (*p);
         auto klv = AsLuaVal(L, i);
-        if (std::holds_alternative<NIL>(klv.v))
+        if (std::holds_alternative<NIL>(*klv.v))
             luaL_argerror(L, i, "trying to use nil as key");
         auto it = map->find(klv);
         if (it == map->end()) {
@@ -102,7 +100,7 @@ int LuaVal::lua_get(lua_State* L) {
             auto& val = it->second;
             return val.asObject(L);
         }
-        p = std::get_if<WrappedMap>(&it->second.v);
+        p = std::get_if<WrappedMap>(&*it->second.v);
         if (!p)
             luaL_argerror(L, i, "trying to index a non-table LuaVal");
     }
@@ -113,13 +111,13 @@ int LuaVal::lua_get(lua_State* L) {
 int LuaVal::lua_set(lua_State* L) {
     LuaVal* self = GetCheckLuaVal(L, 1);
     int arguments = std::max(3, lua_gettop(L));
-    WrappedMap const* p = std::get_if<WrappedMap>(&self->v);
+    WrappedMap const* p = std::get_if<WrappedMap>(&*self->v);
     if (!p)
         luaL_argerror(L, 1, "trying to index a non-table LuaVal");
     for (int i = 2; i <= arguments - 2; ++i) {
         auto& map = (*p);
         auto klv = AsLuaVal(L, i);
-        if (std::holds_alternative<NIL>(klv.v))
+        if (std::holds_alternative<NIL>(*klv.v))
             luaL_argerror(L, i, "trying to use nil as key");
         auto it = map->find(klv);
         if (it == map->end()) {
@@ -128,15 +126,15 @@ int LuaVal::lua_set(lua_State* L) {
             }
             break;
         }
-        p = std::get_if<WrappedMap>(&it->second.v);
+        p = std::get_if<WrappedMap>(&*it->second.v);
         if (!p)
             luaL_argerror(L, i, "trying to index a non-table LuaVal");
     }
     auto kk = AsLuaVal(L, arguments - 1);
     auto vv = AsLuaVal(L, arguments);
-    if (std::holds_alternative<NIL>(kk.v))
+    if (std::holds_alternative<NIL>(*kk.v))
         luaL_argerror(L, arguments - 1, "trying to use nil as key");
-    if (std::holds_alternative<NIL>(vv.v)) {
+    if (std::holds_alternative<NIL>(*vv.v)) {
         (**p).erase(kk);
     }
     else {
@@ -193,12 +191,12 @@ int LuaVal::asObject(lua_State* L) const
         else {
             static_assert(always_false<T>::value, "non-exhaustive visitor!");
         }
-        }, v);
+        }, *v);
 }
 
 int LuaVal::asLua(lua_State* L, unsigned int depth) const
 {
-    WrappedMap const* p = std::get_if<WrappedMap>(&v);
+    WrappedMap const* p = std::get_if<WrappedMap>(&*v);
     if (p)
     {
         lua_newtable(L);
@@ -267,7 +265,7 @@ LuaVal LuaVal::FromTable(lua_State* L, int index)
 {
     // Assumed we know index is a table already
     LuaVal m({});
-    auto& t = std::get<WrappedMap>(m.v);
+    auto& t = std::get<WrappedMap>(*m.v);
     int top = lua_gettop(L);
     lua_pushnil(L);
     while (lua_next(L, index) != 0) {
@@ -279,9 +277,9 @@ LuaVal LuaVal::FromTable(lua_State* L, int index)
 
 size_t LuaValHash(LuaVal const& k)
 {
-    const std::unique_ptr<std::string>* pval = std::get_if<std::unique_ptr<std::string>>(&k.v);
+    const std::unique_ptr<std::string>* pval = std::get_if<std::unique_ptr<std::string>>(&*k.v);
     if (pval) {
         return std::hash<std::string>{}(**pval);
     }
-    return std::hash<decltype(LuaVal::v)>{}(k.v);
+    return std::hash<LuaVal::LuaValVariant>{}(*k.v);
 }

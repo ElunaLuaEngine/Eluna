@@ -84,24 +84,24 @@ public:
 
     bool operator<(LuaVal const& b) const
     {
-        if (v.index() == b.v.index()) {
-            const std::unique_ptr<std::string>* pval = std::get_if<std::unique_ptr<std::string>>(&v);
+        if (v->index() == b.v->index()) {
+            const std::unique_ptr<std::string>* pval = std::get_if<std::unique_ptr<std::string>>(&*v);
             if (pval) {
-                return **pval < **std::get_if<std::unique_ptr<std::string>>(&b.v);
+                return **pval < **std::get_if<std::unique_ptr<std::string>>(&*b.v);
             }
         }
-        return v < b.v;
+        return *v < *b.v;
     }
 
     bool operator==(LuaVal const& b) const
     {
-        if (v.index() == b.v.index()) {
-            const std::unique_ptr<std::string>* pval = std::get_if<std::unique_ptr<std::string>>(&v);
+        if (v->index() == b.v->index()) {
+            const std::unique_ptr<std::string>* pval = std::get_if<std::unique_ptr<std::string>>(&*v);
             if (pval) {
-                return **pval == **std::get_if<std::unique_ptr<std::string>>(&b.v);
+                return **pval == **std::get_if<std::unique_ptr<std::string>>(&*b.v);
             }
         }
-        return v == b.v;
+        return *v == *b.v;
     }
 
     std::string to_string() const
@@ -120,19 +120,19 @@ public:
                 return std::to_string(arg);
             else
                 static_assert(always_false<T>::value, "non-exhaustive visitor!");
-            }, v);
+            }, *v);
     }
 
-    LuaVal() {}
-    LuaVal(std::string const& s) : v(std::make_unique<std::string>(s)) {}
-    LuaVal(bool b) : v(b) {}
-    LuaVal(double d) : v(d) {}
-    LuaVal(MapType const& t) : v(std::make_shared<MapType>(t)) {}
-    LuaVal(std::initializer_list<MapType::value_type> const& l) : v(std::make_shared<MapType>(l)) {}
+    LuaVal() : v(std::make_unique<LuaValVariant>()) {}
+    LuaVal(std::string const& s) : v(std::make_unique<LuaValVariant>(std::make_unique<std::string>(s))) {}
+    LuaVal(bool b) : v(std::make_unique<LuaValVariant>(b)) {}
+    LuaVal(double d) : v(std::make_unique<LuaValVariant>(d)) {}
+    LuaVal(MapType const& t) : v(std::make_unique<LuaValVariant>(std::make_shared<MapType>(t))) {}
+    LuaVal(std::initializer_list<std::pair<const LuaVal, LuaVal> /* MapType::value_type */> const& l) : v(std::make_unique<LuaValVariant>(std::make_shared<MapType>(l))) {}
 
     LuaVal(LuaVal&& b) : v(std::move(b.v)) {
     }
-    LuaVal(const LuaVal& b) : v(std::visit([&](auto&& arg) -> LuaValVariant {
+    LuaVal(const LuaVal& b) : v(std::make_unique<LuaValVariant>(std::visit([&](auto&& arg) -> LuaValVariant {
         using T = std::decay_t<decltype(arg)>;
         if constexpr (std::is_same_v<T, std::unique_ptr<std::string>>)
             return std::make_unique<std::string>(*arg);
@@ -140,7 +140,7 @@ public:
             return std::make_shared<MapType>(*arg);
         else
             return arg;
-        }, b.v)) {
+        }, *b.v))) {
     }
     ~LuaVal() {
     }
@@ -149,7 +149,7 @@ public:
         return *this;
     }
     LuaVal& operator=(const LuaVal& b) {
-        v = std::visit([&](auto&& arg) -> LuaValVariant {
+        v = std::make_unique<LuaValVariant>(std::visit([&](auto&& arg) -> LuaValVariant {
             using T = std::decay_t<decltype(arg)>;
             if constexpr (std::is_same_v<T, std::unique_ptr<std::string>>)
                 return std::make_unique<std::string>(*arg);
@@ -157,7 +157,7 @@ public:
                 return std::make_shared<MapType>(*arg);
             else
                 return arg;
-            }, b.v);
+            }, *b.v));
         return *this;
     }
     LuaVal clone() const {
@@ -165,15 +165,15 @@ public:
     }
     LuaVal reference() const {
         LuaVal lv;
-        lv.v = std::visit([&](auto&& arg) -> LuaValVariant {
+        lv.v = std::make_unique<LuaValVariant>(std::visit([&](auto&& arg) -> LuaValVariant {
             using T = std::decay_t<decltype(arg)>;
             if constexpr (std::is_same_v<T, std::unique_ptr<std::string>>)
                 return std::make_unique<std::string>(*arg);
             else
                 return arg;
-            }, v);
+            }, *v));
         return lv;
     }
 
-    LuaValVariant v;
+    std::unique_ptr<LuaValVariant> v;
 };
