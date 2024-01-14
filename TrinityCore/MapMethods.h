@@ -8,6 +8,7 @@
 #define MAPMETHODS_H
 
 #include "ElunaInstanceAI.h"
+#include "LuaValue.h"
 
 /***
  * A game map, e.g. Azeroth, Eastern Kingdoms, the Molten Core, etc.
@@ -335,6 +336,11 @@ namespace LuaMap
         lua_settop(E->L, tbl);
         return 1;
     }
+
+    int Data(Eluna* E, Map* map)
+    {
+        return LuaVal::PushLuaVal(E->L, map->lua_data);
+    }
     
     ElunaRegister<Map> MapMethods[] =
     {
@@ -363,6 +369,7 @@ namespace LuaMap
 
         // Other
         { "SaveInstanceData", &LuaMap::SaveInstanceData },
+        { "Data", &LuaMap::Data },
 
         { NULL, NULL }
     };

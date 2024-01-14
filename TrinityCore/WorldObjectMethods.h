@@ -7,6 +7,8 @@
 #ifndef WORLDOBJECTMETHODS_H
 #define WORLDOBJECTMETHODS_H
 
+#include "LuaValue.h"
+
 /***
  * Inherits all methods from: [Object]
  */
@@ -1121,6 +1123,11 @@ namespace LuaWorldObject
 
         return 0;
     }
+
+    int Data(Eluna* E, WorldObject* obj)
+    {
+        return LuaVal::PushLuaVal(E->L, obj->lua_data);
+    }
     
     ElunaRegister<WorldObject> WorldObjectMethods[] =
     {
@@ -1176,6 +1183,7 @@ namespace LuaWorldObject
         { "PlayMusic", &LuaWorldObject::PlayMusic },
         { "PlayDirectSound", &LuaWorldObject::PlayDirectSound },
         { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound },
+        { "Data", &LuaWorldObject::Data },
 
         { NULL, NULL }
     };
