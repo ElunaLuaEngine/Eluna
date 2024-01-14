@@ -277,7 +277,7 @@ LuaVal LuaVal::FromTable(lua_State* L, int index)
     return m;
 }
 
-inline size_t LuaValHash(LuaVal const& k)
+size_t LuaValHash(LuaVal const& k)
 {
     const std::unique_ptr<std::string>* pval = std::get_if<std::unique_ptr<std::string>>(&k.v);
     if (pval) {
