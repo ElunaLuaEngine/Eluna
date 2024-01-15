@@ -75,33 +75,33 @@ void Eluna::_ReloadEluna()
 }
 
 Eluna::Eluna(int32 mapId) :
-    event_level(0),
-    push_counter(0),
-    enabled(false),
-    boundMapId(mapId),
+event_level(0),
+push_counter(0),
+enabled(false),
+boundMapId(mapId),
 
-    L(NULL),
-    eventMgr(NULL),
+L(NULL),
+eventMgr(NULL),
 
-    ServerEventBindings(NULL),
-    PlayerEventBindings(NULL),
-    GuildEventBindings(NULL),
-    GroupEventBindings(NULL),
-    VehicleEventBindings(NULL),
-    BGEventBindings(NULL),
+ServerEventBindings(NULL),
+PlayerEventBindings(NULL),
+GuildEventBindings(NULL),
+GroupEventBindings(NULL),
+VehicleEventBindings(NULL),
+BGEventBindings(NULL),
 
-    PacketEventBindings(NULL),
-    CreatureEventBindings(NULL),
-    CreatureGossipBindings(NULL),
-    GameObjectEventBindings(NULL),
-    GameObjectGossipBindings(NULL),
-    ItemEventBindings(NULL),
-    ItemGossipBindings(NULL),
-    PlayerGossipBindings(NULL),
-    MapEventBindings(NULL),
-    InstanceEventBindings(NULL),
+PacketEventBindings(NULL),
+CreatureEventBindings(NULL),
+CreatureGossipBindings(NULL),
+GameObjectEventBindings(NULL),
+GameObjectGossipBindings(NULL),
+ItemEventBindings(NULL),
+ItemGossipBindings(NULL),
+PlayerGossipBindings(NULL),
+MapEventBindings(NULL),
+InstanceEventBindings(NULL),
 
-    CreatureUniqueBindings(NULL)
+CreatureUniqueBindings(NULL)
 {
     OpenLua();
     eventMgr = new EventMgr(this);
@@ -167,25 +167,25 @@ void Eluna::CreateBindStores()
 {
     DestroyBindStores();
 
-    ServerEventBindings = new BindingMap< EventKey<Hooks::ServerEvents> >(L);
-    PlayerEventBindings = new BindingMap< EventKey<Hooks::PlayerEvents> >(L);
-    GuildEventBindings = new BindingMap< EventKey<Hooks::GuildEvents> >(L);
-    GroupEventBindings = new BindingMap< EventKey<Hooks::GroupEvents> >(L);
-    VehicleEventBindings = new BindingMap< EventKey<Hooks::VehicleEvents> >(L);
-    BGEventBindings = new BindingMap< EventKey<Hooks::BGEvents> >(L);
+    ServerEventBindings      = new BindingMap< EventKey<Hooks::ServerEvents> >(L);
+    PlayerEventBindings      = new BindingMap< EventKey<Hooks::PlayerEvents> >(L);
+    GuildEventBindings       = new BindingMap< EventKey<Hooks::GuildEvents> >(L);
+    GroupEventBindings       = new BindingMap< EventKey<Hooks::GroupEvents> >(L);
+    VehicleEventBindings     = new BindingMap< EventKey<Hooks::VehicleEvents> >(L);
+    BGEventBindings          = new BindingMap< EventKey<Hooks::BGEvents> >(L);
 
-    PacketEventBindings = new BindingMap< EntryKey<Hooks::PacketEvents> >(L);
-    CreatureEventBindings = new BindingMap< EntryKey<Hooks::CreatureEvents> >(L);
-    CreatureGossipBindings = new BindingMap< EntryKey<Hooks::GossipEvents> >(L);
-    GameObjectEventBindings = new BindingMap< EntryKey<Hooks::GameObjectEvents> >(L);
+    PacketEventBindings      = new BindingMap< EntryKey<Hooks::PacketEvents> >(L);
+    CreatureEventBindings    = new BindingMap< EntryKey<Hooks::CreatureEvents> >(L);
+    CreatureGossipBindings   = new BindingMap< EntryKey<Hooks::GossipEvents> >(L);
+    GameObjectEventBindings  = new BindingMap< EntryKey<Hooks::GameObjectEvents> >(L);
     GameObjectGossipBindings = new BindingMap< EntryKey<Hooks::GossipEvents> >(L);
-    ItemEventBindings = new BindingMap< EntryKey<Hooks::ItemEvents> >(L);
-    ItemGossipBindings = new BindingMap< EntryKey<Hooks::GossipEvents> >(L);
-    PlayerGossipBindings = new BindingMap< EntryKey<Hooks::GossipEvents> >(L);
-    MapEventBindings = new BindingMap< EntryKey<Hooks::InstanceEvents> >(L);
-    InstanceEventBindings = new BindingMap< EntryKey<Hooks::InstanceEvents> >(L);
+    ItemEventBindings        = new BindingMap< EntryKey<Hooks::ItemEvents> >(L);
+    ItemGossipBindings       = new BindingMap< EntryKey<Hooks::GossipEvents> >(L);
+    PlayerGossipBindings     = new BindingMap< EntryKey<Hooks::GossipEvents> >(L);
+    MapEventBindings         = new BindingMap< EntryKey<Hooks::InstanceEvents> >(L);
+    InstanceEventBindings    = new BindingMap< EntryKey<Hooks::InstanceEvents> >(L);
 
-    CreatureUniqueBindings = new BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >(L);
+    CreatureUniqueBindings   = new BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >(L);
 }
 
 void Eluna::DestroyBindStores()
@@ -478,14 +478,14 @@ void Eluna::Push(Unit const* unit)
     }
     switch (unit->GetTypeId())
     {
-    case TYPEID_UNIT:
-        Push(unit->ToCreature());
-        break;
-    case TYPEID_PLAYER:
-        Push(unit->ToPlayer());
-        break;
-    default:
-        ElunaTemplate<Unit>::Push(this, unit);
+        case TYPEID_UNIT:
+            Push(unit->ToCreature());
+            break;
+        case TYPEID_PLAYER:
+            Push(unit->ToPlayer());
+            break;
+        default:
+            ElunaTemplate<Unit>::Push(this, unit);
     }
 }
 void Eluna::Push(WorldObject const* obj)
@@ -497,20 +497,20 @@ void Eluna::Push(WorldObject const* obj)
     }
     switch (obj->GetTypeId())
     {
-    case TYPEID_UNIT:
-        Push(obj->ToCreature());
-        break;
-    case TYPEID_PLAYER:
-        Push(obj->ToPlayer());
-        break;
-    case TYPEID_GAMEOBJECT:
-        Push(obj->ToGameObject());
-        break;
-    case TYPEID_CORPSE:
-        Push(obj->ToCorpse());
-        break;
-    default:
-        ElunaTemplate<WorldObject>::Push(this, obj);
+        case TYPEID_UNIT:
+            Push(obj->ToCreature());
+            break;
+        case TYPEID_PLAYER:
+            Push(obj->ToPlayer());
+            break;
+        case TYPEID_GAMEOBJECT:
+            Push(obj->ToGameObject());
+            break;
+        case TYPEID_CORPSE:
+            Push(obj->ToCorpse());
+            break;
+        default:
+            ElunaTemplate<WorldObject>::Push(this, obj);
     }
 }
 void Eluna::Push(Object const* obj)
@@ -522,20 +522,20 @@ void Eluna::Push(Object const* obj)
     }
     switch (obj->GetTypeId())
     {
-    case TYPEID_UNIT:
-        Push(obj->ToCreature());
-        break;
-    case TYPEID_PLAYER:
-        Push(obj->ToPlayer());
-        break;
-    case TYPEID_GAMEOBJECT:
-        Push(obj->ToGameObject());
-        break;
-    case TYPEID_CORPSE:
-        Push(obj->ToCorpse());
-        break;
-    default:
-        ElunaTemplate<Object>::Push(this, obj);
+        case TYPEID_UNIT:
+            Push(obj->ToCreature());
+            break;
+        case TYPEID_PLAYER:
+            Push(obj->ToPlayer());
+            break;
+        case TYPEID_GAMEOBJECT:
+            Push(obj->ToGameObject());
+            break;
+        case TYPEID_CORPSE:
+            Push(obj->ToCorpse());
+            break;
+        default:
+            ElunaTemplate<Object>::Push(this, obj);
     }
 }
 void Eluna::Push(ObjectGuid const guid)
@@ -739,87 +739,118 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, 
 
     switch (regtype)
     {
-    case Hooks::REGTYPE_SERVER:
-        if (event_id < Hooks::SERVER_EVENT_COUNT)
-        {
-            auto key = EventKey<Hooks::ServerEvents>((Hooks::ServerEvents)event_id);
-            bindingID = ServerEventBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, ServerEventBindings);
-            return 1; // Stack: callback
-        }
-        break;
-
-    case Hooks::REGTYPE_PLAYER:
-        if (event_id < Hooks::PLAYER_EVENT_COUNT)
-        {
-            auto key = EventKey<Hooks::PlayerEvents>((Hooks::PlayerEvents)event_id);
-            bindingID = PlayerEventBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, PlayerEventBindings);
-            return 1; // Stack: callback
-        }
-        break;
-
-    case Hooks::REGTYPE_GUILD:
-        if (event_id < Hooks::GUILD_EVENT_COUNT)
-        {
-            auto key = EventKey<Hooks::GuildEvents>((Hooks::GuildEvents)event_id);
-            bindingID = GuildEventBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, GuildEventBindings);
-            return 1; // Stack: callback
-        }
-        break;
-
-    case Hooks::REGTYPE_GROUP:
-        if (event_id < Hooks::GROUP_EVENT_COUNT)
-        {
-            auto key = EventKey<Hooks::GroupEvents>((Hooks::GroupEvents)event_id);
-            bindingID = GroupEventBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, GroupEventBindings);
-            return 1; // Stack: callback
-        }
-        break;
-
-    case Hooks::REGTYPE_VEHICLE:
-        if (event_id < Hooks::VEHICLE_EVENT_COUNT)
-        {
-            auto key = EventKey<Hooks::VehicleEvents>((Hooks::VehicleEvents)event_id);
-            bindingID = VehicleEventBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, VehicleEventBindings);
-            return 1; // Stack: callback
-        }
-        break;
-
-    case Hooks::REGTYPE_BG:
-        if (event_id < Hooks::BG_EVENT_COUNT)
-        {
-            auto key = EventKey<Hooks::BGEvents>((Hooks::BGEvents)event_id);
-            bindingID = BGEventBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, BGEventBindings);
-            return 1; // Stack: callback
-        }
-        break;
-
-    case Hooks::REGTYPE_PACKET:
-        if (event_id < Hooks::PACKET_EVENT_COUNT)
-        {
-            if (entry >= NUM_MSG_TYPES)
+        case Hooks::REGTYPE_SERVER:
+            if (event_id < Hooks::SERVER_EVENT_COUNT)
             {
-                luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-                luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
-                return 0; // Stack: (empty)
+                auto key = EventKey<Hooks::ServerEvents>((Hooks::ServerEvents)event_id);
+                bindingID = ServerEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, ServerEventBindings);
+                return 1; // Stack: callback
             }
+            break;
 
-            auto key = EntryKey<Hooks::PacketEvents>((Hooks::PacketEvents)event_id, entry);
-            bindingID = PacketEventBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, PacketEventBindings);
-            return 1; // Stack: callback
-        }
-        break;
+        case Hooks::REGTYPE_PLAYER:
+            if (event_id < Hooks::PLAYER_EVENT_COUNT)
+            {
+                auto key = EventKey<Hooks::PlayerEvents>((Hooks::PlayerEvents)event_id);
+                bindingID = PlayerEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, PlayerEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
 
-    case Hooks::REGTYPE_CREATURE:
-        if (event_id < Hooks::CREATURE_EVENT_COUNT)
-        {
-            if (entry != 0)
+        case Hooks::REGTYPE_GUILD:
+            if (event_id < Hooks::GUILD_EVENT_COUNT)
+            {
+                auto key = EventKey<Hooks::GuildEvents>((Hooks::GuildEvents)event_id);
+                bindingID = GuildEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, GuildEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
+
+        case Hooks::REGTYPE_GROUP:
+            if (event_id < Hooks::GROUP_EVENT_COUNT)
+            {
+                auto key = EventKey<Hooks::GroupEvents>((Hooks::GroupEvents)event_id);
+                bindingID = GroupEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, GroupEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
+
+        case Hooks::REGTYPE_VEHICLE:
+            if (event_id < Hooks::VEHICLE_EVENT_COUNT)
+            {
+                auto key = EventKey<Hooks::VehicleEvents>((Hooks::VehicleEvents)event_id);
+                bindingID = VehicleEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, VehicleEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
+
+        case Hooks::REGTYPE_BG:
+            if (event_id < Hooks::BG_EVENT_COUNT)
+            {
+                auto key = EventKey<Hooks::BGEvents>((Hooks::BGEvents)event_id);
+                bindingID = BGEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, BGEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
+
+        case Hooks::REGTYPE_PACKET:
+            if (event_id < Hooks::PACKET_EVENT_COUNT)
+            {
+                if (entry >= NUM_MSG_TYPES)
+                {
+                    luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                    luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
+                    return 0; // Stack: (empty)
+                }
+
+                auto key = EntryKey<Hooks::PacketEvents>((Hooks::PacketEvents)event_id, entry);
+                bindingID = PacketEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, PacketEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
+
+        case Hooks::REGTYPE_CREATURE:
+            if (event_id < Hooks::CREATURE_EVENT_COUNT)
+            {
+                if (entry != 0)
+                {
+                    if (!eObjectMgr->GetCreatureTemplate(entry))
+                    {
+                        luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                        luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
+                        return 0; // Stack: (empty)
+                    }
+
+                    auto key = EntryKey<Hooks::CreatureEvents>((Hooks::CreatureEvents)event_id, entry);
+                    bindingID = CreatureEventBindings->Insert(key, functionRef, shots);
+                    createCancelCallback(this, bindingID, CreatureEventBindings);
+                }
+                else
+                {
+                    if (guid.IsEmpty())
+                    {
+                        luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                        luaL_error(L, "guid was 0!");
+                        return 0; // Stack: (empty)
+                    }
+
+                    auto key = UniqueObjectKey<Hooks::CreatureEvents>((Hooks::CreatureEvents)event_id, guid, instanceId);
+                    bindingID = CreatureUniqueBindings->Insert(key, functionRef, shots);
+                    createCancelCallback(this, bindingID, CreatureUniqueBindings);
+                }
+                return 1; // Stack: callback
+            }
+            break;
+
+        case Hooks::REGTYPE_CREATURE_GOSSIP:
+            if (event_id < Hooks::GOSSIP_EVENT_COUNT)
             {
                 if (!eObjectMgr->GetCreatureTemplate(entry))
                 {
@@ -828,139 +859,108 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, 
                     return 0; // Stack: (empty)
                 }
 
-                auto key = EntryKey<Hooks::CreatureEvents>((Hooks::CreatureEvents)event_id, entry);
-                bindingID = CreatureEventBindings->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, CreatureEventBindings);
+                auto key = EntryKey<Hooks::GossipEvents>((Hooks::GossipEvents)event_id, entry);
+                bindingID = CreatureGossipBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, CreatureGossipBindings);
+                return 1; // Stack: callback
             }
-            else
+            break;
+
+        case Hooks::REGTYPE_GAMEOBJECT:
+            if (event_id < Hooks::GAMEOBJECT_EVENT_COUNT)
             {
-                if (guid.IsEmpty())
+                if (!eObjectMgr->GetGameObjectTemplate(entry))
                 {
                     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-                    luaL_error(L, "guid was 0!");
+                    luaL_error(L, "Couldn't find a gameobject with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
 
-                auto key = UniqueObjectKey<Hooks::CreatureEvents>((Hooks::CreatureEvents)event_id, guid, instanceId);
-                bindingID = CreatureUniqueBindings->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, CreatureUniqueBindings);
+                auto key = EntryKey<Hooks::GameObjectEvents>((Hooks::GameObjectEvents)event_id, entry);
+                bindingID = GameObjectEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, GameObjectEventBindings);
+                return 1; // Stack: callback
             }
-            return 1; // Stack: callback
-        }
-        break;
+            break;
 
-    case Hooks::REGTYPE_CREATURE_GOSSIP:
-        if (event_id < Hooks::GOSSIP_EVENT_COUNT)
-        {
-            if (!eObjectMgr->GetCreatureTemplate(entry))
+        case Hooks::REGTYPE_GAMEOBJECT_GOSSIP:
+            if (event_id < Hooks::GOSSIP_EVENT_COUNT)
             {
-                luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-                luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
-                return 0; // Stack: (empty)
+                if (!eObjectMgr->GetGameObjectTemplate(entry))
+                {
+                    luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                    luaL_error(L, "Couldn't find a gameobject with (ID: %d)!", entry);
+                    return 0; // Stack: (empty)
+                }
+
+                auto key = EntryKey<Hooks::GossipEvents>((Hooks::GossipEvents)event_id, entry);
+                bindingID = GameObjectGossipBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, GameObjectGossipBindings);
+                return 1; // Stack: callback
             }
+            break;
 
-            auto key = EntryKey<Hooks::GossipEvents>((Hooks::GossipEvents)event_id, entry);
-            bindingID = CreatureGossipBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, CreatureGossipBindings);
-            return 1; // Stack: callback
-        }
-        break;
-
-    case Hooks::REGTYPE_GAMEOBJECT:
-        if (event_id < Hooks::GAMEOBJECT_EVENT_COUNT)
-        {
-            if (!eObjectMgr->GetGameObjectTemplate(entry))
+        case Hooks::REGTYPE_ITEM:
+            if (event_id < Hooks::ITEM_EVENT_COUNT)
             {
-                luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-                luaL_error(L, "Couldn't find a gameobject with (ID: %d)!", entry);
-                return 0; // Stack: (empty)
+                if (!eObjectMgr->GetItemTemplate(entry))
+                {
+                    luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                    luaL_error(L, "Couldn't find a item with (ID: %d)!", entry);
+                    return 0; // Stack: (empty)
+                }
+
+                auto key = EntryKey<Hooks::ItemEvents>((Hooks::ItemEvents)event_id, entry);
+                bindingID = ItemEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, ItemEventBindings);
+                return 1; // Stack: callback
             }
+            break;
 
-            auto key = EntryKey<Hooks::GameObjectEvents>((Hooks::GameObjectEvents)event_id, entry);
-            bindingID = GameObjectEventBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, GameObjectEventBindings);
-            return 1; // Stack: callback
-        }
-        break;
-
-    case Hooks::REGTYPE_GAMEOBJECT_GOSSIP:
-        if (event_id < Hooks::GOSSIP_EVENT_COUNT)
-        {
-            if (!eObjectMgr->GetGameObjectTemplate(entry))
+        case Hooks::REGTYPE_ITEM_GOSSIP:
+            if (event_id < Hooks::GOSSIP_EVENT_COUNT)
             {
-                luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-                luaL_error(L, "Couldn't find a gameobject with (ID: %d)!", entry);
-                return 0; // Stack: (empty)
+                if (!eObjectMgr->GetItemTemplate(entry))
+                {
+                    luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                    luaL_error(L, "Couldn't find a item with (ID: %d)!", entry);
+                    return 0; // Stack: (empty)
+                }
+
+                auto key = EntryKey<Hooks::GossipEvents>((Hooks::GossipEvents)event_id, entry);
+                bindingID = ItemGossipBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, ItemGossipBindings);
+                return 1; // Stack: callback
             }
+            break;
 
-            auto key = EntryKey<Hooks::GossipEvents>((Hooks::GossipEvents)event_id, entry);
-            bindingID = GameObjectGossipBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, GameObjectGossipBindings);
-            return 1; // Stack: callback
-        }
-        break;
-
-    case Hooks::REGTYPE_ITEM:
-        if (event_id < Hooks::ITEM_EVENT_COUNT)
-        {
-            if (!eObjectMgr->GetItemTemplate(entry))
+        case Hooks::REGTYPE_PLAYER_GOSSIP:
+            if (event_id < Hooks::GOSSIP_EVENT_COUNT)
             {
-                luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-                luaL_error(L, "Couldn't find a item with (ID: %d)!", entry);
-                return 0; // Stack: (empty)
+                auto key = EntryKey<Hooks::GossipEvents>((Hooks::GossipEvents)event_id, entry);
+                bindingID = PlayerGossipBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, PlayerGossipBindings);
+                return 1; // Stack: callback
             }
-
-            auto key = EntryKey<Hooks::ItemEvents>((Hooks::ItemEvents)event_id, entry);
-            bindingID = ItemEventBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, ItemEventBindings);
-            return 1; // Stack: callback
-        }
-        break;
-
-    case Hooks::REGTYPE_ITEM_GOSSIP:
-        if (event_id < Hooks::GOSSIP_EVENT_COUNT)
-        {
-            if (!eObjectMgr->GetItemTemplate(entry))
+            break;
+        case Hooks::REGTYPE_MAP:
+            if (event_id < Hooks::INSTANCE_EVENT_COUNT)
             {
-                luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-                luaL_error(L, "Couldn't find a item with (ID: %d)!", entry);
-                return 0; // Stack: (empty)
+                auto key = EntryKey<Hooks::InstanceEvents>((Hooks::InstanceEvents)event_id, entry);
+                bindingID = MapEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, MapEventBindings);
+                return 1; // Stack: callback
             }
-
-            auto key = EntryKey<Hooks::GossipEvents>((Hooks::GossipEvents)event_id, entry);
-            bindingID = ItemGossipBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, ItemGossipBindings);
-            return 1; // Stack: callback
-        }
-        break;
-
-    case Hooks::REGTYPE_PLAYER_GOSSIP:
-        if (event_id < Hooks::GOSSIP_EVENT_COUNT)
-        {
-            auto key = EntryKey<Hooks::GossipEvents>((Hooks::GossipEvents)event_id, entry);
-            bindingID = PlayerGossipBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, PlayerGossipBindings);
-            return 1; // Stack: callback
-        }
-        break;
-    case Hooks::REGTYPE_MAP:
-        if (event_id < Hooks::INSTANCE_EVENT_COUNT)
-        {
-            auto key = EntryKey<Hooks::InstanceEvents>((Hooks::InstanceEvents)event_id, entry);
-            bindingID = MapEventBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, MapEventBindings);
-            return 1; // Stack: callback
-        }
-        break;
-    case Hooks::REGTYPE_INSTANCE:
-        if (event_id < Hooks::INSTANCE_EVENT_COUNT)
-        {
-            auto key = EntryKey<Hooks::InstanceEvents>((Hooks::InstanceEvents)event_id, entry);
-            bindingID = InstanceEventBindings->Insert(key, functionRef, shots);
-            createCancelCallback(this, bindingID, InstanceEventBindings);
-            return 1; // Stack: callback
-        }
-        break;
+            break;
+        case Hooks::REGTYPE_INSTANCE:
+            if (event_id < Hooks::INSTANCE_EVENT_COUNT)
+            {
+                auto key = EntryKey<Hooks::InstanceEvents>((Hooks::InstanceEvents)event_id, entry);
+                bindingID = InstanceEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, InstanceEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     std::ostringstream oss;
@@ -1003,9 +1003,9 @@ int Eluna::CallOneFunction(int number_of_functions, int number_of_arguments, int
     ASSERT(number_of_functions > 0 && number_of_arguments > 0 && number_of_results >= 0);
     // Stack: event_id, [arguments], [functions]
 
-    int functions_top = lua_gettop(L);
+    int functions_top        = lua_gettop(L);
     int first_function_index = functions_top - number_of_functions + 1;
-    int arguments_top = first_function_index - 1;
+    int arguments_top        = first_function_index - 1;
     int first_argument_index = arguments_top - number_of_arguments + 1;
 
     // Copy the arguments from the bottom of the stack to the top.

@@ -217,21 +217,21 @@ private:
 
     // Non-static pushes, to be used in hooks.
     // They up the pushed value counter for hook helper functions.
-    void HookPush() { Push(); ++push_counter; }
-    void HookPush(const long long value) { Push(value); ++push_counter; }
-    void HookPush(const unsigned long long value) { Push(value); ++push_counter; }
-    void HookPush(const long value) { Push(value); ++push_counter; }
-    void HookPush(const unsigned long value) { Push(value); ++push_counter; }
-    void HookPush(const int value) { Push(value); ++push_counter; }
-    void HookPush(const unsigned int value) { Push(value); ++push_counter; }
-    void HookPush(const bool value) { Push(value); ++push_counter; }
-    void HookPush(const float value) { Push(value); ++push_counter; }
-    void HookPush(const double value) { Push(value); ++push_counter; }
-    void HookPush(const std::string& value) { Push(value); ++push_counter; }
-    void HookPush(const char* value) { Push(value); ++push_counter; }
-    void HookPush(ObjectGuid const value) { Push(value); ++push_counter; }
+    void HookPush()                                 { Push(); ++push_counter; }
+    void HookPush(const long long value)            { Push(value); ++push_counter; }
+    void HookPush(const unsigned long long value)   { Push(value); ++push_counter; }
+    void HookPush(const long value)                 { Push(value); ++push_counter; }
+    void HookPush(const unsigned long value)        { Push(value); ++push_counter; }
+    void HookPush(const int value)                  { Push(value); ++push_counter; }
+    void HookPush(const unsigned int value)         { Push(value); ++push_counter; }
+    void HookPush(const bool value)                 { Push(value); ++push_counter; }
+    void HookPush(const float value)                { Push(value); ++push_counter; }
+    void HookPush(const double value)               { Push(value); ++push_counter; }
+    void HookPush(const std::string& value)         { Push(value); ++push_counter; }
+    void HookPush(const char* value)                { Push(value); ++push_counter; }
+    void HookPush(ObjectGuid const value)           { Push(value); ++push_counter; }
     template<typename T>
-    void HookPush(T const* ptr) { Push(ptr); ++push_counter; }
+    void HookPush(T const* ptr)                     { Push(ptr); ++push_counter; }
 
 public:
 
@@ -241,23 +241,23 @@ public:
     QueryCallbackProcessor queryProcessor;
     QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 
-    BindingMap< EventKey<Hooks::ServerEvents> >* ServerEventBindings;
-    BindingMap< EventKey<Hooks::PlayerEvents> >* PlayerEventBindings;
-    BindingMap< EventKey<Hooks::GuildEvents> >* GuildEventBindings;
-    BindingMap< EventKey<Hooks::GroupEvents> >* GroupEventBindings;
-    BindingMap< EventKey<Hooks::VehicleEvents> >* VehicleEventBindings;
-    BindingMap< EventKey<Hooks::BGEvents> >* BGEventBindings;
-
-    BindingMap< EntryKey<Hooks::PacketEvents> >* PacketEventBindings;
-    BindingMap< EntryKey<Hooks::CreatureEvents> >* CreatureEventBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >* CreatureGossipBindings;
+    BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
+    BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;
+    BindingMap< EventKey<Hooks::GuildEvents> >*      GuildEventBindings;
+    BindingMap< EventKey<Hooks::GroupEvents> >*      GroupEventBindings;
+    BindingMap< EventKey<Hooks::VehicleEvents> >*    VehicleEventBindings;
+    BindingMap< EventKey<Hooks::BGEvents> >*         BGEventBindings;
+                                                     
+    BindingMap< EntryKey<Hooks::PacketEvents> >*     PacketEventBindings;
+    BindingMap< EntryKey<Hooks::CreatureEvents> >*   CreatureEventBindings;
+    BindingMap< EntryKey<Hooks::GossipEvents> >*     CreatureGossipBindings;
     BindingMap< EntryKey<Hooks::GameObjectEvents> >* GameObjectEventBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >* GameObjectGossipBindings;
-    BindingMap< EntryKey<Hooks::ItemEvents> >* ItemEventBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >* ItemGossipBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >* PlayerGossipBindings;
-    BindingMap< EntryKey<Hooks::InstanceEvents> >* MapEventBindings;
-    BindingMap< EntryKey<Hooks::InstanceEvents> >* InstanceEventBindings;
+    BindingMap< EntryKey<Hooks::GossipEvents> >*     GameObjectGossipBindings;
+    BindingMap< EntryKey<Hooks::ItemEvents> >*       ItemEventBindings;
+    BindingMap< EntryKey<Hooks::GossipEvents> >*     ItemGossipBindings;
+    BindingMap< EntryKey<Hooks::GossipEvents> >*     PlayerGossipBindings;
+    BindingMap< EntryKey<Hooks::InstanceEvents> >*   MapEventBindings;
+    BindingMap< EntryKey<Hooks::InstanceEvents> >*   InstanceEventBindings;
 
     BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >* CreatureUniqueBindings;
 
