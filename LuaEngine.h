@@ -247,7 +247,7 @@ public:
     BindingMap< EventKey<Hooks::GroupEvents> >*      GroupEventBindings;
     BindingMap< EventKey<Hooks::VehicleEvents> >*    VehicleEventBindings;
     BindingMap< EventKey<Hooks::BGEvents> >*         BGEventBindings;
-                                                     
+
     BindingMap< EntryKey<Hooks::PacketEvents> >*     PacketEventBindings;
     BindingMap< EntryKey<Hooks::CreatureEvents> >*   CreatureEventBindings;
     BindingMap< EntryKey<Hooks::GossipEvents> >*     CreatureGossipBindings;

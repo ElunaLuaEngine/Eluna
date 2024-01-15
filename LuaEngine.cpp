@@ -47,7 +47,7 @@
 
 extern "C"
 {
-    // Base lua libraries
+// Base lua libraries
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"

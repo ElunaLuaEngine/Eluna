@@ -69,9 +69,8 @@ struct ElunaCreatureAI : CreatureAI
             for (auto& point : movepoints)
             {
 #ifndef CMANGOS
-                //if (Eluna* e = me->GetEluna())
-                    if (!me->GetEluna()->MovementInform(me, point.first, point.second))
-                        ScriptedAI::MovementInform(point.first, point.second);
+                if (!me->GetEluna()->MovementInform(me, point.first, point.second))
+                    ScriptedAI::MovementInform(point.first, point.second);
 #else
                 if (!sEluna->MovementInform(me, point.first, point.second))
                     CreatureAI::MovementInform(point.first, point.second);
