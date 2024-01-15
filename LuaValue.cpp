@@ -250,10 +250,10 @@ LuaVal LuaVal::AsLuaVal(lua_State* L, int index)
     case LUA_TUSERDATA:
         if (LuaVal* ptr = GetLuaVal(L, index))
             return ptr->reference();
-    default:
-        luaL_argerror(L, index, "Trying to use unsupported type");
-        return LuaVal();
+        break;
     }
+    luaL_argerror(L, index, "Trying to use unsupported type");
+    return LuaVal();
 }
 
 int LuaVal::lua_AsLuaVal(lua_State* L)
