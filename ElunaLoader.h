@@ -37,7 +37,6 @@ public:
     bool ShouldMapLoadEluna(uint32 mapId);
     bool CompileScript(lua_State* L, LuaScript& script);
     static int LoadBytecodeChunk(lua_State* L, uint8* bytes, size_t len, BytecodeBuffer* buffer);
-    void PreloadElunaMaps();
 
     // Lua script folder path
     std::string lua_folderpath;
@@ -49,7 +48,6 @@ public:
     ScriptList lua_extensions;
     std::vector<LuaScript> combined_scripts;
     std::list<uint32> requiredMaps;
-    bool preloadMaps;
 };
 
 #define sElunaLoader ElunaLoader::instance()

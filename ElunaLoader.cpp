@@ -74,8 +74,6 @@ void ElunaLoader::LoadScripts()
             ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '%s'", mapIdStr.c_str());
         }
     }
-
-    preloadMaps = eConfigMgr->GetBoolDefault("Eluna.PreloadOnlyOnMaps", false);
 }
 
 int ElunaLoader::LoadBytecodeChunk(lua_State* /*L*/, uint8* bytes, size_t len, BytecodeBuffer* buffer)
@@ -243,17 +241,4 @@ bool ElunaLoader::ShouldMapLoadEluna(uint32 id)
         return true;
 
     return (std::find(requiredMaps.begin(), requiredMaps.end(), id) != requiredMaps.end());
-}
-
-void ElunaLoader::PreloadElunaMaps()
-{
-    // Don't preload maps if not enabled or eluna has a state for every map.
-    if (!preloadMaps || !requiredMaps.size())
-        return;
-
-    for (uint32 mapId : requiredMaps)
-    {
-        // Creates the parent map for every entry in requiredMaps, will break if any emulator unloads parent maps.
-        sMapMgr->CreateBaseMap(mapId);
-    }
 }
