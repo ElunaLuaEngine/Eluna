@@ -771,6 +771,10 @@ namespace LuaWorldObject
      */
     int RegisterEvent(Eluna* E, WorldObject* obj)
     {
+        // Dirty fix to disable RegisterEvent in "world" state in multistate implementation
+        if (!E->GetCompatibilityMode() && E->GetBoundMapId() == -1)
+            return 0;
+
         luaL_checktype(E->L, 2, LUA_TFUNCTION);
         uint32 min, max;
         if (lua_istable(E->L, 3))
@@ -807,6 +811,10 @@ namespace LuaWorldObject
      */
     int RemoveEventById(Eluna* E, WorldObject* obj)
     {
+        // Dirty fix to disable RegisterEvent in "world" state in multistate implementation
+        if (!E->GetCompatibilityMode() && E->GetBoundMapId() == -1)
+            return 0;
+
         int eventId = Eluna::CHECKVAL<int>(E->L, 2);
         obj->elunaEvents->SetState(eventId, LUAEVENT_STATE_ABORT);
         return 0;
@@ -816,8 +824,12 @@ namespace LuaWorldObject
      * Removes all timed events from a [WorldObject]
      *
      */
-    int RemoveEvents(Eluna* /*E*/, WorldObject* obj)
+    int RemoveEvents(Eluna* E, WorldObject* obj)
     {
+        // Dirty fix to disable RegisterEvent in "world" state in multistate implementation
+        if (!E->GetCompatibilityMode() && E->GetBoundMapId() == -1)
+            return 0;
+
         obj->elunaEvents->SetStates(LUAEVENT_STATE_ABORT);
         return 0;
     }

@@ -74,11 +74,12 @@ void Eluna::_ReloadEluna()
     reload = false;
 }
 
-Eluna::Eluna(int32 mapId) :
+Eluna::Eluna(int32 mapId, bool compatMode) :
 event_level(0),
 push_counter(0),
 enabled(false),
 boundMapId(mapId),
+compatibilityMode(compatMode),
 
 L(NULL),
 eventMgr(NULL),

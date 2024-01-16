@@ -176,6 +176,9 @@ private:
     // The map id that this Eluna object is tied to. -1 is reserved for objects without a bound map id.
     int32 boundMapId;
 
+    // Whether or not Eluna is in compatibility mode. Used in some method wrappers.
+    bool compatibilityMode;
+
     // Map from instance ID -> Lua table ref
     std::unordered_map<uint32, int> instanceDataRefs;
     // Map from map ID -> Lua table ref
@@ -349,8 +352,9 @@ public:
     void FreeInstanceId(uint32 instanceId);
 
     int32 GetBoundMapId() const { return boundMapId; }
+    bool GetCompatibilityMode() const { return compatibilityMode; }
 
-    Eluna(int32 mapId);
+    Eluna(int32 mapId, bool compatMode = false);
     ~Eluna();
 
     // Prevent copy
