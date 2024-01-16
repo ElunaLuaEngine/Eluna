@@ -773,7 +773,10 @@ namespace LuaWorldObject
     {
         // Dirty fix to disable RegisterEvent in "world" state in multistate implementation
         if (!E->GetCompatibilityMode() && E->GetBoundMapId() == -1)
+        {
+            luaL_error(E->L, "RegisterEvent is disabled in the World State in multistate mode. Please review your code!");
             return 0;
+        }
 
         luaL_checktype(E->L, 2, LUA_TFUNCTION);
         uint32 min, max;
@@ -813,7 +816,10 @@ namespace LuaWorldObject
     {
         // Dirty fix to disable RegisterEvent in "world" state in multistate implementation
         if (!E->GetCompatibilityMode() && E->GetBoundMapId() == -1)
+        {
+            luaL_error(E->L, "RemoveEventById is disabled in the World State in multistate mode. Please review your code!");
             return 0;
+        }
 
         int eventId = Eluna::CHECKVAL<int>(E->L, 2);
         obj->elunaEvents->SetState(eventId, LUAEVENT_STATE_ABORT);
@@ -828,7 +834,10 @@ namespace LuaWorldObject
     {
         // Dirty fix to disable RegisterEvent in "world" state in multistate implementation
         if (!E->GetCompatibilityMode() && E->GetBoundMapId() == -1)
+        {
+            luaL_error(E->L, "RemoveEvents is disabled in the World State in multistate mode. Please review your code!");
             return 0;
+        }
 
         obj->elunaEvents->SetStates(LUAEVENT_STATE_ABORT);
         return 0;
