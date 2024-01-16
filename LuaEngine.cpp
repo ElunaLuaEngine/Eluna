@@ -249,11 +249,15 @@ void Eluna::RunScripts()
 
     for (auto it = sElunaLoader->combined_scripts.begin(); it != sElunaLoader->combined_scripts.end(); ++it)
     {
-        // check that the script file is either global or meant to be loaded for this map
-        if (it->mapId != -1 && it->mapId != boundMapId)
+        // if the Eluna state is in compatibility mode, it should load all scripts, including those tagged with a specific map ID
+        if (!GetCompatibilityMode())
         {
-            ELUNA_LOG_DEBUG("[Eluna]: `%s` is tagged %i and will not load for map: %i", it->filename.c_str(), it->mapId, boundMapId);
-            continue;
+            // check that the script file is either global or meant to be loaded for this map
+            if (it->mapId != -1 && it->mapId != boundMapId)
+            {
+                ELUNA_LOG_DEBUG("[Eluna]: `%s` is tagged %i and will not load for map: %i", it->filename.c_str(), it->mapId, boundMapId);
+                continue;
+            }
         }
 
         // Check that no duplicate names exist
