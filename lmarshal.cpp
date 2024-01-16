@@ -1,7 +1,7 @@
 /*
  * lmarshal.c
  * A Lua library for serializing and deserializing Lua values
- * Richard Hundt <richardhundt@gmail.com>, Eluna Lua Engine <http://emudevs.com/>
+ * Richard Hundt <richardhundt@gmail.com>, Eluna Lua Engine <https://elunaluaengine.github.io/>
  *
  * License: MIT
  *
