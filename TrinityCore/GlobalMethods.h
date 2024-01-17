@@ -1266,31 +1266,57 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+
+    /**
+     * Initiates an asynchronous SQL query on the world database with a callback function.
+     *
+     * The query is executed asynchronously, and the provided Lua function is called when the query completes.
+     * The callback function parameter is the query result (an [ElunaQuery] or nil if no rows found).
+     *
+     * Example usage:
+     *     WorldDBQueryAsync("SELECT entry, name FROM creature_template LIMIT 10", function(results)
+     *         if results then
+     *             repeat
+     *                 local entry, name = results:GetUInt32(0), results:GetString(1)
+     *                 print(entry, name)
+     *             until not results:NextRow()
+     *         end
+     *     end)
+     *
+     * @param string sql : query to execute asynchronously
+     * @param function callback : the callback function to be called with the query results
+     */
     int WorldDBQueryAsync(Eluna* E)
     {
         const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
         luaL_checktype(E->L, 2, LUA_TFUNCTION);
+
+        // Push the Lua function onto the stack and create a reference
         lua_pushvalue(E->L, 2);
         int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        // Validate the function reference
         if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
         {
             luaL_argerror(E->L, 2, "unable to make a ref to function");
             return 0;
         }
 
+        // Add an asynchronous query callback
         E->GetQueryProcessor().AddCallback(WorldDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
         {
             ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
 
-            // Get function
+            // Get the Lua function from the registry
             lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
 
-            // Push parameters
+            // Push the query results as a parameter
             E->Push(eq);
 
-            // Call function
+            // Call the Lua function
             E->ExecuteCall(1, 0);
 
+            // Unreference the Lua function
             luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
         }));
         return 0;
@@ -1340,31 +1366,48 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Initiates an asynchronous SQL query on the character database with a callback function.
+     *
+     * The query is executed asynchronously, and the provided Lua function is called when the query completes.
+     * The callback function parameter is the query result (an [ElunaQuery] or nil if no rows found).
+     *
+     * For an example see [Global:WorldDBQueryAsync].
+     *
+     * @param string sql : query to execute asynchronously
+     * @param function callback : the callback function to be called with the query results
+     */
     int CharDBQueryAsync(Eluna* E)
     {
         const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
         luaL_checktype(E->L, 2, LUA_TFUNCTION);
+
+        // Push the Lua function onto the stack and create a reference
         lua_pushvalue(E->L, 2);
         int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        // Validate the function reference
         if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
         {
             luaL_argerror(E->L, 2, "unable to make a ref to function");
             return 0;
         }
 
+        // Add an asynchronous query callback
         E->GetQueryProcessor().AddCallback(CharacterDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
         {
             ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
 
-            // Get function
+            // Get the Lua function from the registry
             lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
 
-            // Push parameters
+            // Push the query results as a parameter
             E->Push(eq);
 
-            // Call function
+            // Call the Lua function
             E->ExecuteCall(1, 0);
 
+            // Unreference the Lua function
             luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
         }));
         return 0;
@@ -1414,31 +1457,48 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * Initiates an asynchronous SQL query on the login database with a callback function.
+     *
+     * The query is executed asynchronously, and the provided Lua function is called when the query completes.
+     * The callback function parameter is the query result (an [ElunaQuery] or nil if no rows found).
+     *
+     * For an example see [Global:WorldDBQueryAsync].
+     *
+     * @param string sql : query to execute asynchronously
+     * @param function callback : the callback function to be called with the query results
+     */
     int AuthDBQueryAsync(Eluna* E)
     {
         const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
         luaL_checktype(E->L, 2, LUA_TFUNCTION);
+
+        // Push the Lua function onto the stack and create a reference
         lua_pushvalue(E->L, 2);
         int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        // Validate the function reference
         if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
         {
             luaL_argerror(E->L, 2, "unable to make a ref to function");
             return 0;
         }
 
+        // Add an asynchronous query callback
         E->GetQueryProcessor().AddCallback(LoginDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
         {
             ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
 
-            // Get function
+            // Get the Lua function from the registry
             lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
 
-            // Push parameters
+            // Push the query results as a parameter
             E->Push(eq);
 
-            // Call function
+            // Call the Lua function
             E->ExecuteCall(1, 0);
 
+            // Unreference the Lua function
             luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
         }));
         return 0;
