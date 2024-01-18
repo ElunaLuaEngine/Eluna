@@ -32,7 +32,7 @@ def make_renderer(template_path, link_parser_factory):
     """Return a function that can be used to render Jinja2 templates from the `template_path` directory."""
 
     # Set up jinja2 environment to load templates from the templates folder.
-    env = Environment(loader=FileSystemLoader(template_path), extensions=['jinja2.ext.with_'])
+    env = Environment(loader=FileSystemLoader(template_path))
 
 
     def inner(template_name, output_path, level, **kwargs):
@@ -64,13 +64,13 @@ if __name__ == '__main__':
 
     # Load up all files with methods we need to parse.
     # Hard-coded to the TC files for now. Will have to add core support later on.
-    print 'Finding Eluna method files...'
+    print('Finding Eluna method files...')
     class_files = find_class_files('../TrinityCore/')
 
     # Parse all the method files.
     classes = []
     for f in class_files:
-        print 'Parsing file {}...'.format(f.name)
+        print(f'Parsing file {f.name}...')
         classes.append(ClassParser.parse_file(f))
         f.close()
 
@@ -156,7 +156,7 @@ if __name__ == '__main__':
     render('date.js', 'date.js', level=0, currdate=time.strftime("%d/%m/%Y"))
 
     for class_ in classes:
-        print 'Rending pages for class {}...'.format(class_.name)
+        print(f'Rendering pages for class {class_.name}...')
 
         # Make a folder for the class.
         os.mkdir('build/' + class_.name)
