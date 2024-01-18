@@ -3,7 +3,7 @@ import shutil
 import typing
 from jinja2 import Environment, FileSystemLoader
 from typedecorator import params, returns
-from parser import ClassParser, MethodDoc
+from ElunaDoc.parser import ClassParser, MethodDoc
 import glob
 import time
 
