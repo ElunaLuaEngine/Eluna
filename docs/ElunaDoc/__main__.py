@@ -1,6 +1,6 @@
 import os
 import shutil
-from types import FileType
+import typing
 from jinja2 import Environment, FileSystemLoader
 from typedecorator import params, returns
 from parser import ClassParser, MethodDoc
@@ -8,7 +8,7 @@ import glob
 import time
 
 
-@returns([(str, FileType)])
+@returns([(str, typing.IO)])
 @params(search_path=str)
 def find_class_files(search_path):
     """Find and open all files containing Eluna class methods in `search_path`.
