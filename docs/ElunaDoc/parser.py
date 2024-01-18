@@ -1,5 +1,5 @@
 import re
-from types import FileType
+import typing
 import markdown
 from typedecorator import params, returns, Nullable
 
@@ -23,7 +23,7 @@ class ParameterDoc(object):
         'ObjectGuid': ('0', '18,446,744,073,709,551,615'),
     }
 
-    @params(self=object, name=Nullable(unicode), data_type=str, description=unicode, default_value=Nullable(unicode))
+    @params(self=object, name=Nullable(str), data_type=str, description=str, default_value=Nullable(str))
     def __init__(self, name, data_type, description, default_value=None):
         """If `name` is not provided, the Parameter is a returned value instead of a parameter."""
         self.name = name
@@ -59,12 +59,12 @@ class ParameterDoc(object):
             self.data_type = '[' + self.data_type + ']'
 
         elif not self.data_type in ['nil', 'boolean', 'number', 'string', 'table', 'function', '...'] and self.data_type[:1] != '[':
-            print "Missing angle brackets [] around the data type name: `" + self.data_type + "`"
+            print(f"Missing angle brackets [] around the data type name: `{self.data_type}`")
 
 
 class MethodDoc(object):
     """The documentation data of an Eluna method."""
-    @params(self=object, name=unicode, description=unicode, prototypes=[unicode], parameters=[ParameterDoc], returned=[ParameterDoc])
+    @params(self=object, name=str, description=str, prototypes=[str], parameters=[ParameterDoc], returned=[ParameterDoc])
     def __init__(self, name, description, prototypes, parameters, returned):
         self.name = name
         self.prototypes = prototypes
@@ -81,7 +81,7 @@ class MethodDoc(object):
 
 class MangosClassDoc(object):
     """The documentation of a MaNGOS class that has Lua methods."""
-    @params(self=object, name=unicode, description=unicode, methods=[MethodDoc])
+    @params(self=object, name=str, description=str, methods=[MethodDoc])
     def __init__(self, name, description, methods):
         self.name = name
         # Parse the description as Markdown.
@@ -317,7 +317,7 @@ class ClassParser(object):
 
     @staticmethod
     @returns(MangosClassDoc)
-    @params(file=FileType)
+    @params(file=typing.IO)
     def parse_file(file):
         """Parse the file `file` into a documented class."""
         # Get the class name from "ClassMethods.h" by stripping off "Methods.h".
