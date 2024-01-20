@@ -17,6 +17,8 @@ namespace LuaGuild
      *
      * Only the players that are online and on some map.
      *
+     * In multistate, this method is only available in the WORLD state
+     *
      * @return table guildPlayers : table of [Player]s
      */
     int GetMembers(Eluna* E, Guild* guild)
@@ -56,6 +58,8 @@ namespace LuaGuild
 
     /**
      * Finds and returns the [Guild] leader by their GUID if logged in
+     *
+     * In multistate, this method is only available in the WORLD state
      *
      * @return [Player] leader
      */

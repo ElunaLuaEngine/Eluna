@@ -758,6 +758,8 @@ namespace LuaWorldObject
      *     worldobject:RegisterEvent(Timed, 1000, 5) -- do it after 1 second 5 times
      *     worldobject:RegisterEvent(Timed, {1000, 10000}, 0) -- do it after 1 to 10 seconds forever
      *
+     * In multistate, this method is only available in the MAP states
+     * 
      * @proto eventId = (function, delay)
      * @proto eventId = (function, delaytable)
      * @proto eventId = (function, delay, repeats)
@@ -803,6 +805,8 @@ namespace LuaWorldObject
     /**
      * Removes the timed event from a [WorldObject] by the specified event ID
      *
+     * In multistate, this method is only available in the MAP states
+     *
      * @param int eventId : event Id to remove
      */
     int RemoveEventById(Eluna* E, WorldObject* obj)
@@ -814,6 +818,8 @@ namespace LuaWorldObject
 
     /**
      * Removes all timed events from a [WorldObject]
+     *
+     * In multistate, this method is only available in the MAP states
      *
      */
     int RemoveEvents(Eluna* /*E*/, WorldObject* obj)

@@ -166,6 +166,8 @@ namespace LuaGroup
     /**
      * Returns a table with the [Player]s in this [Group]
      *
+     * In multistate, this method is only available in the WORLD state
+     *
      * @return table groupPlayers : table of [Player]s
      */
     int GetMembers(Eluna* E, Group* group)

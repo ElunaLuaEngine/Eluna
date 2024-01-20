@@ -125,6 +125,8 @@ namespace LuaGlobalFunctions
     /**
      * Finds and Returns [Player] by guid if found
      *
+     * In multistate, this method is only available in the WORLD state
+     * 
      * @param ObjectGuid guid : guid of the [Player], you can get it with [Object:GetGUID]
      * @return [Player] player
      */
@@ -137,6 +139,8 @@ namespace LuaGlobalFunctions
 
     /**
      * Finds and Returns [Player] by name if found
+     *
+     * In multistate, this method is only available in the WORLD state
      *
      * @param string name : name of the [Player]
      * @return [Player] player
@@ -170,6 +174,8 @@ namespace LuaGlobalFunctions
      *         TEAM_HORDE = 1,
      *         TEAM_NEUTRAL = 2
      *     };
+     *
+     * In multistate, this method is only available in the WORLD state
      *
      * @param [TeamId] team = TEAM_NEUTRAL : optional check team of the [Player], Alliance, Horde or Neutral (All)
      * @param bool onlyGM = false : optional check if GM only
