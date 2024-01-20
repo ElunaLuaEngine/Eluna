@@ -428,50 +428,50 @@ namespace LuaGroup
     ElunaRegister<Group> GroupMethods[] =
     {
         // Getters
-        { "GetMembers", &LuaGroup::GetMembers },
-        { "GetLeaderGUID", &LuaGroup::GetLeaderGUID },
-        { "GetGUID", &LuaGroup::GetGUID },
-        { "GetMemberGroup", &LuaGroup::GetMemberGroup },
-        { "GetMemberGUID", &LuaGroup::GetMemberGUID },
-        { "GetMembersCount", &LuaGroup::GetMembersCount },
+        { "GetMembers", &LuaGroup::GetMembers, METHOD_REG_ALL },
+        { "GetLeaderGUID", &LuaGroup::GetLeaderGUID, METHOD_REG_ALL },
+        { "GetGUID", &LuaGroup::GetGUID, METHOD_REG_ALL },
+        { "GetMemberGroup", &LuaGroup::GetMemberGroup, METHOD_REG_ALL },
+        { "GetMemberGUID", &LuaGroup::GetMemberGUID, METHOD_REG_ALL },
+        { "GetMembersCount", &LuaGroup::GetMembersCount, METHOD_REG_ALL },
 #ifndef CATA
-        { "GetMemberFlags", &LuaGroup::GetMemberFlags },
+        { "GetMemberFlags", &LuaGroup::GetMemberFlags, METHOD_REG_ALL },
 #endif
 
         // Setters
-        { "SetLeader", &LuaGroup::SetLeader },
-        { "SetMembersGroup", &LuaGroup::SetMembersGroup },
-        { "SetTargetIcon", &LuaGroup::SetTargetIcon },
+        { "SetLeader", &LuaGroup::SetLeader, METHOD_REG_ALL },
+        { "SetMembersGroup", &LuaGroup::SetMembersGroup, METHOD_REG_ALL },
+        { "SetTargetIcon", &LuaGroup::SetTargetIcon, METHOD_REG_ALL },
 #ifndef CATA
-        { "SetMemberFlag", &LuaGroup::SetMemberFlag },
+        { "SetMemberFlag", &LuaGroup::SetMemberFlag, METHOD_REG_ALL },
 #endif
 
         // Boolean
-        { "IsLeader", &LuaGroup::IsLeader },
-        { "AddMember", &LuaGroup::AddMember },
-        { "RemoveMember", &LuaGroup::RemoveMember },
-        { "Disband", &LuaGroup::Disband },
-        { "IsFull", &LuaGroup::IsFull },
-        { "IsLFGGroup", &LuaGroup::IsLFGGroup },
-        { "IsRaidGroup", &LuaGroup::IsRaidGroup },
-        { "IsBGGroup", &LuaGroup::IsBGGroup },
-        { "IsBFGroup", &LuaGroup::IsBFGroup },
-        { "IsMember", &LuaGroup::IsMember },
-        { "IsAssistant", &LuaGroup::IsAssistant },
-        { "SameSubGroup", &LuaGroup::SameSubGroup },
-        { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },
+        { "IsLeader", &LuaGroup::IsLeader, METHOD_REG_ALL },
+        { "AddMember", &LuaGroup::AddMember, METHOD_REG_ALL },
+        { "RemoveMember", &LuaGroup::RemoveMember, METHOD_REG_ALL },
+        { "Disband", &LuaGroup::Disband, METHOD_REG_ALL },
+        { "IsFull", &LuaGroup::IsFull, METHOD_REG_ALL },
+        { "IsLFGGroup", &LuaGroup::IsLFGGroup, METHOD_REG_ALL },
+        { "IsRaidGroup", &LuaGroup::IsRaidGroup, METHOD_REG_ALL },
+        { "IsBGGroup", &LuaGroup::IsBGGroup, METHOD_REG_ALL },
+        { "IsBFGroup", &LuaGroup::IsBFGroup, METHOD_REG_ALL },
+        { "IsMember", &LuaGroup::IsMember, METHOD_REG_ALL },
+        { "IsAssistant", &LuaGroup::IsAssistant, METHOD_REG_ALL },
+        { "SameSubGroup", &LuaGroup::SameSubGroup, METHOD_REG_ALL },
+        { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup, METHOD_REG_ALL },
 
         // Other
-        { "SendPacket", &LuaGroup::SendPacket },
-        { "ConvertToLFG", &LuaGroup::ConvertToLFG },
-        { "ConvertToRaid", &LuaGroup::ConvertToRaid },
+        { "SendPacket", &LuaGroup::SendPacket, METHOD_REG_ALL },
+        { "ConvertToLFG", &LuaGroup::ConvertToLFG, METHOD_REG_ALL },
+        { "ConvertToRaid", &LuaGroup::ConvertToRaid, METHOD_REG_ALL },
 
 #ifdef CATA //Not implemented in TCPP
-        { "GetMemberFlags", nullptr },
-        { "SetMemberFlag", nullptr },
+        { "GetMemberFlags", nullptr, METHOD_REG_NONE },
+        { "SetMemberFlag", nullptr, METHOD_REG_NONE },
 #endif
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 

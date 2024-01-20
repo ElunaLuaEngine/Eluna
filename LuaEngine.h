@@ -135,6 +135,14 @@ struct LuaScript
     int32 mapId;
 };
 
+enum MethodRegisterState
+{
+    METHOD_REG_NONE = 0,
+    METHOD_REG_MAP,
+    METHOD_REG_WORLD,
+    METHOD_REG_ALL
+};
+
 #define ELUNA_STATE_PTR "Eluna State Ptr"
 
 #if defined(TRINITY)

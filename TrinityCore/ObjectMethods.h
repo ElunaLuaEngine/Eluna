@@ -456,43 +456,43 @@ namespace LuaObject
     ElunaRegister<Object> ObjectMethods[] =
     {
         // Getters
-        { "GetEntry", &LuaObject::GetEntry },
-        { "GetGUID", &LuaObject::GetGUID },
-        { "GetGUIDLow", &LuaObject::GetGUIDLow },
-        { "GetInt32Value", &LuaObject::GetInt32Value },
-        { "GetUInt32Value", &LuaObject::GetUInt32Value },
-        { "GetFloatValue", &LuaObject::GetFloatValue },
-        { "GetByteValue", &LuaObject::GetByteValue },
-        { "GetUInt16Value", &LuaObject::GetUInt16Value },
-        { "GetUInt64Value", &LuaObject::GetUInt64Value },
-        { "GetScale", &LuaObject::GetScale },
-        { "GetTypeId", &LuaObject::GetTypeId },
+        { "GetEntry", &LuaObject::GetEntry, METHOD_REG_ALL },
+        { "GetGUID", &LuaObject::GetGUID, METHOD_REG_ALL },
+        { "GetGUIDLow", &LuaObject::GetGUIDLow, METHOD_REG_ALL },
+        { "GetInt32Value", &LuaObject::GetInt32Value, METHOD_REG_ALL },
+        { "GetUInt32Value", &LuaObject::GetUInt32Value, METHOD_REG_ALL },
+        { "GetFloatValue", &LuaObject::GetFloatValue, METHOD_REG_ALL },
+        { "GetByteValue", &LuaObject::GetByteValue, METHOD_REG_ALL },
+        { "GetUInt16Value", &LuaObject::GetUInt16Value, METHOD_REG_ALL },
+        { "GetUInt64Value", &LuaObject::GetUInt64Value, METHOD_REG_ALL },
+        { "GetScale", &LuaObject::GetScale, METHOD_REG_ALL },
+        { "GetTypeId", &LuaObject::GetTypeId, METHOD_REG_ALL },
 
         // Setters
-        { "SetInt32Value", &LuaObject::SetInt32Value },
-        { "SetUInt32Value", &LuaObject::SetUInt32Value },
-        { "UpdateUInt32Value", &LuaObject::UpdateUInt32Value },
-        { "SetFloatValue", &LuaObject::SetFloatValue },
-        { "SetByteValue", &LuaObject::SetByteValue },
-        { "SetUInt16Value", &LuaObject::SetUInt16Value },
-        { "SetInt16Value", &LuaObject::SetInt16Value },
-        { "SetUInt64Value", &LuaObject::SetUInt64Value },
-        { "SetScale", &LuaObject::SetScale },
-        { "SetFlag", &LuaObject::SetFlag },
+        { "SetInt32Value", &LuaObject::SetInt32Value, METHOD_REG_ALL },
+        { "SetUInt32Value", &LuaObject::SetUInt32Value, METHOD_REG_ALL },
+        { "UpdateUInt32Value", &LuaObject::UpdateUInt32Value, METHOD_REG_ALL },
+        { "SetFloatValue", &LuaObject::SetFloatValue, METHOD_REG_ALL },
+        { "SetByteValue", &LuaObject::SetByteValue, METHOD_REG_ALL },
+        { "SetUInt16Value", &LuaObject::SetUInt16Value, METHOD_REG_ALL },
+        { "SetInt16Value", &LuaObject::SetInt16Value, METHOD_REG_ALL },
+        { "SetUInt64Value", &LuaObject::SetUInt64Value, METHOD_REG_ALL },
+        { "SetScale", &LuaObject::SetScale, METHOD_REG_ALL },
+        { "SetFlag", &LuaObject::SetFlag, METHOD_REG_ALL },
 
         // Boolean
-        { "IsInWorld", &LuaObject::IsInWorld },
-        { "HasFlag", &LuaObject::HasFlag },
+        { "IsInWorld", &LuaObject::IsInWorld, METHOD_REG_ALL },
+        { "HasFlag", &LuaObject::HasFlag, METHOD_REG_ALL },
 
         // Other
-        { "ToGameObject", &LuaObject::ToGameObject },
-        { "ToUnit", &LuaObject::ToUnit },
-        { "ToCreature", &LuaObject::ToCreature },
-        { "ToPlayer", &LuaObject::ToPlayer },
-        { "ToCorpse", &LuaObject::ToCorpse },
-        { "RemoveFlag", &LuaObject::RemoveFlag },
+        { "ToGameObject", &LuaObject::ToGameObject, METHOD_REG_ALL },
+        { "ToUnit", &LuaObject::ToUnit, METHOD_REG_ALL },
+        { "ToCreature", &LuaObject::ToCreature, METHOD_REG_ALL },
+        { "ToPlayer", &LuaObject::ToPlayer, METHOD_REG_ALL },
+        { "ToCorpse", &LuaObject::ToCorpse, METHOD_REG_ALL },
+        { "RemoveFlag", &LuaObject::RemoveFlag, METHOD_REG_ALL },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

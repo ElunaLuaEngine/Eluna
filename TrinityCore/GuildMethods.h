@@ -245,34 +245,34 @@ namespace LuaGuild
     ElunaRegister<Guild> GuildMethods[] =
     {
         // Getters
-        { "GetMembers", &LuaGuild::GetMembers },
-        { "GetLeader", &LuaGuild::GetLeader },
-        { "GetLeaderGUID", &LuaGuild::GetLeaderGUID },
-        { "GetId", &LuaGuild::GetId },
-        { "GetName", &LuaGuild::GetName },
-        { "GetMOTD", &LuaGuild::GetMOTD },
-        { "GetInfo", &LuaGuild::GetInfo },
-        { "GetMemberCount", &LuaGuild::GetMemberCount },
+        { "GetMembers", &LuaGuild::GetMembers, METHOD_REG_ALL },
+        { "GetLeader", &LuaGuild::GetLeader, METHOD_REG_ALL },
+        { "GetLeaderGUID", &LuaGuild::GetLeaderGUID, METHOD_REG_ALL },
+        { "GetId", &LuaGuild::GetId, METHOD_REG_ALL },
+        { "GetName", &LuaGuild::GetName, METHOD_REG_ALL },
+        { "GetMOTD", &LuaGuild::GetMOTD, METHOD_REG_ALL },
+        { "GetInfo", &LuaGuild::GetInfo, METHOD_REG_ALL },
+        { "GetMemberCount", &LuaGuild::GetMemberCount, METHOD_REG_ALL },
 
         // Setters
-        { "SetBankTabText", &LuaGuild::SetBankTabText },
-        { "SetMemberRank", &LuaGuild::SetMemberRank },
+        { "SetBankTabText", &LuaGuild::SetBankTabText, METHOD_REG_ALL },
+        { "SetMemberRank", &LuaGuild::SetMemberRank, METHOD_REG_ALL },
 #ifndef CATA
-        { "SetLeader", &LuaGuild::SetLeader },
+        { "SetLeader", &LuaGuild::SetLeader, METHOD_REG_ALL },
 #endif
 
         // Other
-        { "SendPacket", &LuaGuild::SendPacket },
-        { "SendPacketToRanked", &LuaGuild::SendPacketToRanked },
-        { "Disband", &LuaGuild::Disband },
-        { "AddMember", &LuaGuild::AddMember },
-        { "DeleteMember", &LuaGuild::DeleteMember },
+        { "SendPacket", &LuaGuild::SendPacket, METHOD_REG_ALL },
+        { "SendPacketToRanked", &LuaGuild::SendPacketToRanked, METHOD_REG_ALL },
+        { "Disband", &LuaGuild::Disband, METHOD_REG_ALL },
+        { "AddMember", &LuaGuild::AddMember, METHOD_REG_ALL },
+        { "DeleteMember", &LuaGuild::DeleteMember, METHOD_REG_ALL },
 
 #ifdef CATA //Not implemented in TCPP
-        { "SetLeader", nullptr },
+        { "SetLeader", nullptr, METHOD_REG_NONE },
 #endif
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

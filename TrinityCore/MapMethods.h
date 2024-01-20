@@ -345,33 +345,33 @@ namespace LuaMap
     ElunaRegister<Map> MapMethods[] =
     {
         // Getters
-        { "GetName", &LuaMap::GetName },
-        { "GetDifficulty", &LuaMap::GetDifficulty },
-        { "GetInstanceId", &LuaMap::GetInstanceId },
-        { "GetInstanceData", &LuaMap::GetInstanceData },
-        { "GetPlayerCount", &LuaMap::GetPlayerCount },
-        { "GetPlayers", &LuaMap::GetPlayers },
-        { "GetMapId", &LuaMap::GetMapId },
-        { "GetAreaId", &LuaMap::GetAreaId },
-        { "GetHeight", &LuaMap::GetHeight },
-        { "GetWorldObject", &LuaMap::GetWorldObject },
+        { "GetName", &LuaMap::GetName, METHOD_REG_ALL },
+        { "GetDifficulty", &LuaMap::GetDifficulty, METHOD_REG_ALL },
+        { "GetInstanceId", &LuaMap::GetInstanceId, METHOD_REG_ALL },
+        { "GetInstanceData", &LuaMap::GetInstanceData, METHOD_REG_ALL },
+        { "GetPlayerCount", &LuaMap::GetPlayerCount, METHOD_REG_ALL },
+        { "GetPlayers", &LuaMap::GetPlayers, METHOD_REG_ALL },
+        { "GetMapId", &LuaMap::GetMapId, METHOD_REG_ALL },
+        { "GetAreaId", &LuaMap::GetAreaId, METHOD_REG_ALL },
+        { "GetHeight", &LuaMap::GetHeight, METHOD_REG_ALL },
+        { "GetWorldObject", &LuaMap::GetWorldObject, METHOD_REG_ALL },
 
         // Setters
-        { "SetWeather", &LuaMap::SetWeather },
+        { "SetWeather", &LuaMap::SetWeather, METHOD_REG_ALL },
 
         // Boolean
-        { "IsArena", &LuaMap::IsArena },
-        { "IsBattleground", &LuaMap::IsBattleground },
-        { "IsDungeon", &LuaMap::IsDungeon },
-        { "IsEmpty", &LuaMap::IsEmpty },
-        { "IsHeroic", &LuaMap::IsHeroic },
-        { "IsRaid", &LuaMap::IsRaid },
+        { "IsArena", &LuaMap::IsArena, METHOD_REG_ALL },
+        { "IsBattleground", &LuaMap::IsBattleground, METHOD_REG_ALL },
+        { "IsDungeon", &LuaMap::IsDungeon, METHOD_REG_ALL },
+        { "IsEmpty", &LuaMap::IsEmpty, METHOD_REG_ALL },
+        { "IsHeroic", &LuaMap::IsHeroic, METHOD_REG_ALL },
+        { "IsRaid", &LuaMap::IsRaid, METHOD_REG_ALL },
 
         // Other
-        { "SaveInstanceData", &LuaMap::SaveInstanceData },
-        { "Data", &LuaMap::Data },
+        { "SaveInstanceData", &LuaMap::SaveInstanceData, METHOD_REG_ALL },
+        { "Data", &LuaMap::Data, METHOD_REG_ALL },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

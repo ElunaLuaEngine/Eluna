@@ -29,6 +29,7 @@ public:
     {
         const char* name;
         int(*func)(Eluna*);
+        MethodRegisterState regState;
     };
 
     static int thunk(lua_State* L)
@@ -130,6 +131,7 @@ struct ElunaRegister
 {
     const char* name;
     int(*mfunc)(Eluna*, T*);
+    MethodRegisterState regState;
 };
 
 template<typename T>
@@ -256,8 +258,24 @@ public:
         ASSERT(lua_istable(E->L, -1));
 
         // load all core-specific methods
-        for (; methodTable && methodTable->name && methodTable->mfunc; ++methodTable)
+        for (; methodTable && methodTable->name && methodTable->mfunc && methodTable->regState; ++methodTable)
         {
+            // todo: methods we decide not to register should have a "default" output method
+            // (not supported or something) instead of not registering them at all
+
+            // if method is flagged as shouldn't be registered (unimplemented) then continue
+            if (methodTable->regState == METHOD_REG_NONE)
+                continue;
+
+            // if we're in multistate and a method is not flagged as all, then check whether method should be set for this state
+            if (!E->GetCompatibilityMode() && methodTable->regState != METHOD_REG_ALL)
+            {
+                if (methodTable->regState == METHOD_REG_MAP && E->GetBoundMapId() == -1)
+                    continue;
+                if (methodTable->regState == METHOD_REG_WORLD && E->GetBoundMapId() != -1)
+                    continue;
+            }
+
             lua_pushstring(E->L, methodTable->name);
             lua_pushlightuserdata(E->L, (void*)methodTable);
             lua_pushlightuserdata(E->L, (void*)E);

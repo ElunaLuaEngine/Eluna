@@ -771,13 +771,6 @@ namespace LuaWorldObject
      */
     int RegisterEvent(Eluna* E, WorldObject* obj)
     {
-        // Dirty fix to disable RegisterEvent in "world" state in multistate implementation
-        if (!E->GetCompatibilityMode() && E->GetBoundMapId() == -1)
-        {
-            luaL_error(E->L, "RegisterEvent is disabled in the World State in multistate mode. Please review your code!");
-            return 0;
-        }
-
         luaL_checktype(E->L, 2, LUA_TFUNCTION);
         uint32 min, max;
         if (lua_istable(E->L, 3))
@@ -814,13 +807,6 @@ namespace LuaWorldObject
      */
     int RemoveEventById(Eluna* E, WorldObject* obj)
     {
-        // Dirty fix to disable RegisterEvent in "world" state in multistate implementation
-        if (!E->GetCompatibilityMode() && E->GetBoundMapId() == -1)
-        {
-            luaL_error(E->L, "RemoveEventById is disabled in the World State in multistate mode. Please review your code!");
-            return 0;
-        }
-
         int eventId = Eluna::CHECKVAL<int>(E->L, 2);
         obj->elunaEvents->SetState(eventId, LUAEVENT_STATE_ABORT);
         return 0;
@@ -832,13 +818,6 @@ namespace LuaWorldObject
      */
     int RemoveEvents(Eluna* E, WorldObject* obj)
     {
-        // Dirty fix to disable RegisterEvent in "world" state in multistate implementation
-        if (!E->GetCompatibilityMode() && E->GetBoundMapId() == -1)
-        {
-            luaL_error(E->L, "RemoveEvents is disabled in the World State in multistate mode. Please review your code!");
-            return 0;
-        }
-
         obj->elunaEvents->SetStates(LUAEVENT_STATE_ABORT);
         return 0;
     }
@@ -1153,60 +1132,60 @@ namespace LuaWorldObject
     ElunaRegister<WorldObject> WorldObjectMethods[] =
     {
         // Getters
-        { "GetName", &LuaWorldObject::GetName },
-        { "GetMap", &LuaWorldObject::GetMap },
-        { "GetPhaseMask", &LuaWorldObject::GetPhaseMask },
-        { "SetPhaseMask", &LuaWorldObject::SetPhaseMask },
-        { "GetInstanceId", &LuaWorldObject::GetInstanceId },
-        { "GetAreaId", &LuaWorldObject::GetAreaId },
-        { "GetZoneId", &LuaWorldObject::GetZoneId },
-        { "GetMapId", &LuaWorldObject::GetMapId },
-        { "GetX", &LuaWorldObject::GetX },
-        { "GetY", &LuaWorldObject::GetY },
-        { "GetZ", &LuaWorldObject::GetZ },
-        { "GetO", &LuaWorldObject::GetO },
-        { "GetLocation", &LuaWorldObject::GetLocation },
-        { "GetPlayersInRange", &LuaWorldObject::GetPlayersInRange },
-        { "GetCreaturesInRange", &LuaWorldObject::GetCreaturesInRange },
-        { "GetGameObjectsInRange", &LuaWorldObject::GetGameObjectsInRange },
-        { "GetNearestPlayer", &LuaWorldObject::GetNearestPlayer },
-        { "GetNearestGameObject", &LuaWorldObject::GetNearestGameObject },
-        { "GetNearestCreature", &LuaWorldObject::GetNearestCreature },
-        { "GetNearObject", &LuaWorldObject::GetNearObject },
-        { "GetNearObjects", &LuaWorldObject::GetNearObjects },
-        { "GetDistance", &LuaWorldObject::GetDistance },
-        { "GetExactDistance", &LuaWorldObject::GetExactDistance },
-        { "GetDistance2d", &LuaWorldObject::GetDistance2d },
-        { "GetExactDistance2d", &LuaWorldObject::GetExactDistance2d },
-        { "GetRelativePoint", &LuaWorldObject::GetRelativePoint },
-        { "GetAngle", &LuaWorldObject::GetAngle },
+        { "GetName", &LuaWorldObject::GetName, METHOD_REG_ALL },
+        { "GetMap", &LuaWorldObject::GetMap, METHOD_REG_ALL },
+        { "GetPhaseMask", &LuaWorldObject::GetPhaseMask, METHOD_REG_ALL },
+        { "SetPhaseMask", &LuaWorldObject::SetPhaseMask, METHOD_REG_ALL },
+        { "GetInstanceId", &LuaWorldObject::GetInstanceId, METHOD_REG_ALL },
+        { "GetAreaId", &LuaWorldObject::GetAreaId, METHOD_REG_ALL },
+        { "GetZoneId", &LuaWorldObject::GetZoneId, METHOD_REG_ALL },
+        { "GetMapId", &LuaWorldObject::GetMapId, METHOD_REG_ALL },
+        { "GetX", &LuaWorldObject::GetX, METHOD_REG_ALL },
+        { "GetY", &LuaWorldObject::GetY, METHOD_REG_ALL },
+        { "GetZ", &LuaWorldObject::GetZ, METHOD_REG_ALL },
+        { "GetO", &LuaWorldObject::GetO, METHOD_REG_ALL },
+        { "GetLocation", &LuaWorldObject::GetLocation, METHOD_REG_ALL },
+        { "GetPlayersInRange", &LuaWorldObject::GetPlayersInRange, METHOD_REG_ALL },
+        { "GetCreaturesInRange", &LuaWorldObject::GetCreaturesInRange, METHOD_REG_ALL },
+        { "GetGameObjectsInRange", &LuaWorldObject::GetGameObjectsInRange, METHOD_REG_ALL },
+        { "GetNearestPlayer", &LuaWorldObject::GetNearestPlayer, METHOD_REG_ALL },
+        { "GetNearestGameObject", &LuaWorldObject::GetNearestGameObject, METHOD_REG_ALL },
+        { "GetNearestCreature", &LuaWorldObject::GetNearestCreature, METHOD_REG_ALL },
+        { "GetNearObject", &LuaWorldObject::GetNearObject, METHOD_REG_ALL },
+        { "GetNearObjects", &LuaWorldObject::GetNearObjects, METHOD_REG_ALL },
+        { "GetDistance", &LuaWorldObject::GetDistance, METHOD_REG_ALL },
+        { "GetExactDistance", &LuaWorldObject::GetExactDistance, METHOD_REG_ALL },
+        { "GetDistance2d", &LuaWorldObject::GetDistance2d, METHOD_REG_ALL },
+        { "GetExactDistance2d", &LuaWorldObject::GetExactDistance2d, METHOD_REG_ALL },
+        { "GetRelativePoint", &LuaWorldObject::GetRelativePoint, METHOD_REG_ALL },
+        { "GetAngle", &LuaWorldObject::GetAngle, METHOD_REG_ALL },
 
         // Boolean
-        { "IsWithinLoS", &LuaWorldObject::IsWithinLoS },
-        { "IsInMap", &LuaWorldObject::IsInMap },
-        { "IsWithinDist3d", &LuaWorldObject::IsWithinDist3d },
-        { "IsWithinDist2d", &LuaWorldObject::IsWithinDist2d },
-        { "IsWithinDist", &LuaWorldObject::IsWithinDist },
-        { "IsWithinDistInMap", &LuaWorldObject::IsWithinDistInMap },
-        { "IsInRange", &LuaWorldObject::IsInRange },
-        { "IsInRange2d", &LuaWorldObject::IsInRange2d },
-        { "IsInRange3d", &LuaWorldObject::IsInRange3d },
-        { "IsInFront", &LuaWorldObject::IsInFront },
-        { "IsInBack", &LuaWorldObject::IsInBack },
+        { "IsWithinLoS", &LuaWorldObject::IsWithinLoS, METHOD_REG_ALL },
+        { "IsInMap", &LuaWorldObject::IsInMap, METHOD_REG_ALL },
+        { "IsWithinDist3d", &LuaWorldObject::IsWithinDist3d, METHOD_REG_ALL },
+        { "IsWithinDist2d", &LuaWorldObject::IsWithinDist2d, METHOD_REG_ALL },
+        { "IsWithinDist", &LuaWorldObject::IsWithinDist, METHOD_REG_ALL },
+        { "IsWithinDistInMap", &LuaWorldObject::IsWithinDistInMap, METHOD_REG_ALL },
+        { "IsInRange", &LuaWorldObject::IsInRange, METHOD_REG_ALL },
+        { "IsInRange2d", &LuaWorldObject::IsInRange2d, METHOD_REG_ALL },
+        { "IsInRange3d", &LuaWorldObject::IsInRange3d, METHOD_REG_ALL },
+        { "IsInFront", &LuaWorldObject::IsInFront, METHOD_REG_ALL },
+        { "IsInBack", &LuaWorldObject::IsInBack, METHOD_REG_ALL },
 
         // Other
-        { "SummonGameObject", &LuaWorldObject::SummonGameObject },
-        { "SpawnCreature", &LuaWorldObject::SpawnCreature },
-        { "SendPacket", &LuaWorldObject::SendPacket },
-        { "RegisterEvent", &LuaWorldObject::RegisterEvent },
-        { "RemoveEventById", &LuaWorldObject::RemoveEventById },
-        { "RemoveEvents", &LuaWorldObject::RemoveEvents },
-        { "PlayMusic", &LuaWorldObject::PlayMusic },
-        { "PlayDirectSound", &LuaWorldObject::PlayDirectSound },
-        { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound },
-        { "Data", &LuaWorldObject::Data },
+        { "SummonGameObject", &LuaWorldObject::SummonGameObject, METHOD_REG_ALL },
+        { "SpawnCreature", &LuaWorldObject::SpawnCreature, METHOD_REG_ALL },
+        { "SendPacket", &LuaWorldObject::SendPacket, METHOD_REG_ALL },
+        { "RegisterEvent", &LuaWorldObject::RegisterEvent, METHOD_REG_MAP }, // Map state method only in multistate
+        { "RemoveEventById", &LuaWorldObject::RemoveEventById, METHOD_REG_MAP }, // Map state method only in multistate
+        { "RemoveEvents", &LuaWorldObject::RemoveEvents, METHOD_REG_MAP }, // Map state method only in multistate
+        { "PlayMusic", &LuaWorldObject::PlayMusic, METHOD_REG_ALL },
+        { "PlayDirectSound", &LuaWorldObject::PlayDirectSound, METHOD_REG_ALL },
+        { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound, METHOD_REG_ALL },
+        { "Data", &LuaWorldObject::Data, METHOD_REG_ALL },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif
