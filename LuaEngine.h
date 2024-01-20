@@ -184,6 +184,9 @@ private:
     // The map id that this Eluna object is tied to. -1 is reserved for objects without a bound map id.
     int32 boundMapId;
 
+    // The instance id that this Eluna object is tied to. -1 is reserved for objects without a bound map id.
+    uint32 boundInstanceId;
+
     // Whether or not Eluna is in compatibility mode. Used in some method wrappers.
     bool compatibilityMode;
 
@@ -360,9 +363,10 @@ public:
     void FreeInstanceId(uint32 instanceId);
 
     int32 GetBoundMapId() const { return boundMapId; }
+    uint32 GetBoundInstanceId() const { return boundInstanceId; }
     bool GetCompatibilityMode() const { return compatibilityMode; }
 
-    Eluna(int32 mapId, bool compatMode = false);
+    Eluna(int32 mapId, uint32 instanceId, bool compatMode = false);
     ~Eluna();
 
     // Prevent copy

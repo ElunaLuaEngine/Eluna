@@ -98,6 +98,17 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Returns the instance ID of the Lua state. Returns 0 for continent maps and the world state.
+     *
+     * @return uint32 instanceId
+     */
+    int GetStateInstanceId(Eluna* E)
+    {
+        E->Push(E->GetBoundInstanceId());
+        return 1;
+    }
+
+    /**
      * Returns [Quest] template
      *
      * @param uint32 questId : [Quest] entry ID
@@ -3096,6 +3107,7 @@ namespace LuaGlobalFunctions
         { "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion },
         { "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion },
         { "GetStateMapId", &LuaGlobalFunctions::GetStateMapId },
+        { "GetStateInstanceId", &LuaGlobalFunctions::GetStateInstanceId },
         { "GetQuest", &LuaGlobalFunctions::GetQuest },
         { "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName, METHOD_REG_WORLD }, // World state method only in multistate

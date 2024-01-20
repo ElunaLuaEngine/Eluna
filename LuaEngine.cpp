@@ -74,11 +74,12 @@ void Eluna::_ReloadEluna()
     reload = false;
 }
 
-Eluna::Eluna(int32 mapId, bool compatMode) :
+Eluna::Eluna(int32 mapId, uint32 instanceId, bool compatMode) :
 event_level(0),
 push_counter(0),
 enabled(false),
 boundMapId(mapId),
+boundInstanceId(instanceId),
 compatibilityMode(compatMode),
 
 L(NULL),
@@ -234,7 +235,7 @@ void Eluna::DestroyBindStores()
 
 void Eluna::RunScripts()
 {
-    ELUNA_LOG_DEBUG("[Eluna]: Running scripts for map: %i", boundMapId);
+    ELUNA_LOG_DEBUG("[Eluna]: Running scripts for state: %i, instance: %u", boundMapId, boundInstanceId);
 
     uint32 oldMSTime = ElunaUtil::GetCurrTime();
     uint32 count = 0;
@@ -309,7 +310,7 @@ void Eluna::RunScripts()
     }
     // Stack: package, modules
     lua_pop(L, 2);
-    ELUNA_LOG_INFO("[Eluna]: Executed %u Lua scripts in %u ms for map state %i", count, ElunaUtil::GetTimeDiff(oldMSTime), boundMapId);
+    ELUNA_LOG_INFO("[Eluna]: Executed %u Lua scripts in %u ms for map: %i, instance: %u", count, ElunaUtil::GetTimeDiff(oldMSTime), boundMapId, boundInstanceId);
 
     OnLuaStateOpen();
 }
