@@ -96,16 +96,16 @@ namespace LuaVehicle
     ElunaRegister<Vehicle> VehicleMethods[] =
     {
         // Getters
-        { "GetOwner", &LuaVehicle::GetOwner, METHOD_REG_ALL },
-        { "GetEntry", &LuaVehicle::GetEntry, METHOD_REG_ALL },
-        { "GetPassenger", &LuaVehicle::GetPassenger, METHOD_REG_ALL },
+        { "GetOwner", &LuaVehicle::GetOwner },
+        { "GetEntry", &LuaVehicle::GetEntry },
+        { "GetPassenger", &LuaVehicle::GetPassenger },
 
         // Boolean
-        { "IsOnBoard", &LuaVehicle::IsOnBoard, METHOD_REG_ALL },
+        { "IsOnBoard", &LuaVehicle::IsOnBoard },
 
         // Other
-        { "AddPassenger", &LuaVehicle::AddPassenger, METHOD_REG_ALL },
-        { "RemovePassenger", &LuaVehicle::RemovePassenger, METHOD_REG_ALL },
+        { "AddPassenger", &LuaVehicle::AddPassenger },
+        { "RemovePassenger", &LuaVehicle::RemovePassenger },
 
         { NULL, NULL, METHOD_REG_NONE }
     };

@@ -315,31 +315,31 @@ namespace LuaGameObject
     ElunaRegister<GameObject> GameObjectMethods[] =
     {
         // Getters
-        { "GetDisplayId", &LuaGameObject::GetDisplayId, METHOD_REG_ALL },
-        { "GetGoState", &LuaGameObject::GetGoState, METHOD_REG_ALL },
-        { "GetLootState", &LuaGameObject::GetLootState, METHOD_REG_ALL },
-        { "GetLootRecipient", &LuaGameObject::GetLootRecipient, METHOD_REG_ALL },
-        { "GetLootRecipientGroup", &LuaGameObject::GetLootRecipientGroup, METHOD_REG_ALL },
-        { "GetDBTableGUIDLow", &LuaGameObject::GetDBTableGUIDLow, METHOD_REG_ALL },
+        { "GetDisplayId", &LuaGameObject::GetDisplayId },
+        { "GetGoState", &LuaGameObject::GetGoState },
+        { "GetLootState", &LuaGameObject::GetLootState },
+        { "GetLootRecipient", &LuaGameObject::GetLootRecipient },
+        { "GetLootRecipientGroup", &LuaGameObject::GetLootRecipientGroup },
+        { "GetDBTableGUIDLow", &LuaGameObject::GetDBTableGUIDLow },
 
         // Setters
-        { "SetGoState", &LuaGameObject::SetGoState, METHOD_REG_ALL },
-        { "SetLootState", &LuaGameObject::SetLootState, METHOD_REG_ALL },
-        { "SetRespawnTime", &LuaGameObject::SetRespawnTime, METHOD_REG_ALL },
+        { "SetGoState", &LuaGameObject::SetGoState },
+        { "SetLootState", &LuaGameObject::SetLootState },
+        { "SetRespawnTime", &LuaGameObject::SetRespawnTime },
 
         // Boolean
-        { "IsTransport", &LuaGameObject::IsTransport, METHOD_REG_ALL },
-        { "IsDestructible", &LuaGameObject::IsDestructible, METHOD_REG_ALL },
-        { "IsActive", &LuaGameObject::IsActive, METHOD_REG_ALL },
-        { "HasQuest", &LuaGameObject::HasQuest, METHOD_REG_ALL },
-        { "IsSpawned", &LuaGameObject::IsSpawned, METHOD_REG_ALL },
+        { "IsTransport", &LuaGameObject::IsTransport },
+        { "IsDestructible", &LuaGameObject::IsDestructible },
+        { "IsActive", &LuaGameObject::IsActive },
+        { "HasQuest", &LuaGameObject::HasQuest },
+        { "IsSpawned", &LuaGameObject::IsSpawned },
 
         // Other
-        { "RemoveFromWorld", &LuaGameObject::RemoveFromWorld, METHOD_REG_ALL },
-        { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton, METHOD_REG_ALL },
-        { "Despawn", &LuaGameObject::Despawn, METHOD_REG_ALL },
-        { "Respawn", &LuaGameObject::Respawn, METHOD_REG_ALL },
-        { "SaveToDB", &LuaGameObject::SaveToDB, METHOD_REG_ALL },
+        { "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },
+        { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },
+        { "Despawn", &LuaGameObject::Despawn },
+        { "Respawn", &LuaGameObject::Respawn },
+        { "SaveToDB", &LuaGameObject::SaveToDB },
 
         { NULL, NULL, METHOD_REG_NONE }
     };

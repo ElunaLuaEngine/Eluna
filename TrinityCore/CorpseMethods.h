@@ -77,13 +77,13 @@ namespace LuaCorpse
     ElunaRegister<Corpse> CorpseMethods[] =
     {
         // Getters
-        { "GetOwnerGUID", &LuaCorpse::GetOwnerGUID, METHOD_REG_ALL },
-        { "GetGhostTime", &LuaCorpse::GetGhostTime, METHOD_REG_ALL },
-        { "GetType", &LuaCorpse::GetType, METHOD_REG_ALL },
+        { "GetOwnerGUID", &LuaCorpse::GetOwnerGUID },
+        { "GetGhostTime", &LuaCorpse::GetGhostTime },
+        { "GetType", &LuaCorpse::GetType },
 
         // Other
-        { "ResetGhostTime", &LuaCorpse::ResetGhostTime, METHOD_REG_ALL },
-        { "SaveToDB", &LuaCorpse::SaveToDB, METHOD_REG_ALL },
+        { "ResetGhostTime", &LuaCorpse::ResetGhostTime },
+        { "SaveToDB", &LuaCorpse::SaveToDB },
 
         { NULL, NULL, METHOD_REG_NONE }
     };

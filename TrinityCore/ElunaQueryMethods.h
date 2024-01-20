@@ -314,25 +314,25 @@ namespace LuaQuery
     ElunaRegister<ElunaQuery> QueryMethods[] =
     {
         // Getters
-        { "GetColumnCount", &LuaQuery::GetColumnCount, METHOD_REG_ALL },
-        { "GetRowCount", &LuaQuery::GetRowCount, METHOD_REG_ALL },
-        { "GetRow", &LuaQuery::GetRow, METHOD_REG_ALL },
-        { "GetBool", &LuaQuery::GetBool, METHOD_REG_ALL },
-        { "GetUInt8", &LuaQuery::GetUInt8, METHOD_REG_ALL },
-        { "GetUInt16", &LuaQuery::GetUInt16, METHOD_REG_ALL },
-        { "GetUInt32", &LuaQuery::GetUInt32, METHOD_REG_ALL },
-        { "GetUInt64", &LuaQuery::GetUInt64, METHOD_REG_ALL },
-        { "GetInt8", &LuaQuery::GetInt8, METHOD_REG_ALL },
-        { "GetInt16", &LuaQuery::GetInt16, METHOD_REG_ALL },
-        { "GetInt32", &LuaQuery::GetInt32, METHOD_REG_ALL },
-        { "GetInt64", &LuaQuery::GetInt64, METHOD_REG_ALL },
-        { "GetFloat", &LuaQuery::GetFloat, METHOD_REG_ALL },
-        { "GetDouble", &LuaQuery::GetDouble, METHOD_REG_ALL },
-        { "GetString", &LuaQuery::GetString, METHOD_REG_ALL },
+        { "GetColumnCount", &LuaQuery::GetColumnCount },
+        { "GetRowCount", &LuaQuery::GetRowCount },
+        { "GetRow", &LuaQuery::GetRow },
+        { "GetBool", &LuaQuery::GetBool },
+        { "GetUInt8", &LuaQuery::GetUInt8 },
+        { "GetUInt16", &LuaQuery::GetUInt16 },
+        { "GetUInt32", &LuaQuery::GetUInt32 },
+        { "GetUInt64", &LuaQuery::GetUInt64 },
+        { "GetInt8", &LuaQuery::GetInt8 },
+        { "GetInt16", &LuaQuery::GetInt16 },
+        { "GetInt32", &LuaQuery::GetInt32 },
+        { "GetInt64", &LuaQuery::GetInt64 },
+        { "GetFloat", &LuaQuery::GetFloat },
+        { "GetDouble", &LuaQuery::GetDouble },
+        { "GetString", &LuaQuery::GetString },
 
         // Boolean
-        { "NextRow", &LuaQuery::NextRow, METHOD_REG_ALL },
-        { "IsNull", &LuaQuery::IsNull, METHOD_REG_ALL },
+        { "NextRow", &LuaQuery::NextRow },
+        { "IsNull", &LuaQuery::IsNull },
 
         { NULL, NULL, METHOD_REG_NONE }
     };

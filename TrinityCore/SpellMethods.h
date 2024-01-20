@@ -173,24 +173,24 @@ namespace LuaSpell
     ElunaRegister<Spell> SpellMethods[] =
     {
         // Getters
-        { "GetCaster", &LuaSpell::GetCaster, METHOD_REG_ALL },
-        { "GetCastTime", &LuaSpell::GetCastTime, METHOD_REG_ALL },
-        { "GetEntry", &LuaSpell::GetEntry, METHOD_REG_ALL },
-        { "GetDuration", &LuaSpell::GetDuration, METHOD_REG_ALL },
-        { "GetPowerCost", &LuaSpell::GetPowerCost, METHOD_REG_ALL },
-        { "GetTargetDest", &LuaSpell::GetTargetDest, METHOD_REG_ALL },
-        { "GetTarget", &LuaSpell::GetTarget, METHOD_REG_ALL },
+        { "GetCaster", &LuaSpell::GetCaster },
+        { "GetCastTime", &LuaSpell::GetCastTime },
+        { "GetEntry", &LuaSpell::GetEntry },
+        { "GetDuration", &LuaSpell::GetDuration },
+        { "GetPowerCost", &LuaSpell::GetPowerCost },
+        { "GetTargetDest", &LuaSpell::GetTargetDest },
+        { "GetTarget", &LuaSpell::GetTarget },
 
         // Setters
-        { "SetAutoRepeat", &LuaSpell::SetAutoRepeat, METHOD_REG_ALL },
+        { "SetAutoRepeat", &LuaSpell::SetAutoRepeat },
 
         // Boolean
-        { "IsAutoRepeat", &LuaSpell::IsAutoRepeat, METHOD_REG_ALL },
+        { "IsAutoRepeat", &LuaSpell::IsAutoRepeat },
 
         // Other
-        { "Cancel", &LuaSpell::Cancel, METHOD_REG_ALL },
-        { "Cast", &LuaSpell::Cast, METHOD_REG_ALL },
-        { "Finish", &LuaSpell::Finish, METHOD_REG_ALL },
+        { "Cancel", &LuaSpell::Cancel },
+        { "Cast", &LuaSpell::Cast },
+        { "Finish", &LuaSpell::Finish },
 
         { NULL, NULL, METHOD_REG_NONE }
     };

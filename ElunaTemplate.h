@@ -29,7 +29,7 @@ public:
     {
         const char* name;
         int(*func)(Eluna*);
-        MethodRegisterState regState;
+        MethodRegisterState regState = METHOD_REG_ALL;
     };
 
     static int thunk(lua_State* L)
@@ -55,17 +55,45 @@ public:
 
         lua_pushglobaltable(E->L);
 
-        for (; methodTable && methodTable->name && methodTable->func; ++methodTable)
+        for (; methodTable && methodTable->name; ++methodTable)
         {
             lua_pushstring(E->L, methodTable->name);
+
+            // if the method should not be registered, push a closure to error output function
+            if (methodTable->regState == METHOD_REG_NONE)
+            {
+                lua_pushcclosure(E->L, MethodUnimpl, 0);
+                lua_rawset(E->L, -3);
+                continue;
+            }
+
+            // if we're in multistate mode, we need to check whether a method is flagged as a world or a map specific method
+            if (!E->GetCompatibilityMode() && methodTable->regState != METHOD_REG_ALL)
+            {
+                // if the method should not be registered, push a closure to error output function
+                if ((E->GetBoundMapId() == -1 && methodTable->regState == METHOD_REG_MAP) ||
+                    (E->GetBoundMapId() != -1 && methodTable->regState == METHOD_REG_WORLD))
+                {
+                    lua_pushcclosure(E->L, MethodWrongState, 0);
+                    lua_rawset(E->L, -3);
+                    continue;
+                }
+            }
+
+            // push method table and Eluna object pointers as light user data
             lua_pushlightuserdata(E->L, (void*)methodTable);
             lua_pushlightuserdata(E->L, (void*)E);
+
+            // push a closure to the thunk function with 2 upvalues (method table and Eluna object)
             lua_pushcclosure(E->L, thunk, 2);
             lua_rawset(E->L, -3);
         }
 
         lua_remove(E->L, -1);
     }
+
+    static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call a method that does not exist for state: %i", Eluna::GetEluna(L)->GetBoundMapId()); return 0; }
+    static int MethodUnimpl(lua_State* L) { luaL_error(L, "attempt to call a method that is not implemented for this emulator"); return 0; }
 };
 
 class ElunaObject
@@ -131,7 +159,7 @@ struct ElunaRegister
 {
     const char* name;
     int(*mfunc)(Eluna*, T*);
-    MethodRegisterState regState;
+    MethodRegisterState regState = METHOD_REG_ALL;
 };
 
 template<typename T>
@@ -258,27 +286,37 @@ public:
         ASSERT(lua_istable(E->L, -1));
 
         // load all core-specific methods
-        for (; methodTable && methodTable->name && methodTable->mfunc && methodTable->regState; ++methodTable)
+        for (; methodTable && methodTable->name; ++methodTable)
         {
-            // todo: methods we decide not to register should have a "default" output method
-            // (not supported or something) instead of not registering them at all
+            // push the method name to the Lua stack
+            lua_pushstring(E->L, methodTable->name);
 
-            // if method is flagged as shouldn't be registered (unimplemented) then continue
+            // if the method should not be registered, push a closure to error output function
             if (methodTable->regState == METHOD_REG_NONE)
-                continue;
-
-            // if we're in multistate and a method is not flagged as all, then check whether method should be set for this state
-            if (!E->GetCompatibilityMode() && methodTable->regState != METHOD_REG_ALL)
             {
-                if (methodTable->regState == METHOD_REG_MAP && E->GetBoundMapId() == -1)
-                    continue;
-                if (methodTable->regState == METHOD_REG_WORLD && E->GetBoundMapId() != -1)
-                    continue;
+                lua_pushcclosure(E->L, MethodUnimpl, 0);
+                lua_rawset(E->L, -3);
+                continue;
             }
 
-            lua_pushstring(E->L, methodTable->name);
+            // if we're in multistate mode, we need to check whether a method is flagged as a world or a map specific method
+            if (!E->GetCompatibilityMode() && methodTable->regState != METHOD_REG_ALL)
+            {
+                // if the method should not be registered, push a closure to error output function
+                if ((E->GetBoundMapId() == -1 && methodTable->regState == METHOD_REG_MAP) ||
+                    (E->GetBoundMapId() != -1 && methodTable->regState == METHOD_REG_WORLD))
+                {
+                    lua_pushcclosure(E->L, MethodWrongState, 0);
+                    lua_rawset(E->L, -3);
+                    continue;
+                }
+            }
+
+            // push method table and Eluna object pointers as light user data
             lua_pushlightuserdata(E->L, (void*)methodTable);
             lua_pushlightuserdata(E->L, (void*)E);
+
+            // push a closure to the thunk function with 2 upvalues (method table and Eluna object)
             lua_pushcclosure(E->L, thunk, 2);
             lua_rawset(E->L, -3);
         }
@@ -411,6 +449,9 @@ public:
     static int Less(lua_State* L) { return CompareError(L); }
     static int LessOrEqual(lua_State* L) { return CompareError(L); }
     static int Call(lua_State* L) { return luaL_error(L, "attempt to call a %s value", tname); }
+
+    static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call a method that does not exist for state: %i", Eluna::GetEluna(L)->GetBoundMapId()); return 0; }
+    static int MethodUnimpl(lua_State* L) { luaL_error(L, "attempt to call a method that is not implemented for this emulator"); return 0; }
 };
 
 template<typename T>

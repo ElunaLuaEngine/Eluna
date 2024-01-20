@@ -182,20 +182,20 @@ namespace LuaQuest
     ElunaRegister<Quest> QuestMethods[] =
     {
         // Getters
-        { "GetId", &LuaQuest::GetId, METHOD_REG_ALL },
-        { "GetLevel", &LuaQuest::GetLevel, METHOD_REG_ALL },
-        { "GetMaxLevel", &LuaQuest::GetMaxLevel, METHOD_REG_ALL },
-        { "GetMinLevel", &LuaQuest::GetMinLevel, METHOD_REG_ALL },
-        { "GetNextQuestId", &LuaQuest::GetNextQuestId, METHOD_REG_ALL },
-        { "GetPrevQuestId", &LuaQuest::GetPrevQuestId, METHOD_REG_ALL },
-        { "GetNextQuestInChain", &LuaQuest::GetNextQuestInChain, METHOD_REG_ALL },
-        { "GetFlags", &LuaQuest::GetFlags, METHOD_REG_ALL },
-        { "GetType", &LuaQuest::GetType, METHOD_REG_ALL },
+        { "GetId", &LuaQuest::GetId },
+        { "GetLevel", &LuaQuest::GetLevel },
+        { "GetMaxLevel", &LuaQuest::GetMaxLevel },
+        { "GetMinLevel", &LuaQuest::GetMinLevel },
+        { "GetNextQuestId", &LuaQuest::GetNextQuestId },
+        { "GetPrevQuestId", &LuaQuest::GetPrevQuestId },
+        { "GetNextQuestInChain", &LuaQuest::GetNextQuestInChain },
+        { "GetFlags", &LuaQuest::GetFlags },
+        { "GetType", &LuaQuest::GetType },
 
         // Boolean
-        { "HasFlag", &LuaQuest::HasFlag, METHOD_REG_ALL },
-        { "IsDaily", &LuaQuest::IsDaily, METHOD_REG_ALL },
-        { "IsRepeatable", &LuaQuest::IsRepeatable, METHOD_REG_ALL },
+        { "HasFlag", &LuaQuest::HasFlag },
+        { "IsDaily", &LuaQuest::IsDaily },
+        { "IsRepeatable", &LuaQuest::IsRepeatable },
 
         { NULL, NULL, METHOD_REG_NONE }
     };

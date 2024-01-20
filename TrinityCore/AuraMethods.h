@@ -172,22 +172,22 @@ namespace LuaAura
     ElunaRegister<Aura> AuraMethods[] =
     {
         // Getters
-        { "GetCaster", &LuaAura::GetCaster, METHOD_REG_ALL },
-        { "GetCasterGUID", &LuaAura::GetCasterGUID, METHOD_REG_ALL },
-        { "GetCasterLevel", &LuaAura::GetCasterLevel, METHOD_REG_ALL },
-        { "GetDuration", &LuaAura::GetDuration, METHOD_REG_ALL },
-        { "GetMaxDuration", &LuaAura::GetMaxDuration, METHOD_REG_ALL },
-        { "GetAuraId", &LuaAura::GetAuraId, METHOD_REG_ALL },
-        { "GetStackAmount", &LuaAura::GetStackAmount, METHOD_REG_ALL },
-        { "GetOwner", &LuaAura::GetOwner, METHOD_REG_ALL },
+        { "GetCaster", &LuaAura::GetCaster },
+        { "GetCasterGUID", &LuaAura::GetCasterGUID },
+        { "GetCasterLevel", &LuaAura::GetCasterLevel },
+        { "GetDuration", &LuaAura::GetDuration },
+        { "GetMaxDuration", &LuaAura::GetMaxDuration },
+        { "GetAuraId", &LuaAura::GetAuraId },
+        { "GetStackAmount", &LuaAura::GetStackAmount },
+        { "GetOwner", &LuaAura::GetOwner },
 
         // Setters
-        { "SetDuration", &LuaAura::SetDuration, METHOD_REG_ALL },
-        { "SetMaxDuration", &LuaAura::SetMaxDuration, METHOD_REG_ALL },
-        { "SetStackAmount", &LuaAura::SetStackAmount, METHOD_REG_ALL },
+        { "SetDuration", &LuaAura::SetDuration },
+        { "SetMaxDuration", &LuaAura::SetMaxDuration },
+        { "SetStackAmount", &LuaAura::SetStackAmount },
 
         // Other
-        { "Remove", &LuaAura::Remove, METHOD_REG_ALL },
+        { "Remove", &LuaAura::Remove },
 
         { NULL, NULL, METHOD_REG_NONE }
     };

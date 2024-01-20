@@ -310,35 +310,35 @@ namespace LuaPacket
     ElunaRegister<WorldPacket> PacketMethods[] =
     {
         // Getters
-        { "GetOpcode", &LuaPacket::GetOpcode, METHOD_REG_ALL },
-        { "GetSize", &LuaPacket::GetSize, METHOD_REG_ALL },
+        { "GetOpcode", &LuaPacket::GetOpcode },
+        { "GetSize", &LuaPacket::GetSize },
 
         // Setters
-        { "SetOpcode", &LuaPacket::SetOpcode, METHOD_REG_ALL },
+        { "SetOpcode", &LuaPacket::SetOpcode },
 
         // Readers
-        { "ReadByte", &LuaPacket::ReadByte, METHOD_REG_ALL },
-        { "ReadUByte", &LuaPacket::ReadUByte, METHOD_REG_ALL },
-        { "ReadShort", &LuaPacket::ReadShort, METHOD_REG_ALL },
-        { "ReadUShort", &LuaPacket::ReadUShort, METHOD_REG_ALL },
-        { "ReadLong", &LuaPacket::ReadLong, METHOD_REG_ALL },
-        { "ReadULong", &LuaPacket::ReadULong, METHOD_REG_ALL },
-        { "ReadGUID", &LuaPacket::ReadGUID, METHOD_REG_ALL },
-        { "ReadString", &LuaPacket::ReadString, METHOD_REG_ALL },
-        { "ReadFloat", &LuaPacket::ReadFloat, METHOD_REG_ALL },
-        { "ReadDouble", &LuaPacket::ReadDouble, METHOD_REG_ALL },
+        { "ReadByte", &LuaPacket::ReadByte },
+        { "ReadUByte", &LuaPacket::ReadUByte },
+        { "ReadShort", &LuaPacket::ReadShort },
+        { "ReadUShort", &LuaPacket::ReadUShort },
+        { "ReadLong", &LuaPacket::ReadLong },
+        { "ReadULong", &LuaPacket::ReadULong },
+        { "ReadGUID", &LuaPacket::ReadGUID },
+        { "ReadString", &LuaPacket::ReadString },
+        { "ReadFloat", &LuaPacket::ReadFloat },
+        { "ReadDouble", &LuaPacket::ReadDouble },
 
         // Writers
-        { "WriteByte", &LuaPacket::WriteByte, METHOD_REG_ALL },
-        { "WriteUByte", &LuaPacket::WriteUByte, METHOD_REG_ALL },
-        { "WriteShort", &LuaPacket::WriteShort, METHOD_REG_ALL },
-        { "WriteUShort", &LuaPacket::WriteUShort, METHOD_REG_ALL },
-        { "WriteLong", &LuaPacket::WriteLong, METHOD_REG_ALL },
-        { "WriteULong", &LuaPacket::WriteULong, METHOD_REG_ALL },
-        { "WriteGUID", &LuaPacket::WriteGUID, METHOD_REG_ALL },
-        { "WriteString", &LuaPacket::WriteString, METHOD_REG_ALL },
-        { "WriteFloat", &LuaPacket::WriteFloat, METHOD_REG_ALL },
-        { "WriteDouble", &LuaPacket::WriteDouble, METHOD_REG_ALL },
+        { "WriteByte", &LuaPacket::WriteByte },
+        { "WriteUByte", &LuaPacket::WriteUByte },
+        { "WriteShort", &LuaPacket::WriteShort },
+        { "WriteUShort", &LuaPacket::WriteUShort },
+        { "WriteLong", &LuaPacket::WriteLong },
+        { "WriteULong", &LuaPacket::WriteULong },
+        { "WriteGUID", &LuaPacket::WriteGUID },
+        { "WriteString", &LuaPacket::WriteString },
+        { "WriteFloat", &LuaPacket::WriteFloat },
+        { "WriteDouble", &LuaPacket::WriteDouble },
 
         { NULL, NULL, METHOD_REG_NONE }
     };
