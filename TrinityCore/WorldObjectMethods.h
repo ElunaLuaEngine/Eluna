@@ -816,7 +816,7 @@ namespace LuaWorldObject
      * Removes all timed events from a [WorldObject]
      *
      */
-    int RemoveEvents(Eluna* E, WorldObject* obj)
+    int RemoveEvents(Eluna* /*E*/, WorldObject* obj)
     {
         obj->elunaEvents->SetStates(LUAEVENT_STATE_ABORT);
         return 0;
