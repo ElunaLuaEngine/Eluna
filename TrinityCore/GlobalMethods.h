@@ -2288,6 +2288,16 @@ namespace LuaGlobalFunctions
         E->Push(pathId);
         return 1;
     }
+    /**
+     * Returns `true` if Eluna is in compatibility mode, `false` if in multistate.
+     *
+     * @return bool isCompatibilityMode
+     */
+    int IsCompatibilityMode(Eluna* E)
+    {
+        E->Push(E->GetCompatibilityMode());
+        return 1;
+    }
 
     /**
      * Returns `true` if the bag and slot is a valid inventory position, otherwise `false`.
@@ -3146,6 +3156,7 @@ namespace LuaGlobalFunctions
         { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
 
         // Boolean
+        { "IsCompatibilityMode", &LuaGlobalFunctions::IsCompatibilityMode },
         { "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },
         { "IsEquipmentPos", &LuaGlobalFunctions::IsEquipmentPos },
         { "IsBankPos", &LuaGlobalFunctions::IsBankPos },
