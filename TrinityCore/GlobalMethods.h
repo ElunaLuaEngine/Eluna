@@ -3097,10 +3097,10 @@ namespace LuaGlobalFunctions
         { "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion },
         { "GetStateMapId", &LuaGlobalFunctions::GetStateMapId },
         { "GetQuest", &LuaGlobalFunctions::GetQuest },
-        { "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID },
-        { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName },
+        { "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID, METHOD_REG_WORLD }, // World state method only in multistate
+        { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetGameTime", &LuaGlobalFunctions::GetGameTime },
-        { "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld },
+        { "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetGuildByName", &LuaGlobalFunctions::GetGuildByName },
         { "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID },
         { "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },

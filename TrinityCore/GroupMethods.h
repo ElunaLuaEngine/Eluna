@@ -428,7 +428,7 @@ namespace LuaGroup
     ElunaRegister<Group> GroupMethods[] =
     {
         // Getters
-        { "GetMembers", &LuaGroup::GetMembers },
+        { "GetMembers", &LuaGroup::GetMembers, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetLeaderGUID", &LuaGroup::GetLeaderGUID },
         { "GetGUID", &LuaGroup::GetGUID },
         { "GetMemberGroup", &LuaGroup::GetMemberGroup },

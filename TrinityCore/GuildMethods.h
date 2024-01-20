@@ -245,8 +245,8 @@ namespace LuaGuild
     ElunaRegister<Guild> GuildMethods[] =
     {
         // Getters
-        { "GetMembers", &LuaGuild::GetMembers },
-        { "GetLeader", &LuaGuild::GetLeader },
+        { "GetMembers", &LuaGuild::GetMembers, METHOD_REG_WORLD }, // World state method only in multistate
+        { "GetLeader", &LuaGuild::GetLeader, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetLeaderGUID", &LuaGuild::GetLeaderGUID },
         { "GetId", &LuaGuild::GetId },
         { "GetName", &LuaGuild::GetName },
