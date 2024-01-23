@@ -36,6 +36,7 @@
 #endif
 #include "Hooks.h"
 #include "ElunaUtility.h"
+#include "Map.h"
 #include <mutex>
 #include <memory>
 
@@ -181,11 +182,7 @@ private:
     uint8 push_counter;
     bool enabled;
 
-    // The map id that this Eluna object is tied to. -1 is reserved for objects without a bound map id.
-    int32 boundMapId;
-
-    // The instance id that this Eluna object is tied to. -1 is reserved for objects without a bound map id.
-    uint32 boundInstanceId;
+    Map* const boundMap;
 
     // Whether or not Eluna is in compatibility mode. Used in some method wrappers.
     bool compatibilityMode;
@@ -362,11 +359,27 @@ public:
     InstanceData* GetInstanceData(Map* map);
     void FreeInstanceId(uint32 instanceId);
 
-    int32 GetBoundMapId() const { return boundMapId; }
-    uint32 GetBoundInstanceId() const { return boundInstanceId; }
+    Map* GetBoundMap() const { return boundMap; }
+
+    int32 GetBoundMapId() const
+    {
+        if(const Map * map = GetBoundMap())
+            return map->GetId();
+
+        return -1;
+    }
+
+    uint32 GetBoundInstanceId() const
+    {
+        if(const Map * map = GetBoundMap())
+            return map->GetInstanceId();
+
+        return 0;
+    }
+
     bool GetCompatibilityMode() const { return compatibilityMode; }
 
-    Eluna(int32 mapId, uint32 instanceId, bool compatMode = false);
+    Eluna(Map * map, bool compatMode = false);
     ~Eluna();
 
     // Prevent copy

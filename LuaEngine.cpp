@@ -74,12 +74,11 @@ void Eluna::_ReloadEluna()
     reload = false;
 }
 
-Eluna::Eluna(int32 mapId, uint32 instanceId, bool compatMode) :
+Eluna::Eluna(Map* map, bool compatMode) :
 event_level(0),
 push_counter(0),
 enabled(false),
-boundMapId(mapId),
-boundInstanceId(instanceId),
+boundMap(map),
 compatibilityMode(compatMode),
 
 L(NULL),
@@ -235,6 +234,8 @@ void Eluna::DestroyBindStores()
 
 void Eluna::RunScripts()
 {
+    int32 const boundMapId = GetBoundMapId();
+    uint32 const boundInstanceId = GetBoundInstanceId();
     ELUNA_LOG_DEBUG("[Eluna]: Running scripts for state: %i, instance: %u", boundMapId, boundInstanceId);
 
     uint32 oldMSTime = ElunaUtil::GetCurrTime();
