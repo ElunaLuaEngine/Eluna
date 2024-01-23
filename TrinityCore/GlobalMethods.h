@@ -87,9 +87,9 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the map pointer of the Lua state. Returns null for the "World" state.
+     * Returns the [Map] pointer of the Lua state. Returns null for the "World" state.
      *
-     * @return int32 mapId
+     * @return [Map] map
      */
     int GetStateMap(Eluna* E)
     {
