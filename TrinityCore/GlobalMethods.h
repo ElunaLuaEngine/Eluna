@@ -223,6 +223,56 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Returns a table with all the current [Player]s on the states map.
+     *
+     * Does not return players that may be teleporting or otherwise not on the map.
+     *
+     *     enum TeamId
+     *     {
+     *         TEAM_ALLIANCE = 0,
+     *         TEAM_HORDE = 1,
+     *         TEAM_NEUTRAL = 2
+     *     };
+     *
+     * In multistate, this method is only available in the MAP state
+     *
+     * @param [TeamId] team = TEAM_NEUTRAL : optional check team of the [Player], Alliance, Horde or Neutral (All)
+     * @param bool onlyGM = false : optional check if GM only
+     * @return table mapPlayers
+     */
+    int GetPlayersOnMap(Eluna* E)
+    {
+        uint32 team = Eluna::CHECKVAL<uint32>(E->L, 1, TEAM_NEUTRAL);
+        bool onlyGM = Eluna::CHECKVAL<bool>(E->L, 2, false);
+
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
+        uint32 i = 0;
+
+        Map::PlayerList const& players = E->GetBoundMap()->GetPlayers();
+        if (!players.isEmpty())
+        {
+            for (Map::PlayerList::const_iterator it = players.begin(); it != players.end(); ++it)
+            {
+                if (Player* player = it->GetSource())
+                {
+                    if (!player->IsInWorld())
+                        continue;
+
+                    if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
+                    {
+                        E->Push(player);
+                        lua_rawseti(E->L, tbl, ++i);
+                    }
+                }
+            }
+        }
+
+        lua_settop(E->L, tbl); // push table to top of stack
+        return 1;
+    }
+
+    /**
      * Returns a [Guild] by name.
      *
      * @param string name
@@ -238,6 +288,8 @@ namespace LuaGlobalFunctions
     /**
      * Returns a [Map] by ID.
      *
+     * In multistate, this method is only available in the MAP state
+     * 
      * @param uint32 mapId : see [Map.dbc](https://github.com/cmangos/issues/wiki/Map.dbc)
      * @param uint32 instanceId = 0 : required if the map is an instance, otherwise don't pass anything
      * @return [Map] map : the Map, or `nil` if it doesn't exist
@@ -3133,7 +3185,7 @@ namespace LuaGlobalFunctions
         { "GetRealmID", &LuaGlobalFunctions::GetRealmID },
         { "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion },
         { "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion },
-        { "GetStateMap", &LuaGlobalFunctions::GetStateMap, METHOD_REG_MAP },
+        { "GetStateMap", &LuaGlobalFunctions::GetStateMap, METHOD_REG_MAP }, // Map state method only in multistate
         { "GetStateMapId", &LuaGlobalFunctions::GetStateMapId },
         { "GetStateInstanceId", &LuaGlobalFunctions::GetStateInstanceId },
         { "GetQuest", &LuaGlobalFunctions::GetQuest },
@@ -3141,6 +3193,7 @@ namespace LuaGlobalFunctions
         { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetGameTime", &LuaGlobalFunctions::GetGameTime },
         { "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld, METHOD_REG_WORLD }, // World state method only in multistate
+        { "GetPlayersOnMap", &LuaGlobalFunctions::GetPlayersOnMap, METHOD_REG_MAP }, // Map state method only in multistate
         { "GetGuildByName", &LuaGlobalFunctions::GetGuildByName },
         { "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID },
         { "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
@@ -3159,7 +3212,7 @@ namespace LuaGlobalFunctions
         { "bit_or", &LuaGlobalFunctions::bit_or },
         { "bit_and", &LuaGlobalFunctions::bit_and },
         { "GetItemLink", &LuaGlobalFunctions::GetItemLink },
-        { "GetMapById", &LuaGlobalFunctions::GetMapById },
+        { "GetMapById", &LuaGlobalFunctions::GetMapById, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetCurrTime", &LuaGlobalFunctions::GetCurrTime },
         { "GetTimeDiff", &LuaGlobalFunctions::GetTimeDiff },
         { "PrintInfo", &LuaGlobalFunctions::PrintInfo },
