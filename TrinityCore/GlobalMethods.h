@@ -288,7 +288,7 @@ namespace LuaGlobalFunctions
     /**
      * Returns a [Map] by ID.
      *
-     * In multistate, this method is only available in the MAP state
+     * In multistate, this method is only available in the WORLD state
      * 
      * @param uint32 mapId : see [Map.dbc](https://github.com/cmangos/issues/wiki/Map.dbc)
      * @param uint32 instanceId = 0 : required if the map is an instance, otherwise don't pass anything
