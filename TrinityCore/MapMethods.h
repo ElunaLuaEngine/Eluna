@@ -337,6 +337,27 @@ namespace LuaMap
         return 1;
     }
 
+    /**
+     * Returns a runtime-persistent cache tied to the [Map].
+     * This data will remain for as long as the [Map] exists, or until a server restart.
+     *
+     * A reload of the Lua state will NOT clear this cache.
+     *
+     * This cache can be added to and read from with the following sub-methods.
+     * <pre>
+     * -- Sets the key-value pair in the cache
+     * Map:Data():Set("key", val)
+     *
+     * -- Returns the value from the cache using the key
+     * local val = Map:Data():Get("key")
+     *
+     * -- Removes the key-value pair from the cache
+     * Map:Data():Set("key", nil)
+     *
+     * -- Returns all the key-value pairs as a Lua table indexed by the keys
+     * local table = Map:Data():AsTable()
+     * </pre>
+     */
     int Data(Eluna* E, Map* map)
     {
         return LuaVal::PushLuaVal(E->L, map->lua_data);

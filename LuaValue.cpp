@@ -73,7 +73,7 @@ void LuaVal::Register(lua_State* L) {
     lua_pushcfunction(L, &LuaVal::lua_AsLuaVal);
     lua_setfield(L, -2, "New");
     lua_pushcfunction(L, &LuaVal::lua_asLua);
-    lua_setfield(L, -2, "AsLua");
+    lua_setfield(L, -2, "AsTable");
 
     lua_setglobal(L, "LuaVal");
 }
