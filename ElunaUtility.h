@@ -107,6 +107,8 @@ typedef QueryNamedResult ElunaQuery;
 #endif
 #endif
 
+typedef std::vector<uint8> BytecodeBuffer;
+
 class Unit;
 class WorldObject;
 struct FactionTemplateEntry;
@@ -155,25 +157,6 @@ namespace ElunaUtil
         uint16 const i_typeMask;
         uint32 const i_dead; // 0 both, 1 alive, 2 dead
         bool const i_nearest;
-    };
-
-    /*
-     * Usage:
-     * Inherit this class, then when needing lock, use
-     * Guard guard(GetLock());
-     *
-     * The lock is automatically released at end of scope
-     */
-    class Lockable
-    {
-    public:
-        typedef std::mutex LockType;
-        typedef std::lock_guard<LockType> Guard;
-
-        LockType& GetLock() { return _lock; }
-
-    private:
-        LockType _lock;
     };
 
     /*

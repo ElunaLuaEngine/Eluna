@@ -49,11 +49,11 @@ namespace LuaQuest
      * @param [QuestFlags] flag : all available flags can be seen above
      * @return bool hasFlag
      */
-    int HasFlag(lua_State* L, Quest* quest)
+    int HasFlag(Eluna* E, Quest* quest)
     {
-        uint32 flag = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 flag = Eluna::CHECKVAL<uint32>(E->L, 2);
 
-        Eluna::Push(L, quest->HasFlag(flag));
+        E->Push(quest->HasFlag(flag));
         return 1;
     }
 
@@ -62,9 +62,9 @@ namespace LuaQuest
      *
      * @return bool isDaily
      */
-    int IsDaily(lua_State* L, Quest* quest)
+    int IsDaily(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->IsDaily());
+        E->Push(quest->IsDaily());
         return 1;
     }
 
@@ -73,9 +73,9 @@ namespace LuaQuest
      *
      * @return bool isRepeatable
      */
-    int IsRepeatable(lua_State* L, Quest* quest)
+    int IsRepeatable(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->IsRepeatable());
+        E->Push(quest->IsRepeatable());
         return 1;
     }
 
@@ -84,9 +84,9 @@ namespace LuaQuest
      *
      * @return uint32 entryId
      */
-    int GetId(lua_State* L, Quest* quest)
+    int GetId(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetQuestId());
+        E->Push(quest->GetQuestId());
         return 1;
     }
 
@@ -95,9 +95,9 @@ namespace LuaQuest
      *
      * @return uint32 level
      */
-    int GetLevel(lua_State* L, Quest* quest)
+    int GetLevel(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetQuestLevel());
+        E->Push(quest->GetQuestLevel());
         return 1;
     }
 
@@ -106,9 +106,9 @@ namespace LuaQuest
      *
      * @return uint32 minLevel
      */
-    int GetMinLevel(lua_State* L, Quest* quest)
+    int GetMinLevel(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetMinLevel());
+        E->Push(quest->GetMinLevel());
         return 1;
     }
 
@@ -117,9 +117,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetNextQuestId(lua_State* L, Quest* quest)
+    int GetNextQuestId(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetNextQuestId());
+        E->Push(quest->GetNextQuestId());
         return 1;
     }
 
@@ -128,9 +128,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetPrevQuestId(lua_State* L, Quest* quest)
+    int GetPrevQuestId(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetPrevQuestId());
+        E->Push(quest->GetPrevQuestId());
         return 1;
     }
 
@@ -139,9 +139,9 @@ namespace LuaQuest
      *
      * @return int32 entryId
      */
-    int GetNextQuestInChain(lua_State* L, Quest* quest)
+    int GetNextQuestInChain(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetNextQuestInChain());
+        E->Push(quest->GetNextQuestInChain());
         return 1;
     }
 
@@ -150,9 +150,9 @@ namespace LuaQuest
      *
      * @return [QuestFlags] flags
      */
-    int GetFlags(lua_State* L, Quest* quest)
+    int GetFlags(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetFlags());
+        E->Push(quest->GetFlags());
         return 1;
     }
 
@@ -163,19 +163,19 @@ namespace LuaQuest
      *
      * @return uint32 type
      */
-    int GetType(lua_State* L, Quest* quest)
+    int GetType(Eluna* E, Quest* quest)
     {
 #ifdef CATA
-        Eluna::Push(L, quest->GetQuestType());
+        E->Push(quest->GetQuestType());
 #else
-        Eluna::Push(L, quest->GetType());
+        E->Push(quest->GetType());
 #endif
         return 1;
     }
 
-    int GetMaxLevel(lua_State* L, Quest* quest)
+    int GetMaxLevel(Eluna* E, Quest* quest)
     {
-        Eluna::Push(L, quest->GetMaxLevel());
+        E->Push(quest->GetMaxLevel());
         return 1;
     }
     
@@ -197,7 +197,7 @@ namespace LuaQuest
         { "IsDaily", &LuaQuest::IsDaily },
         { "IsRepeatable", &LuaQuest::IsRepeatable },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

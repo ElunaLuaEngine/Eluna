@@ -17,66 +17,65 @@ using namespace Hooks;
         return;\
     auto key = EventKey<GuildEvents>(EVENT);\
     if (!GuildEventBindings->HasBindingsFor(key))\
-        return;\
-    LOCK_ELUNA
+        return;
 
 void Eluna::OnAddMember(Guild* guild, Player* player, uint32 plRank)
 {
     START_HOOK(GUILD_EVENT_ON_ADD_MEMBER);
-    Push(guild);
-    Push(player);
-    Push(plRank);
+    HookPush(guild);
+    HookPush(player);
+    HookPush(plRank);
     CallAllFunctions(GuildEventBindings, key);
 }
 
 void Eluna::OnRemoveMember(Guild* guild, Player* player, bool isDisbanding)
 {
     START_HOOK(GUILD_EVENT_ON_REMOVE_MEMBER);
-    Push(guild);
-    Push(player);
-    Push(isDisbanding);
+    HookPush(guild);
+    HookPush(player);
+    HookPush(isDisbanding);
     CallAllFunctions(GuildEventBindings, key);
 }
 
 void Eluna::OnMOTDChanged(Guild* guild, const std::string& newMotd)
 {
     START_HOOK(GUILD_EVENT_ON_MOTD_CHANGE);
-    Push(guild);
-    Push(newMotd);
+    HookPush(guild);
+    HookPush(newMotd);
     CallAllFunctions(GuildEventBindings, key);
 }
 
 void Eluna::OnInfoChanged(Guild* guild, const std::string& newInfo)
 {
     START_HOOK(GUILD_EVENT_ON_INFO_CHANGE);
-    Push(guild);
-    Push(newInfo);
+    HookPush(guild);
+    HookPush(newInfo);
     CallAllFunctions(GuildEventBindings, key);
 }
 
 void Eluna::OnCreate(Guild* guild, Player* leader, const std::string& name)
 {
     START_HOOK(GUILD_EVENT_ON_CREATE);
-    Push(guild);
-    Push(leader);
-    Push(name);
+    HookPush(guild);
+    HookPush(leader);
+    HookPush(name);
     CallAllFunctions(GuildEventBindings, key);
 }
 
 void Eluna::OnDisband(Guild* guild)
 {
     START_HOOK(GUILD_EVENT_ON_DISBAND);
-    Push(guild);
+    HookPush(guild);
     CallAllFunctions(GuildEventBindings, key);
 }
 
 void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_WITHDRAW);
-    Push(guild);
-    Push(player);
-    Push(amount);
-    Push(isRepair); // isRepair not a part of Mangos, implement?
+    HookPush(guild);
+    HookPush(player);
+    HookPush(amount);
+    HookPush(isRepair); // isRepair not a part of Mangos, implement?
     int amountIndex = lua_gettop(L) - 1;
     int n = SetupStack(GuildEventBindings, key, 4);
 
@@ -129,9 +128,9 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, b
 void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_DEPOSIT);
-    Push(guild);
-    Push(player);
-    Push(amount);
+    HookPush(guild);
+    HookPush(player);
+    HookPush(amount);
     int amountIndex = lua_gettop(L);
     int n = SetupStack(GuildEventBindings, key, 3);
 
@@ -184,38 +183,38 @@ void Eluna::OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank
     bool isDestBank, uint8 destContainer, uint8 destSlotId)
 {
     START_HOOK(GUILD_EVENT_ON_ITEM_MOVE);
-    Push(guild);
-    Push(player);
-    Push(pItem);
-    Push(isSrcBank);
-    Push(srcContainer);
-    Push(srcSlotId);
-    Push(isDestBank);
-    Push(destContainer);
-    Push(destSlotId);
+    HookPush(guild);
+    HookPush(player);
+    HookPush(pItem);
+    HookPush(isSrcBank);
+    HookPush(srcContainer);
+    HookPush(srcSlotId);
+    HookPush(isDestBank);
+    HookPush(destContainer);
+    HookPush(destSlotId);
     CallAllFunctions(GuildEventBindings, key);
 }
 
 void Eluna::OnEvent(Guild* guild, uint8 eventType, uint32 playerGuid1, uint32 playerGuid2, uint8 newRank)
 {
     START_HOOK(GUILD_EVENT_ON_EVENT);
-    Push(guild);
-    Push(eventType);
-    Push(playerGuid1);
-    Push(playerGuid2);
-    Push(newRank);
+    HookPush(guild);
+    HookPush(eventType);
+    HookPush(playerGuid1);
+    HookPush(playerGuid2);
+    HookPush(newRank);
     CallAllFunctions(GuildEventBindings, key);
 }
 
 void Eluna::OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playerGuid, uint32 itemOrMoney, uint16 itemStackCount, uint8 destTabId)
 {
     START_HOOK(GUILD_EVENT_ON_BANK_EVENT);
-    Push(guild);
-    Push(eventType);
-    Push(tabId);
-    Push(playerGuid);
-    Push(itemOrMoney);
-    Push(itemStackCount);
-    Push(destTabId);
+    HookPush(guild);
+    HookPush(eventType);
+    HookPush(tabId);
+    HookPush(playerGuid);
+    HookPush(itemOrMoney);
+    HookPush(itemStackCount);
+    HookPush(destTabId);
     CallAllFunctions(GuildEventBindings, key);
 }

@@ -70,7 +70,7 @@ public:
     typedef std::multimap<uint64, LuaEvent*> EventList;
     typedef std::unordered_map<int, LuaEvent*> EventMap;
 
-    ElunaEventProcessor(Eluna** _E, WorldObject* _obj);
+    ElunaEventProcessor(Eluna* _E, WorldObject* _obj);
     ~ElunaEventProcessor();
 
     void Update(uint32 diff);
@@ -88,18 +88,18 @@ private:
     EventList eventList;
     uint64 m_time;
     WorldObject* obj;
-    Eluna** E;
+    Eluna* E;
 };
 
-class EventMgr : public ElunaUtil::Lockable
+class EventMgr
 {
 public:
     typedef std::unordered_set<ElunaEventProcessor*> ProcessorSet;
     ProcessorSet processors;
     ElunaEventProcessor* globalProcessor;
-    Eluna** E;
+    Eluna* E;
 
-    EventMgr(Eluna** _E);
+    EventMgr(Eluna* _E);
     ~EventMgr();
 
     // Set the state of all timed events
