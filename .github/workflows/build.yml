@@ -16,7 +16,6 @@ jobs:
       with:
         submodules: false
         repository: ElunaLuaEngine/ElunaTrinityWotlk
-        ref: multistate
     - uses: actions/checkout@v3
       with:
         path: src/server/game/LuaEngine
