@@ -221,6 +221,11 @@ namespace LuaItem
     }
 
 #ifndef CATA
+    /**
+     * Returns 'true' if the refund period has expired for this [Item], 'false' otherwise
+     *
+     * @return bool isRefundExpired
+     */
     int IsRefundExpired(Eluna* E, Item* item)
     {
         E->Push(item->IsRefundExpired());
@@ -315,6 +320,11 @@ namespace LuaItem
         return 1;
     }
 
+    /**
+     * Returns GUID of the [Player] who currently owns the [Item]
+     *
+     * @return ObjectGuid guid : guid of the [Player] who owns the [Item]
+     */
     int GetOwnerGUID(Eluna* E, Item* item)
     {
         E->Push(item->GetOwnerGUID());
@@ -629,6 +639,11 @@ namespace LuaItem
     }
 
 #ifdef WOTLK
+    /**
+     * Returns the amount of stat values on this [Item]
+     *
+     * @return uint32 statsCount
+     */
     int GetStatsCount(Eluna* E, Item* item)
     {
         E->Push(item->GetTemplate()->StatsCount);
@@ -651,6 +666,11 @@ namespace LuaItem
         return 1;
     }
 
+    /**
+     * Returns the random suffix ID of this [Item]
+     *
+     * @return uint32 suffixId
+     */
     int GetRandomSuffix(Eluna* E, Item* item)
     {
 #ifdef CATA

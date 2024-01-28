@@ -807,12 +807,25 @@ namespace LuaCreature
     }
 #endif
 
+    /**
+     * Returns the loot mode for the [Creature].
+     *
+     * <pre>
+     *   LOOT_MODE_DEFAULT          = 1,
+     *   LOOT_MODE_HARD_MODE_1      = 2,
+     *   LOOT_MODE_HARD_MODE_2      = 4,
+     *   LOOT_MODE_HARD_MODE_3      = 8,
+     *   LOOT_MODE_HARD_MODE_4      = 16,
+     *   LOOT_MODE_JUNK_FISH        = 32768
+     * </pre>
+     *
+     * @return uint16 lootMode
+     */
     int GetLootMode(Eluna* E, Creature* creature)
     {
         E->Push(creature->GetLootMode());
         return 1;
     }
-
 
     /**
      * Returns the guid of the [Creature] that is used as the ID in the database
@@ -864,6 +877,20 @@ namespace LuaCreature
         return 0;
     }
 
+    /**
+     * Sets the loot mode for the [Creature].
+     *
+     * <pre>
+     *   LOOT_MODE_DEFAULT          = 1,
+     *   LOOT_MODE_HARD_MODE_1      = 2,
+     *   LOOT_MODE_HARD_MODE_2      = 4,
+     *   LOOT_MODE_HARD_MODE_3      = 8,
+     *   LOOT_MODE_HARD_MODE_4      = 16,
+     *   LOOT_MODE_JUNK_FISH        = 32768
+     * </pre>
+     * 
+     * @param uint16 lootMode
+     */
     int SetLootMode(Eluna* E, Creature* creature)
     {
         uint16 lootMode = Eluna::CHECKVAL<uint16>(E->L, 2);

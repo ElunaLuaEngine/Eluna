@@ -173,6 +173,11 @@ namespace LuaQuest
         return 1;
     }
 
+    /**
+     * Returns the maximum level where the [Quest] can still be picked up.
+     *
+     * @return uint32 maxLevel
+     */
     int GetMaxLevel(Eluna* E, Quest* quest)
     {
         E->Push(quest->GetMaxLevel());

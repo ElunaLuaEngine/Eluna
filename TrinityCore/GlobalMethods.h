@@ -45,9 +45,9 @@ namespace LuaGlobalFunctions
      *
      * - for MaNGOS returns the realmID as it is stored in the core.
      * - for TrinityCore returns the realmID as it is in the conf file.
+     *
      * @return uint32 realm ID
      */
-
     int GetRealmID(Eluna* E)
     {
         E->Push(sConfigMgr->GetIntDefault("RealmID", 1));

@@ -157,6 +157,11 @@ namespace LuaGroup
         return 1;
     }
 
+    /**
+     * Returns true if the [Group] is a battlefield group, false otherwise
+     *
+     * @return bool isBFGroup
+     */
     int IsBFGroup(Eluna* E, Group* group)
     {
         E->Push(group->isBFGroup());
@@ -249,6 +254,7 @@ namespace LuaGroup
         return 1;
     }
 
+#ifndef CATA
     /**
      * Returns the [Group] members' flags
      *
@@ -260,11 +266,10 @@ namespace LuaGroup
      *     MEMBER_FLAG_MAINASSIST  = 4
      * };
      * </pre>
-     * 
+     *
      * @param ObjectGuid guid : guid of the player
      * @return uint8 flags
      */
-#ifndef CATA
     int GetMemberFlags(Eluna* E, Group* group)
     {
         ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 2);
@@ -393,12 +398,16 @@ namespace LuaGroup
         return 0;
     }
 
+    /**
+     * Converts the [Group] to a LFG group
+     */
     int ConvertToLFG(Eluna* /*E*/, Group* group)
     {
         group->ConvertToLFG();
         return 0;
     }
 
+#ifndef CATA
     /**
      * Sets or removes a flag for a [Group] member
      *
@@ -415,7 +424,6 @@ namespace LuaGroup
      * @param bool apply : add the `flag` if `true`, remove the `flag` otherwise
      * @param [GroupMemberFlags] flag : the flag to set or unset
      */
-#ifndef CATA
     int SetMemberFlag(Eluna* E, Group* group)
     {
         ObjectGuid target = Eluna::CHECKVAL<ObjectGuid>(E->L, 2);

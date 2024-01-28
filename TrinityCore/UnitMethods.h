@@ -458,18 +458,33 @@ namespace LuaUnit
         return 1;
     }
 
+    /**
+     * Returns true if the [Unit] is visible, false otherwise.
+     *
+     * @return bool isVisible
+     */
     int IsVisible(Eluna* E, Unit* unit)
     {
         E->Push(unit->IsVisible());
         return 1;
     }
 
+    /**
+     * Returns true if the [Unit] is moving, false otherwise.
+     *
+     * @return bool isMoving
+     */
     int IsMoving(Eluna* E, Unit* unit)
     {
         E->Push(unit->isMoving());
         return 1;
     }
 
+    /**
+     * Returns true if the [Unit] is flying, false otherwise.
+     *
+     * @return bool isFlying
+     */
     int IsFlying(Eluna* E, Unit* unit)
     {
         E->Push(unit->IsFlying());

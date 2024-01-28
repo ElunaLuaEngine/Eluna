@@ -59,6 +59,11 @@ namespace LuaGameObject
         return 1;
     }
 
+    /**
+     * Returns true if the [GameObject] is a destructible, false otherwise.
+     *
+     * @return bool isDestructible
+     */
     int IsDestructible(Eluna* E, GameObject* go)
     {
         E->Push(go->IsDestructibleBuilding());
