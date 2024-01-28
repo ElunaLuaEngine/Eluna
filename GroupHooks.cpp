@@ -13,15 +13,11 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
-    if (!IsEnabled())\
-        return;\
     auto key = EventKey<GroupEvents>(EVENT);\
     if (!GroupEventBindings->HasBindingsFor(key))\
         return;
 
 #define START_HOOK_WITH_RETVAL(EVENT, RETVAL) \
-    if (!IsEnabled())\
-        return RETVAL;\
     auto key = EventKey<GroupEvents>(EVENT);\
     if (!GroupEventBindings->HasBindingsFor(key))\
         return RETVAL;

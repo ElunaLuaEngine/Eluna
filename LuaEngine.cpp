@@ -7,6 +7,7 @@
 #include "Hooks.h"
 #include "LuaEngine.h"
 #include "BindingMap.h"
+#include "ElunaConfig.h"
 #include "ElunaEventMgr.h"
 #include "ElunaIncludes.h"
 #include "ElunaLoader.h"
@@ -77,7 +78,6 @@ void Eluna::_ReloadEluna()
 Eluna::Eluna(Map* map, bool compatMode) :
 event_level(0),
 push_counter(0),
-enabled(false),
 boundMap(map),
 compatibilityMode(compatMode),
 
@@ -133,13 +133,6 @@ void Eluna::CloseLua()
 
 void Eluna::OpenLua()
 {
-    enabled = eConfigMgr->GetBoolDefault("Eluna.Enabled", true);
-    if (!IsEnabled())
-    {
-        ELUNA_LOG_INFO("[Eluna]: Eluna is disabled in config");
-        return;
-    }
-
     L = luaL_newstate();
 
     lua_pushlightuserdata(L, this);
@@ -378,7 +371,7 @@ bool Eluna::ExecuteCall(int params, int res)
         ASSERT(false); // stack probably corrupt
     }
 
-    bool usetrace = eConfigMgr->GetBoolDefault("Eluna.TraceBack", false);
+    bool usetrace = sElunaConfig->GetConfig(CONFIG_ELUNA_TRACEBACK);
     if (usetrace)
     {
         lua_pushcfunction(L, &StackTrace);
@@ -1036,9 +1029,6 @@ int Eluna::CallOneFunction(int number_of_functions, int number_of_arguments, int
 
 CreatureAI* Eluna::GetAI(Creature* creature)
 {
-    if (!IsEnabled())
-        return NULL;
-
     for (int i = 1; i < Hooks::CREATURE_EVENT_COUNT; ++i)
     {
         Hooks::CreatureEvents event_id = (Hooks::CreatureEvents)i;
@@ -1056,9 +1046,6 @@ CreatureAI* Eluna::GetAI(Creature* creature)
 
 InstanceData* Eluna::GetInstanceData(Map* map)
 {
-    if (!IsEnabled())
-        return NULL;
-
     for (int i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
     {
         Hooks::InstanceEvents event_id = (Hooks::InstanceEvents)i;
@@ -1120,9 +1107,6 @@ void Eluna::CreateInstanceData(Map const* map)
  */
 void Eluna::FreeInstanceId(uint32 instanceId)
 {
-    if (!IsEnabled())
-        return;
-
     for (int i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
     {
         auto key = EntryKey<Hooks::InstanceEvents>((Hooks::InstanceEvents)i, instanceId);

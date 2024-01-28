@@ -1,11 +1,12 @@
 /*
-* Copyright (C) 2010 - 2022 Eluna Lua Engine <https://elunaluaengine.github.io/>
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * Copyright (C) 2022 - 2022 Hour of Twilight <https://www.houroftwilight.net/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
 
 #include "LuaEngine.h"
+#include "ElunaConfig.h"
 #include "ElunaLoader.h"
 #include "ElunaUtility.h"
 #include "ElunaIncludes.h"
@@ -40,7 +41,7 @@ ElunaLoader::~ElunaLoader()
 
 void ElunaLoader::LoadScripts()
 {
-    lua_folderpath = eConfigMgr->GetStringDefault("Eluna.ScriptPath", "lua_scripts");
+    lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
 
     uint32 oldMSTime = ElunaUtil::GetCurrTime();
     lua_scripts.clear();
@@ -61,7 +62,7 @@ void ElunaLoader::LoadScripts()
 
     ELUNA_LOG_INFO("[Eluna]: Loaded and precompiled %u scripts in %u ms", uint32(combined_scripts.size()), ElunaUtil::GetTimeDiff(oldMSTime));
     requiredMaps.clear();
-    std::istringstream maps(eConfigMgr->GetStringDefault("Eluna.OnlyOnMaps", ""));
+    std::istringstream maps(sElunaConfig->GetConfig(CONFIG_ELUNA_ONLY_ON_MAPS));
     while (maps.good())
     {
         std::string mapIdStr;

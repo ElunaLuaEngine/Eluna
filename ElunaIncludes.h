@@ -189,7 +189,6 @@ typedef Opcodes                 OpcodesList;
 #define CORE_VERSION            (GitRevision::GetFullVersion())
 #define eWorld                  (sWorld)
 #define eMapMgr                 (sMapMgr)
-#define eConfigMgr              (sConfigMgr)
 #define eGuildMgr               (sGuildMgr)
 #define eObjectMgr              (sObjectMgr)
 #define eAccountMgr             (sAccountMgr)
