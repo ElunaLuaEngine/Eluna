@@ -401,6 +401,7 @@ ElunaRegister<Unit> UnitMethods[] =
 #endif
 
     // Other
+    {"HandleStatModifier", &LuaUnit::HandleStatModifier},
     { "AddAura", &LuaUnit::AddAura },
     { "RemoveAura", &LuaUnit::RemoveAura },
     { "RemoveAllAuras", &LuaUnit::RemoveAllAuras },

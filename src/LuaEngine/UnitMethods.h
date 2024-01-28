@@ -13,6 +13,27 @@
 namespace LuaUnit
 {
     /**
+     * The [Unit] modifies a specific stat
+     *
+     * @param int32 stat : The stat to modify
+     * @param int8 type : The type of modifier to apply
+     * @param float value : The value to apply to the stat
+     * @param bool apply = false : Whether the modifier should be applied or removed
+     * @return bool : Whether the stat modification was successful
+     */
+    int HandleStatModifier(lua_State* L, Unit* unit)
+    {
+        int32 stat = Eluna::CHECKVAL<int32>(L, 2);
+        int8  type = Eluna::CHECKVAL<int8>(L, 3);
+
+        float value = Eluna::CHECKVAL<float>(L, 4);
+        bool apply = Eluna::CHECKVAL<bool>(L, 5, false);
+
+        Eluna::Push(L, unit->HandleStatModifier(UnitMods(UNIT_MOD_STAT_START + stat), (UnitModifierType)type, value, apply));
+        return 1;
+    }
+
+    /**
      * The [Unit] tries to attack a given target
      *
      * @param [Unit] who : [Unit] to attack
