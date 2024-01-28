@@ -1321,7 +1321,7 @@ namespace LuaGlobalFunctions
         if (result)
             E->Push(new ElunaQuery(result));
         else
-            E->Push(E->L);
+            E->Push();
 
         return 1;
     }
@@ -1422,7 +1422,7 @@ namespace LuaGlobalFunctions
         if (result)
             E->Push(new QueryResult(result));
         else
-            E->Push(E->L);
+            E->Push();
 
         return 1;
     }
@@ -1513,7 +1513,7 @@ namespace LuaGlobalFunctions
         if (result)
             E->Push(new QueryResult(result));
         else
-            E->Push(E->L);
+            E->Push();
 
         return 1;
     }
@@ -1702,14 +1702,14 @@ namespace LuaGlobalFunctions
 
         if (!phase)
         {
-            E->Push(E->L);
+            E->Push();
             return 1;
         }
 
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
         {
-            E->Push(E->L);
+            E->Push();
             return 1;
         }
 
@@ -1727,7 +1727,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete creature;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1748,7 +1748,7 @@ namespace LuaGlobalFunctions
                 if (!creature->LoadFromDB(db_guid, map, true, true))
                 {
                     delete creature;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1766,7 +1766,7 @@ namespace LuaGlobalFunctions
 #endif
                 if (!creature)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1786,13 +1786,13 @@ namespace LuaGlobalFunctions
             const GameObjectTemplate* objectInfo = eObjectMgr->GetGameObjectTemplate(entry);
             if (!objectInfo)
             {
-                E->Push(E->L);
+                E->Push();
                 return 1;
             }
 
             if (objectInfo->displayId && !sGameObjectDisplayInfoStore.LookupEntry(objectInfo->displayId))
             {
-                E->Push(E->L);
+                E->Push();
                 return 1;
             }
 
@@ -1806,7 +1806,7 @@ namespace LuaGlobalFunctions
 #endif
             {
                 delete object;
-                E->Push(E->L);
+                E->Push();
                 return 1;
             }
 
@@ -1832,7 +1832,7 @@ namespace LuaGlobalFunctions
                 if (!object->LoadFromDB(guidLow, map, true))
                 {
                     delete object;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
                 eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGameObjectData(guidLow));
@@ -1843,7 +1843,7 @@ namespace LuaGlobalFunctions
             return 1;
         }
 
-        E->Push(E->L);
+        E->Push();
         return 1;
     }
 
@@ -2258,13 +2258,13 @@ namespace LuaGlobalFunctions
         int start = lua_gettop(E->L);
         int end = start;
 
-        E->Push(E->L);
+        E->Push();
         // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, nil
         while (lua_next(E->L, -2) != 0)
         {
             // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, key, value
             luaL_checktype(E->L, -1, LUA_TTABLE);
-            E->Push(E->L);
+            E->Push();
             // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, key, value, nil
             while (lua_next(E->L, -2) != 0)
             {
