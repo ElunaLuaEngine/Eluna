@@ -1142,6 +1142,8 @@ namespace LuaCreature
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
 #ifndef CATA
         { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
+#else
+        { "GetShieldBlockValue", nullptr, METHOD_REG_NONE },
 #endif
 
         // Setters
@@ -1161,6 +1163,8 @@ namespace LuaCreature
         { "SetEquipmentSlots", &LuaCreature::SetEquipmentSlots },
 #ifndef CATA
         { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
+#else
+        { "SetDisableReputationGain", nullptr, METHOD_REG_NONE },
 #endif
 
         // Boolean
@@ -1187,6 +1191,8 @@ namespace LuaCreature
         { "CanFly", &LuaCreature::CanFly },
 #ifndef CATA
         { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
+#else
+        { "IsReputationGainDisabled", nullptr, METHOD_REG_NONE },
 #endif
 
         // Other
@@ -1203,21 +1209,21 @@ namespace LuaCreature
         { "UpdateEntry", &LuaCreature::UpdateEntry },
 
         // Not implemented methods
-        { "GetWaypointPath", nullptr }, // TC/Acore
-        { "GetLootMode", nullptr }, // TC/Acore
-        { "SetRegeneratingHealth", nullptr }, // TC/Acore
-        { "SetLootMode", nullptr }, // TC/Acore
-        { "SetReactState", nullptr }, // TC/Acore
-        { "IsDungeonBoss", nullptr }, // TC/Acore
-        { "IsTrigger", nullptr }, // TC/Acore
-        { "CanStartAttack", nullptr }, // TC/Acore
-        { "IsDamageEnoughForLootingAndReward", nullptr }, // TC/Acore
-        { "HasLootMode", nullptr }, // TC/Acore
-        { "AddLootMode", nullptr }, // TC/Acore
-        { "ResetLootMode", nullptr }, // TC/Acore
-        { "RemoveLootMode", nullptr }, // TC/Acore
+        { "GetWaypointPath", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "GetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "SetRegeneratingHealth", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "SetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "SetReactState", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "IsDungeonBoss", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "IsTrigger", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "CanStartAttack", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "IsDamageEnoughForLootingAndReward", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "HasLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "AddLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "ResetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "RemoveLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

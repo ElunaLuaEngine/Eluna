@@ -404,6 +404,8 @@ namespace LuaGroup
         { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },
 #if defined WOTLK
         { "IsLFGGroup", &LuaGroup::IsLFGGroup },
+#else
+        { "IsLFGGroup", nullptr, METHOD_REG_NONE },
 #endif
 
         // Other
@@ -411,12 +413,12 @@ namespace LuaGroup
         { "ConvertToRaid", &LuaGroup::ConvertToRaid },
 
         // Not implemented methods
-        { "IsBFGroup", nullptr },   // not implemented
-        { "ConvertToLFG", nullptr },    // not implemented
-        { "GetMemberFlags", nullptr },    // not implemented
-        { "SetMemberFlag", nullptr },    // not implemented
+        { "IsBFGroup", nullptr, METHOD_REG_NONE },   // not implemented
+        { "ConvertToLFG", nullptr, METHOD_REG_NONE },    // not implemented
+        { "GetMemberFlags", nullptr, METHOD_REG_NONE },    // not implemented
+        { "SetMemberFlag", nullptr, METHOD_REG_NONE },    // not implemented
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 

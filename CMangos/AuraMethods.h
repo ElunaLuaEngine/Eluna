@@ -200,7 +200,7 @@ namespace LuaAura
         // Other
         { "Remove", &LuaAura::Remove },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

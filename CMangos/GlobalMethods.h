@@ -91,6 +91,39 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Returns the [Map] pointer of the Lua state. Returns null for the "World" state.
+     *
+     * @return [Map] map
+     */
+    int GetStateMap(Eluna* E)
+    {
+        E->Push(E->GetBoundMap());
+        return 1;
+    }
+
+    /**
+     * Returns the map ID of the Lua state. Returns -1 for the "World" state.
+     *
+     * @return int32 mapId
+     */
+    int GetStateMapId(Eluna* E)
+    {
+        E->Push(E->GetBoundMapId());
+        return 1;
+    }
+
+    /**
+     * Returns the instance ID of the Lua state. Returns 0 for continent maps and the world state.
+     *
+     * @return uint32 instanceId
+     */
+    int GetStateInstanceId(Eluna* E)
+    {
+        E->Push(E->GetBoundInstanceId());
+        return 1;
+    }
+
+    /**
      * Returns [Quest] template
      *
      * @param uint32 questId : [Quest] entry ID
@@ -183,6 +216,56 @@ namespace LuaGlobalFunctions
                 }
             }
         }
+        lua_settop(E->L, tbl); // push table to top of stack
+        return 1;
+    }
+
+    /**
+     * Returns a table with all the current [Player]s on the states map.
+     *
+     * Does not return players that may be teleporting or otherwise not on the map.
+     *
+     *     enum TeamId
+     *     {
+     *         TEAM_ALLIANCE = 0,
+     *         TEAM_HORDE = 1,
+     *         TEAM_NEUTRAL = 2
+     *     };
+     *
+     * In multistate, this method is only available in the MAP state
+     *
+     * @param [TeamId] team = TEAM_NEUTRAL : optional check team of the [Player], Alliance, Horde or Neutral (All)
+     * @param bool onlyGM = false : optional check if GM only
+     * @return table mapPlayers
+     */
+    int GetPlayersOnMap(Eluna* E)
+    {
+        uint32 team = Eluna::CHECKVAL<uint32>(E->L, 1, TEAM_NEUTRAL);
+        bool onlyGM = Eluna::CHECKVAL<bool>(E->L, 2, false);
+
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
+        uint32 i = 0;
+
+        Map::PlayerList const& players = E->GetBoundMap()->GetPlayers();
+        if (!players.isEmpty())
+        {
+            for (Map::PlayerList::const_iterator it = players.begin(); it != players.end(); ++it)
+            {
+                if (Player* player = it->getSource())
+                {
+                    if (!player->IsInWorld())
+                        continue;
+
+                    if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
+                    {
+                        E->Push(player);
+                        lua_rawseti(E->L, tbl, ++i);
+                    }
+                }
+            }
+        }
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -1224,7 +1307,7 @@ namespace LuaGlobalFunctions
         if (result)
             E->Push(result);
         else
-            E->Push(E->L);
+            E->Push();
         return 1;
     }
 
@@ -1249,6 +1332,65 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Initiates an asynchronous SQL query on the world database with a callback function.
+     *
+     * The query is executed asynchronously, and the provided Lua function is called when the query completes.
+     * The callback function parameter is the query result (an [ElunaQuery] or nil if no rows found).
+     *
+     * <pre>
+     * WorldDBQueryAsync("SELECT entry, name FROM creature_template LIMIT 10", function(results)
+     *    if results then
+     *        repeat
+     *            local entry, name = results:GetUInt32(0), results:GetString(1)
+     *            print(entry, name)
+     *        until not results:NextRow()
+     *    end
+     * end)
+     * </pre>
+     *
+     * @param string sql : query to execute asynchronously
+     * @param function callback : the callback function to be called with the query results
+     */
+    int WorldDBQueryAsync(Eluna* /*E*/)
+    {
+        // Todo: Implement async queries. Below is the code example from TC.
+
+        /*
+        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        luaL_checktype(E->L, 2, LUA_TFUNCTION);
+
+        // Push the Lua function onto the stack and create a reference
+        lua_pushvalue(E->L, 2);
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        // Validate the function reference
+        if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
+        {
+            luaL_argerror(E->L, 2, "unable to make a ref to function");
+            return 0;
+        }
+
+        // Add an asynchronous query callback
+        E->GetQueryProcessor().AddCallback(WorldDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+            {
+                ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+
+                // Get the Lua function from the registry
+                lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+
+                // Push the query results as a parameter
+                E->Push(eq);
+
+                // Call the Lua function
+                E->ExecuteCall(1, 0);
+
+                // Unreference the Lua function
+                luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
+            }));*/
+        return 0;
+    }
+
+    /**
      * Executes a SQL query on the character database and returns an [ElunaQuery].
      *
      * The query is always executed synchronously
@@ -1267,7 +1409,7 @@ namespace LuaGlobalFunctions
         if (result)
             E->Push(result);
         else
-            E->Push(E->L);
+            E->Push();
         return 1;
     }
 
@@ -1291,6 +1433,45 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    int CharDBQueryAsync(Eluna* /*E*/)
+    {
+        // Todo: Implement async queries. Below is the code example from TC.
+
+        /*
+        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        luaL_checktype(E->L, 2, LUA_TFUNCTION);
+
+        // Push the Lua function onto the stack and create a reference
+        lua_pushvalue(E->L, 2);
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        // Validate the function reference
+        if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
+        {
+            luaL_argerror(E->L, 2, "unable to make a ref to function");
+            return 0;
+        }
+
+        // Add an asynchronous query callback
+        E->GetQueryProcessor().AddCallback(WorldDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+            {
+                ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+
+                // Get the Lua function from the registry
+                lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+
+                // Push the query results as a parameter
+                E->Push(eq);
+
+                // Call the Lua function
+                E->ExecuteCall(1, 0);
+
+                // Unreference the Lua function
+                luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
+            }));*/
+        return 0;
+    }
+
     /**
      * Executes a SQL query on the login database and returns an [ElunaQuery].
      *
@@ -1310,7 +1491,7 @@ namespace LuaGlobalFunctions
         if (result)
             E->Push(result);
         else
-            E->Push(E->L);
+            E->Push();
         return 1;
     }
 
@@ -1331,6 +1512,45 @@ namespace LuaGlobalFunctions
     {
         const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
         LoginDatabase.Execute(query);
+        return 0;
+    }
+
+    int AuthDBQueryAsync(Eluna* /*E*/)
+    {
+        // Todo: Implement async queries. Below is the code example from TC.
+
+        /*
+        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        luaL_checktype(E->L, 2, LUA_TFUNCTION);
+
+        // Push the Lua function onto the stack and create a reference
+        lua_pushvalue(E->L, 2);
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        // Validate the function reference
+        if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
+        {
+            luaL_argerror(E->L, 2, "unable to make a ref to function");
+            return 0;
+        }
+
+        // Add an asynchronous query callback
+        E->GetQueryProcessor().AddCallback(WorldDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+            {
+                ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+
+                // Get the Lua function from the registry
+                lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+
+                // Push the query results as a parameter
+                E->Push(eq);
+
+                // Call the Lua function
+                E->ExecuteCall(1, 0);
+
+                // Unreference the Lua function
+                luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
+            }));*/
         return 0;
     }
 
@@ -1451,7 +1671,7 @@ namespace LuaGlobalFunctions
         uint32 phase = Eluna::CHECKVAL<uint32>(E->L, 11, PHASEMASK_NORMAL);
         if (!phase)
         {
-            E->Push(E->L);
+            E->Push();
             return 1;
         }
 #endif
@@ -1459,7 +1679,7 @@ namespace LuaGlobalFunctions
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
         {
-            E->Push(E->L);
+            E->Push();
             return 1;
         }
 
@@ -1470,7 +1690,7 @@ namespace LuaGlobalFunctions
                 CreatureInfo const* cinfo = ObjectMgr::GetCreatureTemplate(entry);
                 if (!cinfo)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1484,7 +1704,7 @@ namespace LuaGlobalFunctions
                 uint32 lowguid = eObjectMgr->GenerateStaticCreatureLowGuid();
                 if (!lowguid)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 #ifndef CATA
@@ -1494,7 +1714,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete pCreature;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1527,7 +1747,7 @@ namespace LuaGlobalFunctions
                 CreatureInfo const* cinfo = ObjectMgr::GetCreatureTemplate(entry);
                 if (!cinfo)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1546,7 +1766,7 @@ namespace LuaGlobalFunctions
                 {
                     delete pCreature;
                     {
-                        E->Push(E->L);
+                        E->Push();
                         return 1;
                     }
                 }
@@ -1576,7 +1796,7 @@ namespace LuaGlobalFunctions
                 const GameObjectInfo* gInfo = ObjectMgr::GetGameObjectInfo(entry);
                 if (!gInfo)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1584,7 +1804,7 @@ namespace LuaGlobalFunctions
                 uint32 db_lowGUID = eObjectMgr->GenerateStaticGameObjectLowGuid();
                 if (!db_lowGUID)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1598,7 +1818,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete pGameObj;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1622,7 +1842,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete pGameObj;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1647,7 +1867,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete pGameObj;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1661,7 +1881,7 @@ namespace LuaGlobalFunctions
             return 1;
         }
 
-        E->Push(E->L);
+        E->Push();
         return 1;
     }
 
@@ -2074,13 +2294,13 @@ namespace LuaGlobalFunctions
         int start = lua_gettop(E->L);
         int end = start;
 
-        E->Push(E->L);
+        E->Push();
         // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, nil
         while (lua_next(E->L, -2) != 0)
         {
             // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, key, value
             luaL_checktype(E->L, -1, LUA_TTABLE);
-            E->Push(E->L);
+            E->Push();
             // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, key, value, nil
             while (lua_next(E->L, -2) != 0)
             {
@@ -2167,6 +2387,17 @@ namespace LuaGlobalFunctions
         pathEntry->ID = pathId;
         sTaxiPathStore.InsertEntry(pathEntry, pathId);
         E->Push(pathId);
+        return 1;
+    }
+
+    /**
+     * Returns `true` if Eluna is in compatibility mode, `false` if in multistate.
+     *
+     * @return bool isCompatibilityMode
+     */
+    int IsCompatibilityMode(Eluna* E)
+    {
+        E->Push(E->GetCompatibilityMode());
         return 1;
     }
 
@@ -2993,11 +3224,15 @@ namespace LuaGlobalFunctions
         { "GetRealmID", &LuaGlobalFunctions::GetRealmID },
         { "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion },
         { "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion },
+        { "GetStateMap", &LuaGlobalFunctions::GetStateMap, METHOD_REG_MAP }, // Map state method only in multistate
+        { "GetStateMapId", &LuaGlobalFunctions::GetStateMapId },
+        { "GetStateInstanceId", &LuaGlobalFunctions::GetStateInstanceId },
         { "GetQuest", &LuaGlobalFunctions::GetQuest },
-        { "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID },
-        { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName },
+        { "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID, METHOD_REG_WORLD }, // World state method only in multistate
+        { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetGameTime", &LuaGlobalFunctions::GetGameTime },
-        { "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld },
+        { "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld, METHOD_REG_WORLD }, // World state method only in multistate
+        { "GetPlayersOnMap", &LuaGlobalFunctions::GetPlayersOnMap, METHOD_REG_MAP }, // Map state method only in multistate
         { "GetGuildByName", &LuaGlobalFunctions::GetGuildByName },
         { "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID },
         { "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
@@ -3016,7 +3251,7 @@ namespace LuaGlobalFunctions
         { "bit_or", &LuaGlobalFunctions::bit_or },
         { "bit_and", &LuaGlobalFunctions::bit_and },
         { "GetItemLink", &LuaGlobalFunctions::GetItemLink },
-        { "GetMapById", &LuaGlobalFunctions::GetMapById },
+        { "GetMapById", &LuaGlobalFunctions::GetMapById, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetCurrTime", &LuaGlobalFunctions::GetCurrTime },
         { "GetTimeDiff", &LuaGlobalFunctions::GetTimeDiff },
         { "PrintInfo", &LuaGlobalFunctions::PrintInfo },
@@ -3025,6 +3260,7 @@ namespace LuaGlobalFunctions
         { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
 
         // Boolean
+        { "IsCompatibilityMode", &LuaGlobalFunctions::IsCompatibilityMode },
         { "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },
         { "IsEquipmentPos", &LuaGlobalFunctions::IsEquipmentPos },
         { "IsBankPos", &LuaGlobalFunctions::IsBankPos },
@@ -3037,10 +3273,13 @@ namespace LuaGlobalFunctions
         { "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage },
         { "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery },
         { "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute },
+        { "WorldDBQueryAsync", &LuaGlobalFunctions::WorldDBQueryAsync, METHOD_REG_NONE }, // TODO: Implement
         { "CharDBQuery", &LuaGlobalFunctions::CharDBQuery },
         { "CharDBExecute", &LuaGlobalFunctions::CharDBExecute },
+        { "CharDBQueryAsync", &LuaGlobalFunctions::CharDBQueryAsync, METHOD_REG_NONE }, // TODO: Implement
         { "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery },
         { "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute },
+        { "AuthDBQueryAsync", &LuaGlobalFunctions::AuthDBQueryAsync, METHOD_REG_NONE }, // TODO: Implement
         { "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
         { "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
         { "RemoveEvents", &LuaGlobalFunctions::RemoveEvents },
@@ -3059,7 +3298,7 @@ namespace LuaGlobalFunctions
         { "StartGameEvent", &LuaGlobalFunctions::StartGameEvent },
         { "StopGameEvent", &LuaGlobalFunctions::StopGameEvent },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 }
 #endif

@@ -2542,6 +2542,9 @@ namespace LuaUnit
 #if defined(WOTLK)
         { "GetCritterGUID", &LuaUnit::GetCritterGUID },
         { "GetVehicleKit", &LuaUnit::GetVehicleKit },
+#else
+        { "GetCritterGUID", nullptr, METHOD_REG_NONE },
+        { "GetVehicleKit", nullptr, METHOD_REG_NONE },
 #endif
 
         // Setters
@@ -2575,6 +2578,10 @@ namespace LuaUnit
         { "SetFFA", &LuaUnit::SetFFA },
         { "SetSanctuary", &LuaUnit::SetSanctuary },
         { "SetCritterGUID", &LuaUnit::SetCritterGUID },
+#else
+        { "SetFFA", nullptr, METHOD_REG_NONE },
+        { "SetSanctuary", nullptr, METHOD_REG_NONE },
+        { "SetCritterGUID", nullptr, METHOD_REG_NONE },
 #endif
 
         // Boolean
@@ -2618,7 +2625,9 @@ namespace LuaUnit
         { "IsStandState", &LuaUnit::IsStandState },
 #if defined(TBC) || defined(WOTLK)
         { "IsOnVehicle", &LuaUnit::IsOnVehicle },
-#endif        
+#else
+        { "IsOnVehicle", nullptr, METHOD_REG_NONE },
+#endif
 
         // Other
         { "AddAura", &LuaUnit::AddAura },
@@ -2663,27 +2672,31 @@ namespace LuaUnit
         { "AddThreat", &LuaUnit::AddThreat },
 #if defined(TBC) || defined(WOTLK)
         { "RemoveArenaAuras", &LuaUnit::RemoveArenaAuras },
+#else
+        { "RemoveArenaAuras", nullptr, METHOD_REG_NONE },
 #endif
 #if defined(WOTLK)
         { "MoveJump", &LuaUnit::MoveJump },
+#else
+        { "MoveJump", nullptr, METHOD_REG_NONE },
 #endif
 
         // Not implemented methods
-        { "GetVehicle", nullptr }, // not implemented
-        { "SetStunned", nullptr }, // not implemented
-        { "SetCanFly", nullptr }, // not implemented
-        { "SetVisible", nullptr }, // not implemented
-        { "IsVisible", nullptr }, // not implemented
-        { "IsMoving", nullptr }, // not implemented
-        { "IsFlying", nullptr }, // not implemented
-        { "RestoreDisplayId", nullptr }, // not implemented
-        { "RestoreFaction", nullptr }, //not implemented
-        { "RemoveBindSightAuras", nullptr }, // not implemented
-        { "RemoveCharmAuras", nullptr }, // not implemented
-        { "DisableMelee", nullptr }, // not implemented
-        { "SummonGuardian", nullptr }, // not implemented
+        { "GetVehicle", nullptr, METHOD_REG_NONE }, // not implemented
+        { "SetStunned", nullptr, METHOD_REG_NONE }, // not implemented
+        { "SetCanFly", nullptr, METHOD_REG_NONE }, // not implemented
+        { "SetVisible", nullptr, METHOD_REG_NONE }, // not implemented
+        { "IsVisible", nullptr, METHOD_REG_NONE }, // not implemented
+        { "IsMoving", nullptr, METHOD_REG_NONE }, // not implemented
+        { "IsFlying", nullptr, METHOD_REG_NONE }, // not implemented
+        { "RestoreDisplayId", nullptr, METHOD_REG_NONE }, // not implemented
+        { "RestoreFaction", nullptr, METHOD_REG_NONE }, //not implemented
+        { "RemoveBindSightAuras", nullptr, METHOD_REG_NONE }, // not implemented
+        { "RemoveCharmAuras", nullptr, METHOD_REG_NONE }, // not implemented
+        { "DisableMelee", nullptr, METHOD_REG_NONE }, // not implemented
+        { "SummonGuardian", nullptr, METHOD_REG_NONE }, // not implemented
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

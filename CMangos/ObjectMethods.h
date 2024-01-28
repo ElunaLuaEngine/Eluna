@@ -492,7 +492,7 @@ namespace LuaObject
         { "ToCorpse", &LuaObject::ToCorpse },
         { "RemoveFlag", &LuaObject::RemoveFlag },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

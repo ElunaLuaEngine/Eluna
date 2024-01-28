@@ -287,7 +287,7 @@ namespace LuaQuery
 
             const char* str = row[i].GetString();
             if (row[i].IsNULL() || !str)
-                E->Push(E->L);
+                E->Push();
             else
             {
                 // MYSQL_TYPE_LONGLONG Interpreted as string for lua
@@ -335,7 +335,7 @@ namespace LuaQuery
         { "NextRow", &LuaQuery::NextRow },
         { "IsNull", &LuaQuery::IsNull },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #undef RESULT

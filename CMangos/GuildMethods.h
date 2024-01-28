@@ -254,10 +254,14 @@ namespace LuaGuild
         // Setters
 #if defined(TBC) || defined(WOTLK)
         { "SetBankTabText", &LuaGuild::SetBankTabText },
+#else
+        { "SetBankTabText", nullptr, METHOD_REG_NONE },
 #endif
         { "SetMemberRank", &LuaGuild::SetMemberRank },
 #ifndef CATA
         { "SetLeader", &LuaGuild::SetLeader },
+#else
+        { "SetLeader", nullptr, METHOD_REG_NONE },
 #endif
 
         // Other
@@ -267,7 +271,7 @@ namespace LuaGuild
         { "AddMember", &LuaGuild::AddMember },
         { "DeleteMember", &LuaGuild::DeleteMember },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

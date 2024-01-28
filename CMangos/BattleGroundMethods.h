@@ -64,7 +64,6 @@ namespace LuaBattleGround
         return 1;
     }
 
-#ifndef AZEROTHCORE
     /**
      * Returns the bracket ID of the specific [BattleGround].
      *
@@ -75,7 +74,6 @@ namespace LuaBattleGround
         E->Push(bg->GetBracketId());
         return 1;
     }
-#endif
 
     /**
      * Returns the end time of the [BattleGround].
@@ -249,7 +247,7 @@ namespace LuaBattleGround
         { "GetWinner", &LuaBattleGround::GetWinner },
         { "GetStatus", &LuaBattleGround::GetStatus },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

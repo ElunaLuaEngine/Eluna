@@ -755,9 +755,13 @@ namespace LuaItem
         { "GetBagSize", &LuaItem::GetBagSize },
 #if defined(TBC) || defined(WOTLK)
         { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
+#else
+        { "GetRandomSuffix", nullptr, METHOD_REG_NONE },
 #endif
 #if defined(WOTLK)
         { "GetStatsCount", &LuaItem::GetStatsCount },
+#else
+        { "GetStatsCount", nullptr, METHOD_REG_NONE },
 #endif
 
         // Setters
@@ -784,20 +788,25 @@ namespace LuaItem
         { "ClearEnchantment", &LuaItem::ClearEnchantment },
 #if defined(TBC) || defined(WOTLK)
         { "IsCurrencyToken", &LuaItem::IsCurrencyToken },
+#else
+        { "IsCurrencyToken", nullptr, METHOD_REG_NONE },
 #endif
 #if defined(WOTLK)
         { "IsBoundAccountWide", &LuaItem::IsBoundAccountWide },
         { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
         { "IsArmorVellum", &LuaItem::IsArmorVellum },
+#else
+        { "IsBoundAccountWide", nullptr, METHOD_REG_NONE },
+        { "IsWeaponVellum", nullptr, METHOD_REG_NONE },
+        { "IsArmorVellum", nullptr, METHOD_REG_NONE },
 #endif
-
         // Other
         { "SaveToDB", &LuaItem::SaveToDB },
 
         // Not implemented methods
-        { "IsRefundExpired", nullptr }, // not implemented
+        { "IsRefundExpired", nullptr, METHOD_REG_NONE }, // not implemented
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

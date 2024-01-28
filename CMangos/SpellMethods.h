@@ -188,7 +188,7 @@ namespace LuaSpell
         { "Cast", &LuaSpell::Cast },
         { "Finish", &LuaSpell::Finish },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

@@ -3801,14 +3801,23 @@ namespace LuaPlayer
 #if defined(TBC) || defined(WOTLK)
         { "GetArenaPoints", &LuaPlayer::GetArenaPoints },
         { "GetHonorPoints", &LuaPlayer::GetHonorPoints },
+#else
+        { "GetArenaPoints", nullptr, METHOD_REG_NONE },
+        { "GetHonorPoints", nullptr, METHOD_REG_NONE },
 #endif
 #if defined(WOTLK)
         { "GetPhaseMaskForSpawn", &LuaPlayer::GetPhaseMaskForSpawn },
         { "GetActiveSpec", &LuaPlayer::GetActiveSpec },
         { "GetSpecsCount", &LuaPlayer::GetSpecsCount },
+#else
+        { "GetPhaseMaskForSpawn", nullptr, METHOD_REG_NONE },
+        { "GetActiveSpec", nullptr, METHOD_REG_NONE },
+        { "GetSpecsCount", nullptr, METHOD_REG_NONE },
 #endif
 #ifndef CATA
         { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
+#else
+        { "GetShieldBlockValue", nullptr, METHOD_REG_NONE },
 #endif
         { "GetMailCount", &LuaPlayer::GetMailCount },
 
@@ -3843,6 +3852,11 @@ namespace LuaPlayer
         { "UnsetKnownTitle", &LuaPlayer::UnsetKnownTitle },
         { "SetArenaPoints", &LuaPlayer::SetArenaPoints },
         { "SetHonorPoints", &LuaPlayer::SetHonorPoints },
+#else
+        { "SetKnownTitle", nullptr, METHOD_REG_NONE },
+        { "UnsetKnownTitle", nullptr, METHOD_REG_NONE },
+        { "SetArenaPoints", nullptr, METHOD_REG_NONE },
+        { "SetHonorPoints", nullptr, METHOD_REG_NONE },
 #endif
 
         // Boolean
@@ -3895,11 +3909,21 @@ namespace LuaPlayer
         { "InArena", &LuaPlayer::InArena },
         { "CanFly", &LuaPlayer::CanFly },
         { "IsFlying", &LuaPlayer::IsFlying },
+#else
+        { "HasTitle", nullptr, METHOD_REG_NONE },
+        { "IsInArenaTeam", nullptr, METHOD_REG_NONE },
+        { "InArena", nullptr, METHOD_REG_NONE },
+        { "CanFly", nullptr, METHOD_REG_NONE },
+        { "IsFlying", nullptr, METHOD_REG_NONE },
 #endif
 #if defined(WOTLK)
         { "HasAchieved", &LuaPlayer::HasAchieved },
         { "HasTalent", &LuaPlayer::HasTalent },
         { "CanTitanGrip", &LuaPlayer::CanTitanGrip },
+#else
+        { "HasAchieved", nullptr, METHOD_REG_NONE },
+        { "HasTalent", nullptr, METHOD_REG_NONE },
+        { "CanTitanGrip", nullptr, METHOD_REG_NONE },
 #endif
         { "CanCompleteRepeatableQuest", &LuaPlayer::CanCompleteRepeatableQuest },
         { "CanRewardQuest", &LuaPlayer::CanRewardQuest },
@@ -3987,49 +4011,57 @@ namespace LuaPlayer
         { "RemoveArenaSpellCooldowns", &LuaPlayer::RemoveArenaSpellCooldowns },
         { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
         { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
+#else
+        { "RemoveArenaSpellCooldowns", nullptr, METHOD_REG_NONE },
+        { "ModifyHonorPoints", nullptr, METHOD_REG_NONE },
+        { "ModifyArenaPoints", nullptr, METHOD_REG_NONE },
 #endif
 #if defined(WOTLK)
         { "ResetPetTalents", &LuaPlayer::ResetPetTalents },
         { "ResetAchievements", &LuaPlayer::ResetAchievements },
         { "SendMovieStart", &LuaPlayer::SendMovieStart },
+#else
+        { "ResetPetTalents", nullptr, METHOD_REG_NONE },
+        { "ResetAchievements", nullptr, METHOD_REG_NONE },
+        { "SendMovieStart", nullptr, METHOD_REG_NONE },
 #endif
         // Not implemented methods
-        { "GetChampioningFaction", nullptr }, // ACore & TC only
-        { "GetRecruiterId", nullptr }, // not implemented
-        { "GetHonorStoredKills", nullptr }, // classic only
-        { "GetRankPoints", nullptr }, // classic only
-        { "GetHonorLastWeekStandingPos", nullptr }, // classic only
-        { "SetHonorStoredKills", nullptr }, // classic only
-        { "SetRankPoints", nullptr }, // classic only
-        { "SetHonorLastWeekStandingPos", nullptr }, // classic only
-        { "SetMovement", nullptr }, // not implemented
-        { "SetFFA", nullptr }, // not implemented
+        { "GetChampioningFaction", nullptr, METHOD_REG_NONE }, // ACore & TC only
+        { "GetRecruiterId", nullptr, METHOD_REG_NONE }, // not implemented
+        { "GetHonorStoredKills", nullptr, METHOD_REG_NONE }, // classic only
+        { "GetRankPoints", nullptr, METHOD_REG_NONE }, // classic only
+        { "GetHonorLastWeekStandingPos", nullptr, METHOD_REG_NONE }, // classic only
+        { "SetHonorStoredKills", nullptr, METHOD_REG_NONE }, // classic only
+        { "SetRankPoints", nullptr, METHOD_REG_NONE }, // classic only
+        { "SetHonorLastWeekStandingPos", nullptr, METHOD_REG_NONE }, // classic only
+        { "SetMovement", nullptr, METHOD_REG_NONE }, // not implemented
+        { "SetFFA", nullptr, METHOD_REG_NONE }, // not implemented
         { "IsImmuneToEnvironmentalDamage", nullptr}, // not implemented
-        { "InRandomLfgDungeon", nullptr }, // not implemented
-        { "HasPendingBind", nullptr }, //not implmented
-        { "CanFlyInZone", nullptr }, // not implemented
-        { "IsNeverVisible", nullptr }, // not implemented
-        { "IsUsingLfg", nullptr }, // not implemented
-        { "HasReceivedQuestReward", nullptr }, // not implemented
-        { "IsOutdoorPvPActive", nullptr }, // not implemented
-        { "IsARecruiter", nullptr }, // not implemented
-        { "SetAchievement", nullptr }, // TC/Acore
-        { "RemovePet", nullptr }, // not implemented
-        { "SummonPet", nullptr }, // not implemented
-        { "RemoveActiveQuest", nullptr }, // not implemented
-        { "RemoveRewardedQuest", nullptr }, // not implemented
-        { "KilledPlayerCredit", nullptr }, // not implemented
-        { "KillGOCredit", nullptr }, // not implemented
-        { "GainSpellComboPoints", nullptr }, // not implemented
-        { "AddTalent", nullptr }, // not implemented
-        { "BindToInstance", nullptr }, // not implemented
-        { "UpdateHonor", nullptr }, // classic only
-        { "ResetHonor", nullptr },  // classic only
-        { "ClearHonorInfo", nullptr },  // classic only
-        { "GetXP", nullptr }, // not implemented
-        { "GetXPForNextLevel", nullptr }, // not implemented
+        { "InRandomLfgDungeon", nullptr, METHOD_REG_NONE }, // not implemented
+        { "HasPendingBind", nullptr, METHOD_REG_NONE }, //not implmented
+        { "CanFlyInZone", nullptr, METHOD_REG_NONE }, // not implemented
+        { "IsNeverVisible", nullptr, METHOD_REG_NONE }, // not implemented
+        { "IsUsingLfg", nullptr, METHOD_REG_NONE }, // not implemented
+        { "HasReceivedQuestReward", nullptr, METHOD_REG_NONE }, // not implemented
+        { "IsOutdoorPvPActive", nullptr, METHOD_REG_NONE }, // not implemented
+        { "IsARecruiter", nullptr, METHOD_REG_NONE }, // not implemented
+        { "SetAchievement", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "RemovePet", nullptr, METHOD_REG_NONE }, // not implemented
+        { "SummonPet", nullptr, METHOD_REG_NONE }, // not implemented
+        { "RemoveActiveQuest", nullptr, METHOD_REG_NONE }, // not implemented
+        { "RemoveRewardedQuest", nullptr, METHOD_REG_NONE }, // not implemented
+        { "KilledPlayerCredit", nullptr, METHOD_REG_NONE }, // not implemented
+        { "KillGOCredit", nullptr, METHOD_REG_NONE }, // not implemented
+        { "GainSpellComboPoints", nullptr, METHOD_REG_NONE }, // not implemented
+        { "AddTalent", nullptr, METHOD_REG_NONE }, // not implemented
+        { "BindToInstance", nullptr, METHOD_REG_NONE }, // not implemented
+        { "UpdateHonor", nullptr, METHOD_REG_NONE }, // classic only
+        { "ResetHonor", nullptr, METHOD_REG_NONE },  // classic only
+        { "ClearHonorInfo", nullptr, METHOD_REG_NONE },  // classic only
+        { "GetXP", nullptr, METHOD_REG_NONE }, // not implemented
+        { "GetXPForNextLevel", nullptr, METHOD_REG_NONE }, // not implemented
         
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

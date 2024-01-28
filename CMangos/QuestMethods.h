@@ -187,13 +187,15 @@ namespace LuaQuest
         { "HasFlag", &LuaQuest::HasFlag },
 #if defined(TBC) || defined(WOTLK)
         { "IsDaily", &LuaQuest::IsDaily },
+#else
+        { "IsDaily", nullptr, METHOD_REG_NONE },
 #endif
         { "IsRepeatable", &LuaQuest::IsRepeatable },
 
         // Not implemented methods
-        { "GetMaxLevel", nullptr },  // not implemented
+        { "GetMaxLevel", nullptr, METHOD_REG_NONE },  // not implemented
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif
