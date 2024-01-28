@@ -593,6 +593,10 @@ ElunaRegister<Player> PlayerMethods[] =
 #endif
 
     // Boolean
+    { "HasTankSpec", &LuaPlayer::HasTankSpec },
+    { "HasMeleeSpec", &LuaPlayer::HasMeleeSpec },
+    { "HasCasterSpec", &LuaPlayer::HasCasterSpec },
+    { "HasHealSpec", &LuaPlayer::HasHealSpec },
     { "IsInGroup", &LuaPlayer::IsInGroup },
     { "IsInGuild", &LuaPlayer::IsInGuild },
     { "IsGM", &LuaPlayer::IsGM },

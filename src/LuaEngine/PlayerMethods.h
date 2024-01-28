@@ -406,6 +406,50 @@ namespace LuaPlayer
 #endif
 
     /**
+     * Returns `true` if the [Player] has a Tank Specialization, `false` otherwise.
+     *
+     * @return bool HasTankSpec
+     */
+    int HasTankSpec(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->HasTankSpec());
+        return 1;
+    }
+    
+    /**
+     * Returns `true` if the [Player] has a Melee Specialization, `false` otherwise.
+     *
+     * @return bool HasMeleeSpec
+     */
+    int HasMeleeSpec(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->HasMeleeSpec());
+        return 1;
+    }
+    
+    /**
+     * Returns `true` if the [Player] has a Caster Specialization, `false` otherwise.
+     *
+     * @return bool HasCasterSpec
+     */
+    int HasCasterSpec(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->HasCasterSpec());
+        return 1;
+    }
+    
+    /**
+     * Returns `true` if the [Player] has a Heal Specialization, `false` otherwise.
+     *
+     * @return bool HasHealSpec
+     */
+    int HasHealSpec(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->HasHealSpec());
+        return 1;
+    }
+
+    /**
      * Returns `true` if the [Player] is in a [Group], `false` otherwise.
      *
      * @return bool isInGroup
