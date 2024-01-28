@@ -14,7 +14,7 @@
 #include <sstream>
 #include <boost/filesystem.hpp>
 
-#ifdef TRINITYCORE
+#ifdef TRINITY
 #include "MapManager.h"
 #endif
 

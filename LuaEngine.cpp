@@ -979,13 +979,13 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, 
 void Eluna::UpdateEluna(uint32 diff)
 {
     if (reload)
-#ifdef TRINITYCORE
+#ifdef TRINITY
         if(!GetQueryProcessor().HasPendingCallbacks())
 #endif
             _ReloadEluna();
 
     eventMgr->globalProcessor->Update(diff);
-#ifdef TRINITYCORE
+#ifdef TRINITY
     GetQueryProcessor().ProcessReadyCallbacks();
 #endif
 }

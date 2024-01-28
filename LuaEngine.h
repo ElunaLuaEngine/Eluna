@@ -250,7 +250,7 @@ public:
     lua_State* L;
     EventMgr* eventMgr;
 
-#ifdef TRINITYCORE
+#ifdef TRINITY
     QueryCallbackProcessor queryProcessor;
     QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 #endif
