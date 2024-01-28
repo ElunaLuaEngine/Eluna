@@ -490,6 +490,7 @@ public:
     bool OnCanGroupInvite(Player* player, std::string& memberName);
     void OnGroupRollRewardItem(Player* player, Item* item, uint32 count, RollVote voteType, Roll* roll);
     void OnBattlegroundDesertion(Player* player, const BattlegroundDesertionType type);
+    void OnCreatureKilledByPet(Player* player, Creature* killed);
 
 #ifndef CLASSIC
 #ifndef TBC

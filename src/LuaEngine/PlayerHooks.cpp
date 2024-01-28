@@ -698,3 +698,11 @@ void Eluna::OnBattlegroundDesertion(Player* player, const BattlegroundDesertionT
     Push(type);
     CallAllFunctions(PlayerEventBindings, key);
 }
+
+void Eluna::OnCreatureKilledByPet(Player* player, Creature* killed)
+{
+    START_HOOK(PLAYER_EVENT_ON_PET_KILL);
+    Push(player);
+    Push(killed);
+    CallAllFunctions(PlayerEventBindings, key);
+}

@@ -472,6 +472,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetGuild", &LuaPlayer::GetGuild },
     { "GetAccountId", &LuaPlayer::GetAccountId },
     { "GetAccountName", &LuaPlayer::GetAccountName },
+    { "GetCompletedQuestsCount", &LuaPlayer::GetCompletedQuestsCount },
 #if defined (TBC) || defined (WOTLK)
     { "GetArenaPoints", &LuaPlayer::GetArenaPoints },
     { "GetHonorPoints", &LuaPlayer::GetHonorPoints },
@@ -492,6 +493,8 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetRestBonus", &LuaPlayer::GetRestBonus },
 #ifdef WOTLK
     { "GetPhaseMaskForSpawn", &LuaPlayer::GetPhaseMaskForSpawn },
+    { "GetAchievementPoints", &LuaPlayer::GetAchievementPoints },
+    { "GetCompletedAchievementsCount", &LuaPlayer::GetCompletedAchievementsCount },
 #endif
     { "GetReqKillOrCastCurrentCount", &LuaPlayer::GetReqKillOrCastCurrentCount },
     { "GetQuestStatus", &LuaPlayer::GetQuestStatus },
