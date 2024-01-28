@@ -18,11 +18,11 @@ namespace LuaGameObject
      * @param uint32 questId : quest entry Id to check
      * @return bool hasQuest
      */
-    int HasQuest(lua_State* L, GameObject* go)
+    int HasQuest(Eluna* E, GameObject* go)
     {
-        uint32 questId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 questId = Eluna::CHECKVAL<uint32>(E->L, 2);
 
-        Eluna::Push(L, go->HasQuest(questId));
+        E->Push(go->HasQuest(questId));
         return 1;
     }
 
@@ -31,9 +31,9 @@ namespace LuaGameObject
      *
      * @return bool isSpawned
      */
-    int IsSpawned(lua_State* L, GameObject* go)
+    int IsSpawned(Eluna* E, GameObject* go)
     {
-        Eluna::Push(L, go->IsSpawned());
+        E->Push(go->IsSpawned());
         return 1;
     }
 
@@ -42,9 +42,9 @@ namespace LuaGameObject
      *
      * @return bool isTransport
      */
-    int IsTransport(lua_State* L, GameObject* go)
+    int IsTransport(Eluna* E, GameObject* go)
     {
-        Eluna::Push(L, go->IsTransport());
+        E->Push(go->IsTransport());
         return 1;
     }
 
@@ -53,9 +53,9 @@ namespace LuaGameObject
      *
      * @return bool isActive
      */
-    int IsActive(lua_State* L, GameObject* go)
+    int IsActive(Eluna* E, GameObject* go)
     {
-        Eluna::Push(L, go->isActiveObject());
+        E->Push(go->isActiveObject());
         return 1;
     }
 
@@ -64,9 +64,9 @@ namespace LuaGameObject
      *
      * @return uint32 displayId
      */
-    int GetDisplayId(lua_State* L, GameObject* go)
+    int GetDisplayId(Eluna* E, GameObject* go)
     {
-        Eluna::Push(L, go->GetDisplayId());
+        E->Push(go->GetDisplayId());
         return 1;
     }
 
@@ -85,9 +85,9 @@ namespace LuaGameObject
      *
      * @return [GOState] goState
      */
-    int GetGoState(lua_State* L, GameObject* go)
+    int GetGoState(Eluna* E, GameObject* go)
     {
-        Eluna::Push(L, go->GetGoState());
+        E->Push(go->GetGoState());
         return 1;
     }
 
@@ -107,9 +107,9 @@ namespace LuaGameObject
      *
      * @return [LootState] lootState
      */
-    int GetLootState(lua_State* L, GameObject* go)
+    int GetLootState(Eluna* E, GameObject* go)
     {
-        Eluna::Push(L, go->GetLootState());
+        E->Push(go->GetLootState());
         return 1;
     }
 
@@ -120,9 +120,9 @@ namespace LuaGameObject
      *
      * @return [Player] player
      */
-    int GetLootRecipient(lua_State* L, GameObject* go)
+    int GetLootRecipient(Eluna* E, GameObject* go)
     {
-        Eluna::Push(L, go->GetLootRecipient());
+        E->Push(go->GetLootRecipient());
         return 1;
     }
 
@@ -133,9 +133,9 @@ namespace LuaGameObject
      *
      * @return [Group] group
      */
-    int GetLootRecipientGroup(lua_State* L, GameObject* go)
+    int GetLootRecipientGroup(Eluna* E, GameObject* go)
     {
-        Eluna::Push(L, go->GetGroupLootRecipient());
+        E->Push(go->GetGroupLootRecipient());
         return 1;
     }
 
@@ -144,10 +144,10 @@ namespace LuaGameObject
      *
      * @return uint32 dbguid
      */
-    int GetDBTableGUIDLow(lua_State* L, GameObject* go)
+    int GetDBTableGUIDLow(Eluna* E, GameObject* go)
     {
         // on mangos based this is same as lowguid
-        Eluna::Push(L, go->GetGUIDLow());
+        E->Push(go->GetGUIDLow());
         return 1;
     }
 
@@ -165,9 +165,9 @@ namespace LuaGameObject
      *
      * @param [GOState] state : all available go states can be seen above
      */
-    int SetGoState(lua_State* L, GameObject* go)
+    int SetGoState(Eluna* E, GameObject* go)
     {
-        uint32 state = Eluna::CHECKVAL<uint32>(L, 2, 0);
+        uint32 state = Eluna::CHECKVAL<uint32>(E->L, 2, 0);
 
         if (state == 0)
             go->SetGoState(GO_STATE_ACTIVE);
@@ -195,9 +195,9 @@ namespace LuaGameObject
      *
      * @param [LootState] state : all available loot states can be seen above
      */
-    int SetLootState(lua_State* L, GameObject* go)
+    int SetLootState(Eluna* E, GameObject* go)
     {
-        uint32 state = Eluna::CHECKVAL<uint32>(L, 2, 0);
+        uint32 state = Eluna::CHECKVAL<uint32>(E->L, 2, 0);
 
         if (state == 0)
             go->SetLootState(GO_NOT_READY);
@@ -215,7 +215,7 @@ namespace LuaGameObject
      * Saves [GameObject] to the database
      *
      */
-    int SaveToDB(lua_State* /*L*/, GameObject* go)
+    int SaveToDB(Eluna* /*E*/, GameObject* go)
     {
         go->SaveToDB();
         return 0;
@@ -228,9 +228,9 @@ namespace LuaGameObject
      *
      * @param bool deleteFromDB : if true, it will delete the [GameObject] from the database
      */
-    int RemoveFromWorld(lua_State* L, GameObject* go)
+    int RemoveFromWorld(Eluna* E, GameObject* go)
     {
-        bool deldb = Eluna::CHECKVAL<bool>(L, 2, false);
+        bool deldb = Eluna::CHECKVAL<bool>(E->L, 2, false);
 
         // cs_gobject.cpp copy paste
         ObjectGuid ownerGuid = go->GetOwnerGuid();
@@ -251,7 +251,7 @@ namespace LuaGameObject
         go->SetRespawnTime(0);
         go->Delete();
 
-        Eluna::CHECKOBJ<ElunaObject>(L, 1)->Invalidate();
+        Eluna::CHECKOBJ<ElunaObject>(E->L, 1)->Invalidate();
         return 0;
     }
 
@@ -260,9 +260,9 @@ namespace LuaGameObject
      *
      * @param uint32 delay = 0 : cooldown time in seconds to restore the [GameObject] back to normal. 0 for infinite duration
      */
-    int UseDoorOrButton(lua_State* L, GameObject* go)
+    int UseDoorOrButton(Eluna* E, GameObject* go)
     {
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 2, 0);
+        uint32 delay = Eluna::CHECKVAL<uint32>(E->L, 2, 0);
 
         go->UseDoorOrButton(delay);
         return 0;
@@ -273,7 +273,7 @@ namespace LuaGameObject
      *
      * The gameobject may be automatically respawned by the core
      */
-    int Despawn(lua_State* /*L*/, GameObject* go)
+    int Despawn(Eluna* /*E*/, GameObject* go)
     {
         go->SetLootState(GO_JUST_DEACTIVATED);
         return 0;
@@ -282,7 +282,7 @@ namespace LuaGameObject
     /**
      * Respawns a [GameObject]
      */
-    int Respawn(lua_State* /*L*/, GameObject* go)
+    int Respawn(Eluna* /*E*/, GameObject* go)
     {
         go->Respawn();
         return 0;
@@ -295,9 +295,9 @@ namespace LuaGameObject
      *
      * @param int32 delay = 0 : cooldown time in seconds to respawn or despawn the object. 0 means never
      */
-    int SetRespawnTime(lua_State* L, GameObject* go)
+    int SetRespawnTime(Eluna* E, GameObject* go)
     {
-        int32 respawn = Eluna::CHECKVAL<int32>(L, 2);
+        int32 respawn = Eluna::CHECKVAL<int32>(E->L, 2);
 
         go->SetRespawnTime(respawn);
         return 0;

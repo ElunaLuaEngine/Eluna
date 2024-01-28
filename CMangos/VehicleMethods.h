@@ -24,7 +24,7 @@ namespace LuaVehicle
     {
         Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
 
-        Eluna::Push(L, vehicle->HasOnBoard(passenger));
+        E->Push(vehicle->HasOnBoard(passenger));
         return 1;
     }
 
@@ -35,7 +35,7 @@ namespace LuaVehicle
      */
     int GetOwner(lua_State* L, Vehicle* vehicle)
     {
-        Eluna::Push(L, vehicle->GetOwner());
+        E->Push(vehicle->GetOwner());
         return 1;
     }
 
@@ -46,7 +46,7 @@ namespace LuaVehicle
      */
     int GetEntry(lua_State* L, Vehicle* vehicle)
     {
-        Eluna::Push(L, vehicle->GetVehicleEntry()->m_ID);
+        E->Push(vehicle->GetVehicleEntry()->m_ID);
         return 1;
     }
 
@@ -59,7 +59,7 @@ namespace LuaVehicle
     int GetPassenger(lua_State* L, Vehicle* vehicle)
     {
         int8 seatId = Eluna::CHECKVAL<int8>(L, 2);
-        Eluna::Push(L, vehicle->GetPassenger(seatId));
+        E->Push(vehicle->GetPassenger(seatId));
         return 1;
     }
 

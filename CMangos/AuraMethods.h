@@ -26,9 +26,9 @@ namespace LuaAura
      *
      * @return [Unit] caster
      */
-    int GetCaster(lua_State* L, Aura* aura)
+    int GetCaster(Eluna* E, Aura* aura)
     {
-        Eluna::Push(L, aura->GetCaster());
+        E->Push(aura->GetCaster());
         return 1;
     }
 
@@ -37,9 +37,9 @@ namespace LuaAura
      *
      * @return string caster_guid : the GUID of the Unit as a decimal string
      */
-    int GetCasterGUID(lua_State* L, Aura* aura)
+    int GetCasterGUID(Eluna* E, Aura* aura)
     {
-        Eluna::Push(L, aura->GetCasterGuid());
+        E->Push(aura->GetCasterGuid());
         return 1;
     }
 
@@ -48,9 +48,9 @@ namespace LuaAura
      *
      * @return uint32 caster_level
      */
-    int GetCasterLevel(lua_State* L, Aura* aura)
+    int GetCasterLevel(Eluna* E, Aura* aura)
     {
-        Eluna::Push(L, aura->GetCaster()->GetLevel());
+        E->Push(aura->GetCaster()->GetLevel());
         return 1;
     }
 
@@ -59,9 +59,9 @@ namespace LuaAura
      *
      * @return int32 duration : amount of time left in milliseconds
      */
-    int GetDuration(lua_State* L, Aura* aura)
+    int GetDuration(Eluna* E, Aura* aura)
     {
-        Eluna::Push(L, aura->GetAuraDuration());
+        E->Push(aura->GetAuraDuration());
         return 1;
     }
 
@@ -70,9 +70,9 @@ namespace LuaAura
      *
      * @return uint32 aura_id
      */
-    int GetAuraId(lua_State* L, Aura* aura)
+    int GetAuraId(Eluna* E, Aura* aura)
     {
-        Eluna::Push(L, aura->GetId());
+        E->Push(aura->GetId());
         return 1;
     }
 
@@ -84,9 +84,9 @@ namespace LuaAura
      *
      * @return int32 max_duration : the maximum duration of the Aura, in milliseconds
      */
-    int GetMaxDuration(lua_State* L, Aura* aura)
+    int GetMaxDuration(Eluna* E, Aura* aura)
     {
-        Eluna::Push(L, aura->GetAuraMaxDuration());
+        E->Push(aura->GetAuraMaxDuration());
         return 1;
     }
 
@@ -97,9 +97,9 @@ namespace LuaAura
      *
      * @return uint32 stack_amount
      */
-    int GetStackAmount(lua_State* L, Aura* aura)
+    int GetStackAmount(Eluna* E, Aura* aura)
     {
-        Eluna::Push(L, aura->GetStackAmount());
+        E->Push(aura->GetStackAmount());
         return 1;
     }
 
@@ -108,9 +108,9 @@ namespace LuaAura
      *
      * @return [Unit] owner
      */
-    int GetOwner(lua_State* L, Aura* aura)
+    int GetOwner(Eluna* E, Aura* aura)
     {
-        Eluna::Push(L, aura->GetTarget());
+        E->Push(aura->GetTarget());
         return 1;
     }
 
@@ -119,9 +119,9 @@ namespace LuaAura
      *
      * @param int32 duration : the new duration of the Aura, in milliseconds
      */
-    int SetDuration(lua_State* L, Aura* aura)
+    int SetDuration(Eluna* E, Aura* aura)
     {
-        int32 duration = Eluna::CHECKVAL<int32>(L, 2);
+        int32 duration = Eluna::CHECKVAL<int32>(E->L, 2);
         aura->GetHolder()->SetAuraDuration(duration);
 #if (defined(TBC) || defined(CLASSIC))
         aura->GetHolder()->UpdateAuraDuration();
@@ -139,9 +139,9 @@ namespace LuaAura
      *
      * @param int32 duration : the new maximum duration of the Aura, in milliseconds
      */
-    int SetMaxDuration(lua_State* L, Aura* aura)
+    int SetMaxDuration(Eluna* E, Aura* aura)
     {
-        int32 duration = Eluna::CHECKVAL<int32>(L, 2);
+        int32 duration = Eluna::CHECKVAL<int32>(E->L, 2);
         aura->GetHolder()->SetAuraMaxDuration(duration);
 #if (defined(TBC) || defined(CLASSIC))
         aura->GetHolder()->UpdateAuraDuration();
@@ -159,9 +159,9 @@ namespace LuaAura
      *
      * @param uint32 amount
      */
-    int SetStackAmount(lua_State* L, Aura* aura)
+    int SetStackAmount(Eluna* E, Aura* aura)
     {
-        uint8 amount = Eluna::CHECKVAL<uint8>(L, 2);
+        uint8 amount = Eluna::CHECKVAL<uint8>(E->L, 2);
 #ifndef CATA
         aura->GetHolder()->SetStackAmount(amount, aura->GetTarget());
 #else
@@ -173,10 +173,10 @@ namespace LuaAura
     /**
      * Remove this [Aura] from the [Unit] it is applied to.
      */
-    int Remove(lua_State* L, Aura* aura)
+    int Remove(Eluna* E, Aura* aura)
     {
         aura->GetTarget()->RemoveSpellAuraHolder(aura->GetHolder(), AURA_REMOVE_BY_CANCEL);
-        Eluna::CHECKOBJ<ElunaObject>(L, 1)->Invalidate();
+        Eluna::CHECKOBJ<ElunaObject>(E->L, 1)->Invalidate();
         return 0;
     }
     

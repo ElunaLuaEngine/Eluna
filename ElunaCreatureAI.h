@@ -72,7 +72,7 @@ struct ElunaCreatureAI : CreatureAI
                 if (!me->GetEluna()->MovementInform(me, point.first, point.second))
                     ScriptedAI::MovementInform(point.first, point.second);
 #else
-                if (!sEluna->MovementInform(me, point.first, point.second))
+                if (!me->GetEluna()->MovementInform(me, point.first, point.second))
                     CreatureAI::MovementInform(point.first, point.second);
 #endif
             }
@@ -111,7 +111,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!sEluna->EnterCombat(me, target))
             ScriptedAI::EnterCombat(target);
 #else
-        if (!sEluna->EnterCombat(me, target))
+        if (!me->GetEluna()->EnterCombat(me, target))
             CreatureAI::EnterCombat(target);
 #endif
     }
@@ -149,7 +149,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!me->GetEluna()->JustDied(me, killer))
             ScriptedAI::JustDied(killer);
 #else
-        if (!sEluna->JustDied(me, killer))
+        if (!me->GetEluna()->JustDied(me, killer))
             CreatureAI::JustDied(killer);
 #endif
     }
@@ -161,7 +161,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!me->GetEluna()->KilledUnit(me, victim))
             ScriptedAI::KilledUnit(victim);
 #else
-        if (!sEluna->KilledUnit(me, victim))
+        if (!me->GetEluna()->KilledUnit(me, victim))
             CreatureAI::KilledUnit(victim);
 #endif
     }
@@ -173,7 +173,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!me->GetEluna()->JustSummoned(me, summon))
             ScriptedAI::JustSummoned(summon);
 #else
-        if (!sEluna->JustSummoned(me, summon))
+        if (!me->GetEluna()->JustSummoned(me, summon))
             CreatureAI::JustSummoned(summon);
 #endif
     }
@@ -185,7 +185,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!me->GetEluna()->SummonedCreatureDespawn(me, summon))
             ScriptedAI::SummonedCreatureDespawn(summon);
 #else
-        if (!sEluna->SummonedCreatureDespawn(me, summon))
+        if (!me->GetEluna()->SummonedCreatureDespawn(me, summon))
             CreatureAI::SummonedCreatureDespawn(summon);
 #endif
     }
@@ -205,7 +205,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!me->GetEluna()->AttackStart(me, target))
             ScriptedAI::AttackStart(target);
 #else
-        if (!sEluna->AttackStart(me, target))
+        if (!me->GetEluna()->AttackStart(me, target))
            CreatureAI::AttackStart(target);
 #endif
     }
@@ -251,7 +251,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!sEluna->JustRespawned(me))
             ScriptedAI::JustRespawned();
 #else
-        if (!sEluna->JustRespawned(me))
+        if (!me->GetEluna()->JustRespawned(me))
             CreatureAI::JustRespawned();
 #endif
     }
@@ -264,7 +264,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!me->GetEluna()->JustReachedHome(me))
             ScriptedAI::JustReachedHome();
 #else
-        if (!sEluna->JustReachedHome(me))
+        if (!me->GetEluna()->JustReachedHome(me))
             CreatureAI::JustReachedHome();
 #endif
     }
@@ -276,7 +276,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!me->GetEluna()->ReceiveEmote(me, player, emoteId))
             ScriptedAI::ReceiveEmote(player, emoteId);
 #else
-        if (!sEluna->ReceiveEmote(me, player, emoteId))
+        if (!me->GetEluna()->ReceiveEmote(me, player, emoteId))
             CreatureAI::ReceiveEmote(player, emoteId);
 #endif
     }
@@ -288,7 +288,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!me->GetEluna()->CorpseRemoved(me, respawnDelay))
             ScriptedAI::CorpseRemoved(respawnDelay);
 #else
-        if (!sEluna->CorpseRemoved(me, respawnDelay))
+        if (!me->GetEluna()->CorpseRemoved(me, respawnDelay))
             CreatureAI::CorpseRemoved(respawnDelay);
 #endif
     }
@@ -307,7 +307,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!me->GetEluna()->MoveInLineOfSight(me, who))
             ScriptedAI::MoveInLineOfSight(who);
 #else
-        if (!sEluna->MoveInLineOfSight(me, who))
+        if (!me->GetEluna()->MoveInLineOfSight(me, who))
             CreatureAI::MoveInLineOfSight(who);
 #endif
     }
@@ -325,7 +325,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!me->GetEluna()->SpellHit(me, caster, spell))
             ScriptedAI::SpellHit(caster, spell);
 #else
-        if (!sEluna->SpellHit(me, caster, spell))
+        if (!me->GetEluna()->SpellHit(me, caster, spell))
             CreatureAI::SpellHit(caster, spell);
 #endif
     }
@@ -341,7 +341,7 @@ struct ElunaCreatureAI : CreatureAI
         if (!me->GetEluna()->SpellHitTarget(me, target, spell))
             ScriptedAI::SpellHitTarget(target, spell);
 #else
-        if (!sEluna->SpellHitTarget(me, target, spell))
+        if (!me->GetEluna()->SpellHitTarget(me, target, spell))
             CreatureAI::SpellHitTarget(target, spell);
 #endif
     }
