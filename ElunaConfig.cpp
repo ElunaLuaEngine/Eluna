@@ -4,7 +4,11 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
+#ifdef TRINITY
 #include "Config.h"
+#elif CMANGOS
+#include "Config/Config.h"
+#endif
 #include "ElunaConfig.h"
 
 ElunaConfig::ElunaConfig()
@@ -37,6 +41,8 @@ void ElunaConfig::SetConfig(ElunaConfigBoolValues index, char const* fieldname, 
 {
 #ifdef TRINITY
     SetConfig(index, sConfigMgr->GetBoolDefault(fieldname, defvalue));
+#elif CMANGOS
+    SetConfig(index, sConfig.GetBoolDefault(fieldname, defvalue));
 #endif
 }
 
@@ -44,6 +50,8 @@ void ElunaConfig::SetConfig(ElunaConfigStringValues index, char const* fieldname
 {
 #ifdef TRINITY
     SetConfig(index, sConfigMgr->GetStringDefault(fieldname, defvalue));
+#elif CMANGOS
+    SetConfig(index, sConfig.GetStringDefault(fieldname, defvalue));
 #endif
 }
 
