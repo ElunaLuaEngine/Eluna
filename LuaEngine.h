@@ -28,15 +28,16 @@
 #endif
 #endif
 #ifndef CMANGOS
+#include "Map.h"
 #include "Weather.h"
 #include "World.h"
 #else
+#include "Maps/Map.h"
 #include "Weather/Weather.h"
 #include "World/World.h"
 #endif
 #include "Hooks.h"
 #include "ElunaUtility.h"
-#include "Map.h"
 #include <mutex>
 #include <memory>
 
@@ -249,8 +250,10 @@ public:
     lua_State* L;
     EventMgr* eventMgr;
 
+#ifdef TRINITY
     QueryCallbackProcessor queryProcessor;
     QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
+#endif
 
     BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
     BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;

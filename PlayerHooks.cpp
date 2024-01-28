@@ -99,8 +99,17 @@ bool Eluna::OnCommand(Player* player, const char* text)
             if (mapid_reload_cache_only != mapId)
             {
                 if (mapId == mapid_reload_global || mapId == mapid_reload_all)
+#ifdef TRINITY
                     sWorld->GetEluna()->ReloadEluna();
+#else
+                    sWorld.GetEluna()->ReloadEluna();
+#endif
+
+#ifdef TRINITY
                 sMapMgr->DoForAllMaps([&](Map* map)
+#else
+                sMapMgr.DoForAllMaps([&](Map* map)
+#endif
                     {
                         if (mapId == mapid_reload_all || mapId == static_cast<int>(map->GetId()))
                         {

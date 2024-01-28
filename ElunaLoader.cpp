@@ -14,7 +14,9 @@
 #include <sstream>
 #include <boost/filesystem.hpp>
 
+#ifdef TRINITY
 #include "MapManager.h"
+#endif
 
 extern "C" {
 #include <lua.h>
