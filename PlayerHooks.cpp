@@ -100,9 +100,11 @@ bool Eluna::OnCommand(Player* player, const char* text)
             {
                 if (mapId == mapid_reload_global || mapId == mapid_reload_all)
 #ifdef TRINITY
-                    sWorld->GetEluna()->ReloadEluna();
+                    if (sWorld->GetEluna())
+                        sWorld->GetEluna()->ReloadEluna();
 #else
-                    sWorld.GetEluna()->ReloadEluna();
+                    if (sWorld.GetEluna())
+                        sWorld.GetEluna()->ReloadEluna();
 #endif
 
 #ifdef TRINITY
