@@ -4369,6 +4369,21 @@ namespace LuaPlayer
         return 1;
     }
 
+    /**
+     * The [Player] sets the spell power
+     *
+     * @param int value : The spell power value to set
+     * @param bool apply = false : Whether the spell power should be applied or removed
+     */
+    int SetSpellPower(lua_State* L, Player* player)
+    {
+        int value  = Eluna::CHECKVAL<int>(L, 2);
+        bool apply = Eluna::CHECKVAL<bool>(L, 3, false);
+
+        player->ApplySpellPowerBonus(value, apply);
+        return 0;
+    }
+
     /*int BindToInstance(lua_State* L, Player* player)
     {
     player->BindToInstance();

@@ -571,6 +571,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SetRankPoints", &LuaPlayer::SetRankPoints },
     { "SetHonorLastWeekStandingPos", &LuaPlayer::SetHonorLastWeekStandingPos },
 #endif
+    { "SetSpellPower", &LuaPlayer::SetSpellPower },
     { "SetLifetimeKills", &LuaPlayer::SetLifetimeKills },
     { "SetGameMaster", &LuaPlayer::SetGameMaster },
     { "SetGMChat", &LuaPlayer::SetGMChat },
