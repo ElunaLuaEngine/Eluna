@@ -1264,7 +1264,7 @@ namespace LuaGlobalFunctions
      * <pre>
      * enum SpellEvents
      * {
-     *     SPELL_EVENT_ON_CAST                             = 1,    // (event, spell, worldobject, skipCheck)
+     *     SPELL_EVENT_ON_CAST                             = 1,    // (event, spell, skipCheck)
      *     SPELL_EVENT_COUNT
      * };
      * </pre>
