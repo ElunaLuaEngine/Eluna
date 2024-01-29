@@ -767,6 +767,88 @@ namespace LuaCreature
     }
 
     /**
+     * Adds threat to a [Unit] for this [Creature].
+     *
+     * @param [Unit] target
+     * @param float amount
+     */
+    int AddThreat(Eluna* E, Creature* creature)
+    {
+        Unit* target = Eluna::CHECKOBJ<Unit>(E->L, 2);
+        float amt = Eluna::CHECKVAL<float>(E->L, 3);
+
+        creature->GetThreatManager().AddThreat(target, amt);
+        return 0;
+    }
+
+    /**
+     * Returns the threat of a [Unit] in this [Creature]'s threat list.
+     *
+     * @param [Unit] target
+     * @return float threat
+     */
+    int GetThreat(Eluna* E, Creature* creature)
+    {
+        Unit* target = Eluna::CHECKOBJ<Unit>(E->L, 2);
+
+        E->Push(creature->GetThreatManager().GetThreat(target));
+        return 1;
+    }
+
+    /**
+     * Clear the threat of a [Unit] in this [Creature]'s threat list.
+     *
+     * @param [Unit] target
+     */
+    int ClearThreat(Eluna* E, Creature* creature)
+    {
+        Unit* target = Eluna::CHECKOBJ<Unit>(E->L, 2);
+
+        creature->GetThreatManager().ClearThreat(target);
+        return 0;
+    }
+
+    /**
+     * Clear the [Creature]'s threat list. This will cause evading.
+     */
+    int ClearAllThreat(Eluna* E, Creature* creature)
+    {
+        creature->GetThreatManager().ClearAllThreat();
+        return 0;
+    }
+
+    /**
+     * Resets the [Creature]'s threat list, setting all threat targets' threat to 0.
+     */
+    int ResetAllThreat(Eluna* E, Creature* creature)
+    {
+        creature->GetThreatManager().ResetAllThreat();
+        return 0;
+    }
+
+    /**
+     * Forces the [Creature] to fixate on the [Unit], regardless of threat. Requires the [Unit] to be in the threat list.
+     *
+     * @param [Unit] target
+     */
+    int FixateTarget(Eluna* E, Creature* creature)
+    {
+        Unit* target = Eluna::CHECKOBJ<Unit>(E->L, 2);
+
+        creature->GetThreatManager().FixateTarget(target);
+        return 0;
+    }
+
+    /**
+     * Clears the [Creature]'s fixated target.
+     */
+    int ClearFixate(Eluna* E, Creature* creature)
+    {
+        creature->GetThreatManager().ClearFixate();
+        return 0;
+    }
+
+    /**
      * Returns the [Creature]'s NPC flags.
      *
      * These are used to control whether the NPC is a vendor, can repair items,
@@ -1314,6 +1396,7 @@ namespace LuaCreature
 #endif
         { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
+        { "GetThreat", &LuaCreature::GetThreat },
 
         // Setters
         { "SetRegeneratingHealth", &LuaCreature::SetRegeneratingHealth },
@@ -1379,6 +1462,12 @@ namespace LuaCreature
         { "SelectVictim", &LuaCreature::SelectVictim },
         { "MoveWaypoint", &LuaCreature::MoveWaypoint },
         { "UpdateEntry", &LuaCreature::UpdateEntry },
+        { "AddThreat", &LuaCreature::AddThreat },
+        { "ClearThreat", &LuaCreature::ClearThreat },
+        { "ClearAllThreat", &LuaCreature::ClearAllThreat },
+        { "ResetAllThreat", &LuaCreature::ResetAllThreat },
+        { "FixateTarget", &LuaCreature::FixateTarget },
+        { "ClearFixate", &LuaCreature::ClearFixate },
 
 #ifdef CATA //Not implemented in TCPP
         { "GetShieldBlockValue", nullptr },

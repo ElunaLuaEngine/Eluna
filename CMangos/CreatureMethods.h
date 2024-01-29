@@ -1222,6 +1222,13 @@ namespace LuaCreature
         { "AddLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "ResetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "RemoveLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "GetThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "AddThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "ClearThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "ClearAllThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "ResetAllThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "FixateTarget", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "ClearFixate", nullptr, METHOD_REG_NONE }, // TC/Acore
 
         { NULL, NULL, METHOD_REG_NONE }
     };
