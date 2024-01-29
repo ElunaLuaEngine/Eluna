@@ -544,6 +544,14 @@ bool Eluna::OnSendMail(Player* sender, ObjectGuid recipientGuid)
     return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 
+void Eluna::OnDiscoverArea(Player* player, uint32 area)
+{
+    START_HOOK(PLAYER_EVENT_ON_DISCOVER_AREA);
+    HookPush(player);
+    HookPush(area);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
 {
     if (lang == LANG_ADDON)

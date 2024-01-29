@@ -410,6 +410,7 @@ public:
     bool OnTradeInit(Player* trader, Player* tradee);
     bool OnTradeAccept(Player* trader, Player* tradee);
     bool OnSendMail(Player* sender, ObjectGuid recipientGuid);
+    void OnDiscoverArea(Player* player, uint32 area);
 
     /* Item */
     void OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget);

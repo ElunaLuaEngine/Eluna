@@ -746,7 +746,7 @@ namespace LuaGlobalFunctions
      *     PLAYER_EVENT_ON_SKILL_CHANGE            =     43,       // (event, player, skillId, skillValue) - Returns new skill level value
      *     PLAYER_EVENT_ON_LEARN_SPELL             =     44,       // (event, player, spellId)
      *     PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE    =     45,       // (event, player, achievementId)
-     *     // UNUSED                               =     46,       // (event, player)
+     *     PLAYER_EVENT_ON_DISCOVER_AREA           =     46,       // (event, player, area)
      *     PLAYER_EVENT_ON_UPDATE_AREA             =     47,       // (event, player, oldArea, newArea)
      *     PLAYER_EVENT_ON_TRADE_INIT              =     48,       // (event, player, target) - Can return false to interrupt trade
      *     PLAYER_EVENT_ON_SEND_MAIL               =     49,       // (event, player, recipientGuid) - Can return false to interrupt sending
