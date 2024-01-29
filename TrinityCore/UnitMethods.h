@@ -2671,7 +2671,6 @@ namespace LuaUnit
         { "MoveClear", &LuaUnit::MoveClear },
         { "DealDamage", &LuaUnit::DealDamage },
         { "DealHeal", &LuaUnit::DealHeal },
-        { "AddThreat", &LuaUnit::AddThreat },
 
         // Not implemented methods
         { "SummonGuardian", nullptr, METHOD_REG_NONE }, // not implemented
