@@ -1259,6 +1259,32 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Registers a [Spell] event handler.
+     *
+     * <pre>
+     * enum SpellEvents
+     * {
+     *     SPELL_EVENT_ON_CAST                             = 1,    // (event, spell, worldobject, skipCheck)
+     *     SPELL_EVENT_COUNT
+     * };
+     * </pre>
+     *
+     * @proto cancel = (entry, event, function)
+     * @proto cancel = (entry, event, function, shots)
+     *
+     * @param uint32 entry : [Spell] entry Id
+     * @param uint32 event : [Spell] event Id, refer to SpellEvents above
+     * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+     *
+     * @return function cancel : a function that cancels the binding when called
+     */
+    int RegisterSpellEvent(Eluna* E)
+    {
+        return RegisterEntryHelper(E, Hooks::REGTYPE_SPELL);
+    }
+
+    /**
      * Reloads the Lua engine.
      */
     int ReloadEluna(Eluna* E)
@@ -3156,6 +3182,7 @@ namespace LuaGlobalFunctions
         { "RegisterCreatureGossipEvent", &LuaGlobalFunctions::RegisterCreatureGossipEvent },
         { "RegisterGameObjectEvent", &LuaGlobalFunctions::RegisterGameObjectEvent },
         { "RegisterGameObjectGossipEvent", &LuaGlobalFunctions::RegisterGameObjectGossipEvent },
+        { "RegisterSpellEvent", &LuaGlobalFunctions::RegisterSpellEvent },
         { "RegisterItemEvent", &LuaGlobalFunctions::RegisterItemEvent },
         { "RegisterItemGossipEvent", &LuaGlobalFunctions::RegisterItemGossipEvent },
         { "RegisterPlayerGossipEvent", &LuaGlobalFunctions::RegisterPlayerGossipEvent },

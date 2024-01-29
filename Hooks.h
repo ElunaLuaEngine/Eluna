@@ -80,6 +80,7 @@ namespace Hooks
         REGTYPE_CREATURE_GOSSIP,
         REGTYPE_GAMEOBJECT,
         REGTYPE_GAMEOBJECT_GOSSIP,
+        REGTYPE_SPELL,
         REGTYPE_ITEM,
         REGTYPE_ITEM_GOSSIP,
         REGTYPE_PLAYER_GOSSIP,
@@ -325,6 +326,12 @@ namespace Hooks
         GAMEOBJECT_EVENT_COUNT
     };
 
+    enum SpellEvents
+    {
+        SPELL_EVENT_ON_CAST                             = 1,    // (event, spell, skipCheck)
+        SPELL_EVENT_COUNT
+    };
+
     enum ItemEvents
     {
         ITEM_EVENT_ON_DUMMY_EFFECT                      = 1,    // (event, caster, spellid, effindex, item)
@@ -366,6 +373,7 @@ namespace Hooks
         INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS   = 7,    // (event, instance_data, map)
         INSTANCE_EVENT_COUNT
     };
+
 };
 
 #endif // _HOOKS_H
