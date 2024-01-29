@@ -1632,15 +1632,6 @@ namespace LuaUnit
     }
 
     /**
-     * Clears the [Unit]'s threat list.
-     */
-    int ClearThreatList(Eluna* /*E*/, Unit* unit)
-    {
-        unit->getThreatManager().clearReferences();
-        return 0;
-    }
-
-    /**
      * Mounts the [Unit] on the given displayID/modelID.
      *
      * @param uint32 displayId
@@ -2456,46 +2447,6 @@ namespace LuaUnit
 #endif
         return 0;
     }
-
-    /**
-     * Adds threat to the [Unit] from the victim.
-     *
-     * <pre>
-     * enum SpellSchoolMask
-     * {
-     *     SPELL_SCHOOL_MASK_NONE    = 0,
-     *     SPELL_SCHOOL_MASK_NORMAL  = 1,
-     *     SPELL_SCHOOL_MASK_HOLY    = 2,
-     *     SPELL_SCHOOL_MASK_FIRE    = 4,
-     *     SPELL_SCHOOL_MASK_NATURE  = 8,
-     *     SPELL_SCHOOL_MASK_FROST   = 16,
-     *     SPELL_SCHOOL_MASK_SHADOW  = 32,
-     *     SPELL_SCHOOL_MASK_ARCANE  = 64,
-     * }
-     * </pre>
-     *
-     * @param [Unit] victim : [Unit] that caused the threat
-     * @param float threat : threat amount
-     * @param [SpellSchoolMask] schoolMask = 0 : [SpellSchoolMask] of the threat causer
-     * @param uint32 spell = 0 : spell entry used for threat
-     */
-    int AddThreat(Eluna* E, Unit* unit)
-    {
-        Unit* victim = Eluna::CHECKOBJ<Unit>(E->L, 2);
-        float threat = Eluna::CHECKVAL<float>(E->L, 3, true);
-        uint32 spell = Eluna::CHECKVAL<uint32>(E->L, 4, 0);
-
-        uint32 schoolMask = Eluna::CHECKVAL<uint32>(E->L, 5, 0);
-        SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
-        unit->AddThreat(victim, threat, false, (SpellSchoolMask)schoolMask, spellEntry);
-
-#ifdef CLASSIC
-        unit->AddThreat(victim, threat, false, spellEntry ? GetSchoolMask(spellEntry->School) : SPELL_SCHOOL_MASK_NONE, spellEntry);
-#else
-        unit->AddThreat(victim, threat, false, spellEntry ? static_cast<SpellSchoolMask>(spellEntry->SchoolMask) : SPELL_SCHOOL_MASK_NONE, spellEntry);
-#endif
-        return 0;
-    }
     
     ElunaRegister<Unit> UnitMethods[] =
     {
@@ -2652,7 +2603,6 @@ namespace LuaUnit
         { "CountPctFromMaxHealth", &LuaUnit::CountPctFromMaxHealth },
         { "Dismount", &LuaUnit::Dismount },
         { "Mount", &LuaUnit::Mount },
-        { "ClearThreatList", &LuaUnit::ClearThreatList },
         { "ClearUnitState", &LuaUnit::ClearUnitState },
         { "AddUnitState", &LuaUnit::AddUnitState },
         { "NearTeleport", &LuaUnit::NearTeleport },
@@ -2669,7 +2619,6 @@ namespace LuaUnit
         { "MoveClear", &LuaUnit::MoveClear },
         { "DealDamage", &LuaUnit::DealDamage },
         { "DealHeal", &LuaUnit::DealHeal },
-        { "AddThreat", &LuaUnit::AddThreat },
 #if defined(TBC) || defined(WOTLK)
         { "RemoveArenaAuras", &LuaUnit::RemoveArenaAuras },
 #else

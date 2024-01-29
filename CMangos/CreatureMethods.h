@@ -1116,6 +1116,55 @@ namespace LuaCreature
         return 1;
     }
     
+    /**
+     * Adds threat to the [Creature] from the victim.
+     *
+     * <pre>
+     * enum SpellSchoolMask
+     * {
+     *     SPELL_SCHOOL_MASK_NONE    = 0,
+     *     SPELL_SCHOOL_MASK_NORMAL  = 1,
+     *     SPELL_SCHOOL_MASK_HOLY    = 2,
+     *     SPELL_SCHOOL_MASK_FIRE    = 4,
+     *     SPELL_SCHOOL_MASK_NATURE  = 8,
+     *     SPELL_SCHOOL_MASK_FROST   = 16,
+     *     SPELL_SCHOOL_MASK_SHADOW  = 32,
+     *     SPELL_SCHOOL_MASK_ARCANE  = 64,
+     * }
+     * </pre>
+     *
+     * @param [Unit] victim : [Unit] that caused the threat
+     * @param float threat : threat amount
+     * @param [SpellSchoolMask] schoolMask = 0 : [SpellSchoolMask] of the threat causer
+     * @param uint32 spell = 0 : spell entry used for threat
+     */
+    int AddThreat(Eluna* E, Creature* creature)
+    {
+        Unit* victim = Eluna::CHECKOBJ<Unit>(E->L, 2);
+        float threat = Eluna::CHECKVAL<float>(E->L, 3, true);
+        uint32 spell = Eluna::CHECKVAL<uint32>(E->L, 4, 0);
+
+        uint32 schoolMask = Eluna::CHECKVAL<uint32>(E->L, 5, 0);
+        SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
+        creature->AddThreat(victim, threat, false, (SpellSchoolMask)schoolMask, spellEntry);
+
+#ifdef CLASSIC
+        creature->AddThreat(victim, threat, false, spellEntry ? GetSchoolMask(spellEntry->School) : SPELL_SCHOOL_MASK_NONE, spellEntry);
+#else
+        creature->AddThreat(victim, threat, false, spellEntry ? static_cast<SpellSchoolMask>(spellEntry->SchoolMask) : SPELL_SCHOOL_MASK_NONE, spellEntry);
+#endif
+        return 0;
+    }
+    
+    /**
+     * Clears the [Creature]'s threat list.
+     */
+    int ClearThreatList(Eluna* /*E*/, Creature* creature)
+    {
+        creature->getThreatManager().clearReferences();
+        return 0;
+    }
+    
     ElunaRegister<Creature> CreatureMethods[] =
     {
         // Getters
@@ -1207,7 +1256,10 @@ namespace LuaCreature
         { "SelectVictim", &LuaCreature::SelectVictim },
         { "MoveWaypoint", &LuaCreature::MoveWaypoint },
         { "UpdateEntry", &LuaCreature::UpdateEntry },
+        { "AddThreat", &LuaCreature::AddThreat },
+        { "ClearThreatList", &LuaCreature::ClearThreatList },
 
+        
         // Not implemented methods
         { "GetWaypointPath", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "GetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
@@ -1223,9 +1275,7 @@ namespace LuaCreature
         { "ResetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "RemoveLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "GetThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "AddThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "ClearThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "ClearAllThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "ResetAllThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "FixateTarget", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "ClearFixate", nullptr, METHOD_REG_NONE }, // TC/Acore

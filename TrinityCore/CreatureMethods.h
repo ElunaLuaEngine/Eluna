@@ -767,17 +767,34 @@ namespace LuaCreature
     }
 
     /**
-     * Adds threat to a [Unit] for this [Creature].
+     * Adds threat to the [Creature] from the victim.
      *
-     * @param [Unit] target
-     * @param float amount
+     * <pre>
+     * enum SpellSchoolMask
+     * {
+     *     SPELL_SCHOOL_MASK_NONE    = 0,
+     *     SPELL_SCHOOL_MASK_NORMAL  = 1,
+     *     SPELL_SCHOOL_MASK_HOLY    = 2,
+     *     SPELL_SCHOOL_MASK_FIRE    = 4,
+     *     SPELL_SCHOOL_MASK_NATURE  = 8,
+     *     SPELL_SCHOOL_MASK_FROST   = 16,
+     *     SPELL_SCHOOL_MASK_SHADOW  = 32,
+     *     SPELL_SCHOOL_MASK_ARCANE  = 64,
+     * }
+     * </pre>
+     *
+     * @param [Unit] victim : [Unit] that caused the threat
+     * @param float threat : threat amount
+     * @param [SpellSchoolMask] schoolMask = 0 : [SpellSchoolMask] of the threat causer
+     * @param uint32 spell = 0 : spell entry used for threat
      */
     int AddThreat(Eluna* E, Creature* creature)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(E->L, 2);
-        float amt = Eluna::CHECKVAL<float>(E->L, 3);
+        Unit* victim = Eluna::CHECKOBJ<Unit>(E->L, 2);
+        float threat = Eluna::CHECKVAL<float>(E->L, 3, true);
+        uint32 spell = Eluna::CHECKVAL<uint32>(E->L, 4, 0);
 
-        creature->GetThreatManager().AddThreat(target, amt);
+        creature->GetThreatManager().AddThreat(victim, threat, spell ? sSpellMgr->GetSpellInfo(spell) : NULL, true, true);
         return 0;
     }
 
@@ -811,7 +828,7 @@ namespace LuaCreature
     /**
      * Clear the [Creature]'s threat list. This will cause evading.
      */
-    int ClearAllThreat(Eluna* E, Creature* creature)
+    int ClearThreatList(Eluna* /*E*/, Creature* creature)
     {
         creature->GetThreatManager().ClearAllThreat();
         return 0;
@@ -820,7 +837,7 @@ namespace LuaCreature
     /**
      * Resets the [Creature]'s threat list, setting all threat targets' threat to 0.
      */
-    int ResetAllThreat(Eluna* E, Creature* creature)
+    int ResetAllThreat(Eluna* /*E*/, Creature* creature)
     {
         creature->GetThreatManager().ResetAllThreat();
         return 0;
@@ -842,7 +859,7 @@ namespace LuaCreature
     /**
      * Clears the [Creature]'s fixated target.
      */
-    int ClearFixate(Eluna* E, Creature* creature)
+    int ClearFixate(Eluna* /*E*/, Creature* creature)
     {
         creature->GetThreatManager().ClearFixate();
         return 0;
@@ -1464,7 +1481,7 @@ namespace LuaCreature
         { "UpdateEntry", &LuaCreature::UpdateEntry },
         { "AddThreat", &LuaCreature::AddThreat },
         { "ClearThreat", &LuaCreature::ClearThreat },
-        { "ClearAllThreat", &LuaCreature::ClearAllThreat },
+        { "ClearThreatList", &LuaCreature::ClearThreatList },
         { "ResetAllThreat", &LuaCreature::ResetAllThreat },
         { "FixateTarget", &LuaCreature::FixateTarget },
         { "ClearFixate", &LuaCreature::ClearFixate },

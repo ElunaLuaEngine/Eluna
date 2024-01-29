@@ -1714,15 +1714,6 @@ namespace LuaUnit
     }
 
     /**
-     * Clears the [Unit]'s threat list.
-     */
-    int ClearThreatList(Eluna* /*E*/, Unit* unit)
-    {
-        unit->GetThreatManager().ClearAllThreat();
-        return 0;
-    }
-
-    /**
      * Mounts the [Unit] on the given displayID/modelID.
      *
      * @param uint32 displayId
@@ -2434,38 +2425,6 @@ namespace LuaUnit
         return 0;
     }
 
-    /**
-     * Adds threat to the [Unit] from the victim.
-     *
-     * <pre>
-     * enum SpellSchoolMask
-     * {
-     *     SPELL_SCHOOL_MASK_NONE    = 0,
-     *     SPELL_SCHOOL_MASK_NORMAL  = 1,
-     *     SPELL_SCHOOL_MASK_HOLY    = 2,
-     *     SPELL_SCHOOL_MASK_FIRE    = 4,
-     *     SPELL_SCHOOL_MASK_NATURE  = 8,
-     *     SPELL_SCHOOL_MASK_FROST   = 16,
-     *     SPELL_SCHOOL_MASK_SHADOW  = 32,
-     *     SPELL_SCHOOL_MASK_ARCANE  = 64,
-     * }
-     * </pre>
-     *
-     * @param [Unit] victim : [Unit] that caused the threat
-     * @param float threat : threat amount
-     * @param [SpellSchoolMask] schoolMask = 0 : [SpellSchoolMask] of the threat causer
-     * @param uint32 spell = 0 : spell entry used for threat
-     */
-    int AddThreat(Eluna* E, Unit* unit)
-    {
-        Unit* victim = Eluna::CHECKOBJ<Unit>(E->L, 2);
-        float threat = Eluna::CHECKVAL<float>(E->L, 3, true);
-        uint32 spell = Eluna::CHECKVAL<uint32>(E->L, 4, 0);
-
-        unit->GetThreatManager().AddThreat(victim, threat, spell ? sSpellMgr->GetSpellInfo(spell) : NULL, true, true);
-        return 0;
-    }
-
     int RestoreDisplayId(Eluna* /*E*/, Unit* unit)
     {
         unit->RestoreDisplayId();
@@ -2694,7 +2653,6 @@ namespace LuaUnit
         { "RestoreFaction", &LuaUnit::RestoreFaction },
         { "RemoveBindSightAuras", &LuaUnit::RemoveBindSightAuras },
         { "RemoveCharmAuras", &LuaUnit::RemoveCharmAuras },
-        { "ClearThreatList", &LuaUnit::ClearThreatList },
         { "ClearUnitState", &LuaUnit::ClearUnitState },
         { "AddUnitState", &LuaUnit::AddUnitState },
         { "DisableMelee", &LuaUnit::DisableMelee },
