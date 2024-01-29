@@ -266,12 +266,12 @@ public:
     BindingMap< EntryKey<Hooks::GossipEvents> >*     CreatureGossipBindings;
     BindingMap< EntryKey<Hooks::GameObjectEvents> >* GameObjectEventBindings;
     BindingMap< EntryKey<Hooks::GossipEvents> >*     GameObjectGossipBindings;
+    BindingMap< EntryKey<Hooks::SpellEvents> >*      SpellEventBindings;
     BindingMap< EntryKey<Hooks::ItemEvents> >*       ItemEventBindings;
     BindingMap< EntryKey<Hooks::GossipEvents> >*     ItemGossipBindings;
     BindingMap< EntryKey<Hooks::GossipEvents> >*     PlayerGossipBindings;
     BindingMap< EntryKey<Hooks::InstanceEvents> >*   MapEventBindings;
     BindingMap< EntryKey<Hooks::InstanceEvents> >*   InstanceEventBindings;
-    BindingMap< EntryKey<Hooks::SpellEvents> >* SpellEventBindings;
 
     BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >* CreatureUniqueBindings;
 
