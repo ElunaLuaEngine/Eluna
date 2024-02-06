@@ -20,9 +20,9 @@ namespace LuaVehicle
      * @param [Unit] passenger
      * @return bool isOnBoard
      */
-    int IsOnBoard(lua_State* L, Vehicle* vehicle)
+    int IsOnBoard(Eluna* E, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit* passenger = Eluna::CHECKOBJ<Unit>(E->L, 2);
 
         E->Push(vehicle->HasOnBoard(passenger));
         return 1;
@@ -33,7 +33,7 @@ namespace LuaVehicle
      *
      * @return [Unit] owner
      */
-    int GetOwner(lua_State* L, Vehicle* vehicle)
+    int GetOwner(Eluna* E, Vehicle* vehicle)
     {
         E->Push(vehicle->GetOwner());
         return 1;
@@ -44,7 +44,7 @@ namespace LuaVehicle
      *
      * @return uint32 entry
      */
-    int GetEntry(lua_State* L, Vehicle* vehicle)
+    int GetEntry(Eluna* E, Vehicle* vehicle)
     {
         E->Push(vehicle->GetVehicleEntry()->m_ID);
         return 1;
@@ -56,9 +56,9 @@ namespace LuaVehicle
      * @param int8 seat
      * @return [Unit] passenger
      */
-    int GetPassenger(lua_State* L, Vehicle* vehicle)
+    int GetPassenger(Eluna* E, Vehicle* vehicle)
     {
-        int8 seatId = Eluna::CHECKVAL<int8>(L, 2);
+        int8 seatId = Eluna::CHECKVAL<int8>(E->L, 2);
         E->Push(vehicle->GetPassenger(seatId));
         return 1;
     }
@@ -69,10 +69,10 @@ namespace LuaVehicle
      * @param [Unit] passenger
      * @param int8 seat
      */
-    int AddPassenger(lua_State* L, Vehicle* vehicle)
+    int AddPassenger(Eluna* E, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
-        int8 seatId = Eluna::CHECKVAL<int8>(L, 3);
+        Unit* passenger = Eluna::CHECKOBJ<Unit>(E->L, 2);
+        int8 seatId = Eluna::CHECKVAL<int8>(E->L, 3);
 
         if (vehicle->CanBoard(passenger))
             vehicle->Board(passenger, seatId);
@@ -84,9 +84,9 @@ namespace LuaVehicle
      *
      * @param [Unit] passenger
      */
-    int RemovePassenger(lua_State* L, Vehicle* vehicle)
+    int RemovePassenger(Eluna* E, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit* passenger = Eluna::CHECKOBJ<Unit>(E->L, 2);
 
         vehicle->UnBoard(passenger, false);
         return 0;
