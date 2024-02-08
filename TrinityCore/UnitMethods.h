@@ -2629,7 +2629,7 @@ namespace LuaUnit
         { "SetStandState", &LuaUnit::SetStandState },
         { "SetInCombatWith", &LuaUnit::SetInCombatWith },
         { "ModifyPower", &LuaUnit::ModifyPower },
-        { "SetImmuneTo", &LuaUnit::SetImmuneTo}
+        { "SetImmuneTo", &LuaUnit::SetImmuneTo },
 
         // Boolean
         { "IsAlive", &LuaUnit::IsAlive },
