@@ -1601,7 +1601,7 @@ namespace LuaUnit
     int SetRooted(Eluna* E, Unit* unit)
     {
         bool apply = Eluna::CHECKVAL<bool>(E->L, 2, true);
-        
+
         unit->SetImmobilizedState(apply);
         return 0;
     }
@@ -2447,7 +2447,7 @@ namespace LuaUnit
 #endif
         return 0;
     }
-    
+
     ElunaRegister<Unit> UnitMethods[] =
     {
         // Getters
@@ -2644,6 +2644,7 @@ namespace LuaUnit
         { "RemoveCharmAuras", nullptr, METHOD_REG_NONE }, // not implemented
         { "DisableMelee", nullptr, METHOD_REG_NONE }, // not implemented
         { "SummonGuardian", nullptr, METHOD_REG_NONE }, // not implemented
+        { "SetImmuneTo", nullptr }, // not implemented
 
         { NULL, NULL, METHOD_REG_NONE }
     };

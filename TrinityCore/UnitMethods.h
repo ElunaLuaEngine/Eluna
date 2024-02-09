@@ -13,6 +13,55 @@
 namespace LuaUnit
 {
     /**
+    * Sets a mechanic immunity for the [Unit].
+    *
+    * <pre>
+    *   MECHANIC_NONE             = 0,
+    *   MECHANIC_CHARM            = 1,
+    *   MECHANIC_DISORIENTED      = 2,
+    *   MECHANIC_DISARM           = 3,
+    *   MECHANIC_DISTRACT         = 4,
+    *   MECHANIC_FEAR             = 5,
+    *   MECHANIC_GRIP             = 6,
+    *   MECHANIC_ROOT             = 7,
+    *   MECHANIC_SLOW_ATTACK      = 8,
+    *   MECHANIC_SILENCE          = 9,
+    *   MECHANIC_SLEEP            = 10,
+    *   MECHANIC_SNARE            = 11,
+    *   MECHANIC_STUN             = 12,
+    *   MECHANIC_FREEZE           = 13,
+    *   MECHANIC_KNOCKOUT         = 14,
+    *   MECHANIC_BLEED            = 15,
+    *   MECHANIC_BANDAGE          = 16,
+    *   MECHANIC_POLYMORPH        = 17,
+    *   MECHANIC_BANISH           = 18,
+    *   MECHANIC_SHIELD           = 19,
+    *   MECHANIC_SHACKLE          = 20,
+    *   MECHANIC_MOUNT            = 21,
+    *   MECHANIC_INFECTED         = 22,
+    *   MECHANIC_TURN             = 23,
+    *   MECHANIC_HORROR           = 24,
+    *   MECHANIC_INVULNERABILITY  = 25,
+    *   MECHANIC_INTERRUPT        = 26,
+    *   MECHANIC_DAZE             = 27,
+    *   MECHANIC_DISCOVERY        = 28,
+    *   MECHANIC_IMMUNE_SHIELD    = 29,     // Divine (Blessing) Shield/Protection and Ice Block
+    *   MECHANIC_SAPPED           = 30,
+    *   MECHANIC_ENRAGED          = 31
+    * </pre>
+    *
+    * @param int32 immunity : new value for the immunity mask
+    * @param bool apply = true : if true, the immunity is applied, otherwise it is removed
+    */
+    int SetImmuneTo(Eluna* E, Unit* unit)
+    {
+        int32 immunity = Eluna::CHECKVAL<int32>(E->L, 2);
+        bool apply = Eluna::CHECKVAL<bool>(E->L, 3, true);
+
+        unit->ApplySpellImmune(0, 5, immunity, apply);
+        return 0;
+    }
+    /**
      * The [Unit] tries to attack a given target
      *
      * @param [Unit] who : [Unit] to attack
@@ -2500,7 +2549,7 @@ namespace LuaUnit
     E->Push(summon);
     return 1;
     }*/
-    
+
     ElunaRegister<Unit> UnitMethods[] =
     {
         // Getters
@@ -2580,6 +2629,7 @@ namespace LuaUnit
         { "SetStandState", &LuaUnit::SetStandState },
         { "SetInCombatWith", &LuaUnit::SetInCombatWith },
         { "ModifyPower", &LuaUnit::ModifyPower },
+        { "SetImmuneTo", &LuaUnit::SetImmuneTo },
 
         // Boolean
         { "IsAlive", &LuaUnit::IsAlive },
