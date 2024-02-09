@@ -53,10 +53,10 @@ namespace LuaUnit
     * @param int32 immunity : new value for the immunity mask
     * @param bool apply = true : if true, the immunity is applied, otherwise it is removed
     */
-    int SetImmuneTo(lua_State* L, Unit* unit)
+    int SetImmuneTo(lua_State* E->L, Unit* unit)
     {
-        int32 immunity = Eluna::CHECKVAL<int32>(L, 2, true);
-        bool apply = Eluna::CHECKVAL<bool>(L, 3, true);
+        int32 immunity = Eluna::CHECKVAL<int32>(E->L, 2);
+        bool apply = Eluna::CHECKVAL<bool>(E->L, 3, true);
 
         unit->ApplySpellImmune(0, 5, immunity, apply);
         return 0;
