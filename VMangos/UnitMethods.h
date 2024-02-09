@@ -2972,7 +2972,7 @@ namespace LuaUnit
     Eluna::Push(L, summon);
     return 1;
     }*/
-    
+
     ElunaRegister<Unit> UnitMethods[] =
     {
         // Getters
@@ -3158,6 +3158,7 @@ namespace LuaUnit
         { "RemoveCharmAuras", nullptr }, // not implemented
         { "DisableMelee", nullptr }, // not implemented
         { "SummonGuardian", nullptr }, // not implemented
+        { "SetImmuneTo", nullptr }, // not implemented
 
         { NULL, NULL }
     };
