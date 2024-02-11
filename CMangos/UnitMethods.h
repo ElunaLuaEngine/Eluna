@@ -13,6 +13,60 @@
 namespace LuaUnit
 {
     /**
+    * Sets a mechanic immunity for the [Unit].
+    *
+    * <pre>
+    *   MECHANIC_NONE             = 0,
+    *   MECHANIC_CHARM            = 1,
+    *   MECHANIC_DISORIENTED      = 2,
+    *   MECHANIC_DISARM           = 3,
+    *   MECHANIC_DISTRACT         = 4,
+    *   MECHANIC_FEAR             = 5,
+    *   MECHANIC_GRIP             = 6,     // Called MECHANIC_FUMBLE in Classic/TBC
+    *   MECHANIC_ROOT             = 7,
+    *   MECHANIC_PACIFY           = 8,
+    *   MECHANIC_SILENCE          = 9,
+    *   MECHANIC_SLEEP            = 10,
+    *   MECHANIC_SNARE            = 11,
+    *   MECHANIC_STUN             = 12,
+    *   MECHANIC_FREEZE           = 13,
+    *   MECHANIC_KNOCKOUT         = 14,
+    *   MECHANIC_BLEED            = 15,
+    *   MECHANIC_BANDAGE          = 16,
+    *   MECHANIC_POLYMORPH        = 17,
+    *   MECHANIC_BANISH           = 18,
+    *   MECHANIC_SHIELD           = 19,
+    *   MECHANIC_SHACKLE          = 20,
+    *   MECHANIC_MOUNT            = 21,
+    *   MECHANIC_INFECTED         = 22,     // Called MECHANIC_PERSUADE in Classic/TBC
+    *   MECHANIC_TURN             = 23,
+    *   MECHANIC_HORROR           = 24,
+    *   MECHANIC_INVULNERABILITY  = 25,
+    *   MECHANIC_INTERRUPT        = 26,
+    *   MECHANIC_DAZE             = 27,
+    *   MECHANIC_DISCOVERY        = 28,
+    *   MECHANIC_IMMUNE_SHIELD    = 29,     // Divine (Blessing) Shield/Protection and Ice Block
+    *   MECHANIC_SAPPED           = 30,
+    *   MECHANIC_ENRAGED          = 31      // Not used in Classic/TBC
+    * </pre>
+    *
+    * @param int32 immunity : new value for the immunity mask
+    * @param bool apply = true : if true, the immunity is applied, otherwise it is removed
+    */
+    int SetImmuneTo(Eluna* E, Unit* unit)
+    {
+        int32 immunity = Eluna::CHECKVAL<int32>(E->L, 2);
+        bool apply = Eluna::CHECKVAL<bool>(E->L, 3, true);
+
+#ifndef CATA
+        unit->ApplySpellImmune(nullptr, 5, immunity, apply);
+#else
+        unit->ApplySpellImmune(0, 5, immunity, apply);
+#endif
+        return 0;
+    }
+
+    /**
      * The [Unit] tries to attack a given target
      *
      * @param [Unit] who : [Unit] to attack
@@ -2490,13 +2544,6 @@ namespace LuaUnit
         { "GetStat", &LuaUnit::GetStat },
         { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
         { "GetMovementType", &LuaUnit::GetMovementType },
-#if defined(WOTLK)
-        { "GetCritterGUID", &LuaUnit::GetCritterGUID },
-        { "GetVehicleKit", &LuaUnit::GetVehicleKit },
-#else
-        { "GetCritterGUID", nullptr, METHOD_REG_NONE },
-        { "GetVehicleKit", nullptr, METHOD_REG_NONE },
-#endif
 
         // Setters
         { "SetFaction", &LuaUnit::SetFaction },
@@ -2525,15 +2572,7 @@ namespace LuaUnit
         { "SetStandState", &LuaUnit::SetStandState },
         { "SetInCombatWith", &LuaUnit::SetInCombatWith },
         { "ModifyPower", &LuaUnit::ModifyPower },
-#if defined(WOTLK)
-        { "SetFFA", &LuaUnit::SetFFA },
-        { "SetSanctuary", &LuaUnit::SetSanctuary },
-        { "SetCritterGUID", &LuaUnit::SetCritterGUID },
-#else
-        { "SetFFA", nullptr, METHOD_REG_NONE },
-        { "SetSanctuary", nullptr, METHOD_REG_NONE },
-        { "SetCritterGUID", nullptr, METHOD_REG_NONE },
-#endif
+        { "SetImmuneTo", &LuaUnit::SetImmuneTo },
 
         // Boolean
         { "IsAlive", &LuaUnit::IsAlive },
@@ -2574,11 +2613,6 @@ namespace LuaUnit
         { "HasAura", &LuaUnit::HasAura },
         { "IsCasting", &LuaUnit::IsCasting },
         { "IsStandState", &LuaUnit::IsStandState },
-#if defined(TBC) || defined(WOTLK)
-        { "IsOnVehicle", &LuaUnit::IsOnVehicle },
-#else
-        { "IsOnVehicle", nullptr, METHOD_REG_NONE },
-#endif
 
         // Other
         { "AddAura", &LuaUnit::AddAura },
@@ -2619,14 +2653,26 @@ namespace LuaUnit
         { "MoveClear", &LuaUnit::MoveClear },
         { "DealDamage", &LuaUnit::DealDamage },
         { "DealHeal", &LuaUnit::DealHeal },
+
+        // Expansion specific methods
 #if defined(TBC) || defined(WOTLK)
+        { "IsOnVehicle", &LuaUnit::IsOnVehicle },
         { "RemoveArenaAuras", &LuaUnit::RemoveArenaAuras },
-#else
-        { "RemoveArenaAuras", nullptr, METHOD_REG_NONE },
-#endif
-#if defined(WOTLK)
+#elif defined(WOTLK)
+        { "GetCritterGUID", &LuaUnit::GetCritterGUID },
+        { "GetVehicleKit", &LuaUnit::GetVehicleKit },
+        { "SetFFA", &LuaUnit::SetFFA },
+        { "SetSanctuary", &LuaUnit::SetSanctuary },
+        { "SetCritterGUID", &LuaUnit::SetCritterGUID },
         { "MoveJump", &LuaUnit::MoveJump },
 #else
+        { "GetCritterGUID", nullptr, METHOD_REG_NONE },
+        { "GetVehicleKit", nullptr, METHOD_REG_NONE },
+        { "SetFFA", nullptr, METHOD_REG_NONE },
+        { "SetSanctuary", nullptr, METHOD_REG_NONE },
+        { "SetCritterGUID", nullptr, METHOD_REG_NONE },
+        { "IsOnVehicle", nullptr, METHOD_REG_NONE },
+        { "RemoveArenaAuras", nullptr, METHOD_REG_NONE },
         { "MoveJump", nullptr, METHOD_REG_NONE },
 #endif
 
@@ -2644,7 +2690,6 @@ namespace LuaUnit
         { "RemoveCharmAuras", nullptr, METHOD_REG_NONE }, // not implemented
         { "DisableMelee", nullptr, METHOD_REG_NONE }, // not implemented
         { "SummonGuardian", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SetImmuneTo", nullptr }, // not implemented
 
         { NULL, NULL, METHOD_REG_NONE }
     };
