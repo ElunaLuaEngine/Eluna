@@ -13,6 +13,56 @@
 namespace LuaUnit
 {
     /**
+    * Sets a mechanic immunity for the [Unit].
+    *
+    * <pre>
+    *   MECHANIC_NONE             = 0,
+    *   MECHANIC_CHARM            = 1,
+    *   MECHANIC_DISORIENTED      = 2,
+    *   MECHANIC_DISARM           = 3,
+    *   MECHANIC_DISTRACT         = 4,
+    *   MECHANIC_FEAR             = 5,
+    *   MECHANIC_GRIP             = 6,
+    *   MECHANIC_ROOT             = 7,
+    *   MECHANIC_SLOW_ATTACK      = 8,
+    *   MECHANIC_SILENCE          = 9,
+    *   MECHANIC_SLEEP            = 10,
+    *   MECHANIC_SNARE            = 11,
+    *   MECHANIC_STUN             = 12,
+    *   MECHANIC_FREEZE           = 13,
+    *   MECHANIC_KNOCKOUT         = 14,
+    *   MECHANIC_BLEED            = 15,
+    *   MECHANIC_BANDAGE          = 16,
+    *   MECHANIC_POLYMORPH        = 17,
+    *   MECHANIC_BANISH           = 18,
+    *   MECHANIC_SHIELD           = 19,
+    *   MECHANIC_SHACKLE          = 20,
+    *   MECHANIC_MOUNT            = 21,
+    *   MECHANIC_INFECTED         = 22,
+    *   MECHANIC_TURN             = 23,
+    *   MECHANIC_HORROR           = 24,
+    *   MECHANIC_INVULNERABILITY  = 25,
+    *   MECHANIC_INTERRUPT        = 26,
+    *   MECHANIC_DAZE             = 27,
+    *   MECHANIC_DISCOVERY        = 28,
+    *   MECHANIC_IMMUNE_SHIELD    = 29,     // Divine (Blessing) Shield/Protection and Ice Block
+    *   MECHANIC_SAPPED           = 30,
+    *   MECHANIC_ENRAGED          = 31
+    * </pre>
+    *
+    * @param int32 immunity : new value for the immunity mask
+    * @param bool apply = true : if true, the immunity is applied, otherwise it is removed
+    */
+    int SetImmuneTo(lua_State* L, Unit* unit)
+    {
+        int32 immunity = Eluna::CHECKVAL<int32>(L, 2);
+        bool apply = Eluna::CHECKVAL<bool>(L, 3, true);
+
+        unit->ApplySpellImmune(0, 5, immunity, apply);
+        return 0;
+    }
+    
+    /**
      * The [Unit] modifies a specific stat
      *
      * @param int32 stat : The stat to modify
@@ -1717,7 +1767,7 @@ namespace LuaUnit
             unit->SetByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
             for (Unit::ControlSet::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
                 (*itr)->SetByteValue(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
-    }
+        }
         else
         {
             unit->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
@@ -2314,20 +2364,20 @@ namespace LuaUnit
         bool delayed = Eluna::CHECKVAL<bool>(L, 3, true);
         switch (spellType)
         {
-            case 0:
-                spellType = CURRENT_MELEE_SPELL;
-                break;
-            case 1:
-                spellType = CURRENT_GENERIC_SPELL;
-                break;
-            case 2:
-                spellType = CURRENT_CHANNELED_SPELL;
-                break;
-            case 3:
-                spellType = CURRENT_AUTOREPEAT_SPELL;
-                break;
-            default:
-                return luaL_argerror(L, 2, "valid CurrentSpellTypes expected");
+        case 0:
+            spellType = CURRENT_MELEE_SPELL;
+            break;
+        case 1:
+            spellType = CURRENT_GENERIC_SPELL;
+            break;
+        case 2:
+            spellType = CURRENT_CHANNELED_SPELL;
+            break;
+        case 3:
+            spellType = CURRENT_AUTOREPEAT_SPELL;
+            break;
+        default:
+            return luaL_argerror(L, 2, "valid CurrentSpellTypes expected");
         }
 
         unit->InterruptSpell((CurrentSpellTypes)spellType, delayed);
@@ -2585,12 +2635,12 @@ namespace LuaUnit
         return 0;
     }
 
-   /**
-    * Modifies threat in pct to the [Unit] from the victim
-    *
-    * @param [Unit] victim : [Unit] that caused the threat
-    * @param int32 percent : threat amount in pct
-    */
+    /**
+     * Modifies threat in pct to the [Unit] from the victim
+     *
+     * @param [Unit] victim : [Unit] that caused the threat
+     * @param int32 percent : threat amount in pct
+     */
     int ModifyThreatPct(lua_State* L, Unit* unit)
     {
         Unit* victim = Eluna::CHECKOBJ<Unit>(L, 2);

@@ -353,6 +353,7 @@ ElunaRegister<Unit> UnitMethods[] =
     { "SetStandState", &LuaUnit::SetStandState },
     { "SetInCombatWith", &LuaUnit::SetInCombatWith },
     { "ModifyPower", &LuaUnit::ModifyPower },
+    { "SetImmuneTo", &LuaUnit::SetImmuneTo },
 
     // Boolean
     { "IsAlive", &LuaUnit::IsAlive },
@@ -401,7 +402,7 @@ ElunaRegister<Unit> UnitMethods[] =
 #endif
 
     // Other
-    {"HandleStatModifier", &LuaUnit::HandleStatModifier},
+    { "HandleStatModifier", &LuaUnit::HandleStatModifier },
     { "AddAura", &LuaUnit::AddAura },
     { "RemoveAura", &LuaUnit::RemoveAura },
     { "RemoveAllAuras", &LuaUnit::RemoveAllAuras },
