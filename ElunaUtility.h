@@ -13,6 +13,7 @@
 #define EXP_TBC 1
 #define EXP_WOTLK 2
 #define EXP_CATA 3
+#define EXP_RETAIL 9
 
 #if !defined ELUNA_CMANGOS
 #include "SharedDefines.h"
@@ -34,6 +35,7 @@
 #include <unordered_set>
 #include <mutex>
 #include <memory>
+#include <sstream>
 
 #if defined ELUNA_TRINITY || ELUNA_CMANGOS
 #define USING_BOOST
@@ -55,18 +57,25 @@
 typedef QueryResult ElunaQuery;
 #define GET_GUID                GetGUID
 #define HIGHGUID_PLAYER         HighGuid::Player
-#define HIGHGUID_UNIT           HighGuid::Unit
 #define HIGHGUID_ITEM           HighGuid::Item
 #define HIGHGUID_GAMEOBJECT     HighGuid::GameObject
 #define HIGHGUID_PET            HighGuid::Pet
 #define HIGHGUID_TRANSPORT      HighGuid::Transport
 #define HIGHGUID_VEHICLE        HighGuid::Vehicle
-#define HIGHGUID_CONTAINER      HighGuid::Container
 #define HIGHGUID_DYNAMICOBJECT  HighGuid::DynamicObject
 #define HIGHGUID_CORPSE         HighGuid::Corpse
-#define HIGHGUID_MO_TRANSPORT   HighGuid::Mo_Transport
 #define HIGHGUID_INSTANCE       HighGuid::Instance
+#if ELUNA_EXPANSION < EXP_RETAIL
+#define HIGHGUID_UNIT           HighGuid::Unit
+#define HIGHGUID_CONTAINER      HighGuid::Container
+#define HIGHGUID_MO_TRANSPORT   HighGuid::Mo_Transport
 #define HIGHGUID_GROUP          HighGuid::Group
+#else
+#define HIGHGUID_UNIT           HighGuid::Creature
+//#define HIGHGUID_CONTAINER      HighGuid::Container
+#define HIGHGUID_MO_TRANSPORT   HighGuid::Transport
+//#define HIGHGUID_GROUP          HighGuid::Group
+#endif
 #endif
 
 #if defined ELUNA_TRINITY
