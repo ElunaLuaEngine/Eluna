@@ -105,9 +105,17 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
 
 bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
 {
+#if defined ELUNA_TRINITY && ELUNA_EXPANSION >= EXP_CATA
+    START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_EXPIRE, pProto->BasicData->ID, false);
+#else
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_EXPIRE, pProto->ItemId, false);
+#endif
     HookPush(pPlayer);
+#if defined ELUNA_TRINITY && ELUNA_EXPANSION >= EXP_CATA
+    HookPush(pProto->BasicData->ID);
+#else
     HookPush(pProto->ItemId);
+#endif
     return CallAllFunctionsBool(binding, key);
 }
 
