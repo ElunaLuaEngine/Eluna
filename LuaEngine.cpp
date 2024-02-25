@@ -801,12 +801,14 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
         case Hooks::REGTYPE_PACKET:
             if (event_id < Hooks::PACKET_EVENT_COUNT)
             {
+#if ELUNA_EXPANSION < EXP_RETAIL
                 if (entry >= NUM_MSG_TYPES)
                 {
                     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
                     luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
+#endif
 
                 auto key = EntryKey<Hooks::PacketEvents>((Hooks::PacketEvents)event_id, entry);
                 bindingID = PacketEventBindings->Insert(key, functionRef, shots);
@@ -987,13 +989,13 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
 void Eluna::UpdateEluna(uint32 diff)
 {
     if (reload && sElunaLoader->GetCacheState() == SCRIPT_CACHE_READY)
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY && ELUNA_EXPANSION != EXP_RETAIL
         if(!GetQueryProcessor().HasPendingCallbacks())
 #endif
             _ReloadEluna();
 
     eventMgr->globalProcessor->Update(diff);
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY && ELUNA_EXPANSION != EXP_RETAIL
     GetQueryProcessor().ProcessReadyCallbacks();
 #endif
 }
