@@ -58,7 +58,11 @@ namespace LuaUnit
         int32 immunity = E->CHECKVAL<int32>(2);
         bool apply = E->CHECKVAL<bool>(3, true);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         unit->ApplySpellImmune(0, 5, immunity, apply);
+#else
+        unit->ApplySpellImmune(0, SpellImmunity(IMMUNITY_MECHANIC), immunity, apply);
+#endif
         return 0;
     }
     /**
@@ -117,7 +121,11 @@ namespace LuaUnit
      */
     int IsRooted(Eluna* E, Unit* unit)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(unit->IsRooted() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT));
+#else
+        E->Push(unit->HasRootAura() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT));
+#endif
         return 1;
     }
 
@@ -231,7 +239,11 @@ namespace LuaUnit
      */
     int IsSpiritGuide(Eluna* E, Unit* unit)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(unit->IsSpiritGuide());
+#else
+        E->Push(unit->IsSpiritService());
+#endif
         return 1;
     }
 
@@ -656,6 +668,7 @@ namespace LuaUnit
         return 1;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the [Unit]'s base spell power
      *
@@ -672,6 +685,7 @@ namespace LuaUnit
         E->Push(unit->GetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS + spellschool));
         return 1;
     }
+#endif
 
     /**
      * Returns the [Unit]'s current victim target or nil.
@@ -987,6 +1001,7 @@ namespace LuaUnit
         return 1;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the [Unit]'s class' name in given or default locale or nil.
      *
@@ -1050,6 +1065,7 @@ namespace LuaUnit
         E->Push(entry->Name[locale]);
         return 1;
     }
+#endif
 
     /**
      * Returns the [Unit]'s faction ID.
@@ -1357,7 +1373,9 @@ namespace LuaUnit
         {
             player->GiveLevel(newlevel);
             player->InitTalentForLevel();
+#if ELUNA_EXPANSION < EXP_RETAIL
             player->SetUInt32Value(PLAYER_XP, 0);
+#endif
         }
         else
             unit->SetLevel(newlevel);
@@ -1516,6 +1534,7 @@ namespace LuaUnit
         return 0;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Sets the [Unit]'s native/default modelID.
      *
@@ -1527,6 +1546,7 @@ namespace LuaUnit
         unit->SetNativeDisplayId(model);
         return 0;
     }
+#endif
 
     /**
      * Sets the [Unit]'s facing/orientation.
@@ -1616,6 +1636,7 @@ namespace LuaUnit
         return 0;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Sets the [Unit]'s FFA flag on or off.
      *
@@ -1661,6 +1682,7 @@ namespace LuaUnit
 
         return 0;
     }
+#endif
 
     /**
      * Sets the [Unit]s critter GUID field.
@@ -1790,6 +1812,7 @@ namespace LuaUnit
         return 0;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Makes the [Unit] perform the given emote continuously.
      *
@@ -1802,6 +1825,7 @@ namespace LuaUnit
         unit->SetUInt32Value(UNIT_NPC_EMOTESTATE, emoteId);
         return 0;
     }
+#endif
 
     /**
      * Returns calculated percentage from Health
@@ -1825,6 +1849,7 @@ namespace LuaUnit
         return 1;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Sends chat message to [Player]
      *
@@ -1851,6 +1876,7 @@ namespace LuaUnit
         target->GetSession()->SendPacket(&data);
         return 0;
     }
+#endif
 
     /**
      * Stops the [Unit]'s movement
@@ -1966,7 +1992,11 @@ namespace LuaUnit
     {
         Unit* target = E->CHECKOBJ<Unit>(2);
         uint32 time = E->CHECKVAL<uint32>(3, 0);
+#if ELUNA_EXPANSION < EXP_RETAIL
         unit->GetMotionMaster()->MoveFleeing(target, time);
+#else
+        unit->GetMotionMaster()->MoveFleeing(target, Milliseconds(time));
+#endif
         return 0;
     }
 
@@ -2113,7 +2143,11 @@ namespace LuaUnit
         uint32 spell = E->CHECKVAL<uint32>(3);
         bool triggered = E->CHECKVAL<bool>(4, false);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(spell);
+#else
+        SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(spell, DIFFICULTY_NONE);
+#endif
         if (!spellEntry)
             return 0;
 
@@ -2121,6 +2155,7 @@ namespace LuaUnit
         return 0;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Casts the [Spell] at target [Unit] with custom basepoints or casters.
      * See also [Unit:CastSpell].
@@ -2165,6 +2200,7 @@ namespace LuaUnit
         unit->CastSpell(target, spell, args);
         return 0;
     }
+#endif
 
     /**
      * Makes the [Unit] cast the spell to the given coordinates, used for area effect spells.
@@ -2258,7 +2294,11 @@ namespace LuaUnit
         uint32 spell = E->CHECKVAL<uint32>(2);
         Unit* target = E->CHECKOBJ<Unit>(3);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(spell);
+#else
+        SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(spell, DIFFICULTY_NONE);
+#endif
         if (!spellEntry)
             return 1;
 
@@ -2343,6 +2383,7 @@ namespace LuaUnit
         return 0;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Makes the [Unit] damage the target [Unit]
      *
@@ -2420,6 +2461,7 @@ namespace LuaUnit
         unit->DealSpellDamage(&dmgInfo, true);
         return 0;
     }
+#endif
 
     /**
      * Makes the [Unit] heal the target [Unit] with given spell
@@ -2436,7 +2478,11 @@ namespace LuaUnit
         uint32 amount = E->CHECKVAL<uint32>(4);
         bool critical = E->CHECKVAL<bool>(5, false);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
+#else
+        if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell, DIFFICULTY_NONE))
+#endif
         {
             HealInfo healInfo(unit, target, amount, info, info->GetSchoolMask());
             unit->HealBySpell(healInfo, critical);
@@ -2588,8 +2634,6 @@ namespace LuaUnit
         { "GetClass", &LuaUnit::GetClass },
         { "GetRaceMask", &LuaUnit::GetRaceMask },
         { "GetClassMask", &LuaUnit::GetClassMask },
-        { "GetRaceAsString", &LuaUnit::GetRaceAsString },
-        { "GetClassAsString", &LuaUnit::GetClassAsString },
         { "GetAura", &LuaUnit::GetAura },
         { "GetFaction", &LuaUnit::GetFaction },
         { "GetCurrentSpell", &LuaUnit::GetCurrentSpell },
@@ -2611,10 +2655,18 @@ namespace LuaUnit
         { "GetVictim", &LuaUnit::GetVictim },
         { "GetSpeed", &LuaUnit::GetSpeed },
         { "GetStat", &LuaUnit::GetStat },
-        { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
         { "GetVehicleKit", &LuaUnit::GetVehicleKit },
         { "GetVehicle", &LuaUnit::GetVehicle },
         { "GetMovementType", &LuaUnit::GetMovementType },
+#if ELUNA_EXPANSION < EXP_RETAIL
+        { "GetRaceAsString", &LuaUnit::GetRaceAsString },
+        { "GetClassAsString", &LuaUnit::GetClassAsString },
+        { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
+#else
+        { "GetRaceAsString", METHOD_REG_NONE },
+        { "GetClassAsString", METHOD_REG_NONE },
+        { "GetBaseSpellPower", METHOD_REG_NONE },
+#endif
 
         // Setters
         { "SetFaction", &LuaUnit::SetFaction },
@@ -2625,7 +2677,6 @@ namespace LuaUnit
         { "SetMaxPower", &LuaUnit::SetMaxPower },
         { "SetPowerType", &LuaUnit::SetPowerType },
         { "SetDisplayId", &LuaUnit::SetDisplayId },
-        { "SetNativeDisplayId", &LuaUnit::SetNativeDisplayId },
         { "SetFacing", &LuaUnit::SetFacing },
         { "SetFacingToObject", &LuaUnit::SetFacingToObject },
         { "SetSpeed", &LuaUnit::SetSpeed },
@@ -2634,8 +2685,15 @@ namespace LuaUnit
         { "SetConfused", &LuaUnit::SetConfused },
         { "SetFeared", &LuaUnit::SetFeared },
         { "SetPvP", &LuaUnit::SetPvP },
+#if ELUNA_EXPANSION < EXP_RETAIL
+        { "SetNativeDisplayId", &LuaUnit::SetNativeDisplayId },
         { "SetFFA", &LuaUnit::SetFFA },
         { "SetSanctuary", &LuaUnit::SetSanctuary },
+#else
+        { "SetNativeDisplayId", METHOD_REG_NONE },
+        { "SetFFA", METHOD_REG_NONE },
+        { "SetSanctuary", METHOD_REG_NONE },
+#endif
         { "SetCanFly", &LuaUnit::SetCanFly },
         { "SetVisible", &LuaUnit::SetVisible },
         { "SetOwnerGUID", &LuaUnit::SetOwnerGUID },
@@ -2708,14 +2766,11 @@ namespace LuaUnit
         { "SendUnitSay", &LuaUnit::SendUnitSay },
         { "SendUnitYell", &LuaUnit::SendUnitYell },
         { "CastSpell", &LuaUnit::CastSpell },
-        { "CastCustomSpell", &LuaUnit::CastCustomSpell },
         { "CastSpellAoF", &LuaUnit::CastSpellAoF },
         { "Kill", &LuaUnit::Kill },
         { "StopSpellCast", &LuaUnit::StopSpellCast },
         { "InterruptSpell", &LuaUnit::InterruptSpell },
-        { "SendChatMessageToPlayer", &LuaUnit::SendChatMessageToPlayer },
         { "PerformEmote", &LuaUnit::PerformEmote },
-        { "EmoteState", &LuaUnit::EmoteState },
         { "CountPctFromCurHealth", &LuaUnit::CountPctFromCurHealth },
         { "CountPctFromMaxHealth", &LuaUnit::CountPctFromMaxHealth },
         { "Dismount", &LuaUnit::Dismount },
@@ -2740,10 +2795,20 @@ namespace LuaUnit
         { "MoveStop", &LuaUnit::MoveStop },
         { "MoveExpire", &LuaUnit::MoveExpire },
         { "MoveClear", &LuaUnit::MoveClear },
-        { "DealDamage", &LuaUnit::DealDamage },
         { "DealHeal", &LuaUnit::DealHeal },
         { "AddFlatStatModifier", &LuaUnit::AddFlatStatModifier },
         { "AddPctStatModifier", &LuaUnit::AddPctStatModifier },
+#if ELUNA_EXPANSION < EXP_RETAIL
+        { "CastCustomSpell", &LuaUnit::CastCustomSpell },
+        { "SendChatMessageToPlayer", &LuaUnit::SendChatMessageToPlayer },
+        { "EmoteState", &LuaUnit::EmoteState },
+        { "DealDamage", &LuaUnit::DealDamage },
+#else
+        { "CastCustomSpell", METHOD_REG_NONE },
+        { "SendChatMessageToPlayer", METHOD_REG_NONE },
+        { "EmoteState", METHOD_REG_NONE },
+        { "DealDamage", METHOD_REG_NONE },
+#endif
 
         // Not implemented methods
         { "SummonGuardian", METHOD_REG_NONE } // not implemented
