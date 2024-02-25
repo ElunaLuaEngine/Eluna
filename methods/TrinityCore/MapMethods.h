@@ -58,7 +58,11 @@ namespace LuaMap
      */
     int IsEmpty(Eluna* E, Map* map)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(map->isEmpty());
+#else
+        E->Push(map->empty());
+#endif
         return 1;
     }
 
@@ -108,9 +112,14 @@ namespace LuaMap
     {
         float x = E->CHECKVAL<float>(2);
         float y = E->CHECKVAL<float>(3);
-        uint32 phasemask = E->CHECKVAL<uint32>(4, 1);
+        [[maybe_unused]] uint32 phasemask = E->CHECKVAL<uint32>(4, 1);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         float z = map->GetHeight(phasemask, x, y, MAX_HEIGHT);
+#else
+        PhaseShift phaseShift;
+        float z = map->GetHeight(phaseShift, x, y, MAX_HEIGHT);
+#endif
         if (z != INVALID_HEIGHT)
             E->Push(z);
         return 1;
@@ -125,7 +134,11 @@ namespace LuaMap
      */
     int GetDifficulty(Eluna* E, Map* map)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(map->GetDifficulty());
+#else
+        E->Push(map->GetDifficultyID());
+#endif
         return 1;
     }
 
@@ -176,9 +189,13 @@ namespace LuaMap
         float x = E->CHECKVAL<float>(2);
         float y = E->CHECKVAL<float>(3);
         float z = E->CHECKVAL<float>(4);
+#if ELUNA_EXPANSION < EXP_RETAIL
         float phasemask = E->CHECKVAL<uint32>(5, PHASEMASK_NORMAL);
-
         E->Push(map->GetAreaId(phasemask, x, y, z));
+#else
+        PhaseShift phaseShift;
+        E->Push(map->GetAreaId(phaseShift, x, y, z));
+#endif
         return 1;
     }
 
@@ -198,7 +215,9 @@ namespace LuaMap
                 E->Push(eObjectAccessor()GetPlayer(map, guid));
                 break;
             case HIGHGUID_TRANSPORT:
+#if ELUNA_EXPANSION < EXP_RETAIL
             case HIGHGUID_MO_TRANSPORT:
+#endif
             case HIGHGUID_GAMEOBJECT:
                 E->Push(map->GetGameObject(guid));
                 break;
@@ -272,6 +291,7 @@ namespace LuaMap
         return 1;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Saves the [Map]'s instance data to the database.
      */
@@ -286,6 +306,7 @@ namespace LuaMap
 
         return 0;
     }
+#endif
 
     /**
     * Returns a table with all the current [Player]s in the map
@@ -377,7 +398,11 @@ namespace LuaMap
         { "IsRaid", &LuaMap::IsRaid },
 
         // Other
+#if ELUNA_EXPANSION < EXP_RETAIL
         { "SaveInstanceData", &LuaMap::SaveInstanceData },
+#else
+        { "SaveInstanceData", METHOD_REG_NONE },
+#endif
         { "Data", &LuaMap::Data }
     };
 };

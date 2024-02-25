@@ -72,13 +72,13 @@ namespace LuaGlobalFunctions
     /**
      * Returns emulator's supported expansion.
      *
-     * Expansion is 0 for pre-TBC, 1 for TBC, 2 for WotLK, and 3 for Cataclysm.
+     * Expansion is 0 for pre-TBC, 1 for TBC, 2 for WotLK, 3 for Cataclysm, 9 for Retail.
      *
      * @return int32 expansion
      */
     int GetCoreExpansion(Eluna* E)
     {
-        E->Push(2);
+        E->Push(ELUNA_EXPANSION);
         return 1;
     }
 
@@ -244,7 +244,11 @@ namespace LuaGlobalFunctions
         uint32 i = 0;
 
         Map::PlayerList const& players = E->GetBoundMap()->GetPlayers();
+#if ELUNA_EXPANSION < EXP_RETAIL
         if (!players.isEmpty())
+#else
+        if (!players.empty())
+#endif
         {
             for (Map::PlayerList::const_iterator it = players.begin(); it != players.end(); ++it)
             {
@@ -335,7 +339,11 @@ namespace LuaGlobalFunctions
     int GetPlayerGUID(Eluna* E)
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(ObjectGuid::Create<HIGHGUID_PLAYER>(lowguid));
+#else
+        E->Push(ObjectGuid::Create<HighGuid::Player>(lowguid));
+#endif
         return 1;
     }
 
@@ -351,10 +359,14 @@ namespace LuaGlobalFunctions
     int GetItemGUID(Eluna* E)
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(ObjectGuid::Create<HIGHGUID_ITEM>(lowguid));
+#else
+        E->Push(ObjectGuid::Create<HighGuid::Item>(lowguid));
+#endif
         return 1;
     }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Builds a [GameObject]'s GUID.
      *
@@ -392,6 +404,7 @@ namespace LuaGlobalFunctions
         E->Push(ObjectGuid::Create<HIGHGUID_UNIT>(entry, lowguid));
         return 1;
     }
+#endif
 
     /**
      * Returns the low GUID from a GUID.
@@ -442,7 +455,11 @@ namespace LuaGlobalFunctions
     int GetItemLink(Eluna* E)
     {
         uint32 entry = E->CHECKVAL<uint32>(1);
+#if ELUNA_EXPANSION < EXP_RETAIL
         uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
+#else
+        LocaleConstant locale = static_cast<LocaleConstant>(E->CHECKVAL<uint8>(2, DEFAULT_LOCALE));
+#endif
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -450,12 +467,19 @@ namespace LuaGlobalFunctions
         if (!temp)
             return luaL_argerror(E->L, 1, "valid ItemEntry expected");
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         std::string name = temp->Name1;
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(entry))
             ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(locale), name);
 
         std::ostringstream oss;
         oss << "|c" << std::hex << ItemQualityColors[temp->Quality] << std::dec <<
+#else
+        std::string name = temp->GetName(locale);
+
+        std::ostringstream oss;
+        oss << "|c" << std::hex << ItemQualityColors[temp->GetQuality()] << std::dec <<
+#endif
             "|Hitem:" << entry << ":0:" <<
             "0:0:0:0:" <<
             "0:0:0:0|h[" << name << "]|h|r";
@@ -518,7 +542,11 @@ namespace LuaGlobalFunctions
     int GetAreaName(Eluna* E)
     {
         uint32 areaOrZoneId = E->CHECKVAL<uint32>(1);
+#if ELUNA_EXPANSION < EXP_RETAIL
         uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
+#else
+        LocaleConstant locale = static_cast<LocaleConstant>(E->CHECKVAL<uint8>(2, DEFAULT_LOCALE));
+#endif
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -1636,6 +1664,7 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Performs an in-game spawn and returns the [Creature] or [GameObject] spawned.
      *
@@ -1791,6 +1820,7 @@ namespace LuaGlobalFunctions
         E->Push();
         return 1;
     }
+#endif
 
     /**
      * Creates a [WorldPacket].
@@ -1803,10 +1833,19 @@ namespace LuaGlobalFunctions
     {
         uint32 opcode = E->CHECKVAL<uint32>(1);
         size_t size = E->CHECKVAL<size_t>(2);
+#if ELUNA_EXPANSION < EXP_RETAIL
         if (opcode >= NUM_MSG_TYPES)
+#else
+        OpcodeTable opcodeTable;
+        if ((!opcodeTable.IsValid((OpcodeClient)opcode)) || (!opcodeTable.IsValid((OpcodeServer)opcode)))
+#endif
             return luaL_argerror(E->L, 1, "valid opcode expected");
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(new WorldPacket((OpcodesList)opcode, size));
+#else
+        E->Push(new WorldPacket(opcode, size));
+#endif
         return 1;
     }
 
@@ -1827,11 +1866,23 @@ namespace LuaGlobalFunctions
         uint32 incrtime = E->CHECKVAL<uint32>(4);
         uint32 extendedcost = E->CHECKVAL<uint32>(5);
 
+#if ELUNA_EXPANSION >= EXP_CATA
+        VendorItem vItem;
+        vItem.item = item;
+        vItem.maxcount = maxcount;
+        vItem.incrtime = incrtime;
+        vItem.ExtendedCost = extendedcost;
+
+        if (!eObjectMgr->IsVendorItemValid(entry, vItem))
+            return 0;
+
+        eObjectMgr->AddVendorItem(entry, vItem);
+#else
         if (!eObjectMgr->IsVendorItemValid(entry, item, maxcount, incrtime, extendedcost))
             return 0;
 
         eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime, extendedcost);
-
+#endif
         return 0;
     }
 
@@ -1848,7 +1899,11 @@ namespace LuaGlobalFunctions
         if (!eObjectMgr->GetCreatureTemplate(entry))
             return luaL_argerror(E->L, 1, "valid CreatureEntry expected");
 
+#if ELUNA_EXPANSION >= EXP_CATA
+        eObjectMgr->RemoveVendorItem(entry, item, 1);
+#else
         eObjectMgr->RemoveVendorItem(entry, item);
+#endif
 
         return 0;
     }
@@ -1868,8 +1923,11 @@ namespace LuaGlobalFunctions
 
         auto const itemlist = items->m_items;
         for (auto itr = itemlist.begin(); itr != itemlist.end(); ++itr)
+#if ELUNA_EXPANSION >= EXP_CATA
+            eObjectMgr->RemoveVendorItem(entry, itr->item, 1);
+#else
             eObjectMgr->RemoveVendorItem(entry, itr->item);
-
+#endif
         return 0;
     }
 
@@ -1929,7 +1987,11 @@ namespace LuaGlobalFunctions
                 mode = BanMode::BAN_CHARACTER;
                 break;
             case BAN_IP:
+#if ELUNA_EXPANSION < EXP_RETAIL
                 if (!IsIPAddress(nameOrIP.c_str()))
+#else
+                if (!ElunaUtil::IsIPAddress(nameOrIP))
+#endif
                     return luaL_argerror(E->L, 2, "invalid ip");
                 mode = BanMode::BAN_IP;
                 break;
@@ -1966,6 +2028,7 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Sends mail to a [Player].
      *
@@ -2029,7 +2092,11 @@ namespace LuaGlobalFunctions
                 continue;
             }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
             if (amount < 1 || (item_proto->MaxCount > 0 && amount > uint32(item_proto->MaxCount)))
+#else
+            if (amount < 1 || (item_proto->GetMaxCount() > 0 && amount > uint32(item_proto->GetMaxCount())))
+#endif
             {
                 luaL_error(E->L, "Item entry %d has invalid amount %d", entry, amount);
                 continue;
@@ -2043,12 +2110,17 @@ namespace LuaGlobalFunctions
             }
         }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         Player* receiverPlayer = eObjectAccessor()FindPlayerByLowGUID(receiverGUIDLow);
+#else
+        Player* receiverPlayer = eObjectAccessor()FindPlayer(ObjectGuid::Create<HighGuid::Player>(receiverGUIDLow));
+#endif
         draft.SendMailTo(trans, MailReceiver(receiverPlayer, receiverGUIDLow), sender, MAIL_CHECK_MASK_NONE, delay);
         CharacterDatabase.CommitTransaction(trans);
 
         return addedItems;
     }
+#endif
 
     /**
      * Performs a bitwise AND (a & b).
@@ -2138,6 +2210,7 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Adds a taxi path to a specified map, returns the used pathId.
      *
@@ -2269,6 +2342,7 @@ namespace LuaGlobalFunctions
         E->Push(pathId);
         return 1;
     }
+#endif
     /**
      * Returns `true` if Eluna is in compatibility mode, `false` if in multistate.
      *
@@ -3109,7 +3183,6 @@ namespace LuaGlobalFunctions
         { "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent },
         { "RegisterMapEvent", &LuaGlobalFunctions::RegisterMapEvent },
         { "RegisterInstanceEvent", &LuaGlobalFunctions::RegisterInstanceEvent },
-
         { "ClearBattleGroundEvents", &LuaGlobalFunctions::ClearBattleGroundEvents },
         { "ClearCreatureEvents", &LuaGlobalFunctions::ClearCreatureEvents },
         { "ClearUniqueCreatureEvents", &LuaGlobalFunctions::ClearUniqueCreatureEvents },
@@ -3147,12 +3220,17 @@ namespace LuaGlobalFunctions
         { "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
         { "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID },
         { "GetItemGUID", &LuaGlobalFunctions::GetItemGUID },
-        { "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID },
-        { "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID },
         { "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow },
         { "GetGUIDType", &LuaGlobalFunctions::GetGUIDType },
         { "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry },
         { "GetAreaName", &LuaGlobalFunctions::GetAreaName },
+#if ELUNA_EXPANSION < EXP_RETAIL
+        { "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID },
+        { "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID },
+#else
+        { "GetObjectGUID", METHOD_REG_NONE },
+        { "GetUnitGUID", METHOD_REG_NONE },
+#endif
         { "bit_not", &LuaGlobalFunctions::bit_not },
         { "bit_xor", &LuaGlobalFunctions::bit_xor },
         { "bit_rshift", &LuaGlobalFunctions::bit_rshift },
@@ -3192,16 +3270,22 @@ namespace LuaGlobalFunctions
         { "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
         { "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
         { "RemoveEvents", &LuaGlobalFunctions::RemoveEvents },
-        { "PerformIngameSpawn", &LuaGlobalFunctions::PerformIngameSpawn },
         { "CreatePacket", &LuaGlobalFunctions::CreatePacket },
+#if ELUNA_EXPANSION < EXP_RETAIL
+        { "PerformIngameSpawn", &LuaGlobalFunctions::PerformIngameSpawn },
+        { "SendMail", &LuaGlobalFunctions::SendMail },
+        { "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
+#else
+        { "PerformIngameSpawn", METHOD_REG_NONE },
+        { "SendMail", METHOD_REG_NONE },
+        { "AddTaxiPath", METHOD_REG_NONE },
+#endif
         { "AddVendorItem", &LuaGlobalFunctions::AddVendorItem },
         { "VendorRemoveItem", &LuaGlobalFunctions::VendorRemoveItem },
         { "VendorRemoveAllItems", &LuaGlobalFunctions::VendorRemoveAllItems },
         { "Kick", &LuaGlobalFunctions::Kick },
         { "Ban", &LuaGlobalFunctions::Ban },
         { "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers },
-        { "SendMail", &LuaGlobalFunctions::SendMail },
-        { "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
         { "CreateInt64", &LuaGlobalFunctions::CreateLongLong },
         { "CreateUint64", &LuaGlobalFunctions::CreateULongLong },
         { "StartGameEvent", &LuaGlobalFunctions::StartGameEvent },
