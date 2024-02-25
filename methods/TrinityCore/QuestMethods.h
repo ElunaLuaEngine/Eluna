@@ -47,7 +47,11 @@ namespace LuaQuest
     {
         uint32 flag = E->CHECKVAL<uint32>(2);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(quest->HasFlag(flag));
+#else
+        E->Push(quest->HasFlag(QuestFlags(flag)));
+#endif
         return 1;
     }
 
@@ -84,6 +88,7 @@ namespace LuaQuest
         return 1;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the [Quest]'s level.
      *
@@ -105,6 +110,7 @@ namespace LuaQuest
         E->Push(quest->GetMinLevel());
         return 1;
     }
+#endif
 
     /**
      * Returns the next [Quest] entry ID.
@@ -159,7 +165,11 @@ namespace LuaQuest
      */
     int GetType(Eluna* E, Quest* quest)
     {
+#if ELUNA_EXPANSION >= EXP_CATA
+        E->Push(quest->GetQuestType());
+#else
         E->Push(quest->GetType());
+#endif
         return 1;
     }
 
@@ -178,9 +188,14 @@ namespace LuaQuest
     {
         // Getters
         { "GetId", &LuaQuest::GetId },
+#if ELUNA_EXPANSION < EXP_RETAIL
         { "GetLevel", &LuaQuest::GetLevel },
-        { "GetMaxLevel", &LuaQuest::GetMaxLevel },
         { "GetMinLevel", &LuaQuest::GetMinLevel },
+#else
+        { "GetLevel", METHOD_REG_NONE },
+        { "GetMinLevel", METHOD_REG_NONE },
+#endif
+        { "GetMaxLevel", &LuaQuest::GetMaxLevel },
         { "GetNextQuestId", &LuaQuest::GetNextQuestId },
         { "GetPrevQuestId", &LuaQuest::GetPrevQuestId },
         { "GetNextQuestInChain", &LuaQuest::GetNextQuestInChain },

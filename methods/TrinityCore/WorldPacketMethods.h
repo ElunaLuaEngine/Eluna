@@ -50,10 +50,20 @@ namespace LuaPacket
     int SetOpcode(Eluna* E, WorldPacket* packet)
     {
         uint32 opcode = E->CHECKVAL<uint32>(2);
+
+#if ELUNA_EXPANSION < EXP_RETAIL
         if (opcode >= NUM_MSG_TYPES)
+#else
+        OpcodeTable opcodeTable;
+        if ((!opcodeTable.IsValid((OpcodeClient)opcode)) || (!opcodeTable.IsValid((OpcodeServer)opcode)))
+#endif
             return luaL_argerror(E->L, 2, "valid opcode expected");
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         packet->SetOpcode((OpcodesList)opcode);
+#else
+        packet->SetOpcode(opcode);
+#endif
         return 0;
     }
 

@@ -72,7 +72,11 @@ namespace LuaVehicle
         Unit* passenger = E->CHECKOBJ<Unit>(2);
         int8 seatId = E->CHECKVAL<int8>(3);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         vehicle->AddPassenger(passenger, seatId);
+#else
+        vehicle->AddVehiclePassenger(passenger, seatId);
+#endif
         return 0;
     }
 
