@@ -23,9 +23,9 @@ namespace LuaMap
      *
      * @return bool isArena
      */
-    int IsArena(lua_State* L, Map* map)
+    int IsArena(Eluna* E, Map* map)
     {
-        Eluna::Push(L, map->IsBattleArena());
+        E->Push(map->IsBattleArena());
         return 1;
     }
 #endif
@@ -35,13 +35,9 @@ namespace LuaMap
      *
      * @return bool isBattleGround
      */
-    int IsBattleground(lua_State* L, Map* map)
+    int IsBattleground(Eluna* E, Map* map)
     {
-#if defined TRINITY || AZEROTHCORE
-        Eluna::Push(L, map->IsBattleground());
-#else
-        Eluna::Push(L, map->IsBattleGround());
-#endif
+        E->Push(map->IsBattleGround());
         return 1;
     }
 
@@ -50,9 +46,9 @@ namespace LuaMap
      *
      * @return bool isDungeon
      */
-    int IsDungeon(lua_State* L, Map* map)
+    int IsDungeon(Eluna* E, Map* map)
     {
-        Eluna::Push(L, map->IsDungeon());
+        E->Push(map->IsDungeon());
         return 1;
     }
 
@@ -61,9 +57,9 @@ namespace LuaMap
      *
      * @return bool isEmpty
      */
-    int IsEmpty(lua_State* L, Map* map)
+    int IsEmpty(Eluna* E, Map* map)
     {
-        Eluna::Push(L, map->isEmpty());
+        E->Push(map->isEmpty());
         return 1;
     }
 
@@ -73,9 +69,9 @@ namespace LuaMap
      *
      * @return bool isHeroic
      */
-    int IsHeroic(lua_State* L, Map* map)
+    int IsHeroic(Eluna* E, Map* map)
     {
-        Eluna::Push(L, map->IsHeroic());
+        E->Push(map->IsHeroic());
         return 1;
     }
 #endif
@@ -85,9 +81,9 @@ namespace LuaMap
      *
      * @return bool isRaid
      */
-    int IsRaid(lua_State* L, Map* map)
+    int IsRaid(Eluna* E, Map* map)
     {
-        Eluna::Push(L, map->IsRaid());
+        E->Push(map->IsRaid());
         return 1;
     }
 
@@ -96,9 +92,9 @@ namespace LuaMap
      *
      * @return string mapName
      */
-    int GetName(lua_State* L, Map* map)
+    int GetName(Eluna* E, Map* map)
     {
-        Eluna::Push(L, map->GetMapName());
+        E->Push(map->GetMapName());
         return 1;
     }
 
@@ -111,18 +107,13 @@ namespace LuaMap
      * @param float y
      * @return float z
      */
-    int GetHeight(lua_State* L, Map* map)
+    int GetHeight(Eluna* E, Map* map)
     {
-        float x = Eluna::CHECKVAL<float>(L, 2);
-        float y = Eluna::CHECKVAL<float>(L, 3);
-#if (defined(TBC) || defined(CLASSIC))
+        float x = Eluna::CHECKVAL<float>(E->L, 2);
+        float y = Eluna::CHECKVAL<float>(E->L, 3);
         float z = map->GetHeight(x, y, MAX_HEIGHT);
-#else
-        uint32 phasemask = Eluna::CHECKVAL<uint32>(L, 4, 1);
-        float z = map->GetHeight(phasemask, x, y, MAX_HEIGHT);
-#endif
         if (z != INVALID_HEIGHT)
-            Eluna::Push(L, z);
+            E->Push(z);
         return 1;
     }
 
@@ -133,13 +124,9 @@ namespace LuaMap
      *
      * @return int32 difficulty
      */
-    int GetDifficulty(lua_State* L, Map* map)
+    int GetDifficulty(Eluna* E, Map* map)
     {
-#ifndef CLASSIC
-        Eluna::Push(L, map->GetDifficulty());
-#else
-        Eluna::Push(L, (Difficulty)0);
-#endif
+        E->Push((Difficulty)0);
         return 1;
     }
 
@@ -148,9 +135,9 @@ namespace LuaMap
      *
      * @return uint32 instanceId
      */
-    int GetInstanceId(lua_State* L, Map* map)
+    int GetInstanceId(Eluna* E, Map* map)
     {
-        Eluna::Push(L, map->GetInstanceId());
+        E->Push(map->GetInstanceId());
         return 1;
     }
 
@@ -159,9 +146,9 @@ namespace LuaMap
      *
      * @return uint32 playerCount
      */
-    int GetPlayerCount(lua_State* L, Map* map)
+    int GetPlayerCount(Eluna* E, Map* map)
     {
-        Eluna::Push(L, map->GetPlayersCountExceptGMs());
+        E->Push(map->GetPlayersCountExceptGMs());
         return 1;
     }
 
@@ -170,9 +157,9 @@ namespace LuaMap
      *
      * @return uint32 mapId
      */
-    int GetMapId(lua_State* L, Map* map)
+    int GetMapId(Eluna* E, Map* map)
     {
-        Eluna::Push(L, map->GetId());
+        E->Push(map->GetId());
         return 1;
     }
 
@@ -185,18 +172,13 @@ namespace LuaMap
      * @param uint32 phasemask = PHASEMASK_NORMAL
      * @return uint32 areaId
      */
-    int GetAreaId(lua_State* L, Map* map)
+    int GetAreaId(Eluna* E, Map* map)
     {
-        float x = Eluna::CHECKVAL<float>(L, 2);
-        float y = Eluna::CHECKVAL<float>(L, 3);
-        float z = Eluna::CHECKVAL<float>(L, 4);
-#if defined TRINITY || defined AZEROTHCORE
-        float phasemask = Eluna::CHECKVAL<uint32>(L, 5, PHASEMASK_NORMAL);
+        float x = Eluna::CHECKVAL<float>(E->L, 2);
+        float y = Eluna::CHECKVAL<float>(E->L, 3);
+        float z = Eluna::CHECKVAL<float>(E->L, 4);
 
-        Eluna::Push(L, map->GetAreaId(phasemask, x, y, z));
-#else
-        Eluna::Push(L, map->GetTerrain()->GetAreaId(x, y, z));
-#endif
+        E->Push(map->GetTerrain()->GetAreaId(x, y, z));
         return 1;
     }
 
@@ -206,40 +188,11 @@ namespace LuaMap
      * @param ObjectGuid guid
      * @return [WorldObject] object
      */
-    int GetWorldObject(lua_State* L, Map* map)
+    int GetWorldObject(Eluna* E, Map* map)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 2);
 
-#if defined TRINITY || AZEROTHCORE
-        switch (guid.GetHigh())
-        {
-            case HIGHGUID_PLAYER:
-                Eluna::Push(L, eObjectAccessor()GetPlayer(map, guid));
-                break;
-            case HIGHGUID_TRANSPORT:
-            case HIGHGUID_MO_TRANSPORT:
-            case HIGHGUID_GAMEOBJECT:
-                Eluna::Push(L, map->GetGameObject(guid));
-                break;
-            case HIGHGUID_VEHICLE:
-            case HIGHGUID_UNIT:
-                Eluna::Push(L, map->GetCreature(guid));
-                break;
-            case HIGHGUID_PET:
-                Eluna::Push(L, map->GetPet(guid));
-                break;
-            case HIGHGUID_DYNAMICOBJECT:
-                Eluna::Push(L, map->GetDynamicObject(guid));
-                break;
-            case HIGHGUID_CORPSE:
-                Eluna::Push(L, map->GetCorpse(guid));
-                break;
-            default:
-                break;
-        }
-#else
-        Eluna::Push(L, map->GetWorldObject(guid));
-#endif
+        E->Push(map->GetWorldObject(guid));
         return 1;
     }
 
@@ -260,26 +213,15 @@ namespace LuaMap
      * @param [WeatherType] type : the [WeatherType], see above available weather types
      * @param float grade : the intensity/grade of the [Weather], ranges from 0 to 1
      */
-    int SetWeather(lua_State* L, Map* map)
+    int SetWeather(Eluna* E, Map* map)
     {
         (void)map; // ensure that the variable is referenced in order to pass compiler checks
-        uint32 zoneId = Eluna::CHECKVAL<uint32>(L, 2);
-        uint32 weatherType = Eluna::CHECKVAL<uint32>(L, 3);
-        float grade = Eluna::CHECKVAL<float>(L, 4);
+        uint32 zoneId = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 weatherType = Eluna::CHECKVAL<uint32>(E->L, 3);
+        float grade = Eluna::CHECKVAL<float>(E->L, 4);
 
-#if defined TRINITY
-        if (Weather * weather = map->GetOrGenerateZoneDefaultWeather(zoneId))
-            weather->SetWeather((WeatherType)weatherType, grade);
-#elif defined AZEROTHCORE
-        Weather* weather = WeatherMgr::FindWeather(zoneId);
-        if (!weather)
-            weather = WeatherMgr::AddWeather(zoneId);
-        if (weather)
-            weather->SetWeather((WeatherType)weatherType, grade);
-#else
         if (Weather::IsValidWeatherType(weatherType))
             map->SetWeather(zoneId, (WeatherType)weatherType, grade, false);
-#endif
         return 0;
     }
 
@@ -291,20 +233,14 @@ namespace LuaMap
      *
      * @return table instance_data : instance data table, or `nil`
      */
-    int GetInstanceData(lua_State* L, Map* map)
+    int GetInstanceData(Eluna* E, Map* map)
     {
-#if defined TRINITY || AZEROTHCORE
-        ElunaInstanceAI* iAI = NULL;
-        if (InstanceMap* inst = map->ToInstanceMap())
-            iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
-#else
         ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData());
-#endif
 
         if (iAI)
-            Eluna::GetEluna(L)->PushInstanceData(L, iAI, false);
+            Eluna::GetEluna(E->L)->PushInstanceData(E->L, iAI, false);
         else
-            Eluna::Push(L); // nil
+            E->Push(); // nil
 
         return 1;
     }
@@ -312,15 +248,9 @@ namespace LuaMap
     /**
      * Saves the [Map]'s instance data to the database.
      */
-    int SaveInstanceData(lua_State* /*L*/, Map* map)
+    int SaveInstanceData(Eluna* /*E*/, Map* map)
     {
-#if defined TRINITY || AZEROTHCORE
-        ElunaInstanceAI* iAI = NULL;
-        if (InstanceMap* inst = map->ToInstanceMap())
-            iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
-#else
         ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData());
-#endif
 
         if (iAI)
             iAI->SaveToDB();
@@ -341,32 +271,29 @@ namespace LuaMap
     * @param [TeamId] team : optional check team of the [Player], Alliance, Horde or Neutral (All)
     * @return table mapPlayers
     */
-    int GetPlayers(lua_State* L, Map* map)
+    int GetPlayers(Eluna* E, Map* map)
     {
-        uint32 team = Eluna::CHECKVAL<uint32>(L, 2, TEAM_NEUTRAL);
+        uint32 team = Eluna::CHECKVAL<uint32>(E->L, 2, TEAM_NEUTRAL);
 
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         Map::PlayerList const& players = map->GetPlayers();
         for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
         {
-#if defined TRINITY || AZEROTHCORE
-            Player* player = itr->GetSource();
-#else
             Player* player = itr->getSource();
-#endif
+
             if (!player)
                 continue;
             if (player->GetSession() && (team >= TEAM_NEUTRAL || player->GetTeamId() == team))
             {
-                Eluna::Push(L, player);
-                lua_rawseti(L, tbl, ++i);
+                E->Push(player);
+                lua_rawseti(E->L, tbl, ++i);
             }
         }
 
-        lua_settop(L, tbl);
+        lua_settop(E->L, tbl);
         return 1;
     }
     
@@ -392,14 +319,14 @@ namespace LuaMap
         { "IsDungeon", &LuaMap::IsDungeon },
         { "IsEmpty", &LuaMap::IsEmpty },
         { "IsRaid", &LuaMap::IsRaid },
-#ifndef CLASSIC
-        { "IsArena", &LuaMap::IsArena },
-        { "IsHeroic", &LuaMap::IsHeroic },
-#endif
+
         // Other
         { "SaveInstanceData", &LuaMap::SaveInstanceData },
 
-        { NULL, NULL }
+        { "IsArena", nullptr, METHOD_REG_NONE },
+        { "IsHeroic", nullptr, METHOD_REG_NONE },
+
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

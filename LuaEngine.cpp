@@ -34,7 +34,7 @@
 
 // Some dummy includes containing BOOST_VERSION:
 // ObjectAccessor.h Config.h Log.h
-#if !defined MANGOS
+#if !defined(MANGOS) && !defined(VMANGOS)
 #define USING_BOOST
 #endif
 
