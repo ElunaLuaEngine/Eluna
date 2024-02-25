@@ -337,6 +337,17 @@ namespace LuaItem
     }
 
     /**
+    * Returns the ID of the [Item]
+    *
+    * @return uint32 itemId
+    */
+    int GetItemId(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->ItemId);
+        return 1;
+    }
+
+    /**
      * Returns the name of the [Item]
      *
      * @return string name
@@ -366,6 +377,28 @@ namespace LuaItem
     int GetQuality(Eluna* E, Item* item)
     {
         E->Push(item->GetTemplate()->Quality);
+        return 1;
+    }
+
+    /**
+    * Returns the flags of the [Item]
+    *
+    * @return uint32 flags
+    */
+    int GetFlags(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->Flags);
+        return 1;
+    }
+
+    /**
+    * Returns the extraFlags of the [Item]
+    *
+    * @return uint32 extraFlags
+    */
+    int GetExtraFlags(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->ExtraFlags);
         return 1;
     }
 
@@ -634,9 +667,12 @@ namespace LuaItem
         { "GetItemLink", &LuaItem::GetItemLink },
         { "GetClass", &LuaItem::GetClass },
         { "GetSubClass", &LuaItem::GetSubClass },
+        { "GetItemId", &LuaItem::GetItemId },
         { "GetName", &LuaItem::GetName },
         { "GetDisplayId", &LuaItem::GetDisplayId },
         { "GetQuality", &LuaItem::GetQuality },
+        { "GetFlags", &LuaItem::GetFlags },
+        { "GetExtraFlags", &LuaItem::GetExtraFlags },
         { "GetBuyCount", &LuaItem::GetBuyCount },
         { "GetBuyPrice", &LuaItem::GetBuyPrice },
         { "GetSellPrice", &LuaItem::GetSellPrice },
@@ -679,6 +715,7 @@ namespace LuaItem
         // Not implemented methods
         { "GetRandomSuffix", nullptr, METHOD_REG_NONE },  // not implemented
         { "GetStatsCount", nullptr, METHOD_REG_NONE },  // not implemented
+        { "GetFlags2", nullptr, METHOD_REG_NONE }, // not avaliable in Classic/TBC
         { "IsPotion", nullptr, METHOD_REG_NONE }, // not implemented in VMANGOS
         { "IsRefundExpired", nullptr, METHOD_REG_NONE }, // not implemented
         { "IsCurrencyToken", nullptr, METHOD_REG_NONE },  // not implemented

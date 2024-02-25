@@ -474,6 +474,17 @@ namespace LuaItem
     }
 
     /**
+    * Returns the ID of the [Item]
+    *
+    * @return uint32 itemId
+    */
+    int GetItemId(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->ItemId);
+        return 1;
+    }
+
+    /**
      * Returns the name of the [Item]
      *
      * @return string name
@@ -515,6 +526,39 @@ namespace LuaItem
 #else
         E->Push(item->GetTemplate()->Quality);
 #endif
+        return 1;
+    }
+
+    /**
+    * Returns the flags of the [Item]
+    *
+    * @return uint32 flags
+    */
+    int GetFlags(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->Flags);
+        return 1;
+    }
+
+    /**
+    * Returns the flags2 of the [Item]
+    *
+    * @return uint32 flags2
+    */
+    int GetFlags2(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->Flags2);
+        return 1;
+    }
+
+    /**
+    * Returns the extraFlags of the [Item]
+    *
+    * @return uint32 extraFlags
+    */
+    int GetExtraFlags(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->ExtraFlags);
         return 1;
     }
 
@@ -841,9 +885,13 @@ namespace LuaItem
         { "GetItemLink", &LuaItem::GetItemLink },
         { "GetClass", &LuaItem::GetClass },
         { "GetSubClass", &LuaItem::GetSubClass },
+        { "GetItemId", &LuaItem::GetItemId },
         { "GetName", &LuaItem::GetName },
         { "GetDisplayId", &LuaItem::GetDisplayId },
         { "GetQuality", &LuaItem::GetQuality },
+        { "GetFlags", &LuaItem::GetFlags },
+        { "GetFlags2", &LuaItem::GetFlags2 },
+        { "GetExtraFlags", &LuaItem::GetExtraFlags },		
         { "GetBuyCount", &LuaItem::GetBuyCount },
         { "GetBuyPrice", &LuaItem::GetBuyPrice },
         { "GetSellPrice", &LuaItem::GetSellPrice },
