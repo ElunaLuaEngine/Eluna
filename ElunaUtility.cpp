@@ -10,7 +10,11 @@
 #include "Object.h"
 #include "Unit.h"
 #include "GameObject.h"
+#if ELUNA_EXPANSION == EXP_RETAIL
+#include "DB2Stores.h"
+#else
 #include "DBCStores.h"
+#endif
 #else
 #include "World/World.h"
 #include "Entities/Object.h"
@@ -98,10 +102,12 @@ bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
             {
                 if (i_obj_fact)
                 {
-#if !defined ELUNA_MANGOS
+#if !defined ELUNA_MANGOS && ELUNA_EXPANSION < EXP_RETAIL
                     if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))
-#else
+#elif ELUNA_EXPANSION < EXP_RETAIL
                     if ((i_obj_fact->IsHostileTo(*target->getFactionTemplateEntry())) != (i_hostile == 1))
+#else
+                    if ((i_obj_fact->IsHostileTo(target->GetFactionTemplateEntry())) != (i_hostile == 1))
 #endif
                         return false;
                 }
