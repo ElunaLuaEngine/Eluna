@@ -16,7 +16,11 @@
 #include "CellImpl.h"
 #include "Channel.h"
 #include "Chat.h"
+#if ELUNA_EXPANSION < EXP_RETAIL
 #include "DBCStores.h"
+#else
+#include "DB2Stores.h"
+#endif
 #include "GameEventMgr.h"
 #include "GossipDef.h"
 #include "GridNotifiers.h"
@@ -121,7 +125,7 @@
 #endif
 
 #if !defined ELUNA_MANGOS
-#if ELUNA_EXPANSION > EXP_CLASSIC
+#if ELUNA_EXPANSION > EXP_CLASSIC && ELUNA_EXPANSION < EXP_RETAIL
 typedef Opcodes OpcodesList;
 #endif
 #endif

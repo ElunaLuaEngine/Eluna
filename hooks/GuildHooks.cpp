@@ -27,6 +27,16 @@ void Eluna::OnAddMember(Guild* guild, Player* player, uint32 plRank)
     CallAllFunctions(binding, key);
 }
 
+#if ELUNA_EXPANSION == EXP_RETAIL
+void Eluna::OnRemoveMember(Guild* guild, ObjectGuid guid, bool isDisbanding)
+{
+    START_HOOK(GUILD_EVENT_ON_REMOVE_MEMBER);
+    HookPush(guild);
+    HookPush(guid);
+    HookPush(isDisbanding);
+    CallAllFunctions(binding, key);
+}
+#else
 void Eluna::OnRemoveMember(Guild* guild, Player* player, bool isDisbanding)
 {
     START_HOOK(GUILD_EVENT_ON_REMOVE_MEMBER);
@@ -35,6 +45,7 @@ void Eluna::OnRemoveMember(Guild* guild, Player* player, bool isDisbanding)
     HookPush(isDisbanding);
     CallAllFunctions(binding, key);
 }
+#endif
 
 void Eluna::OnMOTDChanged(Guild* guild, const std::string& newMotd)
 {

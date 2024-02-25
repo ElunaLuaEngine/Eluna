@@ -64,8 +64,10 @@ struct ElunaCreatureAI : NativeScriptedAI
 
         if (!me->GetEluna()->UpdateAI(me, diff))
         {
-#if !defined ELUNA_MANGOS
+#if !defined ELUNA_MANGOS && ELUNA_EXPANSION < EXP_RETAIL
             if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
+#elif ELUNA_EXPANSION == EXP_RETAIL
+            if (!me->HasUnitFlag(UNIT_FLAG_IMMUNE_TO_NPC))
 #else
             if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE))
 #endif

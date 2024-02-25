@@ -41,9 +41,14 @@ namespace LuaWorldObject
      *
      * @return uint32 phase
      */
-    int GetPhaseMask(Eluna* E, WorldObject* obj)
+    int GetPhaseMask(Eluna* E, [[maybe_unused]] WorldObject* obj)
     {
+#if ELUNA_EXPANSION >= EXP_CATA
+        EventMap event;
+        E->Push(event.GetPhaseMask());
+#else
         E->Push(obj->GetPhaseMask());
+#endif
         return 1;
     }
 
@@ -53,12 +58,17 @@ namespace LuaWorldObject
     * @param uint32 phaseMask
     * @param bool update = true : update visibility to nearby objects
     */
-    int SetPhaseMask(Eluna* E, WorldObject* obj)
+    int SetPhaseMask(Eluna* E, [[maybe_unused]] WorldObject* obj)
     {
         uint32 phaseMask = E->CHECKVAL<uint32>(2);
-        bool update = E->CHECKVAL<bool>(3, true);
+        [[maybe_unused]] bool update = E->CHECKVAL<bool>(3, true);
 
+#if ELUNA_EXPANSION >= EXP_CATA
+        EventMap event;
+        event.SetPhase(phaseMask);
+#else
         obj->SetPhaseMask(phaseMask, update);
+#endif
         return 0;
     }
 
@@ -1030,9 +1040,12 @@ namespace LuaWorldObject
         uint32 musicid = E->CHECKVAL<uint32>(2);
         Player* player = E->CHECKOBJ<Player>(3, false);
 
+#if ELUNA_EXPANSION == EXP_RETAIL
+        if (!sSoundKitStore.LookupEntry(musicid))
+#else
         if (!sSoundEntriesStore.LookupEntry(musicid))
+#endif
             musicid = 0;
-
         WorldPackets::Misc::PlayMusic playMusic(musicid);
         const WorldPacket* data = playMusic.Write();
 
@@ -1059,7 +1072,11 @@ namespace LuaWorldObject
     {
         uint32 soundId = E->CHECKVAL<uint32>(2);
         Player* player = E->CHECKOBJ<Player>(3, false);
+#if ELUNA_EXPANSION == EXP_RETAIL
+        if (!sSoundKitStore.LookupEntry(soundId))
+#else
         if (!sSoundEntriesStore.LookupEntry(soundId))
+#endif
             return 0;
 
         if (player)
@@ -1086,7 +1103,11 @@ namespace LuaWorldObject
     {
         uint32 soundId = E->CHECKVAL<uint32>(2);
         Player* player = E->CHECKOBJ<Player>(3, false);
+#if ELUNA_EXPANSION == EXP_RETAIL
+        if (!sSoundKitStore.LookupEntry(soundId))
+#else
         if (!sSoundEntriesStore.LookupEntry(soundId))
+#endif
             return 0;
 
         if (player)
