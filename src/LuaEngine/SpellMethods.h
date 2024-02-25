@@ -70,6 +70,30 @@ namespace LuaSpell
     }
 
     /**
+     * Returns the reagents needed for the [Spell].
+     *
+     * @return table reagents : a table containing the [ItemTemplate]s and amount of reagents needed for the [Spell]
+    */
+    int GetReagentCost(lua_State* L, Spell* spell)
+    {
+        auto spellInfo = spell->GetSpellInfo();
+        auto reagents = spellInfo->Reagent;
+        auto reagentCounts = spellInfo->ReagentCount;
+        lua_newtable(L);
+        for (auto i = 0; i < MAX_SPELL_REAGENTS; ++i)
+        {
+            if (reagents[i] <= 0)
+                continue;
+            auto reagent = eObjectMgr->GetItemTemplate(reagents[i]);
+            auto count = reagentCounts[i];
+            Eluna::Push(L, reagent);
+            Eluna::Push(L, count);
+            lua_settable(L, -3);
+        }
+        return 1;
+    }
+
+    /**
      * Returns the spell duration of the [Spell].
      *
      * @return int32 duration

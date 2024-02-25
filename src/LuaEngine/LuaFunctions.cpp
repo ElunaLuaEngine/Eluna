@@ -1085,6 +1085,7 @@ ElunaRegister<Spell> SpellMethods[] =
     { "GetEntry", &LuaSpell::GetEntry },
     { "GetDuration", &LuaSpell::GetDuration },
     { "GetPowerCost", &LuaSpell::GetPowerCost },
+    { "GetReagentCost", &LuaSpell::GetReagentCost },
     { "GetTargetDest", &LuaSpell::GetTargetDest },
     { "GetTarget", &LuaSpell::GetTarget },
 
