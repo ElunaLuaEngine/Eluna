@@ -42,6 +42,7 @@ namespace LuaPacket
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Sets the opcode of the [WorldPacket] to the specified opcode.
      *
@@ -56,6 +57,7 @@ namespace LuaPacket
         packet->SetOpcode((OpcodesList)opcode);
         return 0;
     }
+#endif
 
     /**
      * Reads and returns a signed 8-bit integer value from the [WorldPacket].
@@ -314,7 +316,11 @@ namespace LuaPacket
         { "GetSize", &LuaPacket::GetSize },
 
         // Setters
+#if ELUNA_EXPANSION < RETAIL
         { "SetOpcode", &LuaPacket::SetOpcode },
+#else
+        { "SetOpcode", METHOD_REG_NONE },
+#endif
 
         // Readers
         { "ReadByte", &LuaPacket::ReadByte },

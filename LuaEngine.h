@@ -395,7 +395,11 @@ public:
     void OnResurrect(Player* pPlayer);
     void OnQuestAbandon(Player* pPlayer, uint32 questId);
     void OnQuestStatusChanged(Player* pPlayer, uint32 questId, uint8 status);
+#if ELUNA_EXPANSION == RETAIL
+    void OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 spellid);
+#else
     void OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, uint32 spellid);
+#endif
     void OnSkillChange(Player* pPlayer, uint32 skillId, uint32 skillValue);
     void OnLearnSpell(Player* pPlayer, uint32 spellid);
     InventoryResult OnCanUseItem(const Player* pPlayer, uint32 itemEntry);
@@ -532,15 +536,21 @@ public:
     /* Weather */
     void OnChange(Weather* weather, uint32 zone, WeatherState state, float grade);
 
+#if ELUNA_EXPANSION < RETAIL
     /* Auction House */
     void OnAdd(AuctionHouseObject* ah, AuctionEntry* entry);
     void OnRemove(AuctionHouseObject* ah, AuctionEntry* entry);
     void OnSuccessful(AuctionHouseObject* ah, AuctionEntry* entry);
     void OnExpire(AuctionHouseObject* ah, AuctionEntry* entry);
+#endif
 
     /* Guild */
     void OnAddMember(Guild* guild, Player* player, uint32 plRank);
+#if ELUNA_EXPANSION == RETAIL
+    void OnRemoveMember(Guild* guild, ObjectGuid guid, bool isDisbanding);
+#else
     void OnRemoveMember(Guild* guild, Player* player, bool isDisbanding);
+#endif
     void OnMOTDChanged(Guild* guild, const std::string& newMotd);
     void OnInfoChanged(Guild* guild, const std::string& newInfo);
     void OnCreate(Guild* guild, Player* leader, const std::string& name);

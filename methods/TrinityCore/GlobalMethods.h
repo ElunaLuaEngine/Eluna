@@ -8,6 +8,7 @@
 #define GLOBALMETHODS_H
 
 #include "BindingMap.h"
+//#include <sstream>
 
 /***
  * These functions can be used anywhere at any time, including at start-up.
@@ -72,13 +73,19 @@ namespace LuaGlobalFunctions
     /**
      * Returns emulator's supported expansion.
      *
-     * Expansion is 0 for pre-TBC, 1 for TBC, 2 for WotLK, and 3 for Cataclysm.
+     * Expansion is 0 for pre-TBC, 1 for TBC, 2 for WotLK, 3 for Cataclysm, 9 for Dragonflight.
      *
      * @return int32 expansion
      */
     int GetCoreExpansion(Eluna* E)
     {
+#if ELUNA_EXPANSION == WOTLK
         E->Push(2);
+#elif ELUNA_EXPANSION == CATA
+        E->Push(3);
+#elif ELUNA_EXPANSION == RETAIL
+        E->Push(9);
+#endif
         return 1;
     }
 
@@ -322,6 +329,7 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Builds a [Player]'s GUID
      *
@@ -392,6 +400,7 @@ namespace LuaGlobalFunctions
         E->Push(MAKE_NEW_GUID(lowguid, entry, HIGHGUID_UNIT));
         return 1;
     }
+#endif
 
     /**
      * Returns the low GUID from a GUID.
@@ -420,6 +429,7 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns a chat link for an [Item].
      *
@@ -463,6 +473,7 @@ namespace LuaGlobalFunctions
         E->Push(oss.str());
         return 1;
     }
+#endif
 
     /**
      * Returns the type ID from a GUID.
@@ -496,6 +507,7 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns the area or zone's name.
      *
@@ -529,6 +541,7 @@ namespace LuaGlobalFunctions
         E->Push(areaEntry->AreaName[locale]);
         return 1;
     }
+#endif
 
     /**
      * Returns the currently active game events.
@@ -1630,6 +1643,7 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Performs an in-game spawn and returns the [Creature] or [GameObject] spawned.
      *
@@ -1803,6 +1817,7 @@ namespace LuaGlobalFunctions
         E->Push(new WorldPacket((OpcodesList)opcode, size));
         return 1;
     }
+#endif
 
     /**
      * Adds an [Item] to a vendor and updates the world database.
@@ -1821,11 +1836,23 @@ namespace LuaGlobalFunctions
         uint32 incrtime = E->CHECKVAL<uint32>(4);
         uint32 extendedcost = E->CHECKVAL<uint32>(5);
 
+#if ELUNA_EXPANSION >= CATA
+        VendorItem vItem;
+        vItem.item = item;
+        vItem.maxcount = maxcount;
+        vItem.incrtime = incrtime;
+        vItem.ExtendedCost = extendedcost;
+
+        if (!eObjectMgr->IsVendorItemValid(entry, vItem))
+            return 0;
+
+        eObjectMgr->AddVendorItem(entry, vItem);
+#else
         if (!eObjectMgr->IsVendorItemValid(entry, item, maxcount, incrtime, extendedcost))
             return 0;
 
         eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime, extendedcost);
-
+#endif
         return 0;
     }
 
@@ -1842,7 +1869,11 @@ namespace LuaGlobalFunctions
         if (!eObjectMgr->GetCreatureTemplate(entry))
             return luaL_argerror(E->L, 1, "valid CreatureEntry expected");
 
+#if ELUNA_EXPANSION >= CATA
+        eObjectMgr->RemoveVendorItem(entry, item, 1);
+#else
         eObjectMgr->RemoveVendorItem(entry, item);
+#endif
 
         return 0;
     }
@@ -1862,8 +1893,11 @@ namespace LuaGlobalFunctions
 
         auto const itemlist = items->m_items;
         for (auto itr = itemlist.begin(); itr != itemlist.end(); ++itr)
+#if ELUNA_EXPANSION >= CATA
+            eObjectMgr->RemoveVendorItem(entry, itr->item, 1);
+#else
             eObjectMgr->RemoveVendorItem(entry, itr->item);
-
+#endif
         return 0;
     }
 
@@ -1960,6 +1994,7 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Sends mail to a [Player].
      *
@@ -2043,6 +2078,7 @@ namespace LuaGlobalFunctions
 
         return addedItems;
     }
+#endif
 
     /**
      * Performs a bitwise AND (a & b).
@@ -2132,6 +2168,7 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Adds a taxi path to a specified map, returns the used pathId.
      *
@@ -2263,6 +2300,8 @@ namespace LuaGlobalFunctions
         E->Push(pathId);
         return 1;
     }
+#endif
+
     /**
      * Returns `true` if Eluna is in compatibility mode, `false` if in multistate.
      *
@@ -2603,6 +2642,7 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Unbinds event handlers for either all of a [Creature]'s events, or one type of event.
      *
@@ -2640,6 +2680,7 @@ namespace LuaGlobalFunctions
         }
         return 0;
     }
+#endif
 
     /**
      * Unbinds event handlers for either all of a [Creature]'s gossip events, or one type of event.
@@ -3074,10 +3115,13 @@ namespace LuaGlobalFunctions
         { "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent },
         { "RegisterMapEvent", &LuaGlobalFunctions::RegisterMapEvent },
         { "RegisterInstanceEvent", &LuaGlobalFunctions::RegisterInstanceEvent },
-
         { "ClearBattleGroundEvents", &LuaGlobalFunctions::ClearBattleGroundEvents },
         { "ClearCreatureEvents", &LuaGlobalFunctions::ClearCreatureEvents },
+#if ELUNA_EXPANSION < RETAIL
         { "ClearUniqueCreatureEvents", &LuaGlobalFunctions::ClearUniqueCreatureEvents },
+#else
+        { "ClearUniqueCreatureEvents", METHOD_REG_NONE },
+#endif
         { "ClearCreatureGossipEvents", &LuaGlobalFunctions::ClearCreatureGossipEvents },
         { "ClearGameObjectEvents", &LuaGlobalFunctions::ClearGameObjectEvents },
         { "ClearGameObjectGossipEvents", &LuaGlobalFunctions::ClearGameObjectGossipEvents },
@@ -3110,21 +3154,33 @@ namespace LuaGlobalFunctions
         { "GetGuildByName", &LuaGlobalFunctions::GetGuildByName },
         { "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID },
         { "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
+        { "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow },
+        { "GetGUIDType", &LuaGlobalFunctions::GetGUIDType },
+        { "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry },
+#if ELUNA_EXPANSION < RETAIL
         { "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID },
         { "GetItemGUID", &LuaGlobalFunctions::GetItemGUID },
         { "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID },
         { "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID },
-        { "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow },
-        { "GetGUIDType", &LuaGlobalFunctions::GetGUIDType },
-        { "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry },
         { "GetAreaName", &LuaGlobalFunctions::GetAreaName },
+#else
+        { "GetPlayerGUID", METHOD_REG_NONE },
+        { "GetItemGUID", METHOD_REG_NONE },
+        { "GetObjectGUID", METHOD_REG_NONE },
+        { "GetUnitGUID", METHOD_REG_NONE },
+        { "GetAreaName", METHOD_REG_NONE },
+#endif
         { "bit_not", &LuaGlobalFunctions::bit_not },
         { "bit_xor", &LuaGlobalFunctions::bit_xor },
         { "bit_rshift", &LuaGlobalFunctions::bit_rshift },
         { "bit_lshift", &LuaGlobalFunctions::bit_lshift },
         { "bit_or", &LuaGlobalFunctions::bit_or },
         { "bit_and", &LuaGlobalFunctions::bit_and },
+#if ELUNA_EXPANSION < RETAIL
         { "GetItemLink", &LuaGlobalFunctions::GetItemLink },
+#else
+        { "GetItemLink", METHOD_REG_NONE },
+#endif
         { "GetMapById", &LuaGlobalFunctions::GetMapById, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetCurrTime", &LuaGlobalFunctions::GetCurrTime },
         { "GetTimeDiff", &LuaGlobalFunctions::GetTimeDiff },
@@ -3157,16 +3213,26 @@ namespace LuaGlobalFunctions
         { "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
         { "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
         { "RemoveEvents", &LuaGlobalFunctions::RemoveEvents },
+#if ELUNA_EXPANSION < RETAIL
         { "PerformIngameSpawn", &LuaGlobalFunctions::PerformIngameSpawn },
         { "CreatePacket", &LuaGlobalFunctions::CreatePacket },
+#else
+        { "PerformIngameSpawn", METHOD_REG_NONE },
+        { "CreatePacket", METHOD_REG_NONE },
+#endif
         { "AddVendorItem", &LuaGlobalFunctions::AddVendorItem },
         { "VendorRemoveItem", &LuaGlobalFunctions::VendorRemoveItem },
         { "VendorRemoveAllItems", &LuaGlobalFunctions::VendorRemoveAllItems },
         { "Kick", &LuaGlobalFunctions::Kick },
         { "Ban", &LuaGlobalFunctions::Ban },
         { "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers },
+#if ELUNA_EXPANSION < RETAIL
         { "SendMail", &LuaGlobalFunctions::SendMail },
         { "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
+#else
+        { "SendMail", METHOD_REG_NONE },
+        { "AddTaxiPath", METHOD_REG_NONE },
+#endif
         { "CreateInt64", &LuaGlobalFunctions::CreateLongLong },
         { "CreateUint64", &LuaGlobalFunctions::CreateULongLong },
         { "StartGameEvent", &LuaGlobalFunctions::StartGameEvent },

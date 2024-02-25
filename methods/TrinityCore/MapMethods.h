@@ -95,6 +95,7 @@ namespace LuaMap
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns the height of the [Map] at the given X and Y coordinates.
      *
@@ -128,6 +129,7 @@ namespace LuaMap
         E->Push(map->GetDifficulty());
         return 1;
     }
+#endif
 
     /**
      * Returns the instance ID of the [Map].
@@ -162,6 +164,7 @@ namespace LuaMap
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns the area ID of the [Map] at the specified X, Y, and Z coordinates.
      *
@@ -181,6 +184,7 @@ namespace LuaMap
         E->Push(map->GetAreaId(phasemask, x, y, z));
         return 1;
     }
+#endif
 
     /**
      * Returns a [WorldObject] by its GUID from the map if it is spawned.
@@ -198,7 +202,9 @@ namespace LuaMap
                 E->Push(eObjectAccessor()GetPlayer(map, guid));
                 break;
             case HIGHGUID_TRANSPORT:
+#if ELUNA_EXPANSION < RETAIL
             case HIGHGUID_MO_TRANSPORT:
+#endif
             case HIGHGUID_GAMEOBJECT:
                 E->Push(map->GetGameObject(guid));
                 break;
@@ -273,6 +279,7 @@ namespace LuaMap
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Saves the [Map]'s instance data to the database.
      */
@@ -287,6 +294,7 @@ namespace LuaMap
 
         return 0;
     }
+#endif
 
     /**
     * Returns a table with all the current [Player]s in the map
@@ -357,15 +365,21 @@ namespace LuaMap
     {
         // Getters
         { "GetName", &LuaMap::GetName },
-        { "GetDifficulty", &LuaMap::GetDifficulty },
         { "GetInstanceId", &LuaMap::GetInstanceId },
         { "GetInstanceData", &LuaMap::GetInstanceData },
         { "GetPlayerCount", &LuaMap::GetPlayerCount },
         { "GetPlayers", &LuaMap::GetPlayers },
         { "GetMapId", &LuaMap::GetMapId },
+        { "GetWorldObject", &LuaMap::GetWorldObject },
+#if ELUNA_EXPANSION < RETAIL
+        { "GetDifficulty", &LuaMap::GetDifficulty },
         { "GetAreaId", &LuaMap::GetAreaId },
         { "GetHeight", &LuaMap::GetHeight },
-        { "GetWorldObject", &LuaMap::GetWorldObject },
+#else
+        { "GetDifficulty", METHOD_REG_NONE },
+        { "GetAreaId", METHOD_REG_NONE },
+        { "GetHeight", METHOD_REG_NONE },
+#endif
 
         // Setters
         { "SetWeather", &LuaMap::SetWeather },
@@ -379,7 +393,11 @@ namespace LuaMap
         { "IsRaid", &LuaMap::IsRaid },
 
         // Other
+#if ELUNA_EXPANSION < RETAIL
         { "SaveInstanceData", &LuaMap::SaveInstanceData },
+#else
+        { "SaveInstanceData", METHOD_REG_NONE },
+#endif
         { "Data", &LuaMap::Data }
     };
 };

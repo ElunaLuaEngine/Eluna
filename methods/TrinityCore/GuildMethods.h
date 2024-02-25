@@ -52,7 +52,11 @@ namespace LuaGuild
      */
     int GetMemberCount(Eluna* E, Guild* guild)
     {
+#if ELUNA_EXPANSION < RETAIL
         E->Push(guild->GetMemberCount());
+#else
+        E->Push(guild->GetMembersCount());
+#endif
         return 1;
     }
 
@@ -124,6 +128,7 @@ namespace LuaGuild
         return 1;
     }
 
+#if ELUNA_EXPANSION < CATA
     /**
      * Sets the leader of this [Guild]
      *
@@ -138,6 +143,7 @@ namespace LuaGuild
         guild->HandleSetLeader(player->GetSession(), player->GetName());
         return 0;
     }
+#endif
 
     /**
      * Sets the information of the bank tab specified
@@ -182,7 +188,11 @@ namespace LuaGuild
         WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
         uint8 ranked = E->CHECKVAL<uint8>(3);
 
+#if ELUNA_EXPANSION < RETAIL
         guild->BroadcastPacketToRank(data, ranked);
+#else
+        guild->BroadcastPacketToRank(data, GuildRankId(ranked));
+#endif
         return 0;
     }
 
@@ -215,7 +225,11 @@ namespace LuaGuild
 
         CharacterDatabaseTransaction trans(nullptr);
 
+#if ELUNA_EXPANSION < RETAIL
         guild->AddMember(trans, player->GET_GUID(), rankId);
+#else
+        guild->AddMember(trans, player->GET_GUID(), GuildRankId(rankId));
+#endif
         return 0;
     }
 
@@ -253,7 +267,11 @@ namespace LuaGuild
 
         CharacterDatabaseTransaction trans(nullptr);
 
+#if ELUNA_EXPANSION < RETAIL
         guild->ChangeMemberRank(trans, player->GET_GUID(), newRank);
+#else
+        guild->ChangeMemberRank(trans, player->GET_GUID(), GuildRankId(newRank));
+#endif
         return 0;
     }
     
@@ -272,7 +290,11 @@ namespace LuaGuild
         // Setters
         { "SetBankTabText", &LuaGuild::SetBankTabText, METHOD_REG_WORLD }, // World state method only in multistate
         { "SetMemberRank", &LuaGuild::SetMemberRank, METHOD_REG_WORLD }, // World state method only in multistate
+#if ELUNA_EXPANSION < CATA
         { "SetLeader", &LuaGuild::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
+#else
+        { "SetLeader", METHOD_REG_NONE }, // World state method only in multistate
+#endif
 
         // Other
         { "SendPacket", &LuaGuild::SendPacket },

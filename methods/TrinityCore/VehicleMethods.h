@@ -61,6 +61,7 @@ namespace LuaVehicle
         return 1;
     }
 
+#if ELUNA_EXPANSION < CATA
     /**
      * Adds [Unit] passenger to a specified seat in the [Vehicle]
      *
@@ -75,6 +76,7 @@ namespace LuaVehicle
         vehicle->AddPassenger(passenger, seatId);
         return 0;
     }
+#endif
 
     /**
      * Removes [Unit] passenger from the [Vehicle]
@@ -100,7 +102,11 @@ namespace LuaVehicle
         { "IsOnBoard", &LuaVehicle::IsOnBoard },
 
         // Other
+#if ELUNA_EXPANSION < CATA
         { "AddPassenger", &LuaVehicle::AddPassenger },
+#else
+        { "AddPassenger", METHOD_REG_NONE },
+#endif
         { "RemovePassenger", &LuaVehicle::RemovePassenger }
     };
 }

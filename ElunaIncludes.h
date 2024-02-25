@@ -16,7 +16,11 @@
 #include "CellImpl.h"
 #include "Channel.h"
 #include "Chat.h"
+#if ELUNA_EXPANSION < RETAIL
 #include "DBCStores.h"
+#else
+#include "DB2Stores.h"
+#endif
 #include "GameEventMgr.h"
 #include "GossipDef.h"
 #include "GridNotifiers.h"
@@ -118,6 +122,10 @@
 #include "GitRevision.h"
 #include "revision_data.h"
 #endif
+#endif
+
+#if ELUNA_EXPANSION > CATA
+typedef OpcodeServer OpcodesList;
 #endif
 
 #if !defined ELUNA_MANGOS

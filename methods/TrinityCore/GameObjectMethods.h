@@ -124,6 +124,7 @@ namespace LuaGameObject
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns the [Player] that can loot the [GameObject]
      *
@@ -149,6 +150,7 @@ namespace LuaGameObject
         E->Push(go->GetLootRecipientGroup());
         return 1;
     }
+#endif
 
     /**
      * Returns the guid of the [GameObject] that is used as the ID in the database
@@ -231,6 +233,7 @@ namespace LuaGameObject
         return 0;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Removes [GameObject] from the world
      *
@@ -261,6 +264,7 @@ namespace LuaGameObject
 
         return 0;
     }
+#endif
 
     /**
      * Activates a door or a button/lever
@@ -316,8 +320,13 @@ namespace LuaGameObject
         { "GetDisplayId", &LuaGameObject::GetDisplayId },
         { "GetGoState", &LuaGameObject::GetGoState },
         { "GetLootState", &LuaGameObject::GetLootState },
+#if ELUNA_EXPANSION < RETAIL
         { "GetLootRecipient", &LuaGameObject::GetLootRecipient },
         { "GetLootRecipientGroup", &LuaGameObject::GetLootRecipientGroup },
+#else
+        { "GetLootRecipient", METHOD_REG_NONE },
+        { "GetLootRecipientGroup", METHOD_REG_NONE },
+#endif
         { "GetDBTableGUIDLow", &LuaGameObject::GetDBTableGUIDLow },
 
         // Setters
@@ -333,7 +342,11 @@ namespace LuaGameObject
         { "IsSpawned", &LuaGameObject::IsSpawned },
 
         // Other
+#if ELUNA_EXPANSION < RETAIL
         { "RemoveFromWorld", &LuaGameObject::RemoveFromWorld },
+#else
+        { "RemoveFromWorld", METHOD_REG_NONE },
+#endif
         { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },
         { "Despawn", &LuaGameObject::Despawn },
         { "Respawn", &LuaGameObject::Respawn },

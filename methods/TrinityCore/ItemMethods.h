@@ -45,6 +45,7 @@ namespace LuaItem
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns 'true' if the [Item] is not bound to the [Player] specified, 'false' otherwise
      *
@@ -58,6 +59,7 @@ namespace LuaItem
         E->Push(item->IsBindedNotWith(player));
         return 1;
     }
+#endif
 
     /**
      * Returns 'true' if the [Item] is locked, 'false' otherwise
@@ -185,6 +187,7 @@ namespace LuaItem
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns 'true' if the [Item] is a weapon vellum, 'false' otherwise
      *
@@ -206,6 +209,7 @@ namespace LuaItem
         E->Push(item->IsArmorVellum());
         return 1;
     }
+#endif
 
     /**
      * Returns 'true' if the [Item] is a conjured consumable, 'false' otherwise
@@ -229,6 +233,7 @@ namespace LuaItem
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns the chat link of the [Item]
      *
@@ -298,6 +303,7 @@ namespace LuaItem
         E->Push(oss.str());
         return 1;
     }
+#endif
 
     /**
      * Returns GUID of the [Player] who currently owns the [Item]
@@ -382,6 +388,7 @@ namespace LuaItem
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns the spell ID tied to the [Item] by spell index
      *
@@ -413,6 +420,7 @@ namespace LuaItem
         E->Push(item->GetTemplate()->Spells[index].SpellTrigger);
         return 1;
     }
+#endif
 
     /**
      * Returns class of the [Item]
@@ -421,7 +429,11 @@ namespace LuaItem
      */
     int GetClass(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION >= CATA
+        E->Push(item->GetTemplate()->GetClass());
+#else
         E->Push(item->GetTemplate()->Class);
+#endif
         return 1;
     }
 
@@ -432,7 +444,11 @@ namespace LuaItem
      */
     int GetSubClass(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION >= CATA
+        E->Push(item->GetTemplate()->GetSubClass());
+#else
         E->Push(item->GetTemplate()->SubClass);
+#endif
         return 1;
     }
 
@@ -443,7 +459,11 @@ namespace LuaItem
     */
     int GetItemId(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION < RETAIL
         E->Push(item->GetTemplate()->ItemId);
+#else
+        E->Push(item->GetTemplate()->BasicData->ID);
+#endif
         return 1;
     }
 
@@ -454,10 +474,15 @@ namespace LuaItem
      */
     int GetName(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION >= CATA
+        E->Push(item->GetTemplate()->GetDefaultLocaleName());
+#else
         E->Push(item->GetTemplate()->Name1);
+#endif
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns the display ID of the [Item]
      *
@@ -468,6 +493,7 @@ namespace LuaItem
         E->Push(item->GetTemplate()->DisplayInfoID);
         return 1;
     }
+#endif
 
     /**
      * Returns the quality of the [Item]
@@ -476,10 +502,15 @@ namespace LuaItem
      */
     int GetQuality(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION >= CATA
+        E->Push(item->GetTemplate()->GetQuality());
+#else
         E->Push(item->GetTemplate()->Quality);
+#endif
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
     * Returns the flags of the [Item]
     *
@@ -501,6 +532,7 @@ namespace LuaItem
         E->Push(item->GetTemplate()->Flags2);
         return 1;
     }
+#endif
 
     /**
     * Returns the extraFlags of the [Item]
@@ -520,7 +552,11 @@ namespace LuaItem
      */
     int GetBuyCount(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION >= CATA
+        E->Push(item->GetTemplate()->GetBuyCount());
+#else
         E->Push(item->GetTemplate()->BuyCount);
+#endif
         return 1;
     }
 
@@ -531,7 +567,11 @@ namespace LuaItem
      */
     int GetBuyPrice(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION >= CATA
+        E->Push(item->GetTemplate()->GetBuyPrice());
+#else
         E->Push(item->GetTemplate()->BuyPrice);
+#endif
         return 1;
     }
 
@@ -542,7 +582,11 @@ namespace LuaItem
      */
     int GetSellPrice(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION >= CATA
+        E->Push(item->GetTemplate()->GetSellPrice());
+#else
         E->Push(item->GetTemplate()->SellPrice);
+#endif
         return 1;
     }
 
@@ -553,7 +597,11 @@ namespace LuaItem
      */
     int GetInventoryType(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION >= CATA
+        E->Push(item->GetTemplate()->GetInventoryType());
+#else
         E->Push(item->GetTemplate()->InventoryType);
+#endif
         return 1;
     }
 
@@ -564,10 +612,15 @@ namespace LuaItem
      */
     int GetAllowableClass(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION >= CATA
+        E->Push(item->GetTemplate()->GetAllowableClass());
+#else
         E->Push(item->GetTemplate()->AllowableClass);
+#endif
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns the [Player] races allowed to use this [Item]
      *
@@ -578,6 +631,7 @@ namespace LuaItem
         E->Push(item->GetTemplate()->AllowableRace);
         return 1;
     }
+#endif
 
     /**
      * Returns the [Item]s level
@@ -586,7 +640,11 @@ namespace LuaItem
      */
     int GetItemLevel(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION >= CATA
+        E->Push(item->GetTemplate()->GetBaseItemLevel());
+#else
         E->Push(item->GetTemplate()->ItemLevel);
+#endif
         return 1;
     }
 
@@ -597,10 +655,17 @@ namespace LuaItem
      */
     int GetRequiredLevel(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION == CATA
+        E->Push(item->GetTemplate()->GetRequiredLevel());
+#elif ELUNA_EXPANSION == RETAIL
+        E->Push(item->GetTemplate()->GetBaseRequiredLevel());
+#else
         E->Push(item->GetTemplate()->RequiredLevel);
+#endif
         return 1;
     }
 
+#if ELUNA_EXPANSION < RETAIL
     /**
      * Returns the amount of stat values on this [Item]
      *
@@ -633,6 +698,7 @@ namespace LuaItem
         E->Push(item->GetTemplate()->RandomSuffix);
         return 1;
     }
+#endif
 
     /**
      * Returns the item set ID of this [Item]
@@ -641,7 +707,11 @@ namespace LuaItem
      */
     int GetItemSet(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION >= CATA
+        E->Push(item->GetTemplate()->GetItemSet());
+#else
         E->Push(item->GetTemplate()->ItemSet);
+#endif
         return 1;
     }
 
@@ -785,31 +855,44 @@ namespace LuaItem
         { "GetSlot", &LuaItem::GetSlot },
         { "GetBagSlot", &LuaItem::GetBagSlot },
         { "GetEnchantmentId", &LuaItem::GetEnchantmentId },
-        { "GetSpellId", &LuaItem::GetSpellId },
-        { "GetSpellTrigger", &LuaItem::GetSpellTrigger },
-        { "GetItemLink", &LuaItem::GetItemLink },
         { "GetClass", &LuaItem::GetClass },
         { "GetSubClass", &LuaItem::GetSubClass },
         { "GetItemId", &LuaItem::GetItemId },
         { "GetName", &LuaItem::GetName },
-        { "GetDisplayId", &LuaItem::GetDisplayId },
         { "GetQuality", &LuaItem::GetQuality },
-        { "GetFlags", &LuaItem::GetFlags },
-        { "GetFlags2", &LuaItem::GetFlags2 },
-        { "GetExtraFlags", &LuaItem::GetExtraFlags },		
+		{ "GetExtraFlags", &LuaItem::GetExtraFlags },
         { "GetBuyCount", &LuaItem::GetBuyCount },
         { "GetBuyPrice", &LuaItem::GetBuyPrice },
         { "GetSellPrice", &LuaItem::GetSellPrice },
         { "GetInventoryType", &LuaItem::GetInventoryType },
         { "GetAllowableClass", &LuaItem::GetAllowableClass },
-        { "GetAllowableRace", &LuaItem::GetAllowableRace },
         { "GetItemLevel", &LuaItem::GetItemLevel },
         { "GetRequiredLevel", &LuaItem::GetRequiredLevel },
+        { "GetItemSet", &LuaItem::GetItemSet },
+        { "GetBagSize", &LuaItem::GetBagSize },
+#if ELUNA_EXPANSION < RETAIL
+        { "GetSpellId", &LuaItem::GetSpellId },
+        { "GetSpellTrigger", &LuaItem::GetSpellTrigger },
+        { "GetItemLink", &LuaItem::GetItemLink },
+        { "GetDisplayId", &LuaItem::GetDisplayId },
+        { "GetFlags", &LuaItem::GetFlags },
+        { "GetFlags2", &LuaItem::GetFlags2 },
+        { "GetAllowableRace", &LuaItem::GetAllowableRace },
         { "GetStatsCount", &LuaItem::GetStatsCount },
         { "GetRandomProperty", &LuaItem::GetRandomProperty },
         { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
-        { "GetItemSet", &LuaItem::GetItemSet },
-        { "GetBagSize", &LuaItem::GetBagSize },
+#else
+        { "GetSpellId", METHOD_REG_NONE },
+        { "GetSpellTrigger", METHOD_REG_NONE },
+        { "GetItemLink", METHOD_REG_NONE },
+        { "GetDisplayId", METHOD_REG_NONE },
+        { "GetFlags", METHOD_REG_NONE },
+        { "GetFlags2", METHOD_REG_NONE },
+        { "GetAllowableRace", METHOD_REG_NONE },
+        { "GetStatsCount", METHOD_REG_NONE },
+        { "GetRandomProperty", METHOD_REG_NONE },
+        { "GetRandomSuffix", METHOD_REG_NONE },
+#endif
 
         // Setters
         { "SetOwner", &LuaItem::SetOwner },
@@ -820,7 +903,6 @@ namespace LuaItem
         { "IsSoulBound", &LuaItem::IsSoulBound },
         { "IsBoundAccountWide", &LuaItem::IsBoundAccountWide },
         { "IsBoundByEnchant", &LuaItem::IsBoundByEnchant },
-        { "IsNotBoundToPlayer", &LuaItem::IsNotBoundToPlayer },
         { "IsLocked", &LuaItem::IsLocked },
         { "IsBag", &LuaItem::IsBag },
         { "IsCurrencyToken", &LuaItem::IsCurrencyToken },
@@ -832,12 +914,19 @@ namespace LuaItem
         { "IsEquipped", &LuaItem::IsEquipped },
         { "HasQuest", &LuaItem::HasQuest },
         { "IsPotion", &LuaItem::IsPotion },
-        { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
-        { "IsArmorVellum", &LuaItem::IsArmorVellum },
         { "IsRefundExpired", &LuaItem::IsRefundExpired },
         { "IsConjuredConsumable", &LuaItem::IsConjuredConsumable },
         { "SetEnchantment", &LuaItem::SetEnchantment },
         { "ClearEnchantment", &LuaItem::ClearEnchantment },
+#if ELUNA_EXPANSION < RETAIL
+        { "IsNotBoundToPlayer", &LuaItem::IsNotBoundToPlayer },
+        { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
+        { "IsArmorVellum", &LuaItem::IsArmorVellum },
+#else
+        { "IsNotBoundToPlayer", METHOD_REG_NONE },
+        { "IsWeaponVellum", METHOD_REG_NONE },
+        { "IsArmorVellum", METHOD_REG_NONE },
+#endif
 
         // Other
         { "SaveToDB", &LuaItem::SaveToDB }
