@@ -143,6 +143,9 @@ bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, 
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
     auto original_menu = *pPlayer->GetPlayerMenu();
     pPlayer->GetPlayerMenu()->ClearMenus();
+#elif defined ELUNA_TRINITY && ELUNA_EXPANSION == EXP_RETAIL
+    auto original_menu = pPlayer->PlayerTalkClass->GetGossipMenu().GetMenuId();
+    pPlayer->PlayerTalkClass->ClearMenus();
 #else
     auto original_menu = *pPlayer->PlayerTalkClass;
     pPlayer->PlayerTalkClass->ClearMenus();
@@ -155,6 +158,8 @@ bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, 
     if (!preventDefault) {
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
         *pPlayer->GetPlayerMenu() = original_menu;
+#elif defined ELUNA_TRINITY && ELUNA_EXPANSION == EXP_RETAIL
+        pPlayer->PlayerTalkClass->GetGossipMenu().SetMenuId(original_menu);
 #else
         *pPlayer->PlayerTalkClass = original_menu;
 #endif
@@ -168,6 +173,9 @@ bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 send
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
     auto original_menu = *pPlayer->GetPlayerMenu();
     pPlayer->GetPlayerMenu()->ClearMenus();
+#elif defined ELUNA_TRINITY && ELUNA_EXPANSION == EXP_RETAIL
+    auto original_menu = pPlayer->PlayerTalkClass->GetGossipMenu().GetMenuId();
+    pPlayer->PlayerTalkClass->ClearMenus();
 #else
     auto original_menu = *pPlayer->PlayerTalkClass;
     pPlayer->PlayerTalkClass->ClearMenus();
@@ -181,6 +189,8 @@ bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 send
     if (!preventDefault) {
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
         *pPlayer->GetPlayerMenu() = original_menu;
+#elif defined ELUNA_TRINITY && ELUNA_EXPANSION == EXP_RETAIL
+        pPlayer->PlayerTalkClass->GetGossipMenu().SetMenuId(original_menu);
 #else
         *pPlayer->PlayerTalkClass = original_menu;
 #endif
