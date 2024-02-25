@@ -10,7 +10,12 @@
 #include "Object.h"
 #include "Unit.h"
 #include "GameObject.h"
+#if ELUNA_EXPANSION == EXP_RETAIL
+#include "DB2Stores.h"
+#include "IpAddress.h"
+#else
 #include "DBCStores.h"
+#endif
 #else
 #include "World/World.h"
 #include "Entities/Object.h"
@@ -98,10 +103,12 @@ bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
             {
                 if (i_obj_fact)
                 {
-#if !defined ELUNA_MANGOS
+#if !defined ELUNA_MANGOS && ELUNA_EXPANSION < EXP_RETAIL
                     if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))
-#else
+#elif ELUNA_EXPANSION < EXP_RETAIL
                     if ((i_obj_fact->IsHostileTo(*target->getFactionTemplateEntry())) != (i_hostile == 1))
+#else
+                    if ((i_obj_fact->IsHostileTo(target->GetFactionTemplateEntry())) != (i_hostile == 1))
 #endif
                         return false;
                 }
@@ -210,3 +217,12 @@ unsigned char* ElunaUtil::DecodeData(const char *data, size_t *output_length)
 
     return decoded_data;
 }
+
+#if ELUNA_EXPANSION == EXP_RETAIL
+bool ElunaUtil::IsIPAddress(std::string const& text)
+{
+    boost::system::error_code error;
+    Trinity::Net::make_address(text, error);
+    return !error;
+}
+#endif

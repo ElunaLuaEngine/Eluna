@@ -551,15 +551,21 @@ public:
     /* Weather */
     void OnChange(Weather* weather, uint32 zone, WeatherState state, float grade);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /* Auction House */
     void OnAdd(AuctionHouseObject* ah, AuctionEntry* entry);
     void OnRemove(AuctionHouseObject* ah, AuctionEntry* entry);
     void OnSuccessful(AuctionHouseObject* ah, AuctionEntry* entry);
     void OnExpire(AuctionHouseObject* ah, AuctionEntry* entry);
+#endif
 
     /* Guild */
     void OnAddMember(Guild* guild, Player* player, uint32 plRank);
+#if ELUNA_EXPANSION == EXP_RETAIL
+    void OnRemoveMember(Guild* guild, ObjectGuid guid, bool isDisbanding);
+#else
     void OnRemoveMember(Guild* guild, Player* player, bool isDisbanding);
+#endif
     void OnMOTDChanged(Guild* guild, const std::string& newMotd);
     void OnInfoChanged(Guild* guild, const std::string& newInfo);
     void OnCreate(Guild* guild, Player* leader, const std::string& name);
