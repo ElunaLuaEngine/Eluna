@@ -84,6 +84,7 @@ namespace LuaQuest
         return 1;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the [Quest]'s level.
      *
@@ -105,6 +106,7 @@ namespace LuaQuest
         E->Push(quest->GetMinLevel());
         return 1;
     }
+#endif
 
     /**
      * Returns the next [Quest] entry ID.
@@ -192,9 +194,14 @@ namespace LuaQuest
     {
         // Getters
         { "GetId", &LuaQuest::GetId },
+#if ELUNA_EXPANSION < EXP_RETAIL
         { "GetLevel", &LuaQuest::GetLevel },
-        { "GetMaxLevel", &LuaQuest::GetMaxLevel },
         { "GetMinLevel", &LuaQuest::GetMinLevel },
+#else
+        { "GetLevel", METHOD_REG_NONE },
+        { "GetMinLevel", METHOD_REG_NONE },
+#endif
+        { "GetMaxLevel", &LuaQuest::GetMaxLevel },
         { "GetNextQuestId", &LuaQuest::GetNextQuestId },
         { "GetPrevQuestId", &LuaQuest::GetPrevQuestId },
         { "GetNextQuestInChain", &LuaQuest::GetNextQuestInChain },

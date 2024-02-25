@@ -135,7 +135,11 @@ namespace LuaGuild
     {
         Player* player = E->CHECKOBJ<Player>(2);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
+        guild->HandleSetLeader(player->GetSession(), player->GetName());
+#else
         guild->HandleSetNewGuildMaster(player->GetSession(), player->GetName());
+#endif
         return 0;
     }
 
@@ -182,7 +186,11 @@ namespace LuaGuild
         WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
         uint8 ranked = E->CHECKVAL<uint8>(3);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         guild->BroadcastPacketToRank(data, ranked);
+#else
+        guild->BroadcastPacketToRank(data, GuildRankId(ranked));
+#endif
         return 0;
     }
 
@@ -215,7 +223,11 @@ namespace LuaGuild
 
         CharacterDatabaseTransaction trans(nullptr);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         guild->AddMember(trans, player->GET_GUID(), rankId);
+#else
+        guild->AddMember(trans, player->GET_GUID(), GuildRankId(rankId));
+#endif
         return 0;
     }
 
@@ -253,7 +265,11 @@ namespace LuaGuild
 
         CharacterDatabaseTransaction trans(nullptr);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         guild->ChangeMemberRank(trans, player->GET_GUID(), newRank);
+#else
+        guild->ChangeMemberRank(trans, player->GET_GUID(), GuildRankId(newRank));
+#endif
         return 0;
     }
     
