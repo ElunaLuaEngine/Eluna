@@ -108,7 +108,7 @@ struct ElunaCreatureAI : CreatureAI
     void EnterCombat(Unit* target) override
     {
 #ifndef CMANGOS
-        if (!sEluna->EnterCombat(me, target))
+        if (!me->GetEluna()->EnterCombat(me, target))
             ScriptedAI::EnterCombat(target);
 #else
         if (!me->GetEluna()->EnterCombat(me, target))
@@ -248,7 +248,7 @@ struct ElunaCreatureAI : CreatureAI
     void JustRespawned() override
     {
 #ifndef CMANGOS
-        if (!sEluna->JustRespawned(me))
+        if (!me->GetEluna()->JustRespawned(me))
             ScriptedAI::JustRespawned();
 #else
         if (!me->GetEluna()->JustRespawned(me))

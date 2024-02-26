@@ -13,7 +13,12 @@
 #include <filesystem>
 #include <fstream>
 #include <sstream>
+#ifndef VMANGOS
 #include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
+#else
+namespace fs = std::filesystem;
+#endif
 
 #ifdef TRINITY
 #include "MapManager.h"
@@ -96,10 +101,10 @@ void ElunaLoader::ReadFiles(std::string path)
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 
-    boost::filesystem::path someDir(path);
-    boost::filesystem::directory_iterator end_iter;
+    fs::path someDir(path);
+    fs::directory_iterator end_iter;
 
-    if (boost::filesystem::exists(someDir) && boost::filesystem::is_directory(someDir))
+    if (fs::exists(someDir) && fs::is_directory(someDir))
     {
         lua_requirepath +=
             path + "/?.lua;" +
@@ -107,7 +112,7 @@ void ElunaLoader::ReadFiles(std::string path)
             path + "/?.dll;" +
             path + "/?.so;";
 
-        for (boost::filesystem::directory_iterator dir_iter(someDir); dir_iter != end_iter; ++dir_iter)
+        for (fs::directory_iterator dir_iter(someDir); dir_iter != end_iter; ++dir_iter)
         {
             std::string fullpath = dir_iter->path().generic_string();
             // Check if file is hidden
@@ -122,13 +127,13 @@ void ElunaLoader::ReadFiles(std::string path)
 #endif
 
             // load subfolder
-            if (boost::filesystem::is_directory(dir_iter->status()))
+            if (fs::is_directory(dir_iter->status()))
             {
                 ReadFiles(fullpath);
                 continue;
             }
 
-            if (boost::filesystem::is_regular_file(dir_iter->status()))
+            if (fs::is_regular_file(dir_iter->status()))
             {
                 int32 mapId;
 
