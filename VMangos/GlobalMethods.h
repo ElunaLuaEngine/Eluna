@@ -655,9 +655,21 @@ namespace LuaGlobalFunctions
      *     PLAYER_EVENT_ON_LOOT_MONEY              =     37,       // (event, player, amount)
      *     PLAYER_EVENT_ON_QUEST_ABANDON           =     38,       // (event, player, questId)
      *     PLAYER_EVENT_ON_LEARN_TALENTS           =     39,       // (event, player, talentId, talentRank, spellid)
-     *     // UNUSED                               =     40,       // (event, player)
-     *     // UNUSED                               =     41,       // (event, player)
+     *     PLAYER_EVENT_ON_ENVIRONMENTAL_DEATH     =     40,       // (event, player, environmentalDamageType)
+     *     PLAYER_EVENT_ON_TRADE_ACCEPT            =     41,       // (event, player, target) - Can return false to interrupt trade
      *     PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - player is nil if command used from console. Can return false
+     *     PLAYER_EVENT_ON_SKILL_CHANGE            =     43,       // (event, player, skillId, skillValue) - Returns new skill level value
+     *     PLAYER_EVENT_ON_LEARN_SPELL             =     44,       // (event, player, spellId)
+     *     PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE    =     45,       // (event, player, achievementId) - Not supported in VMaNGOS
+     *     PLAYER_EVENT_ON_DISCOVER_AREA           =     46,       // (event, player, area) - Not supported in VMaNGOS
+     *     PLAYER_EVENT_ON_UPDATE_AREA             =     47,       // (event, player, oldArea, newArea)
+     *     PLAYER_EVENT_ON_TRADE_INIT              =     48,       // (event, player, target) - Can return false to interrupt trade
+     *     PLAYER_EVENT_ON_SEND_MAIL               =     49,       // (event, player, recipientGuid) - Can return false to interrupt sending
+     *     // UNUSED                               =     50,       // (event, player)
+     *     // UNUSED                               =     51,       // (event, player)
+     *     // UNUSED                               =     52,       // (event, player)
+     *     // UNUSED                               =     53,       // (event, player)
+     *     PLAYER_EVENT_ON_QUEST_STATUS_CHANGED    =     54,       // (event, player, questId, status)
      * };
      * </pre>
      *
@@ -866,6 +878,7 @@ namespace LuaGlobalFunctions
      *     ITEM_EVENT_ON_QUEST_ACCEPT                      = 3,    // (event, player, item, quest) - Can return true
      *     ITEM_EVENT_ON_EXPIRE                            = 4,    // (event, player, itemid) - Can return true
      *     ITEM_EVENT_ON_REMOVE                            = 5,    // (event, player, item) - Can return true
+     *     ITEM_EVENT_ON_ADD                               = 6,    // (event, player, item)
      *     ITEM_EVENT_COUNT
      * };
      * </pre>
