@@ -6,7 +6,7 @@
 
 #ifdef TRINITY
 #include "Config.h"
-#else if defined CMANGOS || defined VMANGOS
+#elif defined CMANGOS || defined VMANGOS
 #include "Config/Config.h"
 #endif
 #include "ElunaConfig.h"
