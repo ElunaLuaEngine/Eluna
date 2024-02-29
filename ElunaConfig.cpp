@@ -41,7 +41,7 @@ void ElunaConfig::SetConfig(ElunaConfigBoolValues index, char const* fieldname, 
 {
 #ifdef TRINITY
     SetConfig(index, sConfigMgr->GetBoolDefault(fieldname, defvalue));
-#else if defined CMANGOS || defined VMANGOS
+#elif defined CMANGOS || defined VMANGOS
     SetConfig(index, sConfig.GetBoolDefault(fieldname, defvalue));
 #endif
 }
