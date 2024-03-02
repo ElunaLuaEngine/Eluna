@@ -119,7 +119,7 @@ namespace LuaGlobalFunctions
      */
     int GetQuest(Eluna* E)
     {
-        uint32 questId = Eluna::CHECKVAL<uint32>(E->L, 1);
+        uint32 questId = E->CHECKVAL<uint32>(1);
 
         E->Push(eObjectMgr->GetQuestTemplate(questId));
         return 1;
@@ -133,7 +133,7 @@ namespace LuaGlobalFunctions
      */
     int GetPlayerByGUID(Eluna* E)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 1);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(1);
         E->Push(eObjectAccessor()FindPlayer(guid));
         return 1;
     }
@@ -146,7 +146,7 @@ namespace LuaGlobalFunctions
      */
     int GetPlayerByName(Eluna* E)
     {
-        const char* name = Eluna::CHECKVAL<const char*>(E->L, 1);
+        const char* name = E->CHECKVAL<const char*>(1);
         E->Push(eObjectAccessor()FindPlayerByName(name));
         return 1;
     }
@@ -184,8 +184,8 @@ namespace LuaGlobalFunctions
      */
     int GetPlayersInWorld(Eluna* E)
     {
-        uint32 team = Eluna::CHECKVAL<uint32>(E->L, 1, TEAM_NEUTRAL);
-        bool onlyGM = Eluna::CHECKVAL<bool>(E->L, 2, false);
+        uint32 team = E->CHECKVAL<uint32>(1, TEAM_NEUTRAL);
+        bool onlyGM = E->CHECKVAL<bool>(2, false);
 
         lua_newtable(E->L);
         int tbl = lua_gettop(E->L);
@@ -241,7 +241,7 @@ namespace LuaGlobalFunctions
      */
     int GetGuildByName(Eluna* E)
     {
-        const char* name = Eluna::CHECKVAL<const char*>(E->L, 1);
+        const char* name = E->CHECKVAL<const char*>(1);
         E->Push(eGuildMgr->GetGuildByName(name));
         return 1;
     }
@@ -255,8 +255,8 @@ namespace LuaGlobalFunctions
      */
     int GetMapById(Eluna* E)
     {
-        uint32 mapid = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint32 instance = Eluna::CHECKVAL<uint32>(E->L, 2, 0);
+        uint32 mapid = E->CHECKVAL<uint32>(1);
+        uint32 instance = E->CHECKVAL<uint32>(2, 0);
 
         E->Push(eMapMgr->FindMap(mapid, instance));
         return 1;
@@ -270,7 +270,7 @@ namespace LuaGlobalFunctions
      */
     int GetGuildByLeaderGUID(Eluna* E)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 1);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(1);
 
         E->Push(eGuildMgr->GetGuildByLeader(guid));
         return 1;
@@ -299,7 +299,7 @@ namespace LuaGlobalFunctions
      */
     int GetPlayerGUID(Eluna* E)
     {
-        uint32 lowguid = Eluna::CHECKVAL<uint32>(E->L, 1);
+        uint32 lowguid = E->CHECKVAL<uint32>(1);
         E->Push(MAKE_NEW_GUID(lowguid, 0, HIGHGUID_PLAYER));
         return 1;
     }
@@ -315,7 +315,7 @@ namespace LuaGlobalFunctions
      */
     int GetItemGUID(Eluna* E)
     {
-        uint32 lowguid = Eluna::CHECKVAL<uint32>(E->L, 1);
+        uint32 lowguid = E->CHECKVAL<uint32>(1);
         E->Push(MAKE_NEW_GUID(lowguid, 0, HIGHGUID_ITEM));
         return 1;
     }
@@ -333,8 +333,8 @@ namespace LuaGlobalFunctions
      */
     int GetObjectGUID(Eluna* E)
     {
-        uint32 lowguid = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 lowguid = E->CHECKVAL<uint32>(1);
+        uint32 entry = E->CHECKVAL<uint32>(2);
         E->Push(MAKE_NEW_GUID(lowguid, entry, HIGHGUID_GAMEOBJECT));
         return 1;
     }
@@ -352,8 +352,8 @@ namespace LuaGlobalFunctions
      */
     int GetUnitGUID(Eluna* E)
     {
-        uint32 lowguid = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 lowguid = E->CHECKVAL<uint32>(1);
+        uint32 entry = E->CHECKVAL<uint32>(2);
         E->Push(MAKE_NEW_GUID(lowguid, entry, HIGHGUID_UNIT));
         return 1;
     }
@@ -379,7 +379,7 @@ namespace LuaGlobalFunctions
      */
     int GetGUIDLow(Eluna* E)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 1);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(1);
 
         E->Push(guid.GetCounter());
         return 1;
@@ -407,8 +407,8 @@ namespace LuaGlobalFunctions
      */
     int GetItemLink(Eluna* E)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint8 locale = Eluna::CHECKVAL<uint8>(E->L, 2, DEFAULT_LOCALE);
+        uint32 entry = E->CHECKVAL<uint32>(1);
+        uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -444,7 +444,7 @@ namespace LuaGlobalFunctions
      */
     int GetGUIDType(Eluna* E)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 1);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(1);
         E->Push(static_cast<int>(guid.GetHigh()));
         return 1;
     }
@@ -459,7 +459,7 @@ namespace LuaGlobalFunctions
      */
     int GetGUIDEntry(Eluna* E)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 1);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(1);
         E->Push(guid.GetEntry());
         return 1;
     }
@@ -486,8 +486,8 @@ namespace LuaGlobalFunctions
      */
     int GetAreaName(Eluna* E)
     {
-        uint32 areaOrZoneId = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint8 locale = Eluna::CHECKVAL<uint8>(E->L, 2, DEFAULT_LOCALE);
+        uint32 areaOrZoneId = E->CHECKVAL<uint32>(1);
+        uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -533,10 +533,10 @@ namespace LuaGlobalFunctions
 
     static int RegisterEntryHelper(Eluna* E, int regtype)
     {
-        uint32 id = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint32 ev = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 id = E->CHECKVAL<uint32>(1);
+        uint32 ev = E->CHECKVAL<uint32>(2);
         luaL_checktype(E->L, 3, LUA_TFUNCTION);
-        uint32 shots = Eluna::CHECKVAL<uint32>(E->L, 4, 0);
+        uint32 shots = E->CHECKVAL<uint32>(4, 0);
 
         lua_pushvalue(E->L, 3);
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
@@ -549,9 +549,9 @@ namespace LuaGlobalFunctions
 
     static int RegisterEventHelper(Eluna* E, int regtype)
     {
-        uint32 ev = Eluna::CHECKVAL<uint32>(E->L, 1);
+        uint32 ev = E->CHECKVAL<uint32>(1);
         luaL_checktype(E->L, 2, LUA_TFUNCTION);
-        uint32 shots = Eluna::CHECKVAL<uint32>(E->L, 3, 0);
+        uint32 shots = E->CHECKVAL<uint32>(3, 0);
 
         lua_pushvalue(E->L, 2);
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
@@ -564,11 +564,11 @@ namespace LuaGlobalFunctions
 
     static int RegisterUniqueHelper(Eluna* E, int regtype)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 1);
-        uint32 instanceId = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 ev = Eluna::CHECKVAL<uint32>(E->L, 3);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(1);
+        uint32 instanceId = E->CHECKVAL<uint32>(2);
+        uint32 ev = E->CHECKVAL<uint32>(3);
         luaL_checktype(E->L, 4, LUA_TFUNCTION);
-        uint32 shots = Eluna::CHECKVAL<uint32>(E->L, 5, 0);
+        uint32 shots = E->CHECKVAL<uint32>(5, 0);
 
         lua_pushvalue(E->L, 4);
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
@@ -1221,7 +1221,7 @@ namespace LuaGlobalFunctions
      */
     int RunCommand(Eluna* E)
     {
-        const char* command = Eluna::CHECKVAL<const char*>(E->L, 1);
+        const char* command = E->CHECKVAL<const char*>(1);
 #if defined TRINITY || AZEROTHCORE
         // ignores output of the command
         eWorld->QueueCliCommand(new CliCommandHolder(nullptr, command, [](void*, std::string_view) {}, [](void*, bool) {}));
@@ -1240,7 +1240,7 @@ namespace LuaGlobalFunctions
      */
     int SendWorldMessage(Eluna* E)
     {
-        const char* message = Eluna::CHECKVAL<const char*>(E->L, 1);
+        const char* message = E->CHECKVAL<const char*>(1);
         eWorld->SendServerMessage(SERVER_MSG_STRING, message);
         return 0;
     }
@@ -1264,7 +1264,7 @@ namespace LuaGlobalFunctions
      */
     int WorldDBQuery(Eluna* E)
     {
-        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        const char* query = E->CHECKVAL<const char*>(1);
 
 #if defined TRINITY || AZEROTHCORE
         ElunaQuery result = WorldDatabase.Query(query);
@@ -1297,7 +1297,7 @@ namespace LuaGlobalFunctions
      */
     int WorldDBExecute(Eluna* E)
     {
-        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        const char* query = E->CHECKVAL<const char*>(1);
         WorldDatabase.Execute(query);
         return 0;
     }
@@ -1315,7 +1315,7 @@ namespace LuaGlobalFunctions
      */
     int CharDBQuery(Eluna* E)
     {
-        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        const char* query = E->CHECKVAL<const char*>(1);
 
 #if defined TRINITY || AZEROTHCORE
         QueryResult result = CharacterDatabase.Query(query);
@@ -1348,7 +1348,7 @@ namespace LuaGlobalFunctions
      */
     int CharDBExecute(Eluna* E)
     {
-        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        const char* query = E->CHECKVAL<const char*>(1);
         CharacterDatabase.Execute(query);
         return 0;
     }
@@ -1366,7 +1366,7 @@ namespace LuaGlobalFunctions
      */
     int AuthDBQuery(Eluna* E)
     {
-        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        const char* query = E->CHECKVAL<const char*>(1);
 
 #if defined TRINITY || AZEROTHCORE
         QueryResult result = LoginDatabase.Query(query);
@@ -1399,7 +1399,7 @@ namespace LuaGlobalFunctions
      */
     int AuthDBExecute(Eluna* E)
     {
-        const char* query = Eluna::CHECKVAL<const char*>(E->L, 1);
+        const char* query = E->CHECKVAL<const char*>(1);
         LoginDatabase.Execute(query);
         return 0;
     }
@@ -1430,15 +1430,15 @@ namespace LuaGlobalFunctions
         {
             E->Push(1);
             lua_gettable(E->L, 2);
-            min = Eluna::CHECKVAL<uint32>(E->L, -1);
+            min = E->CHECKVAL<uint32>(-1);
             E->Push(2);
             lua_gettable(E->L, 2);
-            max = Eluna::CHECKVAL<uint32>(E->L, -1);
+            max = E->CHECKVAL<uint32>(-1);
             lua_pop(E->L, 2);
         }
         else
-            min = max = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 repeats = Eluna::CHECKVAL<uint32>(E->L, 3, 1);
+            min = max = E->CHECKVAL<uint32>(2);
+        uint32 repeats = E->CHECKVAL<uint32>(3, 1);
 
         if (min > max)
             return luaL_argerror(E->L, 2, "min is bigger than max delay");
@@ -1461,8 +1461,8 @@ namespace LuaGlobalFunctions
      */
     int RemoveEventById(Eluna* E)
     {
-        int eventId = Eluna::CHECKVAL<int>(E->L, 1);
-        bool all_Events = Eluna::CHECKVAL<bool>(E->L, 1, false);
+        int eventId = E->CHECKVAL<int>(1);
+        bool all_Events = E->CHECKVAL<bool>(1, false);
 
         // not thread safe
         if (all_Events)
@@ -1479,7 +1479,7 @@ namespace LuaGlobalFunctions
      */
     int RemoveEvents(Eluna* E)
     {
-        bool all_Events = Eluna::CHECKVAL<bool>(E->L, 1, false);
+        bool all_Events = E->CHECKVAL<bool>(1, false);
 
         // not thread safe
         if (all_Events)
@@ -1507,18 +1507,18 @@ namespace LuaGlobalFunctions
      */
     int PerformIngameSpawn(Eluna* E)
     {
-        int spawntype = Eluna::CHECKVAL<int>(E->L, 1);
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 mapID = Eluna::CHECKVAL<uint32>(E->L, 3);
-        uint32 instanceID = Eluna::CHECKVAL<uint32>(E->L, 4);
-        float x = Eluna::CHECKVAL<float>(E->L, 5);
-        float y = Eluna::CHECKVAL<float>(E->L, 6);
-        float z = Eluna::CHECKVAL<float>(E->L, 7);
-        float o = Eluna::CHECKVAL<float>(E->L, 8);
-        bool save = Eluna::CHECKVAL<bool>(E->L, 9, false);
-        uint32 durorresptime = Eluna::CHECKVAL<uint32>(E->L, 10, 0);
+        int spawntype = E->CHECKVAL<int>(1);
+        uint32 entry = E->CHECKVAL<uint32>(2);
+        uint32 mapID = E->CHECKVAL<uint32>(3);
+        uint32 instanceID = E->CHECKVAL<uint32>(4);
+        float x = E->CHECKVAL<float>(5);
+        float y = E->CHECKVAL<float>(6);
+        float z = E->CHECKVAL<float>(7);
+        float o = E->CHECKVAL<float>(8);
+        bool save = E->CHECKVAL<bool>(9, false);
+        uint32 durorresptime = E->CHECKVAL<uint32>(10, 0);
 #if (!defined(TBC) && !defined(CLASSIC))
-        uint32 phase = Eluna::CHECKVAL<uint32>(E->L, 11, PHASEMASK_NORMAL);
+        uint32 phase = E->CHECKVAL<uint32>(11, PHASEMASK_NORMAL);
         if (!phase)
         {
             E->Push(E->L);
@@ -1888,8 +1888,8 @@ namespace LuaGlobalFunctions
      */
     int CreatePacket(Eluna* E)
     {
-        uint32 opcode = Eluna::CHECKVAL<uint32>(E->L, 1);
-        size_t size = Eluna::CHECKVAL<size_t>(E->L, 2);
+        uint32 opcode = E->CHECKVAL<uint32>(1);
+        size_t size = E->CHECKVAL<size_t>(2);
         if (opcode >= NUM_MSG_TYPES)
             return luaL_argerror(E->L, 1, "valid opcode expected");
 
@@ -1912,11 +1912,11 @@ namespace LuaGlobalFunctions
      */
     int AddVendorItem(Eluna* E)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint32 item = Eluna::CHECKVAL<uint32>(E->L, 2);
-        int maxcount = Eluna::CHECKVAL<int>(E->L, 3);
-        uint32 incrtime = Eluna::CHECKVAL<uint32>(E->L, 4);
-        uint32 extendedcost = Eluna::CHECKVAL<uint32>(E->L, 5);
+        uint32 entry = E->CHECKVAL<uint32>(1);
+        uint32 item = E->CHECKVAL<uint32>(2);
+        int maxcount = E->CHECKVAL<int>(3);
+        uint32 incrtime = E->CHECKVAL<uint32>(4);
+        uint32 extendedcost = E->CHECKVAL<uint32>(5);
 
 #if defined TRINITY || AZEROTHCORE
 #ifdef CATA
@@ -1948,8 +1948,8 @@ namespace LuaGlobalFunctions
      */
     int VendorRemoveItem(Eluna* E)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint32 item = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(1);
+        uint32 item = E->CHECKVAL<uint32>(2);
         if (!eObjectMgr->GetCreatureTemplate(entry))
             return luaL_argerror(E->L, 1, "valid CreatureEntry expected");
 
@@ -1968,7 +1968,7 @@ namespace LuaGlobalFunctions
      */
     int VendorRemoveAllItems(Eluna* E)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
+        uint32 entry = E->CHECKVAL<uint32>(1);
 
         VendorItemData const* items = eObjectMgr->GetNpcVendorItemList(entry);
         if (!items || items->Empty())
@@ -1995,7 +1995,7 @@ namespace LuaGlobalFunctions
      */
     int Kick(Eluna* E)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 1);
+        Player* player = Eluna::CHECKOBJ<Player>(1);
 #ifdef TRINITY
         player->GetSession()->KickPlayer("GlobalMethods::Kick Kick the player");
 #else
@@ -2023,11 +2023,11 @@ namespace LuaGlobalFunctions
      */
     int Ban(Eluna* E)
     {
-        int banMode = Eluna::CHECKVAL<int>(E->L, 1);
-        std::string nameOrIP = Eluna::CHECKVAL<std::string>(E->L, 2);
-        uint32 duration = Eluna::CHECKVAL<uint32>(E->L, 3);
-        const char* reason = Eluna::CHECKVAL<const char*>(E->L, 4, "");
-        const char* whoBanned = Eluna::CHECKVAL<const char*>(E->L, 5, "");
+        int banMode = E->CHECKVAL<int>(1);
+        std::string nameOrIP = E->CHECKVAL<std::string>(2);
+        uint32 duration = E->CHECKVAL<uint32>(3);
+        const char* reason = E->CHECKVAL<const char*>(4, "");
+        const char* whoBanned = E->CHECKVAL<const char*>(5, "");
 
         const int BAN_ACCOUNT = 0;
         const int BAN_CHARACTER = 1;
@@ -2144,14 +2144,14 @@ namespace LuaGlobalFunctions
     int SendMail(Eluna* E)
     {
         int i = 0;
-        std::string subject = Eluna::CHECKVAL<std::string>(E->L, ++i);
-        std::string text = Eluna::CHECKVAL<std::string>(E->L, ++i);
-        uint32 receiverGUIDLow = Eluna::CHECKVAL<uint32>(E->L, ++i);
-        uint32 senderGUIDLow = Eluna::CHECKVAL<uint32>(E->L, ++i, 0);
-        uint32 stationary = Eluna::CHECKVAL<uint32>(E->L, ++i, MAIL_STATIONERY_DEFAULT);
-        uint32 delay = Eluna::CHECKVAL<uint32>(E->L, ++i, 0);
-        uint32 money = Eluna::CHECKVAL<uint32>(E->L, ++i, 0);
-        uint32 cod = Eluna::CHECKVAL<uint32>(E->L, ++i, 0);
+        std::string subject = E->CHECKVAL<std::string>(++i);
+        std::string text = E->CHECKVAL<std::string>(++i);
+        uint32 receiverGUIDLow = E->CHECKVAL<uint32>(++i);
+        uint32 senderGUIDLow = E->CHECKVAL<uint32>(++i, 0);
+        uint32 stationary = E->CHECKVAL<uint32>(++i, MAIL_STATIONERY_DEFAULT);
+        uint32 delay = E->CHECKVAL<uint32>(++i, 0);
+        uint32 money = E->CHECKVAL<uint32>(++i, 0);
+        uint32 cod = E->CHECKVAL<uint32>(++i, 0);
         int argAmount = lua_gettop(E->L);
 
         MailSender sender(MAIL_NORMAL, senderGUIDLow, (MailStationery)stationary);
@@ -2175,8 +2175,8 @@ namespace LuaGlobalFunctions
         uint8 addedItems = 0;
         while (addedItems <= MAX_MAIL_ITEMS && i + 2 <= argAmount)
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, ++i);
-            uint32 amount = Eluna::CHECKVAL<uint32>(E->L, ++i);
+            uint32 entry = E->CHECKVAL<uint32>(++i);
+            uint32 amount = E->CHECKVAL<uint32>(++i);
 
 #if defined TRINITY || AZEROTHCORE
             ItemTemplate const* item_proto = eObjectMgr->GetItemTemplate(entry);
@@ -2229,8 +2229,8 @@ namespace LuaGlobalFunctions
      */
     int bit_and(Eluna* E)
     {
-        uint32 a = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint32 b = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 a = E->CHECKVAL<uint32>(1);
+        uint32 b = E->CHECKVAL<uint32>(2);
         E->Push(a & b);
         return 1;
     }
@@ -2244,8 +2244,8 @@ namespace LuaGlobalFunctions
      */
     int bit_or(Eluna* E)
     {
-        uint32 a = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint32 b = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 a = E->CHECKVAL<uint32>(1);
+        uint32 b = E->CHECKVAL<uint32>(2);
         E->Push(a | b);
         return 1;
     }
@@ -2259,8 +2259,8 @@ namespace LuaGlobalFunctions
      */
     int bit_lshift(Eluna* E)
     {
-        uint32 a = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint32 b = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 a = E->CHECKVAL<uint32>(1);
+        uint32 b = E->CHECKVAL<uint32>(2);
         E->Push(a << b);
         return 1;
     }
@@ -2274,8 +2274,8 @@ namespace LuaGlobalFunctions
      */
     int bit_rshift(Eluna* E)
     {
-        uint32 a = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint32 b = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 a = E->CHECKVAL<uint32>(1);
+        uint32 b = E->CHECKVAL<uint32>(2);
         E->Push(a >> b);
         return 1;
     }
@@ -2289,8 +2289,8 @@ namespace LuaGlobalFunctions
      */
     int bit_xor(Eluna* E)
     {
-        uint32 a = Eluna::CHECKVAL<uint32>(E->L, 1);
-        uint32 b = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 a = E->CHECKVAL<uint32>(1);
+        uint32 b = E->CHECKVAL<uint32>(2);
         E->Push(a ^ b);
         return 1;
     }
@@ -2303,7 +2303,7 @@ namespace LuaGlobalFunctions
      */
     int bit_not(Eluna* E)
     {
-        uint32 a = Eluna::CHECKVAL<uint32>(E->L, 1);
+        uint32 a = E->CHECKVAL<uint32>(1);
         E->Push(~a);
         return 1;
     }
@@ -2333,10 +2333,10 @@ namespace LuaGlobalFunctions
     int AddTaxiPath(Eluna* E)
     {
         luaL_checktype(E->L, 1, LUA_TTABLE);
-        uint32 mountA = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 mountH = Eluna::CHECKVAL<uint32>(E->L, 3);
-        uint32 price = Eluna::CHECKVAL<uint32>(E->L, 4, 0);
-        uint32 pathId = Eluna::CHECKVAL<uint32>(E->L, 5, 0);
+        uint32 mountA = E->CHECKVAL<uint32>(2);
+        uint32 mountH = E->CHECKVAL<uint32>(3);
+        uint32 price = E->CHECKVAL<uint32>(4, 0);
+        uint32 pathId = E->CHECKVAL<uint32>(5, 0);
         lua_pushvalue(E->L, 1);
         // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}
 
@@ -2374,22 +2374,22 @@ namespace LuaGlobalFunctions
             TaxiPathNodeEntry entry;
 #ifdef TRINITY
             // mandatory
-            entry.ContinentID = Eluna::CHECKVAL<uint32>(E->L, start);
-            entry.Loc.X = Eluna::CHECKVAL<float>(E->L, start + 1);
-            entry.Loc.Y = Eluna::CHECKVAL<float>(E->L, start + 2);
-            entry.Loc.Z = Eluna::CHECKVAL<float>(E->L, start + 3);
+            entry.ContinentID = E->CHECKVAL<uint32>(start);
+            entry.Loc.X = E->CHECKVAL<float>(start + 1);
+            entry.Loc.Y = E->CHECKVAL<float>(start + 2);
+            entry.Loc.Z = E->CHECKVAL<float>(start + 3);
             // optional
-            entry.Flags = Eluna::CHECKVAL<uint32>(E->L, start + 4, 0);
-            entry.Delay = Eluna::CHECKVAL<uint32>(E->L, start + 5, 0);
+            entry.Flags = E->CHECKVAL<uint32>(start + 4, 0);
+            entry.Delay = E->CHECKVAL<uint32>(start + 5, 0);
 #else
             // mandatory
-            entry.mapid = Eluna::CHECKVAL<uint32>(E->L, start);
-            entry.x = Eluna::CHECKVAL<float>(E->L, start + 1);
-            entry.y = Eluna::CHECKVAL<float>(E->L, start + 2);
-            entry.z = Eluna::CHECKVAL<float>(E->L, start + 3);
+            entry.mapid = E->CHECKVAL<uint32>(start);
+            entry.x = E->CHECKVAL<float>(start + 1);
+            entry.y = E->CHECKVAL<float>(start + 2);
+            entry.z = E->CHECKVAL<float>(start + 3);
             // optional
-            entry.actionFlag = Eluna::CHECKVAL<uint32>(E->L, start + 4, 0);
-            entry.delay = Eluna::CHECKVAL<uint32>(E->L, start + 5, 0);
+            entry.actionFlag = E->CHECKVAL<uint32>(start + 4, 0);
+            entry.delay = E->CHECKVAL<uint32>(start + 5, 0);
 #endif
 
             nodes.push_back(entry);
@@ -2507,8 +2507,8 @@ namespace LuaGlobalFunctions
      */
     int IsInventoryPos(Eluna* E)
     {
-        uint8 bag = Eluna::CHECKVAL<uint8>(E->L, 1);
-        uint8 slot = Eluna::CHECKVAL<uint8>(E->L, 2);
+        uint8 bag = E->CHECKVAL<uint8>(1);
+        uint8 slot = E->CHECKVAL<uint8>(2);
 
         E->Push(Player::IsInventoryPos(bag, slot));
         return 1;
@@ -2525,8 +2525,8 @@ namespace LuaGlobalFunctions
      */
     int IsEquipmentPos(Eluna* E)
     {
-        uint8 bag = Eluna::CHECKVAL<uint8>(E->L, 1);
-        uint8 slot = Eluna::CHECKVAL<uint8>(E->L, 2);
+        uint8 bag = E->CHECKVAL<uint8>(1);
+        uint8 slot = E->CHECKVAL<uint8>(2);
 
         E->Push(Player::IsEquipmentPos(bag, slot));
         return 1;
@@ -2543,8 +2543,8 @@ namespace LuaGlobalFunctions
      */
     int IsBankPos(Eluna* E)
     {
-        uint8 bag = Eluna::CHECKVAL<uint8>(E->L, 1);
-        uint8 slot = Eluna::CHECKVAL<uint8>(E->L, 2);
+        uint8 bag = E->CHECKVAL<uint8>(1);
+        uint8 slot = E->CHECKVAL<uint8>(2);
 
         E->Push(Player::IsBankPos(bag, slot));
         return 1;
@@ -2561,8 +2561,8 @@ namespace LuaGlobalFunctions
      */
     int IsBagPos(Eluna* E)
     {
-        uint8 bag = Eluna::CHECKVAL<uint8>(E->L, 1);
-        uint8 slot = Eluna::CHECKVAL<uint8>(E->L, 2);
+        uint8 bag = E->CHECKVAL<uint8>(1);
+        uint8 slot = E->CHECKVAL<uint8>(2);
 
         E->Push(Player::IsBagPos((bag << 8) + slot));
         return 1;
@@ -2576,7 +2576,7 @@ namespace LuaGlobalFunctions
      */
     int IsGameEventActive(Eluna* E)
     {
-        uint16 eventId = Eluna::CHECKVAL<uint16>(E->L, 1);
+        uint16 eventId = E->CHECKVAL<uint16>(1);
 
         E->Push(eGameEventMgr->IsActiveEvent(eventId));
         return 1;
@@ -2601,7 +2601,7 @@ namespace LuaGlobalFunctions
      */
     int GetTimeDiff(Eluna* E)
     {
-        uint32 oldtimems = Eluna::CHECKVAL<uint32>(E->L, 1);
+        uint32 oldtimems = E->CHECKVAL<uint32>(1);
 
         E->Push(ElunaUtil::GetTimeDiff(oldtimems));
         return 1;
@@ -2660,8 +2660,8 @@ namespace LuaGlobalFunctions
     */
     int StartGameEvent(Eluna* E)
     {
-        uint16 eventId = Eluna::CHECKVAL<uint16>(E->L, 1);
-        bool force = Eluna::CHECKVAL<bool>(E->L, 2, false);
+        uint16 eventId = E->CHECKVAL<uint16>(1);
+        bool force = E->CHECKVAL<bool>(2, false);
 
         eGameEventMgr->StartEvent(eventId, force);
         return 0;
@@ -2675,8 +2675,8 @@ namespace LuaGlobalFunctions
     */
     int StopGameEvent(Eluna* E)
     {
-        uint16 eventId = Eluna::CHECKVAL<uint16>(E->L, 1);
-        bool force = Eluna::CHECKVAL<bool>(E->L, 2, false);
+        uint16 eventId = E->CHECKVAL<uint16>(1);
+        bool force = E->CHECKVAL<bool>(2, false);
 
         eGameEventMgr->StopEvent(eventId, force);
         return 0;
@@ -2701,14 +2701,14 @@ namespace LuaGlobalFunctions
         long long init = 0;
         if (lua_isstring(E->L, 1))
         {
-            std::string str = Eluna::CHECKVAL<std::string>(E->L, 1);
+            std::string str = E->CHECKVAL<std::string>(1);
             std::istringstream iss(str);
             iss >> init;
             if (iss.bad())
                 return luaL_argerror(E->L, 1, "long long (as string) could not be converted");
         }
         else if (!lua_isnoneornil(E->L, 1))
-            init = Eluna::CHECKVAL<long long>(E->L, 1);
+            init = E->CHECKVAL<long long>(1);
 
         E->Push(init);
         return 1;
@@ -2733,14 +2733,14 @@ namespace LuaGlobalFunctions
         unsigned long long init = 0;
         if (lua_isstring(E->L, 1))
         {
-            std::string str = Eluna::CHECKVAL<std::string>(E->L, 1);
+            std::string str = E->CHECKVAL<std::string>(1);
             std::istringstream iss(str);
             iss >> init;
             if (iss.bad())
                 return luaL_argerror(E->L, 1, "unsigned long long (as string) could not be converted");
         }
         else if (!lua_isnoneornil(E->L, 1))
-            init = Eluna::CHECKVAL<unsigned long long>(E->L, 1);
+            init = E->CHECKVAL<unsigned long long>(1);
 
         E->Push(init);
         return 1;
@@ -2767,7 +2767,7 @@ namespace LuaGlobalFunctions
         }
         else
         {
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 event_type = E->CHECKVAL<uint32>(1);
             E->BGEventBindings->Clear(Key((Hooks::BGEvents)event_type));
         }
         return 0;
@@ -2794,14 +2794,14 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(E->L, 2))
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 entry = E->CHECKVAL<uint32>(1);
             for (uint32 i = 1; i < Hooks::CREATURE_EVENT_COUNT; ++i)
                 E->CreatureEventBindings->Clear(Key((Hooks::CreatureEvents)i, entry));
         }
         else
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(1);
+            uint32 event_type = E->CHECKVAL<uint32>(2);
             E->CreatureEventBindings->Clear(Key((Hooks::CreatureEvents)event_type, entry));
         }
         return 0;
@@ -2829,16 +2829,16 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(E->L, 3))
         {
-            ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 1);
-            uint32 instanceId = Eluna::CHECKVAL<uint32>(E->L, 2);
+            ObjectGuid guid = E->CHECKVAL<ObjectGuid>(1);
+            uint32 instanceId = E->CHECKVAL<uint32>(2);
             for (uint32 i = 1; i < Hooks::CREATURE_EVENT_COUNT; ++i)
                 E->CreatureUniqueBindings->Clear(Key((Hooks::CreatureEvents)i, guid, instanceId));
         }
         else
         {
-            ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 1);
-            uint32 instanceId = Eluna::CHECKVAL<uint32>(E->L, 2);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 3);
+            ObjectGuid guid = E->CHECKVAL<ObjectGuid>(1);
+            uint32 instanceId = E->CHECKVAL<uint32>(2);
+            uint32 event_type = E->CHECKVAL<uint32>(3);
             E->CreatureUniqueBindings->Clear(Key((Hooks::CreatureEvents)event_type, guid, instanceId));
         }
         return 0;
@@ -2865,14 +2865,14 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(E->L, 2))
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 entry = E->CHECKVAL<uint32>(1);
             for (uint32 i = 1; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
                 E->CreatureGossipBindings->Clear(Key((Hooks::GossipEvents)i, entry));
         }
         else
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(1);
+            uint32 event_type = E->CHECKVAL<uint32>(2);
             E->CreatureGossipBindings->Clear(Key((Hooks::GossipEvents)event_type, entry));
         }
         return 0;
@@ -2899,14 +2899,14 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(E->L, 2))
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 entry = E->CHECKVAL<uint32>(1);
             for (uint32 i = 1; i < Hooks::GAMEOBJECT_EVENT_COUNT; ++i)
                 E->GameObjectEventBindings->Clear(Key((Hooks::GameObjectEvents)i, entry));
         }
         else
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(1);
+            uint32 event_type = E->CHECKVAL<uint32>(2);
             E->GameObjectEventBindings->Clear(Key((Hooks::GameObjectEvents)event_type, entry));
         }
         return 0;
@@ -2933,14 +2933,14 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(E->L, 2))
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 entry = E->CHECKVAL<uint32>(1);
             for (uint32 i = 1; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
                 E->GameObjectGossipBindings->Clear(Key((Hooks::GossipEvents)i, entry));
         }
         else
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(1);
+            uint32 event_type = E->CHECKVAL<uint32>(2);
             E->GameObjectGossipBindings->Clear(Key((Hooks::GossipEvents)event_type, entry));
         }
         return 0;
@@ -2967,7 +2967,7 @@ namespace LuaGlobalFunctions
         }
         else
         {
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 event_type = E->CHECKVAL<uint32>(1);
             E->GroupEventBindings->Clear(Key((Hooks::GroupEvents)event_type));
         }
         return 0;
@@ -2994,7 +2994,7 @@ namespace LuaGlobalFunctions
         }
         else
         {
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 event_type = E->CHECKVAL<uint32>(1);
             E->GuildEventBindings->Clear(Key((Hooks::GuildEvents)event_type));
         }
         return 0;
@@ -3021,14 +3021,14 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(E->L, 2))
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 entry = E->CHECKVAL<uint32>(1);
             for (uint32 i = 1; i < Hooks::ITEM_EVENT_COUNT; ++i)
                 E->ItemEventBindings->Clear(Key((Hooks::ItemEvents)i, entry));
         }
         else
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(1);
+            uint32 event_type = E->CHECKVAL<uint32>(2);
             E->ItemEventBindings->Clear(Key((Hooks::ItemEvents)event_type, entry));
         }
         return 0;
@@ -3055,14 +3055,14 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(E->L, 2))
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 entry = E->CHECKVAL<uint32>(1);
             for (uint32 i = 1; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
                 E->ItemGossipBindings->Clear(Key((Hooks::GossipEvents)i, entry));
         }
         else
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(1);
+            uint32 event_type = E->CHECKVAL<uint32>(2);
             E->ItemGossipBindings->Clear(Key((Hooks::GossipEvents)event_type, entry));
         }
         return 0;
@@ -3086,14 +3086,14 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(E->L, 2))
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 entry = E->CHECKVAL<uint32>(1);
             for (uint32 i = 1; i < Hooks::PACKET_EVENT_COUNT; ++i)
                 E->PacketEventBindings->Clear(Key((Hooks::PacketEvents)i, entry));
         }
         else
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(1);
+            uint32 event_type = E->CHECKVAL<uint32>(2);
             E->PacketEventBindings->Clear(Key((Hooks::PacketEvents)event_type, entry));
         }
         return 0;
@@ -3120,7 +3120,7 @@ namespace LuaGlobalFunctions
         }
         else
         {
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 event_type = E->CHECKVAL<uint32>(1);
             E->PlayerEventBindings->Clear(Key((Hooks::PlayerEvents)event_type));
         }
         return 0;
@@ -3144,14 +3144,14 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(E->L, 2))
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 entry = E->CHECKVAL<uint32>(1);
             for (uint32 i = 1; i < Hooks::GOSSIP_EVENT_COUNT; ++i)
                 E->PlayerGossipBindings->Clear(Key((Hooks::GossipEvents)i, entry));
         }
         else
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(1);
+            uint32 event_type = E->CHECKVAL<uint32>(2);
             E->PlayerGossipBindings->Clear(Key((Hooks::GossipEvents)event_type, entry));
         }
         return 0;
@@ -3178,7 +3178,7 @@ namespace LuaGlobalFunctions
         }
         else
         {
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 event_type = E->CHECKVAL<uint32>(1);
             E->ServerEventBindings->Clear(Key((Hooks::ServerEvents)event_type));
         }
         return 0;
@@ -3202,14 +3202,14 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(E->L, 2))
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 entry = E->CHECKVAL<uint32>(1);
             for (uint32 i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
                 E->MapEventBindings->Clear(Key((Hooks::InstanceEvents)i, entry));
         }
         else
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(1);
+            uint32 event_type = E->CHECKVAL<uint32>(2);
             E->MapEventBindings->Clear(Key((Hooks::InstanceEvents)event_type, entry));
         }
 
@@ -3234,14 +3234,14 @@ namespace LuaGlobalFunctions
 
         if (lua_isnoneornil(E->L, 2))
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
+            uint32 entry = E->CHECKVAL<uint32>(1);
             for (uint32 i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
                 E->InstanceEventBindings->Clear(Key((Hooks::InstanceEvents)i, entry));
         }
         else
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 1);
-            uint32 event_type = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(1);
+            uint32 event_type = E->CHECKVAL<uint32>(2);
             E->InstanceEventBindings->Clear(Key((Hooks::InstanceEvents)event_type, entry));
         }
 

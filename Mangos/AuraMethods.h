@@ -141,7 +141,7 @@ namespace LuaAura
      */
     int SetDuration(Eluna* E, Aura* aura)
     {
-        int32 duration = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 duration = E->CHECKVAL<int32>(2);
 #if defined TRINITY || defined AZEROTHCORE
         aura->SetDuration(duration);
 #else
@@ -165,7 +165,7 @@ namespace LuaAura
      */
     int SetMaxDuration(Eluna* E, Aura* aura)
     {
-        int32 duration = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 duration = E->CHECKVAL<int32>(2);
 #if defined TRINITY || defined AZEROTHCORE
         aura->SetMaxDuration(duration);
 #else
@@ -189,7 +189,7 @@ namespace LuaAura
      */
     int SetStackAmount(Eluna* E, Aura* aura)
     {
-        uint8 amount = Eluna::CHECKVAL<uint8>(E->L, 2);
+        uint8 amount = E->CHECKVAL<uint8>(2);
 #if defined TRINITY || defined AZEROTHCORE
         aura->SetStackAmount(amount);
 #elif defined CMANGOS
@@ -210,7 +210,7 @@ namespace LuaAura
 #else
         aura->GetTarget()->RemoveSpellAuraHolder(aura->GetHolder(), AURA_REMOVE_BY_CANCEL);
 #endif
-        Eluna::CHECKOBJ<ElunaObject>(E->L, 1)->Invalidate();
+        Eluna::CHECKOBJ<ElunaObject>(1)->Invalidate();
         return 0;
     }
     

@@ -33,13 +33,13 @@ namespace LuaPlayer
      */
     int HasTalent(Eluna* E, Player* player)
     {
-        uint32 spellId = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 spellId = E->CHECKVAL<uint32>(2);
 #ifdef MANGOS
         uint8 maxSpecs = MAX_TALENT_SPEC_COUNT;
 #else
         uint8 maxSpecs = MAX_TALENT_SPECS;
 #endif
-        uint8 spec = Eluna::CHECKVAL<uint8>(E->L, 3);
+        uint8 spec = E->CHECKVAL<uint8>(3);
         if (spec >= maxSpecs)
             return 1;
         E->Push(player->HasTalent(spellId, spec));
@@ -54,7 +54,7 @@ namespace LuaPlayer
      */
     int HasAchieved(Eluna* E, Player* player)
     {
-        uint32 achievementId = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 achievementId = E->CHECKVAL<uint32>(2);
 #if defined TRINITY || AZEROTHCORE
         E->Push(player->HasAchieved(achievementId));
 #else
@@ -72,7 +72,7 @@ namespace LuaPlayer
      */
     int HasQuest(Eluna* E, Player* player)
     {
-        uint32 quest = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 quest = E->CHECKVAL<uint32>(2);
 
         E->Push(player->IsActiveQuest(quest));
         return 1;
@@ -86,7 +86,7 @@ namespace LuaPlayer
      */
     int HasSkill(Eluna* E, Player* player)
     {
-        uint32 skill = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 skill = E->CHECKVAL<uint32>(2);
 
         E->Push(player->HasSkill(skill));
         return 1;
@@ -100,7 +100,7 @@ namespace LuaPlayer
      */
     int HasSpell(Eluna* E, Player* player)
     {
-        uint32 id = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 id = E->CHECKVAL<uint32>(2);
 
         E->Push(player->HasSpell(id));
         return 1;
@@ -114,7 +114,7 @@ namespace LuaPlayer
      */
     int HasAtLoginFlag(Eluna* E, Player* player)
     {
-        uint32 flag = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 flag = E->CHECKVAL<uint32>(2);
 
         E->Push(player->HasAtLoginFlag((AtLoginFlags)flag));
         return 1;
@@ -128,7 +128,7 @@ namespace LuaPlayer
      */
     int HasQuestForGO(Eluna* E, Player* player)
     {
-        int32 entry = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 entry = E->CHECKVAL<int32>(2);
 
         E->Push(player->HasQuestForGO(entry));
         return 1;
@@ -143,7 +143,7 @@ namespace LuaPlayer
      */
     int HasTitle(Eluna* E, Player* player)
     {
-        uint32 id = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 id = E->CHECKVAL<uint32>(2);
         CharTitlesEntry const* titleInfo = sCharTitlesStore.LookupEntry(id);
         if (titleInfo)
             E->Push(player->HasTitle(titleInfo));
@@ -161,9 +161,9 @@ namespace LuaPlayer
      */
     int HasItem(Eluna* E, Player* player)
     {
-        uint32 itemId = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 count = Eluna::CHECKVAL<uint32>(E->L, 3, 1);
-        bool check_bank = Eluna::CHECKVAL<bool>(E->L, 4, false);
+        uint32 itemId = E->CHECKVAL<uint32>(2);
+        uint32 count = E->CHECKVAL<uint32>(3, 1);
+        bool check_bank = E->CHECKVAL<bool>(4, false);
         E->Push(player->HasItemCount(itemId, count, check_bank));
         return 1;
     }
@@ -176,7 +176,7 @@ namespace LuaPlayer
      */
     int HasQuestForItem(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         E->Push(player->HasQuestForItem(entry));
         return 1;
@@ -193,12 +193,12 @@ namespace LuaPlayer
      */
     int CanUseItem(Eluna* E, Player* player)
     {
-        Item* item = Eluna::CHECKOBJ<Item>(E->L, 2, false);
+        Item* item = Eluna::CHECKOBJ<Item>(2, false);
         if (item)
             E->Push(player->CanUseItem(item) == EQUIP_ERR_OK);
         else
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(2);
             const ItemTemplate* temp = eObjectMgr->GetItemTemplate(entry);
             if (temp)
                 E->Push(player->CanUseItem(temp) == EQUIP_ERR_OK);
@@ -216,7 +216,7 @@ namespace LuaPlayer
      */
     int HasSpellCooldown(Eluna* E, Player* player)
     {
-        uint32 spellId = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 spellId = E->CHECKVAL<uint32>(2);
 
 #ifdef TRINITY
         E->Push(player->GetSpellHistory()->HasCooldown(spellId));
@@ -234,7 +234,7 @@ namespace LuaPlayer
      */
     int CanShareQuest(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         E->Push(player->CanShareQuest(entry));
         return 1;
@@ -288,7 +288,7 @@ namespace LuaPlayer
      */
     int GetHonorStoredKills(Eluna* E, Player* player)
     {
-        bool honorable = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool honorable = E->CHECKVAL<bool>(2, true);
 
         E->Push(player->GetHonorStoredKills(honorable));
         return 1;
@@ -433,7 +433,7 @@ namespace LuaPlayer
      */
     int IsInArenaTeam(Eluna* E, Player* player)
     {
-        uint32 type = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 type = E->CHECKVAL<uint32>(2);
         if (type < MAX_ARENA_SLOT && player->GetArenaTeamId(type))
             E->Push(true);
         else
@@ -461,7 +461,7 @@ namespace LuaPlayer
      */
     int CanCompleteQuest(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         E->Push(player->CanCompleteQuest(entry));
         return 1;
@@ -532,7 +532,7 @@ namespace LuaPlayer
 
     int IsGroupVisibleFor(Eluna* E, Player* player)
     {
-        Player* target = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* target = Eluna::CHECKOBJ<Player>(2);
         E->Push(player->IsGroupVisibleFor(target));
         return 1;
     }
@@ -545,7 +545,7 @@ namespace LuaPlayer
      */
     int IsInSameRaidWith(Eluna* E, Player* player)
     {
-        Player* target = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* target = Eluna::CHECKOBJ<Player>(2);
         E->Push(player->IsInSameRaidWith(target));
         return 1;
     }
@@ -558,7 +558,7 @@ namespace LuaPlayer
      */
     int IsInSameGroupWith(Eluna* E, Player* player)
     {
-        Player* target = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* target = Eluna::CHECKOBJ<Player>(2);
         E->Push(player->IsInSameGroupWith(target));
         return 1;
     }
@@ -571,7 +571,7 @@ namespace LuaPlayer
      */
     int IsHonorOrXPTarget(Eluna* E, Player* player)
     {
-        Unit* victim = Eluna::CHECKOBJ<Unit>(E->L, 2);
+        Unit* victim = Eluna::CHECKOBJ<Unit>(2);
 
         E->Push(player->isHonorOrXPTarget(victim));
         return 1;
@@ -585,7 +585,7 @@ namespace LuaPlayer
      */
     int IsVisibleForPlayer(Eluna* E, Player* player)
     {
-        Player* target = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* target = Eluna::CHECKOBJ<Player>(2);
 
         E->Push(player->IsVisibleGloballyFor(target));
         return 1;
@@ -707,7 +707,7 @@ namespace LuaPlayer
 
     /*int HasReceivedQuestReward(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         E->Push(player->IsQuestRewarded(entry));
         return 1;
@@ -745,8 +745,8 @@ namespace LuaPlayer
 
     /*int CanFlyInZone(Eluna* E, Player* player)
     {
-        uint32 mapid = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 zone = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 mapid = E->CHECKVAL<uint32>(2);
+        uint32 zone = E->CHECKVAL<uint32>(2);
 
         E->Push(player->IsKnowHowFlyIn(mapid, zone));
         return 1;
@@ -845,7 +845,7 @@ namespace LuaPlayer
      */
     int GetSpellCooldownDelay(Eluna* E, Player* player)
     {
-        uint32 spellId = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 spellId = E->CHECKVAL<uint32>(2);
 
 #ifdef TRINITY
         if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellId))
@@ -912,7 +912,7 @@ namespace LuaPlayer
      */
     int GetNextRandomRaidMember(Eluna* E, Player* player)
     {
-        float radius = Eluna::CHECKVAL<float>(E->L, 2);
+        float radius = E->CHECKVAL<float>(2);
 
 #ifndef CMANGOS
         E->Push(player->GetNextRandomRaidMember(radius));
@@ -952,7 +952,7 @@ namespace LuaPlayer
      */
     int GetXPRestBonus(Eluna* E, Player* player)
     {
-        uint32 xp = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 xp = E->CHECKVAL<uint32>(2);
 
         E->Push(player->GetXPRestBonus(xp));
         return 1;
@@ -996,7 +996,7 @@ namespace LuaPlayer
      */
     int GetReputationRank(Eluna* E, Player* player)
     {
-        uint32 faction = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 faction = E->CHECKVAL<uint32>(2);
 
         E->Push(player->GetReputationRank(faction));
         return 1;
@@ -1021,7 +1021,7 @@ namespace LuaPlayer
      */
     int GetSkillTempBonusValue(Eluna* E, Player* player)
     {
-        uint32 skill = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 skill = E->CHECKVAL<uint32>(2);
 #ifdef CMANGOS
         E->Push(player->GetSkillBonusTemporary(skill));
 #else
@@ -1038,7 +1038,7 @@ namespace LuaPlayer
      */
     int GetSkillPermBonusValue(Eluna* E, Player* player)
     {
-        uint32 skill = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 skill = E->CHECKVAL<uint32>(2);
 #ifdef CMANGOS
         E->Push(player->GetSkillBonusPermanent(skill));
 #else
@@ -1055,7 +1055,7 @@ namespace LuaPlayer
      */
     int GetPureSkillValue(Eluna* E, Player* player)
     {
-        uint32 skill = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 skill = E->CHECKVAL<uint32>(2);
 #ifdef CMANGOS
         E->Push(player->GetSkillValuePure(skill));
 #else
@@ -1072,7 +1072,7 @@ namespace LuaPlayer
      */
     int GetBaseSkillValue(Eluna* E, Player* player)
     {
-        uint32 skill = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 skill = E->CHECKVAL<uint32>(2);
 #ifdef CMANGOS
         E->Push(player->GetSkillValueBase(skill));
 #else
@@ -1089,7 +1089,7 @@ namespace LuaPlayer
      */
     int GetSkillValue(Eluna* E, Player* player)
     {
-        uint32 skill = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 skill = E->CHECKVAL<uint32>(2);
 
         E->Push(player->GetSkillValue(skill));
         return 1;
@@ -1103,7 +1103,7 @@ namespace LuaPlayer
      */
     int GetPureMaxSkillValue(Eluna* E, Player* player)
     {
-        uint32 skill = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 skill = E->CHECKVAL<uint32>(2);
 #ifdef CMANGOS
         E->Push(player->GetSkillMaxPure(skill));
 #else
@@ -1120,7 +1120,7 @@ namespace LuaPlayer
      */
     int GetMaxSkillValue(Eluna* E, Player* player)
     {
-        uint32 skill = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 skill = E->CHECKVAL<uint32>(2);
 #ifdef CMANGOS
         E->Push(player->GetSkillMax(skill));
 #else
@@ -1164,7 +1164,7 @@ namespace LuaPlayer
 #elif defined(CLASSIC)
         E->Push((Difficulty)0);
 #else
-        bool isRaid = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool isRaid = E->CHECKVAL<bool>(2, true);
         E->Push(player->GetDifficulty(isRaid));
 #endif
         return 1;
@@ -1213,7 +1213,7 @@ namespace LuaPlayer
      */
     int GetReputation(Eluna* E, Player* player)
     {
-        uint32 faction = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 faction = E->CHECKVAL<uint32>(2);
 
         E->Push(player->GetReputationMgr().GetReputation(faction));
         return 1;
@@ -1264,7 +1264,7 @@ namespace LuaPlayer
      */
     int GetQuestStatus(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         E->Push(player->GetQuestStatus(entry));
         return 1;
@@ -1278,7 +1278,7 @@ namespace LuaPlayer
      */
     int GetQuestRewardStatus(Eluna* E, Player* player)
     {
-        uint32 questId = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 questId = E->CHECKVAL<uint32>(2);
 
         E->Push(player->GetQuestRewardStatus(questId));
         return 1;
@@ -1293,8 +1293,8 @@ namespace LuaPlayer
      */
     int GetReqKillOrCastCurrentCount(Eluna* E, Player* player)
     {
-        uint32 questId = Eluna::CHECKVAL<uint32>(E->L, 2);
-        int32 entry = Eluna::CHECKVAL<int32>(E->L, 3);
+        uint32 questId = E->CHECKVAL<uint32>(2);
+        int32 entry = E->CHECKVAL<int32>(3);
 
         E->Push(player->GetReqKillOrCastCurrentCount(questId, entry));
         return 1;
@@ -1308,7 +1308,7 @@ namespace LuaPlayer
      */
     int GetQuestLevel(Eluna* E, Player* player)
     {
-        Quest* quest = Eluna::CHECKOBJ<Quest>(E->L, 2);
+        Quest* quest = Eluna::CHECKOBJ<Quest>(2);
 
 #if defined TRINITY || AZEROTHCORE
         E->Push(player->GetQuestLevel(quest));
@@ -1326,7 +1326,7 @@ namespace LuaPlayer
      */
     int GetEquippedItemBySlot(Eluna* E, Player* player)
     {
-        uint8 slot = Eluna::CHECKVAL<uint8>(E->L, 2);
+        uint8 slot = E->CHECKVAL<uint8>(2);
         if (slot >= EQUIPMENT_SLOT_END)
             return 1;
 
@@ -1384,8 +1384,8 @@ namespace LuaPlayer
      */
     int GetItemByPos(Eluna* E, Player* player)
     {
-        uint8 bag = Eluna::CHECKVAL<uint8>(E->L, 2);
-        uint8 slot = Eluna::CHECKVAL<uint8>(E->L, 3);
+        uint8 bag = E->CHECKVAL<uint8>(2);
+        uint8 slot = E->CHECKVAL<uint8>(3);
 
         E->Push(player->GetItemByPos(bag, slot));
         return 1;
@@ -1401,7 +1401,7 @@ namespace LuaPlayer
      */
     int GetItemByGUID(Eluna* E, Player* player)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 2);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
 
         E->Push(player->GetItemByGuid(guid));
         return 1;
@@ -1415,7 +1415,7 @@ namespace LuaPlayer
      */
     int GetMailItem(Eluna* E, Player* player)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 2);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
 
         E->Push(player->GetMItem(guid.GetCounter()));
         return 1;
@@ -1431,7 +1431,7 @@ namespace LuaPlayer
      */
     int GetItemByEntry(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         E->Push(player->GetItemByEntry(entry));
         return 1;
@@ -1445,7 +1445,7 @@ namespace LuaPlayer
      */
     int GetGossipTextId(Eluna* E, Player* player)
     {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(E->L, 2);
+        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(2);
         E->Push(player->GetGossipTextId(obj));
         return 1;
     }
@@ -1518,8 +1518,8 @@ namespace LuaPlayer
      */
     int GetItemCount(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
-        bool checkinBank = Eluna::CHECKVAL<bool>(E->L, 3, false);
+        uint32 entry = E->CHECKVAL<uint32>(2);
+        bool checkinBank = E->CHECKVAL<bool>(3, false);
         E->Push(player->GetItemCount(entry, checkinBank));
         return 1;
     }
@@ -1682,7 +1682,7 @@ namespace LuaPlayer
      */
     int SetPlayerLock(Eluna* E, Player* player)
     {
-        bool apply = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool apply = E->CHECKVAL<bool>(2, true);
 
         if (apply)
         {
@@ -1712,7 +1712,7 @@ namespace LuaPlayer
      */
     int SetAtLoginFlag(Eluna* E, Player* player)
     {
-        uint32 flag = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 flag = E->CHECKVAL<uint32>(2);
 
         player->SetAtLoginFlag((AtLoginFlags)flag);
         return 0;
@@ -1725,7 +1725,7 @@ namespace LuaPlayer
      */
     int SetSheath(Eluna* E, Player* player)
     {
-        uint32 sheathed = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 sheathed = E->CHECKVAL<uint32>(2);
         if (sheathed >= MAX_SHEATH_STATE)
             return 0;
 
@@ -1740,7 +1740,7 @@ namespace LuaPlayer
      */
     int SetDrunkValue(Eluna* E, Player* player)
     {
-        uint8 newDrunkValue = Eluna::CHECKVAL<uint8>(E->L, 2);
+        uint8 newDrunkValue = E->CHECKVAL<uint8>(2);
 
         player->SetDrunkValue(newDrunkValue);
         return 0;
@@ -1753,7 +1753,7 @@ namespace LuaPlayer
      */
     int SetFactionForRace(Eluna* E, Player* player)
     {
-        uint8 race = Eluna::CHECKVAL<uint8>(E->L, 2);
+        uint8 race = E->CHECKVAL<uint8>(2);
 
 #if defined(TRINITY) || defined(AZEROTHCORE)
         player->SetFactionForRace(race);
@@ -1773,10 +1773,10 @@ namespace LuaPlayer
      */
     int SetSkill(Eluna* E, Player* player)
     {
-        uint16 id = Eluna::CHECKVAL<uint16>(E->L, 2);
-        uint16 step = Eluna::CHECKVAL<uint16>(E->L, 3);
-        uint16 currVal = Eluna::CHECKVAL<uint16>(E->L, 4);
-        uint16 maxVal = Eluna::CHECKVAL<uint16>(E->L, 5);
+        uint16 id = E->CHECKVAL<uint16>(2);
+        uint16 step = E->CHECKVAL<uint16>(3);
+        uint16 currVal = E->CHECKVAL<uint16>(4);
+        uint16 maxVal = E->CHECKVAL<uint16>(5);
 
 #ifdef TRINITY
         player->SetSkill(id, step, currVal, maxVal);
@@ -1793,7 +1793,7 @@ namespace LuaPlayer
      */
     int SetGuildRank(Eluna* E, Player* player) // TODO: Move to Guild Methods
     {
-        uint8 rank = Eluna::CHECKVAL<uint8>(E->L, 2);
+        uint8 rank = E->CHECKVAL<uint8>(2);
 
         if (!player->GetGuildId())
             return 0;
@@ -1809,7 +1809,7 @@ namespace LuaPlayer
      */
     int SetFreeTalentPoints(Eluna* E, Player* player)
     {
-        uint32 points = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 points = E->CHECKVAL<uint32>(2);
 
         player->SetFreeTalentPoints(points);
 #if (!defined(TBC) && !defined(CLASSIC))
@@ -1826,8 +1826,8 @@ namespace LuaPlayer
      */
     int SetReputation(Eluna* E, Player* player)
     {
-        uint32 faction = Eluna::CHECKVAL<uint32>(E->L, 2);
-        int32 value = Eluna::CHECKVAL<int32>(E->L, 3);
+        uint32 faction = E->CHECKVAL<uint32>(2);
+        int32 value = E->CHECKVAL<int32>(3);
 #if defined(CMANGOS) && defined(TBC)
         FactionEntry const* factionEntry = sFactionStore.LookupEntry<FactionEntry>(faction);
 #else
@@ -1845,8 +1845,8 @@ namespace LuaPlayer
      */
     int SetQuestStatus(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 status = Eluna::CHECKVAL<uint32>(E->L, 3);
+        uint32 entry = E->CHECKVAL<uint32>(2);
+        uint32 status = E->CHECKVAL<uint32>(3);
         if (status >= MAX_QUEST_STATUS)
             return 0;
 
@@ -1861,7 +1861,7 @@ namespace LuaPlayer
      */
     int SetRestBonus(Eluna* E, Player* player)
     {
-        float bonus = Eluna::CHECKVAL<float>(E->L, 2);
+        float bonus = E->CHECKVAL<float>(2);
 
         player->SetRestBonus(bonus);
         return 0;
@@ -1874,7 +1874,7 @@ namespace LuaPlayer
      */
     int SetAcceptWhispers(Eluna* E, Player* player)
     {
-        bool on = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool on = E->CHECKVAL<bool>(2, true);
 
         player->SetAcceptWhispers(on);
         return 0;
@@ -1887,7 +1887,7 @@ namespace LuaPlayer
      */
     int SetPvPDeath(Eluna* E, Player* player)
     {
-        bool on = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool on = E->CHECKVAL<bool>(2, true);
 
         player->SetPvPDeath(on);
         return 0;
@@ -1900,7 +1900,7 @@ namespace LuaPlayer
      */
     int SetGMVisible(Eluna* E, Player* player)
     {
-        bool on = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool on = E->CHECKVAL<bool>(2, true);
 
         player->SetGMVisible(on);
         return 0;
@@ -1913,7 +1913,7 @@ namespace LuaPlayer
      */
     int SetTaxiCheat(Eluna* E, Player* player)
     {
-        bool on = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool on = E->CHECKVAL<bool>(2, true);
 
         player->SetTaxiCheater(on);
         return 0;
@@ -1926,7 +1926,7 @@ namespace LuaPlayer
      */
     int SetGMChat(Eluna* E, Player* player)
     {
-        bool on = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool on = E->CHECKVAL<bool>(2, true);
 
         player->SetGMChat(on);
         return 0;
@@ -1939,7 +1939,7 @@ namespace LuaPlayer
      */
     int SetGameMaster(Eluna* E, Player* player)
     {
-        bool on = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool on = E->CHECKVAL<bool>(2, true);
 
         player->SetGameMaster(on);
         return 0;
@@ -1955,7 +1955,7 @@ namespace LuaPlayer
      */
     int SetGender(Eluna* E, Player* player)
     {
-        uint32 _gender = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 _gender = E->CHECKVAL<uint32>(2);
 
         Gender gender;
         switch (_gender)
@@ -1984,7 +1984,7 @@ namespace LuaPlayer
      */
     int SetArenaPoints(Eluna* E, Player* player)
     {
-        uint32 arenaP = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 arenaP = E->CHECKVAL<uint32>(2);
         player->SetArenaPoints(arenaP);
         return 0;
     }
@@ -1996,7 +1996,7 @@ namespace LuaPlayer
      */
     int SetHonorPoints(Eluna* E, Player* player)
     {
-        uint32 honorP = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 honorP = E->CHECKVAL<uint32>(2);
         player->SetHonorPoints(honorP);
         return 0;
     }
@@ -2011,8 +2011,8 @@ namespace LuaPlayer
      */
     int SetHonorStoredKills(Eluna* E, Player* player)
     {
-        uint32 kills = Eluna::CHECKVAL<uint32>(E->L, 2);
-        bool honorable = Eluna::CHECKVAL<bool>(E->L, 3, true);
+        uint32 kills = E->CHECKVAL<uint32>(2);
+        bool honorable = E->CHECKVAL<bool>(3, true);
 
         player->SetHonorStoredKills(kills, honorable);
         return 0;
@@ -2025,7 +2025,7 @@ namespace LuaPlayer
      */
     int SetRankPoints(Eluna* E, Player* player)
     {
-        float rankPoints = Eluna::CHECKVAL<float>(E->L, 2);
+        float rankPoints = E->CHECKVAL<float>(2);
 
         player->SetRankPoints(rankPoints);
         return 0;
@@ -2038,7 +2038,7 @@ namespace LuaPlayer
      */
     int SetHonorLastWeekStandingPos(Eluna* E, Player* player)
     {
-        int32 standingPos = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 standingPos = E->CHECKVAL<int32>(2);
 
         player->SetHonorLastWeekStandingPos(standingPos);
         return 0;
@@ -2052,7 +2052,7 @@ namespace LuaPlayer
      */
     int SetLifetimeKills(Eluna* E, Player* player)
     {
-        uint32 val = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 val = E->CHECKVAL<uint32>(2);
         player->SetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS, val);
         return 0;
     }
@@ -2064,7 +2064,7 @@ namespace LuaPlayer
      */
     int SetCoinage(Eluna* E, Player* player)
     {
-        uint32 amt = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 amt = E->CHECKVAL<uint32>(2);
         player->SetMoney(amt);
         return 0;
     }
@@ -2080,11 +2080,11 @@ namespace LuaPlayer
      */
     int SetBindPoint(Eluna* E, Player* player)
     {
-        float x = Eluna::CHECKVAL<float>(E->L, 2);
-        float y = Eluna::CHECKVAL<float>(E->L, 3);
-        float z = Eluna::CHECKVAL<float>(E->L, 4);
-        uint32 mapId = Eluna::CHECKVAL<uint32>(E->L, 5);
-        uint32 areaId = Eluna::CHECKVAL<uint32>(E->L, 6);
+        float x = E->CHECKVAL<float>(2);
+        float y = E->CHECKVAL<float>(3);
+        float z = E->CHECKVAL<float>(4);
+        uint32 mapId = E->CHECKVAL<uint32>(5);
+        uint32 areaId = E->CHECKVAL<uint32>(6);
 
         WorldLocation loc(mapId, x, y, z);
 #if defined TRINITY || AZEROTHCORE
@@ -2103,7 +2103,7 @@ namespace LuaPlayer
      */
     int SetKnownTitle(Eluna* E, Player* player)
     {
-        uint32 id = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 id = E->CHECKVAL<uint32>(2);
         CharTitlesEntry const* t = sCharTitlesStore.LookupEntry(id);
         if (t)
             player->SetTitle(t, false);
@@ -2119,7 +2119,7 @@ namespace LuaPlayer
      */
     int SetAchievement(Eluna* E, Player* player)
     {
-        uint32 id = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 id = E->CHECKVAL<uint32>(2);
         AchievementEntry const* t = sAchievementStore.LookupEntry(id);
         if (t)
             player->CompletedAchievement(t);
@@ -2137,7 +2137,7 @@ namespace LuaPlayer
      */
     int SetFFA(Eluna* E, Player* player)
     {
-        bool apply = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool apply = E->CHECKVAL<bool>(2, true);
 #ifdef CMANGOS
         player->SetPvPFreeForAll(apply);
 #else
@@ -2149,7 +2149,7 @@ namespace LuaPlayer
 
     /*int SetMovement(Eluna* E, Player* player)
     {
-        int32 pType = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 pType = E->CHECKVAL<int32>(2);
 
         player->SetMovement((PlayerMovementType)pType);
         return 0;
@@ -2194,7 +2194,7 @@ namespace LuaPlayer
      */
     int SendShowMailBox(Eluna* E, Player* player)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 2, player->GET_GUID());
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2, player->GET_GUID());
 
 #if (defined(CLASSIC) || defined(TBC))
         WorldPacket data(CMSG_GET_MAIL_LIST, 8);
@@ -2214,7 +2214,7 @@ namespace LuaPlayer
      */
     int ModifyArenaPoints(Eluna* E, Player* player)
     {
-        int32 amount = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 amount = E->CHECKVAL<int32>(2);
 
         player->ModifyArenaPoints(amount);
         return 0;
@@ -2227,7 +2227,7 @@ namespace LuaPlayer
      */
     int ModifyHonorPoints(Eluna* E, Player* player)
     {
-        int32 amount = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 amount = E->CHECKVAL<int32>(2);
 
         player->ModifyHonorPoints(amount);
         return 0;
@@ -2254,7 +2254,7 @@ namespace LuaPlayer
      */
     int SummonPlayer(Eluna* E, Player* player)
     {
-        Unit* summoner = Eluna::CHECKOBJ<Unit>(E->L, 2);
+        Unit* summoner = Eluna::CHECKOBJ<Unit>(2);
 
 #ifdef TRINITY
         player->SendSummonRequestFrom(summoner);
@@ -2287,7 +2287,7 @@ namespace LuaPlayer
      */
     int Mute(Eluna* E, Player* player)
     {
-        uint32 muteseconds = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 muteseconds = E->CHECKVAL<uint32>(2);
         /*const char* reason = luaL_checkstring(E, 2);*/ // Mangos does not have a reason field in database.
 
         time_t muteTime = time(NULL) + muteseconds;
@@ -2305,7 +2305,7 @@ namespace LuaPlayer
      */
     int RewardQuest(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         Quest const* quest = eObjectMgr->GetQuestTemplate(entry);
 
@@ -2324,7 +2324,7 @@ namespace LuaPlayer
      */
     int SendAuctionMenu(Eluna* E, Player* player)
     {
-        Unit* unit = Eluna::CHECKOBJ<Unit>(E->L, 2);
+        Unit* unit = Eluna::CHECKOBJ<Unit>(2);
 
 #if defined(TRINITY) || defined(AZEROTHCORE)
         AuctionHouseEntry const* ahEntry = AuctionHouseMgr::GetAuctionHouseEntry(unit->GetFaction());
@@ -2357,7 +2357,7 @@ namespace LuaPlayer
      */
     int SendTaxiMenu(Eluna* E, Player* player)
     {
-        Creature* creature = Eluna::CHECKOBJ<Creature>(E->L, 2);
+        Creature* creature = Eluna::CHECKOBJ<Creature>(2);
 
         player->GetSession()->SendTaxiMenu(creature);
         return 0;
@@ -2379,7 +2379,7 @@ namespace LuaPlayer
      */
     int SendTabardVendorActivate(Eluna* E, Player* player)
     {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(E->L, 2);
+        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(2);
 
         player->GetSession()->SendTabardVendorActivate(obj->GET_GUID());
         return 0;
@@ -2392,7 +2392,7 @@ namespace LuaPlayer
      */
     int SendShowBank(Eluna* E, Player* player)
     {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(E->L, 2);
+        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(2);
 
         player->GetSession()->SendShowBank(obj->GET_GUID());
         return 0;
@@ -2405,7 +2405,7 @@ namespace LuaPlayer
      */
     int SendListInventory(Eluna* E, Player* player)
     {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(E->L, 2);
+        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(2);
 
         player->GetSession()->SendListInventory(obj->GET_GUID());
         return 0;
@@ -2418,7 +2418,7 @@ namespace LuaPlayer
      */
     int SendTrainerList(Eluna* E, Player* player)
     {
-        Creature* obj = Eluna::CHECKOBJ<Creature>(E->L, 2);
+        Creature* obj = Eluna::CHECKOBJ<Creature>(2);
 
 #ifdef TRINITY
         player->GetSession()->SendTrainerList(obj);
@@ -2435,7 +2435,7 @@ namespace LuaPlayer
      */
     int SendGuildInvite(Eluna* E, Player* player)
     {
-        Player* plr = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* plr = Eluna::CHECKOBJ<Player>(2);
 
 #if defined TRINITY || AZEROTHCORE
         if (Guild* guild = player->GetGuild())
@@ -2454,8 +2454,8 @@ namespace LuaPlayer
      */
     int SendUpdateWorldState(Eluna* E, Player* player)
     {
-        uint32 field = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 value = Eluna::CHECKVAL<uint32>(E->L, 3);
+        uint32 field = E->CHECKVAL<uint32>(2);
+        uint32 value = E->CHECKVAL<uint32>(3);
 
         player->SendUpdateWorldState(field, value);
         return 0;
@@ -2468,7 +2468,7 @@ namespace LuaPlayer
      */
     int LogoutPlayer(Eluna* E, Player* player)
     {
-        bool save = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool save = E->CHECKVAL<bool>(2, true);
 #ifndef CMANGOS
         player->GetSession()->LogoutPlayer(save);
 #else
@@ -2500,9 +2500,9 @@ namespace LuaPlayer
      */
     int UnbindInstance(Eluna* E, Player* player)
     {
-        uint32 map = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 map = E->CHECKVAL<uint32>(2);
 #ifndef CLASSIC
-        uint32 difficulty = Eluna::CHECKVAL<uint32>(E->L, 3, 0);
+        uint32 difficulty = E->CHECKVAL<uint32>(3, 0);
 
         if (difficulty < MAX_DIFFICULTY)
 #ifndef AZEROTHCORE
@@ -2571,7 +2571,7 @@ namespace LuaPlayer
     int LeaveBattleground(Eluna* E, Player* player)
     {
 #ifndef AZEROTHCORE
-        bool teleToEntryPoint = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool teleToEntryPoint = E->CHECKVAL<bool>(2, true);
         player->LeaveBattleground(teleToEntryPoint);
 #else
         player->LeaveBattleground();
@@ -2588,9 +2588,9 @@ namespace LuaPlayer
      */
     int DurabilityRepair(Eluna* E, Player* player)
     {
-        uint16 position = Eluna::CHECKVAL<uint16>(E->L, 2);
-        bool takeCost = Eluna::CHECKVAL<bool>(E->L, 3, true);
-        float discountMod = Eluna::CHECKVAL<float>(E->L, 4, 1.0f);
+        uint16 position = E->CHECKVAL<uint16>(2);
+        bool takeCost = E->CHECKVAL<bool>(3, true);
+        float discountMod = E->CHECKVAL<float>(4, 1.0f);
 
 #ifdef CLASSIC
         player->DurabilityRepair(position, takeCost, discountMod);
@@ -2611,9 +2611,9 @@ namespace LuaPlayer
      */
     int DurabilityRepairAll(Eluna* E, Player* player)
     {
-        bool takeCost = Eluna::CHECKVAL<bool>(E->L, 2, true);
-        float discountMod = Eluna::CHECKVAL<float>(E->L, 3, 1.0f);
-        bool guildBank = Eluna::CHECKVAL<bool>(E->L, 4, false);
+        bool takeCost = E->CHECKVAL<bool>(2, true);
+        float discountMod = E->CHECKVAL<float>(3, 1.0f);
+        bool guildBank = E->CHECKVAL<bool>(4, false);
 
 #ifdef CLASSIC
         player->DurabilityRepairAll(takeCost, discountMod);
@@ -2630,7 +2630,7 @@ namespace LuaPlayer
      */
     int DurabilityPointLossForEquipSlot(Eluna* E, Player* player)
     {
-        int32 slot = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 slot = E->CHECKVAL<int32>(2);
 
         if (slot >= EQUIPMENT_SLOT_START && slot < EQUIPMENT_SLOT_END)
             player->DurabilityPointLossForEquipSlot((EquipmentSlots)slot);
@@ -2647,8 +2647,8 @@ namespace LuaPlayer
      */
     int DurabilityPointsLossAll(Eluna* E, Player* player)
     {
-        int32 points = Eluna::CHECKVAL<int32>(E->L, 2);
-        bool inventory = Eluna::CHECKVAL<bool>(E->L, 3, true);
+        int32 points = E->CHECKVAL<int32>(2);
+        bool inventory = E->CHECKVAL<bool>(3, true);
 
         player->DurabilityPointsLossAll(points, inventory);
         return 0;
@@ -2662,8 +2662,8 @@ namespace LuaPlayer
      */
     int DurabilityPointsLoss(Eluna* E, Player* player)
     {
-        Item* item = Eluna::CHECKOBJ<Item>(E->L, 2);
-        int32 points = Eluna::CHECKVAL<int32>(E->L, 3);
+        Item* item = Eluna::CHECKOBJ<Item>(2);
+        int32 points = E->CHECKVAL<int32>(3);
 
         player->DurabilityPointsLoss(item, points);
         return 0;
@@ -2677,8 +2677,8 @@ namespace LuaPlayer
      */
     int DurabilityLoss(Eluna* E, Player* player)
     {
-        Item* item = Eluna::CHECKOBJ<Item>(E->L, 2);
-        double percent = Eluna::CHECKVAL<double>(E->L, 3);
+        Item* item = Eluna::CHECKOBJ<Item>(2);
+        double percent = E->CHECKVAL<double>(3);
 
         player->DurabilityLoss(item, percent);
         return 0;
@@ -2692,8 +2692,8 @@ namespace LuaPlayer
      */
     int DurabilityLossAll(Eluna* E, Player* player)
     {
-        double percent = Eluna::CHECKVAL<double>(E->L, 2);
-        bool inventory = Eluna::CHECKVAL<bool>(E->L, 3, true);
+        double percent = E->CHECKVAL<double>(2);
+        bool inventory = E->CHECKVAL<bool>(3, true);
 
         player->DurabilityLossAll(percent, inventory);
         return 0;
@@ -2746,7 +2746,7 @@ namespace LuaPlayer
      */
     int ResetTalents(Eluna* E, Player* player)
     {
-        bool no_cost = Eluna::CHECKVAL<bool>(E->L, 2, true);
+        bool no_cost = E->CHECKVAL<bool>(2, true);
 
 #ifdef CATA
         player->ResetTalents(no_cost);
@@ -2770,7 +2770,7 @@ namespace LuaPlayer
      */
     int RemoveSpell(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
 #ifdef TRINITY
         player->RemoveSpell(entry);
@@ -2799,8 +2799,8 @@ namespace LuaPlayer
      */
     int AddComboPoints(Eluna* E, Player* player)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(E->L, 2);
-        int8 count = Eluna::CHECKVAL<int8>(E->L, 3);
+        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        int8 count = E->CHECKVAL<int8>(3);
 
         player->AddComboPoints(target, count);
         return 0;
@@ -2814,8 +2814,8 @@ namespace LuaPlayer
      */
     int TalkedToCreature(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
-        Creature* creature = Eluna::CHECKOBJ<Creature>(E->L, 3);
+        uint32 entry = E->CHECKVAL<uint32>(2);
+        Creature* creature = Eluna::CHECKOBJ<Creature>(3);
 
         player->TalkedToCreature(entry, creature->GET_GUID());
         return 0;
@@ -2828,7 +2828,7 @@ namespace LuaPlayer
      */
     int KilledMonsterCredit(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         player->KilledMonsterCredit(entry, player->GET_GUID());
         return 0;
@@ -2842,8 +2842,8 @@ namespace LuaPlayer
      */
     int GroupEventHappens(Eluna* E, Player* player)
     {
-        uint32 questId = Eluna::CHECKVAL<uint32>(E->L, 2);
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(E->L, 3);
+        uint32 questId = E->CHECKVAL<uint32>(2);
+        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(3);
 
         player->GroupEventHappens(questId, obj);
         return 0;
@@ -2856,7 +2856,7 @@ namespace LuaPlayer
      */
     int AreaExploredOrEventHappens(Eluna* E, Player* player)
     {
-        uint32 questId = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 questId = E->CHECKVAL<uint32>(2);
 
         player->AreaExploredOrEventHappens(questId);
         return 0;
@@ -2869,7 +2869,7 @@ namespace LuaPlayer
      */
     int FailQuest(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         player->FailQuest(entry);
         return 0;
@@ -2882,7 +2882,7 @@ namespace LuaPlayer
      */
     int IncompleteQuest(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         player->IncompleteQuest(entry);
         return 0;
@@ -2897,7 +2897,7 @@ namespace LuaPlayer
      */
     int CompleteQuest(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         Quest const* quest = eObjectMgr->GetQuestTemplate(entry);
 
@@ -3029,7 +3029,7 @@ namespace LuaPlayer
      */
     int AddQuest(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         Quest const* quest = eObjectMgr->GetQuestTemplate(entry);
 
@@ -3089,7 +3089,7 @@ namespace LuaPlayer
      */
     int RemoveQuest(Eluna* E, Player* player)
     {
-        uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 entry = E->CHECKVAL<uint32>(2);
 
         Quest const* quest = eObjectMgr->GetQuestTemplate(entry);
 
@@ -3140,12 +3140,12 @@ namespace LuaPlayer
      */
     int Whisper(Eluna* E, Player* player)
     {
-        std::string text = Eluna::CHECKVAL<std::string>(E->L, 2);
-        uint32 lang = Eluna::CHECKVAL<uint32>(E->L, 3);
+        std::string text = E->CHECKVAL<std::string>(2);
+        uint32 lang = E->CHECKVAL<uint32>(3);
 #ifdef TRINITY
-        Player* receiver = Eluna::CHECKOBJ<Player>(E->L, 4);
+        Player* receiver = Eluna::CHECKOBJ<Player>(4);
 #else
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 4);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(4);
 #endif
 #if defined(TRINITY) || defined(AZEROTHCORE)
         player->Whisper(text, (Language)lang, receiver);
@@ -3162,7 +3162,7 @@ namespace LuaPlayer
      */
     int TextEmote(Eluna* E, Player* player)
     {
-        std::string text = Eluna::CHECKVAL<std::string>(E->L, 2);
+        std::string text = E->CHECKVAL<std::string>(2);
 
         player->TextEmote(text);
         return 0;
@@ -3176,8 +3176,8 @@ namespace LuaPlayer
      */
     int Yell(Eluna* E, Player* player)
     {
-        std::string text = Eluna::CHECKVAL<std::string>(E->L, 2);
-        uint32 lang = Eluna::CHECKVAL<uint32>(E->L, 3);
+        std::string text = E->CHECKVAL<std::string>(2);
+        uint32 lang = E->CHECKVAL<uint32>(3);
 #if defined(TRINITY) || defined(AZEROTHCORE)
         player->Yell(text, (Language)lang);
 #else
@@ -3194,8 +3194,8 @@ namespace LuaPlayer
      */
     int Say(Eluna* E, Player* player)
     {
-        std::string text = Eluna::CHECKVAL<std::string>(E->L, 2);
-        uint32 lang = Eluna::CHECKVAL<uint32>(E->L, 3);
+        std::string text = E->CHECKVAL<std::string>(2);
+        uint32 lang = E->CHECKVAL<uint32>(3);
 #if defined(TRINITY) || defined(AZEROTHCORE)
         player->Say(text, (Language)lang);
 #else
@@ -3212,8 +3212,8 @@ namespace LuaPlayer
      */
     int GiveXP(Eluna* E, Player* player)
     {
-        uint32 xp = Eluna::CHECKVAL<uint32>(E->L, 2);
-        Unit* victim = Eluna::CHECKOBJ<Unit>(E->L, 3, false);
+        uint32 xp = E->CHECKVAL<uint32>(2);
+        Unit* victim = Eluna::CHECKOBJ<Unit>(3, false);
 
 #ifndef CMANGOS
         player->GiveXP(xp, victim);
@@ -3285,15 +3285,15 @@ namespace LuaPlayer
     int EquipItem(Eluna* E, Player* player)
     {
         uint16 dest = 0;
-        Item* item = Eluna::CHECKOBJ<Item>(E->L, 2, false);
-        uint32 slot = Eluna::CHECKVAL<uint32>(E->L, 3);
+        Item* item = Eluna::CHECKOBJ<Item>(2, false);
+        uint32 slot = E->CHECKVAL<uint32>(3);
 
         if (slot >= INVENTORY_SLOT_BAG_END)
             return 1;
 
         if (!item)
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(2);
             item = Item::CreateItem(entry, 1, player);
             if (!item)
                 return 1;
@@ -3334,8 +3334,8 @@ namespace LuaPlayer
      */
     int CanEquipItem(Eluna* E, Player* player)
     {
-        Item* item = Eluna::CHECKOBJ<Item>(E->L, 2, false);
-        uint32 slot = Eluna::CHECKVAL<uint32>(E->L, 3);
+        Item* item = Eluna::CHECKOBJ<Item>(2, false);
+        uint32 slot = E->CHECKVAL<uint32>(3);
         if (slot >= EQUIPMENT_SLOT_END)
         {
             E->Push(false);
@@ -3344,7 +3344,7 @@ namespace LuaPlayer
 
         if (!item)
         {
-            uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 entry = E->CHECKVAL<uint32>(2);
             uint16 dest;
             InventoryResult msg = player->CanEquipNewItem(slot, dest, entry, false);
             if (msg != EQUIP_ERR_OK)
@@ -3375,7 +3375,7 @@ namespace LuaPlayer
      */
     int UnsetKnownTitle(Eluna* E, Player* player)
     {
-        uint32 id = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 id = E->CHECKVAL<uint32>(2);
         CharTitlesEntry const* t = sCharTitlesStore.LookupEntry(id);
         if (t)
             player->SetTitle(t, true);
@@ -3403,7 +3403,7 @@ namespace LuaPlayer
      */
     int AdvanceAllSkills(Eluna* E, Player* player)
     {
-        uint32 step = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 step = E->CHECKVAL<uint32>(2);
 
         if (!step)
             return 0;
@@ -3439,8 +3439,8 @@ namespace LuaPlayer
      */
     int AdvanceSkill(Eluna* E, Player* player)
     {
-        uint32 _skillId = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 _step = Eluna::CHECKVAL<uint32>(E->L, 3);
+        uint32 _skillId = E->CHECKVAL<uint32>(2);
+        uint32 _step = E->CHECKVAL<uint32>(3);
         if (_skillId && _step)
         {
             if (player->HasSkill(_skillId))
@@ -3460,11 +3460,11 @@ namespace LuaPlayer
      */
     int Teleport(Eluna* E, Player* player)
     {
-        uint32 mapId = Eluna::CHECKVAL<uint32>(E->L, 2);
-        float x = Eluna::CHECKVAL<float>(E->L, 3);
-        float y = Eluna::CHECKVAL<float>(E->L, 4);
-        float z = Eluna::CHECKVAL<float>(E->L, 5);
-        float o = Eluna::CHECKVAL<float>(E->L, 6);
+        uint32 mapId = E->CHECKVAL<uint32>(2);
+        float x = E->CHECKVAL<float>(3);
+        float y = E->CHECKVAL<float>(4);
+        float z = E->CHECKVAL<float>(5);
+        float o = E->CHECKVAL<float>(6);
 #if defined AZEROTHCORE
         if (player->IsInFlight())
         {
@@ -3494,7 +3494,7 @@ namespace LuaPlayer
 
     int AddLifetimeKills(Eluna* E, Player* player)
     {
-        uint32 val = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 val = E->CHECKVAL<uint32>(2);
         uint32 currentKills = player->GetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS);
         player->SetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS, currentKills + val);
         return 0;
@@ -3509,8 +3509,8 @@ namespace LuaPlayer
      */
     int AddItem(Eluna* E, Player* player)
     {
-        uint32 itemId = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 itemCount = Eluna::CHECKVAL<uint32>(E->L, 3, 1);
+        uint32 itemId = E->CHECKVAL<uint32>(2);
+        uint32 itemCount = E->CHECKVAL<uint32>(3, 1);
 
 #if defined TRINITY || AZEROTHCORE
         uint32 noSpaceForCount = 0;
@@ -3546,11 +3546,11 @@ namespace LuaPlayer
      */
     int RemoveItem(Eluna* E, Player* player)
     {
-        Item* item = Eluna::CHECKOBJ<Item>(E->L, 2, false);
-        uint32 itemCount = Eluna::CHECKVAL<uint32>(E->L, 3);
+        Item* item = Eluna::CHECKOBJ<Item>(2, false);
+        uint32 itemCount = E->CHECKVAL<uint32>(3);
         if (!item)
         {
-            uint32 itemId = Eluna::CHECKVAL<uint32>(E->L, 2);
+            uint32 itemId = E->CHECKVAL<uint32>(2);
             player->DestroyItemCount(itemId, itemCount, true);
         }
         else
@@ -3558,7 +3558,7 @@ namespace LuaPlayer
             bool all = itemCount >= item->GetCount();
             player->DestroyItemCount(item, itemCount, true);
             if (all)
-                Eluna::CHECKOBJ<ElunaObject>(E->L, 2)->Invalidate();
+                Eluna::CHECKOBJ<ElunaObject>(2)->Invalidate();
         }
         return 0;
     }
@@ -3570,7 +3570,7 @@ namespace LuaPlayer
      */
     int RemoveLifetimeKills(Eluna* E, Player* player)
     {
-        uint32 val = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 val = E->CHECKVAL<uint32>(2);
         uint32 currentKills = player->GetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS);
         if (val > currentKills)
             val = currentKills;
@@ -3586,8 +3586,8 @@ namespace LuaPlayer
      */
     int ResetSpellCooldown(Eluna* E, Player* player)
     {
-        uint32 spellId = Eluna::CHECKVAL<uint32>(E->L, 2);
-        bool update = Eluna::CHECKVAL<bool>(E->L, 3, true);
+        uint32 spellId = E->CHECKVAL<uint32>(2);
+        bool update = E->CHECKVAL<bool>(3, true);
 #ifdef TRINITY
         player->GetSpellHistory()->ResetCooldown(spellId, update);
 #else
@@ -3604,8 +3604,8 @@ namespace LuaPlayer
      */
     int ResetTypeCooldowns(Eluna* E, Player* player)
     {
-        uint32 category = Eluna::CHECKVAL<uint32>(E->L, 2);
-        bool update = Eluna::CHECKVAL<bool>(E->L, 3, true);
+        uint32 category = E->CHECKVAL<uint32>(2);
+        bool update = E->CHECKVAL<bool>(3, true);
         (void)update; // ensure that the variable is referenced in order to pass compiler checks
 
 #ifdef TRINITY
@@ -3646,7 +3646,7 @@ namespace LuaPlayer
      */
     int SendBroadcastMessage(Eluna* E, Player* player)
     {
-        const char* message = Eluna::CHECKVAL<const char*>(E->L, 2);
+        const char* message = E->CHECKVAL<const char*>(2);
         if (std::string(message).length() > 0)
             ChatHandler(player->GetSession()).SendSysMessage(message);
         return 0;
@@ -3659,7 +3659,7 @@ namespace LuaPlayer
      */
     int SendAreaTriggerMessage(Eluna* E, Player* player)
     {
-        std::string msg = Eluna::CHECKVAL<std::string>(E->L, 2);
+        std::string msg = E->CHECKVAL<std::string>(2);
         if (msg.length() > 0)
             player->GetSession()->SendAreaTriggerMessage("%s", msg.c_str());
         return 0;
@@ -3672,7 +3672,7 @@ namespace LuaPlayer
      */
     int SendNotification(Eluna* E, Player* player)
     {
-        std::string msg = Eluna::CHECKVAL<std::string>(E->L, 2);
+        std::string msg = E->CHECKVAL<std::string>(2);
         if (msg.length() > 0)
             player->GetSession()->SendNotification("%s", msg.c_str());
         return 0;
@@ -3686,8 +3686,8 @@ namespace LuaPlayer
      */
     int SendPacket(Eluna* E, Player* player)
     {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(E->L, 2);
-        bool selfOnly = Eluna::CHECKVAL<bool>(E->L, 3, true);
+        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(2);
+        bool selfOnly = E->CHECKVAL<bool>(3, true);
 #ifdef CMANGOS
         if (selfOnly)
             player->GetSession()->SendPacket(*data);
@@ -3713,10 +3713,10 @@ namespace LuaPlayer
      */
     int SendAddonMessage(Eluna* E, Player* player)
     {
-        std::string prefix = Eluna::CHECKVAL<std::string>(E->L, 2);
-        std::string message = Eluna::CHECKVAL<std::string>(E->L, 3);
-        uint8 channel = Eluna::CHECKVAL<uint8>(E->L, 4);
-        Player* receiver = Eluna::CHECKOBJ<Player>(E->L, 5);
+        std::string prefix = E->CHECKVAL<std::string>(2);
+        std::string message = E->CHECKVAL<std::string>(3);
+        uint8 channel = E->CHECKVAL<uint8>(4);
+        Player* receiver = Eluna::CHECKOBJ<Player>(5);
 
         std::string fullmsg = prefix + "\t" + message;
 
@@ -3759,7 +3759,7 @@ namespace LuaPlayer
      */
     int ModifyMoney(Eluna* E, Player* player)
     {
-        int32 amt = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 amt = E->CHECKVAL<int32>(2);
 
         player->ModifyMoney(amt);
         return 1;
@@ -3772,7 +3772,7 @@ namespace LuaPlayer
      */
     int LearnSpell(Eluna* E, Player* player)
     {
-        uint32 id = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 id = E->CHECKVAL<uint32>(2);
 
 #ifdef TRINITY
         player->LearnSpell(id, false);
@@ -3792,8 +3792,8 @@ namespace LuaPlayer
      */
     int LearnTalent(Eluna* E, Player* player)
     {
-        uint32 id = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 rank = Eluna::CHECKVAL<uint32>(E->L, 3);
+        uint32 id = E->CHECKVAL<uint32>(2);
+        uint32 rank = E->CHECKVAL<uint32>(3);
 
         player->LearnTalent(id, rank);
 #if (!defined(TBC) && !defined(CLASSIC))
@@ -3827,8 +3827,8 @@ namespace LuaPlayer
      */
     int ResurrectPlayer(Eluna* E, Player* player)
     {
-        float percent = Eluna::CHECKVAL<float>(E->L, 2, 100.0f);
-        bool sickness = Eluna::CHECKVAL<bool>(E->L, 3, false);
+        float percent = E->CHECKVAL<float>(2, 100.0f);
+        bool sickness = E->CHECKVAL<bool>(3, false);
         player->ResurrectPlayer(percent, sickness);
         player->SpawnCorpseBones();
         return 0;
@@ -3854,13 +3854,13 @@ namespace LuaPlayer
      */
     int GossipMenuAddItem(Eluna* E, Player* player)
     {
-        uint32 _icon = Eluna::CHECKVAL<uint32>(E->L, 2);
-        const char* msg = Eluna::CHECKVAL<const char*>(E->L, 3);
-        uint32 _sender = Eluna::CHECKVAL<uint32>(E->L, 4);
-        uint32 _intid = Eluna::CHECKVAL<uint32>(E->L, 5);
-        bool _code = Eluna::CHECKVAL<bool>(E->L, 6, false);
-        const char* _promptMsg = Eluna::CHECKVAL<const char*>(E->L, 7, "");
-        uint32 _money = Eluna::CHECKVAL<uint32>(E->L, 8, 0);
+        uint32 _icon = E->CHECKVAL<uint32>(2);
+        const char* msg = E->CHECKVAL<const char*>(3);
+        uint32 _sender = E->CHECKVAL<uint32>(4);
+        uint32 _intid = E->CHECKVAL<uint32>(5);
+        bool _code = E->CHECKVAL<bool>(6, false);
+        const char* _promptMsg = E->CHECKVAL<const char*>(7, "");
+        uint32 _money = E->CHECKVAL<uint32>(8, 0);
 #if defined(TRINITY)
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GossipOptionIcon(_icon), msg, _sender, _intid, _promptMsg, _money, _code);
 #elif defined(AZEROTHCORE)
@@ -3910,11 +3910,11 @@ namespace LuaPlayer
      */
     int GossipSendMenu(Eluna* E, Player* player)
     {
-        uint32 npc_text = Eluna::CHECKVAL<uint32>(E->L, 2);
-        Object* sender = Eluna::CHECKOBJ<Object>(E->L, 3);
+        uint32 npc_text = E->CHECKVAL<uint32>(2);
+        Object* sender = Eluna::CHECKOBJ<Object>(3);
         if (sender->GetTypeId() == TYPEID_PLAYER)
         {
-            uint32 menu_id = Eluna::CHECKVAL<uint32>(E->L, 4);
+            uint32 menu_id = E->CHECKVAL<uint32>(4);
 #ifndef CMANGOS
             player->PlayerTalkClass->GetGossipMenu().SetMenuId(menu_id);
 #else
@@ -3954,7 +3954,7 @@ namespace LuaPlayer
      */
     int StartTaxi(Eluna* E, Player* player)
     {
-        uint32 pathId = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 pathId = E->CHECKVAL<uint32>(2);
 
         player->ActivateTaxiPathTo(pathId);
         return 0;
@@ -3972,12 +3972,12 @@ namespace LuaPlayer
      */
     int GossipSendPOI(Eluna* E, Player* player)
     {
-        float x = Eluna::CHECKVAL<float>(E->L, 2);
-        float y = Eluna::CHECKVAL<float>(E->L, 3);
-        uint32 icon = Eluna::CHECKVAL<uint32>(E->L, 4);
-        uint32 flags = Eluna::CHECKVAL<uint32>(E->L, 5);
-        uint32 data = Eluna::CHECKVAL<uint32>(E->L, 6);
-        std::string iconText = Eluna::CHECKVAL<std::string>(E->L, 7);
+        float x = E->CHECKVAL<float>(2);
+        float y = E->CHECKVAL<float>(3);
+        uint32 icon = E->CHECKVAL<uint32>(4);
+        uint32 flags = E->CHECKVAL<uint32>(5);
+        uint32 data = E->CHECKVAL<uint32>(6);
+        std::string iconText = E->CHECKVAL<std::string>(7);
 
         WorldPacket packet(SMSG_GOSSIP_POI, 4 + 4 + 4 + 4 + 4 + 10);
         packet << flags;
@@ -4001,7 +4001,7 @@ namespace LuaPlayer
      */
     int GossipAddQuests(Eluna* E, Player* player)
     {
-        WorldObject* source = Eluna::CHECKOBJ<WorldObject>(E->L, 2);
+        WorldObject* source = Eluna::CHECKOBJ<WorldObject>(2);
 
         if (source->GetTypeId() == TYPEID_UNIT)
         {
@@ -4024,8 +4024,8 @@ namespace LuaPlayer
      */
     int SendQuestTemplate(Eluna* E, Player* player)
     {
-        uint32 questId = Eluna::CHECKVAL<uint32>(E->L, 2);
-        bool activateAccept = Eluna::CHECKVAL<bool>(E->L, 3, true);
+        uint32 questId = E->CHECKVAL<uint32>(2);
+        bool activateAccept = E->CHECKVAL<bool>(3, true);
 
         Quest const* quest = eObjectMgr->GetQuestTemplate(questId);
         if (!quest)
@@ -4055,7 +4055,7 @@ namespace LuaPlayer
      */
     int RemovedInsignia(Eluna* E, Player* player)
     {
-        Player* looter = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* looter = Eluna::CHECKOBJ<Player>(2);
         player->RemovedInsignia(looter);
         return 0;
     }
@@ -4068,7 +4068,7 @@ namespace LuaPlayer
      */
     int GroupInvite(Eluna* E, Player* player)
     {
-        Player* invited = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* invited = Eluna::CHECKOBJ<Player>(2);
 
         if (invited->GetGroup() || invited->GetGroupInvite())
         {
@@ -4136,7 +4136,7 @@ namespace LuaPlayer
      */
     int GroupCreate(Eluna* E, Player* player)
     {
-        Player* invited = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* invited = Eluna::CHECKOBJ<Player>(2);
 
         if (player->GetGroup() || invited->GetGroup())
             return 0;
@@ -4187,7 +4187,7 @@ namespace LuaPlayer
      */
     int SendCinematicStart(Eluna* E, Player* player)
     {
-        uint32 CinematicSequenceId = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 CinematicSequenceId = E->CHECKVAL<uint32>(2);
 
         player->SendCinematicStart(CinematicSequenceId);
         return 0;
@@ -4201,7 +4201,7 @@ namespace LuaPlayer
      */
     int SendMovieStart(Eluna* E, Player* player)
     {
-        uint32 MovieId = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 MovieId = E->CHECKVAL<uint32>(2);
 
         player->SendMovieStart(MovieId);
         return 0;
@@ -4216,9 +4216,9 @@ namespace LuaPlayer
 
     /*int AddTalent(Eluna* E, Player* player)
     {
-    uint32 spellId = Eluna::CHECKVAL<uint32>(E->L, 2);
-    uint8 spec = Eluna::CHECKVAL<uint8>(E->L, 3);
-    bool learning = Eluna::CHECKVAL<bool>(E->L, 4, true);
+    uint32 spellId = E->CHECKVAL<uint32>(2);
+    uint8 spec = E->CHECKVAL<uint8>(3);
+    bool learning = E->CHECKVAL<bool>(4, true);
     if (spec >= MAX_TALENT_SPECS)
     E->Push(false);
     else
@@ -4228,7 +4228,7 @@ namespace LuaPlayer
 
     /*int GainSpellComboPoints(Eluna* E, Player* player)
     {
-    int8 count = Eluna::CHECKVAL<int8>(E->L, 2);
+    int8 count = E->CHECKVAL<int8>(2);
 
     player->GainSpellComboPoints(count);
     return 0;
@@ -4236,8 +4236,8 @@ namespace LuaPlayer
 
     /*int KillGOCredit(Eluna* E, Player* player)
     {
-    uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
-    ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 3);
+    uint32 entry = E->CHECKVAL<uint32>(2);
+    ObjectGuid guid = E->CHECKVAL<ObjectGuid>(3);
     player->KillCreditGO(entry, guid);
     return 0;
     }*/
@@ -4250,7 +4250,7 @@ namespace LuaPlayer
 
     /*int RemoveRewardedQuest(Eluna* E, Player* player)
     {
-    uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+    uint32 entry = E->CHECKVAL<uint32>(2);
 
     player->RemoveRewardedQuest(entry);
     return 0;
@@ -4258,7 +4258,7 @@ namespace LuaPlayer
 
     /*int RemoveActiveQuest(Eluna* E, Player* player)
     {
-    uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
+    uint32 entry = E->CHECKVAL<uint32>(2);
 
     player->RemoveActiveQuest(entry);
     return 0;
@@ -4266,13 +4266,13 @@ namespace LuaPlayer
 
     /*int SummonPet(Eluna* E, Player* player)
     {
-    uint32 entry = Eluna::CHECKVAL<uint32>(E->L, 2);
-    float x = Eluna::CHECKVAL<float>(E->L, 3);
-    float y = Eluna::CHECKVAL<float>(E->L, 4);
-    float z = Eluna::CHECKVAL<float>(E->L, 5);
-    float o = Eluna::CHECKVAL<float>(E->L, 6);
-    uint32 petType = Eluna::CHECKVAL<uint32>(E->L, 7);
-    uint32 despwtime = Eluna::CHECKVAL<uint32>(E->L, 8);
+    uint32 entry = E->CHECKVAL<uint32>(2);
+    float x = E->CHECKVAL<float>(3);
+    float y = E->CHECKVAL<float>(4);
+    float z = E->CHECKVAL<float>(5);
+    float o = E->CHECKVAL<float>(6);
+    uint32 petType = E->CHECKVAL<uint32>(7);
+    uint32 despwtime = E->CHECKVAL<uint32>(8);
 
     if (petType >= MAX_PET_TYPE)
     return 0;
@@ -4283,8 +4283,8 @@ namespace LuaPlayer
 
     /*int RemovePet(Eluna* E, Player* player)
     {
-    int mode = Eluna::CHECKVAL<int>(E->L, 2, PET_SAVE_AS_DELETED);
-    bool returnreagent = Eluna::CHECKVAL<bool>(E->L, 2, false);
+    int mode = E->CHECKVAL<int>(2, PET_SAVE_AS_DELETED);
+    bool returnreagent = E->CHECKVAL<bool>(2, false);
 
     if (!player->GetPet())
     return 0;

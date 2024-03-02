@@ -131,7 +131,7 @@ namespace LuaSpell
      */
     int SetAutoRepeat(Eluna* E, Spell* spell)
     {
-        bool repeat = Eluna::CHECKVAL<bool>(E->L, 2);
+        bool repeat = E->CHECKVAL<bool>(2);
         spell->SetAutoRepeat(repeat);
         return 0;
     }
@@ -143,7 +143,7 @@ namespace LuaSpell
      */
     int Cast(Eluna* E, Spell* spell)
     {
-        bool skipCheck = Eluna::CHECKVAL<bool>(E->L, 2, false);
+        bool skipCheck = E->CHECKVAL<bool>(2, false);
         spell->cast(skipCheck);
         return 0;
     }
