@@ -22,7 +22,7 @@ namespace LuaVehicle
      */
     int IsOnBoard(Eluna* E, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(2);
+        Unit* passenger = E->CHECKOBJ<Unit>(2);
 
         E->Push(vehicle->HasOnBoard(passenger));
         return 1;
@@ -71,7 +71,7 @@ namespace LuaVehicle
      */
     int AddPassenger(Eluna* E, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(2);
+        Unit* passenger = E->CHECKOBJ<Unit>(2);
         int8 seatId = E->CHECKVAL<int8>(3);
 
         if (vehicle->CanBoard(passenger))
@@ -86,7 +86,7 @@ namespace LuaVehicle
      */
     int RemovePassenger(Eluna* E, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(2);
+        Unit* passenger = E->CHECKOBJ<Unit>(2);
 
         vehicle->UnBoard(passenger, false);
         return 0;

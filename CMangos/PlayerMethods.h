@@ -186,7 +186,7 @@ namespace LuaPlayer
      */
     int CanUseItem(Eluna* E, Player* player)
     {
-        Item* item = Eluna::CHECKOBJ<Item>(2, false);
+        Item* item = E->CHECKOBJ<Item>(2, false);
         if (item)
             E->Push(player->CanUseItem(item) == EQUIP_ERR_OK);
         else
@@ -539,7 +539,7 @@ namespace LuaPlayer
 
     int IsGroupVisibleFor(Eluna* E, Player* player)
     {
-        Player* target = Eluna::CHECKOBJ<Player>(2);
+        Player* target = E->CHECKOBJ<Player>(2);
         E->Push(player->IsGroupVisibleFor(target));
         return 1;
     }
@@ -552,7 +552,7 @@ namespace LuaPlayer
      */
     int IsInSameRaidWith(Eluna* E, Player* player)
     {
-        Player* target = Eluna::CHECKOBJ<Player>(2);
+        Player* target = E->CHECKOBJ<Player>(2);
         E->Push(player->IsInSameRaidWith(target));
         return 1;
     }
@@ -565,7 +565,7 @@ namespace LuaPlayer
      */
     int IsInSameGroupWith(Eluna* E, Player* player)
     {
-        Player* target = Eluna::CHECKOBJ<Player>(2);
+        Player* target = E->CHECKOBJ<Player>(2);
         E->Push(player->IsInSameGroupWith(target));
         return 1;
     }
@@ -578,7 +578,7 @@ namespace LuaPlayer
      */
     int IsHonorOrXPTarget(Eluna* E, Player* player)
     {
-        Unit* victim = Eluna::CHECKOBJ<Unit>(2);
+        Unit* victim = E->CHECKOBJ<Unit>(2);
 
         E->Push(player->isHonorOrXPTarget(victim));
         return 1;
@@ -592,7 +592,7 @@ namespace LuaPlayer
      */
     int IsVisibleForPlayer(Eluna* E, Player* player)
     {
-        Player* target = Eluna::CHECKOBJ<Player>(2);
+        Player* target = E->CHECKOBJ<Player>(2);
 
         E->Push(player->IsVisibleGloballyFor(target));
         return 1;
@@ -1212,7 +1212,7 @@ namespace LuaPlayer
      */
     int GetQuestLevel(Eluna* E, Player* player)
     {
-        Quest* quest = Eluna::CHECKOBJ<Quest>(2);
+        Quest* quest = E->CHECKOBJ<Quest>(2);
 
         E->Push(player->GetQuestLevelForPlayer(quest));
         return 1;
@@ -1345,7 +1345,7 @@ namespace LuaPlayer
      */
     int GetGossipTextId(Eluna* E, Player* player)
     {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(2);
+        WorldObject* obj = E->CHECKOBJ<WorldObject>(2);
         E->Push(player->GetGossipTextId(obj));
         return 1;
     }
@@ -2077,7 +2077,7 @@ namespace LuaPlayer
      */
     int SummonPlayer(Eluna* E, Player* player)
     {
-        Unit* summoner = Eluna::CHECKOBJ<Unit>(2);
+        Unit* summoner = E->CHECKOBJ<Unit>(2);
 
         float x, y, z;
         summoner->GetPosition(x,y,z);
@@ -2140,7 +2140,7 @@ namespace LuaPlayer
      */
     int SendAuctionMenu(Eluna* E, Player* player)
     {
-        Unit* unit = Eluna::CHECKOBJ<Unit>(2);
+        Unit* unit = E->CHECKOBJ<Unit>(2);
 
         AuctionHouseEntry const* ahEntry = AuctionHouseMgr::GetAuctionHouseEntry(unit);
         if (!ahEntry)
@@ -2162,7 +2162,7 @@ namespace LuaPlayer
      */
     int SendTaxiMenu(Eluna* E, Player* player)
     {
-        Creature* creature = Eluna::CHECKOBJ<Creature>(2);
+        Creature* creature = E->CHECKOBJ<Creature>(2);
 
         player->GetSession()->SendTaxiMenu(creature);
         return 0;
@@ -2184,7 +2184,7 @@ namespace LuaPlayer
      */
     int SendTabardVendorActivate(Eluna* E, Player* player)
     {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(2);
+        WorldObject* obj = E->CHECKOBJ<WorldObject>(2);
 
         player->GetSession()->SendTabardVendorActivate(obj->GET_GUID());
         return 0;
@@ -2197,7 +2197,7 @@ namespace LuaPlayer
      */
     int SendShowBank(Eluna* E, Player* player)
     {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(2);
+        WorldObject* obj = E->CHECKOBJ<WorldObject>(2);
 
         player->GetSession()->SendShowBank(obj->GET_GUID());
         return 0;
@@ -2210,7 +2210,7 @@ namespace LuaPlayer
      */
     int SendListInventory(Eluna* E, Player* player)
     {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(2);
+        WorldObject* obj = E->CHECKOBJ<WorldObject>(2);
 
         player->GetSession()->SendListInventory(obj->GET_GUID());
         return 0;
@@ -2223,7 +2223,7 @@ namespace LuaPlayer
      */
     int SendTrainerList(Eluna* E, Player* player)
     {
-        Creature* obj = Eluna::CHECKOBJ<Creature>(2);
+        Creature* obj = E->CHECKOBJ<Creature>(2);
 
         player->GetSession()->SendTrainerList(obj->GET_GUID());
         return 0;
@@ -2236,7 +2236,7 @@ namespace LuaPlayer
      */
     int SendGuildInvite(Eluna* E, Player* player)
     {
-        Player* plr = Eluna::CHECKOBJ<Player>(2);
+        Player* plr = E->CHECKOBJ<Player>(2);
 
         player->GetSession()->SendGuildInvite(plr);
         return 0;
@@ -2427,7 +2427,7 @@ namespace LuaPlayer
      */
     int DurabilityPointsLoss(Eluna* E, Player* player)
     {
-        Item* item = Eluna::CHECKOBJ<Item>(2);
+        Item* item = E->CHECKOBJ<Item>(2);
         int32 points = E->CHECKVAL<int32>(3);
 
         player->DurabilityPointsLoss(item, points);
@@ -2442,7 +2442,7 @@ namespace LuaPlayer
      */
     int DurabilityLoss(Eluna* E, Player* player)
     {
-        Item* item = Eluna::CHECKOBJ<Item>(2);
+        Item* item = E->CHECKOBJ<Item>(2);
         double percent = E->CHECKVAL<double>(3);
 
         player->DurabilityLoss(item, percent);
@@ -2542,7 +2542,7 @@ namespace LuaPlayer
      */
     int AddComboPoints(Eluna* E, Player* player)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
         int8 count = E->CHECKVAL<int8>(3);
 
         player->AddComboPoints(target, count);
@@ -2558,7 +2558,7 @@ namespace LuaPlayer
     int TalkedToCreature(Eluna* E, Player* player)
     {
         uint32 entry = E->CHECKVAL<uint32>(2);
-        Creature* creature = Eluna::CHECKOBJ<Creature>(3);
+        Creature* creature = E->CHECKOBJ<Creature>(3);
 
         player->TalkedToCreature(entry, creature->GET_GUID());
         return 0;
@@ -2586,7 +2586,7 @@ namespace LuaPlayer
     int GroupEventHappens(Eluna* E, Player* player)
     {
         uint32 questId = E->CHECKVAL<uint32>(2);
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(3);
+        WorldObject* obj = E->CHECKOBJ<WorldObject>(3);
 
         player->GroupEventHappens(questId, obj);
         return 0;
@@ -2861,7 +2861,7 @@ namespace LuaPlayer
     int GiveXP(Eluna* E, Player* player)
     {
         uint32 xp = E->CHECKVAL<uint32>(2);
-        Unit* victim = Eluna::CHECKOBJ<Unit>(3, false);
+        Unit* victim = E->CHECKOBJ<Unit>(3, false);
 
         player->GiveXP(xp, nullptr);
         return 0;
@@ -2929,7 +2929,7 @@ namespace LuaPlayer
     int EquipItem(Eluna* E, Player* player)
     {
         uint16 dest = 0;
-        Item* item = Eluna::CHECKOBJ<Item>(2, false);
+        Item* item = E->CHECKOBJ<Item>(2, false);
         uint32 slot = E->CHECKVAL<uint32>(3);
 
         if (slot >= INVENTORY_SLOT_BAG_END)
@@ -2978,7 +2978,7 @@ namespace LuaPlayer
      */
     int CanEquipItem(Eluna* E, Player* player)
     {
-        Item* item = Eluna::CHECKOBJ<Item>(2, false);
+        Item* item = E->CHECKOBJ<Item>(2, false);
         uint32 slot = E->CHECKVAL<uint32>(3);
         if (slot >= EQUIPMENT_SLOT_END)
         {
@@ -3149,7 +3149,7 @@ namespace LuaPlayer
      */
     int RemoveItem(Eluna* E, Player* player)
     {
-        Item* item = Eluna::CHECKOBJ<Item>(2, false);
+        Item* item = E->CHECKOBJ<Item>(2, false);
         uint32 itemCount = E->CHECKVAL<uint32>(3);
         if (!item)
         {
@@ -3161,7 +3161,7 @@ namespace LuaPlayer
             bool all = itemCount >= item->GetCount();
             player->DestroyItemCount(item, itemCount, true);
             if (all)
-                Eluna::CHECKOBJ<ElunaObject>(2)->Invalidate();
+                E->CHECKOBJ<ElunaObject>(2)->Invalidate();
         }
         return 0;
     }
@@ -3268,7 +3268,7 @@ namespace LuaPlayer
      */
     int SendPacket(Eluna* E, Player* player)
     {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(2);
+        WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
         bool selfOnly = E->CHECKVAL<bool>(3, true);
 
         if (selfOnly)
@@ -3292,7 +3292,7 @@ namespace LuaPlayer
         std::string prefix = E->CHECKVAL<std::string>(2);
         std::string message = E->CHECKVAL<std::string>(3);
         uint8 channel = E->CHECKVAL<uint8>(4);
-        Player* receiver = Eluna::CHECKOBJ<Player>(5);
+        Player* receiver = E->CHECKOBJ<Player>(5);
 
         std::string fullmsg = prefix + "\t" + message;
 
@@ -3464,7 +3464,7 @@ namespace LuaPlayer
     int GossipSendMenu(Eluna* E, Player* player)
     {
         uint32 npc_text = E->CHECKVAL<uint32>(2);
-        Object* sender = Eluna::CHECKOBJ<Object>(3);
+        Object* sender = E->CHECKOBJ<Object>(3);
         if (sender->GetTypeId() == TYPEID_PLAYER)
         {
             uint32 menu_id = E->CHECKVAL<uint32>(4);
@@ -3551,7 +3551,7 @@ namespace LuaPlayer
      */
     int GossipAddQuests(Eluna* E, Player* player)
     {
-        WorldObject* source = Eluna::CHECKOBJ<WorldObject>(2);
+        WorldObject* source = E->CHECKOBJ<WorldObject>(2);
 
         if (source->GetTypeId() == TYPEID_UNIT)
         {
@@ -3605,7 +3605,7 @@ namespace LuaPlayer
      */
     int RemovedInsignia(Eluna* E, Player* player)
     {
-        Player* looter = Eluna::CHECKOBJ<Player>(2);
+        Player* looter = E->CHECKOBJ<Player>(2);
         player->RemovedInsignia(looter);
         return 0;
     }
@@ -3618,7 +3618,7 @@ namespace LuaPlayer
      */
     int GroupInvite(Eluna* E, Player* player)
     {
-        Player* invited = Eluna::CHECKOBJ<Player>(2);
+        Player* invited = E->CHECKOBJ<Player>(2);
 
         if (invited->GetGroup() || invited->GetGroupInvite())
         {
@@ -3675,7 +3675,7 @@ namespace LuaPlayer
      */
     int GroupCreate(Eluna* E, Player* player)
     {
-        Player* invited = Eluna::CHECKOBJ<Player>(2);
+        Player* invited = E->CHECKOBJ<Player>(2);
 
         if (player->GetGroup() || invited->GetGroup())
             return 0;

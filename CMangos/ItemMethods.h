@@ -55,7 +55,7 @@ namespace LuaItem
      */
     int IsNotBoundToPlayer(Eluna* E, Item* item)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(2);
+        Player* player = E->CHECKOBJ<Player>(2);
 
         E->Push(item->IsBindedNotWith(player));
         return 1;
@@ -616,7 +616,7 @@ namespace LuaItem
      */
     int SetOwner(Eluna* E, Item* item)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(2);
+        Player* player = E->CHECKOBJ<Player>(2);
 
         item->SetOwnerGuid(player->GET_GUID());
         return 0;

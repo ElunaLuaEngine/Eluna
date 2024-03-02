@@ -106,8 +106,8 @@ namespace LuaGroup
      */
     int SameSubGroup(Eluna* E, Group* group)
     {
-        Player* player1 = Eluna::CHECKOBJ<Player>(2);
-        Player* player2 = Eluna::CHECKOBJ<Player>(3);
+        Player* player1 = E->CHECKOBJ<Player>(2);
+        Player* player2 = E->CHECKOBJ<Player>(3);
         E->Push(group->SameSubGroup(player1, player2));
         return 1;
     }
@@ -140,7 +140,7 @@ namespace LuaGroup
      */
     int AddMember(Eluna* E, Group* group)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(2);
+        Player* player = E->CHECKOBJ<Player>(2);
 
         if (player->GetGroup() || !group->IsCreated() || group->IsFull())
         {
@@ -267,7 +267,7 @@ namespace LuaGroup
      */
     int SendPacket(Eluna* E, Group* group)
     {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(2);
+        WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
         bool ignorePlayersInBg = E->CHECKVAL<bool>(3);
         ObjectGuid ignore = E->CHECKVAL<ObjectGuid>(4);
 

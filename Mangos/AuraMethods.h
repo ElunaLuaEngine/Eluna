@@ -210,7 +210,7 @@ namespace LuaAura
 #else
         aura->GetTarget()->RemoveSpellAuraHolder(aura->GetHolder(), AURA_REMOVE_BY_CANCEL);
 #endif
-        Eluna::CHECKOBJ<ElunaObject>(1)->Invalidate();
+        E->CHECKOBJ<ElunaObject>(1)->Invalidate();
         return 0;
     }
     

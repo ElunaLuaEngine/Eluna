@@ -1995,7 +1995,7 @@ namespace LuaGlobalFunctions
      */
     int Kick(Eluna* E)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(1);
+        Player* player = E->CHECKOBJ<Player>(1);
 #ifdef TRINITY
         player->GetSession()->KickPlayer("GlobalMethods::Kick Kick the player");
 #else

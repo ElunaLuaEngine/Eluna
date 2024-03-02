@@ -176,7 +176,7 @@ namespace LuaAura
     int Remove(Eluna* E, Aura* aura)
     {
         aura->GetTarget()->RemoveSpellAuraHolder(aura->GetHolder(), AURA_REMOVE_BY_CANCEL);
-        Eluna::CHECKOBJ<ElunaObject>(1)->Invalidate();
+        E->CHECKOBJ<ElunaObject>(1)->Invalidate();
         return 0;
     }
     

@@ -116,8 +116,8 @@ namespace LuaCreature
      */
     int CanAssistTo(Eluna* E, Creature* creature)
     {
-        Unit* u = Eluna::CHECKOBJ<Unit>(2);
-        Unit* enemy = Eluna::CHECKOBJ<Unit>(3);
+        Unit* u = E->CHECKOBJ<Unit>(2);
+        Unit* enemy = E->CHECKOBJ<Unit>(3);
         bool checkfaction = E->CHECKVAL<bool>(4, true);
 
         E->Push(creature->CanAssistTo(u, enemy, checkfaction));
@@ -144,7 +144,7 @@ namespace LuaCreature
      */
     int IsTappedBy(Eluna* E, Creature* creature)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(2);
+        Player* player = E->CHECKOBJ<Player>(2);
 
 #if defined(TRINITY) || defined(AZEROTHCORE)
         E->Push(creature->isTappedBy(player));
@@ -431,7 +431,7 @@ namespace LuaCreature
      */
     int CanStartAttack(Eluna* E, Creature* creature) // TODO: Implement core side
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
 #ifndef AZEROTHCORE
         bool force = E->CHECKVAL<bool>(3, true);
         E->Push(creature->CanStartAttack(target, force));
@@ -535,7 +535,7 @@ namespace LuaCreature
      */
     int GetAggroRange(Eluna* E, Creature* creature)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
 
 #if defined(TRINITY) || defined(AZEROTHCORE)
         E->Push(creature->GetAggroRange(target));
@@ -559,7 +559,7 @@ namespace LuaCreature
      */
     int GetAttackDistance(Eluna* E, Creature* creature)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
 
         E->Push(creature->GetAttackDistance(target));
         return 1;
@@ -1344,7 +1344,7 @@ namespace LuaCreature
      */
     int AttackStart(Eluna* E, Creature* creature)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
 
         creature->AI()->AttackStart(target);
         return 0;

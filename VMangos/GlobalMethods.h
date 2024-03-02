@@ -1704,7 +1704,7 @@ namespace LuaGlobalFunctions
      */
     int Kick(Eluna* E)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(1);
+        Player* player = E->CHECKOBJ<Player>(1);
         player->GetSession()->KickPlayer();
         return 0;
     }

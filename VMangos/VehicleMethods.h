@@ -22,7 +22,7 @@ namespace LuaVehicle
      */
     int IsOnBoard(lua_State* L, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit* passenger = E->CHECKOBJ<Unit>(L, 2);
 #if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, passenger->IsOnVehicle(vehicle->GetBase()));
 #else
@@ -78,7 +78,7 @@ namespace LuaVehicle
      */
     int AddPassenger(lua_State* L, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit* passenger = E->CHECKOBJ<Unit>(L, 2);
         int8 seatId = E->CHECKVAL<int8>(L, 3);
 #if defined TRINITY || AZEROTHCORE
         vehicle->AddPassenger(passenger, seatId);
@@ -96,7 +96,7 @@ namespace LuaVehicle
      */
     int RemovePassenger(lua_State* L, Vehicle* vehicle)
     {
-        Unit* passenger = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit* passenger = E->CHECKOBJ<Unit>(L, 2);
 #if defined TRINITY || AZEROTHCORE
         vehicle->RemovePassenger(passenger);
 #else

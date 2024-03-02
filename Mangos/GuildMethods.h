@@ -160,7 +160,7 @@ namespace LuaGuild
      */
     int SetLeader(Eluna* E, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(2);
+        Player* player = E->CHECKOBJ<Player>(2);
 
 #if defined TRINITY || AZEROTHCORE
         guild->HandleSetLeader(player->GetSession(), player->GetName());
@@ -199,7 +199,7 @@ namespace LuaGuild
      */
     int SendPacket(Eluna* E, Guild* guild)
     {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(2);
+        WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
 
 #ifdef CMANGOS
         guild->BroadcastPacket(*data);
@@ -218,7 +218,7 @@ namespace LuaGuild
      */
     int SendPacketToRanked(Eluna* E, Guild* guild)
     {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(2);
+        WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
         uint8 ranked = E->CHECKVAL<uint8>(3);
 
 #ifdef CMANGOS
@@ -248,7 +248,7 @@ namespace LuaGuild
      */
     int AddMember(Eluna* E, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(2);
+        Player* player = E->CHECKOBJ<Player>(2);
         uint8 rankId = E->CHECKVAL<uint8>(3, GUILD_RANK_NONE);
 
 #ifdef TRINITY
@@ -268,7 +268,7 @@ namespace LuaGuild
      */
     int DeleteMember(Eluna* E, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(2);
+        Player* player = E->CHECKOBJ<Player>(2);
         bool isDisbanding = E->CHECKVAL<bool>(3, false);
 
 #if defined TRINITY
@@ -290,7 +290,7 @@ namespace LuaGuild
      */
     int SetMemberRank(Eluna* E, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(2);
+        Player* player = E->CHECKOBJ<Player>(2);
         uint8 newRank = E->CHECKVAL<uint8>(3);
 
 #ifdef TRINITY

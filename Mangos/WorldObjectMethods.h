@@ -501,7 +501,7 @@ namespace LuaWorldObject
      */
     int GetDistance(Eluna* E, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2, false);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2, false);
         if (target)
             E->Push(obj->GetDistance(target));
         else
@@ -533,7 +533,7 @@ namespace LuaWorldObject
     {
         float x, y, z;
         obj->GetPosition(x, y, z);
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2, false);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2, false);
         if (target)
         {
             float x2, y2, z2;
@@ -569,7 +569,7 @@ namespace LuaWorldObject
      */
     int GetDistance2d(Eluna* E, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2, false);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2, false);
         if (target)
             E->Push(obj->GetDistance2d(target));
         else
@@ -599,7 +599,7 @@ namespace LuaWorldObject
     {
         float x, y, z;
         obj->GetPosition(x, y, z);
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2, false);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2, false);
         if (target)
         {
             float x2, y2, z2;
@@ -657,7 +657,7 @@ namespace LuaWorldObject
      */
     int GetAngle(Eluna* E, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2, false);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2, false);
 #if defined TRINITY && !AZEROTHCORE
         if (target)
             E->Push(obj->GetAbsoluteAngle(target));
@@ -687,7 +687,7 @@ namespace LuaWorldObject
      */
     int SendPacket(Eluna* E, WorldObject* obj)
     {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(2);
+        WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
 #ifdef CMANGOS
         obj->SendMessageToSet(*data, true);
 #else
@@ -931,7 +931,7 @@ namespace LuaWorldObject
      */
     int IsWithinLoS(Eluna* E, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2, false);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2, false);
 
         if (target)
             E->Push(obj->IsWithinLOSInMap(target));
@@ -954,7 +954,7 @@ namespace LuaWorldObject
      */
     int IsInMap(Eluna* E, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2, true);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2, true);
         E->Push(obj->IsInMap(target));
         return 1;
     }
@@ -1012,7 +1012,7 @@ namespace LuaWorldObject
      */
     int IsWithinDist(Eluna* E, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2, true);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2, true);
         float distance = E->CHECKVAL<float>(3);
         bool is3D = E->CHECKVAL<bool>(4, true);
         E->Push(obj->IsWithinDist(target, distance, is3D));
@@ -1031,7 +1031,7 @@ namespace LuaWorldObject
      */
     int IsWithinDistInMap(Eluna* E, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2);
         float distance = E->CHECKVAL<float>(3);
         bool is3D = E->CHECKVAL<bool>(4, true);
 
@@ -1052,7 +1052,7 @@ namespace LuaWorldObject
      */
     int IsInRange(Eluna* E, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2);
         float minrange = E->CHECKVAL<float>(3);
         float maxrange = E->CHECKVAL<float>(4);
         bool is3D = E->CHECKVAL<bool>(5, true);
@@ -1116,7 +1116,7 @@ namespace LuaWorldObject
      */
     int IsInFront(Eluna* E, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2);
         float arc = E->CHECKVAL<float>(3, static_cast<float>(M_PI));
 
 #ifdef MANGOS
@@ -1136,7 +1136,7 @@ namespace LuaWorldObject
      */
     int IsInBack(Eluna* E, WorldObject* obj)
     {
-        WorldObject* target = Eluna::CHECKOBJ<WorldObject>(2);
+        WorldObject* target = E->CHECKOBJ<WorldObject>(2);
         float arc = E->CHECKVAL<float>(3, static_cast<float>(M_PI));
 
 #ifdef MANGOS
@@ -1161,7 +1161,7 @@ namespace LuaWorldObject
     int PlayMusic(Eluna* E, WorldObject* obj)
     {
         uint32 musicid = E->CHECKVAL<uint32>(2);
-        Player* player = Eluna::CHECKOBJ<Player>(3, false);
+        Player* player = E->CHECKOBJ<Player>(3, false);
 
         WorldPacket data(SMSG_PLAY_MUSIC, 4);
         data << uint32(musicid);
@@ -1193,7 +1193,7 @@ namespace LuaWorldObject
     int PlayDirectSound(Eluna* E, WorldObject* obj)
     {
         uint32 soundId = E->CHECKVAL<uint32>(2);
-        Player* player = Eluna::CHECKOBJ<Player>(3, false);
+        Player* player = E->CHECKOBJ<Player>(3, false);
         if (!sSoundEntriesStore.LookupEntry(soundId))
             return 0;
 
@@ -1223,7 +1223,7 @@ namespace LuaWorldObject
     int PlayDistanceSound(Eluna* E, WorldObject* obj)
     {
         uint32 soundId = E->CHECKVAL<uint32>(2);
-        Player* player = Eluna::CHECKOBJ<Player>(3, false);
+        Player* player = E->CHECKOBJ<Player>(3, false);
         if (!sSoundEntriesStore.LookupEntry(soundId))
             return 0;
 

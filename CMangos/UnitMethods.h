@@ -75,7 +75,7 @@ namespace LuaUnit
      */
     int Attack(Eluna* E, Unit* unit)
     {
-        Unit* who = Eluna::CHECKOBJ<Unit>(2);
+        Unit* who = E->CHECKOBJ<Unit>(2);
         bool meleeAttack = E->CHECKVAL<bool>(3, false);
 
         E->Push(unit->Attack(who, meleeAttack));
@@ -146,7 +146,7 @@ namespace LuaUnit
      */
     int IsInAccessiblePlaceFor(Eluna* E, Unit* unit)
     {
-        Creature* creature = Eluna::CHECKOBJ<Creature>(2);
+        Creature* creature = E->CHECKOBJ<Creature>(2);
 
         E->Push(unit->isInAccessablePlaceFor(creature));
         return 1;
@@ -1538,7 +1538,7 @@ namespace LuaUnit
      */
     int SetFacingToObject(Eluna* E, Unit* unit)
     {
-        WorldObject* obj = Eluna::CHECKOBJ<WorldObject>(2);
+        WorldObject* obj = E->CHECKOBJ<WorldObject>(2);
         unit->SetFacingToObject(obj);
         return 0;
     }
@@ -1600,7 +1600,7 @@ namespace LuaUnit
      */
     int SetInCombatWith(Eluna* E, Unit* unit)
     {
-        Unit* enemy = Eluna::CHECKOBJ<Unit>(2);
+        Unit* enemy = E->CHECKOBJ<Unit>(2);
         unit->SetInCombatWith(enemy);
         return 0;
     }
@@ -1771,7 +1771,7 @@ namespace LuaUnit
         uint8 type = E->CHECKVAL<uint8>(2);
         uint32 lang = E->CHECKVAL<uint32>(3);
         std::string msg = E->CHECKVAL<std::string>(4);
-        Player* target = Eluna::CHECKOBJ<Player>(5);
+        Player* target = E->CHECKOBJ<Player>(5);
 
         if (type >= MAX_CHAT_MSG_TYPE)
             return luaL_argerror(E->L, 2, "valid ChatMsg expected");
@@ -1860,7 +1860,7 @@ namespace LuaUnit
      */
     int MoveFollow(Eluna* E, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
         float dist = E->CHECKVAL<float>(3, 0.0f);
         float angle = E->CHECKVAL<float>(4, 0.0f);
         unit->GetMotionMaster()->MoveFollow(target, dist, angle);
@@ -1876,7 +1876,7 @@ namespace LuaUnit
      */
     int MoveChase(Eluna* E, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
         float dist = E->CHECKVAL<float>(3, 0.0f);
         float angle = E->CHECKVAL<float>(4, 0.0f);
         unit->GetMotionMaster()->MoveChase(target, dist, angle);
@@ -1900,7 +1900,7 @@ namespace LuaUnit
      */
     int MoveFleeing(Eluna* E, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
         uint32 time = E->CHECKVAL<uint32>(3, 0);
         unit->GetMotionMaster()->MoveFleeing(target, time);
         return 0;
@@ -1973,7 +1973,7 @@ namespace LuaUnit
         const char* msg = E->CHECKVAL<const char*>(2);
         uint32 lang = E->CHECKVAL<uint32>(3);
         (void)lang; // ensure that the variable is referenced in order to pass compiler checks
-        Player* receiver = Eluna::CHECKOBJ<Player>(4);
+        Player* receiver = E->CHECKOBJ<Player>(4);
         bool bossWhisper = E->CHECKVAL<bool>(5, false);
         if (std::string(msg).length() > 0)
             unit->MonsterWhisper(msg, receiver, bossWhisper);
@@ -1990,7 +1990,7 @@ namespace LuaUnit
     int SendUnitEmote(Eluna* E, Unit* unit)
     {
         const char* msg = E->CHECKVAL<const char*>(2);
-        Unit* receiver = Eluna::CHECKOBJ<Unit>(3, false);
+        Unit* receiver = E->CHECKOBJ<Unit>(3, false);
         bool bossEmote = E->CHECKVAL<bool>(4, false);
         if (std::string(msg).length() > 0)
             unit->MonsterTextEmote(msg, receiver, bossEmote);
@@ -2045,7 +2045,7 @@ namespace LuaUnit
      */
     int CastSpell(Eluna* E, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2, false);
+        Unit* target = E->CHECKOBJ<Unit>(2, false);
         uint32 spell = E->CHECKVAL<uint32>(3);
         bool triggered = E->CHECKVAL<bool>(4, false);
         SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
@@ -2071,7 +2071,7 @@ namespace LuaUnit
      */
     int CastCustomSpell(Eluna* E, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2, false);
+        Unit* target = E->CHECKOBJ<Unit>(2, false);
         uint32 spell = E->CHECKVAL<uint32>(3);
         bool triggered = E->CHECKVAL<bool>(4, false);
         bool has_bp0 = !lua_isnoneornil(E->L, 5);
@@ -2080,7 +2080,7 @@ namespace LuaUnit
         int32 bp1 = E->CHECKVAL<int32>(6, 0);
         bool has_bp2 = !lua_isnoneornil(E->L, 7);
         int32 bp2 = E->CHECKVAL<int32>(7, 0);
-        Item* castItem = Eluna::CHECKOBJ<Item>(8, false);
+        Item* castItem = E->CHECKOBJ<Item>(8, false);
         ObjectGuid originalCaster = E->CHECKVAL<ObjectGuid>(9, ObjectGuid());
 
         unit->CastCustomSpell(target, spell, has_bp0 ? &bp0 : NULL, has_bp1 ? &bp1 : NULL, has_bp2 ? &bp2 : NULL, triggered, castItem, NULL, ObjectGuid(originalCaster));
@@ -2173,7 +2173,7 @@ namespace LuaUnit
     int AddAura(Eluna* E, Unit* unit)
     {
         uint32 spell = E->CHECKVAL<uint32>(2);
-        Unit* target = Eluna::CHECKOBJ<Unit>(3);
+        Unit* target = E->CHECKOBJ<Unit>(3);
 
         SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
         if (!spellEntry)
@@ -2320,7 +2320,7 @@ namespace LuaUnit
      */
     int DealDamage(Eluna* E, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
         uint32 damage = E->CHECKVAL<uint32>(3);
         bool durabilityloss = E->CHECKVAL<bool>(4, true);
         uint32 school = E->CHECKVAL<uint32>(5, MAX_SPELL_SCHOOL);
@@ -2472,7 +2472,7 @@ namespace LuaUnit
      */
     int DealHeal(Eluna* E, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
         uint32 spell = E->CHECKVAL<uint32>(3);
         uint32 amount = E->CHECKVAL<uint32>(4);
         bool critical = E->CHECKVAL<bool>(5, false);
@@ -2491,7 +2491,7 @@ namespace LuaUnit
      */
     int Kill(Eluna* E, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
         bool durLoss = E->CHECKVAL<bool>(3, true);
 
 #if !defined(CATA)

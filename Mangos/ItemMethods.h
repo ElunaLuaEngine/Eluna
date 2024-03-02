@@ -55,7 +55,7 @@ namespace LuaItem
      */
     int IsNotBoundToPlayer(Eluna* E, Item* item)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(2);
+        Player* player = E->CHECKOBJ<Player>(2);
 
         E->Push(item->IsBindedNotWith(player));
         return 1;
@@ -649,7 +649,7 @@ namespace LuaItem
      */
     int SetOwner(Eluna* E, Item* item)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(2);
+        Player* player = E->CHECKOBJ<Player>(2);
 #if defined TRINITY || AZEROTHCORE
         item->SetOwnerGUID(player->GET_GUID());
 #else

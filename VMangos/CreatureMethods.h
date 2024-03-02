@@ -79,8 +79,8 @@ namespace LuaCreature
      */
     int CanAssistTo(Eluna* E, Creature* creature)
     {
-        Unit* u = Eluna::CHECKOBJ<Unit>(2);
-        Unit* enemy = Eluna::CHECKOBJ<Unit>(3);
+        Unit* u = E->CHECKOBJ<Unit>(2);
+        Unit* enemy = E->CHECKOBJ<Unit>(3);
         bool checkfaction = E->CHECKVAL<bool>(4, true);
 
         E->Push(creature->CanAssistTo(u, enemy, checkfaction));
@@ -107,7 +107,7 @@ namespace LuaCreature
      */
     int IsTappedBy(Eluna* E, Creature* creature)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(2);
+        Player* player = E->CHECKOBJ<Player>(2);
 
         E->Push(creature->IsTappedBy(player));
         return 1;
@@ -365,7 +365,7 @@ namespace LuaCreature
      */
     int GetAggroRange(Eluna* E, Creature* creature)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
 
         float AttackDist = creature->GetAttackDistance(target);
         float ThreatRadius = sWorld.getConfig(CONFIG_FLOAT_THREAT_RADIUS);
@@ -384,7 +384,7 @@ namespace LuaCreature
      */
     int GetAttackDistance(Eluna* E, Creature* creature)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
 
         E->Push(creature->GetAttackDistance(target));
         return 1;
@@ -1003,7 +1003,7 @@ namespace LuaCreature
      */
     int AttackStart(Eluna* E, Creature* creature)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
 
         creature->AI()->AttackStart(target);
         return 0;
