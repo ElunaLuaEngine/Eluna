@@ -302,7 +302,7 @@ namespace LuaMap
 #endif
 
         if (iAI)
-            E->PushInstanceData(E->L, iAI, false);
+            E->PushInstanceData(iAI, false);
         else
             E->Push(E->L); // nil
 

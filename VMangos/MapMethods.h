@@ -238,7 +238,7 @@ namespace LuaMap
         ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData());
 
         if (iAI)
-            Eluna::GetEluna(E->L)->PushInstanceData(E->L, iAI, false);
+            E->PushInstanceData(iAI, false);
         else
             E->Push(); // nil
 
