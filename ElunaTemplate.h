@@ -34,9 +34,8 @@ public:
 
     static int thunk(lua_State* L)
     {
-        Eluna* E = Eluna::GetEluna(L);
-
         ElunaRegister* l = static_cast<ElunaRegister*>(lua_touserdata(L, lua_upvalueindex(1)));
+        Eluna* E = static_cast<Eluna*>(lua_touserdata(L, lua_upvalueindex(2)));
         int top = lua_gettop(L);
         int expected = l->func(E);
         int args = lua_gettop(L) - top;
@@ -402,13 +401,13 @@ public:
 
     static int thunk(lua_State* L)
     {
-        Eluna* E = Eluna::GetEluna(L);
+        ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
+        Eluna* E = static_cast<Eluna*>(lua_touserdata(L, lua_upvalueindex(2)));
 
         T* obj = E->CHECKOBJ<T>(1); // get self
         if (!obj)
             return 0;
 
-        ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
         int top = lua_gettop(L);
         int expected = l->mfunc(E, obj);
         int args = lua_gettop(L) - top;
