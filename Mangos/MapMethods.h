@@ -304,7 +304,7 @@ namespace LuaMap
         if (iAI)
             E->PushInstanceData(iAI, false);
         else
-            E->Push(E->L); // nil
+            E->Push(); // nil
 
         return 1;
     }

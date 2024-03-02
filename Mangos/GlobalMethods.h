@@ -1271,13 +1271,13 @@ namespace LuaGlobalFunctions
         if (result)
             E->Push(new ElunaQuery(result));
         else
-            E->Push(E->L);
+            E->Push();
 #else
         ElunaQuery* result = WorldDatabase.QueryNamed(query);
         if (result)
             E->Push(result);
         else
-            E->Push(E->L);
+            E->Push();
 #endif
         return 1;
     }
@@ -1322,13 +1322,13 @@ namespace LuaGlobalFunctions
         if (result)
             E->Push(new QueryResult(result));
         else
-            E->Push(E->L);
+            E->Push();
 #else
         QueryNamedResult* result = CharacterDatabase.QueryNamed(query);
         if (result)
             E->Push(result);
         else
-            E->Push(E->L);
+            E->Push();
 #endif
         return 1;
     }
@@ -1373,13 +1373,13 @@ namespace LuaGlobalFunctions
         if (result)
             E->Push(new QueryResult(result));
         else
-            E->Push(E->L);
+            E->Push();
 #else
         QueryNamedResult* result = LoginDatabase.QueryNamed(query);
         if (result)
             E->Push(result);
         else
-            E->Push(E->L);
+            E->Push();
 #endif
         return 1;
     }
@@ -1521,7 +1521,7 @@ namespace LuaGlobalFunctions
         uint32 phase = E->CHECKVAL<uint32>(11, PHASEMASK_NORMAL);
         if (!phase)
         {
-            E->Push(E->L);
+            E->Push();
             return 1;
         }
 #endif
@@ -1530,7 +1530,7 @@ namespace LuaGlobalFunctions
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
         {
-            E->Push(E->L);
+            E->Push();
             return 1;
         }
 
@@ -1541,7 +1541,7 @@ namespace LuaGlobalFunctions
                 CreatureInfo const* cinfo = ObjectMgr::GetCreatureTemplate(entry);
                 if (!cinfo)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1555,7 +1555,7 @@ namespace LuaGlobalFunctions
                 uint32 lowguid = eObjectMgr->GenerateStaticCreatureLowGuid();
                 if (!lowguid)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 #ifdef CMANGOS
@@ -1565,7 +1565,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete pCreature;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1598,7 +1598,7 @@ namespace LuaGlobalFunctions
                 CreatureInfo const* cinfo = ObjectMgr::GetCreatureTemplate(entry);
                 if (!cinfo)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1620,7 +1620,7 @@ namespace LuaGlobalFunctions
                 {
                     delete pCreature;
                     {
-                        E->Push(E->L);
+                        E->Push();
                         return 1;
                     }
                 }
@@ -1650,7 +1650,7 @@ namespace LuaGlobalFunctions
                 const GameObjectInfo* gInfo = ObjectMgr::GetGameObjectInfo(entry);
                 if (!gInfo)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1658,7 +1658,7 @@ namespace LuaGlobalFunctions
                 uint32 db_lowGUID = eObjectMgr->GenerateStaticGameObjectLowGuid();
                 if (!db_lowGUID)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1674,7 +1674,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete pGameObj;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1698,7 +1698,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete pGameObj;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1726,7 +1726,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete pGameObj;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1743,7 +1743,7 @@ namespace LuaGlobalFunctions
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
         {
-            E->Push(E->L);
+            E->Push();
             return 1;
         }
 
@@ -1761,7 +1761,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete creature;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1781,7 +1781,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete creature;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1793,7 +1793,7 @@ namespace LuaGlobalFunctions
                 TempSummon* creature = map->SummonCreature(entry, pos, NULL, durorresptime);
                 if (!creature)
                 {
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 
@@ -1813,13 +1813,13 @@ namespace LuaGlobalFunctions
             const GameObjectTemplate* objectInfo = eObjectMgr->GetGameObjectTemplate(entry);
             if (!objectInfo)
             {
-                E->Push(E->L);
+                E->Push();
                 return 1;
             }
 
             if (objectInfo->displayId && !sGameObjectDisplayInfoStore.LookupEntry(objectInfo->displayId))
             {
-                E->Push(E->L);
+                E->Push();
                 return 1;
             }
 
@@ -1834,7 +1834,7 @@ namespace LuaGlobalFunctions
 #endif
             {
                 delete object;
-                E->Push(E->L);
+                E->Push();
                 return 1;
             }
 
@@ -1860,7 +1860,7 @@ namespace LuaGlobalFunctions
 #endif
                 {
                     delete object;
-                    E->Push(E->L);
+                    E->Push();
                     return 1;
                 }
 #ifndef AZEROTHCORE
@@ -1875,7 +1875,7 @@ namespace LuaGlobalFunctions
             return 1;
         }
 #endif
-        E->Push(E->L);
+        E->Push();
         return 1;
     }
 
@@ -2345,13 +2345,13 @@ namespace LuaGlobalFunctions
         int start = lua_gettop(E->L);
         int end = start;
 
-        E->Push(E->L);
+        E->Push();
         // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, nil
         while (lua_next(E->L, -2) != 0)
         {
             // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, key, value
             luaL_checktype(E->L, -1, LUA_TTABLE);
-            E->Push(E->L);
+            E->Push();
             // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, key, value, nil
             while (lua_next(E->L, -2) != 0)
             {

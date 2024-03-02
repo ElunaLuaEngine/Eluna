@@ -495,7 +495,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(E->L, 3);
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
-            return Eluna::GetEluna(E->L)->Register(E->L, regtype, id, ObjectGuid(), 0, ev, functionRef, shots);
+            return E->Register(regtype, id, ObjectGuid(), 0, ev, functionRef, shots);
         else
             luaL_argerror(E->L, 3, "unable to make a ref to function");
         return 0;
@@ -510,7 +510,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(E->L, 2);
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
-            return Eluna::GetEluna(E->L)->Register(E->L, regtype, 0, ObjectGuid(), 0, ev, functionRef, shots);
+            return E->Register(regtype, 0, ObjectGuid(), 0, ev, functionRef, shots);
         else
             luaL_argerror(E->L, 2, "unable to make a ref to function");
         return 0;
@@ -527,7 +527,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(E->L, 4);
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
-            return Eluna::GetEluna(E->L)->Register(E->L, regtype, 0, guid, instanceId, ev, functionRef, shots);
+            return E->Register(regtype, 0, guid, instanceId, ev, functionRef, shots);
         else
             luaL_argerror(E->L, 4, "unable to make a ref to function");
         return 0;
@@ -1231,7 +1231,7 @@ namespace LuaGlobalFunctions
         if (result)
             E->Push(result);
         else
-            E->Push(E->L);
+            E->Push();
         return 1;
     }
 
