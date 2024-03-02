@@ -33,7 +33,7 @@ namespace LuaBattleGround
      */
     int GetAlivePlayersCountByTeam(Eluna* E, BattleGround* bg)
     {
-        uint32 team = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 team = E->CHECKVAL<uint32>(2);
 
         E->Push(bg->GetAlivePlayersCountByTeam((Team)team));
         return 1;
@@ -58,7 +58,7 @@ namespace LuaBattleGround
      */
     int GetBonusHonorFromKillCount(Eluna* E, BattleGround* bg)
     {
-        uint32 kills = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 kills = E->CHECKVAL<uint32>(2);
 
         E->Push(bg->GetBonusHonorFromKill(kills));
         return 1;
@@ -98,7 +98,7 @@ namespace LuaBattleGround
      */
     int GetFreeSlotsForTeam(Eluna* E, BattleGround* bg)
     {
-        uint32 team = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 team = E->CHECKVAL<uint32>(2);
 
         E->Push(bg->GetFreeSlotsForTeam((Team)team));
         return 1;

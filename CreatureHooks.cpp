@@ -124,7 +124,7 @@ bool Eluna::DamageTaken(Creature* me, Unit* attacker, uint32& damage)
 
         if (lua_isnumber(L, r + 1))
         {
-            damage = Eluna::CHECKVAL<uint32>(L, r + 1);
+            damage = CHECKVAL<uint32>(r + 1);
             // Update the stack for subsequent calls.
             ReplaceArgument(damage, damageIndex);
         }
@@ -247,7 +247,7 @@ bool Eluna::CorpseRemoved(Creature* me, uint32& respawnDelay)
 
         if (lua_isnumber(L, r + 1))
         {
-            respawnDelay = Eluna::CHECKVAL<uint32>(L, r + 1);
+            respawnDelay = CHECKVAL<uint32>(r + 1);
             // Update the stack for subsequent calls.
             ReplaceArgument(respawnDelay, respawnDelayIndex);
         }

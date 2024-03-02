@@ -99,7 +99,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
             result = false;
 
         if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
+            if (WorldPacket* data = CHECKOBJ<WorldPacket>(r + 1, false))
             {
 #ifdef VMANGOS
                 packet = std::move(*data);
@@ -129,7 +129,7 @@ void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result
             result = false;
 
         if (lua_isuserdata(L, r + 1))
-            if (WorldPacket* data = CHECKOBJ<WorldPacket>(L, r + 1, false))
+            if (WorldPacket* data = CHECKOBJ<WorldPacket>(r + 1, false))
             {
 #ifdef VMANGOS
                 packet = std::move(*data);

@@ -124,7 +124,7 @@ const char* ElunaInstanceAI::Save() const
     ElunaInstanceAI* self = const_cast<ElunaInstanceAI*>(this);
 
     lua_pushcfunction(L, mar_encode);
-    instance->GetEluna()->PushInstanceData(L, self, false);
+    instance->GetEluna()->PushInstanceData(self, false);
     // Stack: mar_encode, instance_data
 
     if (lua_pcall(L, 1, 1, 0) != 0)
@@ -152,7 +152,7 @@ uint32 ElunaInstanceAI::GetData(uint32 key) const
     lua_State* L = E->L;
     // Stack: (empty)
 
-    E->PushInstanceData(L, const_cast<ElunaInstanceAI*>(this), false);
+    E->PushInstanceData(const_cast<ElunaInstanceAI*>(this), false);
     // Stack: instance_data
 
     E->Push(key);
@@ -161,7 +161,7 @@ uint32 ElunaInstanceAI::GetData(uint32 key) const
     lua_gettable(L, -2);
     // Stack: instance_data, value
 
-    uint32 value = Eluna::CHECKVAL<uint32>(L, -1, 0);
+    uint32 value = E->CHECKVAL<uint32>(-1, 0);
     lua_pop(L, 2);
     // Stack: (empty)
 
@@ -174,7 +174,7 @@ void ElunaInstanceAI::SetData(uint32 key, uint32 value)
     lua_State* L = E->L;
     // Stack: (empty)
 
-    E->PushInstanceData(L, this, false);
+    E->PushInstanceData(this, false);
     // Stack: instance_data
 
     E->Push(key);
@@ -194,7 +194,7 @@ uint64 ElunaInstanceAI::GetData64(uint32 key) const
     lua_State* L = E->L;
     // Stack: (empty)
 
-    E->PushInstanceData(L, const_cast<ElunaInstanceAI*>(this), false);
+    E->PushInstanceData(const_cast<ElunaInstanceAI*>(this), false);
     // Stack: instance_data
 
     E->Push(key);
@@ -203,7 +203,7 @@ uint64 ElunaInstanceAI::GetData64(uint32 key) const
     lua_gettable(L, -2);
     // Stack: instance_data, value
 
-    uint64 value = Eluna::CHECKVAL<uint64>(L, -1, 0);
+    uint64 value = E->CHECKVAL<uint64>(-1, 0);
     lua_pop(L, 2);
     // Stack: (empty)
 
@@ -216,7 +216,7 @@ void ElunaInstanceAI::SetData64(uint32 key, uint64 value)
     lua_State* L = E->L;
     // Stack: (empty)
 
-    E->PushInstanceData(L, this, false);
+    E->PushInstanceData(this, false);
     // Stack: instance_data
 
     E->Push(key);
