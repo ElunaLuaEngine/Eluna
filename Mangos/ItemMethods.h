@@ -55,7 +55,7 @@ namespace LuaItem
      */
     int IsNotBoundToPlayer(Eluna* E, Item* item)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* player = E->CHECKOBJ<Player>(2);
 
         E->Push(item->IsBindedNotWith(player));
         return 1;
@@ -128,7 +128,7 @@ namespace LuaItem
 #if (defined(TBC) || defined(CLASSIC))
         E->Push(item->CanBeTraded());
 #else
-        bool mail = Eluna::CHECKVAL<bool>(E->L, 2, false);
+        bool mail = E->CHECKVAL<bool>(2, false);
         E->Push(item->CanBeTraded(mail));
 #endif
         return 1;
@@ -175,7 +175,7 @@ namespace LuaItem
      */
     int HasQuest(Eluna* E, Item* item)
     {
-        uint32 quest = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 quest = E->CHECKVAL<uint32>(2);
 #if defined TRINITY || AZEROTHCORE
         E->Push(item->hasQuest(quest));
 #else
@@ -259,7 +259,7 @@ namespace LuaItem
      */
     int GetItemLink(Eluna* E, Item* item)
     {
-        uint8 locale = Eluna::CHECKVAL<uint8>(E->L, 2, DEFAULT_LOCALE);
+        uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -406,7 +406,7 @@ namespace LuaItem
      */
     int GetEnchantmentId(Eluna* E, Item* item)
     {
-        uint32 enchant_slot = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 enchant_slot = E->CHECKVAL<uint32>(2);
 
         if (enchant_slot >= MAX_INSPECTED_ENCHANTMENT_SLOT)
             return luaL_argerror(E->L, 2, "valid EnchantmentSlot expected");
@@ -423,7 +423,7 @@ namespace LuaItem
      */
     int GetSpellId(Eluna* E, Item* item)
     {
-        uint32 index = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 index = E->CHECKVAL<uint32>(2);
         if (index >= MAX_ITEM_PROTO_SPELLS)
             return luaL_argerror(E->L, 2, "valid SpellIndex expected");
 
@@ -439,7 +439,7 @@ namespace LuaItem
      */
     int GetSpellTrigger(Eluna* E, Item* item)
     {
-        uint32 index = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 index = E->CHECKVAL<uint32>(2);
         if (index >= MAX_ITEM_PROTO_SPELLS)
             return luaL_argerror(E->L, 2, "valid SpellIndex expected");
 
@@ -649,7 +649,7 @@ namespace LuaItem
      */
     int SetOwner(Eluna* E, Item* item)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* player = E->CHECKOBJ<Player>(2);
 #if defined TRINITY || AZEROTHCORE
         item->SetOwnerGUID(player->GET_GUID());
 #else
@@ -665,7 +665,7 @@ namespace LuaItem
      */
     int SetBinding(Eluna* E, Item* item)
     {
-        bool soulbound = Eluna::CHECKVAL<bool>(E->L, 2);
+        bool soulbound = E->CHECKVAL<bool>(2);
 
         item->SetBinding(soulbound);
         item->SetState(ITEM_CHANGED, item->GetOwner());
@@ -680,7 +680,7 @@ namespace LuaItem
      */
     int SetCount(Eluna* E, Item* item)
     {
-        uint32 count = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 count = E->CHECKVAL<uint32>(2);
         item->SetCount(count);
         return 0;
     }
@@ -701,14 +701,14 @@ namespace LuaItem
             return 1;
         }
 
-        uint32 enchant = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 enchant = E->CHECKVAL<uint32>(2);
         if (!sSpellItemEnchantmentStore.LookupEntry(enchant))
         {
             E->Push(false);
             return 1;
         }
 
-        EnchantmentSlot slot = (EnchantmentSlot)Eluna::CHECKVAL<uint32>(E->L, 3);
+        EnchantmentSlot slot = (EnchantmentSlot)E->CHECKVAL<uint32>(3);
         if (slot >= MAX_INSPECTED_ENCHANTMENT_SLOT)
             return luaL_argerror(E->L, 2, "valid EnchantmentSlot expected");
 
@@ -735,7 +735,7 @@ namespace LuaItem
             return 1;
         }
 
-        EnchantmentSlot slot = (EnchantmentSlot)Eluna::CHECKVAL<uint32>(E->L, 2);
+        EnchantmentSlot slot = (EnchantmentSlot)E->CHECKVAL<uint32>(2);
         if (slot >= MAX_INSPECTED_ENCHANTMENT_SLOT)
             return luaL_argerror(E->L, 2, "valid EnchantmentSlot expected");
 

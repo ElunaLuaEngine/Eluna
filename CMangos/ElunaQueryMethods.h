@@ -20,7 +20,7 @@ namespace LuaQuery
 {
     static void CheckFields(Eluna* E, ElunaQuery* result)
     {
-        uint32 field = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 field = E->CHECKVAL<uint32>(2);
         uint32 count = RESULT->GetFieldCount();
         if (field >= count)
         {
@@ -38,7 +38,7 @@ namespace LuaQuery
      */
     int IsNull(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
 
         E->Push(RESULT->Fetch()[col].IsNULL());
@@ -78,7 +78,7 @@ namespace LuaQuery
      */
     int GetBool(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
         E->Push(RESULT->Fetch()[col].GetBool());
         return 1;
@@ -92,7 +92,7 @@ namespace LuaQuery
      */
     int GetUInt8(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
         E->Push(RESULT->Fetch()[col].GetUInt8());
         return 1;
@@ -106,7 +106,7 @@ namespace LuaQuery
      */
     int GetUInt16(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
         E->Push(RESULT->Fetch()[col].GetUInt16());
         return 1;
@@ -120,7 +120,7 @@ namespace LuaQuery
      */
     int GetUInt32(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
         E->Push(RESULT->Fetch()[col].GetUInt32());
         return 1;
@@ -134,7 +134,7 @@ namespace LuaQuery
      */
     int GetUInt64(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
         E->Push(RESULT->Fetch()[col].GetUInt64());
         return 1;
@@ -148,7 +148,7 @@ namespace LuaQuery
      */
     int GetInt8(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
         E->Push(RESULT->Fetch()[col].GetInt8());
         return 1;
@@ -162,7 +162,7 @@ namespace LuaQuery
      */
     int GetInt16(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
         E->Push(RESULT->Fetch()[col].GetInt16());
         return 1;
@@ -176,7 +176,7 @@ namespace LuaQuery
      */
     int GetInt32(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
         E->Push(RESULT->Fetch()[col].GetInt32());
         return 1;
@@ -190,7 +190,7 @@ namespace LuaQuery
      */
     int GetInt64(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
         E->Push(RESULT->Fetch()[col].GetInt64());
         return 1;
@@ -204,7 +204,7 @@ namespace LuaQuery
      */
     int GetFloat(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
         E->Push(RESULT->Fetch()[col].GetFloat());
         return 1;
@@ -218,7 +218,7 @@ namespace LuaQuery
      */
     int GetDouble(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
         E->Push(RESULT->Fetch()[col].GetDouble());
         return 1;
@@ -232,7 +232,7 @@ namespace LuaQuery
      */
     int GetString(Eluna* E, ElunaQuery* result)
     {
-        uint32 col = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
 
         E->Push(RESULT->Fetch()[col].GetString());

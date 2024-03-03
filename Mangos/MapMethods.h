@@ -113,12 +113,12 @@ namespace LuaMap
      */
     int GetHeight(Eluna* E, Map* map)
     {
-        float x = Eluna::CHECKVAL<float>(E->L, 2);
-        float y = Eluna::CHECKVAL<float>(E->L, 3);
+        float x = E->CHECKVAL<float>(2);
+        float y = E->CHECKVAL<float>(3);
 #if (defined(TBC) || defined(CLASSIC))
         float z = map->GetHeight(x, y, MAX_HEIGHT);
 #else
-        uint32 phasemask = Eluna::CHECKVAL<uint32>(E->L, 4, 1);
+        uint32 phasemask = E->CHECKVAL<uint32>(4, 1);
         float z = map->GetHeight(phasemask, x, y, MAX_HEIGHT);
 #endif
         if (z != INVALID_HEIGHT)
@@ -187,11 +187,11 @@ namespace LuaMap
      */
     int GetAreaId(Eluna* E, Map* map)
     {
-        float x = Eluna::CHECKVAL<float>(E->L, 2);
-        float y = Eluna::CHECKVAL<float>(E->L, 3);
-        float z = Eluna::CHECKVAL<float>(E->L, 4);
+        float x = E->CHECKVAL<float>(2);
+        float y = E->CHECKVAL<float>(3);
+        float z = E->CHECKVAL<float>(4);
 #if defined TRINITY || defined AZEROTHCORE
-        float phasemask = Eluna::CHECKVAL<uint32>(E->L, 5, PHASEMASK_NORMAL);
+        float phasemask = E->CHECKVAL<uint32>(5, PHASEMASK_NORMAL);
 
         E->Push(map->GetAreaId(phasemask, x, y, z));
 #else
@@ -208,7 +208,7 @@ namespace LuaMap
      */
     int GetWorldObject(Eluna* E, Map* map)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(E->L, 2);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
 
 #if defined TRINITY || AZEROTHCORE
         switch (guid.GetHigh())
@@ -263,9 +263,9 @@ namespace LuaMap
     int SetWeather(Eluna* E, Map* map)
     {
         (void)map; // ensure that the variable is referenced in order to pass compiler checks
-        uint32 zoneId = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 weatherType = Eluna::CHECKVAL<uint32>(E->L, 3);
-        float grade = Eluna::CHECKVAL<float>(E->L, 4);
+        uint32 zoneId = E->CHECKVAL<uint32>(2);
+        uint32 weatherType = E->CHECKVAL<uint32>(3);
+        float grade = E->CHECKVAL<float>(4);
 
 #if defined TRINITY
         if (Weather * weather = map->GetOrGenerateZoneDefaultWeather(zoneId))
@@ -302,9 +302,9 @@ namespace LuaMap
 #endif
 
         if (iAI)
-            E->PushInstanceData(E->L, iAI, false);
+            E->PushInstanceData(iAI, false);
         else
-            E->Push(E->L); // nil
+            E->Push(); // nil
 
         return 1;
     }
@@ -343,7 +343,7 @@ namespace LuaMap
     */
     int GetPlayers(Eluna* E, Map* map)
     {
-        uint32 team = Eluna::CHECKVAL<uint32>(E->L, 2, TEAM_NEUTRAL);
+        uint32 team = E->CHECKVAL<uint32>(2, TEAM_NEUTRAL);
 
         lua_newtable(E->L);
         int tbl = lua_gettop(E->L);

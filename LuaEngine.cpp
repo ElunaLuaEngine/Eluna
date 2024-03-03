@@ -584,128 +584,128 @@ static unsigned int CheckUnsignedRange(lua_State* luastate, int narg, unsigned i
     return static_cast<unsigned int>(value);
 }
 
-template<> bool Eluna::CHECKVAL<bool>(lua_State* luastate, int narg)
+template<> bool Eluna::CHECKVAL<bool>(int narg)
 {
-    return lua_toboolean(luastate, narg) != 0;
+    return lua_toboolean(L, narg) != 0;
 }
-template<> float Eluna::CHECKVAL<float>(lua_State* luastate, int narg)
+template<> float Eluna::CHECKVAL<float>(int narg)
 {
-    return static_cast<float>(luaL_checknumber(luastate, narg));
+    return static_cast<float>(luaL_checknumber(L, narg));
 }
-template<> double Eluna::CHECKVAL<double>(lua_State* luastate, int narg)
+template<> double Eluna::CHECKVAL<double>(int narg)
 {
-    return luaL_checknumber(luastate, narg);
+    return luaL_checknumber(L, narg);
 }
-template<> signed char Eluna::CHECKVAL<signed char>(lua_State* luastate, int narg)
+template<> signed char Eluna::CHECKVAL<signed char>(int narg)
 {
-    return CheckIntegerRange(luastate, narg, SCHAR_MIN, SCHAR_MAX);
+    return CheckIntegerRange(L, narg, SCHAR_MIN, SCHAR_MAX);
 }
-template<> unsigned char Eluna::CHECKVAL<unsigned char>(lua_State* luastate, int narg)
+template<> unsigned char Eluna::CHECKVAL<unsigned char>(int narg)
 {
-    return CheckUnsignedRange(luastate, narg, UCHAR_MAX);
+    return CheckUnsignedRange(L, narg, UCHAR_MAX);
 }
-template<> short Eluna::CHECKVAL<short>(lua_State* luastate, int narg)
+template<> short Eluna::CHECKVAL<short>(int narg)
 {
-    return CheckIntegerRange(luastate, narg, SHRT_MIN, SHRT_MAX);
+    return CheckIntegerRange(L, narg, SHRT_MIN, SHRT_MAX);
 }
-template<> unsigned short Eluna::CHECKVAL<unsigned short>(lua_State* luastate, int narg)
+template<> unsigned short Eluna::CHECKVAL<unsigned short>(int narg)
 {
-    return CheckUnsignedRange(luastate, narg, USHRT_MAX);
+    return CheckUnsignedRange(L, narg, USHRT_MAX);
 }
-template<> int Eluna::CHECKVAL<int>(lua_State* luastate, int narg)
+template<> int Eluna::CHECKVAL<int>(int narg)
 {
-    return CheckIntegerRange(luastate, narg, INT_MIN, INT_MAX);
+    return CheckIntegerRange(L, narg, INT_MIN, INT_MAX);
 }
-template<> unsigned int Eluna::CHECKVAL<unsigned int>(lua_State* luastate, int narg)
+template<> unsigned int Eluna::CHECKVAL<unsigned int>(int narg)
 {
-    return CheckUnsignedRange(luastate, narg, UINT_MAX);
+    return CheckUnsignedRange(L, narg, UINT_MAX);
 }
-template<> const char* Eluna::CHECKVAL<const char*>(lua_State* luastate, int narg)
+template<> const char* Eluna::CHECKVAL<const char*>(int narg)
 {
-    return luaL_checkstring(luastate, narg);
+    return luaL_checkstring(L, narg);
 }
-template<> std::string Eluna::CHECKVAL<std::string>(lua_State* luastate, int narg)
+template<> std::string Eluna::CHECKVAL<std::string>(int narg)
 {
-    return luaL_checkstring(luastate, narg);
+    return luaL_checkstring(L, narg);
 }
-template<> long long Eluna::CHECKVAL<long long>(lua_State* luastate, int narg)
+template<> long long Eluna::CHECKVAL<long long>(int narg)
 {
-    if (lua_isnumber(luastate, narg))
-        return static_cast<long long>(CHECKVAL<double>(luastate, narg));
-    return *(Eluna::CHECKOBJ<long long>(luastate, narg, true));
+    if (lua_isnumber(L, narg))
+        return static_cast<long long>(CHECKVAL<double>(narg));
+    return *(Eluna::CHECKOBJ<long long>(narg, true));
 }
-template<> unsigned long long Eluna::CHECKVAL<unsigned long long>(lua_State* luastate, int narg)
+template<> unsigned long long Eluna::CHECKVAL<unsigned long long>(int narg)
 {
-    if (lua_isnumber(luastate, narg))
-        return static_cast<unsigned long long>(CHECKVAL<uint32>(luastate, narg));
-    return *(Eluna::CHECKOBJ<unsigned long long>(luastate, narg, true));
+    if (lua_isnumber(L, narg))
+        return static_cast<unsigned long long>(CHECKVAL<uint32>(narg));
+    return *(Eluna::CHECKOBJ<unsigned long long>(narg, true));
 }
-template<> long Eluna::CHECKVAL<long>(lua_State* luastate, int narg)
+template<> long Eluna::CHECKVAL<long>(int narg)
 {
-    return static_cast<long>(CHECKVAL<long long>(luastate, narg));
+    return static_cast<long>(CHECKVAL<long long>(narg));
 }
-template<> unsigned long Eluna::CHECKVAL<unsigned long>(lua_State* luastate, int narg)
+template<> unsigned long Eluna::CHECKVAL<unsigned long>(int narg)
 {
-    return static_cast<unsigned long>(CHECKVAL<unsigned long long>(luastate, narg));
+    return static_cast<unsigned long>(CHECKVAL<unsigned long long>(narg));
 }
-template<> ObjectGuid Eluna::CHECKVAL<ObjectGuid>(lua_State* luastate, int narg)
+template<> ObjectGuid Eluna::CHECKVAL<ObjectGuid>(int narg)
 {
-    return ObjectGuid(uint64((CHECKVAL<unsigned long long>(luastate, narg))));
-}
-
-template<> Object* Eluna::CHECKOBJ<Object>(lua_State* luastate, int narg, bool error)
-{
-    Object* obj = CHECKOBJ<WorldObject>(luastate, narg, false);
-    if (!obj)
-        obj = CHECKOBJ<Item>(luastate, narg, false);
-    if (!obj)
-        obj = ElunaTemplate<Object>::Check(luastate, narg, error);
-    return obj;
-}
-template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* luastate, int narg, bool error)
-{
-    WorldObject* obj = CHECKOBJ<Unit>(luastate, narg, false);
-    if (!obj)
-        obj = CHECKOBJ<GameObject>(luastate, narg, false);
-    if (!obj)
-        obj = CHECKOBJ<Corpse>(luastate, narg, false);
-    if (!obj)
-        obj = ElunaTemplate<WorldObject>::Check(luastate, narg, error);
-    return obj;
-}
-template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* luastate, int narg, bool error)
-{
-    Unit* obj = CHECKOBJ<Player>(luastate, narg, false);
-    if (!obj)
-        obj = CHECKOBJ<Creature>(luastate, narg, false);
-    if (!obj)
-        obj = ElunaTemplate<Unit>::Check(luastate, narg, error);
-    return obj;
+    return ObjectGuid(uint64((CHECKVAL<unsigned long long>(narg))));
 }
 
-template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* luastate, int narg, bool error)
+template<> Object* Eluna::CHECKOBJ<Object>(int narg, bool error)
 {
-    return CHECKTYPE(luastate, narg, NULL, error);
+    Object* obj = CHECKOBJ<WorldObject>(narg, false);
+    if (!obj)
+        obj = CHECKOBJ<Item>(narg, false);
+    if (!obj)
+        obj = ElunaTemplate<Object>::Check(this, narg, error);
+    return obj;
+}
+template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(int narg, bool error)
+{
+    WorldObject* obj = CHECKOBJ<Unit>(narg, false);
+    if (!obj)
+        obj = CHECKOBJ<GameObject>(narg, false);
+    if (!obj)
+        obj = CHECKOBJ<Corpse>(narg, false);
+    if (!obj)
+        obj = ElunaTemplate<WorldObject>::Check(this, narg, error);
+    return obj;
+}
+template<> Unit* Eluna::CHECKOBJ<Unit>(int narg, bool error)
+{
+    Unit* obj = CHECKOBJ<Player>(narg, false);
+    if (!obj)
+        obj = CHECKOBJ<Creature>(narg, false);
+    if (!obj)
+        obj = ElunaTemplate<Unit>::Check(this, narg, error);
+    return obj;
 }
 
-ElunaObject* Eluna::CHECKTYPE(lua_State* luastate, int narg, const char* tname, bool error)
+template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(int narg, bool error)
 {
-    if (lua_islightuserdata(luastate, narg))
+    return CHECKTYPE(narg, NULL, error);
+}
+
+ElunaObject* Eluna::CHECKTYPE(int narg, const char* tname, bool error)
+{
+    if (lua_islightuserdata(L, narg))
     {
         if (error)
-            luaL_argerror(luastate, narg, "bad argument : userdata expected, got lightuserdata");
+            luaL_argerror(L, narg, "bad argument : userdata expected, got lightuserdata");
         return NULL;
     }
 
-    ElunaObject** ptrHold = static_cast<ElunaObject**>(lua_touserdata(luastate, narg));
+    ElunaObject** ptrHold = static_cast<ElunaObject**>(lua_touserdata(L, narg));
 
     if (!ptrHold || (tname && (*ptrHold)->GetTypeName() != tname))
     {
         if (error)
         {
             char buff[256];
-            snprintf(buff, 256, "bad argument : %s expected, got %s", tname ? tname : "ElunaObject", ptrHold ? (*ptrHold)->GetTypeName() : luaL_typename(luastate, narg));
-            luaL_argerror(luastate, narg, buff);
+            snprintf(buff, 256, "bad argument : %s expected, got %s", tname ? tname : "ElunaObject", ptrHold ? (*ptrHold)->GetTypeName() : luaL_typename(L, narg));
+            luaL_argerror(L, narg, buff);
         }
         return NULL;
     }
@@ -715,7 +715,9 @@ ElunaObject* Eluna::CHECKTYPE(lua_State* luastate, int narg, const char* tname, 
 template<typename K>
 static int cancelBinding(lua_State* L)
 {
-    uint64 bindingID = Eluna::CHECKVAL<uint64>(L, lua_upvalueindex(1));
+    Eluna* E = Eluna::GetEluna(L);
+
+    uint64 bindingID = E->CHECKVAL<uint64>(lua_upvalueindex(1));
 
     BindingMap<K>* bindings = (BindingMap<K>*)lua_touserdata(L, lua_upvalueindex(2));
     ASSERT(bindings != NULL);
@@ -737,7 +739,7 @@ static void createCancelCallback(Eluna* e, uint64 bindingID, BindingMap<K>* bind
 }
 
 // Saves the function reference ID given to the register type's store for given entry under the given event
-int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
+int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
 {
     uint64 bindingID;
 
@@ -1139,7 +1141,7 @@ void Eluna::FreeInstanceId(uint32 instanceId)
     }
 }
 
-void Eluna::PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCounter)
+void Eluna::PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter)
 {
     // Check if the instance data is missing (i.e. someone reloaded Eluna).
     if (!HasInstanceData(ai->instance))

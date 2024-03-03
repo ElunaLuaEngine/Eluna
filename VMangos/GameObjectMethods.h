@@ -20,7 +20,7 @@ namespace LuaGameObject
      */
     int HasQuest(Eluna* E, GameObject* go)
     {
-        uint32 questId = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 questId = E->CHECKVAL<uint32>(2);
 
         E->Push(go->HasQuest(questId));
         return 1;
@@ -166,7 +166,7 @@ namespace LuaGameObject
      */
     int SetGoState(Eluna* E, GameObject* go)
     {
-        uint32 state = Eluna::CHECKVAL<uint32>(E->L, 2, 0);
+        uint32 state = E->CHECKVAL<uint32>(2, 0);
 
         if (state == 0)
             go->SetGoState(GO_STATE_ACTIVE);
@@ -196,7 +196,7 @@ namespace LuaGameObject
      */
     int SetLootState(Eluna* E, GameObject* go)
     {
-        uint32 state = Eluna::CHECKVAL<uint32>(E->L, 2, 0);
+        uint32 state = E->CHECKVAL<uint32>(2, 0);
 
         if (state == 0)
             go->SetLootState(GO_NOT_READY);
@@ -229,7 +229,7 @@ namespace LuaGameObject
      */
     int RemoveFromWorld(Eluna* E, GameObject* go)
     {
-        bool deldb = Eluna::CHECKVAL<bool>(E->L, 2, false);
+        bool deldb = E->CHECKVAL<bool>(2, false);
 
         // cs_gobject.cpp copy paste
         ObjectGuid ownerGuid = go->GetOwnerGuid();
@@ -249,7 +249,7 @@ namespace LuaGameObject
         go->SetRespawnTime(0);
         go->Delete();
 
-        Eluna::CHECKOBJ<ElunaObject>(E->L, 1)->Invalidate();
+        E->CHECKOBJ<ElunaObject>(1)->Invalidate();
         return 0;
     }
 
@@ -260,7 +260,7 @@ namespace LuaGameObject
      */
     int UseDoorOrButton(Eluna* E, GameObject* go)
     {
-        uint32 delay = Eluna::CHECKVAL<uint32>(E->L, 2, 0);
+        uint32 delay = E->CHECKVAL<uint32>(2, 0);
 
         go->UseDoorOrButton(delay);
         return 0;
@@ -295,7 +295,7 @@ namespace LuaGameObject
      */
     int SetRespawnTime(Eluna* E, GameObject* go)
     {
-        int32 respawn = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 respawn = E->CHECKVAL<int32>(2);
 
         go->SetRespawnTime(respawn);
         return 0;

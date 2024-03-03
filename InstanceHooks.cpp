@@ -19,7 +19,7 @@ using namespace Hooks;
     auto instanceKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetInstanceId());\
     if (!MapEventBindings->HasBindingsFor(mapKey) && !InstanceEventBindings->HasBindingsFor(instanceKey))\
         return;\
-    PushInstanceData(L, AI);\
+    PushInstanceData(AI);\
     HookPush(AI->instance)
 
 #define START_HOOK_WITH_RETVAL(EVENT, AI, RETVAL) \
@@ -27,7 +27,7 @@ using namespace Hooks;
     auto instanceKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetInstanceId());\
     if (!MapEventBindings->HasBindingsFor(mapKey) && !InstanceEventBindings->HasBindingsFor(instanceKey))\
         return RETVAL;\
-    PushInstanceData(L, AI);\
+    PushInstanceData(AI);\
     HookPush(AI->instance)
 
 void Eluna::OnInitialize(ElunaInstanceAI* ai)

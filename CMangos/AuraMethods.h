@@ -121,7 +121,7 @@ namespace LuaAura
      */
     int SetDuration(Eluna* E, Aura* aura)
     {
-        int32 duration = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 duration = E->CHECKVAL<int32>(2);
         aura->GetHolder()->SetAuraDuration(duration);
 #if (defined(TBC) || defined(CLASSIC))
         aura->GetHolder()->UpdateAuraDuration();
@@ -141,7 +141,7 @@ namespace LuaAura
      */
     int SetMaxDuration(Eluna* E, Aura* aura)
     {
-        int32 duration = Eluna::CHECKVAL<int32>(E->L, 2);
+        int32 duration = E->CHECKVAL<int32>(2);
         aura->GetHolder()->SetAuraMaxDuration(duration);
 #if (defined(TBC) || defined(CLASSIC))
         aura->GetHolder()->UpdateAuraDuration();
@@ -161,7 +161,7 @@ namespace LuaAura
      */
     int SetStackAmount(Eluna* E, Aura* aura)
     {
-        uint8 amount = Eluna::CHECKVAL<uint8>(E->L, 2);
+        uint8 amount = E->CHECKVAL<uint8>(2);
 #ifndef CATA
         aura->GetHolder()->SetStackAmount(amount, aura->GetTarget());
 #else
@@ -176,7 +176,7 @@ namespace LuaAura
     int Remove(Eluna* E, Aura* aura)
     {
         aura->GetTarget()->RemoveSpellAuraHolder(aura->GetHolder(), AURA_REMOVE_BY_CANCEL);
-        Eluna::CHECKOBJ<ElunaObject>(E->L, 1)->Invalidate();
+        E->CHECKOBJ<ElunaObject>(1)->Invalidate();
         return 0;
     }
     

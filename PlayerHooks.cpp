@@ -51,7 +51,7 @@ void Eluna::OnSkillChange(Player* pPlayer, uint32 skillId, uint32 skillValue)
 
         if (lua_isnumber(L, r))
         {
-            skillValue = CHECKVAL<uint32>(L, r);
+            skillValue = CHECKVAL<uint32>(r);
             // Update the stack for subsequent calls.
             ReplaceArgument(skillValue, valueIndex);
         }
@@ -206,7 +206,7 @@ InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
         int r = CallOneFunction(n--, 2, 1);
 
         if (lua_isnumber(L, r))
-            result = (InventoryResult)CHECKVAL<uint32>(L, r);
+            result = (InventoryResult)CHECKVAL<uint32>(r);
 
         lua_pop(L, 1);
     }
@@ -299,7 +299,7 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<int32>(L, r);
+            amount = CHECKVAL<int32>(r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }
@@ -325,7 +325,7 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int64& amount)
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<int32>(L, r);
+            amount = CHECKVAL<int32>(r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }
@@ -352,7 +352,7 @@ void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<uint32>(L, r);
+            amount = CHECKVAL<uint32>(r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }
@@ -379,7 +379,7 @@ void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standin
 
         if (lua_isnumber(L, r))
         {
-            standing = CHECKVAL<int32>(L, r);
+            standing = CHECKVAL<int32>(r);
             // Update the stack for subsequent calls.
             ReplaceArgument(standing, standingIndex);
         }

@@ -83,7 +83,7 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, b
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<uint32>(L, r);
+            amount = CHECKVAL<uint32>(r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }
@@ -111,7 +111,7 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, b
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<uint32>(L, r);
+            amount = CHECKVAL<uint32>(r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }
@@ -138,7 +138,7 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<uint32>(L, r);
+            amount = CHECKVAL<uint32>(r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }
@@ -165,7 +165,7 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount)
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<uint32>(L, r);
+            amount = CHECKVAL<uint32>(r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }

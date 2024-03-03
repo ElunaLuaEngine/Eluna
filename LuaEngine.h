@@ -337,25 +337,25 @@ public:
      *   and loaded with the last known save state, and `Load`/`Initialize`
      *   hooks are called).
      */
-    void PushInstanceData(lua_State* L, ElunaInstanceAI* ai, bool incrementCounter = true);
+    void PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter = true);
 
     void RunScripts();
     bool HasLuaState() const { return L != NULL; }
     uint64 GetCallstackId() const { return callstackid; }
-    int Register(lua_State* L, uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
+    int Register(uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
     void UpdateEluna(uint32 diff);
 
     // Checks
-    template<typename T> static T CHECKVAL(lua_State* luastate, int narg);
-    template<typename T> static T CHECKVAL(lua_State* luastate, int narg, T def)
+    template<typename T> T CHECKVAL(int narg);
+    template<typename T> T CHECKVAL(int narg, T def)
     {
-        return lua_isnoneornil(luastate, narg) ? def : CHECKVAL<T>(luastate, narg);
+        return lua_isnoneornil(L, narg) ? def : CHECKVAL<T>(narg);
     }
-    template<typename T> static T* CHECKOBJ(lua_State* luastate, int narg, bool error = true)
+    template<typename T> T* CHECKOBJ(int narg, bool error = true)
     {
-        return ElunaTemplate<T>::Check(luastate, narg, error);
+        return ElunaTemplate<T>::Check(this, narg, error);
     }
-    static ElunaObject* CHECKTYPE(lua_State* luastate, int narg, const char* tname, bool error = true);
+    ElunaObject* CHECKTYPE(int narg, const char* tname, bool error = true);
 
     CreatureAI* GetAI(Creature* creature);
     InstanceData* GetInstanceData(Map* map);
@@ -626,9 +626,9 @@ public:
     /* Spell */
     void OnSpellCast(Spell* pSpell, bool skipCheck);
 };
-template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error);
-template<> Object* Eluna::CHECKOBJ<Object>(lua_State* L, int narg, bool error);
-template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(lua_State* L, int narg, bool error);
-template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(lua_State* L, int narg, bool error);
+template<> Unit* Eluna::CHECKOBJ<Unit>(int narg, bool error);
+template<> Object* Eluna::CHECKOBJ<Object>(int narg, bool error);
+template<> WorldObject* Eluna::CHECKOBJ<WorldObject>(int narg, bool error);
+template<> ElunaObject* Eluna::CHECKOBJ<ElunaObject>(int narg, bool error);
 
 #endif

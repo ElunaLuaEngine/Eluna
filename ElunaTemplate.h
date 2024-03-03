@@ -92,7 +92,7 @@ public:
         lua_remove(E->L, -1);
     }
 
-    static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call a method that does not exist for state: %i", Eluna::GetEluna(L)->GetBoundMapId()); return 0; }
+    static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call a method that does not exist for state: %d", Eluna::GetEluna(L)->GetBoundMapId()); return 0; }
     static int MethodUnimpl(lua_State* L) { luaL_error(L, "attempt to call a method that is not implemented for this emulator"); return 0; }
 };
 
@@ -357,9 +357,11 @@ public:
         return 1;
     }
 
-    static T* Check(lua_State* L, int narg, bool error = true)
+    static T* Check(Eluna* E, int narg, bool error = true)
     {
-        ElunaObject* elunaObj = Eluna::CHECKTYPE(L, narg, tname, error);
+        lua_State* L = E->L;
+
+        ElunaObject* elunaObj = E->CHECKTYPE(narg, tname, error);
         if (!elunaObj)
             return NULL;
 
@@ -388,8 +390,10 @@ public:
 
     static int SetInvalidation(lua_State* L)
     {
-        ElunaObject* elunaObj = Eluna::CHECKOBJ<ElunaObject>(L, 1);
-        bool invalidate = Eluna::CHECKVAL<bool>(L, 2);
+        Eluna* E = Eluna::GetEluna(L);
+
+        ElunaObject* elunaObj = E->CHECKOBJ<ElunaObject>(1);
+        bool invalidate = E->CHECKVAL<bool>(2);
 
         elunaObj->SetValidation(invalidate);
         return 0;
@@ -397,11 +401,13 @@ public:
 
     static int thunk(lua_State* L)
     {
-        T* obj = Eluna::CHECKOBJ<T>(L, 1); // get self
-        if (!obj)
-            return 0;
         ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
         Eluna* E = static_cast<Eluna*>(lua_touserdata(L, lua_upvalueindex(2)));
+
+        T* obj = E->CHECKOBJ<T>(1); // get self
+        if (!obj)
+            return 0;
+
         int top = lua_gettop(L);
         int expected = l->mfunc(E, obj);
         int args = lua_gettop(L) - top;
@@ -419,8 +425,10 @@ public:
     // Remember special cases like ElunaTemplate<Vehicle>::CollectGarbage
     static int CollectGarbage(lua_State* L)
     {
+        Eluna* E = Eluna::GetEluna(L);
+
         // Get object pointer (and check type, no error)
-        ElunaObject* obj = Eluna::CHECKOBJ<ElunaObject>(L, 1, false);
+        ElunaObject* obj = E->CHECKOBJ<ElunaObject>(1, false);
         if (obj && manageMemory)
             delete static_cast<T*>(obj->GetObj());
         delete obj;
@@ -429,7 +437,9 @@ public:
 
     static int ToString(lua_State* L)
     {
-        T* obj = Eluna::CHECKOBJ<T>(L, 1, true); // get self
+        Eluna* E = Eluna::GetEluna(L);
+
+        T* obj = E->CHECKOBJ<T>(1, true); // get self
         lua_pushfstring(L, "%s: %p", tname, obj);
         return 1;
     }
@@ -445,12 +455,12 @@ public:
     static int UnaryMinus(lua_State* L) { return ArithmeticError(L); }
     static int Concat(lua_State* L) { return luaL_error(L, "attempt to concatenate a %s value", tname); }
     static int Length(lua_State* L) { return luaL_error(L, "attempt to get length of a %s value", tname); }
-    static int Equal(lua_State* L) { Eluna::GetEluna(L)->Push(Eluna::CHECKOBJ<T>(L, 1) == Eluna::CHECKOBJ<T>(L, 2)); return 1; }
+    static int Equal(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKOBJ<T>(1) == E->CHECKOBJ<T>(2)); return 1; }
     static int Less(lua_State* L) { return CompareError(L); }
     static int LessOrEqual(lua_State* L) { return CompareError(L); }
     static int Call(lua_State* L) { return luaL_error(L, "attempt to call a %s value", tname); }
 
-    static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call a method that does not exist for state: %i", Eluna::GetEluna(L)->GetBoundMapId()); return 0; }
+    static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call a method that does not exist for state: %d", Eluna::GetEluna(L)->GetBoundMapId()); return 0; }
     static int MethodUnimpl(lua_State* L) { luaL_error(L, "attempt to call a method that is not implemented for this emulator"); return 0; }
 };
 

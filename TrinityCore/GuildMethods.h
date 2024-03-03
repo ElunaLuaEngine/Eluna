@@ -132,7 +132,7 @@ namespace LuaGuild
      */
     int SetLeader(Eluna* E, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
+        Player* player = E->CHECKOBJ<Player>(2);
 
         guild->HandleSetLeader(player->GetSession(), player->GetName());
         return 0;
@@ -147,8 +147,8 @@ namespace LuaGuild
      */
     int SetBankTabText(Eluna* E, Guild* guild)
     {
-        uint8 tabId = Eluna::CHECKVAL<uint8>(E->L, 2);
-        const char* text = Eluna::CHECKVAL<const char*>(E->L, 3);
+        uint8 tabId = E->CHECKVAL<uint8>(2);
+        const char* text = E->CHECKVAL<const char*>(3);
 
         guild->SetBankTabText(tabId, text);
         return 0;
@@ -162,7 +162,7 @@ namespace LuaGuild
      */
     int SendPacket(Eluna* E, Guild* guild)
     {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(E->L, 2);
+        WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
 
         guild->BroadcastPacket(data);
         return 0;
@@ -177,8 +177,8 @@ namespace LuaGuild
      */
     int SendPacketToRanked(Eluna* E, Guild* guild)
     {
-        WorldPacket* data = Eluna::CHECKOBJ<WorldPacket>(E->L, 2);
-        uint8 ranked = Eluna::CHECKVAL<uint8>(E->L, 3);
+        WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
+        uint8 ranked = E->CHECKVAL<uint8>(3);
 
         guild->BroadcastPacketToRank(data, ranked);
         return 0;
@@ -203,8 +203,8 @@ namespace LuaGuild
      */
     int AddMember(Eluna* E, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
-        uint8 rankId = Eluna::CHECKVAL<uint8>(E->L, 3, GUILD_RANK_NONE);
+        Player* player = E->CHECKOBJ<Player>(2);
+        uint8 rankId = E->CHECKVAL<uint8>(3, GUILD_RANK_NONE);
 
         CharacterDatabaseTransaction trans(nullptr);
 
@@ -220,8 +220,8 @@ namespace LuaGuild
      */
     int DeleteMember(Eluna* E, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
-        bool isDisbanding = Eluna::CHECKVAL<bool>(E->L, 3, false);
+        Player* player = E->CHECKOBJ<Player>(2);
+        bool isDisbanding = E->CHECKVAL<bool>(3, false);
 
         CharacterDatabaseTransaction trans(nullptr);
 
@@ -237,8 +237,8 @@ namespace LuaGuild
      */
     int SetMemberRank(Eluna* E, Guild* guild)
     {
-        Player* player = Eluna::CHECKOBJ<Player>(E->L, 2);
-        uint8 newRank = Eluna::CHECKVAL<uint8>(E->L, 3);
+        Player* player = E->CHECKOBJ<Player>(2);
+        uint8 newRank = E->CHECKVAL<uint8>(3);
 
         CharacterDatabaseTransaction trans(nullptr);
 
