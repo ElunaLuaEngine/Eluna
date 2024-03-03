@@ -42,6 +42,7 @@ public:
     std::string lua_folderpath;
     // lua path variable for require() function
     std::string lua_requirepath;
+    std::string lua_requirecpath;
 
     typedef std::list<LuaScript> ScriptList;
     ScriptList lua_scripts;

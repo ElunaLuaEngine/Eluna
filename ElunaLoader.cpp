@@ -59,11 +59,17 @@ void ElunaLoader::LoadScripts()
 #endif
     ELUNA_LOG_INFO("[Eluna]: Searching for scripts in `%s`", lua_folderpath.c_str());
     lua_requirepath.clear();
+    lua_requirecpath.clear();
+
     ReadFiles(lua_folderpath);
     CombineLists();
+
     // Erase last ;
     if (!lua_requirepath.empty())
         lua_requirepath.erase(lua_requirepath.end() - 1);
+
+    if (!lua_requirecpath.empty())
+        lua_requirecpath.erase(lua_requirecpath.end() - 1);
 
     ELUNA_LOG_INFO("[Eluna]: Loaded and precompiled %u scripts in %u ms", uint32(combined_scripts.size()), ElunaUtil::GetTimeDiff(oldMSTime));
     requiredMaps.clear();
@@ -108,7 +114,9 @@ void ElunaLoader::ReadFiles(std::string path)
     {
         lua_requirepath +=
             path + "/?.lua;" +
-            path + "/?.ext;" +
+            path + "/?.ext;";
+
+        lua_requirecpath +=
             path + "/?.dll;" +
             path + "/?.so;";
 
@@ -208,7 +216,7 @@ void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::s
     filename = filename.substr(0, extDot);
 
     // check extension and add path to scripts to load
-    if (ext != ".lua" && ext != ".dll" && ext != ".so" && ext != ".ext")
+    if (ext != ".lua" && ext != ".ext")
         return;
     bool extension = ext == ".ext";
 
