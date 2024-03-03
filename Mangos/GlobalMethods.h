@@ -541,7 +541,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(E->L, 3);
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
-            return E->Register(regtype, id, ObjectGuid(), 0, ev, functionRef, shots);
+            return E->Register(E->L, regtype, id, ObjectGuid(), 0, ev, functionRef, shots);
         else
             luaL_argerror(E->L, 3, "unable to make a ref to function");
         return 0;
@@ -556,7 +556,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(E->L, 2);
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
-            return E->Register(regtype, 0, ObjectGuid(), 0, ev, functionRef, shots);
+            return E->Register(E->L, regtype, 0, ObjectGuid(), 0, ev, functionRef, shots);
         else
             luaL_argerror(E->L, 2, "unable to make a ref to function");
         return 0;
@@ -573,7 +573,7 @@ namespace LuaGlobalFunctions
         lua_pushvalue(E->L, 4);
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
-            return E->Register(regtype, 0, guid, instanceId, ev, functionRef, shots);
+            return E->Register(E->L, regtype, 0, guid, instanceId, ev, functionRef, shots);
         else
             luaL_argerror(E->L, 4, "unable to make a ref to function");
         return 0;
@@ -1995,7 +1995,7 @@ namespace LuaGlobalFunctions
      */
     int Kick(Eluna* E)
     {
-        Player* player = E->CHECKOBJ<Player>(1);
+        Player* player = Eluna::CHECKOBJ<Player>(1);
 #ifdef TRINITY
         player->GetSession()->KickPlayer("GlobalMethods::Kick Kick the player");
 #else
