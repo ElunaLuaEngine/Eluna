@@ -755,10 +755,6 @@ namespace LuaGlobalFunctions
      *     // UNUSED                               =     52,       // (event, player)
      *     // UNUSED                               =     53,       // (event, player)
      *     PLAYER_EVENT_ON_QUEST_STATUS_CHANGED    =     54,       // (event, player, questId, status)
-     *     // UNUSED                               =     55,       // (event, player)
-     *     // UNUSED                               =     56,       // (event, player)
-     *     // UNUSED                               =     57,       // (event, player)
-     *     PLAYER_EVENT_ON_UNEQUIP                 =     58,       // (event, player, item, slot)
      * };
      * </pre>
      *
@@ -969,6 +965,8 @@ namespace LuaGlobalFunctions
      *     ITEM_EVENT_ON_EXPIRE                            = 4,    // (event, player, itemid) - Can return true
      *     ITEM_EVENT_ON_REMOVE                            = 5,    // (event, player, item) - Can return true
      *     ITEM_EVENT_ON_ADD                               = 6,    // (event, player, item)
+     *     ITEM_EVENT_ON_EQUIP                             = 7,    // (event, player, item, slot)
+     *     ITEM_EVENT_ON_UNEQUIP                           = 8,    // (event, player, item, slot)
      *     ITEM_EVENT_COUNT
      * };
      * </pre>

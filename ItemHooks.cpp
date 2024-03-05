@@ -141,3 +141,21 @@ void Eluna::OnAdd(Player* pPlayer, Item* pItem)
     Push(pItem);
     CallAllFunctions(ItemEventBindings, key);
 }
+
+void Eluna::OnItemEquip(Player* pPlayer, Item* pItem, uint8 slot)
+{
+    START_HOOK(ITEM_EVENT_ON_EQUIP, pItem->GetEntry());
+    HookPush(pPlayer);
+    HookPush(pItem);
+    HookPush(slot);
+    CallAllFunctions(ItemEventBindings, key);
+}
+
+void Eluna::OnItemUnEquip(Player* pPlayer, Item* pItem, uint8 slot)
+{
+    START_HOOK(ITEM_EVENT_ON_UNEQUIP, pItem->GetEntry());
+    HookPush(pPlayer);
+    HookPush(pItem);
+    HookPush(slot);
+    CallAllFunctions(ItemEventBindings, key);
+}

@@ -396,7 +396,6 @@ public:
     void OnLootMoney(Player* pPlayer, uint32 amount);
     void OnFirstLogin(Player* pPlayer);
     void OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
-    void OnUnEquip(Player* pPlayer, Item* pItem, uint8 slot);
     void OnRepop(Player* pPlayer);
     void OnResurrect(Player* pPlayer);
     void OnQuestAbandon(Player* pPlayer, uint32 questId);
@@ -423,6 +422,8 @@ public:
     bool OnRemove(Player* pPlayer, Item* item);
     void OnAdd(Player* pPlayer, Item* item);
     void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code);
+    void OnItemEquip(Player* pPlayer, Item* pItem, uint8 slot);
+    void OnItemUnEquip(Player* pPlayer, Item* pItem, uint8 slot);
 
     /* Creature */
     void OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Creature* pTarget);
