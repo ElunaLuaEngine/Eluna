@@ -27,7 +27,7 @@
 #endif
 #else
 #include "Database/QueryResult.h"
-#include "Log/Log.h"
+#include "Log.h"
 #endif
 
 #if defined(TRINITY) || defined(AZEROTHCORE)

@@ -12,11 +12,11 @@ jobs:
         eluna: [ON, OFF]
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
       with:
         submodules: false
         repository: ElunaLuaEngine/ElunaTrinityWotlk
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
       with:
         path: src/server/game/LuaEngine
     - name: Dependencies
@@ -53,11 +53,11 @@ jobs:
 #        eluna: [ON]
 #    runs-on: ubuntu-20.04
 #    steps:
-#    - uses: actions/checkout@v4
+#    - uses: actions/checkout@v3
 #      with:
 #        submodules: false
 #        repository: Niam5/ElunaCataPreservation
-#    - uses: actions/checkout@v4
+#    - uses: actions/checkout@v3
 #      with:
 #        path: src/server/game/LuaEngine
 #    - name: Dependencies
@@ -91,17 +91,17 @@ jobs:
 #      fail-fast: false
 #    runs-on: ubuntu-20.04
 #    steps:
-#      - uses: actions/checkout@v4
+#      - uses: actions/checkout@v2
 #        with:
 #          submodules: recursive
 #          repository: azerothcore/azerothcore-wotlk
 #          ref: 'master'
-#      - uses: actions/checkout@v4
+#      - uses: actions/checkout@v2
 #        with:
 #          submodules: false
 #          repository: azerothcore/mod-eluna-lua-engine
 #          path: modules/mod-eluna-lua-engine
-#      - uses: actions/checkout@v4
+#      - uses: actions/checkout@v2
 #        with:
 #          path: modules/mod-eluna-lua-engine/LuaEngine
 #      - name: Configure OS
@@ -151,12 +151,12 @@ jobs:
 #        patch: [zero, one, two]
 #    runs-on: ubuntu-20.04
 #    steps:
-#      - uses: actions/checkout@v4
+#      - uses: actions/checkout@v3
 #        with:
 #          submodules: recursive
 #          repository: mangos${{ matrix.patch }}/server
 #          ref: master
-#      - uses: actions/checkout@v4
+#      - uses: actions/checkout@v3
 #        with:
 #          path: src/modules/Eluna
 #      - name: Configure
@@ -181,12 +181,12 @@ jobs:
         patch: [Classic, TBC, WotLK, Cata]
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           submodules: false
           repository: Niam5/Eluna-CMaNGOS-${{ matrix.patch }}
           ref: master
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           path: src/game/LuaEngine
       - name: Dependencies and Environment
