@@ -422,6 +422,8 @@ public:
     bool OnRemove(Player* pPlayer, Item* item);
     void OnAdd(Player* pPlayer, Item* item);
     void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code);
+    void OnItemEquip(Player* pPlayer, Item* pItem, uint8 slot);
+    void OnItemUnEquip(Player* pPlayer, Item* pItem, uint8 slot);
 
     /* Creature */
     void OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Creature* pTarget);
