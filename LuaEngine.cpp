@@ -66,10 +66,10 @@ void Eluna::_ReloadEluna()
     // Close lua
     CloseLua();
 
-    // Open new lua and libaraies
+    // Open new lua and libraries
     OpenLua();
 
-    // Run scripts from laoded paths
+    // Run scripts from loaded paths
     RunScripts();
 
     reload = false;
@@ -153,7 +153,7 @@ void Eluna::OpenLua()
     lua_getglobal(L, "package");
     lua_pushstring(L, sElunaLoader->lua_requirepath.c_str());
     lua_setfield(L, -2, "path");
-    lua_pushstring(L, ""); // erase cpath
+    lua_pushstring(L, sElunaLoader->lua_requirecpath.c_str());
     lua_setfield(L, -2, "cpath");
     lua_pop(L, 1);
 }
