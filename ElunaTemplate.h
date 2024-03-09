@@ -334,14 +334,14 @@ public:
         }
 
         // Create new userdata
-        ElunaObject** ptrHold = static_cast<ElunaObject**>(lua_newuserdata(L, sizeof(ElunaObject*)));
-        if (!ptrHold)
+        ElunaObject* elunaObject = static_cast<ElunaObject*>(lua_newuserdata(L, sizeof(ElunaObject)));
+        if (!elunaObject)
         {
             ELUNA_LOG_ERROR("%s could not create new userdata", tname);
             lua_pushnil(L);
             return 1;
         }
-        *ptrHold = new ElunaObject(E, const_cast<T*>(obj), manageMemory);
+        new (elunaObject) ElunaObject(E, const_cast<T*>(obj), manageMemory);
 
         // Set metatable for it
         lua_pushstring(L, tname);
@@ -431,7 +431,7 @@ public:
         ElunaObject* obj = E->CHECKOBJ<ElunaObject>(1, false);
         if (obj && manageMemory)
             delete static_cast<T*>(obj->GetObj());
-        delete obj;
+        obj->~ElunaObject();
         return 0;
     }
 

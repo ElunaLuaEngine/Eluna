@@ -38,19 +38,16 @@ extern "C"
 }
 
 LuaVal* LuaVal::GetLuaVal(lua_State* L, int index) {
-    if (LuaVal** ptr = static_cast<LuaVal**>(luaL_testudata(L, index, LUAVAL_MT_NAME)))
-        return *ptr;
-    return nullptr;
+    return static_cast<LuaVal*>(luaL_testudata(L, index, LUAVAL_MT_NAME));
 }
 
 LuaVal* LuaVal::GetCheckLuaVal(lua_State* L, int index) {
-    LuaVal** ptr = static_cast<LuaVal**>(luaL_checkudata(L, index, LUAVAL_MT_NAME));
-    return *ptr;
+    return static_cast<LuaVal*>(luaL_checkudata(L, index, LUAVAL_MT_NAME));
 }
 
 int LuaVal::PushLuaVal(lua_State* L, LuaVal const& lv) {
-    LuaVal** ud = static_cast<LuaVal**>(lua_newuserdata(L, sizeof(LuaVal*)));
-    *ud = new LuaVal(lv.reference());
+    LuaVal* ud = static_cast<LuaVal*>(lua_newuserdata(L, sizeof(LuaVal)));
+    new (ud) LuaVal(lv.reference());
     luaL_setmetatable(L, LUAVAL_MT_NAME);
     return 1;
 }
@@ -161,7 +158,7 @@ int LuaVal::lua_to_string(lua_State* L)
 int LuaVal::lua_gc(lua_State* L)
 {
     LuaVal* self = GetCheckLuaVal(L, 1);
-    delete self;
+    self->~LuaVal();
     return 0;
 }
 
