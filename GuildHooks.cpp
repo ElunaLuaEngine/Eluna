@@ -98,10 +98,10 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, b
 void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_WITHDRAW);
-    Push(guild);
-    Push(player);
-    Push(amount);
-    Push(isRepair); // isRepair not a part of Mangos, implement?
+    HookPush(guild);
+    HookPush(player);
+    HookPush(amount);
+    HookPush(isRepair); // isRepair not a part of Mangos, implement?
     int amountIndex = lua_gettop(L) - 1;
     int n = SetupStack(GuildEventBindings, key, 4);
 
@@ -153,9 +153,9 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
 void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_DEPOSIT);
-    Push(guild);
-    Push(player);
-    Push(amount);
+    HookPush(guild);
+    HookPush(player);
+    HookPush(amount);
     int amountIndex = lua_gettop(L);
     int n = SetupStack(GuildEventBindings, key, 3);
 

@@ -314,8 +314,8 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
 void Eluna::OnMoneyChanged(Player* pPlayer, int64& amount)
 {
     START_HOOK(PLAYER_EVENT_ON_MONEY_CHANGE);
-    Push(pPlayer);
-    Push(amount);
+    HookPush(pPlayer);
+    HookPush(amount);
     int amountIndex = lua_gettop(L);
     int n = SetupStack(PlayerEventBindings, key, 2);
 

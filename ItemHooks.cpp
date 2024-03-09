@@ -112,17 +112,9 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
 
 bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
 {
-#if defined TRINITY && CATA
-    START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_EXPIRE, pProto->BasicData->ID, false);
-#else
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_EXPIRE, pProto->ItemId, false);
-#endif
-    Push(pPlayer);
-#if defined TRINITY && CATA
-    Push(pProto->BasicData->ID);
-#else
-    Push(pProto->ItemId);
-#endif
+    HookPush(pPlayer);
+    HookPush(pProto->ItemId);
     return CallAllFunctionsBool(ItemEventBindings, key);
 }
 
@@ -137,8 +129,8 @@ bool Eluna::OnRemove(Player* pPlayer, Item* pItem)
 void Eluna::OnAdd(Player* pPlayer, Item* pItem)
 {
     START_HOOK(ITEM_EVENT_ON_ADD, pItem->GetEntry());
-    Push(pPlayer);
-    Push(pItem);
+    HookPush(pPlayer);
+    HookPush(pItem);
     CallAllFunctions(ItemEventBindings, key);
 }
 
