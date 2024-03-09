@@ -67,7 +67,7 @@ public:
     static int lua_get(lua_State* L);
     static int lua_set(lua_State* L);
 
-    static std::string tostring(void* ptr);
+    static std::string to_string_map(MapType const* ptr);
     int asObject(lua_State* L) const;
     int asLua(lua_State* L, unsigned int depth) const;
     static LuaVal AsLuaVal(lua_State* L, int index);
@@ -101,7 +101,7 @@ public:
             else if constexpr (std::is_same_v<T, std::string>)
                 return arg;
             else if constexpr (std::is_same_v<T, WrappedMap>)
-                return tostring(arg.get());
+                return LuaVal::to_string_map(arg.get());
             else if constexpr (std::is_same_v<T, bool>)
                 return arg ? "true" : "false";
             else if constexpr (std::is_same_v<T, double>)

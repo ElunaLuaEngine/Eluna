@@ -140,11 +140,13 @@ int LuaVal::lua_set(lua_State* L) {
     return 0;
 }
 
-std::string LuaVal::tostring(void* ptr)
+std::string LuaVal::to_string_map(MapType const* ptr)
 {
-    char arr[128];
-    snprintf(arr, 128, "LuaVal: %p", ptr);
-    return arr;
+    std::string out = "[\n";
+    for (std::pair<const LuaVal, LuaVal> const& pair : *ptr)
+        out += "  { key: " + pair.first.to_string() + ", value: " + pair.second.to_string() + " },\n";
+    out += ']';
+    return out;
 }
 
 int LuaVal::lua_to_string(lua_State* L)
