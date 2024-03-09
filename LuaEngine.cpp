@@ -697,19 +697,19 @@ ElunaObject* Eluna::CHECKTYPE(int narg, const char* tname, bool error)
         return NULL;
     }
 
-    ElunaObject** ptrHold = static_cast<ElunaObject**>(lua_touserdata(L, narg));
+    ElunaObject* elunaObject = static_cast<ElunaObject*>(lua_touserdata(L, narg));
 
-    if (!ptrHold || (tname && (*ptrHold)->GetTypeName() != tname))
+    if (!elunaObject || (tname && elunaObject->GetTypeName() != tname))
     {
         if (error)
         {
             char buff[256];
-            snprintf(buff, 256, "bad argument : %s expected, got %s", tname ? tname : "ElunaObject", ptrHold ? (*ptrHold)->GetTypeName() : luaL_typename(L, narg));
+            snprintf(buff, 256, "bad argument : %s expected, got %s", tname ? tname : "ElunaObject", elunaObject ? elunaObject->GetTypeName() : luaL_typename(L, narg));
             luaL_argerror(L, narg, buff);
         }
         return NULL;
     }
-    return *ptrHold;
+    return elunaObject;
 }
 
 template<typename K>

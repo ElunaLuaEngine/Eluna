@@ -62,12 +62,12 @@ public:
     typedef std::monostate NIL;
     template<class T> struct always_false : std::false_type {};
     typedef std::shared_ptr<MapType> WrappedMap;
-    typedef std::variant<NIL, std::unique_ptr<std::string>, WrappedMap, bool, double> LuaValVariant;
+    typedef std::variant<NIL, std::string, WrappedMap, bool, double> LuaValVariant;
 
     static int lua_get(lua_State* L);
     static int lua_set(lua_State* L);
 
-    static std::string tostring(void* ptr);
+    static std::string to_string_map(MapType const* ptr);
     int asObject(lua_State* L) const;
     int asLua(lua_State* L, unsigned int depth) const;
     static LuaVal AsLuaVal(lua_State* L, int index);
@@ -84,24 +84,12 @@ public:
 
     bool operator<(LuaVal const& b) const
     {
-        if (v->index() == b.v->index()) {
-            const std::unique_ptr<std::string>* pval = std::get_if<std::unique_ptr<std::string>>(&*v);
-            if (pval) {
-                return **pval < **std::get_if<std::unique_ptr<std::string>>(&*b.v);
-            }
-        }
-        return *v < *b.v;
+        return v < b.v;
     }
 
     bool operator==(LuaVal const& b) const
     {
-        if (v->index() == b.v->index()) {
-            const std::unique_ptr<std::string>* pval = std::get_if<std::unique_ptr<std::string>>(&*v);
-            if (pval) {
-                return **pval == **std::get_if<std::unique_ptr<std::string>>(&*b.v);
-            }
-        }
-        return *v == *b.v;
+        return v == b.v;
     }
 
     std::string to_string() const
@@ -110,70 +98,56 @@ public:
             using T = std::decay_t<decltype(arg)>;
             if constexpr (std::is_same_v<T, NIL>)
                 return "nil";
-            else if constexpr (std::is_same_v<T, std::unique_ptr<std::string>>)
-                return *arg;
+            else if constexpr (std::is_same_v<T, std::string>)
+                return arg;
             else if constexpr (std::is_same_v<T, WrappedMap>)
-                return tostring(arg.get());
+                return LuaVal::to_string_map(arg.get());
             else if constexpr (std::is_same_v<T, bool>)
                 return arg ? "true" : "false";
             else if constexpr (std::is_same_v<T, double>)
                 return std::to_string(arg);
             else
                 static_assert(always_false<T>::value, "non-exhaustive visitor!");
-            }, *v);
+            }, v);
     }
 
-    LuaVal() : v(std::make_unique<LuaValVariant>()) {}
-    LuaVal(std::string const& s) : v(std::make_unique<LuaValVariant>(std::make_unique<std::string>(s))) {}
-    LuaVal(bool b) : v(std::make_unique<LuaValVariant>(b)) {}
-    LuaVal(double d) : v(std::make_unique<LuaValVariant>(d)) {}
-    LuaVal(MapType const& t) : v(std::make_unique<LuaValVariant>(std::make_shared<MapType>(t))) {}
-    LuaVal(std::initializer_list<std::pair<const LuaVal, LuaVal> /* MapType::value_type */> const& l) : v(std::make_unique<LuaValVariant>(std::make_shared<MapType>(l))) {}
+    LuaVal() : v() {}
+    LuaVal(std::string const& s) : v(s) {}
+    LuaVal(bool b) : v(b) {}
+    LuaVal(double d) : v(d) {}
+    LuaVal(MapType const& t) : v(std::make_shared<MapType>(t)) {}
+    LuaVal(std::initializer_list<std::pair<const LuaVal, LuaVal> /* MapType::value_type */> const& l) : v(std::make_shared<MapType>(l)) {}
 
-    LuaVal(LuaVal&& b) : v(std::move(b.v)) {
+    LuaVal(LuaVal&& b) noexcept : v(std::move(b.v)) {
     }
-    LuaVal(const LuaVal& b) : v(std::make_unique<LuaValVariant>(std::visit([&](auto&& arg) -> LuaValVariant {
-        using T = std::decay_t<decltype(arg)>;
-        if constexpr (std::is_same_v<T, std::unique_ptr<std::string>>)
-            return std::make_unique<std::string>(*arg);
-        else if constexpr (std::is_same_v<T, WrappedMap>)
-            return std::make_shared<MapType>(*arg);
-        else
-            return arg;
-        }, *b.v))) {
+    LuaVal(const LuaVal& b) : v(b.v) {
     }
     ~LuaVal() {
     }
-    LuaVal& operator=(LuaVal&& b) {
+    LuaVal& operator=(LuaVal&& b) noexcept
+    {
         v = std::move(b.v);
         return *this;
     }
     LuaVal& operator=(const LuaVal& b) {
-        v = std::make_unique<LuaValVariant>(std::visit([&](auto&& arg) -> LuaValVariant {
-            using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, std::unique_ptr<std::string>>)
-                return std::make_unique<std::string>(*arg);
-            else if constexpr (std::is_same_v<T, WrappedMap>)
-                return std::make_shared<MapType>(*arg);
-            else
-                return arg;
-            }, *b.v));
+        v = b.v;
         return *this;
     }
     LuaVal clone() const {
-        return *this;
-    }
-    LuaVal reference() const {
         LuaVal lv;
-        lv.v = std::make_unique<LuaValVariant>(std::visit([&](auto&& arg) -> LuaValVariant {
+        lv.v = std::visit([&](auto&& arg) -> LuaValVariant
+        {
             using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, std::unique_ptr<std::string>>)
-                return std::make_unique<std::string>(*arg);
+            if constexpr (std::is_same_v<T, WrappedMap>)
+                return std::make_shared<MapType>(*arg);
             else
                 return arg;
-            }, *v));
+        }, v);
         return lv;
     }
+    LuaVal reference() const {
+        return *this;
+    }
 
-    std::unique_ptr<LuaValVariant> v;
+    LuaValVariant v;
 };

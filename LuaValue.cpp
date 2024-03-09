@@ -38,19 +38,16 @@ extern "C"
 }
 
 LuaVal* LuaVal::GetLuaVal(lua_State* L, int index) {
-    if (LuaVal** ptr = static_cast<LuaVal**>(luaL_testudata(L, index, LUAVAL_MT_NAME)))
-        return *ptr;
-    return nullptr;
+    return static_cast<LuaVal*>(luaL_testudata(L, index, LUAVAL_MT_NAME));
 }
 
 LuaVal* LuaVal::GetCheckLuaVal(lua_State* L, int index) {
-    LuaVal** ptr = static_cast<LuaVal**>(luaL_checkudata(L, index, LUAVAL_MT_NAME));
-    return *ptr;
+    return static_cast<LuaVal*>(luaL_checkudata(L, index, LUAVAL_MT_NAME));
 }
 
 int LuaVal::PushLuaVal(lua_State* L, LuaVal const& lv) {
-    LuaVal** ud = static_cast<LuaVal**>(lua_newuserdata(L, sizeof(LuaVal*)));
-    *ud = new LuaVal(lv.reference());
+    LuaVal* ud = static_cast<LuaVal*>(lua_newuserdata(L, sizeof(LuaVal)));
+    new (ud) LuaVal(lv.reference());
     luaL_setmetatable(L, LUAVAL_MT_NAME);
     return 1;
 }
@@ -81,13 +78,13 @@ void LuaVal::Register(lua_State* L) {
 int LuaVal::lua_get(lua_State* L) {
     LuaVal* self = GetCheckLuaVal(L, 1);
     int arguments = std::max(2, lua_gettop(L));
-    WrappedMap const* p = std::get_if<WrappedMap>(&*self->v);
+    WrappedMap const* p = std::get_if<WrappedMap>(&self->v);
     if (!p)
         luaL_argerror(L, 1, "trying to index a non-table LuaVal");
     for (int i = 2; i <= arguments; ++i) {
         auto& map = (*p);
         auto klv = AsLuaVal(L, i);
-        if (std::holds_alternative<NIL>(*klv.v))
+        if (std::holds_alternative<NIL>(klv.v))
             luaL_argerror(L, i, "trying to use nil as key");
         auto it = map->find(klv);
         if (it == map->end()) {
@@ -100,7 +97,7 @@ int LuaVal::lua_get(lua_State* L) {
             auto& val = it->second;
             return val.asObject(L);
         }
-        p = std::get_if<WrappedMap>(&*it->second.v);
+        p = std::get_if<WrappedMap>(&it->second.v);
         if (!p)
             luaL_argerror(L, i, "trying to index a non-table LuaVal");
     }
@@ -111,13 +108,13 @@ int LuaVal::lua_get(lua_State* L) {
 int LuaVal::lua_set(lua_State* L) {
     LuaVal* self = GetCheckLuaVal(L, 1);
     int arguments = std::max(3, lua_gettop(L));
-    WrappedMap const* p = std::get_if<WrappedMap>(&*self->v);
+    WrappedMap const* p = std::get_if<WrappedMap>(&self->v);
     if (!p)
         luaL_argerror(L, 1, "trying to index a non-table LuaVal");
     for (int i = 2; i <= arguments - 2; ++i) {
         auto& map = (*p);
         auto klv = AsLuaVal(L, i);
-        if (std::holds_alternative<NIL>(*klv.v))
+        if (std::holds_alternative<NIL>(klv.v))
             luaL_argerror(L, i, "trying to use nil as key");
         auto it = map->find(klv);
         if (it == map->end()) {
@@ -126,15 +123,15 @@ int LuaVal::lua_set(lua_State* L) {
             }
             break;
         }
-        p = std::get_if<WrappedMap>(&*it->second.v);
+        p = std::get_if<WrappedMap>(&it->second.v);
         if (!p)
             luaL_argerror(L, i, "trying to index a non-table LuaVal");
     }
     auto kk = AsLuaVal(L, arguments - 1);
     auto vv = AsLuaVal(L, arguments);
-    if (std::holds_alternative<NIL>(*kk.v))
+    if (std::holds_alternative<NIL>(kk.v))
         luaL_argerror(L, arguments - 1, "trying to use nil as key");
-    if (std::holds_alternative<NIL>(*vv.v)) {
+    if (std::holds_alternative<NIL>(vv.v)) {
         (**p).erase(kk);
     }
     else {
@@ -143,11 +140,13 @@ int LuaVal::lua_set(lua_State* L) {
     return 0;
 }
 
-std::string LuaVal::tostring(void* ptr)
+std::string LuaVal::to_string_map(MapType const* ptr)
 {
-    char arr[128];
-    snprintf(arr, 128, "LuaVal: %p", ptr);
-    return arr;
+    std::string out = "[\n";
+    for (std::pair<const LuaVal, LuaVal> const& pair : *ptr)
+        out += "  { key: " + pair.first.to_string() + ", value: " + pair.second.to_string() + " },\n";
+    out += ']';
+    return out;
 }
 
 int LuaVal::lua_to_string(lua_State* L)
@@ -161,7 +160,7 @@ int LuaVal::lua_to_string(lua_State* L)
 int LuaVal::lua_gc(lua_State* L)
 {
     LuaVal* self = GetCheckLuaVal(L, 1);
-    delete self;
+    self->~LuaVal();
     return 0;
 }
 
@@ -173,8 +172,8 @@ int LuaVal::asObject(lua_State* L) const
             lua_pushnil(L);
             return 1;
         }
-        else if constexpr (std::is_same_v<T, std::unique_ptr<std::string>>) {
-            lua_pushlstring(L, arg->c_str(), arg->size());
+        else if constexpr (std::is_same_v<T, std::string>) {
+            lua_pushlstring(L, arg.c_str(), arg.size());
             return 1;
         }
         else if constexpr (std::is_same_v<T, WrappedMap>) {
@@ -191,12 +190,12 @@ int LuaVal::asObject(lua_State* L) const
         else {
             static_assert(always_false<T>::value, "non-exhaustive visitor!");
         }
-        }, *v);
+        }, v);
 }
 
 int LuaVal::asLua(lua_State* L, unsigned int depth) const
 {
-    WrappedMap const* p = std::get_if<WrappedMap>(&*v);
+    WrappedMap const* p = std::get_if<WrappedMap>(&v);
     if (p)
     {
         lua_newtable(L);
@@ -265,7 +264,7 @@ LuaVal LuaVal::FromTable(lua_State* L, int index)
 {
     // Assumed we know index is a table already
     LuaVal m({});
-    auto& t = std::get<WrappedMap>(*m.v);
+    auto& t = std::get<WrappedMap>(m.v);
     int top = lua_gettop(L);
     lua_pushnil(L);
     while (lua_next(L, index) != 0) {
@@ -277,9 +276,5 @@ LuaVal LuaVal::FromTable(lua_State* L, int index)
 
 size_t LuaValHash(LuaVal const& k)
 {
-    const std::unique_ptr<std::string>* pval = std::get_if<std::unique_ptr<std::string>>(&*k.v);
-    if (pval) {
-        return std::hash<std::string>{}(**pval);
-    }
-    return std::hash<LuaVal::LuaValVariant>{}(*k.v);
+    return std::hash<LuaVal::LuaValVariant>{}(k.v);
 }

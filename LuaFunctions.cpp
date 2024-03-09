@@ -47,7 +47,7 @@ template<> int ElunaTemplate<Vehicle>::CollectGarbage(lua_State* L)
 
     // Get object pointer (and check type, no error)
     ElunaObject* obj = E->CHECKOBJ<ElunaObject>(1, false);
-    delete obj;
+    obj->~ElunaObject();
     return 0;
 }
 #endif
