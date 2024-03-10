@@ -207,3 +207,31 @@ jobs:
           cd bin
           make -j4
           make install
+
+  vmangos-Eluna:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: false
+        repository: Eluna-Ports/Eluna-VMaNGOS
+        ref: development
+    - uses: actions/checkout@v4
+      with:
+        path: src/modules/Eluna
+
+    - name: Dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install build-essential cmake cppcheck git libace-dev libiberty-dev libmysql++-dev libssl-dev libtbb-dev make openssl
+
+    - name: Configure and Build
+      run: |
+        mkdir build
+        mkdir _install
+        cd build
+        cmake ../ -DCMAKE_INSTALL_PREFIX=../_install -DWITH_WARNINGS=0 -DUSE_EXTRACTORS=1
+        make -j2
+        make install
