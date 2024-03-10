@@ -25,6 +25,9 @@
 #ifdef CATA
 #include "Object.h"
 #endif
+#elif VMANGOS
+#include "Database/QueryResult.h"
+#include "Log.h"
 #else
 #include "Database/QueryResult.h"
 #include "Log/Log.h"
