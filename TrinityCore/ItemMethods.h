@@ -558,7 +558,7 @@ namespace LuaItem
     */
     int GetExtraFlags(Eluna* E, Item* item)
     {
-        E->Push(item->GetTemplate()->ExtraFlags);
+        E->Push(item->GetTemplate()->FlagsCu);
         return 1;
     }
 
