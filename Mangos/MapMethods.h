@@ -37,11 +37,7 @@ namespace LuaMap
      */
     int IsBattleground(Eluna* E, Map* map)
     {
-#if defined TRINITY || AZEROTHCORE
-        E->Push(map->IsBattleground());
-#else
         E->Push(map->IsBattleGround());
-#endif
         return 1;
     }
 
@@ -190,13 +186,8 @@ namespace LuaMap
         float x = E->CHECKVAL<float>(2);
         float y = E->CHECKVAL<float>(3);
         float z = E->CHECKVAL<float>(4);
-#if defined TRINITY || defined AZEROTHCORE
-        float phasemask = E->CHECKVAL<uint32>(5, PHASEMASK_NORMAL);
 
-        E->Push(map->GetAreaId(phasemask, x, y, z));
-#else
         E->Push(map->GetTerrain()->GetAreaId(x, y, z));
-#endif
         return 1;
     }
 
@@ -210,36 +201,7 @@ namespace LuaMap
     {
         ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
 
-#if defined TRINITY || AZEROTHCORE
-        switch (guid.GetHigh())
-        {
-            case HIGHGUID_PLAYER:
-                E->Push(eObjectAccessor()GetPlayer(map, guid));
-                break;
-            case HIGHGUID_TRANSPORT:
-            case HIGHGUID_MO_TRANSPORT:
-            case HIGHGUID_GAMEOBJECT:
-                E->Push(map->GetGameObject(guid));
-                break;
-            case HIGHGUID_VEHICLE:
-            case HIGHGUID_UNIT:
-                E->Push(map->GetCreature(guid));
-                break;
-            case HIGHGUID_PET:
-                E->Push(map->GetPet(guid));
-                break;
-            case HIGHGUID_DYNAMICOBJECT:
-                E->Push(map->GetDynamicObject(guid));
-                break;
-            case HIGHGUID_CORPSE:
-                E->Push(map->GetCorpse(guid));
-                break;
-            default:
-                break;
-        }
-#else
         E->Push(map->GetWorldObject(guid));
-#endif
         return 1;
     }
 
@@ -267,19 +229,9 @@ namespace LuaMap
         uint32 weatherType = E->CHECKVAL<uint32>(3);
         float grade = E->CHECKVAL<float>(4);
 
-#if defined TRINITY
-        if (Weather * weather = map->GetOrGenerateZoneDefaultWeather(zoneId))
-            weather->SetWeather((WeatherType)weatherType, grade);
-#elif defined AZEROTHCORE
-        Weather* weather = WeatherMgr::FindWeather(zoneId);
-        if (!weather)
-            weather = WeatherMgr::AddWeather(zoneId);
-        if (weather)
-            weather->SetWeather((WeatherType)weatherType, grade);
-#else
         if (Weather::IsValidWeatherType(weatherType))
             map->SetWeather(zoneId, (WeatherType)weatherType, grade, false);
-#endif
+
         return 0;
     }
 
@@ -293,13 +245,7 @@ namespace LuaMap
      */
     int GetInstanceData(Eluna* E, Map* map)
     {
-#if defined TRINITY || AZEROTHCORE
-        ElunaInstanceAI* iAI = NULL;
-        if (InstanceMap* inst = map->ToInstanceMap())
-            iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
-#else
         ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData());
-#endif
 
         if (iAI)
             E->PushInstanceData(iAI, false);
@@ -314,13 +260,7 @@ namespace LuaMap
      */
     int SaveInstanceData(Eluna* /*E*/, Map* map)
     {
-#if defined TRINITY || AZEROTHCORE
-        ElunaInstanceAI* iAI = NULL;
-        if (InstanceMap* inst = map->ToInstanceMap())
-            iAI = dynamic_cast<ElunaInstanceAI*>(inst->GetInstanceScript());
-#else
         ElunaInstanceAI* iAI = dynamic_cast<ElunaInstanceAI*>(map->GetInstanceData());
-#endif
 
         if (iAI)
             iAI->SaveToDB();
@@ -352,11 +292,8 @@ namespace LuaMap
         Map::PlayerList const& players = map->GetPlayers();
         for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
         {
-#if defined TRINITY || AZEROTHCORE
-            Player* player = itr->GetSource();
-#else
             Player* player = itr->getSource();
-#endif
+
             if (!player)
                 continue;
             if (player->GetSession() && (team >= TEAM_NEUTRAL || player->GetTeamId() == team))
@@ -368,6 +305,32 @@ namespace LuaMap
 
         lua_settop(E->L, tbl);
         return 1;
+    }
+
+    /**
+     * Returns a runtime-persistent cache tied to the [Map].
+     * This data will remain for as long as the [Map] exists, or until a server restart.
+     *
+     * A reload of the Lua state will NOT clear this cache.
+     *
+     * This cache can be added to and read from with the following sub-methods.
+     * <pre>
+     * -- Sets the key-value pair in the cache
+     * Map:Data():Set("key", val)
+     *
+     * -- Returns the value from the cache using the key
+     * local val = Map:Data():Get("key")
+     *
+     * -- Removes the key-value pair from the cache
+     * Map:Data():Set("key", nil)
+     *
+     * -- Returns all the key-value pairs as a Lua table indexed by the keys
+     * local table = Map:Data():AsTable()
+     * </pre>
+     */
+    int Data(Eluna* E, Map* map)
+    {
+        return LuaVal::PushLuaVal(E->L, map->lua_data);
     }
     
     ElunaRegister<Map> MapMethods[] =
@@ -395,11 +358,15 @@ namespace LuaMap
 #ifndef CLASSIC
         { "IsArena", &LuaMap::IsArena },
         { "IsHeroic", &LuaMap::IsHeroic },
+#else
+        { "IsArena", nullptr, METHOD_REG_NONE },
+        { "IsHeroic", nullptr, METHOD_REG_NONE },
 #endif
         // Other
         { "SaveInstanceData", &LuaMap::SaveInstanceData },
+        { "Data", &LuaMap::Data },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

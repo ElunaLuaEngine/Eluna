@@ -21,11 +21,7 @@ namespace LuaCorpse
      */
     int GetOwnerGUID(Eluna* E, Corpse* corpse)
     {
-#if defined TRINITY || AZEROTHCORE
-        E->Push(corpse->GetOwnerGUID());
-#else
         E->Push(corpse->GetOwnerGuid());
-#endif
         return 1;
     }
 
@@ -89,7 +85,7 @@ namespace LuaCorpse
         { "ResetGhostTime", &LuaCorpse::ResetGhostTime },
         { "SaveToDB", &LuaCorpse::SaveToDB },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

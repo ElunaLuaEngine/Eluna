@@ -7,11 +7,7 @@
 #ifndef QUERYMETHODS_H
 #define QUERYMETHODS_H
 
-#if defined TRINITY || defined AZEROTHCORE
-#define RESULT  (*result)
-#else
 #define RESULT  result
-#endif
 
 /***
  * The result of a database query.
@@ -45,11 +41,7 @@ namespace LuaQuery
         uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
 
-#if defined TRINITY || AZEROTHCORE
-        E->Push(RESULT->Fetch()[col].IsNull());
-#else
         E->Push(RESULT->Fetch()[col].IsNULL());
-#endif
         return 1;
     }
 
@@ -243,11 +235,7 @@ namespace LuaQuery
         uint32 col = E->CHECKVAL<uint32>(2);
         CheckFields(E, result);
 
-#ifndef TRINITY
         E->Push(RESULT->Fetch()[col].GetString());
-#else
-        E->Push(RESULT->Fetch()[col].GetCString());
-#endif
         return 1;
     }
 
@@ -291,51 +279,10 @@ namespace LuaQuery
         lua_createtable(E->L, 0, col);
         int tbl = lua_gettop(E->L);
 
-#if !defined TRINITY && !AZEROTHCORE
         const QueryFieldNames& names = RESULT->GetFieldNames();
-#endif
 
         for (uint32 i = 0; i < col; ++i)
         {
-#if defined TRINITY || AZEROTHCORE
-            E->Push(RESULT->GetFieldName(i));
-
-            const char* str = row[i].GetCString();
-            if (row[i].IsNull() || !str)
-                E->Push();
-            else
-            {
-                // MYSQL_TYPE_LONGLONG Interpreted as string for lua
-                switch (row[i].GetType())
-                {
-#if defined TRINITY || AZEROTHCORE
-                    case DatabaseFieldTypes::Int8:
-                    case DatabaseFieldTypes::Int16:
-                    case DatabaseFieldTypes::Int32:
-                    case DatabaseFieldTypes::Int64:
-                    case DatabaseFieldTypes::Float:
-                    case DatabaseFieldTypes::Double:
-#else
-                    case MYSQL_TYPE_TINY:
-                    case MYSQL_TYPE_YEAR:
-                    case MYSQL_TYPE_SHORT:
-                    case MYSQL_TYPE_INT24:
-                    case MYSQL_TYPE_LONG:
-                    case MYSQL_TYPE_LONGLONG:
-                    case MYSQL_TYPE_BIT:
-                    case MYSQL_TYPE_FLOAT:
-                    case MYSQL_TYPE_DOUBLE:
-                    case MYSQL_TYPE_DECIMAL:
-                    case MYSQL_TYPE_NEWDECIMAL:
-#endif
-                        E->Push(strtod(str, NULL));
-                        break;
-                    default:
-                        E->Push(str);
-                        break;
-        }
-    }
-#else
             E->Push(names[i]);
 
             const char* str = row[i].GetString();
@@ -359,7 +306,6 @@ namespace LuaQuery
                         break;
                 }
             }
-#endif
 
             lua_rawset(E->L, tbl);
         }
@@ -391,7 +337,7 @@ namespace LuaQuery
         { "NextRow", &LuaQuery::NextRow },
         { "IsNull", &LuaQuery::IsNull },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #undef RESULT

@@ -4,7 +4,7 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#ifdef TRINITY
+#if defined TRINITY || defined MANGOS
 #include "Config.h"
 #elif defined CMANGOS || defined VMANGOS
 #include "Config/Config.h"
@@ -41,7 +41,7 @@ void ElunaConfig::SetConfig(ElunaConfigBoolValues index, char const* fieldname, 
 {
 #ifdef TRINITY
     SetConfig(index, sConfigMgr->GetBoolDefault(fieldname, defvalue));
-#elif defined CMANGOS || defined VMANGOS
+#elif defined CMANGOS || defined VMANGOS || defined MANGOS
     SetConfig(index, sConfig.GetBoolDefault(fieldname, defvalue));
 #endif
 }
@@ -52,7 +52,7 @@ void ElunaConfig::SetConfig(ElunaConfigStringValues index, char const* fieldname
     SetConfig(index, sConfigMgr->GetStringDefault(fieldname, defvalue));
 #elif CMANGOS
     SetConfig(index, sConfig.GetStringDefault(fieldname, defvalue));
-#elif VMANGOS
+#elif defined VMANGOS || defined MANGOS
     SetConfig(index, sConfig.GetStringDefault(fieldname, defvalue.c_str()));
 #endif
 }

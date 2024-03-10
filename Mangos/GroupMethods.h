@@ -44,11 +44,7 @@ namespace LuaGroup
      */
     int IsLFGGroup(Eluna* E, Group* group)
     {
-#ifdef CMANGOS
-        E->Push(group->IsLFGGroup());
-#else
         E->Push(group->isLFGGroup());
-#endif
         return 1;
     }
 #endif
@@ -60,11 +56,7 @@ namespace LuaGroup
      */
     int IsRaidGroup(Eluna* E, Group* group)
     {
-#ifdef CMANGOS
-        E->Push(group->IsRaidGroup());
-#else
         E->Push(group->isRaidGroup());
-#endif
         return 1;
     }
 
@@ -75,11 +67,7 @@ namespace LuaGroup
      */
     int IsBGGroup(Eluna* E, Group* group)
     {
-#ifdef CMANGOS
-        E->Push(group->IsBattleGroup());        
-#else
         E->Push(group->isBGGroup());
-#endif
         return 1;
     }
 
@@ -163,29 +151,11 @@ namespace LuaGroup
         if (player->GetGroupInvite())
             player->UninviteFromGroup();
 
-#if defined TRINITY || AZEROTHCORE
-        bool success = group->AddMember(player);
-        if (success)
-            group->BroadcastGroupUpdate();
-#else
         bool success = group->AddMember(player->GetObjectGuid(), player->GetName());
-#endif
 
         E->Push(success);
         return 1;
     }
-
-    /*int IsLFGGroup(Eluna* E, Group* group) // TODO: Implementation
-    {
-        E->Push(group->isLFGGroup());
-        return 1;
-    }*/
-
-    /*int IsBFGroup(Eluna* E, Group* group) // TODO: Implementation
-    {
-        E->Push(group->isBFGroup());
-        return 1;
-    }*/
 
     /**
      * Returns a table with the [Player]s in this [Group]
@@ -200,11 +170,7 @@ namespace LuaGroup
 
         for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
         {
-#if defined TRINITY || AZEROTHCORE
-            Player* member = itr->GetSource();
-#else
             Player* member = itr->getSource();
-#endif
 
             if (!member || !member->GetSession())
                 continue;
@@ -224,11 +190,7 @@ namespace LuaGroup
      */
     int GetLeaderGUID(Eluna* E, Group* group)
     {
-#if defined TRINITY || AZEROTHCORE
-        E->Push(group->GetLeaderGUID());
-#else
         E->Push(group->GetLeaderGuid());
-#endif
         return 1;
     }
 
@@ -256,11 +218,8 @@ namespace LuaGroup
     int GetMemberGUID(Eluna* E, Group* group)
     {
         const char* name = E->CHECKVAL<const char*>(2);
-#if defined TRINITY || AZEROTHCORE
-        E->Push(group->GetMemberGUID(name));
-#else
+
         E->Push(group->GetMemberGuid(name));
-#endif
         return 1;
     }
 
@@ -314,11 +273,7 @@ namespace LuaGroup
         bool ignorePlayersInBg = E->CHECKVAL<bool>(3);
         ObjectGuid ignore = E->CHECKVAL<ObjectGuid>(4);
 
-#ifdef CMANGOS
-        group->BroadcastPacket(*data, ignorePlayersInBg, -1, ignore);
-#else
         group->BroadcastPacket(data, ignorePlayersInBg, -1, ignore);
-#endif
         return 0;
     }
 
@@ -344,11 +299,7 @@ namespace LuaGroup
         ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
         uint32 method = E->CHECKVAL<uint32>(3, 0);
 
-#if defined TRINITY || AZEROTHCORE
-        E->Push(group->RemoveMember(guid, (RemoveMethod)method));
-#else
         E->Push(group->RemoveMember(guid, method));
-#endif
         return 1;
     }
 
@@ -419,17 +370,11 @@ namespace LuaGroup
 #endif
         return 0;
     }
-
-    /*int ConvertToLFG(Eluna* E, Group* group) // TODO: Implementation
-    {
-        group->ConvertToLFG();
-        return 0;
-    }*/
     
     ElunaRegister<Group> GroupMethods[] =
     {
         // Getters
-        { "GetMembers", &LuaGroup::GetMembers },
+        { "GetMembers", &LuaGroup::GetMembers, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetLeaderGUID", &LuaGroup::GetLeaderGUID },
         { "GetGUID", &LuaGroup::GetGUID },
         { "GetMemberGroup", &LuaGroup::GetMemberGroup },
@@ -455,18 +400,20 @@ namespace LuaGroup
         { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },
 #if !(defined(CLASSIC) || defined(TBC))
         { "IsLFGGroup", &LuaGroup::IsLFGGroup },
+#else
+        { "IsLFGGroup", nullptr, METHOD_REG_NONE },
 #endif
         // Other
         { "SendPacket", &LuaGroup::SendPacket },
         { "ConvertToRaid", &LuaGroup::ConvertToRaid },
 
         // Not implemented methods
-        { "IsBFGroup", nullptr },   // not implemented
-        { "ConvertToLFG", nullptr },    // not implemented
-        { "GetMemberFlags", nullptr },    // not implemented
-        { "SetMemberFlag", nullptr },    // not implemented
+        { "IsBFGroup", nullptr, METHOD_REG_NONE },   // not implemented
+        { "ConvertToLFG", nullptr, METHOD_REG_NONE },    // not implemented
+        { "GetMemberFlags", nullptr, METHOD_REG_NONE },    // not implemented
+        { "SetMemberFlag", nullptr, METHOD_REG_NONE },    // not implemented
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 

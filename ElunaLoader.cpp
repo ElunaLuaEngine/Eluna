@@ -13,7 +13,7 @@
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#ifndef VMANGOS
+#if !defined(VMANGOS) && !defined(MANGOS)
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 #else

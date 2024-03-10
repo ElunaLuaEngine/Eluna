@@ -176,11 +176,8 @@ namespace LuaItem
     int HasQuest(Eluna* E, Item* item)
     {
         uint32 quest = E->CHECKVAL<uint32>(2);
-#if defined TRINITY || AZEROTHCORE
-        E->Push(item->hasQuest(quest));
-#else
+
         E->Push(item->HasQuest(quest));
-#endif
         return 1;
     }
 
@@ -230,12 +227,6 @@ namespace LuaItem
         return 1;
     }
 
-    /*int IsRefundExpired(Eluna* E, Item* item)// TODO: Implement core support
-    {
-        E->Push(item->IsRefundExpired());
-        return 1;
-    }*/
-
     /**
      * Returns the chat link of the [Item]
      *
@@ -274,40 +265,24 @@ namespace LuaItem
 #if defined(CATA) || defined (MISTS)
             char* suffix = NULL;
 #else
-#ifdef TRINITY
-            std::array<char const*, 16> const* suffix = NULL;
-#else
             char* const* suffix = NULL;
-#endif
 #endif
             if (itemRandPropId < 0)
             {
                 const ItemRandomSuffixEntry* itemRandEntry = sItemRandomSuffixStore.LookupEntry(-item->GetItemRandomPropertyId());
                 if (itemRandEntry)
-#ifdef TRINITY
-                    suffix = &itemRandEntry->Name;
-#else
                     suffix = itemRandEntry->nameSuffix;
-#endif
             }
             else
             {
                 const ItemRandomPropertiesEntry* itemRandEntry = sItemRandomPropertiesStore.LookupEntry(item->GetItemRandomPropertyId());
                 if (itemRandEntry)
-#ifdef TRINITY
-                    suffix = &itemRandEntry->Name;
-#else
                     suffix = itemRandEntry->nameSuffix;
-#endif
             }
             if (suffix)
             {
                 name += ' ';
-#if defined TRINITY
-                name += (*suffix)[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
-#else
                 name += suffix[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
-#endif
             }
         }
 #endif
@@ -323,11 +298,7 @@ namespace LuaItem
             item->GetEnchantmentId(BONUS_ENCHANTMENT_SLOT) << ":" <<
 #endif
             item->GetItemRandomPropertyId() << ":" << item->GetItemSuffixFactor() << ":" <<
-#if defined(TRINITY) || CMANGOS
-            (uint32)item->GetOwner()->GetLevel() << "|h[" << name << "]|h|r";
-#else
             (uint32)item->GetOwner()->getLevel() << "|h[" << name << "]|h|r";
-#endif
 
         E->Push(oss.str());
         return 1;
@@ -335,11 +306,7 @@ namespace LuaItem
 
     int GetOwnerGUID(Eluna* E, Item* item)
     {
-#if defined TRINITY || AZEROTHCORE
-        E->Push(item->GetOwnerGUID());
-#else
         E->Push(item->GetOwnerGuid());
-#endif
         return 1;
     }
 
@@ -650,11 +617,8 @@ namespace LuaItem
     int SetOwner(Eluna* E, Item* item)
     {
         Player* player = E->CHECKOBJ<Player>(2);
-#if defined TRINITY || AZEROTHCORE
-        item->SetOwnerGUID(player->GET_GUID());
-#else
+
         item->SetOwnerGuid(player->GET_GUID());
-#endif
         return 0;
     }
 
@@ -796,9 +760,13 @@ namespace LuaItem
         { "GetBagSize", &LuaItem::GetBagSize },
 #ifndef CLASSIC
         { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
+#else
+        { "GetRandomSuffix", nullptr, METHOD_REG_NONE },
 #endif
 #ifdef WOTLK
         { "GetStatsCount", &LuaItem::GetStatsCount },
+#else
+        { "GetStatsCount", nullptr, METHOD_REG_NONE },
 #endif
 
         // Setters
@@ -825,22 +793,29 @@ namespace LuaItem
         { "ClearEnchantment", &LuaItem::ClearEnchantment },
 #ifndef CLASSIC
         { "IsCurrencyToken", &LuaItem::IsCurrencyToken },
+#else
+        { "IsCurrencyToken", nullptr, METHOD_REG_NONE },
 #endif
 #if (!defined(TBC) && !defined(CLASSIC))
         { "IsBoundAccountWide", &LuaItem::IsBoundAccountWide },
+#else
+        { "IsBoundAccountWide", nullptr, METHOD_REG_NONE },
 #endif
 #if defined(WOTLK)
         { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
         { "IsArmorVellum", &LuaItem::IsArmorVellum },
+#else
+        { "IsWeaponVellum", nullptr, METHOD_REG_NONE },
+        { "IsArmorVellum", nullptr, METHOD_REG_NONE },
 #endif
 
         // Other
         { "SaveToDB", &LuaItem::SaveToDB },
 
         // Not implemented methods
-        { "IsRefundExpired", nullptr }, // not implemented
+        { "IsRefundExpired", nullptr, METHOD_REG_NONE }, // not implemented
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

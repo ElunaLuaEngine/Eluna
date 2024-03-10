@@ -52,11 +52,8 @@ namespace LuaQuest
     int HasFlag(Eluna* E, Quest* quest)
     {
         uint32 flag = E->CHECKVAL<uint32>(2);
-#if defined TRINITY || AZEROTHCORE
-        E->Push(quest->HasFlag(flag));
-#else
+
         E->Push(quest->HasQuestFlag((QuestFlags)flag));
-#endif
         return 1;
     }
 
@@ -157,11 +154,7 @@ namespace LuaQuest
      */
     int GetFlags(Eluna* E, Quest* quest)
     {
-#if defined TRINITY || AZEROTHCORE
-        E->Push(quest->GetFlags());
-#else
         E->Push(quest->GetQuestFlags());
-#endif
         return 1;
     }
 
@@ -177,12 +170,6 @@ namespace LuaQuest
         E->Push(quest->GetType());
         return 1;
     }
-
-    /*int GetMaxLevel(Eluna* E, Quest* quest)
-    {
-        E->Push(quest->GetMaxLevel());
-        return 1;
-    }*/
     
     ElunaRegister<Quest> QuestMethods[] =
     {
@@ -201,12 +188,14 @@ namespace LuaQuest
         { "IsRepeatable", &LuaQuest::IsRepeatable },
 #ifndef CLASSIC
         { "IsDaily", &LuaQuest::IsDaily },
+#else
+        { "IsDaily", nullptr, METHOD_REG_NONE },
 #endif
 
         // Not implemented methods
-        { "GetMaxLevel", nullptr },  // not implemented
+        { "GetMaxLevel", nullptr, METHOD_REG_NONE },  // not implemented
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

@@ -34,12 +34,7 @@ namespace LuaBattleGround
     int GetAlivePlayersCountByTeam(Eluna* E, BattleGround* bg)
     {
         uint32 team = E->CHECKVAL<uint32>(2);
-
-#ifndef AZEROTHCORE
         E->Push(bg->GetAlivePlayersCountByTeam((Team)team));
-#else
-        E->Push(bg->GetAlivePlayersCountByTeam((TeamId)team));
-#endif
         return 1;
     }
 
@@ -68,7 +63,6 @@ namespace LuaBattleGround
         return 1;
     }
 
-#ifndef AZEROTHCORE
     /**
      * Returns the bracket ID of the specific [BattleGround].
      *
@@ -79,7 +73,6 @@ namespace LuaBattleGround
         E->Push(bg->GetBracketId());
         return 1;
     }
-#endif
 
     /**
      * Returns the end time of the [BattleGround].
@@ -105,12 +98,7 @@ namespace LuaBattleGround
     int GetFreeSlotsForTeam(Eluna* E, BattleGround* bg)
     {
         uint32 team = E->CHECKVAL<uint32>(2);
-
-#ifndef AZEROTHCORE
         E->Push(bg->GetFreeSlotsForTeam((Team)team));
-#else
-        E->Push(bg->GetFreeSlotsForTeam((TeamId)team));
-#endif
         return 1;
     }
 
@@ -121,11 +109,7 @@ namespace LuaBattleGround
      */
     int GetInstanceId(Eluna* E, BattleGround* bg)
     {
-#ifdef CMANGOS
-        E->Push(bg->GetInstanceId());
-#else
         E->Push(bg->GetInstanceID());
-#endif
         return 1;
     }
 
@@ -147,13 +131,7 @@ namespace LuaBattleGround
      */
     int GetTypeId(Eluna* E, BattleGround* bg)
     {
-#ifdef CMANGOS
-        E->Push(bg->GetTypeId());
-#elif !AZEROTHCORE
         E->Push(bg->GetTypeID());
-#else
-        E->Push(bg->GetBgTypeID());
-#endif
         return 1;
     }
 
@@ -186,11 +164,7 @@ namespace LuaBattleGround
      */
     int GetMaxPlayers(Eluna* E, BattleGround* bg)
     {
-#ifndef AZEROTHCORE
         E->Push(bg->GetMaxPlayers());
-#else
-        E->Push(bg->GetMaxPlayersPerTeam() * 2);
-#endif
         return 1;
     }
 
@@ -201,11 +175,7 @@ namespace LuaBattleGround
      */
     int GetMinPlayers(Eluna* E, BattleGround* bg)
     {
-#ifndef AZEROTHCORE
         E->Push(bg->GetMinPlayers());
-#else
-        E->Push(bg->GetMaxPlayersPerTeam() * 2);
-#endif
         return 1;
     }
 
@@ -275,7 +245,7 @@ namespace LuaBattleGround
         { "GetWinner", &LuaBattleGround::GetWinner },
         { "GetStatus", &LuaBattleGround::GetStatus },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

@@ -22,11 +22,7 @@ namespace LuaGameObject
     {
         uint32 questId = E->CHECKVAL<uint32>(2);
 
-#if defined TRINITY || AZEROTHCORE
-        E->Push(go->hasQuest(questId));
-#else
         E->Push(go->HasQuest(questId));
-#endif
         return 1;
     }
 
@@ -37,11 +33,7 @@ namespace LuaGameObject
      */
     int IsSpawned(Eluna* E, GameObject* go)
     {
-#ifdef CMANGOS
-        E->Push(go->IsSpawned());
-#else
         E->Push(go->isSpawned());
-#endif
         return 1;
     }
 
@@ -123,11 +115,7 @@ namespace LuaGameObject
      */
     int GetLootState(Eluna* E, GameObject* go)
     {
-#ifdef CMANGOS
-        E->Push(go->GetLootState());
-#else
         E->Push(go->getLootState());
-#endif
         return 1;
     }
 
@@ -153,11 +141,7 @@ namespace LuaGameObject
      */
     int GetLootRecipientGroup(Eluna* E, GameObject* go)
     {
-#if defined TRINITY || AZEROTHCORE
-        E->Push(go->GetLootRecipientGroup());
-#else
         E->Push(go->GetGroupLootRecipient());
-#endif
         return 1;
     }
 
@@ -168,12 +152,8 @@ namespace LuaGameObject
      */
     int GetDBTableGUIDLow(Eluna* E, GameObject* go)
     {
-#if defined(TRINITY) || defined(AZEROTHCORE)
-        E->Push(go->GetSpawnId());
-#else
         // on mangos based this is same as lowguid
         E->Push(go->GetGUIDLow());
-#endif
         return 1;
     }
 
@@ -200,13 +180,7 @@ namespace LuaGameObject
         else if (state == 1)
             go->SetGoState(GO_STATE_READY);
         else if (state == 2)
-        {
-#ifdef TRINITY
-            go->SetGoState(GO_STATE_DESTROYED);
-#else
             go->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
-#endif
-        }
 
         return 0;
     }
@@ -265,11 +239,8 @@ namespace LuaGameObject
         bool deldb = E->CHECKVAL<bool>(2, false);
 
         // cs_gobject.cpp copy paste
-#if defined TRINITY || AZEROTHCORE
-        ObjectGuid ownerGuid = go->GetOwnerGUID();
-#else
         ObjectGuid ownerGuid = go->GetOwnerGuid();
-#endif
+
         if (ownerGuid)
         {
             Unit* owner = eObjectAccessor()GetUnit(*go, ownerGuid);
@@ -280,13 +251,7 @@ namespace LuaGameObject
         }
 
         if (deldb)
-        {
-#ifdef TRINITY
-            GameObject::DeleteFromDB(go->GetSpawnId());
-#else
             go->DeleteFromDB();
-#endif
-        }
 
         go->SetRespawnTime(0);
         go->Delete();
@@ -372,9 +337,9 @@ namespace LuaGameObject
         { "SaveToDB", &LuaGameObject::SaveToDB },
 
         // Not implemented methods
-        { "IsDestructible", nullptr },  // Not implemented
+        { "IsDestructible", nullptr, METHOD_REG_NONE },  // Not implemented
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

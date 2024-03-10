@@ -36,7 +36,6 @@ void Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex ef
 
 void Eluna::UpdateAI(GameObject* pGameObject, uint32 diff)
 {
-    pGameObject->elunaEvents->Update(diff);
     START_HOOK(GAMEOBJECT_EVENT_ON_AIUPDATE, pGameObject->GetEntry());
     HookPush(pGameObject);
     HookPush(diff);

@@ -133,11 +133,7 @@ namespace LuaObject
      */
     int GetScale(Eluna* E, Object* obj)
     {
-#ifndef AZEROTHCORE
         E->Push(obj->GetObjectScale());
-#else
-        E->Push(obj->GetFloatValue(OBJECT_FIELD_SCALE_X));
-#endif
         return 1;
     }
 
@@ -186,11 +182,7 @@ namespace LuaObject
      */
     int GetGUIDLow(Eluna* E, Object* obj)
     {
-#if defined TRINITY || AZEROTHCORE
-        E->Push(obj->GetGUID().GetCounter());
-#else
         E->Push(obj->GetGUIDLow());
-#endif
         return 1;
     }
 
@@ -500,7 +492,7 @@ namespace LuaObject
         { "ToCorpse", &LuaObject::ToCorpse },
         { "RemoveFlag", &LuaObject::RemoveFlag },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif

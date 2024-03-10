@@ -183,17 +183,8 @@ namespace LuaWorldObject
 
         Unit* target = NULL;
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
-#ifdef TRINITY
-        Trinity::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-
-#elif AZEROTHCORE
-        Acore::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#else
         MaNGOS::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
-#endif
 
         E->Push(target);
         return 1;
@@ -216,16 +207,8 @@ namespace LuaWorldObject
 
         GameObject* target = NULL;
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
-#ifdef TRINITY
-        Trinity::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#elif AZEROTHCORE
-        Acore::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#else
         MaNGOS::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
-#endif
 
         E->Push(target);
         return 1;
@@ -250,17 +233,8 @@ namespace LuaWorldObject
 
         Creature* target = NULL;
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_UNIT, entry, hostile, dead);
-#ifdef TRINITY
-        Trinity::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#elif AZEROTHCORE
-        Acore::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#else
         MaNGOS::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitGridObjects(obj, searcher, range);
-
-#endif
 
         E->Push(target);
         return 1;
@@ -283,16 +257,8 @@ namespace LuaWorldObject
 
         std::list<Player*> list;
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
-#ifdef TRINITY
-        Trinity::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#elif AZEROTHCORE
-        Acore::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#else
         MaNGOS::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitWorldObjects(obj, searcher, range);
-#endif
 
         lua_createtable(E->L, list.size(), 0);
         int tbl = lua_gettop(E->L);
@@ -327,16 +293,8 @@ namespace LuaWorldObject
 
         std::list<Creature*> list;
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry, hostile, dead);
-#ifdef TRINITY
-        Trinity::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#elif defined AZEROTHCORE
-        Acore::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#else
         MaNGOS::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
-#endif
 
         lua_createtable(E->L, list.size(), 0);
         int tbl = lua_gettop(E->L);
@@ -369,16 +327,8 @@ namespace LuaWorldObject
 
         std::list<GameObject*> list;
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
-#ifdef TRINITY
-        Trinity::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#elif AZEROTHCORE
-        Acore::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#else
         MaNGOS::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitGridObjects(obj, searcher, range);
-#endif
 
         lua_createtable(E->L, list.size(), 0);
         int tbl = lua_gettop(E->L);
@@ -419,16 +369,8 @@ namespace LuaWorldObject
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, type, entry, hostile, dead);
 
         WorldObject* target = NULL;
-#ifdef TRINITY
-        Trinity::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#elif AZEROTHCORE
-        Acore::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#else
         MaNGOS::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(target, checker);
         Cell::VisitAllObjects(obj, searcher, range);
-#endif
 
         E->Push(target);
         return 1;
@@ -459,16 +401,8 @@ namespace LuaWorldObject
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, type, entry, hostile, dead);
 
         std::list<WorldObject*> list;
-#ifdef TRINITY
-        Trinity::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#elif AZEROTHCORE
-        Acore::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
-#else
         MaNGOS::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(list, checker);
         Cell::VisitAllObjects(obj, searcher, range);
-#endif
 
         lua_createtable(E->L, list.size(), 0);
         int tbl = lua_gettop(E->L);
@@ -658,16 +592,6 @@ namespace LuaWorldObject
     int GetAngle(Eluna* E, WorldObject* obj)
     {
         WorldObject* target = E->CHECKOBJ<WorldObject>(2, false);
-#if defined TRINITY && !AZEROTHCORE
-        if (target)
-            E->Push(obj->GetAbsoluteAngle(target));
-        else
-        {
-            float x = E->CHECKVAL<float>(2);
-            float y = E->CHECKVAL<float>(3);
-            E->Push(obj->GetAbsoluteAngle(x, y));
-        }
-#else
         if (target)
             E->Push(obj->GetAngle(target));
         else
@@ -676,7 +600,7 @@ namespace LuaWorldObject
             float y = E->CHECKVAL<float>(3);
             E->Push(obj->GetAngle(x, y));
         }
-#endif
+
         return 1;
     }
 
@@ -688,11 +612,8 @@ namespace LuaWorldObject
     int SendPacket(Eluna* E, WorldObject* obj)
     {
         WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
-#ifdef CMANGOS
-        obj->SendMessageToSet(*data, true);
-#else
+
         obj->SendMessageToSet(data, true);
-#endif
         return 0;
     }
 
@@ -715,14 +636,8 @@ namespace LuaWorldObject
         float z = E->CHECKVAL<float>(5);
         float o = E->CHECKVAL<float>(6);
         uint32 respawnDelay = E->CHECKVAL<uint32>(7, 30);
-#ifdef TRINITY
-        QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
-        E->Push(obj->SummonGameObject(entry, Position(x, y, z, o), rot, Seconds(respawnDelay)));
-#elif AZEROTHCORE
-        E->Push(obj->SummonGameObject(entry, x, y, z, o, 0, 0, 0, 0, respawnDelay));
-#else
+
         E->Push(obj->SummonGameObject(entry, x, y, z, o, respawnDelay));
-#endif
         return 1;
     }
 
@@ -762,38 +677,6 @@ namespace LuaWorldObject
         uint32 spawnType = E->CHECKVAL<uint32>(7, 8);
         uint32 despawnTimer = E->CHECKVAL<uint32>(8, 0);
 
-#if defined TRINITY || AZEROTHCORE
-        TempSummonType type;
-        switch (spawnType)
-        {
-            case 1:
-                type = TEMPSUMMON_TIMED_OR_DEAD_DESPAWN;
-                break;
-            case 2:
-                type = TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN;
-                break;
-            case 3:
-                type = TEMPSUMMON_TIMED_DESPAWN;
-                break;
-            case 4:
-                type = TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT;
-                break;
-            case 5:
-                type = TEMPSUMMON_CORPSE_DESPAWN;
-                break;
-            case 6:
-                type = TEMPSUMMON_CORPSE_TIMED_DESPAWN;
-                break;
-            case 7:
-                type = TEMPSUMMON_DEAD_DESPAWN;
-                break;
-            case 8:
-                type = TEMPSUMMON_MANUAL_DESPAWN;
-                break;
-            default:
-                return luaL_argerror(E->L, 7, "valid SpawnType expected");
-        }
-#else
         TempSpawnType type;
         switch (spawnType)
         {
@@ -830,12 +713,8 @@ namespace LuaWorldObject
             default:
                 return luaL_argerror(E->L, 7, "valid SpawnType expected");
         }
-#endif
-#ifdef TRINITY
-        E->Push(obj->SummonCreature(entry, x, y, z, o, type, Milliseconds(despawnTimer)));
-#else
+
         E->Push(obj->SummonCreature(entry, x, y, z, o, type, despawnTimer));
-#endif
         return 1;
     }
 
@@ -1119,11 +998,7 @@ namespace LuaWorldObject
         WorldObject* target = E->CHECKOBJ<WorldObject>(2);
         float arc = E->CHECKVAL<float>(3, static_cast<float>(M_PI));
 
-#ifdef MANGOS
         E->Push(obj->IsInFront(target, arc));
-#else
-        E->Push(obj->isInFront(target, arc));
-#endif
         return 1;
     }
 
@@ -1139,11 +1014,7 @@ namespace LuaWorldObject
         WorldObject* target = E->CHECKOBJ<WorldObject>(2);
         float arc = E->CHECKVAL<float>(3, static_cast<float>(M_PI));
 
-#ifdef MANGOS
         E->Push(obj->IsInBack(target, arc));
-#else
-        E->Push(obj->isInBack(target, arc));
-#endif
         return 1;
     }
 
@@ -1165,17 +1036,12 @@ namespace LuaWorldObject
 
         WorldPacket data(SMSG_PLAY_MUSIC, 4);
         data << uint32(musicid);
-#ifdef CMANGOS
-        if (player)
-            player->SendDirectMessage(data);
-        else
-            obj->SendMessageToSet(data, true);
-#else
+
         if (player)
             player->SendDirectMessage(&data);
         else
             obj->SendMessageToSet(&data, true);
-#endif
+
         return 0;
     }
 
@@ -1198,13 +1064,10 @@ namespace LuaWorldObject
             return 0;
 
         if (player)
-#ifndef CMANGOS
             obj->PlayDirectSound(soundId, player);
-#else
-            obj->PlayDirectSound(soundId, PlayPacketParameters(PLAY_TARGET, (Player const*)player));
-#endif
         else
             obj->PlayDirectSound(soundId);
+
         return 0;
     }
 
@@ -1228,16 +1091,39 @@ namespace LuaWorldObject
             return 0;
 
         if (player)
-#ifndef CMANGOS
             obj->PlayDistanceSound(soundId, player);
-#else
-            obj->PlayDistanceSound(soundId, PlayPacketParameters(PLAY_TARGET, (Player const*)player));
-#endif
         else
             obj->PlayDistanceSound(soundId);
+
         return 0;
     }
-    
+
+    /**
+     * Returns a runtime-persistent cache tied to the [WorldObject].
+     * This data will remain for as long as the [WorldObject] exists, or until a server restart.
+     *
+     * A reload of the Lua state will NOT clear this cache.
+     *
+     * This cache can be added to and read from with the following sub-methods.
+     * <pre>
+     * -- Sets the key-value pair in the cache
+     * WorldObject:Data():Set("key", val)
+     *
+     * -- Returns the value from the cache using the key
+     * local val = WorldObject:Data():Get("key")
+     *
+     * -- Removes the key-value pair from the cache
+     * WorldObject:Data():Set("key", nil)
+     *
+     * -- Returns all the key-value pairs as a Lua table indexed by the keys
+     * local table = WorldObject:Data():AsTable()
+     * </pre>
+     */
+    int Data(Eluna* E, WorldObject* obj)
+    {
+        return LuaVal::PushLuaVal(E->L, obj->lua_data);
+    }
+
     ElunaRegister<WorldObject> WorldObjectMethods[] =
     {
         // Getters
@@ -1246,6 +1132,9 @@ namespace LuaWorldObject
 #if (!defined(TBC) && !defined(CLASSIC))
         { "GetPhaseMask", &LuaWorldObject::GetPhaseMask },
         { "SetPhaseMask", &LuaWorldObject::SetPhaseMask },
+#else
+        { "GetPhaseMask", nullptr, METHOD_REG_NONE },
+        { "SetPhaseMask", nullptr, METHOD_REG_NONE },
 #endif
         { "GetInstanceId", &LuaWorldObject::GetInstanceId },
         { "GetAreaId", &LuaWorldObject::GetAreaId },
@@ -1288,14 +1177,15 @@ namespace LuaWorldObject
         { "SummonGameObject", &LuaWorldObject::SummonGameObject },
         { "SpawnCreature", &LuaWorldObject::SpawnCreature },
         { "SendPacket", &LuaWorldObject::SendPacket },
-        { "RegisterEvent", &LuaWorldObject::RegisterEvent },
-        { "RemoveEventById", &LuaWorldObject::RemoveEventById },
-        { "RemoveEvents", &LuaWorldObject::RemoveEvents },
+        { "RegisterEvent", &LuaWorldObject::RegisterEvent, METHOD_REG_MAP }, // Map state method only in multistate
+        { "RemoveEventById", &LuaWorldObject::RemoveEventById, METHOD_REG_MAP }, // Map state method only in multistate
+        { "RemoveEvents", &LuaWorldObject::RemoveEvents, METHOD_REG_MAP }, // Map state method only in multistate
         { "PlayMusic", &LuaWorldObject::PlayMusic },
         { "PlayDirectSound", &LuaWorldObject::PlayDirectSound },
         { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound },
+        { "Data", &LuaWorldObject::Data },
 
-        { NULL, NULL }
+        { NULL, NULL, METHOD_REG_NONE }
     };
 };
 #endif
