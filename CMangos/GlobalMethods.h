@@ -1926,17 +1926,6 @@ namespace LuaGlobalFunctions
         uint32 incrtime = E->CHECKVAL<uint32>(4);
         uint32 extendedcost = E->CHECKVAL<uint32>(5);
 
-#if defined TRINITY || AZEROTHCORE
-#ifdef CATA
-        if (!eObjectMgr->IsVendorItemValid(entry, item, maxcount, incrtime, extendedcost, 1))
-            return 0;
-        eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime, extendedcost, 1);
-#else
-        if (!eObjectMgr->IsVendorItemValid(entry, item, maxcount, incrtime, extendedcost))
-            return 0;
-        eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime, extendedcost);
-#endif
-#else
 #ifndef CATA
         if (!eObjectMgr->IsVendorItemValid(false, "npc_vendor", entry, item, maxcount, incrtime, extendedcost, 0))
 #else
@@ -1950,7 +1939,6 @@ namespace LuaGlobalFunctions
 #else
         eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime);
 #endif
-#endif//TRINITY
         return 0;
     }
 

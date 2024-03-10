@@ -815,6 +815,7 @@ namespace LuaCreature
             creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
         return 0;
     }
+
 #ifndef CATA
     /**
      * Sets whether the [Creature] gives reputation or not.
