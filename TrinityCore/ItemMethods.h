@@ -487,6 +487,22 @@ namespace LuaItem
     /**
      * Returns the name of the [Item]
      *
+     * <pre>
+     * enum LocaleConstant
+     * {
+     *     LOCALE_enUS = 0,
+     *     LOCALE_koKR = 1,
+     *     LOCALE_frFR = 2,
+     *     LOCALE_deDE = 3,
+     *     LOCALE_zhCN = 4,
+     *     LOCALE_zhTW = 5,
+     *     LOCALE_esES = 6,
+     *     LOCALE_esMX = 7,
+     *     LOCALE_ruRU = 8
+     * };
+     * </pre>
+     *
+     * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the [Item]'s name
      * @return string name
      */
     int GetName(Eluna* E, Item* item)
@@ -494,7 +510,13 @@ namespace LuaItem
 #ifdef CATA
         E->Push(item->GetTemplate()->GetDefaultLocaleName());
 #else
-        E->Push(item->GetTemplate()->Name1);
+        uint8 locale = Eluna::CHECKVAL<uint8>(E->L, 2, DEFAULT_LOCALE);
+        std::string name = item->GetTemplate()->Name1;
+
+        if (ItemLocale const* il = eObjectMgr->GetItemLocale(itemTemplate->ItemId))
+            ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(locale), name);
+
+        E->Push(name);
 #endif
         return 1;
     }
