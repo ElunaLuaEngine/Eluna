@@ -510,7 +510,7 @@ namespace LuaItem
 #ifdef CATA
         E->Push(item->GetTemplate()->GetDefaultLocaleName());
 #else
-        uint8 locale = Eluna::CHECKVAL<uint8>(E->L, 2, DEFAULT_LOCALE);
+        uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
         std::string name = item->GetTemplate()->Name1;
 
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(itemTemplate->ItemId))
