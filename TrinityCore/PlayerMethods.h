@@ -3302,26 +3302,11 @@ namespace LuaPlayer
     {
         std::string prefix = E->CHECKVAL<std::string>(2);
         std::string message = E->CHECKVAL<std::string>(3);
-        uint8 channel = E->CHECKVAL<uint8>(4);
+        ChatMsg channel = ChatMsg(E->CHECKVAL<uint8>(4));
         Player* receiver = E->CHECKOBJ<Player>(5);
-
-        WorldPacket data(SMSG_MESSAGECHAT, 100);
-        data << uint8(channel);
-        data << int32(LANG_ADDON);
-        data << player->GET_GUID();
-        data << uint32(0);
-        data << receiver->GET_GUID();
-#ifdef CATA
-        data << prefix;
-        data << uint32(message.length() + 1);
-        data << message;
-#else
         std::string fullmsg = prefix + "\t" + message;
-        data << uint32(fullmsg.length() + 1);
-        data << fullmsg;
-#endif
-        data << uint8(0);
-
+        WorldPacket data;
+        ChatHandler::BuildChatPacket(data, channel, LANG_ADDON, player, receiver, fullmsg);
         receiver->GetSession()->SendPacket(&data);
         return 0;
     }

@@ -76,6 +76,7 @@
 
 #if defined TRINITY
 #include "SpellHistory.h"
+#include "MiscPackets.h"
 #endif
 
 #if defined AZEROTHCORE

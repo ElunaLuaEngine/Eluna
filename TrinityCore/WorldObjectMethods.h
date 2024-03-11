@@ -1066,13 +1066,16 @@ namespace LuaWorldObject
         uint32 musicid = E->CHECKVAL<uint32>(2);
         Player* player = E->CHECKOBJ<Player>(3, false);
 
-        WorldPacket data(SMSG_PLAY_MUSIC, 4);
-        data << uint32(musicid);
+        if (!sSoundEntriesStore.LookupEntry(musicid))
+            return 0;
+
+        WorldPackets::Misc::PlayMusic playMusic(musicid);
+        const WorldPacket* data = playMusic.Write();
 
         if (player)
-            player->SendDirectMessage(&data);
+            player->SendDirectMessage(data);
         else
-            obj->SendMessageToSet(&data, true);
+            obj->SendMessageToSet(data, true);
 
         return 0;
     }
