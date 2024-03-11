@@ -1,0 +1,13 @@
+-- Define the directories where Lua looks for modules and C modules to require
+local path = ";/usr/share/%s/?.lua;/usr/local/share/lua/%s/?.lua;/usr/local/share/lua/%s/?/init.lua;/usr/share/lua/%s/?.lua;/usr/share/lua/%s/?/init.lua"
+local cpath = ";/usr/local/lib/lua/%s/?.so;/usr/lib/x86_64-linux-gnu/lua/%s/?.so;/usr/local/lib/lua/%s/loadall.so"
+
+-- Using the LuaJIT as the string or using "lua"
+local engine  = jit and jit.version:gsub(" ", "-"):lower() or "lua"
+
+-- Get the version number for Lua
+local version = _VERSION:gsub("Lua ", "")
+
+-- Format and add specified paths to package.path and package.cpath
+package.path = package.path .. string.format(path, engine, version, version, version, version)
+package.cpath = package.cpath .. string.format(cpath, version, version, version)
