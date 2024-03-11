@@ -8,7 +8,9 @@ elseif(WIN32)
 endif()
 
 # Add Lua compatibility definition
-target_compile_definitions(lualib PUBLIC LUA_COMPAT_MODULE)
+if(NOT TARGET lualib) 
+  target_compile_definitions(lualib PUBLIC LUA_COMPAT_MODULE) 
+endif()
 
 # Collect module directories
 file(GLOB_RECURSE modules_list LIST_DIRECTORIES true ${MODULES_DIR}/*)
