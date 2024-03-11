@@ -47,6 +47,8 @@ ElunaLoader::~ElunaLoader()
 void ElunaLoader::LoadScripts()
 {
     lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
+    const std::string& lua_path_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_PATH_EXTRA);
+    const std::string& lua_cpath_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_CPATH_EXTRA);
 
     uint32 oldMSTime = ElunaUtil::GetCurrTime();
     lua_scripts.clear();
@@ -63,6 +65,13 @@ void ElunaLoader::LoadScripts()
 
     ReadFiles(lua_folderpath);
     CombineLists();
+
+    // append our custom require paths and cpaths if the config variables are not empty
+    if (!lua_path_extra.empty())
+        lua_requirepath += lua_path_extra;
+
+    if (!lua_cpath_extra.empty())
+        lua_requirecpath += lua_cpath_extra;
 
     // Erase last ;
     if (!lua_requirepath.empty())
