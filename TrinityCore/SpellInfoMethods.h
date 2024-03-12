@@ -181,18 +181,96 @@ namespace LuaSpellInfo
         E->Push(spell_info->IsAffectingArea());
         return 1;
     }
+    
+    /**
+     * Retrieves the category of the [SpellInfo].
+     *
+     * A spell's category is a way of grouping similar spells together.
+     * It might define the spell's nature or its effect. 
+     * For instance, damage spells, heal spells, and crowd-control spells might each have a different category.
+     *
+     * @return integer category : Returns the category of the [SpellInfo].
+     */
+    int GetCategory(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->GetCategory());
+        return 1;
+    }
+    
+    /**
+     * Checks if the [SpellInfo] has a specific effect.
+     *
+     * A spell can have various effects such as damage, healing, or status changes.
+     * These effects are identified by a predefined set of constants represented by the 'SpellEffects' enumeration.
+     *
+     * @param effect : The specific effect to check.
+     * @return boolean : returns true if [SpellInfo] has the specific effect, else false
+     */
+    int HasEffect(Eluna* E, SpellInfo* spell_info)
+    {
+        uint8 effect = E->CHECKVAL<uint8>(2);
+        E->Push(spell_info->HasEffect(static_cast<SpellEffects>(effect)));
+        return 1;
+    }
+    
+    /**
+     * Checks if the [SpellInfo] has a specific aura.
+     *
+     * An aura represents a status change or modification due to a spell or ability. 
+     * These auras are identified by a predefined set of constants represented by the 'AuraType' enumeration.
+     *
+     * @param aura : The specific aura to check.
+     * @return boolean : Returns true if [SpellInfo] has the specific aura, else false
+     */
+    int HasAura(Eluna* E, SpellInfo* spell_info)
+    {
+        uint32 aura = E->CHECKVAL<uint32>(2);
+        E->Push(spell_info->HasAura(static_cast<AuraType>(aura)));
+        return 1;
+    }
+    
+    /**
+     * Checks if the [SpellInfo] has an area aura effect.
+     *
+     * Area aura is a type of spell effect that affects multiple targets within a certain area.
+     * 
+     * @return boolean : Returns true if [SpellInfo] has area aura effect, else false
+     */
+    int HasAreaAuraEffect(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->HasAreaAuraEffect());
+        return 1;
+    }
+    
+    /**
+     * Checks if the [SpellInfo] contains only damage effects.
+     *
+     * Damage effects are spell effects that reduce the target's health points.
+     *
+     * @return boolean : Returns true if [SpellInfo] has only damage effects, else false.
+     */
+    int HasOnlyDamageEffects(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->HasOnlyDamageEffects());
+        return 1;
+    }
 
     ElunaRegister<SpellInfo> SpellInfoMethods[] =
     {
         // Getters
         { "GetName", &LuaSpellInfo::GetName },
         { "GetAttributes", &LuaSpellInfo::GetAttributes },
+        { "GetCategory", &LuaSpellInfo::GetCategory },
         
         // Setters
 
         // Boolean
         { "HasAttribute", &LuaSpellInfo::HasAttribute },
         { "IsAffectingArea", &LuaSpellInfo::IsAffectingArea },
+        { "HasEffect", &LuaSpellInfo::HasEffect },
+        { "HasAura", &LuaSpellInfo::HasAura },
+        { "HasAreaAuraEffect", &LuaSpellInfo::HasAreaAuraEffect },
+        { "HasOnlyDamageEffects", &LuaSpellInfo::HasOnlyDamageEffects },
         
         // Other
 
