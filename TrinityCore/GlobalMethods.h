@@ -3171,6 +3171,20 @@ namespace LuaGlobalFunctions
         return 0;
     }
     
+    /*
+    * Get the [SpellInfo] of entry
+    *
+    * @param uint32 entry : the ID of [Spell]
+    * @return [SpellInfo] spell_info
+    */
+    int GetSpellInfo(Eluna* E)
+    {
+        uint32 entry = E->CHECKVAL<uint32>(1);
+        E->Push(sSpellMgr->GetSpellInfo(entry));
+        
+        return 1;
+    }
+
     ElunaGlobal::ElunaRegister GlobalMethods[] =
     {
         // Hooks
@@ -3249,6 +3263,7 @@ namespace LuaGlobalFunctions
         { "PrintError", &LuaGlobalFunctions::PrintError },
         { "PrintDebug", &LuaGlobalFunctions::PrintDebug },
         { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
+        { "GetSpellInfo", &LuaGlobalFunctions::GetSpellInfo },
 
         // Boolean
         { "IsCompatibilityMode", &LuaGlobalFunctions::IsCompatibilityMode },
@@ -3293,3 +3308,4 @@ namespace LuaGlobalFunctions
     };
 }
 #endif
+
