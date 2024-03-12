@@ -511,12 +511,13 @@ namespace LuaItem
         E->Push(item->GetTemplate()->GetDefaultLocaleName());
 #else
         uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
-        std::string name = item->GetTemplate()->Name1;
+        const ItemTemplate* temp = item->GetTemplate();
 
-        if (ItemLocale const* il = eObjectMgr->GetItemLocale(itemTemplate->ItemId))
+        std::string name = temp->Name1;
+        if (ItemLocale const* il = eObjectMgr->GetItemLocale(temp->ItemId))
             ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(locale), name);
 
-        E->Push(name);
+        E->Push(item->GetTemplate()->Name1);
 #endif
         return 1;
     }
