@@ -254,23 +254,418 @@ namespace LuaSpellInfo
         E->Push(spell_info->HasOnlyDamageEffects());
         return 1;
     }
+    
+    /**
+     * Checks if the [SpellInfo] is an explicit discovery.
+     *
+     * An "explicit discovery" may refer to a spell that is not intuitive or is hidden and must be specifically 
+     * discovered by the player through some sort of action or event.
+     *
+     * @return boolean : Returns true if the [SpellInfo] is an explicit discovery, else false.
+     */
+    int IsExplicitDiscovery(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsExplicitDiscovery());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] is related to loot crafting.
+     *
+     * Loot crafting can refer to the process wherein a player uses collected in-game items (loot)
+     * to craft or create new items, abilities, or spells.
+     *
+     * @return boolean: Returns true if the [SpellInfo] is related to loot crafting, else false.
+     */
+    int IsLootCrafting(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsLootCrafting());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] is related to a Profession skill or Riding skill.
+     *
+     * Profession skills may refer to a set of abilities related to a particular trade or activity, such as blacksmithing or alchemy.
+     * Riding skills are those related to the ability to ride mounts.
+     *
+     * @return boolean : Returns true if the [SpellInfo] is related to a Profession or Riding skill, else false.
+     */
+    int IsProfessionOrRiding(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsProfessionOrRiding());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] is related to a profession skill.
+     *
+     * Profession skills may refer to abilities related to a specific occupation or trade, 
+     * such as blacksmithing, alchemy, fishing, etc.
+     *
+     * @return boolean : Returns true if the [SpellInfo] is related to a profession, else false.
+     */
+    int IsProfession(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsProfession());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] is related to a primary profession skill.
+     *
+     * Primary profession skills usually refer to main occupations or trades of the player character, 
+     * such as blacksmithing, alchemy, mining, etc.
+     *
+     * @return boolean: Returns true if the [SpellInfo] is related to a primary profession, else false.
+     */
+    int IsPrimaryProfession(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsPrimaryProfession());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] represents the first rank of a primary profession skill.
+     * 
+     * Primary profession skills usually refer to main occupations or trades of the player character. 
+     * The first rank typically indicates the introductory level of the profession.
+     *
+     * @return boolean : Returns true if the [SpellInfo] is the first rank of a primary profession, else false.
+     */
+    int IsPrimaryProfessionFirstRank(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsPrimaryProfessionFirstRank());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] represents an ability learned with a profession skill.
+     *
+     * Certain abilities or skills (like crafting item or gathering materials) 
+     * can be learned as part of a profession.
+     *
+     * @return boolean : Returns true if the [SpellInfo] represents an ability that is learned with a profession, else false.
+     */
+    int IsAbilityLearnedWithProfession(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsAbilityLearnedWithProfession());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] represents an ability of a specific skill type.
+     *
+     * This function allows checking if a spell or ability belongs to a specific skill type. 
+     * The skill type is often represented as an integral value (in this case, uint32), 
+     * where each value may correspond to a different skill category such as crafting, combat, magic, etc.
+     *
+     * @param skillType The skill type to check against. Should be an integral value representing the skill type.
+     * @return boolean : Returns true if the [SpellInfo] represents an ability of the given skill type, else false.
+     */
+    int IsAbilityOfSkillType(Eluna* E, SpellInfo* spell_info)
+    {
+        uint32 skillType = E->CHECKVAL<uint32>(2);
+        E->Push(spell_info->IsAbilityOfSkillType(skillType));
+        return 1;
+    }
+
+    /**
+     * Determines if the [SpellInfo] represents a spell or ability that targets an area.
+     *
+     * Spells or abilities that target an area are typically designed to affect multiple targets within a specified range.
+     *
+     * @return boolean : Returns true if the [SpellInfo] represents an ability or spell that targets an area, else false.
+     */
+    int IsTargetingArea(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsTargetingArea());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] requires an explicit unit target.
+     *
+     * Certain spells or abilities can only be cast or used when a specific unit (like a player character, NPC, or enemy) is targeted. 
+     * This function checks if the spell or ability represented by [SpellInfo] has this requirement.
+     *
+     * @return boolean : Returns true if the [SpellInfo] requires an explicit unit target for its execution, otherwise false.
+     */
+    int NeedsExplicitUnitTarget(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->NeedsExplicitUnitTarget());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] requires to be triggered by the caster of another specified spell.
+     *
+     * Certain spells or abilities can only be activated or become effective when they are triggered by the caster 
+     * of another specific spell (the triggeringSpell). This function examines if the spell or ability represented 
+     * by [SpellInfo] has such requirement.
+     *
+     * @param triggeringSpell The spell by the casting of which the ability or spell represented by [SpellInfo] is triggered.
+     * @return boolean : Returns true if the [SpellInfo] needs to be triggered by the caster of the triggeringSpell, else false.
+     */
+    int NeedsToBeTriggeredByCaster(Eluna* E, SpellInfo* spell_info)
+    {
+        const SpellInfo* triggeringSpell = E->CHECKOBJ<SpellInfo>(2);
+        E->Push(spell_info->NeedsToBeTriggeredByCaster(triggeringSpell));
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] represents a self-casting spell or ability.
+     *
+     * Self-casting spells or abilities are those that the casters use on themselves. This can include 
+     * defensive spells, healing spells, buffs, or any other type of effect that a player character or 
+     * NPC applies on themselves.
+     *
+     * @return boolean: Returns true if the [SpellInfo] represents a self-casting spell or ability, otherwise false.
+     */
+    int IsSelfCast(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsSelfCast());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] represents a passive spell or ability.
+     *
+     * Passive spells or abilities are those that are always in effect, without the need for the player or 
+     * NPC to manually activate them. They usually provide their bonus or effect as long as certain conditions are met.
+     *
+     * @return boolean: Returns true if the [SpellInfo] represents a passive spell or ability, otherwise false.
+     */
+    int IsPassive(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsPassive());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] represents a spell or ability that can be set to autocast.
+     *
+     * Autocasting is a feature that allows certain abilities or spells to be cast automatically by the game's 
+     * AI when certain conditions are met. This function checks if the spell or ability represented by [SpellInfo] 
+     * can be set to autocast.
+     *
+     * @return boolean : Returns true if the [SpellInfo] is autocastable, else false.
+     */
+    int IsAutocastable(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsAutocastable());
+        return 1;
+    }
+
+    /**
+     * Determines if the [SpellInfo] represents a spell or ability that stack with different ranks.
+     *
+     * Some spells or abilities can accumulate or "stack" their effects with multiple activations 
+     * and these effects can sometimes vary based on the rank or level of the spell. This function checks 
+     * if the spell represented by [SpellInfo] has this capacity.
+     *
+     * @return boolean : Returns true if the [SpellInfo] is stackable with different ranks, 
+     * otherwise false.
+     */
+    int IsStackableWithRanks(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsStackableWithRanks());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] represents a passive spell or ability that is stackable with different ranks.
+     *
+     * Some passive spells or abilities are designed to stack their effects with multiple activations, and these effects 
+     * can also vary depending on the rank of the spell. This function assesses whether the spell or ability represented 
+     * by [SpellInfo] has this property.
+     *
+     * @return boolean : Returns true if the [SpellInfo] is a passive ability or spell that can be stacked with 
+     * different ranks, otherwise false.
+     */
+    int IsPassiveStackableWithRanks(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsPassiveStackableWithRanks());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] represents a multi-slot aura spell or effect.
+     *
+     * A multi-slot aura is one that takes up more than one slot or position in the game's effect array or system. 
+     * This function checks if the spell or ability represented by [SpellInfo] has this property.
+     *
+     * @return boolean : Returns true if the [SpellInfo] represents a multi-slot aura, else false.
+     */
+    int IsMultiSlotAura(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsMultiSlotAura());
+        return 1;
+    }
+
+    /**
+     * Checks if the [SpellInfo] represents a spell or ability that can be stacked on one slot by different casters.
+     *
+     * This function checks if the spell or ability represented by [SpellInfo] has this stackable property.
+     *
+     * @return boolean : Returns true if the [SpellInfo] is stackable on one slot by different casters, else false.
+     */
+    int IsStackableOnOneSlotWithDifferentCasters(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsStackableOnOneSlotWithDifferentCasters());
+        return 1;
+    }
+
+    int IsCooldownStartedOnEvent(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsCooldownStartedOnEvent());
+        return 1;
+    }
+
+    int IsDeathPersistent(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsDeathPersistent());
+        return 1;
+    }
+
+    int IsRequiringDeadTarget(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsRequiringDeadTarget());
+        return 1;
+    }
+
+    int IsAllowingDeadTarget(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsAllowingDeadTarget());
+        return 1;
+    }
+
+    int IsGroupBuff(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsGroupBuff());
+        return 1;
+    }
+
+    int CanBeUsedInCombat(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->CanBeUsedInCombat());
+        return 1;
+    }
+
+    int IsPositive(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsPositive());
+        return 1;
+    }
+
+    int IsPositiveEffect(Eluna* E, SpellInfo* spell_info)
+    {
+        uint8 effIndex = E->CHECKVAL<uint32>(2);
+        E->Push(spell_info->IsPositiveEffect(effIndex));
+        return 1;
+    }
+
+    int IsChanneled(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsChanneled());
+        return 1;
+    }
+
+    int IsMoveAllowedChannel(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsMoveAllowedChannel());
+        return 1;
+    }
+
+    int NeedsComboPoints(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->NeedsComboPoints());
+        return 1;
+    }
+
+    int IsNextMeleeSwingSpell(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsNextMeleeSwingSpell());
+        return 1;
+    }
+
+    int IsBreakingStealth(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsBreakingStealth());
+        return 1;
+    }
+
+    int IsRangedWeaponSpell(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsRangedWeaponSpell());
+        return 1;
+    }
+
+    int IsAutoRepeatRangedSpell(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsAutoRepeatRangedSpell());
+        return 1;
+    }
+
+    int HasInitialAggro(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->HasInitialAggro());
+        return 1;
+    }
 
     ElunaRegister<SpellInfo> SpellInfoMethods[] =
     {
         // Getters
-        { "GetName", &LuaSpellInfo::GetName },
         { "GetAttributes", &LuaSpellInfo::GetAttributes },
         { "GetCategory", &LuaSpellInfo::GetCategory },
+        { "GetName", &LuaSpellInfo::GetName },
         
         // Setters
 
         // Boolean
-        { "HasAttribute", &LuaSpellInfo::HasAttribute },
-        { "IsAffectingArea", &LuaSpellInfo::IsAffectingArea },
-        { "HasEffect", &LuaSpellInfo::HasEffect },
-        { "HasAura", &LuaSpellInfo::HasAura },
         { "HasAreaAuraEffect", &LuaSpellInfo::HasAreaAuraEffect },
+        { "HasAttribute", &LuaSpellInfo::HasAttribute },
+        { "HasAura", &LuaSpellInfo::HasAura },
+        { "HasEffect", &LuaSpellInfo::HasEffect },
+        { "HasInitialAggro", &LuaSpellInfo::HasInitialAggro },
         { "HasOnlyDamageEffects", &LuaSpellInfo::HasOnlyDamageEffects },
+        
+        { "IsAbilityLearnedWithProfession", &LuaSpellInfo::IsAbilityLearnedWithProfession },
+        { "IsAbilityOfSkillType", &LuaSpellInfo::IsAbilityOfSkillType },
+        { "IsAffectingArea", &LuaSpellInfo::IsAffectingArea },
+        { "IsAllowingDeadTarget", &LuaSpellInfo::IsAllowingDeadTarget },
+        { "IsAutocastable", &LuaSpellInfo::IsAutocastable },
+        { "IsAutoRepeatRangedSpell", &LuaSpellInfo::IsAutoRepeatRangedSpell },
+        { "IsBreakingStealth", &LuaSpellInfo::IsBreakingStealth },
+        { "IsChanneled", &LuaSpellInfo::IsChanneled },
+        { "IsCooldownStartedOnEvent", &LuaSpellInfo::IsCooldownStartedOnEvent },
+        { "IsDeathPersistent", &LuaSpellInfo::IsDeathPersistent },
+        { "IsExplicitDiscovery", &LuaSpellInfo::IsExplicitDiscovery },
+        { "IsGroupBuff", &LuaSpellInfo::IsGroupBuff },
+        { "IsLootCrafting", &LuaSpellInfo::IsLootCrafting },
+        { "IsMoveAllowedChannel", &LuaSpellInfo::IsMoveAllowedChannel },
+        { "IsMultiSlotAura", &LuaSpellInfo::IsMultiSlotAura },
+        { "IsNextMeleeSwingSpell", &LuaSpellInfo::IsNextMeleeSwingSpell },
+        { "IsPassive", &LuaSpellInfo::IsPassive },
+        { "IsPassiveStackableWithRanks", &LuaSpellInfo::IsPassiveStackableWithRanks },
+        { "IsPositive", &LuaSpellInfo::IsPositive },
+        { "IsPositiveEffect", &LuaSpellInfo::IsPositiveEffect },
+        { "IsPrimaryProfession", &LuaSpellInfo::IsPrimaryProfession },
+        { "IsPrimaryProfessionFirstRank", &LuaSpellInfo::IsPrimaryProfessionFirstRank },
+        { "IsProfession", &LuaSpellInfo::IsProfession },
+        { "IsProfessionOrRiding", &LuaSpellInfo::IsProfessionOrRiding },
+        { "IsRangedWeaponSpell", &LuaSpellInfo::IsRangedWeaponSpell },
+        { "IsRequiringDeadTarget", &LuaSpellInfo::IsRequiringDeadTarget },
+        { "IsStackableOnOneSlotWithDifferentCasters", &LuaSpellInfo::IsStackableOnOneSlotWithDifferentCasters },
+        { "IsStackableWithRanks", &LuaSpellInfo::IsStackableWithRanks },
+        { "IsTargetingArea", &LuaSpellInfo::IsTargetingArea },
+        
+        { "CanBeUsedInCombat", &LuaSpellInfo::CanBeUsedInCombat },
+
+        { "NeedsComboPoints", &LuaSpellInfo::NeedsComboPoints },
+        { "NeedsExplicitUnitTarget", &LuaSpellInfo::NeedsExplicitUnitTarget },
+        { "NeedsToBeTriggeredByCaster", &LuaSpellInfo::NeedsToBeTriggeredByCaster },
         
         // Other
 
