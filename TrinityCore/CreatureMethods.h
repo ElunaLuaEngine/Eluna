@@ -1383,7 +1383,19 @@ namespace LuaCreature
 
         return 1;
     }
-    
+
+    /**
+     * Returns the loot associated with a [Creature].
+     * TODO: Implement LootMode features
+     *
+     * @return [Loot] loot : the Loot object associated with the [Creature]
+     */
+    int GetLoot(Eluna* E, Creature* creature)
+    {
+        E->Push(&creature->loot);
+        return 1;
+    }
+
     ElunaRegister<Creature> CreatureMethods[] =
     {
         // Getters
@@ -1414,6 +1426,7 @@ namespace LuaCreature
         { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
         { "GetThreat", &LuaCreature::GetThreat },
+        { "GetLoot", &LuaCreature::GetLoot },
 
         // Setters
         { "SetRegeneratingHealth", &LuaCreature::SetRegeneratingHealth },

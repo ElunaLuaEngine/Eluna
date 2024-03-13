@@ -41,6 +41,10 @@
 #include <mutex>
 #include <memory>
 
+#ifdef TRINITY
+#include "LootMgr.h"
+#endif
+
 extern "C"
 {
 #include "lua.h"
