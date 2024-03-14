@@ -154,6 +154,26 @@ private:
     TRACKABLE_PTR_NAMESPACE unique_weak_ptr<T> _obj;
 };
 
+template <>
+class ElunaObjectImpl<Aura> : public ElunaObject
+{
+public:
+    ElunaObjectImpl(Eluna* E, Aura* obj, char const* tname);
+
+    void* GetObj() const override { return _obj.lock().get(); }
+    bool IsValid() const override
+    {
+        // aura references are not invalidated when their owner (player) changes map
+        // owner reference must be checked additionally to ensure scripts don't store
+        // and access auras of players on another map (possibly updating in another thread)
+        return !_obj.expired() && !_owner.expired();
+    }
+
+private:
+    TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Aura> _obj;
+    TRACKABLE_PTR_NAMESPACE unique_weak_ptr<WorldObject> _owner;
+};
+
 template <typename T>
 class ElunaObjectValueImpl : public ElunaObject
 {

@@ -50,6 +50,11 @@ TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Spell> GetWeakPtrFor(Spell const* obj) {
 TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Vehicle> GetWeakPtrFor(Vehicle const* obj) { return obj->GetWeakPtr(); }
 #endif
 
+ElunaObjectImpl<Aura>::ElunaObjectImpl(Eluna* E, Aura* obj, char const* tname) : ElunaObject(E, tname),
+    _obj(GetWeakPtrFor(obj)), _owner(GetWeakPtrFor(obj->GetOwner()))
+{
+}
+
 // Template by Mud from http://stackoverflow.com/questions/4484437/lua-integer-type/4485511#4485511
 template<> int ElunaTemplate<unsigned long long>::Add(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) + E->CHECKVAL<unsigned long long>(2)); return 1; }
 template<> int ElunaTemplate<unsigned long long>::Substract(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) - E->CHECKVAL<unsigned long long>(2)); return 1; }
