@@ -633,6 +633,207 @@ namespace LuaSpellInfo
         E->Push(spell_info->HasInitialAggro());
         return 1;
     }
+    
+    int GetAttackType(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->GetAttackType());
+        return 1;
+    }
+    
+    int IsItemFitToSpellRequirements(Eluna* E, SpellInfo* spell_info)
+    {
+        const Item* item = E->CHECKOBJ<Item>(2);
+        E->Push(spell_info->IsItemFitToSpellRequirements(item));
+        return 1;
+    }
+    
+    
+    int IsAffected(Eluna* E, SpellInfo* spell_info)
+    {
+        // Get the familyName from Lua argument at position 2. The CHECKVAL<uint32>(2) 
+        // instruction checks and converts the Lua argument to a uint32.
+        uint32 familyName = E->CHECKVAL<uint32>(2);
+
+        // Similarly, get three parts of flag96 from Lua arguments at position 3, 4, 5.
+        uint32 flagPart1 = E->CHECKVAL<uint32>(3);
+        uint32 flagPart2 = E->CHECKVAL<uint32>(4);
+        uint32 flagPart3 = E->CHECKVAL<uint32>(5);
+
+        // Construct a flag96 object from the individual parts retrieved from Lua.
+        flag96 familyFlags(flagPart1, flagPart2, flagPart3); 
+
+        // Now invoke the IsAffected method on spell_info with the provided familyName 
+        // and the constructed flag96 object familyFlag.
+        // Finally, push its result back to Lua.
+        E->Push(spell_info->IsAffected(familyName, familyFlags));
+
+        return 1;
+    }
+    
+    int IsAffectedBySpellMods(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsAffectedBySpellMods());
+        return 1;
+    }
+    
+    /*  int IsAffectedBySpellMod(Eluna* E, SpellInfo* spell_info)
+        {
+            const SpellInfo* auraSpellInfo = E->CHECKOBJ<SpellInfo>(2);
+            E->Push(spell_info->IsAffectedBySpellMod(auraSpellInfo));
+            return 1;
+        }
+    */
+    
+    int CanPierceImmuneAura(Eluna* E, SpellInfo* spell_info)
+    {
+        const SpellInfo* auraSpellInfo = E->CHECKOBJ<SpellInfo>(2);
+        E->Push(spell_info->CanPierceImmuneAura(auraSpellInfo));
+        return 1;
+    }
+    
+    int CanDispelAura(Eluna* E, SpellInfo* spell_info)
+    {
+        const SpellInfo* auraSpellInfo = E->CHECKOBJ<SpellInfo>(2);
+        E->Push(spell_info->CanDispelAura(auraSpellInfo));
+        return 1;
+    }
+    
+    int IsSingleTarget(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->IsSingleTarget());
+        return 1;
+    }
+    
+    int IsAuraExclusiveBySpecificWith(Eluna* E, SpellInfo* spell_info)
+    {
+        const SpellInfo* spellInfo = E->CHECKOBJ<SpellInfo>(2);
+        E->Push(spell_info->IsAuraExclusiveBySpecificWith(spellInfo));
+        return 1;
+    }
+    
+    int IsAuraExclusiveBySpecificPerCasterWith(Eluna* E, SpellInfo* spell_info)
+    {
+        const SpellInfo* spellInfo = E->CHECKOBJ<SpellInfo>(2);
+        E->Push(spell_info->IsAuraExclusiveBySpecificPerCasterWith(spellInfo));
+        return 1;
+    }
+    
+    int CheckShapeshift(Eluna* E, SpellInfo* spell_info)
+    {
+        uint32 form = E->CHECKVAL<uint32>(2);
+        E->Push(spell_info->CheckShapeshift(form));
+        return 1;
+    }
+    
+    int CheckLocation(Eluna* E, SpellInfo* spell_info)
+    {
+        uint32 map_id = E->CHECKVAL<uint32>(2);
+        uint32 zone_id = E->CHECKVAL<uint32>(3);
+        uint32 area_id = E->CHECKVAL<uint32>(4);
+        const Player* player = E->CHECKOBJ<Player>(5, false);
+        bool strict = E->CHECKVAL<bool>(6, false);
+
+        E->Push(spell_info->CheckLocation(map_id, zone_id, area_id, player, strict));
+        return 1;
+    }
+    
+    int CheckTarget(Eluna* E, SpellInfo* spell_info)
+    {
+        const WorldObject* caster = E->CHECKOBJ<WorldObject>(2);
+        const WorldObject* target = E->CHECKOBJ<WorldObject>(3);
+        bool implicit = E->CHECKVAL<bool>(4, true);
+
+        E->Push(spell_info->CheckTarget(caster, target, implicit));
+        return 1;
+    }
+    
+    int CheckExplicitTarget(Eluna* E, SpellInfo* spell_info)
+    {
+        const WorldObject* caster = E->CHECKOBJ<WorldObject>(2);
+        const WorldObject* target = E->CHECKOBJ<WorldObject>(3);
+        const Item* item = E->CHECKOBJ<Item>(4, true);
+
+        E->Push(spell_info->CheckExplicitTarget(caster, target, item));
+        return 1;
+    }
+    
+    int CheckVehicle(Eluna* E, SpellInfo* spell_info)
+    {
+        const Unit* caster = E->CHECKOBJ<Unit>(2);
+
+        E->Push(spell_info->CheckVehicle(caster));
+        return 1;
+    }
+    
+    int CheckTargetCreatureType(Eluna* E, SpellInfo* spell_info)
+    {
+        const Unit* target = E->CHECKOBJ<Unit>(2);
+
+        E->Push(spell_info->CheckTargetCreatureType(target));
+        return 1;
+    }
+    
+    int GetSchoolMask(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->GetSchoolMask());
+        return 1;
+    }
+    
+    int GetAllEffectsMechanicMask(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->GetAllEffectsMechanicMask());
+        return 1;
+    }
+    
+    int GetEffectMechanicMask(Eluna* E, SpellInfo* spell_info)
+    {
+        uint32 effIndex = E->CHECKVAL<uint32>(2);
+        
+        E->Push(spell_info->GetEffectMechanicMask(static_cast<SpellEffIndex>(effIndex)));
+        return 1;
+    }
+    
+    int GetSpellMechanicMaskByEffectMask(Eluna* E, SpellInfo* spell_info)
+    {
+        uint32 effectmask = E->CHECKVAL<uint32>(2);
+
+        E->Push(spell_info->GetSpellMechanicMaskByEffectMask(effectmask));
+        return 1;
+    }
+    
+    int GetEffectMechanic(Eluna* E, SpellInfo* spell_info)
+    {
+        uint32 effIndex = E->CHECKVAL<uint32>(2);
+
+        E->Push(spell_info->GetEffectMechanic(static_cast<SpellEffIndex>(effIndex)));
+        return 1;
+    }
+    
+    int GetDispelMask(Eluna* E, SpellInfo* spell_info)
+    {
+        uint32 type = E->CHECKVAL<uint32>(2, false);
+
+        E->Push(type != 0 ? spell_info->GetDispelMask(static_cast<DispelType>(type)) : spell_info->GetDispelMask());
+        return 1;
+    }
+    
+    int GetExplicitTargetMask(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->GetExplicitTargetMask());
+        return 1;
+    }
+    
+    int GetAuraState(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->GetAuraState());
+        return 1;
+    }
+    
+    int GetSpellSpecific(Eluna* E, SpellInfo* spell_info)
+    {
+        E->Push(spell_info->GetSpellSpecific());
+        return 1;
+    }
 
     ElunaRegister<SpellInfo> SpellInfoMethods[] =
     {
@@ -640,6 +841,23 @@ namespace LuaSpellInfo
         { "GetAttributes", &LuaSpellInfo::GetAttributes },
         { "GetCategory", &LuaSpellInfo::GetCategory },
         { "GetName", &LuaSpellInfo::GetName },
+        { "GetAttackType", &LuaSpellInfo::GetAttackType },
+        { "CheckShapeshift", &LuaSpellInfo::CheckShapeshift },
+        { "CheckLocation", &LuaSpellInfo::CheckLocation },
+        { "CheckTarget", &LuaSpellInfo::CheckTarget },
+        { "CheckExplicitTarget", &LuaSpellInfo::CheckExplicitTarget },
+        { "CheckVehicle", &LuaSpellInfo::CheckVehicle },
+        { "CheckTargetCreatureType", &LuaSpellInfo::CheckTargetCreatureType },
+        { "CheckTargetCreatureType", &LuaSpellInfo::CheckTargetCreatureType },
+        { "GetSchoolMask", &LuaSpellInfo::GetSchoolMask },
+        { "GetAllEffectsMechanicMask", &LuaSpellInfo::GetAllEffectsMechanicMask },
+        { "GetEffectMechanicMask", &LuaSpellInfo::GetEffectMechanicMask },
+        { "GetSpellMechanicMaskByEffectMask", &LuaSpellInfo::GetSpellMechanicMaskByEffectMask },
+        { "GetEffectMechanic", &LuaSpellInfo::GetEffectMechanic },
+        { "GetDispelMask", &LuaSpellInfo::GetDispelMask },
+        { "GetExplicitTargetMask", &LuaSpellInfo::GetExplicitTargetMask },
+        { "GetAuraState", &LuaSpellInfo::GetAuraState },
+        { "GetSpellSpecific", &LuaSpellInfo::GetSpellSpecific },
         
         // Setters
 
@@ -680,9 +898,17 @@ namespace LuaSpellInfo
         { "IsStackableOnOneSlotWithDifferentCasters", &LuaSpellInfo::IsStackableOnOneSlotWithDifferentCasters },
         { "IsStackableWithRanks", &LuaSpellInfo::IsStackableWithRanks },
         { "IsTargetingArea", &LuaSpellInfo::IsTargetingArea },
-        
+        { "IsItemFitToSpellRequirements", &LuaSpellInfo::IsItemFitToSpellRequirements },
+        { "IsAffected", &LuaSpellInfo::IsAffected },
+        { "IsAffectedBySpellMods", &LuaSpellInfo::IsAffectedBySpellMods },
+        /* { "IsAffectedBySpellMod", &LuaSpellInfo::IsAffectedBySpellMod }, */
+        { "CanPierceImmuneAura", &LuaSpellInfo::CanPierceImmuneAura },
+        { "CanDispelAura", &LuaSpellInfo::CanDispelAura },
+        { "IsSingleTarget", &LuaSpellInfo::IsSingleTarget },
+        { "IsAuraExclusiveBySpecificWith", &LuaSpellInfo::IsAuraExclusiveBySpecificWith },
+        { "IsAuraExclusiveBySpecificPerCasterWith", &LuaSpellInfo::IsAuraExclusiveBySpecificPerCasterWith },        
         { "CanBeUsedInCombat", &LuaSpellInfo::CanBeUsedInCombat },
-
+        
         { "NeedsComboPoints", &LuaSpellInfo::NeedsComboPoints },
         { "NeedsExplicitUnitTarget", &LuaSpellInfo::NeedsExplicitUnitTarget },
         { "NeedsToBeTriggeredByCaster", &LuaSpellInfo::NeedsToBeTriggeredByCaster },
