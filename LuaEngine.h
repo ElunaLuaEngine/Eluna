@@ -169,11 +169,6 @@ private:
     // Indicates that the lua state should be reloaded
     bool reload = false;
 
-    // A counter for lua event stacks that occur (see event_level).
-    // This is used to determine whether an object belongs to the current call stack or not.
-    // 0 is reserved for always belonging to the call stack
-    // 1 is reserved for a non valid callstackid
-    uint64 callstackid = 2;
     // A counter for the amount of nested events. When the event_level
     // reaches 0 we are about to return back to C++. At this point the
     // objects used during the event stack are invalidated.
@@ -196,7 +191,6 @@ private:
     void CloseLua();
     void DestroyBindStores();
     void CreateBindStores();
-    void InvalidateObjects();
 
     // Use ReloadEluna() to make eluna reload
     // This is called on world update to reload eluna
@@ -341,7 +335,6 @@ public:
 
     void RunScripts();
     bool HasLuaState() const { return L != NULL; }
-    uint64 GetCallstackId() const { return callstackid; }
     int Register(uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
     void UpdateEluna(uint32 diff);
 

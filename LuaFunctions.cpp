@@ -37,19 +37,17 @@ extern "C"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
 
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Aura> GetWeakPtrFor(Aura const* obj) { return obj->GetWeakPtr(); }
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Battleground> GetWeakPtrFor(Battleground const* obj) { return obj->GetWeakPtr(); }
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Group> GetWeakPtrFor(Group const* obj) { return obj->GetWeakPtr(); }
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Guild> GetWeakPtrFor(Guild const* obj) { return obj->GetWeakPtr(); }
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Map> GetWeakPtrFor(Map const* obj) { return obj->GetWeakPtr(); }
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Object> GetWeakPtrForObjectImpl(Object const* obj) { return obj->GetWeakPtr(); }
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Quest> GetWeakPtrFor(Quest const* obj) { return obj->GetWeakPtr(); }
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Spell> GetWeakPtrFor(Spell const* obj) { return obj->GetWeakPtr(); }
+
 #if (!defined(TBC) && !defined(CLASSIC))
-// fix compile error about accessing vehicle destructor
-template<> int ElunaTemplate<Vehicle>::CollectGarbage(lua_State* L)
-{
-    ASSERT(!manageMemory);
-
-    Eluna* E = Eluna::GetEluna(L);
-
-    // Get object pointer (and check type, no error)
-    ElunaObject* obj = E->CHECKOBJ<ElunaObject>(1, false);
-    obj->~ElunaObject();
-    return 0;
-}
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Vehicle> GetWeakPtrFor(Vehicle const* obj) { return obj->GetWeakPtr(); }
 #endif
 
 // Template by Mud from http://stackoverflow.com/questions/4484437/lua-integer-type/4485511#4485511
@@ -104,6 +102,9 @@ template<> int ElunaTemplate<long long>::ToString(lua_State* L)
     E->Push(ss.str());
     return 1;
 }
+
+template<> int ElunaTemplate<ObjectGuid>::Equal(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<ObjectGuid>(1) == E->CHECKVAL<ObjectGuid>(2)); return 1; }
+template<> int ElunaTemplate<ObjectGuid>::ToString(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<ObjectGuid>(1).ToString()); return 1; }
 
 void RegisterFunctions(Eluna* E)
 {
@@ -175,15 +176,17 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<BattleGround>::Register(E, "BattleGround");
     ElunaTemplate<BattleGround>::SetMethods(E, LuaBattleGround::BattleGroundMethods);
 
-    ElunaTemplate<WorldPacket>::Register(E, "WorldPacket", true);
+    ElunaTemplate<WorldPacket>::Register(E, "WorldPacket");
     ElunaTemplate<WorldPacket>::SetMethods(E, LuaPacket::PacketMethods);
 
-    ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery", true);
+    ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery");
     ElunaTemplate<ElunaQuery>::SetMethods(E, LuaQuery::QueryMethods);
 
-    ElunaTemplate<long long>::Register(E, "long long", true);
+    ElunaTemplate<long long>::Register(E, "long long");
 
-    ElunaTemplate<unsigned long long>::Register(E, "unsigned long long", true);
+    ElunaTemplate<unsigned long long>::Register(E, "unsigned long long");
+
+    ElunaTemplate<ObjectGuid>::Register(E, "ObjectGuid");
 
     LuaVal::Register(E->L);
 }

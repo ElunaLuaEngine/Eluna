@@ -75,7 +75,6 @@ void Eluna::OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* o
     ExecuteCall(4, 0);
 
     ASSERT(!event_level);
-    InvalidateObjects();
 }
 
 void Eluna::OnGameEventStart(uint32 eventid)
@@ -115,7 +114,7 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
     HookPush(pTrigger->entry);
 #else
     HookPush(pTrigger->id);
-    
+
 #endif
     return CallAllFunctionsBool(ServerEventBindings, key);
 }

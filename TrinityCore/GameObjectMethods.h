@@ -265,7 +265,6 @@ namespace LuaGameObject
         go->SetRespawnTime(0);
         go->Delete();
 
-        E->CHECKOBJ<ElunaObject>(1)->Invalidate();
         return 0;
     }
 
@@ -316,7 +315,7 @@ namespace LuaGameObject
         go->SetRespawnTime(respawn);
         return 0;
     }
-    
+
     ElunaRegister<GameObject> GameObjectMethods[] =
     {
         // Getters
