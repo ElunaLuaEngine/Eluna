@@ -1165,6 +1165,23 @@ namespace LuaCreature
         creature->getThreatManager().clearReferences();
         return 0;
     }
+
+    /**
+    * Removes [Creature] from the world
+    *
+    * The object is no longer reachable after this and it is not respawned.
+    *
+    * @param bool deleteFromDB : if true, it will delete the [Creature] from the database
+    */
+    int RemoveFromWorld(Eluna* E, Creature* creature)
+    {
+        bool deldb = E->CHECKVAL<bool>(2, false);
+        if (deldb)
+            creature->DeleteFromDB();
+
+        creature->RemoveFromWorld();
+        return 0;
+    }
     
     ElunaRegister<Creature> CreatureMethods[] =
     {
@@ -1259,7 +1276,7 @@ namespace LuaCreature
         { "UpdateEntry", &LuaCreature::UpdateEntry },
         { "AddThreat", &LuaCreature::AddThreat },
         { "ClearThreatList", &LuaCreature::ClearThreatList },
-
+        { "RemoveFromWorld", &LuaCreature::RemoveFromWorld },
         
         // Not implemented methods
         { "GetWaypointPath", nullptr, METHOD_REG_NONE }, // TC/Acore
@@ -1280,7 +1297,6 @@ namespace LuaCreature
         { "ResetAllThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "FixateTarget", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "ClearFixate", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "RemoveFromWorld", nullptr, METHOD_REG_NONE }, // not implemented
 
         { NULL, NULL, METHOD_REG_NONE }
     };
