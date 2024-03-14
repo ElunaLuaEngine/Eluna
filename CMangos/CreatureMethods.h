@@ -1280,6 +1280,7 @@ namespace LuaCreature
         { "ResetAllThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "FixateTarget", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "ClearFixate", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "RemoveFromWorld", nullptr, METHOD_REG_NONE }, // not implemented
 
         { NULL, NULL, METHOD_REG_NONE }
     };
