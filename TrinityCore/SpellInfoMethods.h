@@ -55,48 +55,51 @@ namespace LuaSpellInfo
      * 5 : SpellAttr5
      * 6 : SpellAttr6
      * 7 : SpellAttr7
-     * 8 : SpellCustomAttributes
+     * -1 : SpellCustomAttributes
      * </pre>
      *
-     * @param attributeType : the type of the attribute.
+     * @param int8 attributeType : the type of the attribute.
      * @param attribute : the specific attribute to check.
      * @return boolean : returns true if [SpellInfo] has the attribute, else false
      */
     int HasAttribute(Eluna* E, SpellInfo* spell_info)
     {
-        uint8 attributeType = E->CHECKVAL<uint8>(2);
+        int8 attributeType = E->CHECKVAL<int8>(2);
         uint32 attribute    = E->CHECKVAL<uint32>(3);
 
         bool hasAttribute = false;
-        switch(attributeType)
-        {
-            case 0:
-                hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr0>(attribute));
-                break;
-            case 1:
-                hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr1>(attribute));
-                break;
-            case 2:
-                hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr2>(attribute));
-                break;
-            case 3:
-                hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr3>(attribute));
-                break;
-            case 4:
-                hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr4>(attribute));
-                break;
-            case 5:
-                hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr5>(attribute));
-                break;
-            case 6:
-                hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr6>(attribute));
-                break;
-            case 7:
-                hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr7>(attribute));
-                break;
-            case 8:
-                hasAttribute = spell_info->HasAttribute(static_cast<SpellCustomAttributes>(attribute));
-                break;
+        if ( attributeType == -1 ) {
+            hasAttribute = spell_info->HasAttribute(static_cast<SpellCustomAttributes>(attribute));           ;
+        }else{
+            switch(attributeType)
+            {
+                case 0:
+                    hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr0>(attribute));
+                    break;
+                case 1:
+                    hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr1>(attribute));
+                    break;
+                case 2:
+                    hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr2>(attribute));
+                    break;
+                case 3:
+                    hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr3>(attribute));
+                    break;
+                case 4:
+                    hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr4>(attribute));
+                    break;
+                case 5:
+                    hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr5>(attribute));
+                    break;
+                case 6:
+                    hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr6>(attribute));
+                    break;
+                case 7:
+                    hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr7>(attribute));
+                    break;
+                case -1:
+                    break;
+            }
         }
 
         E->Push(hasAttribute);
@@ -119,46 +122,48 @@ namespace LuaSpellInfo
      * 5 : AttributesEx5
      * 6 : AttributesEx6
      * 7 : AttributesEx7
-     * 8 : AttributesCu
+     * -1 : AttributesCu
      * </pre>
      *
-     * @param attributeType : The type of the attribute.
+     * @param int8 attributeType : The type of the attribute.
      * @return uint32 attributes : Returns the attributes of [SpellInfo] based on the attribute type.
      */
     int GetAttributes(Eluna* E, SpellInfo* spell_info)
     {
-        uint8 attributeType = E->CHECKVAL<uint8>(2);
+        int8 attributeType = E->CHECKVAL<int8>(2);
         uint32 attributes;
 
-        switch(attributeType)
-        {
-            case 0:
-                attributes = spell_info->Attributes;
-                break;
-            case 1:
-                attributes = spell_info->AttributesEx;
-                break;
-            case 2:
-                attributes = spell_info->AttributesEx2;
-                break;
-            case 3:
-                attributes = spell_info->AttributesEx3;
-                break;
-            case 4:
-                attributes = spell_info->AttributesEx4;
-                break;
-            case 5:
-                attributes = spell_info->AttributesEx5;
-                break;
-            case 6:
-                attributes = spell_info->AttributesEx6;
-                break;
-            case 7:
-                attributes = spell_info->AttributesEx7;
-                break;
-            case 8:
-                attributes = spell_info->AttributesCu;
-                break;
+        if ( attributeType == -1 ) {
+            attributes = spell_info->AttributesCu;
+        }
+        else {
+            switch(attributeType)
+            {
+                case 0:
+                    attributes = spell_info->Attributes;
+                    break;
+                case 1:
+                    attributes = spell_info->AttributesEx;
+                    break;
+                case 2:
+                    attributes = spell_info->AttributesEx2;
+                    break;
+                case 3:
+                    attributes = spell_info->AttributesEx3;
+                    break;
+                case 4:
+                    attributes = spell_info->AttributesEx4;
+                    break;
+                case 5:
+                    attributes = spell_info->AttributesEx5;
+                    break;
+                case 6:
+                    attributes = spell_info->AttributesEx6;
+                    break;
+                case 7:
+                    attributes = spell_info->AttributesEx7;
+                    break;
+            }
         }
 
         E->Push(attributes);
@@ -517,18 +522,33 @@ namespace LuaSpellInfo
         return 1;
     }
 
+    /**
+     * Returns a boolean indicating whether the cooldown has started on the event associated with the [SpellInfo]
+     *
+     * @return bool : true if cooldown has started on the [SpellInfo]'s associated event; false otherwise
+     */
     int IsCooldownStartedOnEvent(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->IsCooldownStartedOnEvent());
         return 1;
     }
 
+    /**
+     * Returns a boolean indicating whether the death is persistent for the given [SpellInfo]
+     *
+     * @return bool : true if death is persistent for the [SpellInfo]; false otherwise
+     */
     int IsDeathPersistent(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->IsDeathPersistent());
         return 1;
     }
 
+    /**
+     * Returns a boolean indicating whether the [SpellInfo] requires a dead target
+     *
+     * @return bool : true if the [SpellInfo] requires a dead target; false otherwise
+     */
     int IsRequiringDeadTarget(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->IsRequiringDeadTarget());
