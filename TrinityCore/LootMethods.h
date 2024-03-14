@@ -133,7 +133,7 @@ namespace LuaLoot
     *
     * @param uint32 min : the minimum amount of money to generate
     * @param uint32 max : the maximum amount of money to generate
-    */    
+    */
     int GenerateMoney(Eluna* E, Loot* loot)
     {
         uint32 min = E->CHECKVAL<uint32>(2);
@@ -141,21 +141,144 @@ namespace LuaLoot
         loot->generateMoneyLoot(min, max);
         return 0;
     }
+    
+    /**
+     * Empties all the loot data present in the [Loot] object.
+     */
+    int Empty(Eluna* /*E*/, Loot* loot)
+    {
+        loot->empty();
+        return 0;
+    }
+    
+    /**
+     * Notifies about the item removal at the provided index.
+     *
+     * @param uint8 lootIndex : the index of the item that will be removed
+     */
+    int NotifyItemRemoved(Eluna* E, Loot* loot)
+    {
+        uint8 lootIndex = E->CHECKVAL<uint8>(2);
+        loot->NotifyItemRemoved(lootIndex);
+        return 0;
+    }
+    
+    /**
+     * Notifies about the removal of a quest item at the provided index.
+     *
+     * @param uint8 questIndex : the index of the quest item that will be removed
+     */
+    int NotifyQuestItemRemoved(Eluna* E, Loot* loot)
+    {
+        uint8 questIndex = E->CHECKVAL<uint8>(2);
+        loot->NotifyQuestItemRemoved(questIndex);
+        return 0;
+    }
+    
+    /**
+     * Triggers a notification about the removal of money from the loot.
+     */
+    int NotifyMoneyRemoved(Eluna* /*E*/, Loot* loot)
+    {
+        loot->NotifyMoneyRemoved();
+        return 0;
+    }   
+    
+    /**
+     * Adds a new looter with provided GUID to the loot.
+     *
+     * @param ObjectGuid guid : the GUID of the looter to be added
+     */
+    int AddLooter(Eluna* E, Loot* loot)
+    {
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
+        loot->AddLooter(guid);
+        return 0;
+    }
+    
+    /**
+     * Removes the looter with the provided GUID from the loot.
+     *
+     * @param ObjectGuid guid : the GUID of the looter to be removed
+     */
+    int RemoveLooter(Eluna* E, Loot* loot)
+    {
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
+        loot->RemoveLooter(guid);
+        return 0;
+    }
+    
+    /**
+     * Gets the maximum slot in the loot for a specific player.
+     *
+     * @param Player* player : the player for whom the maximum slot is to be found
+     * @return MaxSlotInLootFor : return the max slot in loot for the selected [Player]
+     */
+    int GetMaxSlotInLootFor(Eluna* E, Loot* loot)
+    {
+        Player* player = E->CHECKOBJ<Player>(2);
+        E->Push(loot->GetMaxSlotInLootFor(player));
+        return 1;
+    }
+    
+    /**
+     * Checks if the loot has items for every player.
+     * 
+     * @return hasItemForAll : return if [Loot] have item for all [Player]
+     */
+    int HasItemForAll(Eluna* E, Loot* loot)
+    {
+        E->Push(loot->hasItemForAll());
+        return 1;
+    }
+    
+    /**
+     * Checks if the loot has items for a specific player.
+     *
+     * @param Player* player : the player for whom the item presence is to be checked
+     * @return hasItemFor : return if [Loot] have item for [Player]
+     */
+    int HasItemFor(Eluna* E, Loot* loot)
+    {
+        Player* player = E->CHECKOBJ<Player>(2);
+        E->Push(loot->hasItemFor(player));
+        return 1;
+    }
+    
+    /**
+     * Checks if the loot has items that are above a certain threshold.
+     * return hasOverThresholdItem : true or false
+     */
+    int HasOverThresholdItem(Eluna* E, Loot* loot)
+    {
+        E->Push(loot->hasOverThresholdItem());
+        return 1;
+    }
 
     ElunaRegister<Loot> LootMethods[] =
     {
         // Getters
         { "GetMoney", &LuaLoot::GetMoney },
+        { "GetMaxSlotInLootFor", &LuaLoot::GetMaxSlotInLootFor },
         
         // Setters
         { "AddItem", &LuaLoot::AddItem },
         { "RemoveItem", &LuaLoot::RemoveItem },
         { "SetMoney", &LuaLoot::SetMoney },
         { "GenerateMoney", &LuaLoot::GenerateMoney },
+        { "Empty", &LuaLoot::Empty },
+        { "NotifyItemRemoved", &LuaLoot::NotifyItemRemoved },
+        { "NotifyQuestItemRemoved", &LuaLoot::NotifyQuestItemRemoved },
+        { "NotifyMoneyRemoved", &LuaLoot::NotifyMoneyRemoved },
+        { "AddLooter", &LuaLoot::AddLooter },
+        { "RemoveLooter", &LuaLoot::RemoveLooter },
         
         // Boolean
         { "IsLooted", &LuaLoot::IsLooted },
         { "HasItem", &LuaLoot::HasItem },
+        { "HasItemForAll", &LuaLoot::HasItemForAll },
+        { "HasItemFor", &LuaLoot::HasItemFor },
+        { "HasOverThresholdItem", &LuaLoot::HasOverThresholdItem },
         
         // Other
 
