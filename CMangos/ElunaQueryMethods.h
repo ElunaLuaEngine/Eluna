@@ -7,7 +7,7 @@
 #ifndef QUERYMETHODS_H
 #define QUERYMETHODS_H
 
-#define RESULT  result
+#define RESULT  (*result)
 
 /***
  * The result of a database query.

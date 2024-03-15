@@ -423,11 +423,13 @@ void Eluna::Push()
 }
 void Eluna::Push(const long long l)
 {
-    ElunaTemplate<long long>::Push(this, new long long(l));
+    // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
+    ElunaTemplate<long long>::Push(this, &l);
 }
 void Eluna::Push(const unsigned long long l)
 {
-    ElunaTemplate<unsigned long long>::Push(this, new unsigned long long(l));
+    // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
+    ElunaTemplate<unsigned long long>::Push(this, &l);
 }
 void Eluna::Push(const long l)
 {
@@ -544,7 +546,8 @@ void Eluna::Push(Object const* obj)
 }
 void Eluna::Push(ObjectGuid const guid)
 {
-    ElunaTemplate<unsigned long long>::Push(this, new unsigned long long(guid.GetRawValue()));
+    // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
+    ElunaTemplate<ObjectGuid>::Push(this, &guid);
 }
 
 static int CheckIntegerRange(lua_State* luastate, int narg, int min, int max)
@@ -650,7 +653,8 @@ template<> unsigned long Eluna::CHECKVAL<unsigned long>(int narg)
 }
 template<> ObjectGuid Eluna::CHECKVAL<ObjectGuid>(int narg)
 {
-    return ObjectGuid(uint64((CHECKVAL<unsigned long long>(narg))));
+    ObjectGuid* guid = CHECKOBJ<ObjectGuid>(narg, true);
+    return guid ? *guid : ObjectGuid();
 }
 
 template<> Object* Eluna::CHECKOBJ<Object>(int narg, bool error)
