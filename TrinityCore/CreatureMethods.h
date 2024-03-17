@@ -1385,6 +1385,18 @@ namespace LuaCreature
     }
 
     /**
+     * Returns the loot associated with a [Creature].
+     * TODO: Implement LootMode features
+     *
+     * @return [Loot] loot : the Loot object associated with the [Creature]
+     */
+    int GetLoot(Eluna* E, Creature* creature)
+    {
+        E->Push(&creature->loot);
+        return 1;
+    }
+    
+    /*
     * Removes [Creature] from the world
     *
     * The object is no longer reachable after this and it is not respawned.
@@ -1434,6 +1446,7 @@ namespace LuaCreature
         { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
         { "GetThreat", &LuaCreature::GetThreat },
+        { "GetLoot", &LuaCreature::GetLoot },
 
         // Setters
         { "SetRegeneratingHealth", &LuaCreature::SetRegeneratingHealth },
