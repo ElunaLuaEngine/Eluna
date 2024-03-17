@@ -99,60 +99,74 @@ public:
 class ElunaObject
 {
 public:
-    template<typename T>
-    ElunaObject(Eluna* E, T* obj, bool manageMemory);
+    ElunaObject(Eluna* E, char const* tname) : E(E), type_name(tname)
+    {
+    }
 
-    ~ElunaObject()
+    virtual ~ElunaObject()
     {
     }
 
     // Get wrapped object pointer
-    void* GetObj() const { return object; }
+    virtual void* GetObj() const = 0;
     // Returns whether the object is valid or not
-    bool IsValid() const { return !callstackid || callstackid == E->GetCallstackId(); }
-    // Returns whether the object can be invalidated or not
-    bool CanInvalidate() const { return _invalidate; }
+    virtual bool IsValid() const = 0;
     // Returns pointer to the wrapped object's type name
     const char* GetTypeName() const { return type_name; }
-
-    // Sets the object pointer that is wrapped
-    void SetObj(void* obj)
-    {
-        ASSERT(obj);
-        object = obj;
-        SetValid(true);
-    }
-    // Sets the object pointer to valid or invalid
-    void SetValid(bool valid)
-    {
-        ASSERT(!valid || (valid && object));
-        if (valid)
-            if (CanInvalidate())
-                callstackid = E->GetCallstackId();
-            else
-                callstackid = 0;
-        else
-            callstackid = 1;
-    }
-    // Sets whether the pointer will be invalidated at end of calls
-    void SetValidation(bool invalidate)
-    {
-        _invalidate = invalidate;
-    }
     // Invalidates the pointer if it should be invalidated
-    void Invalidate()
-    {
-        if (CanInvalidate())
-            callstackid = 1;
-    }
+    virtual void Invalidate() = 0;
 
-private:
+protected:
     Eluna* E;
-    uint64 callstackid;
-    bool _invalidate;
-    void* object;
     const char* type_name;
 };
+
+template <typename T>
+class ElunaObjectImpl : public ElunaObject
+{
+public:
+    ElunaObjectImpl(Eluna* E, T* obj, char const* tname) : ElunaObject(E, tname), _obj(obj), callstackid(E->GetCallstackId())
+    {
+    }
+
+    void* GetObj() const override { return _obj; }
+    bool IsValid() const override { return callstackid == E->GetCallstackId(); }
+    void Invalidate() override { callstackid = 1; }
+
+private:
+    void* _obj;
+    uint64 callstackid;
+};
+
+template <typename T>
+class ElunaObjectValueImpl : public ElunaObject
+{
+public:
+    ElunaObjectValueImpl(Eluna* E, T* obj, char const* tname) : ElunaObject(E, tname), _obj(*obj /*always a copy, what gets passed here might be pointing to something not owned by us*/)
+    {
+    }
+
+    void* GetObj() const override { return const_cast<T*>(&_obj); }
+    bool IsValid() const override { return true; }
+    void Invalidate() override { }
+
+private:
+    T _obj;
+};
+
+#define MAKE_ELUNA_OBJECT_VALUE_IMPL(type) \
+template <> \
+class ElunaObjectImpl<type> : public ElunaObjectValueImpl<type> \
+{ \
+public: \
+    using ElunaObjectValueImpl::ElunaObjectValueImpl; \
+}
+
+MAKE_ELUNA_OBJECT_VALUE_IMPL(long long);
+MAKE_ELUNA_OBJECT_VALUE_IMPL(unsigned long long);
+MAKE_ELUNA_OBJECT_VALUE_IMPL(ObjectGuid);
+MAKE_ELUNA_OBJECT_VALUE_IMPL(WorldPacket);
+MAKE_ELUNA_OBJECT_VALUE_IMPL(ElunaQuery);
 
 template<typename T>
 struct ElunaRegister
@@ -167,13 +181,12 @@ class ElunaTemplate
 {
 public:
     static const char* tname;
-    static bool manageMemory;
 
     // name will be used as type name
     // If gc is true, lua will handle the memory management for object pushed
     // gc should be used if pushing for example WorldPacket,
     // that will only be needed on lua side and will not be managed by TC/mangos/<core>
-    static void Register(Eluna* E, const char* name, bool gc = false)
+    static void Register(Eluna* E, const char* name)
     {
         ASSERT(E);
         ASSERT(name);
@@ -186,7 +199,6 @@ public:
         lua_pop(E->L, 1);
 
         tname = name;
-        manageMemory = gc;
 
         // create metatable for userdata of this type
         luaL_newmetatable(E->L, tname);
@@ -265,10 +277,6 @@ public:
         lua_pushcfunction(E->L, GetType);
         lua_setfield(E->L, metatable, "GetObjectType");
 
-        // special method to decide object invalidation at end of call
-        lua_pushcfunction(E->L, SetInvalidation);
-        lua_setfield(E->L, metatable, "SetInvalidation");
-
         // pop metatable
         lua_pop(E->L, 1);
     }
@@ -333,15 +341,17 @@ public:
             return 1;
         }
 
+        typedef ElunaObjectImpl<T> ElunaObjectType;
+
         // Create new userdata
-        ElunaObject* elunaObject = static_cast<ElunaObject*>(lua_newuserdata(L, sizeof(ElunaObject)));
+        ElunaObjectType* elunaObject = static_cast<ElunaObjectType*>(lua_newuserdata(L, sizeof(ElunaObjectType)));
         if (!elunaObject)
         {
             ELUNA_LOG_ERROR("%s could not create new userdata", tname);
             lua_pushnil(L);
             return 1;
         }
-        new (elunaObject) ElunaObject(E, const_cast<T*>(obj), manageMemory);
+        new (elunaObject) ElunaObjectType(E, const_cast<T*>(obj), tname);
 
         // Set metatable for it
         lua_pushstring(L, tname);
@@ -388,17 +398,6 @@ public:
         return 1;
     }
 
-    static int SetInvalidation(lua_State* L)
-    {
-        Eluna* E = Eluna::GetEluna(L);
-
-        ElunaObject* elunaObj = E->CHECKOBJ<ElunaObject>(1);
-        bool invalidate = E->CHECKVAL<bool>(2);
-
-        elunaObj->SetValidation(invalidate);
-        return 0;
-    }
-
     static int thunk(lua_State* L)
     {
         ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
@@ -429,8 +428,6 @@ public:
 
         // Get object pointer (and check type, no error)
         ElunaObject* obj = E->CHECKOBJ<ElunaObject>(1, false);
-        if (obj && manageMemory)
-            delete static_cast<T*>(obj->GetObj());
         obj->~ElunaObject();
         return 0;
     }
@@ -464,13 +461,6 @@ public:
     static int MethodUnimpl(lua_State* L) { luaL_error(L, "attempt to call a method that is not implemented for this emulator"); return 0; }
 };
 
-template<typename T>
-ElunaObject::ElunaObject(Eluna* E, T* obj, bool manageMemory) : E(E), callstackid(1), _invalidate(!manageMemory), object(obj), type_name(ElunaTemplate<T>::tname)
-{
-    SetValid(true);
-}
-
 template<typename T> const char* ElunaTemplate<T>::tname = NULL;
-template<typename T> bool ElunaTemplate<T>::manageMemory = false;
 
 #endif

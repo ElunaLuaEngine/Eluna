@@ -37,21 +37,6 @@ extern "C"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
 
-#if (!defined(TBC) && !defined(CLASSIC))
-// fix compile error about accessing vehicle destructor
-template<> int ElunaTemplate<Vehicle>::CollectGarbage(lua_State* L)
-{
-    ASSERT(!manageMemory);
-
-    Eluna* E = Eluna::GetEluna(L);
-
-    // Get object pointer (and check type, no error)
-    ElunaObject* obj = E->CHECKOBJ<ElunaObject>(1, false);
-    obj->~ElunaObject();
-    return 0;
-}
-#endif
-
 // Template by Mud from http://stackoverflow.com/questions/4484437/lua-integer-type/4485511#4485511
 template<> int ElunaTemplate<unsigned long long>::Add(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) + E->CHECKVAL<unsigned long long>(2)); return 1; }
 template<> int ElunaTemplate<unsigned long long>::Substract(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) - E->CHECKVAL<unsigned long long>(2)); return 1; }
@@ -102,6 +87,18 @@ template<> int ElunaTemplate<long long>::ToString(lua_State* L)
     std::ostringstream ss;
     ss << l;
     E->Push(ss.str());
+    return 1;
+}
+
+template<> int ElunaTemplate<ObjectGuid>::Equal(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<ObjectGuid>(1) == E->CHECKVAL<ObjectGuid>(2)); return 1; }
+template<> int ElunaTemplate<ObjectGuid>::ToString(lua_State* L)
+{
+    Eluna* E = Eluna::GetEluna(L);
+#if defined(TRINITY)
+    E->Push(E->CHECKVAL<ObjectGuid>(1).ToString());
+#else
+    E->Push(E->CHECKVAL<ObjectGuid>(1).GetString());
+#endif
     return 1;
 }
 
@@ -175,15 +172,17 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<BattleGround>::Register(E, "BattleGround");
     ElunaTemplate<BattleGround>::SetMethods(E, LuaBattleGround::BattleGroundMethods);
 
-    ElunaTemplate<WorldPacket>::Register(E, "WorldPacket", true);
+    ElunaTemplate<WorldPacket>::Register(E, "WorldPacket");
     ElunaTemplate<WorldPacket>::SetMethods(E, LuaPacket::PacketMethods);
 
-    ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery", true);
+    ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery");
     ElunaTemplate<ElunaQuery>::SetMethods(E, LuaQuery::QueryMethods);
 
-    ElunaTemplate<long long>::Register(E, "long long", true);
+    ElunaTemplate<long long>::Register(E, "long long");
 
-    ElunaTemplate<unsigned long long>::Register(E, "unsigned long long", true);
+    ElunaTemplate<unsigned long long>::Register(E, "unsigned long long");
+
+    ElunaTemplate<ObjectGuid>::Register(E, "ObjectGuid");
 
     LuaVal::Register(E->L);
 }

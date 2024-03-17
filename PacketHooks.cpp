@@ -36,7 +36,7 @@ bool Eluna::OnPacketSend(WorldSession* session, const WorldPacket& packet)
 void Eluna::OnPacketSendAny(Player* player, const WorldPacket& packet, bool& result)
 {
     START_HOOK_SERVER(SERVER_EVENT_ON_PACKET_SEND);
-    HookPush(new WorldPacket(packet));
+    HookPush(&packet); // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     HookPush(player);
     int n = SetupStack(ServerEventBindings, key, 2);
 
@@ -56,7 +56,7 @@ void Eluna::OnPacketSendAny(Player* player, const WorldPacket& packet, bool& res
 void Eluna::OnPacketSendOne(Player* player, const WorldPacket& packet, bool& result)
 {
     START_HOOK_PACKET(PACKET_EVENT_ON_PACKET_SEND, packet.GetOpcode());
-    HookPush(new WorldPacket(packet));
+    HookPush(&packet); // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     HookPush(player);
     int n = SetupStack(PacketEventBindings, key, 2);
 
@@ -87,7 +87,7 @@ bool Eluna::OnPacketReceive(WorldSession* session, WorldPacket& packet)
 void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result)
 {
     START_HOOK_SERVER(SERVER_EVENT_ON_PACKET_RECEIVE);
-    HookPush(new WorldPacket(packet));
+    HookPush(&packet); // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     HookPush(player);
     int n = SetupStack(ServerEventBindings, key, 2);
 
@@ -101,7 +101,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
         if (lua_isuserdata(L, r + 1))
             if (WorldPacket* data = CHECKOBJ<WorldPacket>(r + 1, false))
             {
-#ifdef VMANGOS
+#if defined(TRINITY) || defined(VMANGOS)
                 packet = std::move(*data);
 #else
                 packet = *data;
@@ -117,7 +117,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
 void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result)
 {
     START_HOOK_PACKET(PACKET_EVENT_ON_PACKET_RECEIVE, packet.GetOpcode());
-    HookPush(new WorldPacket(packet));
+    HookPush(&packet); // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     HookPush(player);
     int n = SetupStack(PacketEventBindings, key, 2);
 
@@ -131,7 +131,7 @@ void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result
         if (lua_isuserdata(L, r + 1))
             if (WorldPacket* data = CHECKOBJ<WorldPacket>(r + 1, false))
             {
-#ifdef VMANGOS
+#if defined(TRINITY) || defined(VMANGOS)
                 packet = std::move(*data);
 #else
                 packet = *data;
