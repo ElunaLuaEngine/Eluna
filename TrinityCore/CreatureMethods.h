@@ -1383,7 +1383,27 @@ namespace LuaCreature
 
         return 1;
     }
-    
+
+    /**
+    * Removes [Creature] from the world
+    *
+    * The object is no longer reachable after this and it is not respawned.
+    *
+    * @param bool deleteFromDB : if true, it will delete the [Creature] from the database
+    */
+    int RemoveFromWorld(Eluna* E, Creature* creature)
+    {
+        bool deldb = E->CHECKVAL<bool>(2, false);
+        if (deldb)
+        {
+            ObjectGuid::LowType spawnId = creature->GetSpawnId();
+            Creature::DeleteFromDB(spawnId);
+        }
+
+        creature->RemoveFromWorld();
+        return 0;
+    }
+
     ElunaRegister<Creature> CreatureMethods[] =
     {
         // Getters
@@ -1485,6 +1505,7 @@ namespace LuaCreature
         { "ResetAllThreat", &LuaCreature::ResetAllThreat },
         { "FixateTarget", &LuaCreature::FixateTarget },
         { "ClearFixate", &LuaCreature::ClearFixate },
+        { "RemoveFromWorld", &LuaCreature::RemoveFromWorld },
 
 #ifdef CATA //Not implemented in TCPP
         { "GetShieldBlockValue", nullptr },
