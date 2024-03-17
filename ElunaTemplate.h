@@ -22,6 +22,10 @@ extern "C"
 #include "Globals/SharedDefines.h"
 #endif
 
+#include "UniqueTrackablePtr.h"
+
+#define TRACKABLE_PTR_NAMESPACE ::Trinity::
+
 class ElunaGlobal
 {
 public:
@@ -113,29 +117,61 @@ public:
     virtual bool IsValid() const = 0;
     // Returns pointer to the wrapped object's type name
     const char* GetTypeName() const { return type_name; }
-    // Invalidates the pointer if it should be invalidated
-    virtual void Invalidate() = 0;
 
 protected:
     Eluna* E;
     const char* type_name;
 };
 
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Aura> GetWeakPtrFor(Aura const* obj);
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Battleground> GetWeakPtrFor(Battleground const* obj);
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Group> GetWeakPtrFor(Group const* obj);
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Guild> GetWeakPtrFor(Guild const* obj);
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Map> GetWeakPtrFor(Map const* obj);
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Object> GetWeakPtrForObjectImpl(Object const* obj);
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Quest> GetWeakPtrFor(Quest const* obj);
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Spell> GetWeakPtrFor(Spell const* obj);
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Vehicle> GetWeakPtrFor(Vehicle const* obj);
+
+template <typename T>
+TRACKABLE_PTR_NAMESPACE unique_weak_ptr<T> GetWeakPtrFor(T const* obj)
+{
+    return TRACKABLE_PTR_NAMESPACE static_pointer_cast<T>(GetWeakPtrForObjectImpl(obj));
+}
+
 template <typename T>
 class ElunaObjectImpl : public ElunaObject
 {
 public:
-    ElunaObjectImpl(Eluna* E, T* obj, char const* tname) : ElunaObject(E, tname), _obj(obj), callstackid(E->GetCallstackId())
+    ElunaObjectImpl(Eluna* E, T* obj, char const* tname) : ElunaObject(E, tname), _obj(GetWeakPtrFor(obj))
     {
     }
 
-    void* GetObj() const override { return _obj; }
-    bool IsValid() const override { return callstackid == E->GetCallstackId(); }
-    void Invalidate() override { callstackid = 1; }
+    void* GetObj() const override { return _obj.lock().get(); }
+    bool IsValid() const override { return !_obj.expired(); }
 
 private:
-    void* _obj;
-    uint64 callstackid;
+    TRACKABLE_PTR_NAMESPACE unique_weak_ptr<T> _obj;
+};
+
+template <>
+class ElunaObjectImpl<Aura> : public ElunaObject
+{
+public:
+    ElunaObjectImpl(Eluna* E, Aura* obj, char const* tname);
+
+    void* GetObj() const override { return _obj.lock().get(); }
+    bool IsValid() const override
+    {
+        // aura references are not invalidated when their owner (player) changes map
+        // owner reference must be checked additionally to ensure scripts don't store
+        // and access auras of players on another map (possibly updating in another thread)
+        return !_obj.expired() && !_owner.expired();
+    }
+
+private:
+    TRACKABLE_PTR_NAMESPACE unique_weak_ptr<Aura> _obj;
+    TRACKABLE_PTR_NAMESPACE unique_weak_ptr<WorldObject> _owner;
 };
 
 template <typename T>
@@ -148,7 +184,6 @@ public:
 
     void* GetObj() const override { return const_cast<T*>(&_obj); }
     bool IsValid() const override { return true; }
-    void Invalidate() override { }
 
 private:
     T _obj;
