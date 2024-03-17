@@ -3798,6 +3798,25 @@ namespace LuaPlayer
         player->RemovePet(player->GetPet(), (PetSaveMode)mode, returnreagent);
         return 0;
     }
+    
+    int GetLearnedSpells(Eluna* E, Player* player)
+    {
+        std::list<uint32> list;
+        lua_createtable(E->L, list.size(), 0);
+        int tbl = lua_gettop(E->L);
+        uint32 i = 0;
+
+        PlayerSpellMap spellMap = player->GetSpellMap();
+        for (PlayerSpellMap::const_iterator itr = spellMap.begin(); itr != spellMap.end(); ++itr)
+        {
+            SpellInfo const* spellInfo = sSpellMgr->AssertSpellInfo(itr->first);
+            E->Push(spellInfo->Id);
+            lua_rawseti(E->L, tbl, ++i);
+        }
+
+        lua_settop(E->L, tbl);
+        return 1;
+    }
 
     ElunaRegister<Player> PlayerMethods[] =
     {
@@ -3877,6 +3896,7 @@ namespace LuaPlayer
         { "GetXP", &LuaPlayer::GetXP },
         { "GetXPForNextLevel", &LuaPlayer::GetXPForNextLevel },
 #endif
+        { "GetLearnedSpells", &LuaPlayer::GetLearnedSpells },
 
         // Setters
 #ifndef CATA
@@ -4117,3 +4137,4 @@ namespace LuaPlayer
     };
 };
 #endif
+
