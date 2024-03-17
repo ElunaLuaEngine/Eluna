@@ -3390,9 +3390,9 @@ namespace LuaPlayer
     /**
      * Adds a new item to the gossip menu shown to the [Player] on next call to [Player:GossipSendMenu].
      *
-     * sender and intid are numbers which are passed directly to the gossip selection handler. Internally they are partly used for the database gossip handling.
-     * code specifies whether to show a box to insert text to. The player inserted text is passed to the gossip selection handler.
-     * money specifies an amount of money the player needs to have to click the option. An error message is shown if the player doesn't have enough money.
+     * sender and intid are numbers which are passed directly to the gossip selection handler. Internally they are partly used for the database gossip handling.<br />
+     * code specifies whether to show a box to insert text to. The player inserted text is passed to the gossip selection handler.<br />
+     * money specifies an amount of money the player needs to have to click the option. An error message is shown if the player doesn't have enough money.<br />
      * Note that the money amount is only checked client side and is not removed from the player either. You will need to check again in your code before taking action.
      *
      * See also: [Player:GossipSendMenu], [Player:GossipAddQuests], [Player:GossipComplete], [Player:GossipClearMenu]

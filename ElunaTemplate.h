@@ -118,7 +118,7 @@ public:
     // Returns pointer to the wrapped object's type name
     const char* GetTypeName() const { return type_name; }
 
-private:
+protected:
     Eluna* E;
     const char* type_name;
 };
@@ -178,7 +178,7 @@ template <typename T>
 class ElunaObjectValueImpl : public ElunaObject
 {
 public:
-    ElunaObjectValueImpl(Eluna* E, T* obj, char const* tname) : ElunaObject(E, tname), _obj(std::move(*obj))
+    ElunaObjectValueImpl(Eluna* E, T* obj, char const* tname) : ElunaObject(E, tname), _obj(*obj /*always a copy, what gets passed here might be pointing to something not owned by us*/)
     {
     }
 

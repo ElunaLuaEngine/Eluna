@@ -109,7 +109,16 @@ template<> int ElunaTemplate<long long>::ToString(lua_State* L)
 }
 
 template<> int ElunaTemplate<ObjectGuid>::Equal(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<ObjectGuid>(1) == E->CHECKVAL<ObjectGuid>(2)); return 1; }
-template<> int ElunaTemplate<ObjectGuid>::ToString(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<ObjectGuid>(1).ToString()); return 1; }
+template<> int ElunaTemplate<ObjectGuid>::ToString(lua_State* L)
+{
+    Eluna* E = Eluna::GetEluna(L);
+#if defined(TRINITY)
+    E->Push(E->CHECKVAL<ObjectGuid>(1).ToString());
+#else
+    E->Push(E->CHECKVAL<ObjectGuid>(1).GetString());
+#endif
+    return 1;
+}
 
 void RegisterFunctions(Eluna* E)
 {
