@@ -59,7 +59,7 @@ namespace LuaSpellInfo
      * </pre>
      *
      * @param int8 attributeType : the type of the attribute.
-     * @param attribute : the specific attribute to check.
+     * @param uint32 attribute : the specific attribute to check.
      * @return boolean : returns true if [SpellInfo] has the attribute, else false
      */
     int HasAttribute(Eluna* E, SpellInfo* spell_info)
