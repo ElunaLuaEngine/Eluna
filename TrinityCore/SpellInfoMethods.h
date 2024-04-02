@@ -208,7 +208,7 @@ namespace LuaSpellInfo
      * A spell can have various effects such as damage, healing, or status changes.
      * These effects are identified by a predefined set of constants represented by the 'SpellEffects' enumeration.
      *
-     * @param effect : The specific effect to check.
+     * @param uint8 effect : The specific effect to check.
      * @return boolean : returns true if [SpellInfo] has the specific effect, else false
      */
     int HasEffect(Eluna* E, SpellInfo* spell_info)
@@ -224,7 +224,7 @@ namespace LuaSpellInfo
      * An aura represents a status change or modification due to a spell or ability. 
      * These auras are identified by a predefined set of constants represented by the 'AuraType' enumeration.
      *
-     * @param aura : The specific aura to check.
+     * @param uint32 aura : The specific aura to check.
      * @return boolean : Returns true if [SpellInfo] has the specific aura, else false
      */
     int HasAura(Eluna* E, SpellInfo* spell_info)
