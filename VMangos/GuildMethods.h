@@ -224,8 +224,8 @@ namespace LuaGuild
     ElunaRegister<Guild> GuildMethods[] =
     {
         // Getters
-        { "GetMembers", &LuaGuild::GetMembers },
-        { "GetLeader", &LuaGuild::GetLeader },
+        { "GetMembers", &LuaGuild::GetMembers, METHOD_REG_WORLD }, // World state method only in multistate
+        { "GetLeader", &LuaGuild::GetLeader, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetLeaderGUID", &LuaGuild::GetLeaderGUID },
         { "GetId", &LuaGuild::GetId },
         { "GetName", &LuaGuild::GetName },
@@ -234,15 +234,15 @@ namespace LuaGuild
         { "GetMemberCount", &LuaGuild::GetMemberCount },
 
         // Setters
-        { "SetMemberRank", &LuaGuild::SetMemberRank },
-        { "SetLeader", &LuaGuild::SetLeader },
+        { "SetMemberRank", &LuaGuild::SetMemberRank, METHOD_REG_WORLD }, // World state method only in multistate
+        { "SetLeader", &LuaGuild::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
 
         // Other
         { "SendPacket", &LuaGuild::SendPacket },
         { "SendPacketToRanked", &LuaGuild::SendPacketToRanked },
-        { "Disband", &LuaGuild::Disband },
-        { "AddMember", &LuaGuild::AddMember },
-        { "DeleteMember", &LuaGuild::DeleteMember },
+        { "Disband", &LuaGuild::Disband, METHOD_REG_WORLD }, // World state method only in multistate
+        { "AddMember", &LuaGuild::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
+        { "DeleteMember", &LuaGuild::DeleteMember, METHOD_REG_WORLD }, // World state method only in multistate
 
         { "SetBankTabText", nullptr, METHOD_REG_NONE }, // not implemented
 

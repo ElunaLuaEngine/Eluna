@@ -353,7 +353,7 @@ namespace LuaGroup
     ElunaRegister<Group> GroupMethods[] =
     {
         // Getters
-        { "GetMembers", &LuaGroup::GetMembers },
+        { "GetMembers", &LuaGroup::GetMembers, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetLeaderGUID", &LuaGroup::GetLeaderGUID },
         { "GetGUID", &LuaGroup::GetGUID },
         { "GetMemberGroup", &LuaGroup::GetMemberGroup },
@@ -361,15 +361,15 @@ namespace LuaGroup
         { "GetMembersCount", &LuaGroup::GetMembersCount },
 
         // Setters
-        { "SetLeader", &LuaGroup::SetLeader },
-        { "SetMembersGroup", &LuaGroup::SetMembersGroup },
-        { "SetTargetIcon", &LuaGroup::SetTargetIcon },
+        { "SetLeader", &LuaGroup::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
+        { "SetMembersGroup", &LuaGroup::SetMembersGroup, METHOD_REG_WORLD }, // World state method only in multistate
+        { "SetTargetIcon", &LuaGroup::SetTargetIcon, METHOD_REG_WORLD }, // World state method only in multistate
 
         // Boolean
         { "IsLeader", &LuaGroup::IsLeader },
-        { "AddMember", &LuaGroup::AddMember },
-        { "RemoveMember", &LuaGroup::RemoveMember },
-        { "Disband", &LuaGroup::Disband },
+        { "AddMember", &LuaGroup::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
+        { "RemoveMember", &LuaGroup::RemoveMember, METHOD_REG_WORLD }, // World state method only in multistate
+        { "Disband", &LuaGroup::Disband, METHOD_REG_WORLD }, // World state method only in multistate
         { "IsFull", &LuaGroup::IsFull },
         { "IsRaidGroup", &LuaGroup::IsRaidGroup },
         { "IsBGGroup", &LuaGroup::IsBGGroup },
@@ -380,7 +380,7 @@ namespace LuaGroup
 
         // Other
         { "SendPacket", &LuaGroup::SendPacket },
-        { "ConvertToRaid", &LuaGroup::ConvertToRaid },
+        { "ConvertToRaid", &LuaGroup::ConvertToRaid, METHOD_REG_WORLD }, // World state method only in multistate
 
         // Not implemented methods
         { "IsLFGGroup", nullptr, METHOD_REG_NONE },       // not implemented
