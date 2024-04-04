@@ -135,7 +135,7 @@ int LuaVal::lua_set(lua_State* L) {
         (**p).erase(kk);
     }
     else {
-        (**p).insert_or_assign(std::move(kk), std::move(vv));
+        auto const& [it, _] = (**p).insert_or_assign(std::move(kk), std::move(vv));
         return it->second.asObject(L);
     }
     return 0;
