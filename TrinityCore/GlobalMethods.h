@@ -170,7 +170,7 @@ namespace LuaGlobalFunctions
      */
     int GetGameTime(Eluna* E)
     {
-        E->Push(GameTime::GetGameTime());
+        E->Push(uint32(GameTime::GetGameTime()));
         return 1;
     }
 
