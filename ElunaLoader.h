@@ -31,7 +31,7 @@ public:
     ElunaLoader& operator= (ElunaLoader&&) = delete;
     static ElunaLoader* instance();
     void LoadScripts();
-    void ReadFiles(std::string path);
+    void ReadFiles(lua_State* L, std::string path);
     void CombineLists();
     void ProcessScript(lua_State* L, std::string filename, const std::string& fullpath, int32 mapId);
     bool ShouldMapLoadEluna(uint32 mapId);
