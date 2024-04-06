@@ -16,36 +16,6 @@
 #include "ElunaCreatureAI.h"
 #include "ElunaInstanceAI.h"
 
-#if defined(TRINITY_PLATFORM) && defined(TRINITY_PLATFORM_WINDOWS)
-#if TRINITY_PLATFORM == TRINITY_PLATFORM_WINDOWS
-#define ELUNA_WINDOWS
-#endif
-#elif defined(AC_PLATFORM) && defined(AC_PLATFORM_WINDOWS)
-#if AC_PLATFORM == AC_PLATFORM_WINDOWS
-#define ELUNA_WINDOWS
-#endif
-#elif defined(PLATFORM) && defined(PLATFORM_WINDOWS)
-#if PLATFORM == PLATFORM_WINDOWS
-#define ELUNA_WINDOWS
-#endif
-#else
-#error Eluna could not determine platform
-#endif
-
-// Some dummy includes containing BOOST_VERSION:
-// ObjectAccessor.h Config.h Log.h
-#if !defined(MANGOS) && !defined(VMANGOS)
-#define USING_BOOST
-#endif
-
-#ifdef USING_BOOST
-#include <boost/filesystem.hpp>
-#else
-#include <ace/ACE.h>
-#include <ace/Dirent.h>
-#include <ace/OS_NS_sys_stat.h>
-#endif
-
 extern "C"
 {
 // Base lua libraries

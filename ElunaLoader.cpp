@@ -14,11 +14,16 @@
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#if !defined(VMANGOS) && !defined(MANGOS)
+
+#ifdef USING_BOOST
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 #else
 namespace fs = std::filesystem;
+#endif
+
+#ifdef ELUNA_WINDOWS
+#include <Windows.h>
 #endif
 
 #ifdef TRINITY
@@ -121,12 +126,12 @@ int ElunaLoader::LoadBytecodeChunk(lua_State* /*L*/, uint8* bytes, size_t len, B
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
 void ElunaLoader::ReadFiles(lua_State* L, std::string path)
 {
-    ELUNA_LOG_DEBUG("[Eluna]: GetScripts from path `%s`", path.c_str());
+    ELUNA_LOG_DEBUG("[Eluna]: ReadFiles from path `%s`", path.c_str());
 
     fs::path someDir(path);
     fs::directory_iterator end_iter;
 
-    if (fs::exists(someDir) && fs::is_directory(someDir))
+    if (fs::exists(someDir) && fs::is_directory(someDir) && !fs::is_empty(someDir))
     {
         lua_requirepath +=
             path + "/?.lua;" +
