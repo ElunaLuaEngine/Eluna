@@ -170,7 +170,7 @@ namespace LuaGlobalFunctions
      */
     int GetGameTime(Eluna* E)
     {
-        E->Push(eWorld->GetGameTime());
+        E->Push(uint32(eWorld->GetGameTime()));
         return 1;
     }
 
@@ -403,10 +403,10 @@ namespace LuaGlobalFunctions
      * Low GUID is an ID to distinct the objects of the same type.
      *
      * [Player] and [Creature] for example can have the same low GUID but not GUID.
-     * 
+     *
      * On TrinityCore all low GUIDs are different for all objects of the same type.
      * For example creatures in instances are assigned new GUIDs when the Map is created.
-     * 
+     *
      * On MaNGOS and cMaNGOS low GUIDs are unique only on the same map.
      * For example creatures in instances use the same low GUID assigned for that spawn in the database.
      * This is why to identify a creature you have to know the instanceId and low GUID. See [Map:GetIntstanceId]
@@ -1305,9 +1305,12 @@ namespace LuaGlobalFunctions
     {
         const char* query = E->CHECKVAL<const char*>(1);
 
-        ElunaQuery* result = WorldDatabase.QueryNamed(query);
+        QueryNamedResult* result = WorldDatabase.QueryNamed(query);
         if (result)
-            E->Push(result);
+        {
+            ElunaQuery elunaQuery(result);
+            E->Push(&elunaQuery);
+        }
         else
             E->Push();
         return 1;
@@ -1409,7 +1412,10 @@ namespace LuaGlobalFunctions
 
         QueryNamedResult* result = CharacterDatabase.QueryNamed(query);
         if (result)
-            E->Push(result);
+        {
+            ElunaQuery elunaQuery(result);
+            E->Push(&elunaQuery);
+        }
         else
             E->Push();
         return 1;
@@ -1491,7 +1497,10 @@ namespace LuaGlobalFunctions
 
         QueryNamedResult* result = LoginDatabase.QueryNamed(query);
         if (result)
-            E->Push(result);
+        {
+            ElunaQuery elunaQuery(result);
+            E->Push(&elunaQuery);
+        }
         else
             E->Push();
         return 1;
@@ -2249,7 +2258,7 @@ namespace LuaGlobalFunctions
 
     /**
      * Adds a taxi path to a specified map, returns the used pathId.
-     * 
+     *
      * Note that the first taxi point needs to be near the player when he starts the taxi path.
      * The function should also be used only **once** per path added so use it on server startup for example.
      *
@@ -3170,7 +3179,7 @@ namespace LuaGlobalFunctions
 
         return 0;
     }
-    
+
     ElunaGlobal::ElunaRegister GlobalMethods[] =
     {
         // Hooks

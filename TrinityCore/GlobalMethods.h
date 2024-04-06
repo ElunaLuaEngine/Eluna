@@ -137,7 +137,7 @@ namespace LuaGlobalFunctions
      * Finds and Returns [Player] by guid if found
      *
      * In multistate, this method is only available in the WORLD state
-     * 
+     *
      * @param ObjectGuid guid : guid of the [Player], you can get it with [Object:GetGUID]
      * @return [Player] player
      */
@@ -170,7 +170,7 @@ namespace LuaGlobalFunctions
      */
     int GetGameTime(Eluna* E)
     {
-        E->Push(GameTime::GetGameTime());
+        E->Push(uint32(GameTime::GetGameTime()));
         return 1;
     }
 
@@ -289,7 +289,7 @@ namespace LuaGlobalFunctions
      * Returns a [Map] by ID.
      *
      * In multistate, this method is only available in the WORLD state
-     * 
+     *
      * @param uint32 mapId : see [Map.dbc](https://github.com/cmangos/issues/wiki/Map.dbc)
      * @param uint32 instanceId = 0 : required if the map is an instance, otherwise don't pass anything
      * @return [Map] map : the Map, or `nil` if it doesn't exist
@@ -407,10 +407,10 @@ namespace LuaGlobalFunctions
      * Low GUID is an ID to distinct the objects of the same type.
      *
      * [Player] and [Creature] for example can have the same low GUID but not GUID.
-     * 
+     *
      * On TrinityCore all low GUIDs are different for all objects of the same type.
      * For example creatures in instances are assigned new GUIDs when the Map is created.
-     * 
+     *
      * On MaNGOS and cMaNGOS low GUIDs are unique only on the same map.
      * For example creatures in instances use the same low GUID assigned for that spawn in the database.
      * This is why to identify a creature you have to know the instanceId and low GUID. See [Map:GetIntstanceId]
@@ -1347,7 +1347,7 @@ namespace LuaGlobalFunctions
 
         ElunaQuery result = WorldDatabase.Query(query);
         if (result)
-            E->Push(new ElunaQuery(result));
+            E->Push(&result);
         else
             E->Push();
 
@@ -1391,7 +1391,7 @@ namespace LuaGlobalFunctions
      *    end
      * end)
      * </pre>
-     * 
+     *
      * @param string sql : query to execute asynchronously
      * @param function callback : the callback function to be called with the query results
      */
@@ -1414,7 +1414,7 @@ namespace LuaGlobalFunctions
         // Add an asynchronous query callback
         E->GetQueryProcessor().AddCallback(WorldDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
         {
-            ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+            ElunaQuery* eq = result ? &result : nullptr;
 
             // Get the Lua function from the registry
             lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
@@ -1446,9 +1446,9 @@ namespace LuaGlobalFunctions
     {
         const char* query = E->CHECKVAL<const char*>(1);
 
-        QueryResult result = CharacterDatabase.Query(query);
+        ElunaQuery result = CharacterDatabase.Query(query);
         if (result)
-            E->Push(new QueryResult(result));
+            E->Push(&result);
         else
             E->Push();
 
@@ -1505,7 +1505,7 @@ namespace LuaGlobalFunctions
         // Add an asynchronous query callback
         E->GetQueryProcessor().AddCallback(CharacterDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
         {
-            ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+            ElunaQuery* eq = result ? &result : nullptr;
 
             // Get the Lua function from the registry
             lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
@@ -1537,9 +1537,9 @@ namespace LuaGlobalFunctions
     {
         const char* query = E->CHECKVAL<const char*>(1);
 
-        QueryResult result = LoginDatabase.Query(query);
+        ElunaQuery result = LoginDatabase.Query(query);
         if (result)
-            E->Push(new QueryResult(result));
+            E->Push(&result);
         else
             E->Push();
 
@@ -1596,7 +1596,7 @@ namespace LuaGlobalFunctions
         // Add an asynchronous query callback
         E->GetQueryProcessor().AddCallback(LoginDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
         {
-            ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+            ElunaQuery* eq = result ? &result : nullptr;
 
             // Get the Lua function from the registry
             lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
@@ -2251,7 +2251,7 @@ namespace LuaGlobalFunctions
 
     /**
      * Adds a taxi path to a specified map, returns the used pathId.
-     * 
+     *
      * Note that the first taxi point needs to be near the player when he starts the taxi path.
      * The function should also be used only **once** per path added so use it on server startup for example.
      *
@@ -3170,7 +3170,7 @@ namespace LuaGlobalFunctions
 
         return 0;
     }
-    
+
     ElunaGlobal::ElunaRegister GlobalMethods[] =
     {
         // Hooks

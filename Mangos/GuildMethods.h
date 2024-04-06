@@ -246,10 +246,10 @@ namespace LuaGuild
         { "GetMemberCount", &LuaGuild::GetMemberCount },
 
         // Setters
-        { "SetMemberRank", &LuaGuild::SetMemberRank },
-        { "SetLeader", &LuaGuild::SetLeader },
+        { "SetMemberRank", &LuaGuild::SetMemberRank, METHOD_REG_WORLD }, // World state method only in multistate
+        { "SetLeader", &LuaGuild::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
 #ifndef CLASSIC
-        { "SetBankTabText", &LuaGuild::SetBankTabText },
+        { "SetBankTabText", &LuaGuild::SetBankTabText, METHOD_REG_WORLD }, // World state method only in multistate
 #else
         { "SetBankTabText", nullptr,  METHOD_REG_NONE},
 #endif
@@ -257,9 +257,9 @@ namespace LuaGuild
         // Other
         { "SendPacket", &LuaGuild::SendPacket },
         { "SendPacketToRanked", &LuaGuild::SendPacketToRanked },
-        { "Disband", &LuaGuild::Disband },
-        { "AddMember", &LuaGuild::AddMember },
-        { "DeleteMember", &LuaGuild::DeleteMember },
+        { "Disband", &LuaGuild::Disband, METHOD_REG_WORLD }, // World state method only in multistate
+        { "AddMember", &LuaGuild::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
+        { "DeleteMember", &LuaGuild::DeleteMember, METHOD_REG_WORLD }, // World state method only in multistate
 
         { NULL, NULL, METHOD_REG_NONE }
     };
