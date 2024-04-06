@@ -6,6 +6,7 @@
 */
 
 #include "LuaEngine.h"
+#include "ElunaCompat.h"
 #include "ElunaConfig.h"
 #include "ElunaLoader.h"
 #include "ElunaUtility.h"
