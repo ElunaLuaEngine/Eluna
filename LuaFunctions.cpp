@@ -33,6 +33,7 @@ extern "C"
 #include "SpellMethods.h"
 #ifdef TRINITY
     #include "LootMethods.h"
+    #include "SpellInfoMethods.h"
 #endif
 #include "QuestMethods.h"
 #include "MapMethods.h"
@@ -169,6 +170,9 @@ void RegisterFunctions(Eluna* E)
 #ifdef TRINITY
     ElunaTemplate<Loot>::Register(E, "Loot");
     ElunaTemplate<Loot>::SetMethods(E, LuaLoot::LootMethods);
+  
+    ElunaTemplate<SpellInfo>::Register(E, "SpellInfo");
+    ElunaTemplate<SpellInfo>::SetMethods(E, LuaSpellInfo::SpellInfoMethods);
 #endif
 
     ElunaTemplate<Quest>::Register(E, "Quest");
@@ -194,3 +198,4 @@ void RegisterFunctions(Eluna* E)
 
     LuaVal::Register(E->L);
 }
+
