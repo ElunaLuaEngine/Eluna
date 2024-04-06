@@ -8,7 +8,7 @@ elseif(WIN32)
 endif()
 
 # Add Lua compatibility definition
-if(NOT TARGET lualib) 
+if(TARGET lualib) 
   target_compile_definitions(lualib PUBLIC LUA_COMPAT_MODULE) 
 endif()
 

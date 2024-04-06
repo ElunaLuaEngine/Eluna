@@ -3589,6 +3589,8 @@ namespace LuaPlayer
     /**
      * Makes the [Player] invite another player to a group.
      *
+     * In multistate, this method is only available in the WORLD state
+     *
      * @param [Player] invited : player to invite to group
      * @return bool success : true if the player was invited to a group
      */
@@ -3644,6 +3646,8 @@ namespace LuaPlayer
 
     /**
      * Creates a new [Group] with the creator [Player] as leader.
+     *
+     * In multistate, this method is only available in the WORLD state
      *
      * @param [Player] invited : player to add to group
      * @return [Group] createdGroup : the created group or nil
@@ -4094,8 +4098,8 @@ namespace LuaPlayer
         { "Mute", &LuaPlayer::Mute },
         { "SummonPlayer", &LuaPlayer::SummonPlayer },
         { "SaveToDB", &LuaPlayer::SaveToDB },
-        { "GroupInvite", &LuaPlayer::GroupInvite },
-        { "GroupCreate", &LuaPlayer::GroupCreate },
+        { "GroupInvite", &LuaPlayer::GroupInvite, METHOD_REG_WORLD }, // World state method only in multistate
+        { "GroupCreate", &LuaPlayer::GroupCreate, METHOD_REG_WORLD }, // World state method only in multistate
         { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
         { "SendMovieStart", &LuaPlayer::SendMovieStart },
 

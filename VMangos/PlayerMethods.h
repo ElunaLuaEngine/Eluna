@@ -4344,8 +4344,8 @@ namespace LuaPlayer
         { "Mute", &LuaPlayer::Mute },
         { "SummonPlayer", &LuaPlayer::SummonPlayer },
         { "SaveToDB", &LuaPlayer::SaveToDB },
-        { "GroupInvite", &LuaPlayer::GroupInvite },
-        { "GroupCreate", &LuaPlayer::GroupCreate },
+        { "GroupInvite", &LuaPlayer::GroupInvite, METHOD_REG_WORLD }, // World state method only in multistate
+        { "GroupCreate", &LuaPlayer::GroupCreate, METHOD_REG_WORLD }, // World state method only in multistate
         { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
 #if defined(CLASSIC)
         { "UpdateHonor", &LuaPlayer::UpdateHonor },

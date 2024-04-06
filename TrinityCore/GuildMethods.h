@@ -128,6 +128,8 @@ namespace LuaGuild
     /**
      * Sets the leader of this [Guild]
      *
+     * In multistate, this method is only available in the WORLD state
+     *
      * @param [Player] leader : the [Player] leader to change
      */
     int SetLeader(Eluna* E, Guild* guild)
@@ -141,6 +143,8 @@ namespace LuaGuild
 
     /**
      * Sets the information of the bank tab specified
+     *
+     * In multistate, this method is only available in the WORLD state
      *
      * @param uint8 tabId : the ID of the tab specified
      * @param string info : the information to be set to the bank tab
@@ -186,6 +190,9 @@ namespace LuaGuild
 
     /**
      * Disbands the [Guild]
+     *
+     * In multistate, this method is only available in the WORLD state
+     *
      */
     int Disband(Eluna* /*E*/, Guild* guild)
     {
@@ -197,6 +204,8 @@ namespace LuaGuild
      * Adds the specified [Player] to the [Guild] at the specified rank.
      *
      * If no rank is specified, defaults to none.
+     *
+     * In multistate, this method is only available in the WORLD state
      *
      * @param [Player] player : the [Player] to be added to the guild
      * @param uint8 rankId : the rank ID
@@ -215,6 +224,8 @@ namespace LuaGuild
     /**
      * Removes the specified [Player] from the [Guild].
      *
+     * In multistate, this method is only available in the WORLD state
+     *
      * @param [Player] player : the [Player] to be removed from the guild
      * @param bool isDisbanding : default 'false', should only be set to 'true' if the guild is triggered to disband
      */
@@ -231,6 +242,8 @@ namespace LuaGuild
 
     /**
      * Promotes/demotes the [Player] to the specified rank.
+     *
+     * In multistate, this method is only available in the WORLD state
      *
      * @param [Player] player : the [Player] to be promoted/demoted
      * @param uint8 rankId : the rank ID
@@ -259,18 +272,18 @@ namespace LuaGuild
         { "GetMemberCount", &LuaGuild::GetMemberCount },
 
         // Setters
-        { "SetBankTabText", &LuaGuild::SetBankTabText },
-        { "SetMemberRank", &LuaGuild::SetMemberRank },
+        { "SetBankTabText", &LuaGuild::SetBankTabText, METHOD_REG_WORLD }, // World state method only in multistate
+        { "SetMemberRank", &LuaGuild::SetMemberRank, METHOD_REG_WORLD }, // World state method only in multistate
 #ifndef CATA
-        { "SetLeader", &LuaGuild::SetLeader },
+        { "SetLeader", &LuaGuild::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
 #endif
 
         // Other
         { "SendPacket", &LuaGuild::SendPacket },
         { "SendPacketToRanked", &LuaGuild::SendPacketToRanked },
-        { "Disband", &LuaGuild::Disband },
-        { "AddMember", &LuaGuild::AddMember },
-        { "DeleteMember", &LuaGuild::DeleteMember },
+        { "Disband", &LuaGuild::Disband, METHOD_REG_WORLD }, // World state method only in multistate
+        { "AddMember", &LuaGuild::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
+        { "DeleteMember", &LuaGuild::DeleteMember, METHOD_REG_WORLD }, // World state method only in multistate
 
 #ifdef CATA //Not implemented in TCPP
         { "SetLeader", nullptr, METHOD_REG_NONE },
