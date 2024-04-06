@@ -27,4 +27,11 @@ extern "C"
     #define lua_load(L, buf_read, dec_buf, str, NULL) \
         lua_load(L, buf_read, dec_buf, str);
 #endif
+
+#if LUA_VERSION_NUM > 502
+    #define lua_dump(L, writer, data) \
+        lua_dump(L, writer, data, 0);
+    #define lua_pushunsigned(L, u) \
+        lua_pushinteger(L, u);
+#endif
 #endif
