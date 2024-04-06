@@ -37,6 +37,30 @@ extern "C"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
 
+ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj) { return { obj->GetWeakPtr(), obj->GetOwner()->GetMap() }; }
+ElunaConstrainedObjectRef<Battleground> GetWeakPtrFor(Battleground const* obj) { return { obj->GetWeakPtr(), obj->GetBgMap() }; }
+ElunaConstrainedObjectRef<Group> GetWeakPtrFor(Group const* obj) { return { obj->GetWeakPtr(), nullptr }; }
+ElunaConstrainedObjectRef<Guild> GetWeakPtrFor(Guild const* obj) { return { obj->GetWeakPtr(), nullptr }; }
+ElunaConstrainedObjectRef<Map> GetWeakPtrFor(Map const* obj) { return { obj->GetWeakPtr(), obj }; }
+ElunaConstrainedObjectRef<Object> GetWeakPtrForObjectImpl(Object const* obj)
+{
+    if (WorldObject const* worldObject = obj->ToWorldObject())
+        return { obj->GetWeakPtr(), worldObject->GetMap() };
+
+    if (Item const* item = obj->ToItem())
+        if (Player const* player = item->GetOwner())
+            return { obj->GetWeakPtr(), player->GetMap() };
+
+    // possibly dangerous item
+    return { obj->GetWeakPtr(), nullptr };
+}
+ElunaConstrainedObjectRef<Quest> GetWeakPtrFor(Quest const* obj) { return { obj->GetWeakPtr(), nullptr }; }
+ElunaConstrainedObjectRef<Spell> GetWeakPtrFor(Spell const* obj) { return { obj->GetWeakPtr(), obj->GetCaster()->GetMap() }; }
+
+#if (!defined(TBC) && !defined(CLASSIC))
+ElunaConstrainedObjectRef<Vehicle> GetWeakPtrFor(Vehicle const* obj) { return { obj->GetWeakPtr(), obj->GetBase()->GetMap() }; }
+#endif
+
 // Template by Mud from http://stackoverflow.com/questions/4484437/lua-integer-type/4485511#4485511
 template<> int ElunaTemplate<unsigned long long>::Add(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) + E->CHECKVAL<unsigned long long>(2)); return 1; }
 template<> int ElunaTemplate<unsigned long long>::Substract(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) - E->CHECKVAL<unsigned long long>(2)); return 1; }
