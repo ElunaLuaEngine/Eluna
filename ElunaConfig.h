@@ -55,6 +55,10 @@ private:
 
     void SetConfig(ElunaConfigBoolValues index, char const* fieldname, bool defvalue);
     void SetConfig(ElunaConfigStringValues index, char const* fieldname, std::string defvalue);
+
+#if defined CMANGOS || defined VMANGOS
+    Config config;
+#endif
 };
 
 #define sElunaConfig ElunaConfig::instance()
