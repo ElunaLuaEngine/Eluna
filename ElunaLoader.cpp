@@ -6,18 +6,24 @@
 */
 
 #include "LuaEngine.h"
+#include "ElunaCompat.h"
 #include "ElunaConfig.h"
 #include "ElunaLoader.h"
 #include "ElunaUtility.h"
 #include "ElunaIncludes.h"
-#include <filesystem>
 #include <fstream>
 #include <sstream>
-#if !defined(VMANGOS) && !defined(MANGOS)
+
+#ifdef USING_BOOST
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 #else
+#include <filesystem>
 namespace fs = std::filesystem;
+#endif
+
+#ifdef ELUNA_WINDOWS
+#include <Windows.h>
 #endif
 
 #ifdef TRINITY
@@ -63,7 +69,17 @@ void ElunaLoader::LoadScripts()
     lua_requirepath.clear();
     lua_requirecpath.clear();
 
-    ReadFiles(lua_folderpath);
+    // open a new temporary Lua state to compile bytecode in
+    lua_State* L = luaL_newstate();
+    luaL_openlibs(L);
+
+    // read and compile all scripts
+    ReadFiles(L, lua_folderpath);
+
+    // close temporary Lua state
+    lua_close(L);
+
+    // combine lists of Lua scripts and extensions
     CombineLists();
 
     // append our custom require paths and cpaths if the config variables are not empty
@@ -108,18 +124,14 @@ int ElunaLoader::LoadBytecodeChunk(lua_State* /*L*/, uint8* bytes, size_t len, B
 }
 
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
-void ElunaLoader::ReadFiles(std::string path)
+void ElunaLoader::ReadFiles(lua_State* L, std::string path)
 {
-    ELUNA_LOG_DEBUG("[Eluna]: GetScripts from path `%s`", path.c_str());
-
-    // Open a new Lua state to compile bytecode in
-    lua_State* L = luaL_newstate();
-    luaL_openlibs(L);
+    ELUNA_LOG_DEBUG("[Eluna]: ReadFiles from path `%s`", path.c_str());
 
     fs::path someDir(path);
     fs::directory_iterator end_iter;
 
-    if (fs::exists(someDir) && fs::is_directory(someDir))
+    if (fs::exists(someDir) && fs::is_directory(someDir) && !fs::is_empty(someDir))
     {
         lua_requirepath +=
             path + "/?.lua;" +
@@ -146,7 +158,7 @@ void ElunaLoader::ReadFiles(std::string path)
             // load subfolder
             if (fs::is_directory(dir_iter->status()))
             {
-                ReadFiles(fullpath);
+                ReadFiles(L, fullpath);
                 continue;
             }
 
@@ -179,9 +191,6 @@ void ElunaLoader::ReadFiles(std::string path)
             }
         }
     }
-
-    // close Lua state
-    lua_close(L);
 }
 
 bool ElunaLoader::CompileScript(lua_State* L, LuaScript& script)

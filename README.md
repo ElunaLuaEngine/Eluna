@@ -24,9 +24,9 @@ You can join the official Eluna Discord server, where you'll be able to find res
 * [Getting started](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/USAGE.md)
 * [Eluna features](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/IMPL_DETAILS.md)
 * [Function documentation](http://elunaluaengine.github.io/)
-* [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/Hooks.h)
+* [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/hooks/Hooks.h)
 * [Lua reference manual](http://www.lua.org/manual/5.2/)
-* [Forum - support, releases, guides](https://www.getmangos.eu/forums/forum/119-eluna-central/)
+* [Discord - support, releases, guides](https://discord.gg/bjkCVWqqfX)
 * [Example scripts](https://github.com/ElunaLuaEngine/Scripts)
 * [Contributing](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/CONTRIBUTING.md)
 
@@ -47,8 +47,6 @@ Core sources and forks with required modifications for Eluna:
 
 [AzerothCore Eluna Module](https://github.com/azerothcore/mod-eluna)
 
-[Cataclysm Preservation Project](https://github.com/Niam5/ElunaCataPreservation) - maintained by [Niam5](https://github.com/Niam5)
-
 ## Links
 
 * [MaNGOS](http://getmangos.eu/)
@@ -58,10 +56,15 @@ Core sources and forks with required modifications for Eluna:
 * [Lua.org](http://www.lua.org/)
 * [License](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/LICENSE.md)
 
-## Team
+## Current maintainers
+
+* [Rochet2](https://github.com/Rochet2)
+* [Foereaper](https://github.com/Foereaper)
+* [TB](https://github.com/Terrorblade)
+* [Niam5](https://github.com/Niam5)
+
+## Former maintainers
 
 * [Tommy (Easelm)](https://github.com/Easelm)
-* [Foereaper](https://github.com/Foereaper)
-* [Rochet2](https://github.com/Rochet2)
 * [Salja](https://github.com/Salja)
 * [Patman64](https://github.com/Patman64)

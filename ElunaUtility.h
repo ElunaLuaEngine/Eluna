@@ -33,6 +33,26 @@
 #include "Log/Log.h"
 #endif
 
+#if !defined(MANGOS) && !defined(VMANGOS)
+#define USING_BOOST
+#endif
+
+#if defined(TRINITY_PLATFORM) && defined(TRINITY_PLATFORM_WINDOWS)
+#if TRINITY_PLATFORM == TRINITY_PLATFORM_WINDOWS
+#define ELUNA_WINDOWS
+#endif
+#elif defined(AC_PLATFORM) && defined(AC_PLATFORM_WINDOWS)
+#if AC_PLATFORM == AC_PLATFORM_WINDOWS
+#define ELUNA_WINDOWS
+#endif
+#elif defined(PLATFORM) && defined(PLATFORM_WINDOWS)
+#if PLATFORM == PLATFORM_WINDOWS
+#define ELUNA_WINDOWS
+#endif
+#else
+#error Eluna could not determine platform
+#endif
+
 #if defined(TRINITY) || defined(AZEROTHCORE)
 typedef QueryResult ElunaQuery;
 #define GET_GUID                GetGUID
