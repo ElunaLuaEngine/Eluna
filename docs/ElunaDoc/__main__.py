@@ -65,7 +65,7 @@ if __name__ == '__main__':
     # Load up all files with methods we need to parse.
     # Hard-coded to the TC files for now. Will have to add core support later on.
     print('Finding Eluna method files...')
-    class_files = find_class_files('../TrinityCore/')
+    class_files = find_class_files('../methods/TrinityCore/')
 
     # Parse all the method files.
     classes = []

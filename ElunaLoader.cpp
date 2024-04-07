@@ -11,7 +11,6 @@
 #include "ElunaLoader.h"
 #include "ElunaUtility.h"
 #include "ElunaIncludes.h"
-#include <filesystem>
 #include <fstream>
 #include <sstream>
 
@@ -19,6 +18,7 @@
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 #else
+#include <filesystem>
 namespace fs = std::filesystem;
 #endif
 
