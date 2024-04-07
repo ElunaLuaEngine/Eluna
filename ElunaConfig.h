@@ -9,6 +9,8 @@
 
 #include "ElunaUtility.h"
 
+#define ELUNA_CONFIG "eluna.conf"
+
 enum ElunaConfigBoolValues
 {
     CONFIG_ELUNA_ENABLED,

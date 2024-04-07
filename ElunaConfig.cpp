@@ -27,8 +27,18 @@ ElunaConfig::~ElunaConfig()
 
 void ElunaConfig::Initialize()
 {
+    // Load eluna.conf configuration file
+#ifdef TRINITY
+    std::string configError;
+    if (!sConfigMgr->LoadAdditionalFile(ELUNA_CONFIG, true, configError))
+    {
+        printf("Error: %s. Eluna will be disabled.\n", configError.c_str());
+        return;
+    }
+#endif
+
     // Load bools
-    SetConfig(CONFIG_ELUNA_ENABLED, "Eluna.Enabled", true);
+    SetConfig(CONFIG_ELUNA_ENABLED, "Eluna.Enabled", false);
     SetConfig(CONFIG_ELUNA_COMPATIBILITY_MODE, "Eluna.CompatibilityMode", true);
     SetConfig(CONFIG_ELUNA_TRACEBACK, "Eluna.TraceBack", false);
 
