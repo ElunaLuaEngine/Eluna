@@ -8,6 +8,9 @@
 #define _ELUNACONFIG_H
 
 #include "ElunaUtility.h"
+#if defined CMANGOS || defined VMANGOS
+#include "Config/Config.h"
+#endif
 
 #define ELUNA_CONFIG "eluna.conf"
 

@@ -6,8 +6,6 @@
 
 #if defined TRINITY || defined MANGOS
 #include "Config.h"
-#elif defined CMANGOS || defined VMANGOS
-#include "Config/Config.h"
 #endif
 #include "ElunaConfig.h"
 
@@ -36,7 +34,7 @@ void ElunaConfig::Initialize()
         return;
     }
 #elif CMANGOS
-    if (!config.SetSource(ELUNA_CONFIG, "Mangosd_"))
+    if (!config.SetSource(ELUNA_CONFIG, "Eluna_"))
     {
         sLog.outString("Unable to open configuration file(%s). Eluna will be disabled.", ELUNA_CONFIG);
         return;
