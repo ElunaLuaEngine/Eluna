@@ -7,6 +7,7 @@
 #include "Hooks.h"
 #include "LuaEngine.h"
 #include "BindingMap.h"
+#include "ElunaCompat.h"
 #include "ElunaConfig.h"
 #include "ElunaEventMgr.h"
 #include "ElunaIncludes.h"
