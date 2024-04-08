@@ -199,7 +199,7 @@ bool ElunaLoader::CompileScript(lua_State* L, LuaScript& script)
     int err = luaL_loadfile(L, script.filepath.c_str());
 
     // If something bad happened, try to find an error.
-    if (err != LUA_OK)
+    if (err != 0)
     {
         ELUNA_LOG_ERROR("[Eluna]: CompileScript failed to load the Lua script `%s`.", script.filename.c_str());
         Eluna::Report(L);

@@ -26,6 +26,12 @@ extern "C"
         lua_pushinteger(L, u)
     #define lua_load(L, buf_read, dec_buf, str, NULL) \
         lua_load(L, buf_read, dec_buf, str)
+
+#ifndef LUAJIT_VERSION
+    void* luaL_testudata(lua_State* L, int index, const char* tname);
+    void luaL_setmetatable(lua_State* L, const char* tname);
+    #define luaL_setfuncs(L, l, n) luaL_register(L, NULL, l)
+#endif
 #endif
 
 #if LUA_VERSION_NUM > 502

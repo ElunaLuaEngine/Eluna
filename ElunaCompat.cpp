@@ -61,4 +61,24 @@ int lua_absindex(lua_State* L, int i) {
         i += lua_gettop(L) + 1;
     return i;
 }
+
+#ifndef LUAJIT_VERSION
+void* luaL_testudata(lua_State* L, int index, const char* tname) {
+    void* ud = lua_touserdata(L, index);
+    if (ud && lua_getmetatable(L, index))
+    {
+        luaL_getmetatable(L, tname);
+        if (!lua_rawequal(L, -1, -2))
+            ud = NULL;
+        lua_pop(L, 2);
+    }
+    return ud;
+}
+
+void luaL_setmetatable(lua_State* L, const char* tname) {
+    lua_pushstring(L, tname);
+    lua_rawget(L, LUA_REGISTRYINDEX);
+    lua_setmetatable(L, -2);
+}
+#endif
 #endif
