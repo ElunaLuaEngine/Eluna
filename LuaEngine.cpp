@@ -98,6 +98,7 @@ void Eluna::CloseLua()
     if (L)
         lua_close(L);
     L = NULL;
+    stacktraceFunctionStackIndex = 0;
 
     instanceDataRefs.clear();
     continentDataRefs.clear();
@@ -163,6 +164,10 @@ void Eluna::OpenLua()
     lua_pushcfunction(L, &PrecompiledLoader);
     lua_rawseti(L, -2, newLoaderIndex);
     lua_pop(L, 2); // pop loaders/searchers table, pop package table
+
+    // Leave StackTrace function on stack and save reference to it
+    lua_pushcfunction(L, &StackTrace);
+    stacktraceFunctionStackIndex = lua_gettop(L);
 }
 
 void Eluna::CreateBindStores()
@@ -355,24 +360,16 @@ bool Eluna::ExecuteCall(int params, int res)
     }
 
     bool usetrace = sElunaConfig->GetConfig(CONFIG_ELUNA_TRACEBACK);
-    if (usetrace)
+    if (usetrace && !lua_iscfunction(L, stacktraceFunctionStackIndex))
     {
-        lua_pushcfunction(L, &StackTrace);
-        // Stack: function, [parameters], traceback
-        lua_insert(L, base);
-        // Stack: traceback, function, [parameters]
+        ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is %s, not a c-function.", luaL_tolstring(L, stacktraceFunctionStackIndex, NULL));
+        ASSERT(false); // stack probably corrupt
     }
 
     // Objects are invalidated when event_level hits 0
     ++event_level;
-    int result = lua_pcall(L, params, res, usetrace ? base : 0);
+    int result = lua_pcall(L, params, res, usetrace ? stacktraceFunctionStackIndex : 0);
     --event_level;
-
-    if (usetrace)
-    {
-        // Stack: traceback, [results or errmsg]
-        lua_remove(L, base);
-    }
     // Stack: [results or errmsg]
 
     // lua_pcall returns 0 on success.
