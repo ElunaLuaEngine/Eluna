@@ -156,7 +156,7 @@ void Eluna::OpenLua()
         lua_getfield(L, -1, "searchers");
     }
     // insert the new loader to the loaders table by shifting other elements down by one
-    const int newLoaderIndex = 2;
+    const int newLoaderIndex = 1;
     for (int i = lua_rawlen(L, -1); i >= newLoaderIndex; --i) {
         lua_rawgeti(L, -1, i);
         lua_rawseti(L, -2, i + 1);
