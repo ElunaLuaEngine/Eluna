@@ -1102,7 +1102,7 @@ namespace LuaCreature
     {
         uint32 entry = creature->GetEntry();
 
-        CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(entry);
+        CreatureInfo const* cInfo = sObjectMgr.GetCreatureTemplate(entry);
         if (cInfo)
             E->Push(cInfo->pet_family);
         return 1;
