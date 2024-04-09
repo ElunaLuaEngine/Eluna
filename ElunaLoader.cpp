@@ -135,7 +135,8 @@ void ElunaLoader::ReadFiles(lua_State* L, std::string path)
     {
         lua_requirepath +=
             path + "/?.lua;" +
-            path + "/?.ext;";
+            path + "/?.ext;" +
+            path + "/?.moon";
 
         lua_requirecpath +=
             path + "/?.dll;" +
@@ -199,12 +200,8 @@ bool ElunaLoader::CompileScript(lua_State* L, LuaScript& script)
     int err = 0;
     if (script.fileext == ".moon")
     {
-        std::ifstream t(script.filepath);
-        std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-        t.close();
-
-        str = "return require('moonscript').loadstring([[" + str + "]])()";
-        err = luaL_loadstring(L, str.c_str());
+        std::string str = "return require('moonscript').loadfile([[" + script.filepath+ "]])";
+        err = luaL_dostring(L, str.c_str());
     } else
         err = luaL_loadfile(L, script.filepath.c_str());
 
