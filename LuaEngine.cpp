@@ -7,6 +7,7 @@
 #include "Hooks.h"
 #include "LuaEngine.h"
 #include "BindingMap.h"
+#include "ElunaCompat.h"
 #include "ElunaConfig.h"
 #include "ElunaEventMgr.h"
 #include "ElunaIncludes.h"
@@ -97,9 +98,31 @@ void Eluna::CloseLua()
     if (L)
         lua_close(L);
     L = NULL;
+    stacktraceFunctionStackIndex = 0;
 
     instanceDataRefs.clear();
     continentDataRefs.clear();
+}
+
+static int PrecompiledLoader(lua_State* L)
+{
+    const char* modname = lua_tostring(L, 1);
+    if (modname == NULL)
+        return 0;
+    auto it = std::find_if(sElunaLoader->combined_scripts.begin(), sElunaLoader->combined_scripts.end(), [modname](const LuaScript& script) { return script.filename == modname; });
+    if (it == sElunaLoader->combined_scripts.end()) {
+        lua_pushfstring(L, "\n\tno precompiled script '%s' found", modname);
+        return 1;
+    }
+    if (luaL_loadbuffer(L, reinterpret_cast<const char*>(&it->bytecode[0]), it->bytecode.size(), it->filename.c_str()))
+    {
+        // Stack: modname, errmsg
+        return lua_error(L);
+    }
+    // Stack: modname, filefunction
+    lua_pushstring(L, it->filepath.c_str());
+    // Stack: modname, filefunction, modpath
+    return 2;
 }
 
 void Eluna::OpenLua()
@@ -125,7 +148,26 @@ void Eluna::OpenLua()
     lua_setfield(L, -2, "path");
     lua_pushstring(L, sElunaLoader->lua_requirecpath.c_str());
     lua_setfield(L, -2, "cpath");
-    lua_pop(L, 1);
+    // Set package.loaders loader for precompiled scripts
+    lua_getfield(L, -1, "loaders");
+    if (lua_isnil(L, -1)) {
+        // Lua 5.2+ uses searchers instead of loaders
+        lua_pop(L, 1);
+        lua_getfield(L, -1, "searchers");
+    }
+    // insert the new loader to the loaders table by shifting other elements down by one
+    const int newLoaderIndex = 2;
+    for (int i = lua_rawlen(L, -1); i >= newLoaderIndex; --i) {
+        lua_rawgeti(L, -1, i);
+        lua_rawseti(L, -2, i + 1);
+    }
+    lua_pushcfunction(L, &PrecompiledLoader);
+    lua_rawseti(L, -2, newLoaderIndex);
+    lua_pop(L, 2); // pop loaders/searchers table, pop package table
+
+    // Leave StackTrace function on stack and save reference to it
+    lua_pushcfunction(L, &StackTrace);
+    stacktraceFunctionStackIndex = lua_gettop(L);
 }
 
 void Eluna::CreateBindStores()
@@ -210,11 +252,8 @@ void Eluna::RunScripts()
 
     std::unordered_map<std::string, std::string> loaded; // filename, path
 
-    lua_getglobal(L, "package");
-    // Stack: package
-    luaL_getsubtable(L, -1, "loaded");
-    // Stack: package, modules
-    int modules = lua_gettop(L);
+    lua_getglobal(L, "require");
+    // Stack: require
 
     for (auto it = sElunaLoader->combined_scripts.begin(); it != sElunaLoader->combined_scripts.end(); ++it)
     {
@@ -237,47 +276,22 @@ void Eluna::RunScripts()
         }
         loaded[it->filename] = it->filepath;
 
-        lua_getfield(L, modules, it->filename.c_str());
-        // Stack: package, modules, module
-        if (!lua_isnoneornil(L, -1))
+        // We call require on the filename to load the script
+        // A custom loader is used to load the script from the combined_scripts table
+        // The loader is set up in Eluna::OpenLua
+        lua_pushvalue(L, -1); // Stack: require, require
+        lua_pushstring(L, it->filename.c_str()); // Stack: require, require, filename
+        if (ExecuteCall(1, 0))
         {
-            lua_pop(L, 1);
-            ELUNA_LOG_DEBUG("[Eluna]: `%s` was already loaded or required", it->filepath.c_str());
-            continue;
-        }
-        lua_pop(L, 1);
-        // Stack: package, modules
-
-        if (luaL_loadbuffer(L, reinterpret_cast<const char*>(&it->bytecode[0]), it->bytecode.size(), it->filename.c_str()))
-        {
-            // Stack: package, modules, errmsg
-            ELUNA_LOG_ERROR("[Eluna]: Error loading `%s`", it->filepath.c_str());
-            Report(L);
-            // Stack: package, modules
-            continue;
-        }
-        // Stack: package, modules, filefunc
-
-        if (ExecuteCall(0, 1))
-        {
-            // Stack: package, modules, result
-            if (lua_isnoneornil(L, -1) || (lua_isboolean(L, -1) && !lua_toboolean(L, -1)))
-            {
-                // if result evaluates to false, change it to true
-                lua_pop(L, 1);
-                Push(true);
-            }
-            lua_setfield(L, modules, it->filename.c_str());
-            // Stack: package, modules
-
-            // successfully loaded and ran file
+            // Successfully called require on the script
             ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `%s`", it->filepath.c_str());
             ++count;
             continue;
         }
+        // Stack: require
     }
-    // Stack: package, modules
-    lua_pop(L, 2);
+    // Stack: require
+    lua_pop(L, 1);
     ELUNA_LOG_INFO("[Eluna]: Executed %u Lua scripts in %u ms for map: %i, instance: %u", count, ElunaUtil::GetTimeDiff(oldMSTime), boundMapId, boundInstanceId);
 
     OnLuaStateOpen();
@@ -346,24 +360,16 @@ bool Eluna::ExecuteCall(int params, int res)
     }
 
     bool usetrace = sElunaConfig->GetConfig(CONFIG_ELUNA_TRACEBACK);
-    if (usetrace)
+    if (usetrace && !lua_iscfunction(L, stacktraceFunctionStackIndex))
     {
-        lua_pushcfunction(L, &StackTrace);
-        // Stack: function, [parameters], traceback
-        lua_insert(L, base);
-        // Stack: traceback, function, [parameters]
+        ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is %s, not a c-function.", luaL_tolstring(L, stacktraceFunctionStackIndex, NULL));
+        ASSERT(false); // stack probably corrupt
     }
 
     // Objects are invalidated when event_level hits 0
     ++event_level;
-    int result = lua_pcall(L, params, res, usetrace ? base : 0);
+    int result = lua_pcall(L, params, res, usetrace ? stacktraceFunctionStackIndex : 0);
     --event_level;
-
-    if (usetrace)
-    {
-        // Stack: traceback, [results or errmsg]
-        lua_remove(L, base);
-    }
     // Stack: [results or errmsg]
 
     // lua_pcall returns 0 on success.

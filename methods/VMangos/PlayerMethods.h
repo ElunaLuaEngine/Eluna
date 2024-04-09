@@ -2841,7 +2841,7 @@ namespace LuaPlayer
             }
             else if (creature > 0)
             {
-                if (CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(creature))
+                if (CreatureInfo const* cInfo = sObjectMgr.GetCreatureTemplate(creature))
                     for (uint16 z = 0; z < creaturecount; ++z)
 #ifndef CMANGOS
                         player->KilledMonster(cInfo, ObjectGuid());

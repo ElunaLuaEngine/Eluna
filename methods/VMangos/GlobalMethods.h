@@ -1475,7 +1475,7 @@ namespace LuaGlobalFunctions
         {
             if (save)
             {
-                CreatureInfo const* cinfo = ObjectMgr::GetCreatureTemplate(entry);
+                CreatureInfo const* cinfo = sObjectMgr.GetCreatureTemplate(entry);
                 if (!cinfo)
                 {
                     E->Push();
@@ -1516,7 +1516,7 @@ namespace LuaGlobalFunctions
             }
             else
             {
-                CreatureInfo const* cinfo = ObjectMgr::GetCreatureTemplate(entry);
+                CreatureInfo const* cinfo = sObjectMgr.GetCreatureTemplate(entry);
                 if (!cinfo)
                 {
                     E->Push();
