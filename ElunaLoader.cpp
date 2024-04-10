@@ -135,7 +135,8 @@ void ElunaLoader::ReadFiles(lua_State* L, std::string path)
     {
         lua_requirepath +=
             path + "/?.lua;" +
-            path + "/?.ext;";
+            path + "/?.ext;" +
+            path + "/?.moon;";
 
         lua_requirecpath +=
             path + "/?.dll;" +
@@ -196,7 +197,13 @@ void ElunaLoader::ReadFiles(lua_State* L, std::string path)
 bool ElunaLoader::CompileScript(lua_State* L, LuaScript& script)
 {
     // Attempt to load the file
-    int err = luaL_loadfile(L, script.filepath.c_str());
+    int err = 0;
+    if (script.fileext == ".moon")
+    {
+        std::string str = "return require('moonscript').loadfile([[" + script.filepath+ "]])";
+        err = luaL_dostring(L, str.c_str());
+    } else
+        err = luaL_loadfile(L, script.filepath.c_str());
 
     // If something bad happened, try to find an error.
     if (err != 0)
@@ -234,7 +241,7 @@ void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::s
     filename = filename.substr(0, extDot);
 
     // check extension and add path to scripts to load
-    if (ext != ".lua" && ext != ".ext")
+    if (ext != ".lua" && ext != ".ext" && ext != ".moon")
         return;
     bool extension = ext == ".ext";
 
