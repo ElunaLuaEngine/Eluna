@@ -136,7 +136,7 @@ void ElunaLoader::ReadFiles(lua_State* L, std::string path)
         lua_requirepath +=
             path + "/?.lua;" +
             path + "/?.ext;" +
-            path + "/?.moon";
+            path + "/?.moon;";
 
         lua_requirecpath +=
             path + "/?.dll;" +
