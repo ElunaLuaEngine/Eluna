@@ -831,6 +831,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetUnitFlags", &LuaCreature::GetUnitFlags },
     { "GetUnitFlagsTwo", &LuaCreature::GetUnitFlagsTwo },
     { "GetExtraFlags", &LuaCreature::GetExtraFlags },
+    { "GetRank", &LuaCreature::GetRank },
 #if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
 #endif

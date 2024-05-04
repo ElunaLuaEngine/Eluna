@@ -957,6 +957,17 @@ auto const& threatlist = creature->GetThreatMgr().GetThreatList();
         return 1;
     }
 
+    /**
+     * Returns the [Creature]'s rank.
+     *
+     * @return [Rank] rank
+     */
+    int GetRank(lua_State* L, Creature* creature)
+    {
+        Eluna::Push(L, creature->GetCreatureTemplate()->rank);
+        return 1;
+    }
+
 #if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     /**
      * Returns the [Creature]'s shield block value.
