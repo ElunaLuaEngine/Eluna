@@ -26,12 +26,10 @@ ElunaEventProcessor::ElunaEventProcessor(Eluna* _E, WorldObject* _obj) : m_time(
 
 ElunaEventProcessor::~ElunaEventProcessor()
 {
-    {
+    if (E && E->eventMgr) {
         RemoveEvents_internal();
-    }
-
-    if (obj)
         E->eventMgr->processors.erase(this);
+    }
 }
 
 void ElunaEventProcessor::Update(uint32 diff)
