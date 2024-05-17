@@ -149,7 +149,7 @@ namespace LuaAura
      * If `amount` is greater than or equal to the current number of stacks,
      *   then the [Aura] has its duration reset to the maximum duration.
      *
-     * @param uint32 amount
+     * @param uint8 amount
      */
     int SetStackAmount(Eluna* E, Aura* aura)
     {
