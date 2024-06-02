@@ -332,16 +332,12 @@ bool ElunaLoader::ShouldMapLoadEluna(uint32 id)
 
 void ElunaLoader::ReloadElunaForMap(int mapId)
 {
-    const int mapid_reload_cache_only = -3;
-    const int mapid_reload_all = -2; // reserved for reloading all states (default if no args)
-    const int mapid_reload_global = -1; // reserved for reloading global state
-    // otherwise reload the state of the specific mapid
     // If a mapid is provided but does not match any map or reserved id then only script storage is loaded
-
     sElunaLoader->LoadScripts();
-    if (mapId != mapid_reload_cache_only)
+
+    if (mapId != RELOAD_CACHE_ONLY)
     {
-        if (mapId == mapid_reload_global || mapId == mapid_reload_all)
+        if (mapId == RELOAD_GLOBAL_STATE || mapId == RELOAD_ALL_STATES)
 #ifdef TRINITY
             if (sWorld->GetEluna())
                 sWorld->GetEluna()->ReloadEluna();
@@ -356,11 +352,9 @@ void ElunaLoader::ReloadElunaForMap(int mapId)
         sMapMgr.DoForAllMaps([&](Map* map)
 #endif
             {
-                if (mapId == mapid_reload_all || mapId == static_cast<int>(map->GetId()))
-                {
+                if (mapId == RELOAD_ALL_STATES || mapId == static_cast<int>(map->GetId()))
                     if (map->GetEluna())
                         map->GetEluna()->ReloadEluna();
-                }
             }
         );
     }
