@@ -31,6 +31,7 @@ void ElunaConfig::Initialize()
     SetConfig(CONFIG_ELUNA_ENABLED, "Eluna.Enabled", true);
     SetConfig(CONFIG_ELUNA_COMPATIBILITY_MODE, "Eluna.CompatibilityMode", true);
     SetConfig(CONFIG_ELUNA_TRACEBACK, "Eluna.TraceBack", false);
+    SetConfig(CONFIG_ELUNA_SCRIPT_RELOADER, "Eluna.ScriptReloader", false);
 
     // Load strings
     SetConfig(CONFIG_ELUNA_SCRIPT_PATH, "Eluna.ScriptPath", "lua_scripts");

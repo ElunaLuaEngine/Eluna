@@ -36,8 +36,28 @@ extern "C" {
 #include <lauxlib.h>
 }
 
+#ifdef TRINITY
+void ElunaUpdateListener::handleFileAction(efsw::WatchID, std::string const& dir, std::string const& filename, efsw::Action, std::string oldFilename)
+{
+    auto const path = fs::absolute(filename, dir);
+    if (!path.has_extension())
+        return;
+
+    std::string ext = path.extension().string();
+    std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c) { return std::tolower(c); });
+
+    if (ext != ".lua" && ext != ".ext")
+        return;
+
+    sElunaLoader->ReloadElunaForMap(RELOAD_ALL_STATES);
+}
+#endif
+
 ElunaLoader::ElunaLoader()
 {
+#ifdef TRINITY
+    lua_scriptWatcher = -1;
+#endif
 }
 
 ElunaLoader* ElunaLoader::instance()
@@ -48,6 +68,13 @@ ElunaLoader* ElunaLoader::instance()
 
 ElunaLoader::~ElunaLoader()
 {
+#ifdef TRINITY
+    if (lua_scriptWatcher >= 0)
+    {
+        lua_fileWatcher.removeWatch(lua_scriptWatcher);
+        lua_scriptWatcher = -1;
+    }
+#endif
 }
 
 void ElunaLoader::LoadScripts()
@@ -263,6 +290,25 @@ void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::s
     ELUNA_LOG_DEBUG("[Eluna]: ProcessScript processed `%s` successfully", fullpath.c_str());
 }
 
+#ifdef TRINITY
+void ElunaLoader::InitializeFileWatcher()
+{
+    lua_scriptWatcher = lua_fileWatcher.addWatch(lua_folderpath, &elunaUpdateListener, false);
+    if (lua_scriptWatcher >= 0)
+    {
+        ELUNA_LOG_INFO("[Eluna]: Script reloader is listening on `%s`.",
+        lua_folderpath.c_str());
+    }
+    else
+    {
+        ELUNA_LOG_INFO("[Eluna]: Failed to initialize the script reloader on `%s`.",
+        lua_folderpath.c_str());
+    }
+
+    lua_fileWatcher.watch();
+}
+#endif
+
 static bool ScriptPathComparator(const LuaScript& first, const LuaScript& second)
 {
     return first.filepath < second.filepath;
@@ -282,4 +328,40 @@ bool ElunaLoader::ShouldMapLoadEluna(uint32 id)
         return true;
 
     return (std::find(requiredMaps.begin(), requiredMaps.end(), id) != requiredMaps.end());
+}
+
+void ElunaLoader::ReloadElunaForMap(int mapId)
+{
+    const int mapid_reload_cache_only = -3;
+    const int mapid_reload_all = -2; // reserved for reloading all states (default if no args)
+    const int mapid_reload_global = -1; // reserved for reloading global state
+    // otherwise reload the state of the specific mapid
+    // If a mapid is provided but does not match any map or reserved id then only script storage is loaded
+
+    sElunaLoader->LoadScripts();
+    if (mapId != mapid_reload_cache_only)
+    {
+        if (mapId == mapid_reload_global || mapId == mapid_reload_all)
+#ifdef TRINITY
+            if (sWorld->GetEluna())
+                sWorld->GetEluna()->ReloadEluna();
+#else
+            if (sWorld.GetEluna())
+                sWorld.GetEluna()->ReloadEluna();
+#endif
+
+#ifdef TRINITY
+        sMapMgr->DoForAllMaps([&](Map* map)
+#else
+        sMapMgr.DoForAllMaps([&](Map* map)
+#endif
+            {
+                if (mapId == mapid_reload_all || mapId == static_cast<int>(map->GetId()))
+                {
+                    if (map->GetEluna())
+                        map->GetEluna()->ReloadEluna();
+                }
+            }
+        );
+    }
 }
