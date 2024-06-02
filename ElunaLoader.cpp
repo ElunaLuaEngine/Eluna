@@ -333,7 +333,7 @@ bool ElunaLoader::ShouldMapLoadEluna(uint32 id)
 void ElunaLoader::ReloadElunaForMap(int mapId)
 {
     // If a mapid is provided but does not match any map or reserved id then only script storage is loaded
-    sElunaLoader->LoadScripts();
+    LoadScripts();
 
     if (mapId != RELOAD_CACHE_ONLY)
     {
