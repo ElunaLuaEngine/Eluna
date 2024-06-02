@@ -37,7 +37,7 @@ extern "C" {
 }
 
 #ifdef TRINITY
-void ElunaUpdateListener::handleFileAction(efsw::WatchID, std::string const& dir, std::string const& filename, efsw::Action, std::string oldFilename)
+void ElunaUpdateListener::handleFileAction(efsw::WatchID /*watchid*/, std::string const& dir, std::string const& filename, efsw::Action /*action*/, std::string /*oldFilename*/)
 {
     auto const path = fs::absolute(filename, dir);
     if (!path.has_extension())
