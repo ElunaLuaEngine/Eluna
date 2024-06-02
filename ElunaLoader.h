@@ -11,7 +11,6 @@
 #include "ElunaUtility.h"
 
 #ifdef TRINITY
-#include <filesystem>
 #include <efsw/efsw.hpp>
 #endif
 
