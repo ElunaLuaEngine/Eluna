@@ -84,6 +84,9 @@ luaL_Reg GlobalMethods[] =
     { "GetRealmID", &LuaGlobalFunctions::GetRealmID },
     { "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion },
     { "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion },
+    { "GetStateMap", &LuaGlobalFunctions::GetStateMap },
+    { "GetStateMapId", &LuaGlobalFunctions::GetStateMapId },
+    { "GetStateInstanceId", &LuaGlobalFunctions::GetStateInstanceId },
     { "GetQuest", &LuaGlobalFunctions::GetQuest },
     { "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID },
     { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName },
@@ -118,6 +121,7 @@ luaL_Reg GlobalMethods[] =
     { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
 
     // Boolean
+    { "IsCompatibilityMode", &LuaGlobalFunctions::IsCompatibilityMode },
     { "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },
     { "IsEquipmentPos", &LuaGlobalFunctions::IsEquipmentPos },
     { "IsBankPos", &LuaGlobalFunctions::IsBankPos },

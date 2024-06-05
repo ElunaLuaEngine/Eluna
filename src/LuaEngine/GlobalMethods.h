@@ -112,6 +112,42 @@ namespace LuaGlobalFunctions
 #endif
         return 1;
     }
+    
+    /**
+     * Returns the [Map] pointer of the Lua state. Returns null for the "World" state. 
+     *
+     * @return [Map] map
+     */
+    int GetStateMap(lua_State* L)
+    {
+        // Until AC supports multistate, this will always return nil
+        Eluna::Push(L);
+        return 1;
+    }
+
+    /**
+     * Returns the map ID of the Lua state. Returns -1 for the "World" state.
+     *
+     * @return int32 mapId
+     */
+    int GetStateMapId(lua_State* L)
+    {
+        // Until AC supports multistate, this will always return -1
+        Eluna::Push(L, -1);
+        return 1;
+    }
+
+    /**
+     * Returns the instance ID of the Lua state. Returns 0 for continent maps and the world state.
+     *
+     * @return uint32 instanceId
+     */
+    int GetStateInstanceId(lua_State* L)
+    {
+        // Until AC supports multistate, this will always return 0
+        Eluna::Push(L, 0);
+        return 1;
+    }
 
     /**
      * Returns [Quest] template
@@ -2562,6 +2598,18 @@ namespace LuaGlobalFunctions
         sTaxiPathSetBySource[startNode][nodeId - 1] = pathEntry;
 #endif
         Eluna::Push(L, pathId);
+        return 1;
+    }
+
+    /**
+     * Returns `true` if Eluna is in compatibility mode, `false` if in multistate.
+     *
+     * @return bool isCompatibilityMode
+     */
+    int IsCompatibilityMode(lua_State* L)
+    {
+        // Until AC supports multistate, this will always return true
+        Eluna::Push(L, true);
         return 1;
     }
 
