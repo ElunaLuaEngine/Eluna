@@ -8,6 +8,7 @@
 #define PLAYERMETHODS_H
 
 #include "GameTime.h"
+#include "GossipDef.h"
 
 /***
  * Inherits all methods from: [Object], [WorldObject], [Unit]
@@ -4038,7 +4039,15 @@ namespace LuaPlayer
         const char* _promptMsg = Eluna::CHECKVAL<const char*>(L, 7, "");
         uint32 _money = Eluna::CHECKVAL<uint32>(L, 8, 0);
 #if defined TRINITY || AZEROTHCORE
-        player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, _icon, msg, _sender, _intid, _promptMsg, _money, _code);
+        if (player->PlayerTalkClass->GetGossipMenu().GetMenuItemCount() < GOSSIP_MAX_MENU_ITEMS)
+        {
+            player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, _icon, msg, _sender, _intid, _promptMsg, _money,
+                                                                 _code);
+        }
+        else
+        {
+            return luaL_error(L, "GossipMenuItem not added. Reached Max amount of possible GossipMenuItems in this GossipMenu");
+        }
 #else
 #ifndef CLASSIC
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
