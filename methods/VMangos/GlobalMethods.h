@@ -1227,11 +1227,10 @@ namespace LuaGlobalFunctions
     {
         const char* query = E->CHECKVAL<const char*>(1);
 
-        QueryNamedResult* result = WorldDatabase.QueryNamed(query);
+        ElunaQuery result = WorldDatabase.QueryNamed(query);
         if (result)
         {
-            ElunaQuery elunaQuery(result);
-            E->Push(&elunaQuery);
+            E->Push(&result);
         }
         else
             E->Push();
@@ -1273,11 +1272,10 @@ namespace LuaGlobalFunctions
     {
         const char* query = E->CHECKVAL<const char*>(1);
 
-        QueryNamedResult* result = CharacterDatabase.QueryNamed(query);
+        ElunaQuery result = CharacterDatabase.QueryNamed(query);
         if (result)
         {
-            ElunaQuery elunaQuery(result);
-            E->Push(&elunaQuery);
+            E->Push(&result);
         }
         else
             E->Push();
@@ -1319,11 +1317,10 @@ namespace LuaGlobalFunctions
     {
         const char* query = E->CHECKVAL<const char*>(1);
 
-        QueryNamedResult* result = LoginDatabase.QueryNamed(query);
+        ElunaQuery result = LoginDatabase.QueryNamed(query);
         if (result)
         {
-            ElunaQuery elunaQuery(result);
-            E->Push(&elunaQuery);
+            E->Push(&result);
         }
         else
             E->Push();
