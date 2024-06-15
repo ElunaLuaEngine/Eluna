@@ -3935,6 +3935,25 @@ namespace LuaPlayer
 #endif
         return 0;
     }
+    /**
+    * Run a chat command as if the player typed it into the chat
+    *
+    * @param string command: text to display in chat or console
+    */
+    int RunCommand(lua_State* L, Player* player)
+    {
+        auto command = Eluna::CHECKVAL<std::string>(L, 2);
+
+        // In _ParseCommands which is used below no leading . or ! is allowed for the command string.
+        if (command[0] == '.' || command[0] == '!') {
+            command = command.substr(1);
+        }
+
+        auto handler = ChatHandler(player->GetSession());
+        handler._ParseCommands(command);
+
+        return 0;
+    }
 
     /**
     * Adds a glyph specified by `glyphId` to the [Player]'s current talent specialization into the slot with the index `slotIndex`
