@@ -330,7 +330,7 @@ class Eluna_CommandSC : public CommandSC
 public:
     Eluna_CommandSC() : CommandSC("Eluna_CommandSC") { }
 
-    bool CanExecuteCommand(ChatHandler& handler, std::string_view cmdStr) override
+    bool OnTryExecuteCommand(ChatHandler& handler, std::string_view cmdStr) override
     {
         if (!sEluna->OnCommand(handler, std::string(cmdStr).c_str()))
         {
