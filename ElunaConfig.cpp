@@ -6,8 +6,6 @@
 
 #if defined TRINITY || defined MANGOS
 #include "Config.h"
-#elif defined CMANGOS || defined VMANGOS
-#include "Config/Config.h"
 #endif
 #include "ElunaConfig.h"
 
@@ -27,8 +25,30 @@ ElunaConfig::~ElunaConfig()
 
 void ElunaConfig::Initialize()
 {
+    // Load eluna.conf configuration file
+#ifdef TRINITY
+    std::string configError;
+    if (!sConfigMgr->LoadInitial(ELUNA_CONFIG, std::vector<std::string>(), configError))
+    {
+        printf("Error: %s. Eluna will be disabled.\n", configError.c_str());
+        return;
+    }
+#elif CMANGOS
+    if (!config.SetSource(ELUNA_CONFIG, "Eluna_"))
+    {
+        sLog.outString("Unable to open configuration file(%s). Eluna will be disabled.", ELUNA_CONFIG);
+        return;
+    }
+#elif VMANGOS
+    if (!config.SetSource(ELUNA_CONFIG))
+    {
+        sLog.Out(LOG_BASIC, LOG_LVL_ERROR, "Unable to open configuration file(%s). Eluna will be disabled.", ELUNA_CONFIG);
+        return;
+    }
+#endif
+
     // Load bools
-    SetConfig(CONFIG_ELUNA_ENABLED, "Eluna.Enabled", true);
+    SetConfig(CONFIG_ELUNA_ENABLED, "Eluna.Enabled", false);
     SetConfig(CONFIG_ELUNA_COMPATIBILITY_MODE, "Eluna.CompatibilityMode", true);
     SetConfig(CONFIG_ELUNA_TRACEBACK, "Eluna.TraceBack", false);
     SetConfig(CONFIG_ELUNA_SCRIPT_RELOADER, "Eluna.ScriptReloader", false);
@@ -44,7 +64,9 @@ void ElunaConfig::SetConfig(ElunaConfigBoolValues index, char const* fieldname, 
 {
 #ifdef TRINITY
     SetConfig(index, sConfigMgr->GetBoolDefault(fieldname, defvalue));
-#elif defined CMANGOS || defined VMANGOS || defined MANGOS
+#elif defined CMANGOS || defined VMANGOS
+    SetConfig(index, config.GetBoolDefault(fieldname, defvalue));
+#elif MANGOS
     SetConfig(index, sConfig.GetBoolDefault(fieldname, defvalue));
 #endif
 }
@@ -54,8 +76,10 @@ void ElunaConfig::SetConfig(ElunaConfigStringValues index, char const* fieldname
 #ifdef TRINITY
     SetConfig(index, sConfigMgr->GetStringDefault(fieldname, defvalue));
 #elif CMANGOS
-    SetConfig(index, sConfig.GetStringDefault(fieldname, defvalue));
-#elif defined VMANGOS || defined MANGOS
+    SetConfig(index, config.GetStringDefault(fieldname, defvalue));
+#elif VMANGOS
+    SetConfig(index, config.GetStringDefault(fieldname, defvalue.c_str()));
+#elif MANGOS
     SetConfig(index, sConfig.GetStringDefault(fieldname, defvalue.c_str()));
 #endif
 }
