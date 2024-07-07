@@ -2159,8 +2159,6 @@ namespace LuaGlobalFunctions
         const int BAN_CHARACTER = 1;
         const int BAN_IP = 2;
 
-        BanMode mode = BanMode::BAN_ACCOUNT;
-
         switch (banMode)
         {
             case BAN_ACCOUNT:
@@ -2171,26 +2169,20 @@ namespace LuaGlobalFunctions
                 if (!AccountMgr::normalizeString(nameOrIP))
                     return luaL_argerror(L, 2, "invalid account name");
 #endif
-                mode = BanMode::BAN_ACCOUNT;
                 break;
             case BAN_CHARACTER:
                 if (!normalizePlayerName(nameOrIP))
                     return luaL_argerror(L, 2, "invalid character name");
-                mode = BanMode::BAN_CHARACTER;
                 break;
             case BAN_IP:
                 if (!IsIPAddress(nameOrIP.c_str()))
                     return luaL_argerror(L, 2, "invalid ip");
-                mode = BanMode::BAN_IP;
                 break;
             default:
                 return luaL_argerror(L, 1, "unknown banmode");
         }
 
         BanReturn result;
-#ifndef AZEROTHCORE
-        result = eWorld->BanAccount(mode, nameOrIP, duration, reason, whoBanned);
-#else
         switch (banMode)
         {
             case BAN_ACCOUNT:
@@ -2203,7 +2195,6 @@ namespace LuaGlobalFunctions
                 result = sBan->BanIP(nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
             break;
         }
-#endif
 
         switch (result)
         {
