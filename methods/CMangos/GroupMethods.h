@@ -36,6 +36,7 @@ namespace LuaGroup
         return 1;
     }
 
+#if !(defined(CLASSIC) || defined(TBC))
     /**
      * Returns 'true' if the [Group] is a LFG group
      *
@@ -43,9 +44,10 @@ namespace LuaGroup
      */
     int IsLFGGroup(Eluna* E, Group* group)
     {
-        E->Push(group->isLFGGroup());
+        E->Push(group->IsLFGGroup());
         return 1;
     }
+#endif
     
     /**
      * Returns 'true' if the [Group] is a raid [Group]
@@ -54,7 +56,7 @@ namespace LuaGroup
      */
     int IsRaidGroup(Eluna* E, Group* group)
     {
-        E->Push(group->isRaidGroup());
+        E->Push(group->IsRaidGroup());
         return 1;
     }
 
@@ -65,7 +67,7 @@ namespace LuaGroup
      */
     int IsBGGroup(Eluna* E, Group* group)
     {
-        E->Push(group->isBGGroup());
+        E->Push(group->IsBattleGroup());        
         return 1;
     }
 
@@ -149,29 +151,13 @@ namespace LuaGroup
         if (player->GetGroupInvite())
             player->UninviteFromGroup();
 
-        bool success = group->AddMember(player);
-        if (success)
-            group->BroadcastGroupUpdate();
-
+        bool success = group->AddMember(player->GetObjectGuid(), player->GetName());
         E->Push(success);
         return 1;
     }
 
     /**
-     * Returns true if the [Group] is a battlefield group, false otherwise
-     *
-     * @return bool isBFGroup
-     */
-    int IsBFGroup(Eluna* E, Group* group)
-    {
-        E->Push(group->isBFGroup());
-        return 1;
-    }
-
-    /**
      * Returns a table with the [Player]s in this [Group]
-     *
-     * In multistate, this method is only available in the WORLD state
      *
      * @return table groupPlayers : table of [Player]s
      */
@@ -183,7 +169,8 @@ namespace LuaGroup
 
         for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
         {
-            Player* member = itr->GetSource();
+            Player* member = itr->getSource();
+
             if (!member || !member->GetSession())
                 continue;
 
@@ -202,7 +189,7 @@ namespace LuaGroup
      */
     int GetLeaderGUID(Eluna* E, Group* group)
     {
-        E->Push(group->GetLeaderGUID());
+        E->Push(group->GetLeaderGuid());
         return 1;
     }
 
@@ -213,7 +200,11 @@ namespace LuaGroup
      */
     int GetGUID(Eluna* E, Group* group)
     {
+#ifdef CLASSIC
+        E->Push(group->GetId());
+#else
         E->Push(group->GET_GUID());
+#endif
         return 1;
     }
 
@@ -226,7 +217,7 @@ namespace LuaGroup
     int GetMemberGUID(Eluna* E, Group* group)
     {
         const char* name = E->CHECKVAL<const char*>(2);
-        E->Push(group->GetMemberGUID(name));
+        E->Push(group->GetMemberGuid(name));
         return 1;
     }
 
@@ -254,30 +245,6 @@ namespace LuaGroup
         return 1;
     }
 
-#ifndef CATA
-    /**
-     * Returns the [Group] members' flags
-     *
-     * <pre>
-     * enum GroupMemberFlags
-     * {
-     *     MEMBER_FLAG_ASSISTANT   = 1,
-     *     MEMBER_FLAG_MAINTANK    = 2,
-     *     MEMBER_FLAG_MAINASSIST  = 4
-     * };
-     * </pre>
-     *
-     * @param ObjectGuid guid : guid of the player
-     * @return uint8 flags
-     */
-    int GetMemberFlags(Eluna* E, Group* group)
-    {
-        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
-        E->Push(group->GetMemberFlags(guid));
-        return 1;
-    }
-#endif
-
     /**
      * Sets the leader of this [Group]
      *
@@ -304,7 +271,7 @@ namespace LuaGroup
         bool ignorePlayersInBg = E->CHECKVAL<bool>(3);
         ObjectGuid ignore = E->CHECKVAL<ObjectGuid>(4);
 
-        group->BroadcastPacket(data, ignorePlayersInBg, -1, ignore);
+        group->BroadcastPacket(*data, ignorePlayersInBg, -1, ignore);
         return 0;
     }
 
@@ -330,7 +297,7 @@ namespace LuaGroup
         ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
         uint32 method = E->CHECKVAL<uint32>(3, 0);
 
-        E->Push(group->RemoveMember(guid, (RemoveMethod)method));
+        E->Push(group->RemoveMember(guid, method));
         return 1;
     }
 
@@ -391,50 +358,23 @@ namespace LuaGroup
         ObjectGuid target = E->CHECKVAL<ObjectGuid>(3);
         ObjectGuid setter = E->CHECKVAL<ObjectGuid>(4, ObjectGuid());
 
-        if (icon >= TARGET_ICONS_COUNT)
+        if (icon >= TARGETICONCOUNT)
             return luaL_argerror(E->L, 2, "valid target icon expected");
 
+#if (defined(CLASSIC) || defined(TBC))
+        group->SetTargetIcon(icon, target);
+#else
         group->SetTargetIcon(icon, setter, target);
+#endif
         return 0;
     }
 
-    /**
-     * Converts the [Group] to a LFG group
-     */
-    int ConvertToLFG(Eluna* /*E*/, Group* group)
+    /*int ConvertToLFG(Eluna* E, Group* group) // TODO: Implementation
     {
         group->ConvertToLFG();
         return 0;
-    }
-
-#ifndef CATA
-    /**
-     * Sets or removes a flag for a [Group] member
-     *
-     * <pre>
-     * enum GroupMemberFlags
-     * {
-     *     MEMBER_FLAG_ASSISTANT   = 1,
-     *     MEMBER_FLAG_MAINTANK    = 2,
-     *     MEMBER_FLAG_MAINASSIST  = 4
-     * };
-     * </pre>
-     *
-     * @param ObjectGuid target : GUID of the target
-     * @param bool apply : add the `flag` if `true`, remove the `flag` otherwise
-     * @param [GroupMemberFlags] flag : the flag to set or unset
-     */
-    int SetMemberFlag(Eluna* E, Group* group)
-    {
-        ObjectGuid target = E->CHECKVAL<ObjectGuid>(2);
-        bool apply = E->CHECKVAL<bool>(3);
-        GroupMemberFlags flag = static_cast<GroupMemberFlags>(E->CHECKVAL<uint32>(4));
-
-        group->SetGroupMemberFlag(target, apply, flag);
-        return 0;
-    }
-#endif
-
+    }*/
+    
     ElunaRegister<Group> GroupMethods[] =
     {
         // Getters
@@ -444,42 +384,39 @@ namespace LuaGroup
         { "GetMemberGroup", &LuaGroup::GetMemberGroup },
         { "GetMemberGUID", &LuaGroup::GetMemberGUID },
         { "GetMembersCount", &LuaGroup::GetMembersCount },
-#ifndef CATA
-        { "GetMemberFlags", &LuaGroup::GetMemberFlags },
-#endif
 
         // Setters
-        { "SetLeader", &LuaGroup::SetLeader },
-        { "SetMembersGroup", &LuaGroup::SetMembersGroup },
-        { "SetTargetIcon", &LuaGroup::SetTargetIcon },
-#ifndef CATA
-        { "SetMemberFlag", &LuaGroup::SetMemberFlag },
-#endif
+        { "SetLeader", &LuaGroup::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
+        { "SetMembersGroup", &LuaGroup::SetMembersGroup, METHOD_REG_WORLD }, // World state method only in multistate
+        { "SetTargetIcon", &LuaGroup::SetTargetIcon, METHOD_REG_WORLD }, // World state method only in multistate
 
         // Boolean
         { "IsLeader", &LuaGroup::IsLeader },
-        { "AddMember", &LuaGroup::AddMember },
-        { "RemoveMember", &LuaGroup::RemoveMember },
-        { "Disband", &LuaGroup::Disband },
+        { "AddMember", &LuaGroup::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
+        { "RemoveMember", &LuaGroup::RemoveMember, METHOD_REG_WORLD }, // World state method only in multistate
+        { "Disband", &LuaGroup::Disband, METHOD_REG_WORLD }, // World state method only in multistate
         { "IsFull", &LuaGroup::IsFull },
-        { "IsLFGGroup", &LuaGroup::IsLFGGroup },
         { "IsRaidGroup", &LuaGroup::IsRaidGroup },
         { "IsBGGroup", &LuaGroup::IsBGGroup },
-        { "IsBFGroup", &LuaGroup::IsBFGroup },
         { "IsMember", &LuaGroup::IsMember },
         { "IsAssistant", &LuaGroup::IsAssistant },
         { "SameSubGroup", &LuaGroup::SameSubGroup },
         { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },
+#if defined WOTLK
+        { "IsLFGGroup", &LuaGroup::IsLFGGroup },
+#else
+        { "IsLFGGroup", nullptr, METHOD_REG_NONE },
+#endif
 
         // Other
         { "SendPacket", &LuaGroup::SendPacket },
-        { "ConvertToLFG", &LuaGroup::ConvertToLFG },
-        { "ConvertToRaid", &LuaGroup::ConvertToRaid },
+        { "ConvertToRaid", &LuaGroup::ConvertToRaid, METHOD_REG_WORLD }, // World state method only in multistate
 
-#ifdef CATA //Not implemented in TCPP
-        { "GetMemberFlags", nullptr, METHOD_REG_NONE },
-        { "SetMemberFlag", nullptr, METHOD_REG_NONE },
-#endif
+        // Not implemented methods
+        { "IsBFGroup", nullptr, METHOD_REG_NONE },   // not implemented
+        { "ConvertToLFG", nullptr, METHOD_REG_NONE },    // not implemented
+        { "GetMemberFlags", nullptr, METHOD_REG_NONE },    // not implemented
+        { "SetMemberFlag", nullptr, METHOD_REG_NONE },    // not implemented
 
         { NULL, NULL, METHOD_REG_NONE }
     };

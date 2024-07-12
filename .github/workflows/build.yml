@@ -2,15 +2,27 @@ name: build
 
 on:
   push:
-  pull_request:
+  workflow_call:
 
 jobs:
   TC-Eluna:
     strategy:
       fail-fast: false
       matrix:
-        eluna: [ON, OFF]
-    runs-on: ubuntu-20.04
+        include: 
+          - eluna: OFF
+            lua: lua52
+          - eluna: ON
+            lua: lua51
+          - eluna: ON
+            lua: lua52
+          - eluna: ON
+            lua: lua53
+          - eluna: ON
+            lua: lua54
+          - eluna: ON
+            lua: luajit
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
       with:
@@ -21,15 +33,16 @@ jobs:
         path: src/server/game/LuaEngine
     - name: Dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -yq libboost-all-dev g++-10
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 --slave /usr/bin/g++ g++ /usr/bin/g++-10
+        sudo apt-get update && sudo apt-get install -yq libboost-all-dev g++-11
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 --slave /usr/bin/g++ g++ /usr/bin/g++-11
     - name: Setup
       env:
         ELUNA: ${{ matrix.eluna }}
+        LUA: ${{ matrix.lua }}
       run: |
         mkdir bin
         cd bin
-        cmake ../ -DELUNA=$ELUNA -DWITH_WARNINGS=1 -DWITH_COREDEBUG=0 -DUSE_COREPCH=1 -DUSE_SCRIPTPCH=1 -DTOOLS=1 -DSCRIPTS=dynamic -DSERVERS=1 -DNOJEM=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_C_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_INSTALL_PREFIX=check_install -DBUILD_TESTING=1
+        cmake ../ -DELUNA=$ELUNA -DLUA_VERSION=$LUA -DWITH_WARNINGS=1 -DWITH_COREDEBUG=0 -DUSE_COREPCH=1 -DUSE_SCRIPTPCH=1 -DTOOLS=1 -DSCRIPTS=dynamic -DSERVERS=1 -DNOJEM=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_C_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_INSTALL_PREFIX=check_install -DBUILD_TESTING=1
         cd ..
     - name: Build
       run: |

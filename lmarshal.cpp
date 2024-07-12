@@ -322,14 +322,16 @@ static int mar_encode_table(lua_State *L, mar_Buffer *buf, size_t *idx)
 }
 
 #define mar_incr_ptr(l) \
-    if (((*p)-buf)+(ptrdiff_t)(l) > (ptrdiff_t)len) luaL_error(L, "bad code"); (*p) += (l);
+    if (((*p)-buf)+(ptrdiff_t)(l) > (ptrdiff_t)len) \
+        luaL_error(L, "bad code"); \
+    (*p) += (l);
 
 #define mar_next_len(l,T) \
-    if (((*p)-buf)+(ptrdiff_t)sizeof(T) > (ptrdiff_t)len) luaL_error(L, "bad code"); \
+    if (((*p)-buf)+(ptrdiff_t)sizeof(T) > (ptrdiff_t)len) \
+        luaL_error(L, "bad code"); \
     l = *(T*)*p; (*p) += sizeof(T);
 
-static void mar_decode_value
-    (lua_State *L, const char *buf, size_t len, const char **p, size_t *idx)
+static void mar_decode_value(lua_State *L, const char *buf, size_t len, const char **p, size_t *idx)
 {
     size_t l;
     char val_type = **p;

@@ -7,7 +7,7 @@
 #ifndef GLOBALMETHODS_H
 #define GLOBALMETHODS_H
 
-#include "BindingMap.h"
+#include "LuaEngine/BindingMap.h"
 
 /***
  * These functions can be used anywhere at any time, including at start-up.
@@ -78,7 +78,48 @@ namespace LuaGlobalFunctions
      */
     int GetCoreExpansion(Eluna* E)
     {
+#ifdef CLASSIC
         E->Push(0);
+#elif defined(TBC)
+        E->Push(1);
+#elif defined(WOTLK)
+        E->Push(2);
+#elif defined(CATA)
+        E->Push(3);
+#endif
+        return 1;
+    }
+
+    /**
+     * Returns the [Map] pointer of the Lua state. Returns null for the "World" state.
+     *
+     * @return [Map] map
+     */
+    int GetStateMap(Eluna* E)
+    {
+        E->Push(E->GetBoundMap());
+        return 1;
+    }
+
+    /**
+     * Returns the map ID of the Lua state. Returns -1 for the "World" state.
+     *
+     * @return int32 mapId
+     */
+    int GetStateMapId(Eluna* E)
+    {
+        E->Push(E->GetBoundMapId());
+        return 1;
+    }
+
+    /**
+     * Returns the instance ID of the Lua state. Returns 0 for continent maps and the world state.
+     *
+     * @return uint32 instanceId
+     */
+    int GetStateInstanceId(Eluna* E)
+    {
+        E->Push(E->GetBoundInstanceId());
         return 1;
     }
 
@@ -129,7 +170,7 @@ namespace LuaGlobalFunctions
      */
     int GetGameTime(Eluna* E)
     {
-        E->Push(eWorld->GetGameTime());
+        E->Push(uint32(eWorld->GetGameTime()));
         return 1;
     }
 
@@ -168,7 +209,6 @@ namespace LuaGlobalFunctions
                     if (!player->IsInWorld())
                         continue;
                     if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
-
                     {
                         E->Push(player);
                         lua_rawseti(E->L, tbl, ++i);
@@ -176,6 +216,56 @@ namespace LuaGlobalFunctions
                 }
             }
         }
+        lua_settop(E->L, tbl); // push table to top of stack
+        return 1;
+    }
+
+    /**
+     * Returns a table with all the current [Player]s on the states map.
+     *
+     * Does not return players that may be teleporting or otherwise not on the map.
+     *
+     *     enum TeamId
+     *     {
+     *         TEAM_ALLIANCE = 0,
+     *         TEAM_HORDE = 1,
+     *         TEAM_NEUTRAL = 2
+     *     };
+     *
+     * In multistate, this method is only available in the MAP state
+     *
+     * @param [TeamId] team = TEAM_NEUTRAL : optional check team of the [Player], Alliance, Horde or Neutral (All)
+     * @param bool onlyGM = false : optional check if GM only
+     * @return table mapPlayers
+     */
+    int GetPlayersOnMap(Eluna* E)
+    {
+        uint32 team = E->CHECKVAL<uint32>(1, TEAM_NEUTRAL);
+        bool onlyGM = E->CHECKVAL<bool>(2, false);
+
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
+        uint32 i = 0;
+
+        Map::PlayerList const& players = E->GetBoundMap()->GetPlayers();
+        if (!players.isEmpty())
+        {
+            for (Map::PlayerList::const_iterator it = players.begin(); it != players.end(); ++it)
+            {
+                if (Player* player = it->getSource())
+                {
+                    if (!player->IsInWorld())
+                        continue;
+
+                    if ((team == TEAM_NEUTRAL || player->GetTeamId() == team) && (!onlyGM || player->IsGameMaster()))
+                    {
+                        E->Push(player);
+                        lua_rawseti(E->L, tbl, ++i);
+                    }
+                }
+            }
+        }
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -264,20 +354,6 @@ namespace LuaGlobalFunctions
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
         E->Push(MAKE_NEW_GUID(lowguid, 0, HIGHGUID_ITEM));
-        return 1;
-    }
-
-    /**
-    * Returns the [ItemTemplate] for this [Item].
-    *
-    * @param uint32 entry : entry ID of the [Item]
-    * @return ItemTemplate : ItemTemplate of the [Item]
-    */
-
-    int GetItemTemplateEntry(Eluna* E)
-    {
-        uint32 entry = E->CHECKVAL<uint32>(1);
-        E->Push(eObjectMgr->GetItemPrototype(entry));
         return 1;
     }
 
@@ -379,11 +455,14 @@ namespace LuaGlobalFunctions
 
         std::string name = temp->Name1;
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(entry))
-            name = il->Name[locale];
+            ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(locale), name);
 
         std::ostringstream oss;
         oss << "|c" << std::hex << ItemQualityColors[temp->Quality] << std::dec <<
             "|Hitem:" << entry << ":0:" <<
+#ifndef CLASSIC
+            "0:0:0:0:" <<
+#endif
             "0:0:0:0|h[" << name << "]|h|r";
 
         E->Push(oss.str());
@@ -449,15 +528,11 @@ namespace LuaGlobalFunctions
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
-        const auto* areaEntry = AreaEntry::GetById(areaOrZoneId);
+        AreaTableEntry const* areaEntry = GetAreaEntryByAreaID(areaOrZoneId);
         if (!areaEntry)
             return luaL_argerror(E->L, 1, "valid Area or Zone ID expected");
 
-        std::string areaOrZoneName = "<unknown>";
-        areaOrZoneName = areaEntry->Name;
-        sObjectMgr.GetAreaLocaleString(areaEntry->Id, locale, &areaOrZoneName);
-        E->Push(areaOrZoneName);
-
+        E->Push(areaEntry->area_name[locale]);
         return 1;
     }
 
@@ -660,8 +735,8 @@ namespace LuaGlobalFunctions
      *     PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - player is nil if command used from console. Can return false
      *     PLAYER_EVENT_ON_SKILL_CHANGE            =     43,       // (event, player, skillId, skillValue) - Returns new skill level value
      *     PLAYER_EVENT_ON_LEARN_SPELL             =     44,       // (event, player, spellId)
-     *     PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE    =     45,       // (event, player, achievementId) - Not supported in VMaNGOS
-     *     PLAYER_EVENT_ON_DISCOVER_AREA           =     46,       // (event, player, area) - Not supported in VMaNGOS
+     *     PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE    =     45,       // (event, player, achievementId)
+     *     // UNUSED                               =     46,       // (event, player)
      *     PLAYER_EVENT_ON_UPDATE_AREA             =     47,       // (event, player, oldArea, newArea)
      *     PLAYER_EVENT_ON_TRADE_INIT              =     48,       // (event, player, target) - Can return false to interrupt trade
      *     PLAYER_EVENT_ON_SEND_MAIL               =     49,       // (event, player, recipientGuid) - Can return false to interrupt sending
@@ -737,6 +812,7 @@ namespace LuaGlobalFunctions
      *     GROUP_EVENT_ON_LEADER_CHANGE            =     4,       // (event, group, newLeaderGuid, oldLeaderGuid)
      *     GROUP_EVENT_ON_DISBAND                  =     5,       // (event, group)
      *     GROUP_EVENT_ON_CREATE                   =     6,       // (event, group, leaderGuid, groupType)
+     *     GROUP_EVENT_ON_MEMBER_ACCEPT            =     7,       // (event, group, player) - Can return false to disable accepting
      *
      *     GROUP_EVENT_COUNT
      * };
@@ -879,6 +955,8 @@ namespace LuaGlobalFunctions
      *     ITEM_EVENT_ON_EXPIRE                            = 4,    // (event, player, itemid) - Can return true
      *     ITEM_EVENT_ON_REMOVE                            = 5,    // (event, player, item) - Can return true
      *     ITEM_EVENT_ON_ADD                               = 6,    // (event, player, item)
+     *     ITEM_EVENT_ON_EQUIP                             = 7,    // (event, player, item, slot)
+     *     ITEM_EVENT_ON_UNEQUIP                           = 8,    // (event, player, item, slot)
      *     ITEM_EVENT_COUNT
      * };
      * </pre>
@@ -1190,7 +1268,7 @@ namespace LuaGlobalFunctions
     {
         const char* command = E->CHECKVAL<const char*>(1);
 
-        eWorld->QueueCliCommand(new CliCommandHolder(0, SEC_CONSOLE, nullptr, command, nullptr, nullptr));
+        eWorld->QueueCliCommand(new CliCommandHolder(0, SEC_CONSOLE, command, nullptr, nullptr));
         return 0;
     }
 
@@ -1259,6 +1337,65 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Initiates an asynchronous SQL query on the world database with a callback function.
+     *
+     * The query is executed asynchronously, and the provided Lua function is called when the query completes.
+     * The callback function parameter is the query result (an [ElunaQuery] or nil if no rows found).
+     *
+     * <pre>
+     * WorldDBQueryAsync("SELECT entry, name FROM creature_template LIMIT 10", function(results)
+     *    if results then
+     *        repeat
+     *            local entry, name = results:GetUInt32(0), results:GetString(1)
+     *            print(entry, name)
+     *        until not results:NextRow()
+     *    end
+     * end)
+     * </pre>
+     *
+     * @param string sql : query to execute asynchronously
+     * @param function callback : the callback function to be called with the query results
+     */
+    int WorldDBQueryAsync(Eluna* /*E*/)
+    {
+        // Todo: Implement async queries. Below is the code example from TC.
+
+        /*
+        const char* query = E->CHECKVAL<const char*>(1);
+        luaL_checktype(E->L, 2, LUA_TFUNCTION);
+
+        // Push the Lua function onto the stack and create a reference
+        lua_pushvalue(E->L, 2);
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        // Validate the function reference
+        if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
+        {
+            luaL_argerror(E->L, 2, "unable to make a ref to function");
+            return 0;
+        }
+
+        // Add an asynchronous query callback
+        E->GetQueryProcessor().AddCallback(WorldDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+            {
+                ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+
+                // Get the Lua function from the registry
+                lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+
+                // Push the query results as a parameter
+                E->Push(eq);
+
+                // Call the Lua function
+                E->ExecuteCall(1, 0);
+
+                // Unreference the Lua function
+                luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
+            }));*/
+        return 0;
+    }
+
+    /**
      * Executes a SQL query on the character database and returns an [ElunaQuery].
      *
      * The query is always executed synchronously
@@ -1301,6 +1438,45 @@ namespace LuaGlobalFunctions
     {
         const char* query = E->CHECKVAL<const char*>(1);
         CharacterDatabase.Execute(query);
+        return 0;
+    }
+
+    int CharDBQueryAsync(Eluna* /*E*/)
+    {
+        // Todo: Implement async queries. Below is the code example from TC.
+
+        /*
+        const char* query = E->CHECKVAL<const char*>(1);
+        luaL_checktype(E->L, 2, LUA_TFUNCTION);
+
+        // Push the Lua function onto the stack and create a reference
+        lua_pushvalue(E->L, 2);
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        // Validate the function reference
+        if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
+        {
+            luaL_argerror(E->L, 2, "unable to make a ref to function");
+            return 0;
+        }
+
+        // Add an asynchronous query callback
+        E->GetQueryProcessor().AddCallback(WorldDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+            {
+                ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+
+                // Get the Lua function from the registry
+                lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+
+                // Push the query results as a parameter
+                E->Push(eq);
+
+                // Call the Lua function
+                E->ExecuteCall(1, 0);
+
+                // Unreference the Lua function
+                luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
+            }));*/
         return 0;
     }
 
@@ -1347,6 +1523,45 @@ namespace LuaGlobalFunctions
     {
         const char* query = E->CHECKVAL<const char*>(1);
         LoginDatabase.Execute(query);
+        return 0;
+    }
+
+    int AuthDBQueryAsync(Eluna* /*E*/)
+    {
+        // Todo: Implement async queries. Below is the code example from TC.
+
+        /*
+        const char* query = E->CHECKVAL<const char*>(1);
+        luaL_checktype(E->L, 2, LUA_TFUNCTION);
+
+        // Push the Lua function onto the stack and create a reference
+        lua_pushvalue(E->L, 2);
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        // Validate the function reference
+        if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
+        {
+            luaL_argerror(E->L, 2, "unable to make a ref to function");
+            return 0;
+        }
+
+        // Add an asynchronous query callback
+        E->GetQueryProcessor().AddCallback(WorldDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+            {
+                ElunaQuery* eq = result ? new ElunaQuery(result) : nullptr;
+
+                // Get the Lua function from the registry
+                lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+
+                // Push the query results as a parameter
+                E->Push(eq);
+
+                // Call the Lua function
+                E->ExecuteCall(1, 0);
+
+                // Unreference the Lua function
+                luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
+            }));*/
         return 0;
     }
 
@@ -1463,6 +1678,14 @@ namespace LuaGlobalFunctions
         float o = E->CHECKVAL<float>(8);
         bool save = E->CHECKVAL<bool>(9, false);
         uint32 durorresptime = E->CHECKVAL<uint32>(10, 0);
+#if (!defined(TBC) && !defined(CLASSIC))
+        uint32 phase = E->CHECKVAL<uint32>(11, PHASEMASK_NORMAL);
+        if (!phase)
+        {
+            E->Push();
+            return 1;
+        }
+#endif
 
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
@@ -1482,8 +1705,11 @@ namespace LuaGlobalFunctions
                     return 1;
                 }
 
+#if (defined(TBC) || defined(CLASSIC))
                 CreatureCreatePos pos(map, x, y, z, o);
-
+#else
+                CreatureCreatePos pos(map, x, y, z, o, phase);
+#endif
                 Creature* pCreature = new Creature;
                 // used guids from specially reserved range (can be 0 if no free values)
                 uint32 lowguid = eObjectMgr->GenerateStaticCreatureLowGuid();
@@ -1492,20 +1718,33 @@ namespace LuaGlobalFunctions
                     E->Push();
                     return 1;
                 }
-
-                if (!pCreature->Create(lowguid, pos, cinfo, cinfo->entry))
+#ifndef CATA
+                if (!pCreature->Create(lowguid, lowguid, pos, cinfo))
+#else
+                if (!pCreature->Create(lowguid, pos, cinfo))
+#endif
                 {
                     delete pCreature;
                     E->Push();
                     return 1;
                 }
 
+#ifdef TBC
+                pCreature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()));
+#elif defined(CLASSIC)
                 pCreature->SaveToDB(map->GetId());
+#else
+                pCreature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
+#endif
 
                 uint32 db_guid = pCreature->GetGUIDLow();
 
                 // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells();
+#ifndef CATA
+                pCreature->LoadFromDB(db_guid, map, db_guid, 0);
+#else
                 pCreature->LoadFromDB(db_guid, map);
+#endif
 
                 map->Add(pCreature);
                 eObjectMgr->AddCreatureToGrid(db_guid, eObjectMgr->GetCreatureData(db_guid));
@@ -1523,11 +1762,18 @@ namespace LuaGlobalFunctions
                     return 1;
                 }
 
-                TemporarySummon* pCreature = new TemporarySummon(ObjectGuid(uint64(0)));
+                TemporarySpawn* pCreature = new TemporarySpawn(ObjectGuid(uint64(0)));
 
+#if (defined(TBC) || defined(CLASSIC))
                 CreatureCreatePos pos(map, x, y, z, o);
-
-                if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo, TEAM_NONE))
+#else
+                CreatureCreatePos pos(map, x, y, z, o, phase);
+#endif
+#ifdef CATA
+                if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo))
+#else
+                if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo))
+#endif
                 {
                     delete pCreature;
                     {
@@ -1536,11 +1782,13 @@ namespace LuaGlobalFunctions
                     }
                 }
 
+                pCreature->SetRespawnCoord(pos);
+
                 // Active state set before added to map
                 pCreature->SetActiveObjectState(false);
 
                 // Also initializes the AI and MMGen
-                pCreature->Summon(durorresptime ? TEMPSUMMON_TIMED_OR_DEAD_DESPAWN : TEMPSUMMON_MANUAL_DESPAWN, durorresptime);
+                pCreature->Summon(durorresptime ? TEMPSPAWN_TIMED_OR_DEAD_DESPAWN : TEMPSPAWN_MANUAL_DESPAWN, durorresptime);
 
                 // Creature Linking, Initial load is handled like respawn
                 if (pCreature->IsLinkingEventTrigger())
@@ -1572,7 +1820,13 @@ namespace LuaGlobalFunctions
                 }
 
                 GameObject* pGameObj = new GameObject;
-                if (!pGameObj->Create(db_lowGUID, gInfo->id, map, x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY)) // TODO: allow vMangos Eluna Lua func to provide rotation, animprogress, & state
+#if (defined(TBC) || defined(CLASSIC))
+                if (!pGameObj->Create(db_lowGUID, db_lowGUID, gInfo->id, map, x, y, z, o))
+#elif defined CATA
+                if (!pGameObj->Create(db_lowGUID, gInfo->id, map, phase, x, y, z, o))
+#else
+                if (!pGameObj->Create(db_lowGUID, db_lowGUID, gInfo->id, map, phase, x, y, z, o))
+#endif
                 {
                     delete pGameObj;
                     E->Push();
@@ -1583,11 +1837,20 @@ namespace LuaGlobalFunctions
                     pGameObj->SetRespawnTime(durorresptime);
 
                 // fill the gameobject data and save to the db
+#ifdef TBC
+                pGameObj->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()));
+#elif defined(CLASSIC)
                 pGameObj->SaveToDB(map->GetId());
+#else
+                pGameObj->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
+#endif
 
                 // this will generate a new guid if the object is in an instance
+#ifndef CATA
+                if (!pGameObj->LoadFromDB(db_lowGUID, map, db_lowGUID, 0))
+#else
                 if (!pGameObj->LoadFromDB(db_lowGUID, map))
-
+#endif
                 {
                     delete pGameObj;
                     E->Push();
@@ -1606,8 +1869,13 @@ namespace LuaGlobalFunctions
             else
             {
                 GameObject* pGameObj = new GameObject;
-
-                if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), entry, map, x, y, z, o, 0.0f, 0.0f, 0.0f, 0.0f, 0, GO_STATE_READY)) // TODO: allow vMangos Eluna Lua func to provide rotation, animprogress, & state
+#if (defined(TBC) || defined(CLASSIC))
+                if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), entry, map, x, y, z, o))
+#elif !defined CATA
+                if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), entry, map, phase, x, y, z, o))
+#else
+                if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), entry, map, phase, x, y, z, o))
+#endif
                 {
                     delete pGameObj;
                     E->Push();
@@ -1623,6 +1891,7 @@ namespace LuaGlobalFunctions
             }
             return 1;
         }
+
         E->Push();
         return 1;
     }
@@ -1641,7 +1910,11 @@ namespace LuaGlobalFunctions
         if (opcode >= NUM_MSG_TYPES)
             return luaL_argerror(E->L, 1, "valid opcode expected");
 
+#ifdef CLASSIC
+        E->Push(new WorldPacket((Opcodes)opcode, size));
+#else
         E->Push(new WorldPacket((OpcodesList)opcode, size));
+#endif
         return 1;
     }
 
@@ -1662,10 +1935,19 @@ namespace LuaGlobalFunctions
         uint32 incrtime = E->CHECKVAL<uint32>(4);
         uint32 extendedcost = E->CHECKVAL<uint32>(5);
 
-        if (!eObjectMgr->IsVendorItemValid(false, "npc_vendor", entry, item, maxcount, incrtime, 0))
+#ifndef CATA
+        if (!eObjectMgr->IsVendorItemValid(false, "npc_vendor", entry, item, maxcount, incrtime, extendedcost, 0))
+#else
+        if (!eObjectMgr->IsVendorItemValid(false, "npc_vendor", entry, item, VENDOR_ITEM_TYPE_ITEM, maxcount, incrtime, extendedcost, 0))
+#endif
             return 0;
-
-        eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime, 0); // TODO: Allow vMangos Eluna to provide item flags.);
+#ifdef CATA
+        eObjectMgr->AddVendorItem(entry, item, VENDOR_ITEM_TYPE_ITEM, maxcount, incrtime, extendedcost);
+#elif !defined CLASSIC
+        eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime, extendedcost);
+#else
+        eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime);
+#endif
         return 0;
     }
 
@@ -1682,7 +1964,11 @@ namespace LuaGlobalFunctions
         if (!eObjectMgr->GetCreatureTemplate(entry))
             return luaL_argerror(E->L, 1, "valid CreatureEntry expected");
 
+#if defined(CATA)
+        eObjectMgr->RemoveVendorItem(entry, item, 1);
+#else
         eObjectMgr->RemoveVendorItem(entry, item);
+#endif
         return 0;
     }
 
@@ -1701,8 +1987,11 @@ namespace LuaGlobalFunctions
 
         auto const itemlist = items->m_items;
         for (auto itr = itemlist.begin(); itr != itemlist.end(); ++itr)
+#if defined(CATA)
+            eObjectMgr->RemoveVendorItem(entry, (*itr)->item, 1);
+#else
             eObjectMgr->RemoveVendorItem(entry, (*itr)->item);
-
+#endif
         return 0;
     }
 
@@ -1714,6 +2003,7 @@ namespace LuaGlobalFunctions
     int Kick(Eluna* E)
     {
         Player* player = E->CHECKOBJ<Player>(1);
+
         player->GetSession()->KickPlayer();
         return 0;
     }
@@ -1853,8 +2143,7 @@ namespace LuaGlobalFunctions
             uint32 entry = E->CHECKVAL<uint32>(++i);
             uint32 amount = E->CHECKVAL<uint32>(++i);
 
-            ItemTemplate const* item_proto = eObjectMgr->GetItemTemplate(entry);
-
+            ItemTemplate const* item_proto = ObjectMgr::GetItemPrototype(entry);
             if (!item_proto)
             {
                 luaL_error(E->L, "Item entry %d does not exist", entry);
@@ -2062,13 +2351,13 @@ namespace LuaGlobalFunctions
             sTaxiPathNodesByPath.resize(pathId + 1);
         sTaxiPathNodesByPath[pathId].clear();
         sTaxiPathNodesByPath[pathId].resize(nodes.size());
-        static uint32 nodeId = sObjectMgr.GetMaxTaxiNodeId();
+        static uint32 nodeId = 500;
         uint32 startNode = nodeId;
         uint32 index = 0;
         for (std::list<TaxiPathNodeEntry>::iterator it = nodes.begin(); it != nodes.end(); ++it)
         {
             TaxiPathNodeEntry& entry = *it;
-            std::unique_ptr<TaxiNodesEntry> nodeEntry = std::make_unique<TaxiNodesEntry>();
+            TaxiNodesEntry* nodeEntry = new TaxiNodesEntry();
             entry.path = pathId;
             entry.index = nodeId;
             nodeEntry->ID = index;
@@ -2078,9 +2367,14 @@ namespace LuaGlobalFunctions
             nodeEntry->z = entry.z;
             nodeEntry->MountCreatureID[0] = mountH;
             nodeEntry->MountCreatureID[1] = mountA;
-            sObjectMgr.SetTaxiNodeEntry(nodeId++, nodeEntry);
 
+            sTaxiNodesStore.InsertEntry(nodeEntry, nodeId++);
+
+#ifdef CATA
+            sTaxiPathNodesByPath[pathId][index++] = new TaxiPathNodeEntry(entry);
+#else
             sTaxiPathNodesByPath[pathId].set(index++, new TaxiPathNodeEntry(entry));
+#endif
         }
         if (startNode >= nodeId)
             return 1;
@@ -2090,8 +2384,19 @@ namespace LuaGlobalFunctions
         pathEntry->to = nodeId - 1;
         pathEntry->price = price;
         pathEntry->ID = pathId;
-        sTaxiPathStore.InsertEntry(pathId, pathEntry);
+        sTaxiPathStore.InsertEntry(pathEntry, pathId);
         E->Push(pathId);
+        return 1;
+    }
+
+    /**
+     * Returns `true` if Eluna is in compatibility mode, `false` if in multistate.
+     *
+     * @return bool isCompatibilityMode
+     */
+    int IsCompatibilityMode(Eluna* E)
+    {
+        E->Push(E->GetCompatibilityMode());
         return 1;
     }
 
@@ -2918,17 +3223,20 @@ namespace LuaGlobalFunctions
         { "GetRealmID", &LuaGlobalFunctions::GetRealmID },
         { "GetCoreVersion", &LuaGlobalFunctions::GetCoreVersion },
         { "GetCoreExpansion", &LuaGlobalFunctions::GetCoreExpansion },
+        { "GetStateMap", &LuaGlobalFunctions::GetStateMap, METHOD_REG_MAP }, // Map state method only in multistate
+        { "GetStateMapId", &LuaGlobalFunctions::GetStateMapId },
+        { "GetStateInstanceId", &LuaGlobalFunctions::GetStateInstanceId },
         { "GetQuest", &LuaGlobalFunctions::GetQuest },
-        { "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID },
-        { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName },
+        { "GetPlayerByGUID", &LuaGlobalFunctions::GetPlayerByGUID, METHOD_REG_WORLD }, // World state method only in multistate
+        { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetGameTime", &LuaGlobalFunctions::GetGameTime },
-        { "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld },
+        { "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld, METHOD_REG_WORLD }, // World state method only in multistate
+        { "GetPlayersOnMap", &LuaGlobalFunctions::GetPlayersOnMap, METHOD_REG_MAP }, // Map state method only in multistate
         { "GetGuildByName", &LuaGlobalFunctions::GetGuildByName },
         { "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID },
         { "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
         { "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID },
         { "GetItemGUID", &LuaGlobalFunctions::GetItemGUID },
-        { "GetItemTemplate", &LuaGlobalFunctions::GetItemTemplateEntry },
         { "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID },
         { "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID },
         { "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow },
@@ -2942,7 +3250,7 @@ namespace LuaGlobalFunctions
         { "bit_or", &LuaGlobalFunctions::bit_or },
         { "bit_and", &LuaGlobalFunctions::bit_and },
         { "GetItemLink", &LuaGlobalFunctions::GetItemLink },
-        { "GetMapById", &LuaGlobalFunctions::GetMapById },
+        { "GetMapById", &LuaGlobalFunctions::GetMapById, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetCurrTime", &LuaGlobalFunctions::GetCurrTime },
         { "GetTimeDiff", &LuaGlobalFunctions::GetTimeDiff },
         { "PrintInfo", &LuaGlobalFunctions::PrintInfo },
@@ -2951,6 +3259,7 @@ namespace LuaGlobalFunctions
         { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
 
         // Boolean
+        { "IsCompatibilityMode", &LuaGlobalFunctions::IsCompatibilityMode },
         { "IsInventoryPos", &LuaGlobalFunctions::IsInventoryPos },
         { "IsEquipmentPos", &LuaGlobalFunctions::IsEquipmentPos },
         { "IsBankPos", &LuaGlobalFunctions::IsBankPos },
@@ -2963,10 +3272,13 @@ namespace LuaGlobalFunctions
         { "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage },
         { "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery },
         { "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute },
+        { "WorldDBQueryAsync", &LuaGlobalFunctions::WorldDBQueryAsync, METHOD_REG_NONE }, // TODO: Implement
         { "CharDBQuery", &LuaGlobalFunctions::CharDBQuery },
         { "CharDBExecute", &LuaGlobalFunctions::CharDBExecute },
+        { "CharDBQueryAsync", &LuaGlobalFunctions::CharDBQueryAsync, METHOD_REG_NONE }, // TODO: Implement
         { "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery },
         { "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute },
+        { "AuthDBQueryAsync", &LuaGlobalFunctions::AuthDBQueryAsync, METHOD_REG_NONE }, // TODO: Implement
         { "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
         { "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
         { "RemoveEvents", &LuaGlobalFunctions::RemoveEvents },

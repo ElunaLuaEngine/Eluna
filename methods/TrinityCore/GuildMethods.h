@@ -17,6 +17,8 @@ namespace LuaGuild
      *
      * Only the players that are online and on some map.
      *
+     * In multistate, this method is only available in the WORLD state
+     *
      * @return table guildPlayers : table of [Player]s
      */
     int GetMembers(Eluna* E, Guild* guild)
@@ -25,14 +27,19 @@ namespace LuaGuild
         int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
-        eObjectAccessor()DoForAllPlayers([&](Player* player)
+        std::shared_lock<std::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+        const HashMapHolder<Player>::MapType& m = eObjectAccessor()GetPlayers();
+        for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
         {
-            if (player->IsInWorld() && player->GetGuildId() == guild->GetId())
+            if (Player* player = it->second)
             {
-                E->Push(player);
-                lua_rawseti(E->L, tbl, ++i);
+                if (player->IsInWorld() && player->GetGuildId() == guild->GetId())
+                {
+                    E->Push(player);
+                    lua_rawseti(E->L, tbl, ++i);
+                }
             }
-        });
+        }
 
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
@@ -45,18 +52,20 @@ namespace LuaGuild
      */
     int GetMemberCount(Eluna* E, Guild* guild)
     {
-        E->Push(guild->GetMemberSize());
+        E->Push(guild->GetMemberCount());
         return 1;
     }
 
     /**
      * Finds and returns the [Guild] leader by their GUID if logged in
      *
+     * In multistate, this method is only available in the WORLD state
+     *
      * @return [Player] leader
      */
     int GetLeader(Eluna* E, Guild* guild)
     {
-        E->Push(eObjectAccessor()FindPlayer(guild->GetLeaderGuid()));
+        E->Push(eObjectAccessor()FindPlayer(guild->GetLeaderGUID()));
         return 1;
     }
 
@@ -67,7 +76,7 @@ namespace LuaGuild
      */
     int GetLeaderGUID(Eluna* E, Guild* guild)
     {
-        E->Push(guild->GetLeaderGuid());
+        E->Push(guild->GetLeaderGUID());
         return 1;
     }
 
@@ -111,13 +120,15 @@ namespace LuaGuild
      */
     int GetInfo(Eluna* E, Guild* guild)
     {
-        E->Push(guild->GetGINFO());
+        E->Push(guild->GetInfo());
         return 1;
     }
 
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
+#ifndef CATA
     /**
      * Sets the leader of this [Guild]
+     *
+     * In multistate, this method is only available in the WORLD state
      *
      * @param [Player] leader : the [Player] leader to change
      */
@@ -125,14 +136,15 @@ namespace LuaGuild
     {
         Player* player = E->CHECKOBJ<Player>(2);
 
-        guild->SetLeader(player->GET_GUID());
+        guild->HandleSetLeader(player->GetSession(), player->GetName());
         return 0;
     }
 #endif
 
-#ifndef CLASSIC
     /**
      * Sets the information of the bank tab specified
+     *
+     * In multistate, this method is only available in the WORLD state
      *
      * @param uint8 tabId : the ID of the tab specified
      * @param string info : the information to be set to the bank tab
@@ -142,10 +154,9 @@ namespace LuaGuild
         uint8 tabId = E->CHECKVAL<uint8>(2);
         const char* text = E->CHECKVAL<const char*>(3);
 
-        guild->SetGuildBankTabText(tabId, text);
+        guild->SetBankTabText(tabId, text);
         return 0;
     }
-#endif
 
     // SendPacketToGuild(packet)
     /**
@@ -179,6 +190,9 @@ namespace LuaGuild
 
     /**
      * Disbands the [Guild]
+     *
+     * In multistate, this method is only available in the WORLD state
+     *
      */
     int Disband(Eluna* /*E*/, Guild* guild)
     {
@@ -191,6 +205,8 @@ namespace LuaGuild
      *
      * If no rank is specified, defaults to none.
      *
+     * In multistate, this method is only available in the WORLD state
+     *
      * @param [Player] player : the [Player] to be added to the guild
      * @param uint8 rankId : the rank ID
      */
@@ -199,12 +215,16 @@ namespace LuaGuild
         Player* player = E->CHECKOBJ<Player>(2);
         uint8 rankId = E->CHECKVAL<uint8>(3, GUILD_RANK_NONE);
 
-        guild->AddMember(player->GET_GUID(), rankId);
+        CharacterDatabaseTransaction trans(nullptr);
+
+        guild->AddMember(trans, player->GET_GUID(), rankId);
         return 0;
     }
 
     /**
      * Removes the specified [Player] from the [Guild].
+     *
+     * In multistate, this method is only available in the WORLD state
      *
      * @param [Player] player : the [Player] to be removed from the guild
      * @param bool isDisbanding : default 'false', should only be set to 'true' if the guild is triggered to disband
@@ -214,12 +234,16 @@ namespace LuaGuild
         Player* player = E->CHECKOBJ<Player>(2);
         bool isDisbanding = E->CHECKVAL<bool>(3, false);
 
-        guild->DelMember(player->GET_GUID(), isDisbanding);
+        CharacterDatabaseTransaction trans(nullptr);
+
+        guild->DeleteMember(trans, player->GET_GUID(), isDisbanding);
         return 0;
     }
 
     /**
      * Promotes/demotes the [Player] to the specified rank.
+     *
+     * In multistate, this method is only available in the WORLD state
      *
      * @param [Player] player : the [Player] to be promoted/demoted
      * @param uint8 rankId : the rank ID
@@ -229,7 +253,9 @@ namespace LuaGuild
         Player* player = E->CHECKOBJ<Player>(2);
         uint8 newRank = E->CHECKVAL<uint8>(3);
 
-        guild->ChangeMemberRank(player->GET_GUID(), newRank);
+        CharacterDatabaseTransaction trans(nullptr);
+
+        guild->ChangeMemberRank(trans, player->GET_GUID(), newRank);
         return 0;
     }
     
@@ -246,20 +272,22 @@ namespace LuaGuild
         { "GetMemberCount", &LuaGuild::GetMemberCount },
 
         // Setters
-        { "SetMemberRank", &LuaGuild::SetMemberRank },
-        { "SetLeader", &LuaGuild::SetLeader },
-#ifndef CLASSIC
-        { "SetBankTabText", &LuaGuild::SetBankTabText },
-#else
-        { "SetBankTabText", nullptr,  METHOD_REG_NONE},
+        { "SetBankTabText", &LuaGuild::SetBankTabText, METHOD_REG_WORLD }, // World state method only in multistate
+        { "SetMemberRank", &LuaGuild::SetMemberRank, METHOD_REG_WORLD }, // World state method only in multistate
+#ifndef CATA
+        { "SetLeader", &LuaGuild::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
 #endif
 
         // Other
         { "SendPacket", &LuaGuild::SendPacket },
         { "SendPacketToRanked", &LuaGuild::SendPacketToRanked },
-        { "Disband", &LuaGuild::Disband },
-        { "AddMember", &LuaGuild::AddMember },
-        { "DeleteMember", &LuaGuild::DeleteMember },
+        { "Disband", &LuaGuild::Disband, METHOD_REG_WORLD }, // World state method only in multistate
+        { "AddMember", &LuaGuild::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
+        { "DeleteMember", &LuaGuild::DeleteMember, METHOD_REG_WORLD }, // World state method only in multistate
+
+#ifdef CATA //Not implemented in TCPP
+        { "SetLeader", nullptr, METHOD_REG_NONE },
+#endif
 
         { NULL, NULL, METHOD_REG_NONE }
     };

@@ -44,7 +44,7 @@ namespace LuaGroup
      */
     int IsLFGGroup(Eluna* E, Group* group)
     {
-        E->Push(group->IsLFGGroup());
+        E->Push(group->isLFGGroup());
         return 1;
     }
 #endif
@@ -56,7 +56,7 @@ namespace LuaGroup
      */
     int IsRaidGroup(Eluna* E, Group* group)
     {
-        E->Push(group->IsRaidGroup());
+        E->Push(group->isRaidGroup());
         return 1;
     }
 
@@ -67,7 +67,7 @@ namespace LuaGroup
      */
     int IsBGGroup(Eluna* E, Group* group)
     {
-        E->Push(group->IsBattleGroup());        
+        E->Push(group->isBGGroup());
         return 1;
     }
 
@@ -152,6 +152,7 @@ namespace LuaGroup
             player->UninviteFromGroup();
 
         bool success = group->AddMember(player->GetObjectGuid(), player->GetName());
+
         E->Push(success);
         return 1;
     }
@@ -217,6 +218,7 @@ namespace LuaGroup
     int GetMemberGUID(Eluna* E, Group* group)
     {
         const char* name = E->CHECKVAL<const char*>(2);
+
         E->Push(group->GetMemberGuid(name));
         return 1;
     }
@@ -271,7 +273,7 @@ namespace LuaGroup
         bool ignorePlayersInBg = E->CHECKVAL<bool>(3);
         ObjectGuid ignore = E->CHECKVAL<ObjectGuid>(4);
 
-        group->BroadcastPacket(*data, ignorePlayersInBg, -1, ignore);
+        group->BroadcastPacket(data, ignorePlayersInBg, -1, ignore);
         return 0;
     }
 
@@ -368,17 +370,11 @@ namespace LuaGroup
 #endif
         return 0;
     }
-
-    /*int ConvertToLFG(Eluna* E, Group* group) // TODO: Implementation
-    {
-        group->ConvertToLFG();
-        return 0;
-    }*/
     
     ElunaRegister<Group> GroupMethods[] =
     {
         // Getters
-        { "GetMembers", &LuaGroup::GetMembers },
+        { "GetMembers", &LuaGroup::GetMembers, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetLeaderGUID", &LuaGroup::GetLeaderGUID },
         { "GetGUID", &LuaGroup::GetGUID },
         { "GetMemberGroup", &LuaGroup::GetMemberGroup },
@@ -386,15 +382,15 @@ namespace LuaGroup
         { "GetMembersCount", &LuaGroup::GetMembersCount },
 
         // Setters
-        { "SetLeader", &LuaGroup::SetLeader },
-        { "SetMembersGroup", &LuaGroup::SetMembersGroup },
-        { "SetTargetIcon", &LuaGroup::SetTargetIcon },
+        { "SetLeader", &LuaGroup::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
+        { "SetMembersGroup", &LuaGroup::SetMembersGroup, METHOD_REG_WORLD }, // World state method only in multistate
+        { "SetTargetIcon", &LuaGroup::SetTargetIcon, METHOD_REG_WORLD }, // World state method only in multistate
 
         // Boolean
         { "IsLeader", &LuaGroup::IsLeader },
-        { "AddMember", &LuaGroup::AddMember },
-        { "RemoveMember", &LuaGroup::RemoveMember },
-        { "Disband", &LuaGroup::Disband },
+        { "AddMember", &LuaGroup::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
+        { "RemoveMember", &LuaGroup::RemoveMember, METHOD_REG_WORLD }, // World state method only in multistate
+        { "Disband", &LuaGroup::Disband, METHOD_REG_WORLD }, // World state method only in multistate
         { "IsFull", &LuaGroup::IsFull },
         { "IsRaidGroup", &LuaGroup::IsRaidGroup },
         { "IsBGGroup", &LuaGroup::IsBGGroup },
@@ -402,15 +398,14 @@ namespace LuaGroup
         { "IsAssistant", &LuaGroup::IsAssistant },
         { "SameSubGroup", &LuaGroup::SameSubGroup },
         { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },
-#if defined WOTLK
+#if !(defined(CLASSIC) || defined(TBC))
         { "IsLFGGroup", &LuaGroup::IsLFGGroup },
 #else
         { "IsLFGGroup", nullptr, METHOD_REG_NONE },
 #endif
-
         // Other
         { "SendPacket", &LuaGroup::SendPacket },
-        { "ConvertToRaid", &LuaGroup::ConvertToRaid },
+        { "ConvertToRaid", &LuaGroup::ConvertToRaid, METHOD_REG_WORLD }, // World state method only in multistate
 
         // Not implemented methods
         { "IsBFGroup", nullptr, METHOD_REG_NONE },   // not implemented

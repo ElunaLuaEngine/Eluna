@@ -25,21 +25,15 @@ namespace LuaGuild
         int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
+        eObjectAccessor()DoForAllPlayers([&](Player* player)
         {
-            HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
-            const HashMapHolder<Player>::MapType& m = eObjectAccessor()GetPlayers();
-            for (HashMapHolder<Player>::MapType::const_iterator it = m.begin(); it != m.end(); ++it)
+            if (player->IsInWorld() && player->GetGuildId() == guild->GetId())
             {
-                if (Player* player = it->second)
-                {
-                    if (player->IsInWorld() && player->GetGuildId() == guild->GetId())
-                    {
-                        E->Push(player);
-                        lua_rawseti(E->L, tbl, ++i);
-                    }
-                }
+                E->Push(player);
+                lua_rawseti(E->L, tbl, ++i);
             }
-        }
+        });
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -147,8 +141,8 @@ namespace LuaGuild
     {
         uint8 tabId = E->CHECKVAL<uint8>(2);
         const char* text = E->CHECKVAL<const char*>(3);
-        
-		guild->SetGuildBankTabText(tabId, text);
+
+        guild->SetGuildBankTabText(tabId, text);
         return 0;
     }
 #endif
@@ -163,7 +157,7 @@ namespace LuaGuild
     {
         WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
 
-        guild->BroadcastPacket(*data);
+        guild->BroadcastPacket(data);
         return 0;
     }
 
@@ -179,7 +173,7 @@ namespace LuaGuild
         WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
         uint8 ranked = E->CHECKVAL<uint8>(3);
 
-        guild->BroadcastPacketToRank(*data, ranked);
+        guild->BroadcastPacketToRank(data, ranked);
         return 0;
     }
 
@@ -242,8 +236,8 @@ namespace LuaGuild
     ElunaRegister<Guild> GuildMethods[] =
     {
         // Getters
-        { "GetMembers", &LuaGuild::GetMembers },
-        { "GetLeader", &LuaGuild::GetLeader },
+        { "GetMembers", &LuaGuild::GetMembers, METHOD_REG_WORLD }, // World state method only in multistate
+        { "GetLeader", &LuaGuild::GetLeader, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetLeaderGUID", &LuaGuild::GetLeaderGUID },
         { "GetId", &LuaGuild::GetId },
         { "GetName", &LuaGuild::GetName },
@@ -252,24 +246,20 @@ namespace LuaGuild
         { "GetMemberCount", &LuaGuild::GetMemberCount },
 
         // Setters
-#if defined(TBC) || defined(WOTLK)
-        { "SetBankTabText", &LuaGuild::SetBankTabText },
+        { "SetMemberRank", &LuaGuild::SetMemberRank, METHOD_REG_WORLD }, // World state method only in multistate
+        { "SetLeader", &LuaGuild::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
+#ifndef CLASSIC
+        { "SetBankTabText", &LuaGuild::SetBankTabText, METHOD_REG_WORLD }, // World state method only in multistate
 #else
-        { "SetBankTabText", nullptr, METHOD_REG_NONE },
-#endif
-        { "SetMemberRank", &LuaGuild::SetMemberRank },
-#ifndef CATA
-        { "SetLeader", &LuaGuild::SetLeader },
-#else
-        { "SetLeader", nullptr, METHOD_REG_NONE },
+        { "SetBankTabText", nullptr,  METHOD_REG_NONE},
 #endif
 
         // Other
         { "SendPacket", &LuaGuild::SendPacket },
         { "SendPacketToRanked", &LuaGuild::SendPacketToRanked },
-        { "Disband", &LuaGuild::Disband },
-        { "AddMember", &LuaGuild::AddMember },
-        { "DeleteMember", &LuaGuild::DeleteMember },
+        { "Disband", &LuaGuild::Disband, METHOD_REG_WORLD }, // World state method only in multistate
+        { "AddMember", &LuaGuild::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
+        { "DeleteMember", &LuaGuild::DeleteMember, METHOD_REG_WORLD }, // World state method only in multistate
 
         { NULL, NULL, METHOD_REG_NONE }
     };

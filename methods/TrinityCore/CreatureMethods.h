@@ -22,11 +22,27 @@ namespace LuaCreature
      */
     int IsRegeneratingHealth(Eluna* E, Creature* creature)
     {
-        E->Push(creature->IsRegeneratingHealth());
+#ifdef CATA
+        E->Push(creature->isRegeneratingHealth());
+#else
+        E->Push(creature->CanRegenerateHealth());
+#endif
         return 1;
     }
 
-#ifndef CATA
+    /**
+     * Sets whether the [Creature] can regenerate health or not.
+     *
+     * @param bool enable = true : `true` to enable health regeneration, `false` to disable it
+     */
+    int SetRegeneratingHealth(Eluna* E, Creature* creature)
+    {
+        bool enable = E->CHECKVAL<bool>(2, true);
+
+        creature->SetRegenerateHealth(enable);
+        return 0;
+    }
+
     /**
      * Returns `true` if the [Creature] is set to not give reputation when killed,
      *   and returns `false` otherwise.
@@ -35,10 +51,9 @@ namespace LuaCreature
      */
     int IsReputationGainDisabled(Eluna* E, Creature* creature)
     {
-        E->Push(creature->IsNoReputation());
+        E->Push(creature->IsReputationGainDisabled());
         return 1;
     }
-#endif
 
     /**
      * Returns `true` if the [Creature] completes the [Quest] with the ID `questID`,
@@ -51,7 +66,7 @@ namespace LuaCreature
     {
         uint32 quest_id = E->CHECKVAL<uint32>(2);
 
-        E->Push(creature->HasInvolvedQuest(quest_id));
+        E->Push(creature->hasInvolvedQuest(quest_id));
         return 1;
     }
 
@@ -66,11 +81,7 @@ namespace LuaCreature
     {
         bool mustBeDead = E->CHECKVAL<bool>(2, false);
 
-#ifndef CATA
-        E->Push(creature->IsTargetableForAttack(mustBeDead));
-#else
         E->Push(creature->isTargetableForAttack(mustBeDead));
-#endif
         return 1;
     }
 
@@ -115,7 +126,7 @@ namespace LuaCreature
     {
         Player* player = E->CHECKOBJ<Player>(2);
 
-        E->Push(creature->IsTappedBy(player));
+        E->Push(creature->isTappedBy(player));
         return 1;
     }
 
@@ -127,7 +138,7 @@ namespace LuaCreature
      */
     int HasLootRecipient(Eluna* E, Creature* creature)
     {
-        E->Push(creature->HasLootRecipient());
+        E->Push(creature->hasLootRecipient());
         return 1;
     }
 
@@ -187,7 +198,7 @@ namespace LuaCreature
      */
     int IsElite(Eluna* E, Creature* creature)
     {
-        E->Push(creature->IsElite());
+        E->Push(creature->isElite());
         return 1;
     }
 
@@ -228,6 +239,19 @@ namespace LuaCreature
     }
 
     /**
+     * Returns `true` if the [Creature]'s flags_extra includes Dungeon Boss (0x1000000),
+     *   and returns `false` otherwise.
+     *
+     * @return bool isDungeonBoss
+     */
+    int IsDungeonBoss(Eluna* E, Creature* creature)
+    {
+        E->Push(creature->IsDungeonBoss());
+        return 1;
+    }
+
+
+    /**
      * Returns `true` if the [Creature]'s rank is Boss,
      *   and returns `false` otherwise.
      *
@@ -235,7 +259,7 @@ namespace LuaCreature
      */
     int IsWorldBoss(Eluna* E, Creature* creature)
     {
-        E->Push(creature->IsWorldBoss());
+        E->Push(creature->isWorldBoss());
         return 1;
     }
 
@@ -250,7 +274,11 @@ namespace LuaCreature
     {
         uint32 spell = E->CHECKVAL<uint32>(2);
 
-        E->Push(creature->HasCategoryCooldown(spell));
+        if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
+            E->Push(info->GetCategory() && creature->GetSpellHistory()->HasCooldown(spell));
+        else
+            E->Push(false);
+
         return 1;
     }
 
@@ -280,7 +308,7 @@ namespace LuaCreature
     {
         uint32 questId = E->CHECKVAL<uint32>(2);
 
-        E->Push(creature->HasQuest(questId));
+        E->Push(creature->hasQuest(questId));
         return 1;
     }
 
@@ -295,7 +323,7 @@ namespace LuaCreature
     {
         uint32 spellId = E->CHECKVAL<uint32>(2);
 
-        E->Push(creature->HasSpellCooldown(spellId));
+        E->Push(creature->GetSpellHistory()->HasCooldown(spellId));
         return 1;
     }
 
@@ -308,6 +336,60 @@ namespace LuaCreature
     int CanFly(Eluna* E, Creature* creature)
     {
         E->Push(creature->CanFly());
+        return 1;
+    }
+
+    /**
+     * Returns `true` if the [Creature] is an invisible trigger,
+     *   and returns `false` otherwise.
+     *
+     * @return bool canFly
+     */
+    int IsTrigger(Eluna* E, Creature* creature)
+    {
+        E->Push(creature->IsTrigger());
+        return 1;
+    }
+
+    /**
+     * Returns true if the [Creature] is damaged enough for looting
+     *
+     * @return bool isDamagedEnough
+     */
+    int IsDamageEnoughForLootingAndReward(Eluna* E, Creature* creature)
+    {
+        E->Push(creature->IsDamageEnoughForLootingAndReward());
+        return 1;
+    }
+
+    /**
+     * Returns true if the [Creature] can start attacking specified target
+     *
+     * Does not work on most targets
+     *
+     * @param [Unit] target
+     * @param bool force = true : force [Creature] to attack
+     */
+    int CanStartAttack(Eluna* E, Creature* creature)
+    {
+        Unit* target = E->CHECKOBJ<Unit>(2);
+        bool force = E->CHECKVAL<bool>(3, true);
+
+        E->Push(creature->CanStartAttack(target, force));
+        return 1;
+    }
+
+    /**
+     * Returns true if [Creature] has the specified loot mode
+     *
+     * @param uint16 lootMode
+     * @return bool hasLootMode
+     */
+    int HasLootMode(Eluna* E, Creature* creature)
+    {
+        uint16 lootMode = E->CHECKVAL<uint16>(2);
+
+        E->Push(creature->HasLootMode(lootMode));
         return 1;
     }
 
@@ -333,7 +415,18 @@ namespace LuaCreature
      */
     int GetWanderRadius(Eluna* E, Creature* creature)
     {
-        E->Push(creature->GetRespawnRadius());
+        E->Push(creature->GetWanderDistance());
+        return 1;
+    }
+
+    /**
+     * Returns the current waypoint path ID of the [Creature].
+     *
+     * @return uint32 pathId
+     */
+    int GetWaypointPath(Eluna* E, Creature* creature)
+    {
+        E->Push(creature->GetWaypointPath());
         return 1;
     }
 
@@ -344,7 +437,7 @@ namespace LuaCreature
      */
     int GetCurrentWaypointId(Eluna* E, Creature* creature)
     {
-        E->Push(creature->GetMotionMaster()->getLastReachedWaypoint());
+        E->Push(creature->GetCurrentWaypointInfo().first);
         return 1;
     }
 
@@ -369,9 +462,7 @@ namespace LuaCreature
     {
         Unit* target = E->CHECKOBJ<Unit>(2);
 
-        float AttackDist = creature->GetAttackDistance(target);
-        float ThreatRadius = sWorld.getConfig(CONFIG_FLOAT_THREAT_RADIUS);
-        E->Push(ThreatRadius > AttackDist ? ThreatRadius : AttackDist);
+        E->Push(creature->GetAggroRange(target));
         return 1;
     }
 
@@ -392,6 +483,7 @@ namespace LuaCreature
         return 1;
     }
 
+
     /**
      * Returns the [Group] that can loot this [Creature].
      *
@@ -399,7 +491,7 @@ namespace LuaCreature
      */
     int GetLootRecipientGroup(Eluna* E, Creature* creature)
     {
-        E->Push(creature->GetGroupLootRecipient());
+        E->Push(creature->GetLootRecipientGroup());
         return 1;
     }
 
@@ -468,7 +560,11 @@ namespace LuaCreature
     {
         uint32 spell = E->CHECKVAL<uint32>(2);
 
-        E->Push(creature->GetCreatureSpellCooldownDelay(spell));
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell))
+            E->Push(creature->GetSpellHistory()->GetRemainingCooldown(spellInfo));
+        else
+            E->Push(0);
+
         return 1;
     }
 
@@ -495,7 +591,7 @@ namespace LuaCreature
     int GetHomePosition(Eluna* E, Creature* creature)
     {
         float x, y, z, o;
-        creature->GetRespawnCoord(x, y, z, &o);
+        creature->GetHomePosition(x, y, z, o);
 
         E->Push(x);
         E->Push(y);
@@ -520,7 +616,7 @@ namespace LuaCreature
         float z = E->CHECKVAL<float>(4);
         float o = E->CHECKVAL<float>(5);
 
-        creature->SetRespawnCoord(x, y, z, o);
+        creature->SetHomePosition(x, y, z, o);
         return 0;
     }
 
@@ -567,17 +663,11 @@ namespace LuaCreature
         float dist = E->CHECKVAL<float>(5, 0.0f);
         int32 aura = E->CHECKVAL<int32>(6, 0);
 
-        ThreatList const& threatlist = creature->getThreatManager().getThreatList();
-
-        if (threatlist.empty())
-            return 1;
-        if (position >= threatlist.size())
-            return 1;
+        auto const& threatlist = creature->GetThreatManager().GetSortedThreatList();
         std::list<Unit*> targetList;
-        for (auto itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+        for (ThreatReference const* itr : threatlist)
             {
-            Unit* target = (*itr)->getTarget();
-
+            Unit* target = itr->GetVictim();
             if (!target)
                 continue;
             if (playerOnly && target->GetTypeId() != TYPEID_PLAYER)
@@ -646,15 +736,15 @@ namespace LuaCreature
      */
     int GetAITargets(Eluna* E, Creature* creature)
     {
-        auto const& threatlist = creature->getThreatManager().getThreatList();
+        auto const& threatlist = creature->GetThreatManager().GetSortedThreatList();
 
-        lua_createtable(E->L, threatlist.size(), 0);
+        lua_createtable(E->L, creature->GetThreatManager().GetThreatListSize(), 0);
         int tbl = lua_gettop(E->L);
-        uint32 i = 0;
 
-        for (auto itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+        uint32 i = 0;
+        for (ThreatReference const* itr : threatlist)
         {
-            Unit* target = (*itr)->getTarget();
+            Unit* target = itr->GetVictim();
             if (!target)
                 continue;
             E->Push(target);
@@ -672,8 +762,107 @@ namespace LuaCreature
      */
     int GetAITargetsCount(Eluna* E, Creature* creature)
     {
-        E->Push((double)creature->getThreatManager().getThreatList().size());
+        E->Push((double)creature->GetThreatManager().GetThreatListSize());
         return 1;
+    }
+
+    /**
+     * Adds threat to the [Creature] from the victim.
+     *
+     * <pre>
+     * enum SpellSchoolMask
+     * {
+     *     SPELL_SCHOOL_MASK_NONE    = 0,
+     *     SPELL_SCHOOL_MASK_NORMAL  = 1,
+     *     SPELL_SCHOOL_MASK_HOLY    = 2,
+     *     SPELL_SCHOOL_MASK_FIRE    = 4,
+     *     SPELL_SCHOOL_MASK_NATURE  = 8,
+     *     SPELL_SCHOOL_MASK_FROST   = 16,
+     *     SPELL_SCHOOL_MASK_SHADOW  = 32,
+     *     SPELL_SCHOOL_MASK_ARCANE  = 64,
+     * }
+     * </pre>
+     *
+     * @param [Unit] victim : [Unit] that caused the threat
+     * @param float threat : threat amount
+     * @param [SpellSchoolMask] schoolMask = 0 : [SpellSchoolMask] of the threat causer
+     * @param uint32 spell = 0 : spell entry used for threat
+     */
+    int AddThreat(Eluna* E, Creature* creature)
+    {
+        Unit* victim = E->CHECKOBJ<Unit>(2);
+        float threat = E->CHECKVAL<float>(3, true);
+        uint32 spell = E->CHECKVAL<uint32>(4, 0);
+
+        creature->GetThreatManager().AddThreat(victim, threat, spell ? sSpellMgr->GetSpellInfo(spell) : NULL, true, true);
+        return 0;
+    }
+
+    /**
+     * Returns the threat of a [Unit] in this [Creature]'s threat list.
+     *
+     * @param [Unit] target
+     * @return float threat
+     */
+    int GetThreat(Eluna* E, Creature* creature)
+    {
+        Unit* target = E->CHECKOBJ<Unit>(2);
+
+        E->Push(creature->GetThreatManager().GetThreat(target));
+        return 1;
+    }
+
+    /**
+     * Clear the threat of a [Unit] in this [Creature]'s threat list.
+     *
+     * @param [Unit] target
+     */
+    int ClearThreat(Eluna* E, Creature* creature)
+    {
+        Unit* target = E->CHECKOBJ<Unit>(2);
+
+        creature->GetThreatManager().ClearThreat(target);
+        return 0;
+    }
+
+    /**
+     * Clear the [Creature]'s threat list. This will cause evading.
+     */
+    int ClearThreatList(Eluna* /*E*/, Creature* creature)
+    {
+        creature->GetThreatManager().ClearAllThreat();
+        return 0;
+    }
+
+    /**
+     * Resets the [Creature]'s threat list, setting all threat targets' threat to 0.
+     */
+    int ResetAllThreat(Eluna* /*E*/, Creature* creature)
+    {
+        creature->GetThreatManager().ResetAllThreat();
+        return 0;
+    }
+
+    /**
+     * Forces the [Creature] to fixate on the [Unit], regardless of threat. Requires the [Unit] to be in the threat list.
+     *
+     * @param [Unit] target
+     */
+    int FixateTarget(Eluna* E, Creature* creature)
+    {
+        Unit* target = E->CHECKOBJ<Unit>(2);
+
+        creature->GetThreatManager().FixateTarget(target);
+        return 0;
+    }
+
+    /**
+     * Clears the [Creature]'s fixated target.
+     */
+    int ClearFixate(Eluna* /*E*/, Creature* creature)
+    {
+        creature->GetThreatManager().ClearFixate();
+        return 0;
     }
 
     /**
@@ -700,11 +889,22 @@ namespace LuaCreature
      */
     int GetExtraFlags(Eluna* E, Creature* creature)
     {
-        E->Push(creature->GetCreatureInfo()->ExtraFlags);
+        E->Push(creature->GetCreatureTemplate()->flags_extra);
         return 1;
     }
 
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
+    /**
+     * Returns the [Creature]'s rank as defined in the creature template.
+     *
+     * @return uint32 rank
+     */
+    int GetRank(Eluna* E, Creature* creature)
+    {
+        E->Push(creature->GetCreatureTemplate()->rank);
+        return 1;
+    }
+
+#ifndef CATA
     /**
      * Returns the [Creature]'s shield block value.
      *
@@ -718,14 +918,33 @@ namespace LuaCreature
 #endif
 
     /**
+     * Returns the loot mode for the [Creature].
+     *
+     * <pre>
+     *   LOOT_MODE_DEFAULT          = 1,
+     *   LOOT_MODE_HARD_MODE_1      = 2,
+     *   LOOT_MODE_HARD_MODE_2      = 4,
+     *   LOOT_MODE_HARD_MODE_3      = 8,
+     *   LOOT_MODE_HARD_MODE_4      = 16,
+     *   LOOT_MODE_JUNK_FISH        = 32768
+     * </pre>
+     *
+     * @return uint16 lootMode
+     */
+    int GetLootMode(Eluna* E, Creature* creature)
+    {
+        E->Push(creature->GetLootMode());
+        return 1;
+    }
+
+    /**
      * Returns the guid of the [Creature] that is used as the ID in the database
      *
      * @return uint32 dbguid
      */
     int GetDBTableGUIDLow(Eluna* E, Creature* creature)
     {
-        // on mangos based this is same as lowguid
-        E->Push(creature->GetGUIDLow());
+        E->Push(creature->GetSpawnId());
         return 1;
     }
 
@@ -743,6 +962,19 @@ namespace LuaCreature
     }
 
     /**
+     * Sets the [Creature]'s ReactState to `state`.
+     *
+     * @param [ReactState] state
+     */
+    int SetReactState(Eluna* E, Creature* creature)
+    {
+        uint32 state = E->CHECKVAL<uint32>(2);
+
+        creature->SetReactState((ReactStates)state);
+        return 0;
+    }
+
+    /**
      * Makes the [Creature] able to fly if enabled.
      *
      * @param bool disable
@@ -751,7 +983,29 @@ namespace LuaCreature
     {
         bool disable = E->CHECKVAL<bool>(2);
 
-        creature->SetLevitate(disable);
+        creature->SetDisableGravity(disable);
+        return 0;
+    }
+
+    /**
+     * Sets the loot mode for the [Creature].
+     *
+     * <pre>
+     *   LOOT_MODE_DEFAULT          = 1,
+     *   LOOT_MODE_HARD_MODE_1      = 2,
+     *   LOOT_MODE_HARD_MODE_2      = 4,
+     *   LOOT_MODE_HARD_MODE_3      = 8,
+     *   LOOT_MODE_HARD_MODE_4      = 16,
+     *   LOOT_MODE_JUNK_FISH        = 32768
+     * </pre>
+     * 
+     * @param uint16 lootMode
+     */
+    int SetLootMode(Eluna* E, Creature* creature)
+    {
+        uint16 lootMode = E->CHECKVAL<uint16>(2);
+
+        creature->SetLootMode(lootMode);
         return 0;
     }
 
@@ -764,7 +1018,7 @@ namespace LuaCreature
     {
         int32 state = E->CHECKVAL<int32>(2);
 
-        creature->SetDeathState((DeathState)state);
+        creature->setDeathState((DeathState)state);
         return 0;
     }
 
@@ -794,9 +1048,9 @@ namespace LuaCreature
         uint32 off_hand = E->CHECKVAL<uint32>(3);
         uint32 ranged = E->CHECKVAL<uint32>(4);
 
-        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_0, main_hand);
-        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_1, off_hand);
-        creature->SetVirtualItem(VIRTUAL_ITEM_SLOT_2, ranged);
+        creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0, main_hand);
+        creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, off_hand);
+        creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, ranged);
         return 0;
     }
 
@@ -813,10 +1067,10 @@ namespace LuaCreature
             creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
         else
             creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
+
         return 0;
     }
 
-#ifndef CATA
     /**
      * Sets whether the [Creature] gives reputation or not.
      *
@@ -826,10 +1080,9 @@ namespace LuaCreature
     {
         bool disable = E->CHECKVAL<bool>(2, true);
 
-        creature->SetNoReputation(disable);
+        creature->SetDisableReputationGain(disable);
         return 0;
     }
-#endif
 
     /**
      * Sets the [Creature] as in combat with all [Player]s in the dungeon instance.
@@ -839,7 +1092,9 @@ namespace LuaCreature
      */
     int SetInCombatWithZone(Eluna* /*E*/, Creature* creature)
     {
-        creature->SetInCombatWithZone();
+        if (creature->IsAIEnabled())
+            creature->AI()->DoZoneInCombat();
+
         return 0;
     }
 
@@ -852,7 +1107,7 @@ namespace LuaCreature
     {
         float dist = E->CHECKVAL<float>(2);
 
-        creature->SetRespawnRadius(dist);
+        creature->SetWanderDistance(dist);
         return 0;
     }
 
@@ -917,16 +1172,7 @@ namespace LuaCreature
     {
         bool enable = E->CHECKVAL<bool>(2, true);
 
-        // Copy paste from Aura::HandleAuraHover
-        // TODO: implement core side properly
-        WorldPacket data;
-        if (enable)
-            data.Initialize(SMSG_MOVE_SET_HOVER, 8 + 4);
-        else
-            data.Initialize(SMSG_MOVE_UNSET_HOVER, 8 + 4);
-        data << creature->GetPackGUID();
-        data << uint32(0);
-        creature->SendMessageToSet(data, true);
+        creature->SetHover(enable);
         return 0;
     }
 
@@ -939,7 +1185,7 @@ namespace LuaCreature
     {
         uint32 msTimeToDespawn = E->CHECKVAL<uint32>(2, 0);
 
-        creature->ForcedDespawn(msTimeToDespawn);
+        creature->DespawnOrUnsummon(Milliseconds(msTimeToDespawn));
         return 0;
     }
 
@@ -966,7 +1212,7 @@ namespace LuaCreature
      */
     int MoveWaypoint(Eluna* /*E*/, Creature* creature)
     {
-        creature->GetMotionMaster()->MoveWaypoint();
+        creature->GetMotionMaster()->MovePath(creature->GetWaypointPath(), true);
         return 0;
     }
 
@@ -1030,7 +1276,7 @@ namespace LuaCreature
      */
     int SelectVictim(Eluna* E, Creature* creature)
     {
-        E->Push(creature->SelectHostileTarget());
+        E->Push(creature->SelectVictim());
         return 1;
     }
 
@@ -1045,11 +1291,42 @@ namespace LuaCreature
         uint32 entry = E->CHECKVAL<uint32>(2);
         uint32 dataGuidLow = E->CHECKVAL<uint32>(3, 0);
 
-#ifndef CATA
         creature->UpdateEntry(entry, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);
-#else
-        creature->UpdateEntry(entry, ALLIANCE, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);
-#endif
+        return 0;
+    }
+
+    /**
+     * Resets [Creature]'s loot mode to default
+     */
+    int ResetLootMode(Eluna* /*E*/, Creature* creature)
+    {
+        creature->ResetLootMode();
+        return 0;
+    }
+
+    /**
+     * Removes specified loot mode from [Creature]
+     *
+     * @param uint16 lootMode
+     */
+    int RemoveLootMode(Eluna* E, Creature* creature)
+    {
+        uint16 lootMode = E->CHECKVAL<uint16>(2);
+
+        creature->RemoveLootMode(lootMode);
+        return 0;
+    }
+
+    /**
+     * Adds a loot mode to the [Creature]
+     *
+     * @param uint16 lootMode
+     */
+    int AddLootMode(Eluna* E, Creature* creature)
+    {
+        uint16 lootMode = E->CHECKVAL<uint16>(2);
+
+        creature->AddLootMode(lootMode);
         return 0;
     }
 
@@ -1111,59 +1388,11 @@ namespace LuaCreature
     {
         uint32 entry = creature->GetEntry();
 
-        CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(entry);
+        CreatureTemplate const* cInfo = sObjectMgr->GetCreatureTemplate(entry);
         if (cInfo)
-            E->Push(cInfo->Family);
+            E->Push(cInfo->family);
+
         return 1;
-    }
-    
-    /**
-     * Adds threat to the [Creature] from the victim.
-     *
-     * <pre>
-     * enum SpellSchoolMask
-     * {
-     *     SPELL_SCHOOL_MASK_NONE    = 0,
-     *     SPELL_SCHOOL_MASK_NORMAL  = 1,
-     *     SPELL_SCHOOL_MASK_HOLY    = 2,
-     *     SPELL_SCHOOL_MASK_FIRE    = 4,
-     *     SPELL_SCHOOL_MASK_NATURE  = 8,
-     *     SPELL_SCHOOL_MASK_FROST   = 16,
-     *     SPELL_SCHOOL_MASK_SHADOW  = 32,
-     *     SPELL_SCHOOL_MASK_ARCANE  = 64,
-     * }
-     * </pre>
-     *
-     * @param [Unit] victim : [Unit] that caused the threat
-     * @param float threat : threat amount
-     * @param [SpellSchoolMask] schoolMask = 0 : [SpellSchoolMask] of the threat causer
-     * @param uint32 spell = 0 : spell entry used for threat
-     */
-    int AddThreat(Eluna* E, Creature* creature)
-    {
-        Unit* victim = E->CHECKOBJ<Unit>(2);
-        float threat = E->CHECKVAL<float>(3, true);
-        uint32 spell = E->CHECKVAL<uint32>(4, 0);
-
-        uint32 schoolMask = E->CHECKVAL<uint32>(5, 0);
-        SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
-        creature->AddThreat(victim, threat, false, (SpellSchoolMask)schoolMask, spellEntry);
-
-#ifdef CLASSIC
-        creature->AddThreat(victim, threat, false, spellEntry ? GetSchoolMask(spellEntry->School) : SPELL_SCHOOL_MASK_NONE, spellEntry);
-#else
-        creature->AddThreat(victim, threat, false, spellEntry ? static_cast<SpellSchoolMask>(spellEntry->SchoolMask) : SPELL_SCHOOL_MASK_NONE, spellEntry);
-#endif
-        return 0;
-    }
-    
-    /**
-     * Clears the [Creature]'s threat list.
-     */
-    int ClearThreatList(Eluna* /*E*/, Creature* creature)
-    {
-        creature->getThreatManager().clearReferences();
-        return 0;
     }
 
     /**
@@ -1177,12 +1406,15 @@ namespace LuaCreature
     {
         bool deldb = E->CHECKVAL<bool>(2, false);
         if (deldb)
-            creature->DeleteFromDB();
+        {
+            ObjectGuid::LowType spawnId = creature->GetSpawnId();
+            Creature::DeleteFromDB(spawnId);
+        }
 
         creature->RemoveFromWorld();
         return 0;
     }
-    
+
     ElunaRegister<Creature> CreatureMethods[] =
     {
         // Getters
@@ -1201,19 +1433,22 @@ namespace LuaCreature
         { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },
         { "GetWanderRadius", &LuaCreature::GetWanderRadius },
         { "GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId },
+        { "GetWaypointPath", &LuaCreature::GetWaypointPath },
+        { "GetLootMode", &LuaCreature::GetLootMode },
         { "GetLootRecipient", &LuaCreature::GetLootRecipient },
         { "GetLootRecipientGroup", &LuaCreature::GetLootRecipientGroup },
         { "GetNPCFlags", &LuaCreature::GetNPCFlags },
         { "GetExtraFlags", &LuaCreature::GetExtraFlags },
-        { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
-        { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
+        { "GetRank", &LuaCreature::GetRank },
 #ifndef CATA
         { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
-#else
-        { "GetShieldBlockValue", nullptr, METHOD_REG_NONE },
 #endif
+        { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
+        { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
+        { "GetThreat", &LuaCreature::GetThreat },
 
         // Setters
+        { "SetRegeneratingHealth", &LuaCreature::SetRegeneratingHealth },
         { "SetHover", &LuaCreature::SetHover },
         { "SetDisableGravity", &LuaCreature::SetDisableGravity },
         { "SetAggroEnabled", &LuaCreature::SetAggroEnabled },
@@ -1223,22 +1458,22 @@ namespace LuaCreature
         { "SetRespawnDelay", &LuaCreature::SetRespawnDelay },
         { "SetWanderRadius", &LuaCreature::SetWanderRadius },
         { "SetInCombatWithZone", &LuaCreature::SetInCombatWithZone },
+        { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
+        { "SetLootMode", &LuaCreature::SetLootMode },
         { "SetNPCFlags", &LuaCreature::SetNPCFlags },
+        { "SetReactState", &LuaCreature::SetReactState },
         { "SetDeathState", &LuaCreature::SetDeathState },
         { "SetWalk", &LuaCreature::SetWalk },
         { "SetHomePosition", &LuaCreature::SetHomePosition },
         { "SetEquipmentSlots", &LuaCreature::SetEquipmentSlots },
-#ifndef CATA
-        { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
-#else
-        { "SetDisableReputationGain", nullptr, METHOD_REG_NONE },
-#endif
 
         // Boolean
         { "IsRegeneratingHealth", &LuaCreature::IsRegeneratingHealth },
+        { "IsDungeonBoss", &LuaCreature::IsDungeonBoss },
         { "IsWorldBoss", &LuaCreature::IsWorldBoss },
         { "IsRacialLeader", &LuaCreature::IsRacialLeader },
         { "IsCivilian", &LuaCreature::IsCivilian },
+        { "IsTrigger", &LuaCreature::IsTrigger },
         { "IsGuard", &LuaCreature::IsGuard },
         { "IsElite", &LuaCreature::IsElite },
         { "IsInEvadeMode", &LuaCreature::IsInEvadeMode },
@@ -1246,21 +1481,20 @@ namespace LuaCreature
         { "CanWalk", &LuaCreature::CanWalk },
         { "CanSwim", &LuaCreature::CanSwim },
         { "CanAggro", &LuaCreature::CanAggro },
+        { "CanStartAttack", &LuaCreature::CanStartAttack },
         { "HasSearchedAssistance", &LuaCreature::HasSearchedAssistance },
         { "IsTappedBy", &LuaCreature::IsTappedBy },
         { "HasLootRecipient", &LuaCreature::HasLootRecipient },
         { "CanAssistTo", &LuaCreature::CanAssistTo },
         { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },
         { "CanCompleteQuest", &LuaCreature::CanCompleteQuest },
+        { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
+        { "IsDamageEnoughForLootingAndReward", &LuaCreature::IsDamageEnoughForLootingAndReward },
+        { "HasLootMode", &LuaCreature::HasLootMode },
         { "HasSpell", &LuaCreature::HasSpell },
         { "HasQuest", &LuaCreature::HasQuest },
         { "HasSpellCooldown", &LuaCreature::HasSpellCooldown },
         { "CanFly", &LuaCreature::CanFly },
-#ifndef CATA
-        { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
-#else
-        { "IsReputationGainDisabled", nullptr, METHOD_REG_NONE },
-#endif
 
         // Other
         { "FleeToGetAssistance", &LuaCreature::FleeToGetAssistance },
@@ -1270,33 +1504,24 @@ namespace LuaCreature
         { "DespawnOrUnsummon", &LuaCreature::DespawnOrUnsummon },
         { "Respawn", &LuaCreature::Respawn },
         { "AttackStart", &LuaCreature::AttackStart },
+        { "AddLootMode", &LuaCreature::AddLootMode },
+        { "ResetLootMode", &LuaCreature::ResetLootMode },
+        { "RemoveLootMode", &LuaCreature::RemoveLootMode },
         { "SaveToDB", &LuaCreature::SaveToDB },
         { "SelectVictim", &LuaCreature::SelectVictim },
         { "MoveWaypoint", &LuaCreature::MoveWaypoint },
         { "UpdateEntry", &LuaCreature::UpdateEntry },
         { "AddThreat", &LuaCreature::AddThreat },
+        { "ClearThreat", &LuaCreature::ClearThreat },
         { "ClearThreatList", &LuaCreature::ClearThreatList },
+        { "ResetAllThreat", &LuaCreature::ResetAllThreat },
+        { "FixateTarget", &LuaCreature::FixateTarget },
+        { "ClearFixate", &LuaCreature::ClearFixate },
         { "RemoveFromWorld", &LuaCreature::RemoveFromWorld },
-        
-        // Not implemented methods
-        { "GetWaypointPath", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "GetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "SetRegeneratingHealth", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "SetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "SetReactState", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "IsDungeonBoss", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "IsTrigger", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "CanStartAttack", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "IsDamageEnoughForLootingAndReward", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "HasLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "AddLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "ResetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "RemoveLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "GetThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "ClearThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "ResetAllThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "FixateTarget", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "ClearFixate", nullptr, METHOD_REG_NONE }, // TC/Acore
+
+#ifdef CATA //Not implemented in TCPP
+        { "GetShieldBlockValue", nullptr },
+#endif
 
         { NULL, NULL, METHOD_REG_NONE }
     };

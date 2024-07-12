@@ -27,6 +27,7 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "ElunaCompat.h"
 #include "LuaValue.h"
 #include <stdio.h> // snprintf
 
@@ -135,7 +136,8 @@ int LuaVal::lua_set(lua_State* L) {
         (**p).erase(kk);
     }
     else {
-        (**p).insert_or_assign(std::move(kk), std::move(vv));
+        auto const& [it, _] = (**p).insert_or_assign(std::move(kk), std::move(vv));
+        return it->second.asObject(L);
     }
     return 0;
 }
