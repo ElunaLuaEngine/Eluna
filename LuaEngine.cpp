@@ -297,6 +297,14 @@ void Eluna::RunScripts()
     OnLuaStateOpen();
 }
 
+#ifndef TRINITY
+void Eluna::InvalidateObjects()
+{
+    ++callstackid;
+    ASSERT(callstackid && "Callstackid overflow");
+}
+#endif
+
 void Eluna::Report(lua_State* _L)
 {
     const char* msg = lua_tostring(_L, -1);
@@ -978,6 +986,11 @@ void Eluna::CleanUpStack(int number_of_arguments)
 
     lua_pop(L, number_of_arguments + 1); // Add 1 because the caller doesn't know about `event_id`.
     // Stack: (empty)
+
+#ifndef TRINITY
+    if (event_level == 0)
+        InvalidateObjects();
+#endif
 }
 
 /*

@@ -37,6 +37,7 @@ extern "C"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
 
+#ifdef TRINITY
 ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj) { return { obj->GetWeakPtr(), obj->GetOwner()->GetMap() }; }
 ElunaConstrainedObjectRef<Battleground> GetWeakPtrFor(Battleground const* obj) { return { obj->GetWeakPtr(), obj->GetBgMap() }; }
 ElunaConstrainedObjectRef<Group> GetWeakPtrFor(Group const* obj) { return { obj->GetWeakPtr(), nullptr }; }
@@ -56,8 +57,6 @@ ElunaConstrainedObjectRef<Object> GetWeakPtrForObjectImpl(Object const* obj)
 }
 ElunaConstrainedObjectRef<Quest> GetWeakPtrFor(Quest const* obj) { return { obj->GetWeakPtr(), nullptr }; }
 ElunaConstrainedObjectRef<Spell> GetWeakPtrFor(Spell const* obj) { return { obj->GetWeakPtr(), obj->GetCaster()->GetMap() }; }
-
-#if (!defined(TBC) && !defined(CLASSIC))
 ElunaConstrainedObjectRef<Vehicle> GetWeakPtrFor(Vehicle const* obj) { return { obj->GetWeakPtr(), obj->GetBase()->GetMap() }; }
 #endif
 
