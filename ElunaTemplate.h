@@ -114,20 +114,14 @@ public:
     {
     }
 
-#ifdef TRINITY
     // Get wrapped object pointer
     virtual void* GetObjIfValid() const = 0;
-#else
-    // Get wrapped object pointer
-    virtual void* GetObj() const = 0;
-    // Returns whether the object is valid or not
-    virtual bool IsValid() const = 0;
+    // Returns pointer to the wrapped object's type name
+    const char* GetTypeName() const { return type_name; }
+#ifndef TRINITY
     // Invalidates the pointer if it should be invalidated
     virtual void Invalidate() = 0;
 #endif
-
-    // Returns pointer to the wrapped object's type name
-    const char* GetTypeName() const { return type_name; }
 
 protected:
     Eluna* E;
@@ -183,8 +177,14 @@ public:
     {
     }
 
-    void* GetObj() const override { return _obj; }
-    bool IsValid() const override { return callstackid == E->GetCallstackId(); }
+    void* GetObjIfValid() const override
+    {
+        if (callstackid == E->GetCallstackId())
+            return _obj;
+
+        return nullptr;
+    }
+
     void Invalidate() override { callstackid = 1; }
 #endif
 
@@ -201,19 +201,13 @@ template <typename T>
 class ElunaObjectValueImpl : public ElunaObject
 {
 public:
-#ifdef TRINITY
     ElunaObjectValueImpl(Eluna* E, T const* obj, char const* tname) : ElunaObject(E, tname), _obj(*obj /*always a copy, what gets passed here might be pointing to something not owned by us*/)
     {
     }
 
     void* GetObjIfValid() const override { return const_cast<T*>(&_obj); }
-#else
-    ElunaObjectValueImpl(Eluna* E, T* obj, char const* tname) : ElunaObject(E, tname), _obj(*obj /*always a copy, what gets passed here might be pointing to something not owned by us*/)
-    {
-    }
 
-    void* GetObj() const override { return const_cast<T*>(&_obj); }
-    bool IsValid() const override { return true; }
+#ifndef TRINITY
     void Invalidate() override { }
 #endif
 
@@ -442,12 +436,8 @@ public:
         if (!elunaObj)
             return NULL;
 
-#ifdef TRINITY
         void* obj = elunaObj->GetObjIfValid();
         if (!obj)
-#else
-        if (!elunaObj->IsValid())
-#endif
         {
             char buff[256];
             snprintf(buff, 256, "%s expected, got pointer to nonexisting (invalidated) object (%s). Check your code.", tname, luaL_typename(L, narg));
@@ -461,11 +451,7 @@ public:
             }
             return NULL;
         }
-#ifdef TRINITY
         return static_cast<T*>(obj);
-#else
-        return static_cast<T*>(elunaObj->GetObj());
-#endif
     }
 
     static int GetType(lua_State* L)
