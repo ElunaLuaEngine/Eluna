@@ -45,11 +45,11 @@ ElunaConstrainedObjectRef<Guild> GetWeakPtrFor(Guild const* obj) { return { obj-
 ElunaConstrainedObjectRef<Map> GetWeakPtrFor(Map const* obj) { return { obj->GetWeakPtr(), obj }; }
 ElunaConstrainedObjectRef<Object> GetWeakPtrForObjectImpl(Object const* obj)
 {
-    if (WorldObject const* worldObject = obj->ToWorldObject())
-        return { obj->GetWeakPtr(), worldObject->GetMap() };
+    if (obj->isType(TYPEMASK_WORLDOBJECT))
+        return { obj->GetWeakPtr(), static_cast<WorldObject const*>(obj)->GetMap() };
 
-    if (Item const* item = obj->ToItem())
-        if (Player const* player = item->GetOwner())
+    if (obj->GetTypeId() == TYPEID_ITEM)
+        if (Player const* player = static_cast<Item const*>(obj)->GetOwner())
             return { obj->GetWeakPtr(), player->GetMap() };
 
     // possibly dangerous item
