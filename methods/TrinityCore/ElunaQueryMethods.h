@@ -281,26 +281,44 @@ namespace LuaQuery
 
         for (uint32 i = 0; i < col; ++i)
         {
-            E->Push(RESULT->GetFieldName(i));
+            QueryResultFieldMetadata const& fieldMetadata = RESULT->GetFieldMetadata(i);
 
-            const char* str = row[i].GetCString();
-            if (row[i].IsNull() || !str)
+            E->Push(fieldMetadata.Alias);
+
+            if (row[i].IsNull())
                 E->Push();
             else
             {
-                // MYSQL_TYPE_LONGLONG Interpreted as string for lua
-                switch (row[i].GetType())
+                switch (fieldMetadata.Type)
                 {
+                    case DatabaseFieldTypes::UInt8:
+                    case DatabaseFieldTypes::UInt16:
+                    case DatabaseFieldTypes::UInt32:
+                        E->Push(row[i].GetUInt32());
+                        break;
                     case DatabaseFieldTypes::Int8:
                     case DatabaseFieldTypes::Int16:
                     case DatabaseFieldTypes::Int32:
+                        E->Push(row[i].GetInt32());
+                        break;
+                    case DatabaseFieldTypes::UInt64:
+                        E->Push(row[i].GetUInt64());
+                        break;
                     case DatabaseFieldTypes::Int64:
+                        E->Push(row[i].GetInt64());
+                        break;
                     case DatabaseFieldTypes::Float:
                     case DatabaseFieldTypes::Double:
-                        E->Push(strtod(str, NULL));
+                    case DatabaseFieldTypes::Decimal:
+                        E->Push(row[i].GetDouble());
+                        break;
+                    case DatabaseFieldTypes::Date:
+                    case DatabaseFieldTypes::Time:
+                    case DatabaseFieldTypes::Binary:
+                        E->Push(row[i].GetCString());
                         break;
                     default:
-                        E->Push(str);
+                        E->Push();
                         break;
                 }
             }
@@ -310,7 +328,7 @@ namespace LuaQuery
         lua_settop(E->L, tbl);
         return 1;
     }
-    
+
     ElunaRegister<ElunaQuery> QueryMethods[] =
     {
         // Getters
