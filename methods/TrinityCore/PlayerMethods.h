@@ -8,6 +8,9 @@
 #define PLAYERMETHODS_H
 
 #include "LuaValue.h"
+#include "NPCPackets.h"
+#include "PartyPackets.h"
+#include <boost/callable_traits/args.hpp>
 
 /***
  * Inherits all methods from: [Object], [WorldObject], [Unit]
@@ -1914,7 +1917,9 @@ namespace LuaPlayer
      */
     int SetCoinage(Eluna* E, Player* player)
     {
-        uint32 amt = E->CHECKVAL<uint32>(2);
+        using MoneyType = std::tuple_element_t<1, boost::callable_traits::args_t<decltype(&Player::SetMoney)>>;
+
+        MoneyType amt = E->CHECKVAL<MoneyType>(2);
         player->SetMoney(amt);
         return 0;
     }
@@ -2136,16 +2141,7 @@ namespace LuaPlayer
     {
         Unit* unit = E->CHECKOBJ<Unit>(2);
 
-        AuctionHouseEntry const* ahEntry = AuctionHouseMgr::GetAuctionHouseEntry(unit->GetFaction());
-        if (!ahEntry)
-            return 0;
-
-        WorldPacket data(MSG_AUCTION_HELLO, 12);
-        data << unit->GET_GUID();
-        data << uint32(ahEntry->ID);
-        data << uint8(1);
-
-        player->GetSession()->SendPacket(&data);
+        player->GetSession()->SendAuctionHello(unit->GET_GUID(), unit);
         return 0;
     }
 
@@ -3328,7 +3324,9 @@ namespace LuaPlayer
      */
     int ModifyMoney(Eluna* E, Player* player)
     {
-        int32 amt = E->CHECKVAL<int32>(2);
+        using MoneyType = std::tuple_element_t<1, boost::callable_traits::args_t<decltype(&Player::ModifyMoney)>>;
+
+        MoneyType amt = E->CHECKVAL<MoneyType>(2);
 
         player->ModifyMoney(amt);
         return 1;
@@ -3504,15 +3502,14 @@ namespace LuaPlayer
         uint32 data = E->CHECKVAL<uint32>(6);
         std::string iconText = E->CHECKVAL<std::string>(7);
 
-        WorldPacket packet(SMSG_GOSSIP_POI, 4 + 4 + 4 + 4 + 4 + 10);
-        packet << flags;
-        packet << x;
-        packet << y;
-        packet << icon;
-        packet << data;
-        packet << iconText;
+        WorldPackets::NPC::GossipPOI packet;
+        packet.Name = iconText;
+        packet.Flags = flags;
+        packet.Pos.Pos.Relocate(x, y);
+        packet.Icon = icon;
+        packet.Importance = data;
 
-        player->GetSession()->SendPacket(&packet);
+        player->SendDirectMessage(packet.Write());
         return 0;
     }
 
@@ -3623,18 +3620,9 @@ namespace LuaPlayer
 
         if (success)
         {
-#ifdef CATA
-            WorldPacket data(SMSG_PARTY_INVITE, 10);                // guess size
-#else
-            WorldPacket data(SMSG_GROUP_INVITE, 10);                // guess size
-#endif
-            data << uint8(1);                                       // invited/already in group flag
-            data << player->GetName();                              // max len 48
-            data << uint32(0);                                      // unk
-            data << uint8(0);                                       // count
-            data << uint32(0);                                      // unk
-
-            invited->GetSession()->SendPacket(&data);
+            WorldPackets::Party::PartyInvite partyInvite;
+            partyInvite.Initialize(player, 0, true);
+            invited->SendDirectMessage(partyInvite.Write());
         }
 
         E->Push(success);
