@@ -297,7 +297,7 @@ void Eluna::RunScripts()
     OnLuaStateOpen();
 }
 
-#ifndef TRINITY
+#ifndef TRACKABLE_PTR_NAMESPACE
 void Eluna::InvalidateObjects()
 {
     ++callstackid;
@@ -993,7 +993,7 @@ void Eluna::CleanUpStack(int number_of_arguments)
     lua_pop(L, number_of_arguments + 1); // Add 1 because the caller doesn't know about `event_id`.
     // Stack: (empty)
 
-#ifndef TRINITY
+#ifndef TRACKABLE_PTR_NAMESPACE
     if (event_level == 0)
         InvalidateObjects();
 #endif

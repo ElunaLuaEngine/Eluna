@@ -149,6 +149,7 @@ enum MethodRegisterState
 
 #if defined(TRINITY)
 #define ELUNA_GAME_API TC_GAME_API
+#define TRACKABLE_PTR_NAMESPACE ::Trinity::
 #elif defined(AZEROTHCORE)
 #define ELUNA_GAME_API AC_GAME_API
 #else
@@ -169,7 +170,7 @@ private:
     // Indicates that the lua state should be reloaded
     bool reload = false;
 
-#ifndef TRINITY
+#ifndef TRACKABLE_PTR_NAMESPACE
     // A counter for lua event stacks that occur (see event_level).
     // This is used to determine whether an object belongs to the current call stack or not.
     // 0 is reserved for always belonging to the call stack
@@ -202,7 +203,7 @@ private:
     void CloseLua();
     void DestroyBindStores();
     void CreateBindStores();
-#ifndef TRINITY
+#ifndef TRACKABLE_PTR_NAMESPACE
     void InvalidateObjects();
 #endif
 
@@ -349,7 +350,7 @@ public:
 
     void RunScripts();
     bool HasLuaState() const { return L != NULL; }
-#ifndef TRINITY
+#ifndef TRACKABLE_PTR_NAMESPACE
     uint64 GetCallstackId() const { return callstackid; }
 #endif
     int Register(uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);

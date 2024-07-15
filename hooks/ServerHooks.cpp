@@ -75,7 +75,7 @@ void Eluna::OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* o
     ExecuteCall(4, 0);
 
     ASSERT(!event_level);
-#ifndef TRINITY
+#ifndef TRACKABLE_PTR_NAMESPACE
     InvalidateObjects();
 #endif
 }

@@ -22,11 +22,8 @@ extern "C"
 #include "Globals/SharedDefines.h"
 #endif
 
-
 #ifdef TRINITY
 #include "UniqueTrackablePtr.h"
-
-#define TRACKABLE_PTR_NAMESPACE ::Trinity::
 #endif
 
 class ElunaGlobal
@@ -118,7 +115,7 @@ public:
     virtual void* GetObjIfValid() const = 0;
     // Returns pointer to the wrapped object's type name
     const char* GetTypeName() const { return type_name; }
-#ifndef TRINITY
+#ifndef TRACKABLE_PTR_NAMESPACE
     // Invalidates the pointer if it should be invalidated
     virtual void Invalidate() = 0;
 #endif
@@ -128,7 +125,7 @@ protected:
     const char* type_name;
 };
 
-#ifdef TRINITY
+#ifdef TRACKABLE_PTR_NAMESPACE
 template <typename T>
 struct ElunaConstrainedObjectRef
 {
@@ -159,7 +156,7 @@ template <typename T>
 class ElunaObjectImpl : public ElunaObject
 {
 public:
-#ifdef TRINITY
+#ifdef TRACKABLE_PTR_NAMESPACE
     ElunaObjectImpl(Eluna* E, T const* obj, char const* tname) : ElunaObject(E, tname), _obj(GetWeakPtrFor(obj))
     {
     }
@@ -189,7 +186,7 @@ public:
 #endif
 
 private:
-#ifdef TRINITY
+#ifdef TRACKABLE_PTR_NAMESPACE
     ElunaConstrainedObjectRef<T> _obj;
 #else
     void* _obj;
@@ -207,7 +204,7 @@ public:
 
     void* GetObjIfValid() const override { return const_cast<T*>(&_obj); }
 
-#ifndef TRINITY
+#ifndef TRACKABLE_PTR_NAMESPACE
     void Invalidate() override { }
 #endif
 

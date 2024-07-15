@@ -37,7 +37,7 @@ extern "C"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
 
-#ifdef TRINITY
+#ifdef TRACKABLE_PTR_NAMESPACE
 ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj) { return { obj->GetWeakPtr(), obj->GetOwner()->GetMap() }; }
 ElunaConstrainedObjectRef<Battleground> GetWeakPtrFor(Battleground const* obj) { return { obj->GetWeakPtr(), obj->GetBgMap() }; }
 ElunaConstrainedObjectRef<Group> GetWeakPtrFor(Group const* obj) { return { obj->GetWeakPtr(), nullptr }; }
