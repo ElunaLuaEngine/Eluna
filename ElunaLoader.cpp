@@ -13,6 +13,7 @@
 #include "ElunaIncludes.h"
 #include <fstream>
 #include <sstream>
+#include <thread>
 
 #ifdef USING_BOOST
 #include <boost/filesystem.hpp>
@@ -55,6 +56,7 @@ void ElunaUpdateListener::handleFileAction(efsw::WatchID /*watchid*/, std::strin
 
 ElunaLoader::ElunaLoader()
 {
+    _cacheState = SCRIPT_CACHE_NONE;
 #ifdef TRINITY
     lua_scriptWatcher = -1;
 #endif
@@ -77,8 +79,32 @@ ElunaLoader::~ElunaLoader()
 #endif
 }
 
+void ElunaLoader::ReloadScriptCache()
+{
+    // if the internal cache state is anything other than ready, we return
+    if (_cacheState != SCRIPT_CACHE_READY)
+    {
+        ELUNA_LOG_DEBUG("[Eluna]: Script cache not ready, skipping reload");
+        return;
+    }
+
+    // set the internal cache state to reinit
+    _cacheState = SCRIPT_CACHE_REINIT;
+
+    // create new thread to load scripts asynchronously
+    std::thread(&ElunaLoader::LoadScripts, this).detach();
+    ELUNA_LOG_DEBUG("[Eluna]: Script cache reload thread started");
+}
+
 void ElunaLoader::LoadScripts()
 {
+    // only reload the cache if it is either in a reinit state or not loaded at all
+    if (_cacheState != SCRIPT_CACHE_REINIT && _cacheState != SCRIPT_CACHE_NONE)
+        return;
+
+    // set the cache state to loading
+    _cacheState = SCRIPT_CACHE_LOADING;
+
     lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
     const std::string& lua_path_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_PATH_EXTRA);
     const std::string& lua_cpath_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_CPATH_EXTRA);
@@ -140,6 +166,9 @@ void ElunaLoader::LoadScripts()
             ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '%s'", mapIdStr.c_str());
         }
     }
+
+    // set the cache state to ready
+    _cacheState = SCRIPT_CACHE_READY;
 }
 
 int ElunaLoader::LoadBytecodeChunk(lua_State* /*L*/, uint8* bytes, size_t len, BytecodeBuffer* buffer)
@@ -332,9 +361,10 @@ bool ElunaLoader::ShouldMapLoadEluna(uint32 id)
 
 void ElunaLoader::ReloadElunaForMap(int mapId)
 {
-    // If a mapid is provided but does not match any map or reserved id then only script storage is loaded
-    LoadScripts();
+    // reload the script cache asynchronously
+    ReloadScriptCache();
 
+    // If a mapid is provided but does not match any map or reserved id then only script storage is loaded
     if (mapId != RELOAD_CACHE_ONLY)
     {
         if (mapId == RELOAD_GLOBAL_STATE || mapId == RELOAD_ALL_STATES)

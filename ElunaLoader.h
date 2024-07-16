@@ -26,6 +26,14 @@ enum ElunaReloadActions
     RELOAD_GLOBAL_STATE = -1
 };
 
+enum ElunaScriptCacheState
+{
+    SCRIPT_CACHE_NONE = 0,
+    SCRIPT_CACHE_REINIT = 1,
+    SCRIPT_CACHE_LOADING = 2,
+    SCRIPT_CACHE_READY = 3
+};
+
 struct LuaScript;
 
 class ElunaLoader
@@ -42,6 +50,7 @@ public:
     ElunaLoader& operator= (ElunaLoader&&) = delete;
     static ElunaLoader* instance();
     void LoadScripts();
+    void ReloadScriptCache();
     void ReadFiles(lua_State* L, std::string path);
     void CombineLists();
     void ProcessScript(lua_State* L, std::string filename, const std::string& fullpath, int32 mapId);
@@ -49,6 +58,7 @@ public:
     bool CompileScript(lua_State* L, LuaScript& script);
     static int LoadBytecodeChunk(lua_State* L, uint8* bytes, size_t len, BytecodeBuffer* buffer);
     void ReloadElunaForMap(int mapId);
+    uint8 GetCacheState() { return _cacheState; }
 
     // Lua script folder path
     std::string lua_folderpath;
@@ -68,6 +78,8 @@ public:
     efsw::FileWatcher lua_fileWatcher;
     efsw::WatchID lua_scriptWatcher;
 #endif
+protected:
+    std::atomic<uint8> _cacheState;
 };
 
 #ifdef TRINITY
