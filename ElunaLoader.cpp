@@ -70,6 +70,10 @@ ElunaLoader* ElunaLoader::instance()
 
 ElunaLoader::~ElunaLoader()
 {
+    // join any previously created reload thread so it can exit cleanly
+    if (_reloadThread.joinable())
+        _reloadThread.join();
+
 #ifdef TRINITY
     if (lua_scriptWatcher >= 0)
     {
@@ -88,11 +92,15 @@ void ElunaLoader::ReloadScriptCache()
         return;
     }
 
+    // try to join any previous thread before starting a new one, just in case
+    if (_reloadThread.joinable())
+        _reloadThread.join();
+
     // set the internal cache state to reinit
     _cacheState = SCRIPT_CACHE_REINIT;
 
     // create new thread to load scripts asynchronously
-    std::thread(&ElunaLoader::LoadScripts, this).detach();
+    _reloadThread = std::thread(&ElunaLoader::LoadScripts, this);
     ELUNA_LOG_DEBUG("[Eluna]: Script cache reload thread started");
 }
 

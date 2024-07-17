@@ -80,6 +80,7 @@ public:
 #endif
 protected:
     std::atomic<uint8> _cacheState;
+    std::thread _reloadThread;
 };
 
 #ifdef TRINITY
