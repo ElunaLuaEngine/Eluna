@@ -54,9 +54,8 @@ void ElunaUpdateListener::handleFileAction(efsw::WatchID /*watchid*/, std::strin
 }
 #endif
 
-ElunaLoader::ElunaLoader()
+ElunaLoader::ElunaLoader() : _cacheState(SCRIPT_CACHE_NONE)
 {
-    _cacheState = SCRIPT_CACHE_NONE;
 #ifdef TRINITY
     lua_scriptWatcher = -1;
 #endif
@@ -113,26 +112,27 @@ void ElunaLoader::LoadScripts()
     // set the cache state to loading
     _cacheState = SCRIPT_CACHE_LOADING;
 
-    lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
+    uint32 oldMSTime = ElunaUtil::GetCurrTime();
+
+    std::string lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
     const std::string& lua_path_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_PATH_EXTRA);
     const std::string& lua_cpath_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_CPATH_EXTRA);
-
-    uint32 oldMSTime = ElunaUtil::GetCurrTime();
-    lua_scripts.clear();
-    lua_extensions.clear();
-    combined_scripts.clear();
+    
 #ifndef ELUNA_WINDOWS
     if (lua_folderpath[0] == '~')
         if (const char* home = getenv("HOME"))
             lua_folderpath.replace(0, 1, home);
 #endif
+
     ELUNA_LOG_INFO("[Eluna]: Searching for scripts in `%s`", lua_folderpath.c_str());
-    lua_requirepath.clear();
-    lua_requirecpath.clear();
 
     // open a new temporary Lua state to compile bytecode in
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
+
+    // clear all cache variables
+    lua_requirepath.clear();
+    lua_requirecpath.clear();
 
     // read and compile all scripts
     ReadFiles(L, lua_folderpath);
@@ -157,7 +157,6 @@ void ElunaLoader::LoadScripts()
     if (!lua_requirecpath.empty())
         lua_requirecpath.erase(lua_requirecpath.end() - 1);
 
-    ELUNA_LOG_INFO("[Eluna]: Loaded and precompiled %u scripts in %u ms", uint32(combined_scripts.size()), ElunaUtil::GetTimeDiff(oldMSTime));
     requiredMaps.clear();
     std::istringstream maps(sElunaConfig->GetConfig(CONFIG_ELUNA_ONLY_ON_MAPS));
     while (maps.good())
@@ -175,6 +174,8 @@ void ElunaLoader::LoadScripts()
         }
     }
 
+    ELUNA_LOG_INFO("[Eluna]: Loaded and precompiled %u scripts in %u ms", uint32(lua_scripts.size()), ElunaUtil::GetTimeDiff(oldMSTime));
+
     // set the cache state to ready
     _cacheState = SCRIPT_CACHE_READY;
 }
@@ -190,6 +191,8 @@ int ElunaLoader::LoadBytecodeChunk(lua_State* /*L*/, uint8* bytes, size_t len, B
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
 void ElunaLoader::ReadFiles(lua_State* L, std::string path)
 {
+    std::string lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
+
     ELUNA_LOG_DEBUG("[Eluna]: ReadFiles from path `%s`", path.c_str());
 
     fs::path someDir(path);
@@ -321,15 +324,18 @@ void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::s
         return;
 
     if (extension)
-        lua_extensions.push_back(script);
+        _extensions.push_back(script);
     else
-        lua_scripts.push_back(script);
+        _scripts.push_back(script);
+
     ELUNA_LOG_DEBUG("[Eluna]: ProcessScript processed `%s` successfully", fullpath.c_str());
 }
 
 #ifdef TRINITY
 void ElunaLoader::InitializeFileWatcher()
 {
+    std::string lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
+
     lua_scriptWatcher = lua_fileWatcher.addWatch(lua_folderpath, &elunaUpdateListener, true);
     if (lua_scriptWatcher >= 0)
     {
@@ -353,10 +359,15 @@ static bool ScriptPathComparator(const LuaScript& first, const LuaScript& second
 
 void ElunaLoader::CombineLists()
 {
-    lua_extensions.sort(ScriptPathComparator);
-    lua_scripts.sort(ScriptPathComparator);
-    combined_scripts.insert(combined_scripts.end(), lua_extensions.begin(), lua_extensions.end());
-    combined_scripts.insert(combined_scripts.end(), lua_scripts.begin(), lua_scripts.end());
+    _extensions.sort(ScriptPathComparator);
+    _scripts.sort(ScriptPathComparator);
+
+    lua_scripts.clear();
+    lua_scripts.insert(lua_scripts.end(), _extensions.begin(), _extensions.end());
+    lua_scripts.insert(lua_scripts.end(), _scripts.begin(), _scripts.end());
+
+    _extensions.clear();
+    _scripts.clear();
 }
 
 bool ElunaLoader::ShouldMapLoadEluna(uint32 id)

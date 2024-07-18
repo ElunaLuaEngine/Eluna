@@ -49,28 +49,17 @@ public:
     ElunaLoader& operator= (ElunaLoader const&) = delete;
     ElunaLoader& operator= (ElunaLoader&&) = delete;
     static ElunaLoader* instance();
-    void LoadScripts();
-    void ReloadScriptCache();
-    void ReadFiles(lua_State* L, std::string path);
-    void CombineLists();
-    void ProcessScript(lua_State* L, std::string filename, const std::string& fullpath, int32 mapId);
-    bool ShouldMapLoadEluna(uint32 mapId);
-    bool CompileScript(lua_State* L, LuaScript& script);
-    static int LoadBytecodeChunk(lua_State* L, uint8* bytes, size_t len, BytecodeBuffer* buffer);
-    void ReloadElunaForMap(int mapId);
-    uint8 GetCacheState() { return _cacheState; }
 
-    // Lua script folder path
-    std::string lua_folderpath;
-    // lua path variable for require() function
-    std::string lua_requirepath;
-    std::string lua_requirecpath;
+    void LoadScripts();
+    bool ShouldMapLoadEluna(uint32 mapId);
+    void ReloadElunaForMap(int mapId);
+
+    const uint8 GetCacheState() const { return _cacheState; }
+    const std::vector<LuaScript>& GetLuaScripts() const { return lua_scripts; }
+    const std::string GetRequirePath() const { return lua_requirepath; }
+    const std::string GetRequireCPath() const { return lua_requirecpath; }
 
     typedef std::list<LuaScript> ScriptList;
-    ScriptList lua_scripts;
-    ScriptList lua_extensions;
-    std::vector<LuaScript> combined_scripts;
-    std::list<uint32> requiredMaps;
 
 #ifdef TRINITY
     // efsw file watcher
@@ -78,8 +67,23 @@ public:
     efsw::FileWatcher lua_fileWatcher;
     efsw::WatchID lua_scriptWatcher;
 #endif
+
+private:
+    void ReloadScriptCache();
+    void ReadFiles(lua_State* L, std::string path);
+    void CombineLists();
+    void ProcessScript(lua_State* L, std::string filename, const std::string& fullpath, int32 mapId);
+    bool CompileScript(lua_State* L, LuaScript& script);
+    static int LoadBytecodeChunk(lua_State* L, uint8* bytes, size_t len, BytecodeBuffer* buffer);
+
 protected:
     std::atomic<uint8> _cacheState;
+    std::vector<LuaScript> lua_scripts;
+    std::string lua_requirepath;
+    std::string lua_requirecpath;
+    ScriptList _scripts;
+    ScriptList _extensions;
+    std::list<uint32> requiredMaps;
     std::thread _reloadThread;
 };
 
