@@ -54,10 +54,10 @@ public:
     bool ShouldMapLoadEluna(uint32 mapId);
     void ReloadElunaForMap(int mapId);
 
-    const uint8 GetCacheState() const { return _cacheState; }
+    uint8 GetCacheState() const { return _cacheState.load(); }
     const std::vector<LuaScript>& GetLuaScripts() const { return lua_scripts; }
-    const std::string GetRequirePath() const { return lua_requirepath; }
-    const std::string GetRequireCPath() const { return lua_requirecpath; }
+    const std::string& GetRequirePath() const { return lua_requirepath; }
+    const std::string& GetRequireCPath() const { return lua_requirecpath; }
 
     typedef std::list<LuaScript> ScriptList;
 
