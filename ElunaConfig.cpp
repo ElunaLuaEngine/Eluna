@@ -96,7 +96,9 @@ void ElunaConfig::TokenizeAllowedMaps()
     while (std::getline(maps, mapIdStr, ','))
     {
         // remove spaces
-        mapIdStr.erase(std::remove_if(mapIdStr.begin(), mapIdStr.end(), std::isspace), mapIdStr.end());
+        mapIdStr.erase(std::remove_if(mapIdStr.begin(), mapIdStr.end(), [](char c) {
+            return std::isspace(static_cast<unsigned char>(c));
+            }), mapIdStr.end());
 
         try {
             uint32 mapId = std::stoul(mapIdStr);
