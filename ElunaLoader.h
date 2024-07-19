@@ -54,12 +54,10 @@ public:
     bool ShouldMapLoadEluna(uint32 mapId);
     void ReloadElunaForMap(int mapId);
 
-    uint8 GetCacheState() const { return _cacheState.load(); }
-    const std::vector<LuaScript>& GetLuaScripts() const { return lua_scripts; }
-    const std::string& GetRequirePath() const { return lua_requirepath; }
-    const std::string& GetRequireCPath() const { return lua_requirecpath; }
-
-    typedef std::list<LuaScript> ScriptList;
+    uint8 GetCacheState() const { return m_cacheState; }
+    const std::vector<LuaScript>& GetLuaScripts() const { return m_scriptCache; }
+    const std::string& GetRequirePath() const { return m_requirePath; }
+    const std::string& GetRequireCPath() const { return m_requirecPath; }
 
 #ifdef TRINITY
     // efsw file watcher
@@ -76,15 +74,14 @@ private:
     bool CompileScript(lua_State* L, LuaScript& script);
     static int LoadBytecodeChunk(lua_State* L, uint8* bytes, size_t len, BytecodeBuffer* buffer);
 
-protected:
-    std::atomic<uint8> _cacheState;
-    std::vector<LuaScript> lua_scripts;
-    std::string lua_requirepath;
-    std::string lua_requirecpath;
-    ScriptList _scripts;
-    ScriptList _extensions;
-    std::list<uint32> requiredMaps;
-    std::thread _reloadThread;
+    std::atomic<uint8> m_cacheState;
+    std::vector<LuaScript> m_scriptCache;
+    std::string m_requirePath;
+    std::string m_requirecPath;
+    std::list<LuaScript> m_scripts;
+    std::list<LuaScript> m_extensions;
+    std::list<uint32> m_requiredMaps;
+    std::thread m_reloadThread;
 };
 
 #ifdef TRINITY
