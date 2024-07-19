@@ -8,8 +8,6 @@
 #ifndef _ELUNALOADER_H
 #define _ELUNALOADER_H
 
-#include "ElunaUtility.h"
-
 #ifdef TRINITY
 #include <efsw/efsw.hpp>
 #endif

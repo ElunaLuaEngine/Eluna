@@ -39,23 +39,8 @@ void ElunaConfig::Initialize()
     SetConfig(CONFIG_ELUNA_REQUIRE_PATH_EXTRA, "Eluna.RequirePaths", "");
     SetConfig(CONFIG_ELUNA_REQUIRE_CPATH_EXTRA, "Eluna.RequireCPaths", "");
 
-    // tokenize OnlyOnMaps
-    m_requiredMaps.clear();
-    std::istringstream maps(GetConfig(CONFIG_ELUNA_ONLY_ON_MAPS));
-    while (maps.good())
-    {
-        std::string mapIdStr;
-        std::getline(maps, mapIdStr, ',');
-        if (maps.fail() || maps.bad())
-            break;
-        try {
-            uint32 mapId = std::stoul(mapIdStr);
-            m_requiredMaps.emplace_back(mapId);
-        }
-        catch (std::exception&) {
-            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '%s'", mapIdStr.c_str());
-        }
-    }
+    // Call extra functions
+    TokenizeAllowedMaps();
 }
 
 void ElunaConfig::SetConfig(ElunaConfigBoolValues index, char const* fieldname, bool defvalue)
@@ -90,8 +75,35 @@ bool ElunaConfig::IsElunaCompatibilityMode()
 
 bool ElunaConfig::ShouldMapLoadEluna(uint32 id)
 {
-    if (!m_requiredMaps.size())
+    // if the set is empty (all maps), return true
+    if (m_allowedMaps.empty())
         return true;
 
-    return (std::find(m_requiredMaps.begin(), m_requiredMaps.end(), id) != m_requiredMaps.end());
+    // Check if the map ID is in the set
+    return (m_allowedMaps.find(id) != m_allowedMaps.end());
+}
+
+void ElunaConfig::TokenizeAllowedMaps()
+{
+    // clear allowed maps
+    m_allowedMaps.clear();
+
+    // read the configuration value into stringstream
+    std::istringstream maps(GetConfig(CONFIG_ELUNA_ONLY_ON_MAPS));
+
+    // tokenize maps and add to allowed maps
+    std::string mapIdStr;
+    while (std::getline(maps, mapIdStr, ','))
+    {
+        // remove spaces
+        mapIdStr.erase(std::remove_if(mapIdStr.begin(), mapIdStr.end(), std::isspace), mapIdStr.end());
+
+        try {
+            uint32 mapId = std::stoul(mapIdStr);
+            m_allowedMaps.emplace(mapId);
+        }
+        catch (std::exception&) {
+            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '%s'", mapIdStr.c_str());
+        }
+    }
 }

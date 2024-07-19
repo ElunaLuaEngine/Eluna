@@ -5,12 +5,10 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#include "LuaEngine.h"
 #include "ElunaCompat.h"
 #include "ElunaConfig.h"
 #include "ElunaLoader.h"
 #include "ElunaUtility.h"
-#include "ElunaIncludes.h"
 #include <fstream>
 #include <sstream>
 #include <thread>

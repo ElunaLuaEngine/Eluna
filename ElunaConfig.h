@@ -56,7 +56,9 @@ private:
     void SetConfig(ElunaConfigBoolValues index, char const* fieldname, bool defvalue);
     void SetConfig(ElunaConfigStringValues index, char const* fieldname, std::string defvalue);
 
-    std::list<uint32> m_requiredMaps;
+    void TokenizeAllowedMaps();
+
+    std::unordered_set<uint32> m_allowedMaps;
 };
 
 #define sElunaConfig ElunaConfig::instance()
