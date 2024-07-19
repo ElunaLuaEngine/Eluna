@@ -26,6 +26,14 @@ enum ElunaReloadActions
     RELOAD_GLOBAL_STATE = -1
 };
 
+enum ElunaScriptCacheState
+{
+    SCRIPT_CACHE_NONE = 0,
+    SCRIPT_CACHE_REINIT = 1,
+    SCRIPT_CACHE_LOADING = 2,
+    SCRIPT_CACHE_READY = 3
+};
+
 struct LuaScript;
 
 class ElunaLoader
@@ -41,26 +49,14 @@ public:
     ElunaLoader& operator= (ElunaLoader const&) = delete;
     ElunaLoader& operator= (ElunaLoader&&) = delete;
     static ElunaLoader* instance();
+
     void LoadScripts();
-    void ReadFiles(lua_State* L, std::string path);
-    void CombineLists();
-    void ProcessScript(lua_State* L, std::string filename, const std::string& fullpath, int32 mapId);
-    bool ShouldMapLoadEluna(uint32 mapId);
-    bool CompileScript(lua_State* L, LuaScript& script);
-    static int LoadBytecodeChunk(lua_State* L, uint8* bytes, size_t len, BytecodeBuffer* buffer);
     void ReloadElunaForMap(int mapId);
 
-    // Lua script folder path
-    std::string lua_folderpath;
-    // lua path variable for require() function
-    std::string lua_requirepath;
-    std::string lua_requirecpath;
-
-    typedef std::list<LuaScript> ScriptList;
-    ScriptList lua_scripts;
-    ScriptList lua_extensions;
-    std::vector<LuaScript> combined_scripts;
-    std::list<uint32> requiredMaps;
+    uint8 GetCacheState() const { return m_cacheState; }
+    const std::vector<LuaScript>& GetLuaScripts() const { return m_scriptCache; }
+    const std::string& GetRequirePath() const { return m_requirePath; }
+    const std::string& GetRequireCPath() const { return m_requirecPath; }
 
 #ifdef TRINITY
     // efsw file watcher
@@ -68,6 +64,22 @@ public:
     efsw::FileWatcher lua_fileWatcher;
     efsw::WatchID lua_scriptWatcher;
 #endif
+
+private:
+    void ReloadScriptCache();
+    void ReadFiles(lua_State* L, std::string path);
+    void CombineLists();
+    void ProcessScript(lua_State* L, std::string filename, const std::string& fullpath, int32 mapId);
+    bool CompileScript(lua_State* L, LuaScript& script);
+    static int LoadBytecodeChunk(lua_State* L, uint8* bytes, size_t len, BytecodeBuffer* buffer);
+
+    std::atomic<uint8> m_cacheState;
+    std::vector<LuaScript> m_scriptCache;
+    std::string m_requirePath;
+    std::string m_requirecPath;
+    std::list<LuaScript> m_scripts;
+    std::list<LuaScript> m_extensions;
+    std::thread m_reloadThread;
 };
 
 #ifdef TRINITY

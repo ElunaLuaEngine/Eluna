@@ -13,6 +13,7 @@
 #include "ElunaIncludes.h"
 #include <fstream>
 #include <sstream>
+#include <thread>
 
 #ifdef USING_BOOST
 #include <boost/filesystem.hpp>
@@ -53,7 +54,7 @@ void ElunaUpdateListener::handleFileAction(efsw::WatchID /*watchid*/, std::strin
 }
 #endif
 
-ElunaLoader::ElunaLoader()
+ElunaLoader::ElunaLoader() : m_cacheState(SCRIPT_CACHE_NONE)
 {
 #ifdef TRINITY
     lua_scriptWatcher = -1;
@@ -68,6 +69,10 @@ ElunaLoader* ElunaLoader::instance()
 
 ElunaLoader::~ElunaLoader()
 {
+    // join any previously created reload thread so it can exit cleanly
+    if (m_reloadThread.joinable())
+        m_reloadThread.join();
+
 #ifdef TRINITY
     if (lua_scriptWatcher >= 0)
     {
@@ -77,28 +82,57 @@ ElunaLoader::~ElunaLoader()
 #endif
 }
 
+void ElunaLoader::ReloadScriptCache()
+{
+    // if the internal cache state is anything other than ready, we return
+    if (m_cacheState != SCRIPT_CACHE_READY)
+    {
+        ELUNA_LOG_DEBUG("[Eluna]: Script cache not ready, skipping reload");
+        return;
+    }
+
+    // try to join any previous thread before starting a new one, just in case
+    if (m_reloadThread.joinable())
+        m_reloadThread.join();
+
+    // set the internal cache state to reinit
+    m_cacheState = SCRIPT_CACHE_REINIT;
+
+    // create new thread to load scripts asynchronously
+    m_reloadThread = std::thread(&ElunaLoader::LoadScripts, this);
+    ELUNA_LOG_DEBUG("[Eluna]: Script cache reload thread started");
+}
+
 void ElunaLoader::LoadScripts()
 {
-    lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
-    const std::string& lua_path_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_PATH_EXTRA);
-    const std::string& lua_cpath_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_CPATH_EXTRA);
+    // only reload the cache if it is either in a reinit state or not loaded at all
+    if (m_cacheState != SCRIPT_CACHE_REINIT && m_cacheState != SCRIPT_CACHE_NONE)
+        return;
+
+    // set the cache state to loading
+    m_cacheState = SCRIPT_CACHE_LOADING;
 
     uint32 oldMSTime = ElunaUtil::GetCurrTime();
-    lua_scripts.clear();
-    lua_extensions.clear();
-    combined_scripts.clear();
+
+    std::string lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
+    const std::string& lua_path_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_PATH_EXTRA);
+    const std::string& lua_cpath_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_CPATH_EXTRA);
+    
 #ifndef ELUNA_WINDOWS
     if (lua_folderpath[0] == '~')
         if (const char* home = getenv("HOME"))
             lua_folderpath.replace(0, 1, home);
 #endif
+
     ELUNA_LOG_INFO("[Eluna]: Searching for scripts in `%s`", lua_folderpath.c_str());
-    lua_requirepath.clear();
-    lua_requirecpath.clear();
 
     // open a new temporary Lua state to compile bytecode in
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
+
+    // clear all cache variables
+    m_requirePath.clear();
+    m_requirecPath.clear();
 
     // read and compile all scripts
     ReadFiles(L, lua_folderpath);
@@ -111,35 +145,22 @@ void ElunaLoader::LoadScripts()
 
     // append our custom require paths and cpaths if the config variables are not empty
     if (!lua_path_extra.empty())
-        lua_requirepath += lua_path_extra;
+        m_requirePath += lua_path_extra;
 
     if (!lua_cpath_extra.empty())
-        lua_requirecpath += lua_cpath_extra;
+        m_requirecPath += lua_cpath_extra;
 
     // Erase last ;
-    if (!lua_requirepath.empty())
-        lua_requirepath.erase(lua_requirepath.end() - 1);
+    if (!m_requirePath.empty())
+        m_requirePath.erase(m_requirePath.end() - 1);
 
-    if (!lua_requirecpath.empty())
-        lua_requirecpath.erase(lua_requirecpath.end() - 1);
+    if (!m_requirecPath.empty())
+        m_requirecPath.erase(m_requirecPath.end() - 1);
 
-    ELUNA_LOG_INFO("[Eluna]: Loaded and precompiled %u scripts in %u ms", uint32(combined_scripts.size()), ElunaUtil::GetTimeDiff(oldMSTime));
-    requiredMaps.clear();
-    std::istringstream maps(sElunaConfig->GetConfig(CONFIG_ELUNA_ONLY_ON_MAPS));
-    while (maps.good())
-    {
-        std::string mapIdStr;
-        std::getline(maps, mapIdStr, ',');
-        if (maps.fail() || maps.bad())
-            break;
-        try {
-            uint32 mapId = std::stoul(mapIdStr);
-            requiredMaps.emplace_back(mapId);
-        }
-        catch (std::exception&) {
-            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '%s'", mapIdStr.c_str());
-        }
-    }
+    ELUNA_LOG_INFO("[Eluna]: Loaded and precompiled %u scripts in %u ms", uint32(m_scriptCache.size()), ElunaUtil::GetTimeDiff(oldMSTime));
+
+    // set the cache state to ready
+    m_cacheState = SCRIPT_CACHE_READY;
 }
 
 int ElunaLoader::LoadBytecodeChunk(lua_State* /*L*/, uint8* bytes, size_t len, BytecodeBuffer* buffer)
@@ -153,6 +174,8 @@ int ElunaLoader::LoadBytecodeChunk(lua_State* /*L*/, uint8* bytes, size_t len, B
 // Finds lua script files from given path (including subdirectories) and pushes them to scripts
 void ElunaLoader::ReadFiles(lua_State* L, std::string path)
 {
+    std::string lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
+
     ELUNA_LOG_DEBUG("[Eluna]: ReadFiles from path `%s`", path.c_str());
 
     fs::path someDir(path);
@@ -160,12 +183,12 @@ void ElunaLoader::ReadFiles(lua_State* L, std::string path)
 
     if (fs::exists(someDir) && fs::is_directory(someDir) && !fs::is_empty(someDir))
     {
-        lua_requirepath +=
+        m_requirePath +=
             path + "/?.lua;" +
             path + "/?.ext;" +
             path + "/?.moon;";
 
-        lua_requirecpath +=
+        m_requirecPath +=
             path + "/?.dll;" +
             path + "/?.so;";
 
@@ -284,25 +307,26 @@ void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::s
         return;
 
     if (extension)
-        lua_extensions.push_back(script);
+        m_extensions.push_back(script);
     else
-        lua_scripts.push_back(script);
+        m_scripts.push_back(script);
+
     ELUNA_LOG_DEBUG("[Eluna]: ProcessScript processed `%s` successfully", fullpath.c_str());
 }
 
 #ifdef TRINITY
 void ElunaLoader::InitializeFileWatcher()
 {
+    std::string lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
+
     lua_scriptWatcher = lua_fileWatcher.addWatch(lua_folderpath, &elunaUpdateListener, true);
     if (lua_scriptWatcher >= 0)
     {
-        ELUNA_LOG_INFO("[Eluna]: Script reloader is listening on `%s`.",
-        lua_folderpath.c_str());
+        ELUNA_LOG_INFO("[Eluna]: Script reloader is listening on `%s`.", lua_folderpath.c_str());
     }
     else
     {
-        ELUNA_LOG_INFO("[Eluna]: Failed to initialize the script reloader on `%s`.",
-        lua_folderpath.c_str());
+        ELUNA_LOG_INFO("[Eluna]: Failed to initialize the script reloader on `%s`.", lua_folderpath.c_str());
     }
 
     lua_fileWatcher.watch();
@@ -316,35 +340,32 @@ static bool ScriptPathComparator(const LuaScript& first, const LuaScript& second
 
 void ElunaLoader::CombineLists()
 {
-    lua_extensions.sort(ScriptPathComparator);
-    lua_scripts.sort(ScriptPathComparator);
-    combined_scripts.insert(combined_scripts.end(), lua_extensions.begin(), lua_extensions.end());
-    combined_scripts.insert(combined_scripts.end(), lua_scripts.begin(), lua_scripts.end());
-}
+    m_extensions.sort(ScriptPathComparator);
+    m_scripts.sort(ScriptPathComparator);
 
-bool ElunaLoader::ShouldMapLoadEluna(uint32 id)
-{
-    if (!requiredMaps.size())
-        return true;
+    m_scriptCache.clear();
+    m_scriptCache.insert(m_scriptCache.end(), m_extensions.begin(), m_extensions.end());
+    m_scriptCache.insert(m_scriptCache.end(), m_scripts.begin(), m_scripts.end());
 
-    return (std::find(requiredMaps.begin(), requiredMaps.end(), id) != requiredMaps.end());
+    m_extensions.clear();
+    m_scripts.clear();
 }
 
 void ElunaLoader::ReloadElunaForMap(int mapId)
 {
-    // If a mapid is provided but does not match any map or reserved id then only script storage is loaded
-    LoadScripts();
+    // reload the script cache asynchronously
+    ReloadScriptCache();
 
+    // If a mapid is provided but does not match any map or reserved id then only script storage is loaded
     if (mapId != RELOAD_CACHE_ONLY)
     {
         if (mapId == RELOAD_GLOBAL_STATE || mapId == RELOAD_ALL_STATES)
 #ifdef TRINITY
-            if (sWorld->GetEluna())
-                sWorld->GetEluna()->ReloadEluna();
+            if (Eluna* e = sWorld->GetEluna())
 #else
-            if (sWorld.GetEluna())
-                sWorld.GetEluna()->ReloadEluna();
+            if (Eluna* e = sWorld.GetEluna())
 #endif
+                e->ReloadEluna();
 
 #ifdef TRINITY
         sMapMgr->DoForAllMaps([&](Map* map)
@@ -353,8 +374,8 @@ void ElunaLoader::ReloadElunaForMap(int mapId)
 #endif
             {
                 if (mapId == RELOAD_ALL_STATES || mapId == static_cast<int>(map->GetId()))
-                    if (map->GetEluna())
-                        map->GetEluna()->ReloadEluna();
+                    if (Eluna* e = map->GetEluna())
+                        e->ReloadEluna();
             }
         );
     }

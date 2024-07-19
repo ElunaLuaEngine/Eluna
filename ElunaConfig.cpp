@@ -38,6 +38,24 @@ void ElunaConfig::Initialize()
     SetConfig(CONFIG_ELUNA_ONLY_ON_MAPS, "Eluna.OnlyOnMaps", "");
     SetConfig(CONFIG_ELUNA_REQUIRE_PATH_EXTRA, "Eluna.RequirePaths", "");
     SetConfig(CONFIG_ELUNA_REQUIRE_CPATH_EXTRA, "Eluna.RequireCPaths", "");
+
+    // tokenize OnlyOnMaps
+    m_requiredMaps.clear();
+    std::istringstream maps(GetConfig(CONFIG_ELUNA_ONLY_ON_MAPS));
+    while (maps.good())
+    {
+        std::string mapIdStr;
+        std::getline(maps, mapIdStr, ',');
+        if (maps.fail() || maps.bad())
+            break;
+        try {
+            uint32 mapId = std::stoul(mapIdStr);
+            m_requiredMaps.emplace_back(mapId);
+        }
+        catch (std::exception&) {
+            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '%s'", mapIdStr.c_str());
+        }
+    }
 }
 
 void ElunaConfig::SetConfig(ElunaConfigBoolValues index, char const* fieldname, bool defvalue)
@@ -68,4 +86,12 @@ bool ElunaConfig::IsElunaEnabled()
 bool ElunaConfig::IsElunaCompatibilityMode()
 {
     return GetConfig(CONFIG_ELUNA_COMPATIBILITY_MODE);
+}
+
+bool ElunaConfig::ShouldMapLoadEluna(uint32 id)
+{
+    if (!m_requiredMaps.size())
+        return true;
+
+    return (std::find(m_requiredMaps.begin(), m_requiredMaps.end(), id) != m_requiredMaps.end());
 }
