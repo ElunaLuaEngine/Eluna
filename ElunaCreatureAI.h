@@ -53,9 +53,7 @@ struct ElunaCreatureAI : CreatureAI
     void UpdateAI(uint32 diff) override
 #endif
     {
-#ifdef TRINITY
-        //Spawns are handled by Creature.cpp - in function Creature::Update() 
-#else
+#ifndef TRINITY
         if (justSpawned)
         {
             justSpawned = false;
@@ -214,13 +212,8 @@ struct ElunaCreatureAI : CreatureAI
     // Called for reaction at stopping attack at no attackers or targets
     void EnterEvadeMode(EvadeReason /*why*/) override
     {
-#ifndef CMANGOS
         if (!me->GetEluna()->EnterEvadeMode(me))
             ScriptedAI::EnterEvadeMode();
-#else
-        if (!sEluna->EnterEvadeMode(me))
-            CreatureAI::EnterEvadeMode();
-#endif
     }
 #else
     // Called for reaction at stopping attack at no attackers or targets
@@ -346,23 +339,13 @@ struct ElunaCreatureAI : CreatureAI
 #endif
     }
 
-#if defined TRINITY || AZEROTHCORE
-
-#if defined TRINITY && !defined CATA
+#if defined TRINITY
     // Called when the creature is summoned successfully by other creature
     void IsSummonedBy(WorldObject* summoner) override
     {
         if (!summoner->ToUnit() || !me->GetEluna()->OnSummoned(me, summoner->ToUnit()))
             ScriptedAI::IsSummonedBy(summoner);
     }
-#else
-    // Called when the creature is summoned successfully by other creature
-    void IsSummonedBy(Unit* summoner) override
-    {
-        if (!sEluna->OnSummoned(me, summoner))
-            ScriptedAI::IsSummonedBy(summoner);
-    }
-#endif
 
     void SummonedCreatureDies(Creature* summon, Unit* killer) override
     {
