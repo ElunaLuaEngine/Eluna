@@ -157,23 +157,6 @@ void ElunaLoader::LoadScripts()
     if (!m_requirecPath.empty())
         m_requirecPath.erase(m_requirecPath.end() - 1);
 
-    m_requiredMaps.clear();
-    std::istringstream maps(sElunaConfig->GetConfig(CONFIG_ELUNA_ONLY_ON_MAPS));
-    while (maps.good())
-    {
-        std::string mapIdStr;
-        std::getline(maps, mapIdStr, ',');
-        if (maps.fail() || maps.bad())
-            break;
-        try {
-            uint32 mapId = std::stoul(mapIdStr);
-            m_requiredMaps.emplace_back(mapId);
-        }
-        catch (std::exception&) {
-            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '%s'", mapIdStr.c_str());
-        }
-    }
-
     ELUNA_LOG_INFO("[Eluna]: Loaded and precompiled %u scripts in %u ms", uint32(m_scriptCache.size()), ElunaUtil::GetTimeDiff(oldMSTime));
 
     // set the cache state to ready
@@ -366,14 +349,6 @@ void ElunaLoader::CombineLists()
 
     m_extensions.clear();
     m_scripts.clear();
-}
-
-bool ElunaLoader::ShouldMapLoadEluna(uint32 id)
-{
-    if (!m_requiredMaps.size())
-        return true;
-
-    return (std::find(m_requiredMaps.begin(), m_requiredMaps.end(), id) != m_requiredMaps.end());
 }
 
 void ElunaLoader::ReloadElunaForMap(int mapId)

@@ -47,6 +47,7 @@ public:
 
     bool IsElunaEnabled();
     bool IsElunaCompatibilityMode();
+    bool ShouldMapLoadEluna(uint32 mapId);
 
 private:
     bool _configBoolValues[CONFIG_ELUNA_BOOL_COUNT];
@@ -54,6 +55,8 @@ private:
 
     void SetConfig(ElunaConfigBoolValues index, char const* fieldname, bool defvalue);
     void SetConfig(ElunaConfigStringValues index, char const* fieldname, std::string defvalue);
+
+    std::list<uint32> m_requiredMaps;
 };
 
 #define sElunaConfig ElunaConfig::instance()

@@ -51,7 +51,6 @@ public:
     static ElunaLoader* instance();
 
     void LoadScripts();
-    bool ShouldMapLoadEluna(uint32 mapId);
     void ReloadElunaForMap(int mapId);
 
     uint8 GetCacheState() const { return m_cacheState; }
@@ -80,7 +79,6 @@ private:
     std::string m_requirecPath;
     std::list<LuaScript> m_scripts;
     std::list<LuaScript> m_extensions;
-    std::list<uint32> m_requiredMaps;
     std::thread m_reloadThread;
 };
 
