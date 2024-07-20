@@ -1550,11 +1550,7 @@ namespace LuaUnit
     int SetNativeDisplayId(Eluna* E, Unit* unit)
     {
         uint32 model = E->CHECKVAL<uint32>(2);
-#if defined CATA
-        unit->SetDisplayId(model, true);
-#else
         unit->SetNativeDisplayId(model);
-#endif
         return 0;
     }
 

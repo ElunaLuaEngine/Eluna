@@ -72,11 +72,7 @@ namespace LuaVehicle
         Unit* passenger = E->CHECKOBJ<Unit>(2);
         int8 seatId = E->CHECKVAL<int8>(3);
 
-#if defined CATA
-        vehicle->AddVehiclePassenger(passenger, seatId);
-#else
         vehicle->AddPassenger(passenger, seatId);
-#endif
         return 0;
     }
 

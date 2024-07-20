@@ -43,12 +43,7 @@ namespace LuaWorldObject
      */
     int GetPhaseMask(Eluna* E, WorldObject* obj)
     {
-#if defined CATA
-        EventMap event;
-        E->Push(event.GetPhaseMask());
-#else
         E->Push(obj->GetPhaseMask());
-#endif
         return 1;
     }
 
@@ -61,13 +56,9 @@ namespace LuaWorldObject
     int SetPhaseMask(Eluna* E, WorldObject* obj)
     {
         uint32 phaseMask = E->CHECKVAL<uint32>(2);
-#if defined CATA
-        EventMap event;
-        event.SetPhase(phaseMask);
-#else
         bool update = E->CHECKVAL<bool>(3, true);
+
         obj->SetPhaseMask(phaseMask, update);
-#endif
         return 0;
     }
 
@@ -604,20 +595,12 @@ namespace LuaWorldObject
         WorldObject* target = E->CHECKOBJ<WorldObject>(2, false);
 
         if (target)
-#if defined CATA
-            E->Push(obj->GetAngle(target));
-#else
             E->Push(obj->GetAbsoluteAngle(target));
-#endif
         else
         {
             float x = E->CHECKVAL<float>(2);
             float y = E->CHECKVAL<float>(3);
-#if defined CATA
-            E->Push(obj->GetAngle(x, y));
-#else
             E->Push(obj->GetAbsoluteAngle(x, y));
-#endif
         }
 
         return 1;
@@ -657,11 +640,8 @@ namespace LuaWorldObject
         uint32 respawnDelay = E->CHECKVAL<uint32>(7, 30);
 
         QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
-#if defined CATA
-        E->Push(obj->SummonGameObject(entry, x, y, z, o, rot, respawnDelay));
-#else
+
         E->Push(obj->SummonGameObject(entry, Position(x, y, z, o), rot, Seconds(respawnDelay)));
-#endif
         return 1;
     }
 
@@ -732,11 +712,7 @@ namespace LuaWorldObject
                 return luaL_argerror(E->L, 7, "valid SpawnType expected");
         }
 
-#if defined CATA
-        E->Push(obj->SummonCreature(entry, x, y, z, o, type, despawnTimer));
-#else
         E->Push(obj->SummonCreature(entry, x, y, z, o, type, Milliseconds(despawnTimer)));
-#endif
         return 1;
     }
 

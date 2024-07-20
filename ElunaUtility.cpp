@@ -104,9 +104,6 @@ bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
 #if (defined TRINITY || CMANGOS || VMANGOS) && !defined CATA
                     if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))
                         return false;
-#elif defined CATA && defined TRINITY
-                    if ((i_obj_fact->IsHostileTo(target->GetFactionTemplateEntry())) != (i_hostile == 1))
-                        return false;
 #elif defined CATA && defined CMANGOS
                     if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))
                         return false;
