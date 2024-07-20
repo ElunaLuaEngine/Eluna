@@ -108,7 +108,7 @@ namespace LuaMap
     {
         float x = E->CHECKVAL<float>(2);
         float y = E->CHECKVAL<float>(3);
-#ifdef CATA
+#if defined CATA
         PhaseShift phase;
         float z = map->GetHeight(phase, x, y, MAX_HEIGHT);
 #else
@@ -181,7 +181,7 @@ namespace LuaMap
         float x = E->CHECKVAL<float>(2);
         float y = E->CHECKVAL<float>(3);
         float z = E->CHECKVAL<float>(4);
-#ifdef CATA
+#if defined CATA
         PhaseShift phase;
         E->Push(map->GetAreaId(phase, x, y, z));
 #else

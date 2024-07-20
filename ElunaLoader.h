@@ -10,7 +10,7 @@
 
 #include "LuaEngine.h"
 
-#ifdef TRINITY
+#if defined TRINITY
 #include <efsw/efsw.hpp>
 #endif
 
@@ -58,7 +58,7 @@ public:
     const std::string& GetRequirePath() const { return m_requirePath; }
     const std::string& GetRequireCPath() const { return m_requirecPath; }
 
-#ifdef TRINITY
+#if defined TRINITY
     // efsw file watcher
     void InitializeFileWatcher();
     efsw::FileWatcher lua_fileWatcher;
@@ -82,7 +82,7 @@ private:
     std::thread m_reloadThread;
 };
 
-#ifdef TRINITY
+#if defined TRINITY
 /// File watcher responsible for watching lua scripts
 class ElunaUpdateListener : public efsw::FileWatchListener
 {

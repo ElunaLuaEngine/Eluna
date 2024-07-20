@@ -8,10 +8,10 @@
 #define _ELUNA_INSTANCE_DATA_H
 
 #include "LuaEngine.h"
-#ifdef TRINITY
+#if defined TRINITY
 #include "InstanceScript.h"
 #include "Map.h"
-#elif CMANGOS
+#elif defined CMANGOS
 #include "Maps/InstanceData.h"
 #else
 #include "InstanceData.h"
@@ -63,7 +63,7 @@ private:
     std::string lastSaveData;
 
 public:
-#ifdef TRINITY
+#if defined TRINITY
     ElunaInstanceAI(Map* map) : InstanceData(map->ToInstanceMap())
     {
     }
@@ -73,7 +73,7 @@ public:
     }
 #endif
 
-#ifndef TRINITY
+#if !defined TRINITY
     void Initialize() override;
 #endif
 
@@ -82,14 +82,14 @@ public:
      *   data table to/from the core.
      */
     void Load(const char* data) override;
-#ifdef TRINITY
+#if defined TRINITY
     // Simply calls Save, since the functions are a bit different in name and data types on different cores
     std::string GetSaveData() override
     {
         return Save();
     }
     const char* Save() const;
-#elif VMANGOS
+#elif defined VMANGOS
     const char* Save() const;
 #else
     const char* Save() const override;
@@ -110,14 +110,14 @@ public:
     /*
      * These methods allow non-Lua scripts (e.g. DB, C++) to get/set instance data.
      */
-#ifndef VMANGOS
+#if !defined VMANGOS
     uint32 GetData(uint32 key) const override;
 #else
     uint32 GetData(uint32 key) const;
 #endif
     void SetData(uint32 key, uint32 value) override;
 
-#ifndef VMANGOS
+#if !defined VMANGOS
     uint64 GetData64(uint32 key) const override;
 #else
     uint64 GetData64(uint32 key) const;
@@ -148,7 +148,7 @@ public:
         instance->GetEluna()->OnPlayerEnterInstance(this, player);
     }
 
-#ifdef TRINITY
+#if defined TRINITY
     void OnGameObjectCreate(GameObject* gameobject) override
 #else
     void OnObjectCreate(GameObject* gameobject) override

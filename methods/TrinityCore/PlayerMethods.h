@@ -239,7 +239,7 @@ namespace LuaPlayer
      */
     int CanSpeak(Eluna* E, Player* player)
     {
-#ifndef CATA
+#if !defined CATA
         E->Push(player->GetSession()->CanSpeak());
 #else
         E->Push(player->CanSpeak());
@@ -378,7 +378,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#ifndef CATA
+#if !defined CATA
     /**
      * Returns 'true' if the [Player] satisfies all requirements to complete the repeatable quest entry.
      *
@@ -669,7 +669,7 @@ namespace LuaPlayer
     int IsNeverVisible(Eluna* E, Player* player)
     {
         // Possibly add a bool var here
-#ifdef CATA
+#if defined CATA
         E->Push(player->IsNeverVisible());
 #else
         E->Push(player->IsNeverVisible(true));
@@ -720,7 +720,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#ifndef CATA
+#if !defined CATA
     /**
      * Returns the normal phase of the player instead of the actual phase possibly containing GM phase
      *
@@ -1066,7 +1066,7 @@ namespace LuaPlayer
      */
     int GetGuildRank(Eluna* E, Player* player) // TODO: Move to Guild Methods
     {
-#ifdef CATA
+#if defined CATA
         E->Push(player->GetGuildRank());
 #else
         E->Push(player->GetRank());
@@ -1553,7 +1553,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#ifndef CATA
+#if !defined CATA
     /**
      * Returns the amount of mails in the [Player]s mailbox
      *
@@ -1695,7 +1695,7 @@ namespace LuaPlayer
         if (!player->GetGuildId())
             return 0;
 
-#ifdef CATA
+#if defined CATA
         player->SetGuildRank(rank);
 #else
         player->SetRank(rank);
@@ -1872,7 +1872,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#ifndef CATA
+#if !defined CATA
     /**
      * Sets the [Player]s Arena Points to the amount specified
      *
@@ -1986,7 +1986,7 @@ namespace LuaPlayer
         bool apply = E->CHECKVAL<bool>(2, true);
 
         if(apply)
-#ifdef CATA
+#if defined CATA
             player->SetByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PVP_FLAG, UNIT_BYTE2_FLAG_FFA_PVP);
         else
             player->RemoveByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PVP_FLAG, UNIT_BYTE2_FLAG_FFA_PVP);
@@ -1999,7 +1999,7 @@ namespace LuaPlayer
     }
 
 
-#ifndef CATA
+#if !defined CATA
     int SetMovement(Eluna* E, Player* player)
     {
         int32 pType = E->CHECKVAL<int32>(2);
@@ -2041,7 +2041,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#ifndef CATA
+#if !defined CATA
     /**
      * Adds or detracts from the [Player]s current Arena Points
      *
@@ -2103,12 +2103,12 @@ namespace LuaPlayer
 
         time_t muteTime = time(NULL) + muteseconds;
         player->GetSession()->m_muteTime = muteTime;
-#ifdef WOTLK
-        LoginDatabase.PExecute("UPDATE account SET mutetime = {} WHERE id = {}", muteTime, player->GetSession()->GetAccountId());
-#else
+#if defined CATA
         std::ostringstream oss;
         oss << "UPDATE account SET mutetime = " << muteTime << " WHERE id = " << player->GetSession()->GetAccountId();
         LoginDatabase.PExecute("%s", oss.str().c_str());
+#else
+        LoginDatabase.PExecute("UPDATE account SET mutetime = {} WHERE id = {}", muteTime, player->GetSession()->GetAccountId());
 #endif
         return 0;
     }
@@ -2215,7 +2215,7 @@ namespace LuaPlayer
     {
         Creature* obj = E->CHECKOBJ<Creature>(2);
 
-#ifdef CATA
+#if defined CATA
         player->GetSession()->SendTrainerList(obj, NULL);
 #else
         player->GetSession()->SendTrainerList(obj);
@@ -2464,7 +2464,7 @@ namespace LuaPlayer
      */
     int ResetTalentsCost(Eluna* E, Player* player)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(player->GetNextResetTalentsCost());
 #else
         E->Push(player->ResetTalentsCost());
@@ -2715,22 +2715,21 @@ namespace LuaPlayer
             return 0;
 
         // check item starting quest (it can work incorrectly if added without item in inventory)
-#ifndef CATA
+#if defined CATA
+        ItemTemplateContainer const* itc = sObjectMgr->GetItemTemplateStore();
+        ItemTemplateContainer::const_iterator result = std::find_if(itc->begin(), itc->end(), [quest](ItemTemplateContainer::value_type const& value)
+            {
+                return value.second.ExtendedData->StartQuest == quest->GetQuestId();
+            });
+#else
         ItemTemplateContainer const& itc = sObjectMgr->GetItemTemplateStore();
         auto itr = std::find_if(std::begin(itc), std::end(itc), [quest](ItemTemplateContainer::value_type const& value)
-        {
-            return value.second.StartQuest == quest->GetQuestId();
-        });
+            {
+                return value.second.StartQuest == quest->GetQuestId();
+            });
 
         if (itr != std::end(itc))
             return 0;
-
-#elif CATA
-        ItemTemplateContainer const* itc = sObjectMgr->GetItemTemplateStore();
-        ItemTemplateContainer::const_iterator result = std::find_if(itc->begin(), itc->end(), [quest](ItemTemplateContainer::value_type const& value)
-        {
-            return value.second.ExtendedData->StartQuest == quest->GetQuestId();
-        });
 #endif
         // ok, normal (creature/GO starting) quest
         if (player->CanAddQuest(quest, true))
@@ -3009,7 +3008,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#ifndef CATA
+#if !defined CATA
     /**
      * Advances all of the [Player]s weapon skills to the maximum amount available
      */
@@ -3082,7 +3081,7 @@ namespace LuaPlayer
         float z = E->CHECKVAL<float>(5);
         float o = E->CHECKVAL<float>(6);
 
-#ifdef CATA
+#if defined CATA
         if (player->IsInFlight())
         {
             player->GetMotionMaster()->MovementExpired();
@@ -3309,10 +3308,10 @@ namespace LuaPlayer
      */
     int KickPlayer(Eluna* /*E*/, Player* player)
     {
-#ifndef CATA
-        player->GetSession()->KickPlayer("PlayerMethods::KickPlayer Kick the player");
-#else
+#if defined CATA
         player->GetSession()->KickPlayer();
+#else
+        player->GetSession()->KickPlayer("PlayerMethods::KickPlayer Kick the player");
 #endif
         return 0;
     }
@@ -3550,7 +3549,7 @@ namespace LuaPlayer
         if (!quest)
             return 0;
 
-#ifdef CATA
+#if defined CATA
         player->PlayerTalkClass->SendQuestGiverQuestDetails(quest, player->GET_GUID(), activateAccept, true);
 #else
         player->PlayerTalkClass->SendQuestGiverQuestDetails(quest, player->GET_GUID(), activateAccept);
@@ -3801,7 +3800,7 @@ namespace LuaPlayer
         { "GetGuild", &LuaPlayer::GetGuild },
         { "GetAccountId", &LuaPlayer::GetAccountId },
         { "GetAccountName", &LuaPlayer::GetAccountName },
-#ifndef CATA
+#if !defined CATA
         { "GetArenaPoints", &LuaPlayer::GetArenaPoints },
         { "GetHonorPoints", &LuaPlayer::GetHonorPoints },
 #endif
@@ -3818,7 +3817,7 @@ namespace LuaPlayer
         { "GetQuestLevel", &LuaPlayer::GetQuestLevel },
         { "GetChatTag", &LuaPlayer::GetChatTag },
         { "GetRestBonus", &LuaPlayer::GetRestBonus },
-#ifndef CATA
+#if !defined CATA
         { "GetPhaseMaskForSpawn", &LuaPlayer::GetPhaseMaskForSpawn },
 #endif
         { "GetReqKillOrCastCurrentCount", &LuaPlayer::GetReqKillOrCastCurrentCount },
@@ -3860,7 +3859,7 @@ namespace LuaPlayer
         { "GetCorpse", &LuaPlayer::GetCorpse },
         { "GetGossipTextId", &LuaPlayer::GetGossipTextId },
         { "GetQuestRewardStatus", &LuaPlayer::GetQuestRewardStatus },
-#ifndef CATA
+#if !defined CATA
         { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
         { "GetMailCount", &LuaPlayer::GetMailCount },
         { "GetXP", &LuaPlayer::GetXP },
@@ -3868,7 +3867,7 @@ namespace LuaPlayer
 #endif
 
         // Setters
-#ifndef CATA
+#if !defined CATA
         { "AdvanceSkillsToMax", &LuaPlayer::AdvanceSkillsToMax },
 #endif
         { "AdvanceSkill", &LuaPlayer::AdvanceSkill },
@@ -3878,7 +3877,7 @@ namespace LuaPlayer
         { "SetKnownTitle", &LuaPlayer::SetKnownTitle },
         { "UnsetKnownTitle", &LuaPlayer::UnsetKnownTitle },
         { "SetBindPoint", &LuaPlayer::SetBindPoint },
-#ifndef CATA
+#if !defined CATA
         { "SetArenaPoints", &LuaPlayer::SetArenaPoints },
         { "SetHonorPoints", &LuaPlayer::SetHonorPoints },
 #endif
@@ -3894,7 +3893,7 @@ namespace LuaPlayer
         { "SetReputation", &LuaPlayer::SetReputation },
         { "SetFreeTalentPoints", &LuaPlayer::SetFreeTalentPoints },
         { "SetGuildRank", &LuaPlayer::SetGuildRank },
-#ifndef CATA
+#if !defined CATA
         { "SetMovement", &LuaPlayer::SetMovement },
 #endif
         { "SetSkill", &LuaPlayer::SetSkill },
@@ -3967,7 +3966,7 @@ namespace LuaPlayer
         { "CanFly", &LuaPlayer::CanFly },
         { "IsMoving", &LuaPlayer::IsMoving },
         { "IsFlying", &LuaPlayer::IsFlying },
-#ifndef CATA
+#if !defined CATA
         { "CanCompleteRepeatableQuest", &LuaPlayer::CanCompleteRepeatableQuest },
         { "CanRewardQuest", &LuaPlayer::CanRewardQuest },
 #endif
@@ -4031,7 +4030,7 @@ namespace LuaPlayer
         { "DurabilityPointLossForEquipSlot", &LuaPlayer::DurabilityPointLossForEquipSlot },
         { "DurabilityRepairAll", &LuaPlayer::DurabilityRepairAll },
         { "DurabilityRepair", &LuaPlayer::DurabilityRepair },
-#ifndef CATA
+#if !defined CATA
         { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
         { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
 #endif
@@ -4084,7 +4083,7 @@ namespace LuaPlayer
         { "ClearHonorInfo", nullptr, METHOD_REG_NONE }, // classic only
         { "GainSpellComboPoints", nullptr, METHOD_REG_NONE }, // not implemented
 
-#ifdef CATA //Not implmented in TCPP
+#if defined CATA //Not implmented in TCPP
         { "GetArenaPoints", nullptr, METHOD_REG_NONE },
         { "GetHonorPoints", nullptr, METHOD_REG_NONE },
         { "GetPhaseMaskForSpawn", nullptr, METHOD_REG_NONE },

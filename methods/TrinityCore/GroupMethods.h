@@ -256,7 +256,7 @@ namespace LuaGroup
         return 1;
     }
 
-#ifndef CATA
+#if !defined CATA
     /**
      * Returns the [Group] members' flags
      *
@@ -424,7 +424,7 @@ namespace LuaGroup
         return 0;
     }
 
-#ifndef CATA
+#if !defined CATA
     /**
      * Sets or removes a flag for a [Group] member
      *
@@ -463,7 +463,7 @@ namespace LuaGroup
         { "GetMemberGroup", &LuaGroup::GetMemberGroup },
         { "GetMemberGUID", &LuaGroup::GetMemberGUID },
         { "GetMembersCount", &LuaGroup::GetMembersCount },
-#ifndef CATA
+#if !defined CATA
         { "GetMemberFlags", &LuaGroup::GetMemberFlags },
 #endif
 
@@ -471,7 +471,7 @@ namespace LuaGroup
         { "SetLeader", &LuaGroup::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
         { "SetMembersGroup", &LuaGroup::SetMembersGroup, METHOD_REG_WORLD }, // World state method only in multistate
         { "SetTargetIcon", &LuaGroup::SetTargetIcon, METHOD_REG_WORLD }, // World state method only in multistate
-#ifndef CATA
+#if !defined CATA
         { "SetMemberFlag", &LuaGroup::SetMemberFlag, METHOD_REG_WORLD }, // World state method only in multistate
 #endif
 
@@ -495,7 +495,7 @@ namespace LuaGroup
         { "ConvertToLFG", &LuaGroup::ConvertToLFG, METHOD_REG_WORLD }, // World state method only in multistate
         { "ConvertToRaid", &LuaGroup::ConvertToRaid, METHOD_REG_WORLD }, // World state method only in multistate
 
-#ifdef CATA //Not implemented in TCPP
+#if defined CATA //Not implemented in TCPP
         { "GetMemberFlags", nullptr, METHOD_REG_NONE },
         { "SetMemberFlag", nullptr, METHOD_REG_NONE },
 #endif

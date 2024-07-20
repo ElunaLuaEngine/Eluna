@@ -8,7 +8,7 @@
 #define _ELUNA_CREATURE_AI_H
 
 #include "LuaEngine.h"
-#ifdef CMANGOS
+#if defined CMANGOS
 #include "AI/BaseAI/CreatureAI.h"
 #endif
 
@@ -32,7 +32,7 @@ struct ElunaCreatureAI : NativeScriptedAI
     bool justSpawned;
     // used to delay movementinform hook (WP hook)
     std::vector< std::pair<uint32, uint32> > movepoints;
-#ifndef TRINITY
+#if !defined TRINITY
 #define me  m_creature
 #endif
     ElunaCreatureAI(Creature* creature) : NativeScriptedAI(creature), justSpawned(true)
@@ -41,13 +41,13 @@ struct ElunaCreatureAI : NativeScriptedAI
     ~ElunaCreatureAI() { }
 
     //Called at World update tick
-#ifndef TRINITY
+#if !defined TRINITY
     void UpdateAI(const uint32 diff) override
 #else
     void UpdateAI(uint32 diff) override
 #endif
     {
-#ifndef TRINITY
+#if !defined TRINITY
         if (justSpawned)
         {
             justSpawned = false;
@@ -67,7 +67,7 @@ struct ElunaCreatureAI : NativeScriptedAI
 
         if (!me->GetEluna()->UpdateAI(me, diff))
         {
-#ifdef MANGOS
+#if defined MANGOS
             if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE))
 #else
             if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
@@ -76,7 +76,7 @@ struct ElunaCreatureAI : NativeScriptedAI
         }
     }
 
-#ifdef TRINITY
+#if defined TRINITY
     // Called for reaction when initially engaged - this will always happen _after_ JustEnteredCombat
     // Called at creature aggro either by MoveInLOS or Attack Start
     void JustEngagedWith(Unit* target) override
@@ -154,7 +154,7 @@ struct ElunaCreatureAI : NativeScriptedAI
             NativeScriptedAI::AttackStart(target);
     }
 
-#ifdef TRINITY
+#if defined TRINITY
     // Called for reaction at stopping attack at no attackers or targets
     void EnterEvadeMode(EvadeReason /*why*/) override
 #else
@@ -165,7 +165,7 @@ struct ElunaCreatureAI : NativeScriptedAI
             NativeScriptedAI::EnterEvadeMode();
     }
 
-#ifdef TRINITY
+#if defined TRINITY
     // Called when creature appears in the world (spawn, respawn, grid load etc...)
     void JustAppeared() override
     {
@@ -202,7 +202,7 @@ struct ElunaCreatureAI : NativeScriptedAI
             NativeScriptedAI::CorpseRemoved(respawnDelay);
     }
 
-#if !defined(TRINITY) && !defined(VMANGOS)
+#if !defined TRINITY && !defined VMANGOS
     // Enables use of MoveInLineOfSight
     bool IsVisible(Unit* who) const override
     {
@@ -217,9 +217,9 @@ struct ElunaCreatureAI : NativeScriptedAI
     }
 
     // Called when hit by a spell
-#ifdef TRINITY
+#if defined TRINITY
     void SpellHit(WorldObject* caster, SpellInfo const* spell) override
-#elif VMANGOS
+#elif defined VMANGOS
     void SpellHit(Unit* caster, SpellInfo const* spell)
 #else
     void SpellHit(Unit* caster, SpellInfo const* spell) override
@@ -230,7 +230,7 @@ struct ElunaCreatureAI : NativeScriptedAI
     }
 
     // Called when spell hits a target
-#ifdef TRINITY
+#if defined TRINITY
     void SpellHitTarget(WorldObject* target, SpellInfo const* spell) override
 #else
     void SpellHitTarget(Unit* target, SpellInfo const* spell) override
@@ -240,7 +240,7 @@ struct ElunaCreatureAI : NativeScriptedAI
             NativeScriptedAI::SpellHitTarget(target, spell);
     }
 
-#ifdef TRINITY
+#if defined TRINITY
     // Called when the creature is summoned successfully by other creature
     void IsSummonedBy(WorldObject* summoner) override
     {

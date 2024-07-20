@@ -457,7 +457,7 @@ namespace LuaGlobalFunctions
         if (!temp)
             return luaL_argerror(E->L, 1, "valid ItemEntry expected");
 
-#ifdef CATA
+#if defined CATA
         std::string name = temp->ExtendedData->Display->Str[locale];
 #else
         std::string name = temp->Name1;
@@ -466,7 +466,7 @@ namespace LuaGlobalFunctions
             ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(locale), name);
 
         std::ostringstream oss;
-#ifdef CATA
+#if defined CATA
         oss << "|c" << std::hex << ItemQualityColors[temp->ExtendedData->Quality] << std::dec <<
 #else
         oss << "|c" << std::hex << ItemQualityColors[temp->Quality] << std::dec <<
@@ -1304,7 +1304,7 @@ namespace LuaGlobalFunctions
     {
         const char* command = E->CHECKVAL<const char*>(1);
         // ignores output of the command
-#ifdef CATA
+#if defined CATA
         eWorld->QueueCliCommand(new CliCommandHolder(nullptr, command, nullptr, [](void*, bool) {}));
 #else
         eWorld->QueueCliCommand(new CliCommandHolder(nullptr, command, [](void*, std::string_view) {}, [](void*, bool) {}));
@@ -1748,7 +1748,7 @@ namespace LuaGlobalFunctions
             if (save)
             {
                 Creature* creature = new Creature();
-#ifdef CATA
+#if defined CATA
                 if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, entry, pos))
 #else
                 if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, pos))
@@ -1759,7 +1759,7 @@ namespace LuaGlobalFunctions
                     return 1;
                 }
 
-#ifdef CATA
+#if defined CATA
                 creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()));
 #else
                 creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
@@ -1785,7 +1785,7 @@ namespace LuaGlobalFunctions
             }
             else
             {
-#ifdef CATA
+#if defined CATA
                 SummonCreatureExtraArgs extraArgs;
                 extraArgs.SummonDuration = durorresptime;
                 TempSummon* creature = map->SummonCreature(entry, pos, extraArgs);
@@ -1827,7 +1827,7 @@ namespace LuaGlobalFunctions
             GameObject* object = new GameObject;
             uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
             QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
-#ifdef CATA
+#if defined CATA
             if (!object->Create(guidLow, objectInfo->entry, map, Position(x, y, z, o), rot, 0, GO_STATE_READY))
 #else
             if (!object->Create(guidLow, objectInfo->entry, map, phase, Position(x, y, z, o), rot, 0, GO_STATE_READY))
@@ -1844,7 +1844,7 @@ namespace LuaGlobalFunctions
             if (save)
             {
                 // fill the gameobject data and save to the db
-#ifdef CATA
+#if defined CATA
                 object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()));
 #else
                 object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
@@ -1910,7 +1910,7 @@ namespace LuaGlobalFunctions
         uint32 incrtime = E->CHECKVAL<uint32>(4);
         uint32 extendedcost = E->CHECKVAL<uint32>(5);
 
-#ifdef CATA
+#if defined CATA
         VendorItem vItem;
         vItem.item = item;
         vItem.maxcount = maxcount;
@@ -1942,7 +1942,7 @@ namespace LuaGlobalFunctions
         if (!eObjectMgr->GetCreatureTemplate(entry))
             return luaL_argerror(E->L, 1, "valid CreatureEntry expected");
 
-#ifdef CATA
+#if defined CATA
         eObjectMgr->RemoveVendorItem(entry, item, 1);
 #else
         eObjectMgr->RemoveVendorItem(entry, item);
@@ -1966,7 +1966,7 @@ namespace LuaGlobalFunctions
 
         auto const itemlist = items->m_items;
         for (auto itr = itemlist.begin(); itr != itemlist.end(); ++itr)
-#ifdef CATA
+#if defined CATA
             eObjectMgr->RemoveVendorItem(entry, itr->item, 1);
 #else
             eObjectMgr->RemoveVendorItem(entry, itr->item);
@@ -1984,7 +1984,7 @@ namespace LuaGlobalFunctions
     {
         Player* player = E->CHECKOBJ<Player>(1);
 
-#ifndef CATA
+#if !defined CATA
         player->GetSession()->KickPlayer("GlobalMethods::Kick Kick the player");
 #else
         player->GetSession()->KickPlayer();
@@ -2136,7 +2136,7 @@ namespace LuaGlobalFunctions
                 luaL_error(E->L, "Item entry %d does not exist", entry);
                 continue;
             }
-#ifdef CATA
+#if defined CATA
             if (amount < 1 || (item_proto->ExtendedData->MaxCount > 0 && amount > uint32(item_proto->ExtendedData->MaxCount)))
 #else
             if (amount < 1 || (item_proto->MaxCount > 0 && amount > uint32(item_proto->MaxCount)))

@@ -13,7 +13,7 @@
 #include <sstream>
 #include <thread>
 
-#ifdef USING_BOOST
+#if defined USING_BOOST
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 #else
@@ -21,11 +21,11 @@ namespace fs = boost::filesystem;
 namespace fs = std::filesystem;
 #endif
 
-#ifdef ELUNA_WINDOWS
+#if defined ELUNA_WINDOWS
 #include <Windows.h>
 #endif
 
-#ifdef TRINITY
+#if defined TRINITY
 #include "MapManager.h"
 #endif
 
@@ -35,7 +35,7 @@ extern "C" {
 #include <lauxlib.h>
 }
 
-#ifdef TRINITY
+#if defined TRINITY
 void ElunaUpdateListener::handleFileAction(efsw::WatchID /*watchid*/, std::string const& dir, std::string const& filename, efsw::Action /*action*/, std::string /*oldFilename*/)
 {
     auto const path = fs::absolute(filename, dir);
@@ -54,7 +54,7 @@ void ElunaUpdateListener::handleFileAction(efsw::WatchID /*watchid*/, std::strin
 
 ElunaLoader::ElunaLoader() : m_cacheState(SCRIPT_CACHE_NONE)
 {
-#ifdef TRINITY
+#if defined TRINITY
     lua_scriptWatcher = -1;
 #endif
 }
@@ -71,7 +71,7 @@ ElunaLoader::~ElunaLoader()
     if (m_reloadThread.joinable())
         m_reloadThread.join();
 
-#ifdef TRINITY
+#if defined TRINITY
     if (lua_scriptWatcher >= 0)
     {
         lua_fileWatcher.removeWatch(lua_scriptWatcher);
@@ -116,7 +116,7 @@ void ElunaLoader::LoadScripts()
     const std::string& lua_path_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_PATH_EXTRA);
     const std::string& lua_cpath_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_CPATH_EXTRA);
     
-#ifndef ELUNA_WINDOWS
+#if !defined ELUNA_WINDOWS
     if (lua_folderpath[0] == '~')
         if (const char* home = getenv("HOME"))
             lua_folderpath.replace(0, 1, home);
@@ -194,7 +194,7 @@ void ElunaLoader::ReadFiles(lua_State* L, std::string path)
         {
             std::string fullpath = dir_iter->path().generic_string();
             // Check if file is hidden
-#ifdef ELUNA_WINDOWS
+#if defined ELUNA_WINDOWS
             DWORD dwAttrib = GetFileAttributes(fullpath.c_str());
             if (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_HIDDEN))
                 continue;
@@ -312,7 +312,7 @@ void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::s
     ELUNA_LOG_DEBUG("[Eluna]: ProcessScript processed `%s` successfully", fullpath.c_str());
 }
 
-#ifdef TRINITY
+#if defined TRINITY
 void ElunaLoader::InitializeFileWatcher()
 {
     std::string lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
@@ -358,14 +358,14 @@ void ElunaLoader::ReloadElunaForMap(int mapId)
     if (mapId != RELOAD_CACHE_ONLY)
     {
         if (mapId == RELOAD_GLOBAL_STATE || mapId == RELOAD_ALL_STATES)
-#ifdef TRINITY
+#if defined TRINITY
             if (Eluna* e = sWorld->GetEluna())
 #else
             if (Eluna* e = sWorld.GetEluna())
 #endif
                 e->ReloadEluna();
 
-#ifdef TRINITY
+#if defined TRINITY
         sMapMgr->DoForAllMaps([&](Map* map)
 #else
         sMapMgr.DoForAllMaps([&](Map* map)

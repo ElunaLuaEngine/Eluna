@@ -101,7 +101,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
         if (lua_isuserdata(L, r + 1))
             if (WorldPacket* data = CHECKOBJ<WorldPacket>(r + 1, false))
             {
-#if defined(TRINITY) || defined(VMANGOS)
+#if defined TRINITY || defined VMANGOS
                 packet = std::move(*data);
 #else
                 packet = *data;
@@ -131,7 +131,7 @@ void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result
         if (lua_isuserdata(L, r + 1))
             if (WorldPacket* data = CHECKOBJ<WorldPacket>(r + 1, false))
             {
-#if defined(TRINITY) || defined(VMANGOS)
+#if defined TRINITY || defined VMANGOS
                 packet = std::move(*data);
 #else
                 packet = *data;

@@ -185,7 +185,7 @@ namespace LuaItem
         return 1;
     }
 
-#if defined(WOTLK)
+#if !defined CATA
     /**
      * Returns 'true' if the [Item] is a weapon vellum, 'false' otherwise
      *
@@ -220,7 +220,7 @@ namespace LuaItem
         return 1;
     }
 
-#ifndef CATA
+#if !defined CATA
     /**
      * Returns 'true' if the refund period has expired for this [Item], 'false' otherwise
      *
@@ -261,7 +261,7 @@ namespace LuaItem
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
         const ItemTemplate* temp = item->GetTemplate();
-#ifdef CATA
+#if defined CATA
         std::string name = temp->ExtendedData->Display1->Str[locale];
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(temp->BasicData->ID))
 #else
@@ -272,10 +272,10 @@ namespace LuaItem
 
         if (int32 itemRandPropId = item->GetItemRandomPropertyId())
         {
-#ifndef CATA
-            std::array<char const*, 16> const* suffix = NULL;
-#else
+#if defined CATA
             char* const* suffix = NULL;
+#else
+            std::array<char const*, 16> const* suffix = NULL;
 #endif
             if (itemRandPropId < 0)
             {
@@ -292,16 +292,16 @@ namespace LuaItem
             if (suffix)
             {
                 name += ' ';
-#ifndef CATA
-                name += (*suffix)[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
-#else
+#if defined CATA
                 name += (*suffix)[(name != temp->ExtendedData->Display->Str[locale]) ? locale : uint8(DEFAULT_LOCALE)];
+#else
+                name += (*suffix)[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
 #endif
             }
         }
 
         std::ostringstream oss;
-#ifdef CATA
+#if defined CATA
         oss << "|c" << std::hex << ItemQualityColors[temp->ExtendedData->Quality] << std::dec <<
             "|Hitem:" << temp->BasicData->ID << ":" <<
 #else
@@ -415,7 +415,7 @@ namespace LuaItem
         if (index >= MAX_ITEM_PROTO_SPELLS)
             return luaL_argerror(E->L, 2, "valid SpellIndex expected");
 
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->ExtendedData->SpellID[index]);
 #else
         E->Push(item->GetTemplate()->Spells[index].SpellId);
@@ -435,7 +435,7 @@ namespace LuaItem
         if (index >= MAX_ITEM_PROTO_SPELLS)
             return luaL_argerror(E->L, 2, "valid SpellIndex expected");
 
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->ExtendedData->SpellTrigger[index]);
 #else
         E->Push(item->GetTemplate()->Spells[index].SpellTrigger);
@@ -450,7 +450,7 @@ namespace LuaItem
      */
     int GetClass(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetClass());
 #else
         E->Push(item->GetTemplate()->Class);
@@ -465,7 +465,7 @@ namespace LuaItem
      */
     int GetSubClass(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetSubClass());
 #else
         E->Push(item->GetTemplate()->SubClass);
@@ -491,7 +491,7 @@ namespace LuaItem
      */
     int GetName(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetDefaultLocaleName());
 #else
         E->Push(item->GetTemplate()->Name1);
@@ -506,7 +506,7 @@ namespace LuaItem
      */
     int GetDisplayId(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetDisplayID());
 #else
         E->Push(item->GetTemplate()->DisplayInfoID);
@@ -521,7 +521,7 @@ namespace LuaItem
      */
     int GetQuality(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetQuality());
 #else
         E->Push(item->GetTemplate()->Quality);
@@ -569,7 +569,7 @@ namespace LuaItem
      */
     int GetBuyCount(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetBuyCount());
 #else
         E->Push(item->GetTemplate()->BuyCount);
@@ -584,7 +584,7 @@ namespace LuaItem
      */
     int GetBuyPrice(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetBuyPrice());
 #else
         E->Push(item->GetTemplate()->BuyPrice);
@@ -599,7 +599,7 @@ namespace LuaItem
      */
     int GetSellPrice(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetSellPrice());
 #else
         E->Push(item->GetTemplate()->SellPrice);
@@ -614,7 +614,7 @@ namespace LuaItem
      */
     int GetInventoryType(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetInventoryType());
 #else
         E->Push(item->GetTemplate()->InventoryType);
@@ -629,7 +629,7 @@ namespace LuaItem
      */
     int GetAllowableClass(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetAllowableClass());
 #else
         E->Push(item->GetTemplate()->AllowableClass);
@@ -644,7 +644,7 @@ namespace LuaItem
      */
     int GetAllowableRace(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetAllowableRace());
 #else
         E->Push(item->GetTemplate()->AllowableRace);
@@ -659,7 +659,7 @@ namespace LuaItem
      */
     int GetItemLevel(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetBaseItemLevel());
 #else
         E->Push(item->GetTemplate()->ItemLevel);
@@ -674,7 +674,7 @@ namespace LuaItem
      */
     int GetRequiredLevel(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetRequiredLevel());
 #else
         E->Push(item->GetTemplate()->RequiredLevel);
@@ -702,7 +702,7 @@ namespace LuaItem
      */
     int GetRandomProperty(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetRandomProperty());
 #else
         E->Push(item->GetTemplate()->RandomProperty);
@@ -717,7 +717,7 @@ namespace LuaItem
      */
     int GetRandomSuffix(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetRandomSuffix());
 #else
         E->Push(item->GetTemplate()->RandomSuffix);
@@ -732,7 +732,7 @@ namespace LuaItem
      */
     int GetItemSet(Eluna* E, Item* item)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(item->GetTemplate()->GetItemSet());
 #else
         E->Push(item->GetTemplate()->ItemSet);
@@ -900,7 +900,7 @@ namespace LuaItem
         { "GetAllowableRace", &LuaItem::GetAllowableRace },
         { "GetItemLevel", &LuaItem::GetItemLevel },
         { "GetRequiredLevel", &LuaItem::GetRequiredLevel },
-#ifndef CATA
+#if !defined CATA
         { "GetStatsCount", &LuaItem::GetStatsCount },
 #endif
         { "GetRandomProperty", &LuaItem::GetRandomProperty },
@@ -929,7 +929,7 @@ namespace LuaItem
         { "IsEquipped", &LuaItem::IsEquipped },
         { "HasQuest", &LuaItem::HasQuest },
         { "IsPotion", &LuaItem::IsPotion },
-#ifndef CATA
+#if !defined CATA
         { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
         { "IsArmorVellum", &LuaItem::IsArmorVellum },
         { "IsRefundExpired", &LuaItem::IsRefundExpired },
@@ -941,7 +941,7 @@ namespace LuaItem
         // Other
         { "SaveToDB", &LuaItem::SaveToDB },
 
-#ifdef CATA //Not implemented in TCPP
+#if defined CATA //Not implemented in TCPP
         { "GetStatsCount", nullptr, METHOD_REG_NONE },
         { "IsWeaponVellum", nullptr, METHOD_REG_NONE },
         { "IsArmorVellum", nullptr, METHOD_REG_NONE },

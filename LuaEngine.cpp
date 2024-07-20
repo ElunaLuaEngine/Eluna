@@ -309,7 +309,7 @@ void Eluna::RunScripts()
     OnLuaStateOpen();
 }
 
-#ifndef TRACKABLE_PTR_NAMESPACE
+#if !defined TRACKABLE_PTR_NAMESPACE
 void Eluna::InvalidateObjects()
 {
     ++callstackid;
@@ -971,7 +971,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     std::ostringstream oss;
     oss << "regtype " << static_cast<uint32>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " <<
-#ifdef TRINITY
+#if defined TRINITY
         guid.ToHexString()
 #else
         guid.GetRawValue()
@@ -984,13 +984,13 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
 void Eluna::UpdateEluna(uint32 diff)
 {
     if (reload && sElunaLoader->GetCacheState() == SCRIPT_CACHE_READY)
-#ifdef TRINITY
+#if defined TRINITY
         if(!GetQueryProcessor().HasPendingCallbacks())
 #endif
             _ReloadEluna();
 
     eventMgr->globalProcessor->Update(diff);
-#ifdef TRINITY
+#if defined TRINITY
     GetQueryProcessor().ProcessReadyCallbacks();
 #endif
 }
@@ -1005,7 +1005,7 @@ void Eluna::CleanUpStack(int number_of_arguments)
     lua_pop(L, number_of_arguments + 1); // Add 1 because the caller doesn't know about `event_id`.
     // Stack: (empty)
 
-#ifndef TRACKABLE_PTR_NAMESPACE
+#if !defined TRACKABLE_PTR_NAMESPACE
     if (event_level == 0)
         InvalidateObjects();
 #endif

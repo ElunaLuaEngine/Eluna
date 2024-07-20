@@ -16,13 +16,13 @@ extern "C"
 #include "LuaEngine.h"
 #include "ElunaUtility.h"
 #include "ElunaCompat.h"
-#ifndef CMANGOS
+#if !defined CMANGOS
 #include "SharedDefines.h"
 #else
 #include "Globals/SharedDefines.h"
 #endif
 
-#ifdef TRINITY
+#if defined TRINITY
 #include "UniqueTrackablePtr.h"
 #endif
 
@@ -115,7 +115,7 @@ public:
     virtual void* GetObjIfValid() const = 0;
     // Returns pointer to the wrapped object's type name
     const char* GetTypeName() const { return type_name; }
-#ifndef TRACKABLE_PTR_NAMESPACE
+#if !defined TRACKABLE_PTR_NAMESPACE
     // Invalidates the pointer if it should be invalidated
     virtual void Invalidate() = 0;
 #endif
@@ -125,7 +125,7 @@ protected:
     const char* type_name;
 };
 
-#ifdef TRACKABLE_PTR_NAMESPACE
+#if defined TRACKABLE_PTR_NAMESPACE
 template <typename T>
 struct ElunaConstrainedObjectRef
 {
@@ -156,7 +156,7 @@ template <typename T>
 class ElunaObjectImpl : public ElunaObject
 {
 public:
-#ifdef TRACKABLE_PTR_NAMESPACE
+#if defined TRACKABLE_PTR_NAMESPACE
     ElunaObjectImpl(Eluna* E, T const* obj, char const* tname) : ElunaObject(E, tname), _obj(GetWeakPtrFor(obj))
     {
     }
@@ -186,7 +186,7 @@ public:
 #endif
 
 private:
-#ifdef TRACKABLE_PTR_NAMESPACE
+#if defined TRACKABLE_PTR_NAMESPACE
     ElunaConstrainedObjectRef<T> _obj;
 #else
     void* _obj;
@@ -204,7 +204,7 @@ public:
 
     void* GetObjIfValid() const override { return const_cast<T*>(&_obj); }
 
-#ifndef TRACKABLE_PTR_NAMESPACE
+#if !defined TRACKABLE_PTR_NAMESPACE
     void Invalidate() override { }
 #endif
 

@@ -11,7 +11,7 @@
 #include "ElunaUtility.h"
 #include "Hooks.h"
 
-#ifndef CMANGOS
+#if !defined CMANGOS
 #include "DBCEnums.h"
 #include "Group.h"
 #include "Item.h"
@@ -29,8 +29,8 @@
 #include "World/World.h"
 #endif
 
-#ifndef TRINITY
-#ifndef CMANGOS
+#if !defined TRINITY
+#if !defined CMANGOS
 #include "Player.h"
 #else
 #include "Entities/Player.h"
@@ -67,7 +67,7 @@ class WorldPacket;
 struct AreaTriggerEntry;
 struct AuctionEntry;
 
-#ifdef TRINITY
+#if defined TRINITY
 class Battleground;
 class GameObjectAI;
 class InstanceScript;
@@ -85,7 +85,7 @@ typedef ItemPrototype ItemTemplate;
 typedef SpellEffectIndex SpellEffIndex;
 typedef SpellEntry SpellInfo;
 
-#ifdef CMANGOS
+#if defined CMANGOS
 class TemporarySpawn;
 typedef TemporarySpawn TempSummon;
 #else
@@ -93,11 +93,11 @@ class TemporarySummon;
 typedef TemporarySummon TempSummon;
 #endif
 
-#ifdef CLASSIC
+#if defined CLASSIC
 typedef int Difficulty;
 #endif
 
-#if !defined(CLASSIC) && !defined(TBC)
+#if !defined CLASSIC && !defined TBC
 class VehicleInfo;
 typedef VehicleInfo Vehicle;
 #endif
@@ -133,7 +133,7 @@ enum MethodRegisterState
 
 #define ELUNA_STATE_PTR "Eluna State Ptr"
 
-#ifdef TRINITY
+#if defined TRINITY
 #define ELUNA_GAME_API TC_GAME_API
 #define TRACKABLE_PTR_NAMESPACE ::Trinity::
 #else
@@ -154,7 +154,7 @@ private:
     // Indicates that the lua state should be reloaded
     bool reload = false;
 
-#ifndef TRACKABLE_PTR_NAMESPACE
+#if !defined TRACKABLE_PTR_NAMESPACE
     // A counter for lua event stacks that occur (see event_level).
     // This is used to determine whether an object belongs to the current call stack or not.
     // 0 is reserved for always belonging to the call stack
@@ -187,7 +187,7 @@ private:
     void CloseLua();
     void DestroyBindStores();
     void CreateBindStores();
-#ifndef TRACKABLE_PTR_NAMESPACE
+#if !defined TRACKABLE_PTR_NAMESPACE
     void InvalidateObjects();
 #endif
 
@@ -242,7 +242,7 @@ public:
     lua_State* L;
     EventMgr* eventMgr;
 
-#ifdef TRINITY
+#if defined TRINITY
     QueryCallbackProcessor queryProcessor;
     QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 #endif
@@ -334,7 +334,7 @@ public:
 
     void RunScripts();
     bool HasLuaState() const { return L != NULL; }
-#ifndef TRACKABLE_PTR_NAMESPACE
+#if !defined TRACKABLE_PTR_NAMESPACE
     uint64 GetCallstackId() const { return callstackid; }
 #endif
     int Register(uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
@@ -461,7 +461,7 @@ public:
     bool OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest, uint32 opt);
     void GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject);
-#if !defined(CLASSIC) && !defined(TBC)
+#if !defined CLASSIC && !defined TBC
     void OnDestroyed(GameObject* pGameObject, WorldObject* attacker);
     void OnDamaged(GameObject* pGameObject, WorldObject* attacker);
 #endif
@@ -489,7 +489,7 @@ public:
     void OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints);
     void OnTalentsReset(Player* pPlayer, bool noCost);
     void OnMoneyChanged(Player* pPlayer, int32& amount);
-#ifdef CATA
+#if defined CATA
     void OnMoneyChanged(Player* pPlayer, int64& amount);
 #endif
     void OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim);
@@ -517,7 +517,7 @@ public:
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
     void OnAchievementComplete(Player* pPlayer, uint32 achievementId);
 
-#if !defined(CLASSIC) && !defined(TBC)
+#if !defined CLASSIC && !defined TBC
     /* Vehicle */
     void OnInstall(Vehicle* vehicle);
     void OnUninstall(Vehicle* vehicle);
@@ -546,11 +546,11 @@ public:
     void OnCreate(Guild* guild, Player* leader, const std::string& name);
     void OnDisband(Guild* guild);
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair);
-#ifdef CATA
+#if defined CATA
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair);
 #endif
     void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount);
-#ifdef CATA
+#if defined CATA
     void OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount);
 #endif
     void OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId, bool isDestBank, uint8 destContainer, uint8 destSlotId);

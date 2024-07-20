@@ -82,7 +82,7 @@ namespace LuaBattleGround
      */
     int GetEndTime(Eluna* E, BattleGround* bg)
     {
-#ifdef CATA
+#if defined CATA
         E->Push(bg->GetRemainingTime());
 #else
         E->Push(bg->GetEndTime());

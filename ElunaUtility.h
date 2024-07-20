@@ -9,7 +9,7 @@
 
 #include "Common.h"
 
-#ifndef CMANGOS
+#if !defined CMANGOS
 #include "SharedDefines.h"
 #include "ObjectGuid.h"
 #else
@@ -17,10 +17,10 @@
 #include "Entities/ObjectGuid.h"
 #endif
 
-#ifdef TRINITY
+#if defined TRINITY
 #include "QueryResult.h"
 #include "Log.h"
-#elif VMANGOS
+#elif defined VMANGOS
 #include "Database/QueryResult.h"
 #include "Log.h"
 #else
@@ -33,15 +33,15 @@
 #include <mutex>
 #include <memory>
 
-#if !defined(MANGOS) && !defined(VMANGOS)
+#if !defined MANGOS && !defined VMANGOS
 #define USING_BOOST
 #endif
 
-#if defined(TRINITY_PLATFORM) && defined(TRINITY_PLATFORM_WINDOWS)
+#if defined TRINITY_PLATFORM && defined TRINITY_PLATFORM_WINDOWS
 #if TRINITY_PLATFORM == TRINITY_PLATFORM_WINDOWS
 #define ELUNA_WINDOWS
 #endif
-#elif defined(PLATFORM) && defined(PLATFORM_WINDOWS)
+#elif defined PLATFORM && defined PLATFORM_WINDOWS
 #if PLATFORM == PLATFORM_WINDOWS
 #define ELUNA_WINDOWS
 #endif
@@ -49,7 +49,7 @@
 #error Eluna could not determine platform
 #endif
 
-#ifdef TRINITY
+#if defined TRINITY
 typedef QueryResult ElunaQuery;
 #define GET_GUID                GetGUID
 #define HIGHGUID_PLAYER         HighGuid::Player
@@ -67,7 +67,7 @@ typedef QueryResult ElunaQuery;
 #define HIGHGUID_GROUP          HighGuid::Group
 #endif
 
-#ifdef TRINITY
+#if defined TRINITY
 #include "fmt/printf.h"
 #define ELUNA_LOG_TC_FMT(TC_LOG_MACRO, ...) \
     try { \
@@ -79,7 +79,7 @@ typedef QueryResult ElunaQuery;
 #define ELUNA_LOG_INFO(...)     ELUNA_LOG_TC_FMT(TC_LOG_INFO, __VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    ELUNA_LOG_TC_FMT(TC_LOG_ERROR, __VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    ELUNA_LOG_TC_FMT(TC_LOG_DEBUG, __VA_ARGS__);
-#elif VMANGOS
+#elif defined VMANGOS
 typedef std::shared_ptr<QueryNamedResult> ElunaQuery;
 #define ASSERT                  MANGOS_ASSERT
 #define ELUNA_LOG_INFO(...)     sLog.Out(LOG_ELUNA, LOG_LVL_BASIC,__VA_ARGS__);
@@ -101,16 +101,16 @@ typedef std::shared_ptr<QueryNamedResult> ElunaQuery;
 #define GetTemplate             GetProto
 #endif
 
-#ifndef MAKE_NEW_GUID
+#if !defined MAKE_NEW_GUID
 #define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
 #endif
-#ifndef GUID_ENPART
+#if !defined GUID_ENPART
 #define GUID_ENPART(guid)       ObjectGuid(guid).GetEntry()
 #endif
-#ifndef GUID_LOPART
+#if !defined GUID_LOPART
 #define GUID_LOPART(guid)       ObjectGuid(guid).GetCounter()
 #endif
-#ifndef GUID_HIPART
+#if !defined GUID_HIPART
 #define GUID_HIPART(guid)       ObjectGuid(guid).GetHigh()
 #endif
 
