@@ -13,12 +13,9 @@
 #include "AuctionHouseMgr.h"
 #include "Cell.h"
 #include "CellImpl.h"
-#include "Chat.h"
 #include "Channel.h"
+#include "Chat.h"
 #include "DBCStores.h"
-#if defined CATA && defined TRINITY
-#include "DB2Stores.h"
-#endif
 #include "GameEventMgr.h"
 #include "GossipDef.h"
 #include "GridNotifiers.h"
@@ -28,75 +25,67 @@
 #include "GuildMgr.h"
 #include "Language.h"
 #include "Mail.h"
+#include "MapManager.h"
 #include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "Opcodes.h"
-#include "Player.h"
 #include "Pet.h"
+#include "Player.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
 #include "Spell.h"
 #include "SpellAuras.h"
 #include "SpellMgr.h"
 #include "TemporarySummon.h"
-#include "WorldSession.h"
 #include "WorldPacket.h"
+#include "WorldSession.h"
 #else
 #include "Accounts/AccountMgr.h"
 #include "AuctionHouse/AuctionHouseMgr.h"
+#include "Chat/Channel.h"
+#include "Chat/Chat.h"
+#include "DBScripts/ScriptMgr.h"
+#include "Entities/GossipDef.h"
+#include "Entities/Pet.h"
+#include "Entities/Player.h"
+#include "Entities/TemporarySpawn.h"
+#include "GameEvents/GameEventMgr.h"
+#include "Globals/ObjectAccessor.h"
+#include "Globals/ObjectMgr.h"
 #include "Grids/Cell.h"
 #include "Grids/CellImpl.h"
-#include "Chat/Chat.h"
-#include "Chat/Channel.h"
-#include "Server/DBCStores.h"
-#include "GameEvents/GameEventMgr.h"
-#include "Entities/GossipDef.h"
 #include "Grids/GridNotifiers.h"
 #include "Grids/GridNotifiersImpl.h"
 #include "Groups/Group.h"
 #include "Guilds/Guild.h"
 #include "Guilds/GuildMgr.h"
-#include "Tools/Language.h"
 #include "Mails/Mail.h"
 #include "Maps/MapManager.h"
-#include "Globals/ObjectAccessor.h"
-#include "Globals/ObjectMgr.h"
-#include "Server/Opcodes.h"
-#include "Entities/Player.h"
-#include "Entities/Pet.h"
 #include "Reputation/ReputationMgr.h"
-#include "DBScripts/ScriptMgr.h"
+#include "Server/DBCStores.h"
+#include "Server/Opcodes.h"
+#include "Server/WorldPacket.h"
+#include "Server/WorldSession.h"
 #include "Spells/Spell.h"
 #include "Spells/SpellAuras.h"
 #include "Spells/SpellMgr.h"
-#include "Entities/TemporarySpawn.h"
-#include "Server/WorldSession.h"
-#include "Server/WorldPacket.h"
+#include "Tools/Language.h"
 #endif
 
-#if defined TRINITY
-#include "SpellHistory.h"
-#include "MiscPackets.h"
-#endif
-
-#if defined AZEROTHCORE
-#include "MapMgr.h"
-#elif !defined CMANGOS
-#include "MapManager.h"
-#endif
-
-#if defined TRINITY || defined AZEROTHCORE
+#ifdef TRINITY
+#include "Bag.h"
+#include "Battleground.h"
 #include "Config.h"
+#include "DatabaseEnv.h"
 #include "GameEventMgr.h"
 #include "GitRevision.h"
 #include "GroupMgr.h"
+#include "MiscPackets.h"
+#include "MotionMaster.h"
 #include "ScriptedCreature.h"
+#include "SpellHistory.h"
 #include "SpellInfo.h"
 #include "WeatherMgr.h"
-#include "Battleground.h"
-#include "MotionMaster.h"
-#include "DatabaseEnv.h"
-#include "Bag.h"
 #else
 #include "Config/Config.h"
 #if defined CMANGOS && defined CATA
@@ -125,7 +114,7 @@
 #endif
 #endif
 
-#if (!defined(TBC) && !defined(CLASSIC))
+#if !defined(TBC) && !defined(CLASSIC)
 #ifndef CMANGOS
 #include "Vehicle.h"
 #else
@@ -141,10 +130,7 @@
 #endif
 #endif
 
-#if (defined(TRINITY) && defined(CATA))
-typedef OpcodeServer            OpcodesList;
-
-#elif !defined CLASSIC
+#if !defined CLASSIC
 typedef Opcodes                 OpcodesList;
 #endif
 
@@ -177,16 +163,9 @@ typedef Opcodes                 OpcodesList;
 #ifdef TRINITY
 #define CORE_NAME               "TrinityCore"
 #define REGEN_TIME_FULL
-#ifdef CATA
-#define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
-#endif
 #endif
 
-#ifdef AZEROTHCORE
-#define CORE_NAME               "AzerothCore"
-#endif
-
-#if defined TRINITY || defined AZEROTHCORE
+#ifdef TRINITY
 #define CORE_VERSION            (GitRevision::GetFullVersion())
 #define eWorld                  (sWorld)
 #define eMapMgr                 (sMapMgr)
@@ -196,9 +175,7 @@ typedef Opcodes                 OpcodesList;
 #define eAuctionMgr             (sAuctionMgr)
 #define eGameEventMgr           (sGameEventMgr)
 #define eObjectAccessor()       ObjectAccessor::
-#endif
-
-#if !defined TRINITY && !AZEROTHCORE
+#else
 #define eWorld                  (&sWorld)
 #define eMapMgr                 (&sMapMgr)
 #define eConfigMgr              (&sConfig)

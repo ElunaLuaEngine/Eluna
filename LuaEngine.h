@@ -8,18 +8,27 @@
 #define _LUA_ENGINE_H
 
 #include "Common.h"
-#ifndef CMANGOS
-#include "SharedDefines.h"
-#include "DBCEnums.h"
+#include "ElunaUtility.h"
+#include "Hooks.h"
 
+#ifndef CMANGOS
+#include "DBCEnums.h"
 #include "Group.h"
 #include "Item.h"
+#include "Map.h"
+#include "SharedDefines.h"
+#include "Weather.h"
+#include "World.h"
 #else
-#include "Globals/SharedDefines.h"
-#include "Server/DBCEnums.h"
-#include "Groups/Group.h"
 #include "Entities/Item.h"
+#include "Globals/SharedDefines.h"
+#include "Groups/Group.h"
+#include "Maps/Map.h"
+#include "Server/DBCEnums.h"
+#include "Weather/Weather.h"
+#include "World/World.h"
 #endif
+
 #ifndef TRINITY
 #ifndef CMANGOS
 #include "Player.h"
@@ -27,17 +36,8 @@
 #include "Entities/Player.h"
 #endif
 #endif
-#ifndef CMANGOS
-#include "Map.h"
-#include "Weather.h"
-#include "World.h"
-#else
-#include "Maps/Map.h"
-#include "Weather/Weather.h"
-#include "World/World.h"
-#endif
-#include "Hooks.h"
-#include "ElunaUtility.h"
+
+
 #include <mutex>
 #include <memory>
 
@@ -46,74 +46,60 @@ extern "C"
 #include "lua.h"
 };
 
-#if defined(TRINITY) || AZEROTHCORE
-struct ItemTemplate;
-typedef BattlegroundTypeId BattleGroundTypeId;
-#else
-struct ItemPrototype;
-typedef ItemPrototype ItemTemplate;
-typedef SpellEffectIndex SpellEffIndex;
-struct SpellEntry;
-typedef SpellEntry SpellInfo;
-#ifdef CLASSIC
-typedef int Difficulty;
-#endif
-#endif
-#ifndef AZEROTHCORE
-struct AreaTriggerEntry;
-#else
-typedef AreaTrigger AreaTriggerEntry;
-#endif
 class AuctionHouseObject;
-struct AuctionEntry;
-#if defined(TRINITY) || AZEROTHCORE
-class Battleground;
-typedef Battleground BattleGround;
-#endif
 class Channel;
 class Corpse;
 class Creature;
 class CreatureAI;
-class GameObject;
-#if defined(TRINITY) || AZEROTHCORE
-class GameObjectAI;
-#endif
-class Guild;
-class Group;
-#if defined(TRINITY) || AZEROTHCORE
-class InstanceScript;
-typedef InstanceScript InstanceData;
-#else
-class InstanceData;
-#endif
 class ElunaInstanceAI;
+class GameObject;
+class Group;
+class Guild;
 class Item;
 class Pet;
 class Player;
 class Quest;
 class Spell;
 class SpellCastTargets;
-#if defined(TRINITY) || AZEROTHCORE
+class Unit;
+class Weather;
+class WorldPacket;
+struct AreaTriggerEntry;
+struct AuctionEntry;
+
+#ifdef TRINITY
+class Battleground;
+class GameObjectAI;
+class InstanceScript;
 class TempSummon;
-#elif defined CMANGOS
+class Vehicle;
+struct ItemTemplate;
+typedef Battleground BattleGround;
+typedef BattlegroundTypeId BattleGroundTypeId;
+typedef InstanceScript InstanceData;
+#else // MANGOS && CMANGOS && VMANGOS
+class InstanceData;
+struct ItemPrototype;
+struct SpellEntry;
+typedef ItemPrototype ItemTemplate;
+typedef SpellEffectIndex SpellEffIndex;
+typedef SpellEntry SpellInfo;
+
+#ifdef CMANGOS
 class TemporarySpawn;
 typedef TemporarySpawn TempSummon;
 #else
 class TemporarySummon;
 typedef TemporarySummon TempSummon;
 #endif
-// class Transport;
-class Unit;
-class Weather;
-class WorldPacket;
-#ifndef CLASSIC
-#ifndef TBC
-#if defined(TRINITY) || AZEROTHCORE
-class Vehicle;
-#else
+
+#ifdef CLASSIC
+typedef int Difficulty;
+#endif
+
+#if !defined(CLASSIC) && !defined(TBC)
 class VehicleInfo;
 typedef VehicleInfo Vehicle;
-#endif
 #endif
 #endif
 
@@ -147,11 +133,9 @@ enum MethodRegisterState
 
 #define ELUNA_STATE_PTR "Eluna State Ptr"
 
-#if defined(TRINITY)
+#ifdef TRINITY
 #define ELUNA_GAME_API TC_GAME_API
 #define TRACKABLE_PTR_NAMESPACE ::Trinity::
-#elif defined(AZEROTHCORE)
-#define ELUNA_GAME_API AC_GAME_API
 #else
 #define ELUNA_GAME_API
 #endif
@@ -477,11 +461,9 @@ public:
     bool OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest, uint32 opt);
     void GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject);
-#ifndef CLASSIC
-#ifndef TBC
+#if !defined(CLASSIC) && !defined(TBC)
     void OnDestroyed(GameObject* pGameObject, WorldObject* attacker);
     void OnDamaged(GameObject* pGameObject, WorldObject* attacker);
-#endif
 #endif
     void OnLootStateChanged(GameObject* pGameObject, uint32 state);
     void OnGameObjectStateChanged(GameObject* pGameObject, uint32 state);
@@ -535,15 +517,13 @@ public:
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
     void OnAchievementComplete(Player* pPlayer, uint32 achievementId);
 
-#ifndef CLASSIC
-#ifndef TBC
+#if !defined(CLASSIC) && !defined(TBC)
     /* Vehicle */
     void OnInstall(Vehicle* vehicle);
     void OnUninstall(Vehicle* vehicle);
     void OnInstallAccessory(Vehicle* vehicle, Creature* accessory);
     void OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId);
     void OnRemovePassenger(Vehicle* vehicle, Unit* passenger);
-#endif
 #endif
 
     /* AreaTrigger */
@@ -583,11 +563,7 @@ public:
     void OnRemoveMember(Group* group, ObjectGuid guid, uint8 method);
     void OnChangeLeader(Group* group, ObjectGuid newLeaderGuid, ObjectGuid oldLeaderGuid);
     void OnDisband(Group* group);
-#if defined (TRINITY) && defined (CATA)
-    void OnCreate(Group* group, ObjectGuid leaderGuid, GroupFlags groupType);
-#else
     void OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType);
-#endif
     bool OnMemberAccept(Group* group, Player* player);
 
     /* Map */
@@ -614,11 +590,7 @@ public:
 
     /* World */
     void OnOpenStateChange(bool open);
-#ifndef AZEROTHCORE
     void OnConfigLoad(bool reload);
-#else
-    void OnConfigLoad(bool reload, bool isBefore);
-#endif
     void OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask);
     void OnShutdownCancel();
     void OnStartup();
@@ -628,11 +600,7 @@ public:
 
     /* Battle Ground */
     void OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
-#if AZEROTHCORE
-    void OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, TeamId winner);
-#else
     void OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, Team winner);
-#endif
     void OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
     void OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
 

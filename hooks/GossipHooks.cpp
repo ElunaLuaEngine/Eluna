@@ -177,7 +177,7 @@ bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 send
     HookPush(code);
     auto preventDefault = CallAllFunctionsBool(CreatureGossipBindings, key, true);
     if (!preventDefault) {
-#if defined CMANGOS &&!defined(CATA)
+#if defined CMANGOS && !defined(CATA)
         *pPlayer->GetPlayerMenu() = original_menu;
 #else
         *pPlayer->PlayerTalkClass = original_menu;

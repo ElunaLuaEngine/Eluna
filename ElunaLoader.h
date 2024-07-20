@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2022 Eluna Lua Engine <https://elunaluaengine.github.io/>
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * Copyright (C) 2022 - 2022 Hour of Twilight <https://www.houroftwilight.net/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
@@ -7,6 +7,8 @@
 
 #ifndef _ELUNALOADER_H
 #define _ELUNALOADER_H
+
+#include "LuaEngine.h"
 
 #ifdef TRINITY
 #include <efsw/efsw.hpp>

@@ -8,16 +8,13 @@
 #define _ELUNA_INSTANCE_DATA_H
 
 #include "LuaEngine.h"
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY
 #include "InstanceScript.h"
-#elif defined CMANGOS
+#include "Map.h"
+#elif CMANGOS
 #include "Maps/InstanceData.h"
 #else
 #include "InstanceData.h"
-#endif
-
-#ifdef TRINITY
-#include "Map.h"
 #endif
 
 /*
@@ -85,14 +82,14 @@ public:
      *   data table to/from the core.
      */
     void Load(const char* data) override;
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY
     // Simply calls Save, since the functions are a bit different in name and data types on different cores
     std::string GetSaveData() override
     {
         return Save();
     }
     const char* Save() const;
-#elif defined VMANGOS
+#elif VMANGOS
     const char* Save() const;
 #else
     const char* Save() const override;
@@ -151,7 +148,7 @@ public:
         instance->GetEluna()->OnPlayerEnterInstance(this, player);
     }
 
-#if defined TRINITY || AZEROTHCORE
+#ifdef TRINITY
     void OnGameObjectCreate(GameObject* gameobject) override
 #else
     void OnObjectCreate(GameObject* gameobject) override

@@ -11,14 +11,14 @@
 #include "Common.h"
 #ifdef TRINITY
 #include "Random.h"
-#elif defined CMANGOS
+#elif CMANGOS
 #include "Util/Util.h"
 #else
 #include "Util.h"
 #endif
 #include <map>
 
-#if defined(TRINITY) || AZEROTHCORE
+#ifdef TRINITY
 #include "Define.h"
 #else
 #include "Platform/Define.h"
