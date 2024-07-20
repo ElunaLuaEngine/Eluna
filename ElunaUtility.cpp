@@ -5,7 +5,7 @@
 */
 
 #include "ElunaUtility.h"
-#ifndef CMANGOS
+#if !defined CMANGOS
 #include "World.h"
 #include "Object.h"
 #include "Unit.h"
@@ -67,7 +67,7 @@ ElunaUtil::WorldObjectInRangeCheck::WorldObjectInRangeCheck(bool nearest, WorldO
         if (GameObject const* go = i_obj->ToGameObject())
             i_obj_unit = go->GetOwner();
     if (!i_obj_unit)
-#ifndef VMANGOS
+#if !defined VMANGOS
         i_obj_fact = sFactionTemplateStore.LookupEntry(14);
 #else
         i_obj_fact = sObjectMgr.GetFactionTemplateEntry(14);
@@ -101,11 +101,8 @@ bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
             {
                 if (i_obj_fact)
                 {
-#if ((defined TRINITY || AZEROTHCORE || CMANGOS || VMANGOS) && !defined CATA)
+#if (defined TRINITY || CMANGOS || VMANGOS) && !defined CATA
                     if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))
-                        return false;
-#elif defined CATA && defined TRINITY
-                    if ((i_obj_fact->IsHostileTo(target->GetFactionTemplateEntry())) != (i_hostile == 1))
                         return false;
 #elif defined CATA && defined CMANGOS
                     if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))

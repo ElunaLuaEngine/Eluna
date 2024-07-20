@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2022 Eluna Lua Engine <https://elunaluaengine.github.io/>
+ * Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
  * This program is free software licensed under GPL version 3
  * Please see the included DOCS/LICENSE.md for more information
  */
@@ -27,7 +27,7 @@ extern "C"
     #define lua_load(L, buf_read, dec_buf, str, NULL) \
         lua_load(L, buf_read, dec_buf, str)
 
-#ifndef LUAJIT_VERSION
+#if !defined LUAJIT_VERSION
     void* luaL_testudata(lua_State* L, int index, const char* tname);
     void luaL_setmetatable(lua_State* L, const char* tname);
     #define luaL_setfuncs(L, l, n) luaL_register(L, NULL, l)

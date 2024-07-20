@@ -8,17 +8,14 @@
 #define _ELUNA_INCLUDES_H
 
 // Required
-#ifndef CMANGOS
+#if !defined CMANGOS
 #include "AccountMgr.h"
 #include "AuctionHouseMgr.h"
 #include "Cell.h"
 #include "CellImpl.h"
-#include "Chat.h"
 #include "Channel.h"
+#include "Chat.h"
 #include "DBCStores.h"
-#if defined CATA && defined TRINITY
-#include "DB2Stores.h"
-#endif
 #include "GameEventMgr.h"
 #include "GossipDef.h"
 #include "GridNotifiers.h"
@@ -28,75 +25,67 @@
 #include "GuildMgr.h"
 #include "Language.h"
 #include "Mail.h"
+#include "MapManager.h"
 #include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "Opcodes.h"
-#include "Player.h"
 #include "Pet.h"
+#include "Player.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
 #include "Spell.h"
 #include "SpellAuras.h"
 #include "SpellMgr.h"
 #include "TemporarySummon.h"
-#include "WorldSession.h"
 #include "WorldPacket.h"
+#include "WorldSession.h"
 #else
 #include "Accounts/AccountMgr.h"
 #include "AuctionHouse/AuctionHouseMgr.h"
+#include "Chat/Channel.h"
+#include "Chat/Chat.h"
+#include "DBScripts/ScriptMgr.h"
+#include "Entities/GossipDef.h"
+#include "Entities/Pet.h"
+#include "Entities/Player.h"
+#include "Entities/TemporarySpawn.h"
+#include "GameEvents/GameEventMgr.h"
+#include "Globals/ObjectAccessor.h"
+#include "Globals/ObjectMgr.h"
 #include "Grids/Cell.h"
 #include "Grids/CellImpl.h"
-#include "Chat/Chat.h"
-#include "Chat/Channel.h"
-#include "Server/DBCStores.h"
-#include "GameEvents/GameEventMgr.h"
-#include "Entities/GossipDef.h"
 #include "Grids/GridNotifiers.h"
 #include "Grids/GridNotifiersImpl.h"
 #include "Groups/Group.h"
 #include "Guilds/Guild.h"
 #include "Guilds/GuildMgr.h"
-#include "Tools/Language.h"
 #include "Mails/Mail.h"
 #include "Maps/MapManager.h"
-#include "Globals/ObjectAccessor.h"
-#include "Globals/ObjectMgr.h"
-#include "Server/Opcodes.h"
-#include "Entities/Player.h"
-#include "Entities/Pet.h"
 #include "Reputation/ReputationMgr.h"
-#include "DBScripts/ScriptMgr.h"
+#include "Server/DBCStores.h"
+#include "Server/Opcodes.h"
+#include "Server/WorldPacket.h"
+#include "Server/WorldSession.h"
 #include "Spells/Spell.h"
 #include "Spells/SpellAuras.h"
 #include "Spells/SpellMgr.h"
-#include "Entities/TemporarySpawn.h"
-#include "Server/WorldSession.h"
-#include "Server/WorldPacket.h"
+#include "Tools/Language.h"
 #endif
 
 #if defined TRINITY
-#include "SpellHistory.h"
-#include "MiscPackets.h"
-#endif
-
-#if defined AZEROTHCORE
-#include "MapMgr.h"
-#elif !defined CMANGOS
-#include "MapManager.h"
-#endif
-
-#if defined TRINITY || defined AZEROTHCORE
+#include "Bag.h"
+#include "Battleground.h"
 #include "Config.h"
+#include "DatabaseEnv.h"
 #include "GameEventMgr.h"
 #include "GitRevision.h"
 #include "GroupMgr.h"
+#include "MiscPackets.h"
+#include "MotionMaster.h"
 #include "ScriptedCreature.h"
+#include "SpellHistory.h"
 #include "SpellInfo.h"
 #include "WeatherMgr.h"
-#include "Battleground.h"
-#include "MotionMaster.h"
-#include "DatabaseEnv.h"
-#include "Bag.h"
 #else
 #include "Config/Config.h"
 #if defined CMANGOS && defined CATA
@@ -113,80 +102,67 @@
 #include "SQLStorages.h"
 #endif
 #include "BattleGroundMgr.h"
-#ifndef CMANGOS
+#if !defined CMANGOS
 #include "SQLStorages.h"
 #else
 #include "Server/SQLStorages.h"
 #endif
-#ifdef MANGOS
+#if defined MANGOS
 #include "GitRevision.h"
 #else
 #include "revision.h"
 #endif
 #endif
 
-#if (!defined(TBC) && !defined(CLASSIC))
-#ifndef CMANGOS
+#if !defined TBC && !defined CLASSIC
+#if !defined CMANGOS
 #include "Vehicle.h"
 #else
 #include "Entities/Vehicle.h"
 #endif
 #endif
 
-#ifndef CLASSIC
-#ifndef CMANGOS
+#if !defined CLASSIC
+typedef Opcodes OpcodesList;
+#if !defined CMANGOS
 #include "ArenaTeam.h"
 #else
 #include "Arena/ArenaTeam.h"
 #endif
 #endif
 
-#if (defined(TRINITY) && defined(CATA))
-typedef OpcodeServer            OpcodesList;
-
-#elif !defined CLASSIC
-typedef Opcodes                 OpcodesList;
-#endif
-
 /*
  * Note: if you add or change a CORE_NAME or CORE_VERSION #define,
  *   please update LuaGlobalFunctions::GetCoreName or LuaGlobalFunctions::GetCoreVersion documentation example string.
  */
-#ifdef MANGOS
+#if defined MANGOS
 #define CORE_NAME               "MaNGOS"
 #define CORE_VERSION            REVISION_NR
-#ifdef CATA
+#if defined CATA
 #define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
 #endif
 #endif
 
-#ifdef CMANGOS
+#if defined CMANGOS
 #define CORE_NAME               "cMaNGOS"
 #define CORE_VERSION            REVISION_DATE " " REVISION_ID
-#ifdef CATA
+#if defined CATA
 #define NUM_MSG_TYPES           MAX_OPCODE_TABLE_SIZE
 #endif
 #endif
 
-#ifdef VMANGOS
+#if defined VMANGOS
 #define CORE_NAME               "vMaNGOS"
 #define CORE_VERSION            REVISION_HASH
 #define DEFAULT_LOCALE          LOCALE_enUS
 #endif
 
-#ifdef TRINITY
+#if defined TRINITY
 #define CORE_NAME               "TrinityCore"
 #define REGEN_TIME_FULL
-#ifdef CATA
-#define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
-#endif
 #endif
 
-#ifdef AZEROTHCORE
-#define CORE_NAME               "AzerothCore"
-#endif
-
-#if defined TRINITY || defined AZEROTHCORE
+#if defined TRINITY
 #define CORE_VERSION            (GitRevision::GetFullVersion())
 #define eWorld                  (sWorld)
 #define eMapMgr                 (sMapMgr)
@@ -196,9 +172,7 @@ typedef Opcodes                 OpcodesList;
 #define eAuctionMgr             (sAuctionMgr)
 #define eGameEventMgr           (sGameEventMgr)
 #define eObjectAccessor()       ObjectAccessor::
-#endif
-
-#if !defined TRINITY && !AZEROTHCORE
+#else
 #define eWorld                  (&sWorld)
 #define eMapMgr                 (&sMapMgr)
 #define eConfigMgr              (&sConfig)
@@ -212,24 +186,24 @@ typedef Opcodes                 OpcodesList;
 #define TOTAL_LOCALES           MAX_LOCALE
 #define TARGETICONCOUNT         TARGET_ICON_COUNT
 #define MAX_TALENT_SPECS        MAX_TALENT_SPEC_COUNT
-#ifndef VMANGOS
+#if !defined VMANGOS
 #define TEAM_NEUTRAL            TEAM_INDEX_NEUTRAL
 #endif
 
 
-#if ((defined(CATA) && !defined(MANGOS)) || defined VMANGOS)
+#if (defined CATA && !defined MANGOS) || defined VMANGOS
 #define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
 #endif
 
-#ifdef TBC
+#if defined TBC
 #define SPELL_AURA_MOD_KILL_XP_PCT  SPELL_AURA_MOD_XP_PCT
 #endif
 
-#if defined(CATA) || defined(MISTS) || (defined(WOTLK) && !defined(MANGOS))
+#if defined CATA || defined MISTS || (defined WOTLK && !defined MANGOS)
 #define UNIT_BYTE2_FLAG_SANCTUARY   UNIT_BYTE2_FLAG_SUPPORTABLE
 #endif
 
-#ifndef CMANGOS
+#if !defined CMANGOS
 typedef TemporarySummon TempSummon;
 #else
 typedef TemporarySpawn TempSummon;

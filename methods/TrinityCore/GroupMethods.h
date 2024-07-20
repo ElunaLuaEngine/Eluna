@@ -256,7 +256,6 @@ namespace LuaGroup
         return 1;
     }
 
-#ifndef CATA
     /**
      * Returns the [Group] members' flags
      *
@@ -278,7 +277,6 @@ namespace LuaGroup
         E->Push(group->GetMemberFlags(guid));
         return 1;
     }
-#endif
 
     /**
      * Sets the leader of this [Group]
@@ -424,7 +422,6 @@ namespace LuaGroup
         return 0;
     }
 
-#ifndef CATA
     /**
      * Sets or removes a flag for a [Group] member
      *
@@ -452,7 +449,6 @@ namespace LuaGroup
         group->SetGroupMemberFlag(target, apply, flag);
         return 0;
     }
-#endif
 
     ElunaRegister<Group> GroupMethods[] =
     {
@@ -463,17 +459,13 @@ namespace LuaGroup
         { "GetMemberGroup", &LuaGroup::GetMemberGroup },
         { "GetMemberGUID", &LuaGroup::GetMemberGUID },
         { "GetMembersCount", &LuaGroup::GetMembersCount },
-#ifndef CATA
         { "GetMemberFlags", &LuaGroup::GetMemberFlags },
-#endif
 
         // Setters
         { "SetLeader", &LuaGroup::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
         { "SetMembersGroup", &LuaGroup::SetMembersGroup, METHOD_REG_WORLD }, // World state method only in multistate
         { "SetTargetIcon", &LuaGroup::SetTargetIcon, METHOD_REG_WORLD }, // World state method only in multistate
-#ifndef CATA
         { "SetMemberFlag", &LuaGroup::SetMemberFlag, METHOD_REG_WORLD }, // World state method only in multistate
-#endif
 
         // Boolean
         { "IsLeader", &LuaGroup::IsLeader },
@@ -494,11 +486,6 @@ namespace LuaGroup
         { "SendPacket", &LuaGroup::SendPacket },
         { "ConvertToLFG", &LuaGroup::ConvertToLFG, METHOD_REG_WORLD }, // World state method only in multistate
         { "ConvertToRaid", &LuaGroup::ConvertToRaid, METHOD_REG_WORLD }, // World state method only in multistate
-
-#ifdef CATA //Not implemented in TCPP
-        { "GetMemberFlags", nullptr, METHOD_REG_NONE },
-        { "SetMemberFlag", nullptr, METHOD_REG_NONE },
-#endif
 
         { NULL, NULL, METHOD_REG_NONE }
     };

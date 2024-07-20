@@ -165,11 +165,7 @@ namespace LuaQuest
      */
     int GetType(Eluna* E, Quest* quest)
     {
-#ifdef CATA
-        E->Push(quest->GetQuestType());
-#else
         E->Push(quest->GetType());
-#endif
         return 1;
     }
 

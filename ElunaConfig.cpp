@@ -45,20 +45,20 @@ void ElunaConfig::Initialize()
 
 void ElunaConfig::SetConfig(ElunaConfigBoolValues index, char const* fieldname, bool defvalue)
 {
-#ifdef TRINITY
+#if defined TRINITY
     SetConfig(index, sConfigMgr->GetBoolDefault(fieldname, defvalue));
-#elif defined CMANGOS || defined VMANGOS || defined MANGOS
+#else
     SetConfig(index, sConfig.GetBoolDefault(fieldname, defvalue));
 #endif
 }
 
 void ElunaConfig::SetConfig(ElunaConfigStringValues index, char const* fieldname, std::string defvalue)
 {
-#ifdef TRINITY
+#if defined TRINITY
     SetConfig(index, sConfigMgr->GetStringDefault(fieldname, defvalue));
-#elif CMANGOS
+#elif defined CMANGOS
     SetConfig(index, sConfig.GetStringDefault(fieldname, defvalue));
-#elif defined VMANGOS || defined MANGOS
+#else
     SetConfig(index, sConfig.GetStringDefault(fieldname, defvalue.c_str()));
 #endif
 }

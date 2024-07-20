@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2022 Eluna Lua Engine <https://elunaluaengine.github.io/>
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * Copyright (C) 2022 - 2022 Hour of Twilight <https://www.houroftwilight.net/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
@@ -8,7 +8,9 @@
 #ifndef _ELUNALOADER_H
 #define _ELUNALOADER_H
 
-#ifdef TRINITY
+#include "LuaEngine.h"
+
+#if defined TRINITY
 #include <efsw/efsw.hpp>
 #endif
 
@@ -56,7 +58,7 @@ public:
     const std::string& GetRequirePath() const { return m_requirePath; }
     const std::string& GetRequireCPath() const { return m_requirecPath; }
 
-#ifdef TRINITY
+#if defined TRINITY
     // efsw file watcher
     void InitializeFileWatcher();
     efsw::FileWatcher lua_fileWatcher;
@@ -80,7 +82,7 @@ private:
     std::thread m_reloadThread;
 };
 
-#ifdef TRINITY
+#if defined TRINITY
 /// File watcher responsible for watching lua scripts
 class ElunaUpdateListener : public efsw::FileWatchListener
 {

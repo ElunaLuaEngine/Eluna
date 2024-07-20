@@ -108,14 +108,9 @@ namespace LuaMap
     {
         float x = E->CHECKVAL<float>(2);
         float y = E->CHECKVAL<float>(3);
-#ifdef CATA
-        PhaseShift phase;
-        float z = map->GetHeight(phase, x, y, MAX_HEIGHT);
-#else
         uint32 phasemask = E->CHECKVAL<uint32>(4, 1);
 
         float z = map->GetHeight(phasemask, x, y, MAX_HEIGHT);
-#endif
         if (z != INVALID_HEIGHT)
             E->Push(z);
         return 1;
@@ -181,14 +176,9 @@ namespace LuaMap
         float x = E->CHECKVAL<float>(2);
         float y = E->CHECKVAL<float>(3);
         float z = E->CHECKVAL<float>(4);
-#ifdef CATA
-        PhaseShift phase;
-        E->Push(map->GetAreaId(phase, x, y, z));
-#else
         float phasemask = E->CHECKVAL<uint32>(5, PHASEMASK_NORMAL);
 
         E->Push(map->GetAreaId(phasemask, x, y, z));
-#endif
         return 1;
     }
 

@@ -22,11 +22,7 @@ namespace LuaCreature
      */
     int IsRegeneratingHealth(Eluna* E, Creature* creature)
     {
-#ifdef CATA
-        E->Push(creature->isRegeneratingHealth());
-#else
         E->Push(creature->CanRegenerateHealth());
-#endif
         return 1;
     }
 
@@ -904,7 +900,6 @@ namespace LuaCreature
         return 1;
     }
 
-#ifndef CATA
     /**
      * Returns the [Creature]'s shield block value.
      *
@@ -915,7 +910,6 @@ namespace LuaCreature
         E->Push(creature->GetShieldBlockValue());
         return 1;
     }
-#endif
 
     /**
      * Returns the loot mode for the [Creature].
@@ -1440,9 +1434,7 @@ namespace LuaCreature
         { "GetNPCFlags", &LuaCreature::GetNPCFlags },
         { "GetExtraFlags", &LuaCreature::GetExtraFlags },
         { "GetRank", &LuaCreature::GetRank },
-#ifndef CATA
         { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
-#endif
         { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
         { "GetThreat", &LuaCreature::GetThreat },
@@ -1518,10 +1510,6 @@ namespace LuaCreature
         { "FixateTarget", &LuaCreature::FixateTarget },
         { "ClearFixate", &LuaCreature::ClearFixate },
         { "RemoveFromWorld", &LuaCreature::RemoveFromWorld },
-
-#ifdef CATA //Not implemented in TCPP
-        { "GetShieldBlockValue", nullptr },
-#endif
 
         { NULL, NULL, METHOD_REG_NONE }
     };

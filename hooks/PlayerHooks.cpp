@@ -280,7 +280,7 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
     CleanUpStack(2);
 }
 
-#ifdef CATA
+#if defined CATA
 void Eluna::OnMoneyChanged(Player* pPlayer, int64& amount)
 {
     START_HOOK(PLAYER_EVENT_ON_MONEY_CHANGE);
