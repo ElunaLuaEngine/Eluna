@@ -27,6 +27,8 @@ namespace fs = std::filesystem;
 
 #if defined TRINITY
 #include "MapManager.h"
+#elif defined CMANGOS
+#include "Maps/MapManager.h"
 #endif
 
 extern "C" {
