@@ -9,6 +9,11 @@
 
 #include "Common.h"
 
+#define CLASSIC 0
+#define TBC 1
+#define WOTLK 2
+#define CATA 3
+
 #if !defined CMANGOS
 #include "SharedDefines.h"
 #include "ObjectGuid.h"

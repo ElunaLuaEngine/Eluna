@@ -93,11 +93,11 @@ class TemporarySummon;
 typedef TemporarySummon TempSummon;
 #endif
 
-#if defined CLASSIC
+#if EXPANSION == CLASSIC
 typedef int Difficulty;
 #endif
 
-#if !defined CLASSIC && !defined TBC
+#if EXPANSION >= WOTLK
 class VehicleInfo;
 typedef VehicleInfo Vehicle;
 #endif
@@ -461,7 +461,7 @@ public:
     bool OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest, uint32 opt);
     void GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject);
-#if !defined CLASSIC && !defined TBC
+#if EXPANSION >= WOTLK
     void OnDestroyed(GameObject* pGameObject, WorldObject* attacker);
     void OnDamaged(GameObject* pGameObject, WorldObject* attacker);
 #endif
@@ -489,7 +489,7 @@ public:
     void OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints);
     void OnTalentsReset(Player* pPlayer, bool noCost);
     void OnMoneyChanged(Player* pPlayer, int32& amount);
-#if defined CATA
+#if EXPANSION >= CATA
     void OnMoneyChanged(Player* pPlayer, int64& amount);
 #endif
     void OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim);
@@ -517,7 +517,7 @@ public:
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
     void OnAchievementComplete(Player* pPlayer, uint32 achievementId);
 
-#if !defined CLASSIC && !defined TBC
+#if EXPANSION >= WOTLK
     /* Vehicle */
     void OnInstall(Vehicle* vehicle);
     void OnUninstall(Vehicle* vehicle);
@@ -546,11 +546,11 @@ public:
     void OnCreate(Guild* guild, Player* leader, const std::string& name);
     void OnDisband(Guild* guild);
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair);
-#if defined CATA
+#if EXPANSION >= CATA
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair);
 #endif
     void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount);
-#if defined CATA
+#if EXPANSION >= CATA
     void OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount);
 #endif
     void OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId, bool isDestBank, uint8 destContainer, uint8 destSlotId);

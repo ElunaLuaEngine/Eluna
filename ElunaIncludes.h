@@ -11,6 +11,7 @@
 #if !defined CMANGOS
 #include "AccountMgr.h"
 #include "AuctionHouseMgr.h"
+#include "Bag.h"
 #include "Cell.h"
 #include "CellImpl.h"
 #include "Channel.h"
@@ -39,6 +40,28 @@
 #include "TemporarySummon.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
+#if defined TRINITY
+#include "Battleground.h"
+#include "Config.h"
+#include "DatabaseEnv.h"
+#include "GitRevision.h"
+#include "GroupMgr.h"
+#include "MiscPackets.h"
+#include "MotionMaster.h"
+#include "ScriptedCreature.h"
+#include "SpellHistory.h"
+#include "SpellInfo.h"
+#include "WeatherMgr.h"
+#elif defined VMANGOS
+#include "BasicAI.h"
+#include "SQLStorages.h"
+#endif  // TRINITY
+#if EXPANSION > CLASSIC
+#include "ArenaTeam.h"
+#endif
+#if EXPANSION >= WOTLK
+#include "Vehicle.h"
+#endif
 #else
 #include "Accounts/AccountMgr.h"
 #include "AuctionHouse/AuctionHouseMgr.h"
@@ -70,65 +93,27 @@
 #include "Spells/SpellAuras.h"
 #include "Spells/SpellMgr.h"
 #include "Tools/Language.h"
-#endif
-
-#if defined TRINITY
-#include "Bag.h"
-#include "Battleground.h"
-#include "Config.h"
-#include "DatabaseEnv.h"
-#include "GameEventMgr.h"
-#include "GitRevision.h"
-#include "GroupMgr.h"
-#include "MiscPackets.h"
-#include "MotionMaster.h"
-#include "ScriptedCreature.h"
-#include "SpellHistory.h"
-#include "SpellInfo.h"
-#include "WeatherMgr.h"
-#else
-#include "Config/Config.h"
-#if defined CMANGOS && defined CATA
-#include "AI/BaseAI/AggressorAI.h"
-#include "Server/SQLStorages.h"
-#elif defined CMANGOS
 #include "AI/BaseAI/UnitAI.h"
 #include "Server/SQLStorages.h"
-#elif defined VMANGOS
-#include "BasicAI.h"
-#include "Bag.h"
-#else
-#include "AggressorAI.h"
-#include "SQLStorages.h"
-#endif
-#include "BattleGroundMgr.h"
-#if !defined CMANGOS
-#include "SQLStorages.h"
-#else
-#include "Server/SQLStorages.h"
-#endif
-#if defined MANGOS
-#include "GitRevision.h"
-#else
-#include "revision.h"
-#endif
-#endif
-
-#if !defined TBC && !defined CLASSIC
-#if !defined CMANGOS
-#include "Vehicle.h"
-#else
-#include "Entities/Vehicle.h"
-#endif
-#endif
-
-#if !defined CLASSIC
-typedef Opcodes OpcodesList;
-#if !defined CMANGOS
-#include "ArenaTeam.h"
-#else
+#if EXPANSION > CLASSIC
 #include "Arena/ArenaTeam.h"
 #endif
+#if EXPANSION >= WOTLK
+#include "Entities/Vehicle.h"
+#endif
+#if EXPANSION >= CATA
+#include "AI/BaseAI/AggressorAI.h"
+#endif
+#endif
+
+#if !defined TRINITY
+#include "Config/Config.h"
+#include "BattleGroundMgr.h"
+#include "revision.h"
+#endif
+
+#if EXPANSION > CLASSIC
+typedef Opcodes OpcodesList;
 #endif
 
 /*
@@ -138,7 +123,7 @@ typedef Opcodes OpcodesList;
 #if defined MANGOS
 #define CORE_NAME               "MaNGOS"
 #define CORE_VERSION            REVISION_NR
-#if defined CATA
+#if EXPANSION == CATA
 #define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
 #endif
 #endif
@@ -146,7 +131,7 @@ typedef Opcodes OpcodesList;
 #if defined CMANGOS
 #define CORE_NAME               "cMaNGOS"
 #define CORE_VERSION            REVISION_DATE " " REVISION_ID
-#if defined CATA
+#if EXPANSION == CATA
 #define NUM_MSG_TYPES           MAX_OPCODE_TABLE_SIZE
 #endif
 #endif
@@ -191,15 +176,15 @@ typedef Opcodes OpcodesList;
 #endif
 
 
-#if (defined CATA && !defined MANGOS) || defined VMANGOS
+#if EXPANSION >= CATA || defined VMANGOS
 #define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
 #endif
 
-#if defined TBC
+#if EXPANSION == TBC
 #define SPELL_AURA_MOD_KILL_XP_PCT  SPELL_AURA_MOD_XP_PCT
 #endif
 
-#if defined CATA || defined MISTS || (defined WOTLK && !defined MANGOS)
+#if EXPANSION >= WOTLK
 #define UNIT_BYTE2_FLAG_SANCTUARY   UNIT_BYTE2_FLAG_SUPPORTABLE
 #endif
 
