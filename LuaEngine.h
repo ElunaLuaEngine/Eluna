@@ -19,6 +19,9 @@
 #include "SharedDefines.h"
 #include "Weather.h"
 #include "World.h"
+#if defined VMANGOS
+#include "Player.h"
+#endif
 #else
 #include "Entities/Item.h"
 #include "Globals/SharedDefines.h"
@@ -27,16 +30,8 @@
 #include "Server/DBCEnums.h"
 #include "Weather/Weather.h"
 #include "World/World.h"
-#endif
-
-#if !defined TRINITY
-#if !defined CMANGOS
-#include "Player.h"
-#else
 #include "Entities/Player.h"
 #endif
-#endif
-
 
 #include <mutex>
 #include <memory>
@@ -88,7 +83,9 @@ typedef SpellEntry SpellInfo;
 #if defined CMANGOS
 class TemporarySpawn;
 typedef TemporarySpawn TempSummon;
-#else
+#endif
+
+#if defined VMANGOS
 class TemporarySummon;
 typedef TemporarySummon TempSummon;
 #endif
@@ -546,11 +543,9 @@ public:
     void OnCreate(Guild* guild, Player* leader, const std::string& name);
     void OnDisband(Guild* guild);
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair);
-#if EXPANSION >= CATA
-    void OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair);
-#endif
     void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount);
 #if EXPANSION >= CATA
+    void OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair);
     void OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount);
 #endif
     void OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId, bool isDestBank, uint8 destContainer, uint8 destSlotId);

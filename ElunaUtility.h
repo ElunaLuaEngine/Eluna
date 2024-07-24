@@ -17,18 +17,15 @@
 #if !defined CMANGOS
 #include "SharedDefines.h"
 #include "ObjectGuid.h"
+#include "Log.h"
+#if defined TRINITY
+#include "QueryResult.h"
+#else
+#include "Database/QueryResult.h"
+#endif
 #else
 #include "Globals/SharedDefines.h"
 #include "Entities/ObjectGuid.h"
-#endif
-
-#if defined TRINITY
-#include "QueryResult.h"
-#include "Log.h"
-#elif defined VMANGOS
-#include "Database/QueryResult.h"
-#include "Log.h"
-#else
 #include "Database/QueryResult.h"
 #include "Log/Log.h"
 #endif
