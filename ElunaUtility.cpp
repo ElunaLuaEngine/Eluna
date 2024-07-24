@@ -19,13 +19,10 @@
 #include "Server/DBCStores.h"
 #include "Util/Timer.h"
 #endif
-#if defined MANGOS
-#include "Timer.h"
-#endif
 
 uint32 ElunaUtil::GetCurrTime()
 {
-#if !defined CMANGOS && !defined VMANGOS
+#if defined TRINITY
     return getMSTime();
 #else
     return WorldTimer::getMSTime();
@@ -34,7 +31,7 @@ uint32 ElunaUtil::GetCurrTime()
 
 uint32 ElunaUtil::GetTimeDiff(uint32 oldMSTime)
 {
-#if !defined CMANGOS && !defined VMANGOS
+#if defined TRINITY
     return GetMSTimeDiffToNow(oldMSTime);
 #else
     return WorldTimer::getMSTimeDiff(oldMSTime, WorldTimer::getMSTime());

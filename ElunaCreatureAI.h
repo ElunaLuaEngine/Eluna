@@ -67,11 +67,7 @@ struct ElunaCreatureAI : NativeScriptedAI
 
         if (!me->GetEluna()->UpdateAI(me, diff))
         {
-#if defined MANGOS
-            if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE))
-#else
             if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
-#endif
                 NativeScriptedAI::UpdateAI(diff);
         }
     }
@@ -269,7 +265,7 @@ struct ElunaCreatureAI : NativeScriptedAI
     }
 #endif
 
-#if defined MANGOS || defined CMANGOS
+#if defined CMANGOS
 #undef me
 #endif
 };

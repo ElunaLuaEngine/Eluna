@@ -4,9 +4,9 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#if defined TRINITY || defined MANGOS
+#if defined TRINITY
 #include "Config.h"
-#elif defined CMANGOS || defined VMANGOS
+#else
 #include "Config/Config.h"
 #endif
 #include "ElunaConfig.h"

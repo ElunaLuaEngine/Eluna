@@ -77,7 +77,7 @@ struct ItemTemplate;
 typedef Battleground BattleGround;
 typedef BattlegroundTypeId BattleGroundTypeId;
 typedef InstanceScript InstanceData;
-#else // MANGOS && CMANGOS && VMANGOS
+#else
 class InstanceData;
 struct ItemPrototype;
 struct SpellEntry;

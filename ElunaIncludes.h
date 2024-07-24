@@ -120,14 +120,6 @@ typedef Opcodes OpcodesList;
  * Note: if you add or change a CORE_NAME or CORE_VERSION #define,
  *   please update LuaGlobalFunctions::GetCoreName or LuaGlobalFunctions::GetCoreVersion documentation example string.
  */
-#if defined MANGOS
-#define CORE_NAME               "MaNGOS"
-#define CORE_VERSION            REVISION_NR
-#if EXPANSION == CATA
-#define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
-#endif
-#endif
-
 #if defined CMANGOS
 #define CORE_NAME               "cMaNGOS"
 #define CORE_VERSION            REVISION_DATE " " REVISION_ID

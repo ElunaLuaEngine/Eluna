@@ -38,7 +38,7 @@
 #include <mutex>
 #include <memory>
 
-#if !defined MANGOS && !defined VMANGOS
+#if !defined VMANGOS
 #define USING_BOOST
 #endif
 
