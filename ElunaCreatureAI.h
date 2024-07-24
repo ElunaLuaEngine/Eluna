@@ -21,9 +21,6 @@ typedef CreatureAI NativeScriptedAI;
 #elif defined VMANGOS
 class BasicAI;
 typedef BasicAI NativeScriptedAI;
-#else
-class AggressorAI;
-typedef AggressorAI NativeScriptedAI;
 #endif
 
 struct ElunaCreatureAI : NativeScriptedAI
@@ -265,7 +262,7 @@ struct ElunaCreatureAI : NativeScriptedAI
     }
 #endif
 
-#if defined CMANGOS
+#if !defined TRINITY
 #undef me
 #endif
 };
