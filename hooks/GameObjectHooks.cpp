@@ -69,7 +69,7 @@ void Eluna::GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject
     CallAllFunctions(GameObjectEventBindings, key);
 }
 
-#if EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= WOTLK
 void Eluna::OnDestroyed(GameObject* pGameObject, WorldObject* attacker)
 {
     START_HOOK(GAMEOBJECT_EVENT_ON_DESTROYED, pGameObject->GetEntry());

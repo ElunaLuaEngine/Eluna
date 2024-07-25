@@ -167,7 +167,7 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<Item>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<Item>::SetMethods(E, LuaItem::ItemMethods);
 
-#if EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= WOTLK
     ElunaTemplate<Vehicle>::Register(E, "Vehicle");
     ElunaTemplate<Vehicle>::SetMethods(E, LuaVehicle::VehicleMethods);
 #endif

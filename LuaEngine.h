@@ -90,11 +90,11 @@ class TemporarySummon;
 typedef TemporarySummon TempSummon;
 #endif
 
-#if EXPANSION == CLASSIC
+#if ELUNA_EXPANSION == CLASSIC
 typedef int Difficulty;
 #endif
 
-#if EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= WOTLK
 class VehicleInfo;
 typedef VehicleInfo Vehicle;
 #endif
@@ -458,7 +458,7 @@ public:
     bool OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest, uint32 opt);
     void GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject);
-#if EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= WOTLK
     void OnDestroyed(GameObject* pGameObject, WorldObject* attacker);
     void OnDamaged(GameObject* pGameObject, WorldObject* attacker);
 #endif
@@ -486,7 +486,7 @@ public:
     void OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints);
     void OnTalentsReset(Player* pPlayer, bool noCost);
     void OnMoneyChanged(Player* pPlayer, int32& amount);
-#if EXPANSION >= CATA
+#if ELUNA_EXPANSION >= CATA
     void OnMoneyChanged(Player* pPlayer, int64& amount);
 #endif
     void OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim);
@@ -514,7 +514,7 @@ public:
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
     void OnAchievementComplete(Player* pPlayer, uint32 achievementId);
 
-#if EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= WOTLK
     /* Vehicle */
     void OnInstall(Vehicle* vehicle);
     void OnUninstall(Vehicle* vehicle);
@@ -544,7 +544,7 @@ public:
     void OnDisband(Guild* guild);
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair);
     void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount);
-#if EXPANSION >= CATA
+#if ELUNA_EXPANSION >= CATA
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair);
     void OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount);
 #endif
