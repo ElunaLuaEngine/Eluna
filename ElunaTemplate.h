@@ -16,13 +16,13 @@ extern "C"
 #include "LuaEngine.h"
 #include "ElunaUtility.h"
 #include "ElunaCompat.h"
-#if !defined CMANGOS
+#if !defined ELUNA_CMANGOS
 #include "SharedDefines.h"
 #else
 #include "Globals/SharedDefines.h"
 #endif
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
 #include "UniqueTrackablePtr.h"
 #endif
 

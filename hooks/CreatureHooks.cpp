@@ -295,7 +295,7 @@ bool Eluna::SpellHitTarget(Creature* me, WorldObject* target, SpellInfo const* s
     return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
 }
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
 
 bool Eluna::SummonedCreatureDies(Creature* me, Creature* summon, Unit* killer)
 {
@@ -324,4 +324,4 @@ bool Eluna::OwnerAttacked(Creature* me, Unit* target)
     return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
 }
 
-#endif // TRINITY
+#endif // ELUNA_TRINITY

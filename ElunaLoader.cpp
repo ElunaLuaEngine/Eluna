@@ -25,9 +25,9 @@ namespace fs = std::filesystem;
 #include <Windows.h>
 #endif
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
 #include "MapManager.h"
-#elif defined CMANGOS
+#elif defined ELUNA_CMANGOS
 #include "Maps/MapManager.h"
 #endif
 
@@ -37,7 +37,7 @@ extern "C" {
 #include <lauxlib.h>
 }
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
 void ElunaUpdateListener::handleFileAction(efsw::WatchID /*watchid*/, std::string const& dir, std::string const& filename, efsw::Action /*action*/, std::string /*oldFilename*/)
 {
     auto const path = fs::absolute(filename, dir);
@@ -56,7 +56,7 @@ void ElunaUpdateListener::handleFileAction(efsw::WatchID /*watchid*/, std::strin
 
 ElunaLoader::ElunaLoader() : m_cacheState(SCRIPT_CACHE_NONE)
 {
-#if defined TRINITY
+#if defined ELUNA_TRINITY
     lua_scriptWatcher = -1;
 #endif
 }
@@ -73,7 +73,7 @@ ElunaLoader::~ElunaLoader()
     if (m_reloadThread.joinable())
         m_reloadThread.join();
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
     if (lua_scriptWatcher >= 0)
     {
         lua_fileWatcher.removeWatch(lua_scriptWatcher);
@@ -314,7 +314,7 @@ void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::s
     ELUNA_LOG_DEBUG("[Eluna]: ProcessScript processed `%s` successfully", fullpath.c_str());
 }
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
 void ElunaLoader::InitializeFileWatcher()
 {
     std::string lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
@@ -360,14 +360,14 @@ void ElunaLoader::ReloadElunaForMap(int mapId)
     if (mapId != RELOAD_CACHE_ONLY)
     {
         if (mapId == RELOAD_GLOBAL_STATE || mapId == RELOAD_ALL_STATES)
-#if defined TRINITY
+#if defined ELUNA_TRINITY
             if (Eluna* e = sWorld->GetEluna())
 #else
             if (Eluna* e = sWorld.GetEluna())
 #endif
                 e->ReloadEluna();
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
         sMapMgr->DoForAllMaps([&](Map* map)
 #else
         sMapMgr.DoForAllMaps([&](Map* map)

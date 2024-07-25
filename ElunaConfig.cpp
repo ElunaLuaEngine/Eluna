@@ -4,9 +4,9 @@
 * Please see the included DOCS/LICENSE.md for more information
 */
 
-#if defined TRINITY || defined MANGOS
+#if defined ELUNA_TRINITY
 #include "Config.h"
-#elif defined CMANGOS || defined VMANGOS
+#else
 #include "Config/Config.h"
 #endif
 #include "ElunaConfig.h"
@@ -45,7 +45,7 @@ void ElunaConfig::Initialize()
 
 void ElunaConfig::SetConfig(ElunaConfigBoolValues index, char const* fieldname, bool defvalue)
 {
-#if defined TRINITY
+#if defined ELUNA_TRINITY
     SetConfig(index, sConfigMgr->GetBoolDefault(fieldname, defvalue));
 #else
     SetConfig(index, sConfig.GetBoolDefault(fieldname, defvalue));
@@ -54,9 +54,9 @@ void ElunaConfig::SetConfig(ElunaConfigBoolValues index, char const* fieldname, 
 
 void ElunaConfig::SetConfig(ElunaConfigStringValues index, char const* fieldname, std::string defvalue)
 {
-#if defined TRINITY
+#if defined ELUNA_TRINITY
     SetConfig(index, sConfigMgr->GetStringDefault(fieldname, defvalue));
-#elif defined CMANGOS
+#elif defined ELUNA_CMANGOS
     SetConfig(index, sConfig.GetStringDefault(fieldname, defvalue));
 #else
     SetConfig(index, sConfig.GetStringDefault(fieldname, defvalue.c_str()));

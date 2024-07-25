@@ -971,7 +971,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     std::ostringstream oss;
     oss << "regtype " << static_cast<uint32>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " <<
-#if defined TRINITY
+#if defined ELUNA_TRINITY
         guid.ToHexString()
 #else
         guid.GetRawValue()
@@ -984,13 +984,13 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
 void Eluna::UpdateEluna(uint32 diff)
 {
     if (reload && sElunaLoader->GetCacheState() == SCRIPT_CACHE_READY)
-#if defined TRINITY
+#if defined ELUNA_TRINITY
         if(!GetQueryProcessor().HasPendingCallbacks())
 #endif
             _ReloadEluna();
 
     eventMgr->globalProcessor->Update(diff);
-#if defined TRINITY
+#if defined ELUNA_TRINITY
     GetQueryProcessor().ProcessReadyCallbacks();
 #endif
 }

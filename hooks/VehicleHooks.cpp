@@ -10,7 +10,7 @@
 #include "BindingMap.h"
 #include "ElunaTemplate.h"
 
-#if !defined(CLASSIC) && !defined(TBC)
+#if ELUNA_EXPANSION >= WOTLK
 
 using namespace Hooks;
 
@@ -58,4 +58,4 @@ void Eluna::OnRemovePassenger(Vehicle* vehicle, Unit* passenger)
     CallAllFunctions(VehicleEventBindings, key);
 }
 
-#endif // !CLASSIC && !TBC
+#endif

@@ -9,16 +9,16 @@
 
 #include "ElunaUtility.h"
 #include "Common.h"
-#if defined TRINITY
+#if defined ELUNA_TRINITY
 #include "Random.h"
-#elif defined CMANGOS
+#elif defined ELUNA_CMANGOS
 #include "Util/Util.h"
 #else
 #include "Util.h"
 #endif
 #include <map>
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
 #include "Define.h"
 #else
 #include "Platform/Define.h"

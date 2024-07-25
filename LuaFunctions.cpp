@@ -117,7 +117,7 @@ template<> int ElunaTemplate<ObjectGuid>::Equal(lua_State* L) { Eluna* E = Eluna
 template<> int ElunaTemplate<ObjectGuid>::ToString(lua_State* L)
 {
     Eluna* E = Eluna::GetEluna(L);
-#if defined TRINITY
+#if defined ELUNA_TRINITY
     E->Push(E->CHECKVAL<ObjectGuid>(1).ToString());
 #else
     E->Push(E->CHECKVAL<ObjectGuid>(1).GetString());
@@ -167,7 +167,7 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<Item>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<Item>::SetMethods(E, LuaItem::ItemMethods);
 
-#if !defined CLASSIC && !defined TBC
+#if ELUNA_EXPANSION >= WOTLK
     ElunaTemplate<Vehicle>::Register(E, "Vehicle");
     ElunaTemplate<Vehicle>::SetMethods(E, LuaVehicle::VehicleMethods);
 #endif

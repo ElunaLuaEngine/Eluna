@@ -11,7 +11,7 @@
 #include "ElunaUtility.h"
 #include "Hooks.h"
 
-#if !defined CMANGOS
+#if !defined ELUNA_CMANGOS
 #include "DBCEnums.h"
 #include "Group.h"
 #include "Item.h"
@@ -19,6 +19,9 @@
 #include "SharedDefines.h"
 #include "Weather.h"
 #include "World.h"
+#if defined ELUNA_VMANGOS
+#include "Player.h"
+#endif
 #else
 #include "Entities/Item.h"
 #include "Globals/SharedDefines.h"
@@ -27,16 +30,8 @@
 #include "Server/DBCEnums.h"
 #include "Weather/Weather.h"
 #include "World/World.h"
-#endif
-
-#if !defined TRINITY
-#if !defined CMANGOS
-#include "Player.h"
-#else
 #include "Entities/Player.h"
 #endif
-#endif
-
 
 #include <mutex>
 #include <memory>
@@ -67,7 +62,7 @@ class WorldPacket;
 struct AreaTriggerEntry;
 struct AuctionEntry;
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
 class Battleground;
 class GameObjectAI;
 class InstanceScript;
@@ -77,7 +72,7 @@ struct ItemTemplate;
 typedef Battleground BattleGround;
 typedef BattlegroundTypeId BattleGroundTypeId;
 typedef InstanceScript InstanceData;
-#else // MANGOS && CMANGOS && VMANGOS
+#else
 class InstanceData;
 struct ItemPrototype;
 struct SpellEntry;
@@ -85,19 +80,21 @@ typedef ItemPrototype ItemTemplate;
 typedef SpellEffectIndex SpellEffIndex;
 typedef SpellEntry SpellInfo;
 
-#if defined CMANGOS
+#if defined ELUNA_CMANGOS
 class TemporarySpawn;
 typedef TemporarySpawn TempSummon;
-#else
+#endif
+
+#if defined ELUNA_VMANGOS
 class TemporarySummon;
 typedef TemporarySummon TempSummon;
 #endif
 
-#if defined CLASSIC
+#if ELUNA_EXPANSION == CLASSIC
 typedef int Difficulty;
 #endif
 
-#if !defined CLASSIC && !defined TBC
+#if ELUNA_EXPANSION >= WOTLK
 class VehicleInfo;
 typedef VehicleInfo Vehicle;
 #endif
@@ -133,7 +130,7 @@ enum MethodRegisterState
 
 #define ELUNA_STATE_PTR "Eluna State Ptr"
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
 #define ELUNA_GAME_API TC_GAME_API
 #define TRACKABLE_PTR_NAMESPACE ::Trinity::
 #else
@@ -242,7 +239,7 @@ public:
     lua_State* L;
     EventMgr* eventMgr;
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
     QueryCallbackProcessor queryProcessor;
     QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 #endif
@@ -461,7 +458,7 @@ public:
     bool OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
     bool OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest, uint32 opt);
     void GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject);
-#if !defined CLASSIC && !defined TBC
+#if ELUNA_EXPANSION >= WOTLK
     void OnDestroyed(GameObject* pGameObject, WorldObject* attacker);
     void OnDamaged(GameObject* pGameObject, WorldObject* attacker);
 #endif
@@ -489,7 +486,7 @@ public:
     void OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints);
     void OnTalentsReset(Player* pPlayer, bool noCost);
     void OnMoneyChanged(Player* pPlayer, int32& amount);
-#if defined CATA
+#if ELUNA_EXPANSION >= CATA
     void OnMoneyChanged(Player* pPlayer, int64& amount);
 #endif
     void OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim);
@@ -517,7 +514,7 @@ public:
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
     void OnAchievementComplete(Player* pPlayer, uint32 achievementId);
 
-#if !defined CLASSIC && !defined TBC
+#if ELUNA_EXPANSION >= WOTLK
     /* Vehicle */
     void OnInstall(Vehicle* vehicle);
     void OnUninstall(Vehicle* vehicle);
@@ -546,11 +543,9 @@ public:
     void OnCreate(Guild* guild, Player* leader, const std::string& name);
     void OnDisband(Guild* guild);
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair);
-#if defined CATA
-    void OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair);
-#endif
     void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount);
-#if defined CATA
+#if ELUNA_EXPANSION >= CATA
+    void OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair);
     void OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount);
 #endif
     void OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId, bool isDestBank, uint8 destContainer, uint8 destSlotId);
