@@ -5,7 +5,7 @@
 */
 
 #include "ElunaUtility.h"
-#if !defined CMANGOS
+#if !defined ELUNA_CMANGOS
 #include "World.h"
 #include "Object.h"
 #include "Unit.h"
@@ -22,7 +22,7 @@
 
 uint32 ElunaUtil::GetCurrTime()
 {
-#if defined TRINITY
+#if defined ELUNA_TRINITY
     return getMSTime();
 #else
     return WorldTimer::getMSTime();
@@ -31,7 +31,7 @@ uint32 ElunaUtil::GetCurrTime()
 
 uint32 ElunaUtil::GetTimeDiff(uint32 oldMSTime)
 {
-#if defined TRINITY
+#if defined ELUNA_TRINITY
     return GetMSTimeDiffToNow(oldMSTime);
 #else
     return WorldTimer::getMSTimeDiff(oldMSTime, WorldTimer::getMSTime());
@@ -64,7 +64,7 @@ ElunaUtil::WorldObjectInRangeCheck::WorldObjectInRangeCheck(bool nearest, WorldO
         if (GameObject const* go = i_obj->ToGameObject())
             i_obj_unit = go->GetOwner();
     if (!i_obj_unit)
-#if !defined VMANGOS
+#if !defined ELUNA_VMANGOS
         i_obj_fact = sFactionTemplateStore.LookupEntry(14);
 #else
         i_obj_fact = sObjectMgr.GetFactionTemplateEntry(14);

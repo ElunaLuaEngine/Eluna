@@ -11,7 +11,7 @@
 #include "ElunaUtility.h"
 #include "Hooks.h"
 
-#if !defined CMANGOS
+#if !defined ELUNA_CMANGOS
 #include "DBCEnums.h"
 #include "Group.h"
 #include "Item.h"
@@ -19,7 +19,7 @@
 #include "SharedDefines.h"
 #include "Weather.h"
 #include "World.h"
-#if defined VMANGOS
+#if defined ELUNA_VMANGOS
 #include "Player.h"
 #endif
 #else
@@ -62,7 +62,7 @@ class WorldPacket;
 struct AreaTriggerEntry;
 struct AuctionEntry;
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
 class Battleground;
 class GameObjectAI;
 class InstanceScript;
@@ -80,12 +80,12 @@ typedef ItemPrototype ItemTemplate;
 typedef SpellEffectIndex SpellEffIndex;
 typedef SpellEntry SpellInfo;
 
-#if defined CMANGOS
+#if defined ELUNA_CMANGOS
 class TemporarySpawn;
 typedef TemporarySpawn TempSummon;
 #endif
 
-#if defined VMANGOS
+#if defined ELUNA_VMANGOS
 class TemporarySummon;
 typedef TemporarySummon TempSummon;
 #endif
@@ -130,7 +130,7 @@ enum MethodRegisterState
 
 #define ELUNA_STATE_PTR "Eluna State Ptr"
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
 #define ELUNA_GAME_API TC_GAME_API
 #define TRACKABLE_PTR_NAMESPACE ::Trinity::
 #else
@@ -239,7 +239,7 @@ public:
     lua_State* L;
     EventMgr* eventMgr;
 
-#if defined TRINITY
+#if defined ELUNA_TRINITY
     QueryCallbackProcessor queryProcessor;
     QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 #endif

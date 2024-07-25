@@ -6,7 +6,7 @@
 
 #include "ElunaEventMgr.h"
 #include "LuaEngine.h"
-#if !defined CMANGOS
+#if !defined ELUNA_CMANGOS
 #include "Object.h"
 #else
 #include "Entities/Object.h"
