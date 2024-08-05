@@ -156,7 +156,7 @@ template<typename T = void>
 struct ElunaRegister
 {
     const char* name;
-    std::variant<std::monostate, int(*)(Eluna*, T*), int(*)(Eluna*)> mfunc;
+    typename std::conditional<std::is_same_v<T, void>, int(*)(Eluna*), int(*)(Eluna*, T*)>::type mfunc;
     MethodRegisterState regState;
 
     // constructor for non-globals (with T*)
@@ -169,7 +169,7 @@ struct ElunaRegister
 
     // constructor for nullptr functions and METHOD_REG_NONE (unimplemented methods)
     ElunaRegister(const char* name = nullptr, MethodRegisterState state = METHOD_REG_NONE)
-        : name(name), mfunc(std::monostate{}), regState(state) {}
+        : name(name), mfunc(nullptr), regState(state) {}
 };
 
 template<typename T = void>
@@ -277,17 +277,16 @@ public:
         lua_pop(E->L, 1);
     }
 
-    template<typename C = void>
+    template<typename C>
     static void SetMethods(Eluna* E, ElunaRegister<C>* methodTable)
     {
         ASSERT(E);
         ASSERT(methodTable);
 
         // determine if the method table functions are global or non-global
-        const auto& firstMethod = methodTable[0];
-        bool isGlobal = std::holds_alternative<int(*)(Eluna*)>(firstMethod.mfunc);
+        constexpr bool isGlobal = std::is_same_v<T, void>;
 
-        if (isGlobal)
+        if constexpr (isGlobal)
         {
             lua_pushglobaltable(E->L);
         }
@@ -428,17 +427,9 @@ public:
 
         int expected = 0;
         if constexpr (isGlobal)
-        {
-            auto func = std::get_if<int(*)(Eluna*)>(&l->mfunc);
-            if (func)
-                expected = (*func)(E);
-        }
+            expected = l->mfunc(E);      // global method
         else
-        {
-            auto func = std::get_if<int(*)(Eluna*, T*)>(&l->mfunc);
-            if (func)
-                expected = (*func)(E, obj);
-        }
+            expected = l->mfunc(E, obj); // non-global method
 
         int args = lua_gettop(L) - top;
         if (args < 0 || args > expected)
