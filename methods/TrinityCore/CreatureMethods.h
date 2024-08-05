@@ -1511,7 +1511,7 @@ namespace LuaCreature
         { "ClearFixate", &LuaCreature::ClearFixate },
         { "RemoveFromWorld", &LuaCreature::RemoveFromWorld },
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

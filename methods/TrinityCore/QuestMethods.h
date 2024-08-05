@@ -198,7 +198,7 @@ namespace LuaQuest
         { "IsDaily", &LuaQuest::IsDaily },
         { "IsRepeatable", &LuaQuest::IsRepeatable },
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

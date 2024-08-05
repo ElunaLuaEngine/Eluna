@@ -127,7 +127,7 @@ template<> int ElunaTemplate<ObjectGuid>::ToString(lua_State* L)
 
 void RegisterFunctions(Eluna* E)
 {
-    ElunaGlobal::SetMethods(E, LuaGlobalFunctions::GlobalMethods);
+    ElunaTemplate<>::SetMethods(E, LuaGlobalFunctions::GlobalMethods);
 
     ElunaTemplate<Object>::Register(E, "Object");
     ElunaTemplate<Object>::SetMethods(E, LuaObject::ObjectMethods);

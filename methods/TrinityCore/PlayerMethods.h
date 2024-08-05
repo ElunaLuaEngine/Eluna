@@ -3988,7 +3988,7 @@ namespace LuaPlayer
         { "ClearHonorInfo", nullptr, METHOD_REG_NONE }, // classic only
         { "GainSpellComboPoints", nullptr, METHOD_REG_NONE }, // not implemented
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

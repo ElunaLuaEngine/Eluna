@@ -26,80 +26,6 @@ extern "C"
 #include "UniqueTrackablePtr.h"
 #endif
 
-class ElunaGlobal
-{
-public:
-    struct ElunaRegister
-    {
-        const char* name;
-        int(*func)(Eluna*);
-        MethodRegisterState regState = METHOD_REG_ALL;
-    };
-
-    static int thunk(lua_State* L)
-    {
-        ElunaRegister* l = static_cast<ElunaRegister*>(lua_touserdata(L, lua_upvalueindex(1)));
-        Eluna* E = static_cast<Eluna*>(lua_touserdata(L, lua_upvalueindex(2)));
-        int top = lua_gettop(L);
-        int expected = l->func(E);
-        int args = lua_gettop(L) - top;
-        if (args < 0 || args > expected)
-        {
-            ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
-            ASSERT(false);
-        }
-        lua_settop(L, top + expected);
-        return expected;
-    }
-
-    static void SetMethods(Eluna* E, ElunaRegister* methodTable)
-    {
-        ASSERT(E);
-        ASSERT(methodTable);
-
-        lua_pushglobaltable(E->L);
-
-        for (; methodTable && methodTable->name; ++methodTable)
-        {
-            lua_pushstring(E->L, methodTable->name);
-
-            // if the method should not be registered, push a closure to error output function
-            if (methodTable->regState == METHOD_REG_NONE)
-            {
-                lua_pushcclosure(E->L, MethodUnimpl, 0);
-                lua_rawset(E->L, -3);
-                continue;
-            }
-
-            // if we're in multistate mode, we need to check whether a method is flagged as a world or a map specific method
-            if (!E->GetCompatibilityMode() && methodTable->regState != METHOD_REG_ALL)
-            {
-                // if the method should not be registered, push a closure to error output function
-                if ((E->GetBoundMapId() == -1 && methodTable->regState == METHOD_REG_MAP) ||
-                    (E->GetBoundMapId() != -1 && methodTable->regState == METHOD_REG_WORLD))
-                {
-                    lua_pushcclosure(E->L, MethodWrongState, 0);
-                    lua_rawset(E->L, -3);
-                    continue;
-                }
-            }
-
-            // push method table and Eluna object pointers as light user data
-            lua_pushlightuserdata(E->L, (void*)methodTable);
-            lua_pushlightuserdata(E->L, (void*)E);
-
-            // push a closure to the thunk function with 2 upvalues (method table and Eluna object)
-            lua_pushcclosure(E->L, thunk, 2);
-            lua_rawset(E->L, -3);
-        }
-
-        lua_remove(E->L, -1);
-    }
-
-    static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call a method that does not exist for state: %d", Eluna::GetEluna(L)->GetBoundMapId()); return 0; }
-    static int MethodUnimpl(lua_State* L) { luaL_error(L, "attempt to call a method that is not implemented for this emulator"); return 0; }
-};
-
 class ElunaObject
 {
 public:
@@ -226,15 +152,31 @@ MAKE_ELUNA_OBJECT_VALUE_IMPL(ObjectGuid);
 MAKE_ELUNA_OBJECT_VALUE_IMPL(WorldPacket);
 MAKE_ELUNA_OBJECT_VALUE_IMPL(ElunaQuery);
 
-template<typename T>
+template<typename T = void>
 struct ElunaRegister
 {
     const char* name;
-    int(*mfunc)(Eluna*, T*);
+    std::variant<std::monostate, int(*)(Eluna*, T*), int(*)(Eluna*)> mfunc;
     MethodRegisterState regState = METHOD_REG_ALL;
+
+    // constructor for non-globals (with T*)
+    ElunaRegister(const char* name, int(*func)(Eluna*, T*), MethodRegisterState state = METHOD_REG_ALL)
+        : name(name), mfunc(func), regState(state) {}
+
+    // constructor for globals (without T*)
+    ElunaRegister(const char* name, int(*func)(Eluna*), MethodRegisterState state = METHOD_REG_ALL)
+        : name(name), mfunc(func), regState(state) {}
+
+    // constructor for nullptr functions and METHOD_REG_NONE (unimplemented methods)
+    ElunaRegister(const char* name, std::nullptr_t, MethodRegisterState state = METHOD_REG_NONE)
+        : name(name), mfunc(std::monostate{}), regState(state) {}
+
+    // constructor for empty entry (last entry of method table)
+    ElunaRegister(const char* name = nullptr, MethodRegisterState state = METHOD_REG_NONE)
+        : name(name), mfunc(std::monostate{}), regState(state) {}
 };
 
-template<typename T>
+template<typename T = void>
 class ElunaTemplate
 {
 public:
@@ -339,17 +281,35 @@ public:
         lua_pop(E->L, 1);
     }
 
-    template<typename C>
+    template<typename C = void>
     static void SetMethods(Eluna* E, ElunaRegister<C>* methodTable)
     {
         ASSERT(E);
-        ASSERT(tname);
         ASSERT(methodTable);
 
-        // get metatable
-        lua_pushstring(E->L, tname);
-        lua_rawget(E->L, LUA_REGISTRYINDEX);
-        ASSERT(lua_istable(E->L, -1));
+        // determine if the method table functions are global or non-global
+        bool isGlobal = false;
+        const auto& firstMethod = methodTable[0];
+        std::visit([&isGlobal](auto&& func)
+        {
+            using FuncType = std::decay_t<decltype(func)>;
+            if constexpr (std::is_same_v<FuncType, int(*)(Eluna*)>)
+                isGlobal = true;
+        }, firstMethod.mfunc);
+
+        if (isGlobal)
+        {
+            lua_pushglobaltable(E->L);
+        }
+        else
+        {
+            ASSERT(tname);
+
+            // get metatable
+            lua_pushstring(E->L, tname);
+            lua_rawget(E->L, LUA_REGISTRYINDEX);
+            ASSERT(lua_istable(E->L, -1));
+        }
 
         // load all core-specific methods
         for (; methodTable && methodTable->name; ++methodTable)
@@ -461,13 +421,38 @@ public:
     {
         ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
         Eluna* E = static_cast<Eluna*>(lua_touserdata(L, lua_upvalueindex(2)));
+        T* obj;
 
-        T* obj = E->CHECKOBJ<T>(1); // get self
-        if (!obj)
-            return 0;
+        // determine if the method table functions are global or non-global
+        bool isGlobal = false;
+        std::visit([&](auto&& func)
+        {
+            using FuncType = std::decay_t<decltype(func)>;
+            if constexpr (std::is_same_v<FuncType, int(*)(Eluna*)>)
+                isGlobal = true;
+        }, l->mfunc);
+
+        // we only check self if the method is not a global
+        if (!isGlobal)
+        {
+            obj = E->CHECKOBJ<T>(1);
+            if (!obj)
+                return 0;
+        }
 
         int top = lua_gettop(L);
-        int expected = l->mfunc(E, obj);
+
+        int expected = 0;
+        std::visit([&](auto&& func)
+        {
+            using FuncType = std::decay_t<decltype(func)>;
+            if constexpr (std::is_same_v<FuncType, int(*)(Eluna*)>) // global method
+                expected = func(E);
+            else if constexpr (std::is_same_v<FuncType, int(*)(Eluna*, T*)>) // non-global method
+                expected = func(E, obj);
+
+        }, l->mfunc);
+
         int args = lua_gettop(L) - top;
         if (args < 0 || args > expected)
         {

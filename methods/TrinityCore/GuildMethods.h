@@ -281,7 +281,7 @@ namespace LuaGuild
         { "AddMember", &LuaGuild::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
         { "DeleteMember", &LuaGuild::DeleteMember, METHOD_REG_WORLD }, // World state method only in multistate
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

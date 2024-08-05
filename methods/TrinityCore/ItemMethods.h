@@ -842,7 +842,7 @@ namespace LuaItem
         // Other
         { "SaveToDB", &LuaItem::SaveToDB },
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

@@ -487,7 +487,7 @@ namespace LuaGroup
         { "ConvertToLFG", &LuaGroup::ConvertToLFG, METHOD_REG_WORLD }, // World state method only in multistate
         { "ConvertToRaid", &LuaGroup::ConvertToRaid, METHOD_REG_WORLD }, // World state method only in multistate
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 

@@ -339,7 +339,7 @@ namespace LuaGameObject
         { "Respawn", &LuaGameObject::Respawn },
         { "SaveToDB", &LuaGameObject::SaveToDB },
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif
