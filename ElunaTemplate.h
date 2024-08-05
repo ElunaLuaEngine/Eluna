@@ -284,7 +284,7 @@ public:
         ASSERT(methodTable);
 
         // determine if the method table functions are global or non-global
-        constexpr bool isGlobal = std::is_same_v<T, void>;
+        constexpr bool isGlobal = std::is_same_v<C, void>;
 
         if constexpr (isGlobal)
         {
