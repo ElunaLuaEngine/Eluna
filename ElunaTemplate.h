@@ -417,19 +417,13 @@ public:
     {
         ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
         Eluna* E = static_cast<Eluna*>(lua_touserdata(L, lua_upvalueindex(2)));
-        T* obj;
 
         // determine if the method table functions are global or non-global
-        bool isGlobal = false;
-        std::visit([&](auto&& func)
-        {
-            using FuncType = std::decay_t<decltype(func)>;
-            if constexpr (std::is_same_v<FuncType, int(*)(Eluna*)>)
-                isGlobal = true;
-        }, l->mfunc);
+        constexpr bool isGlobal = std::is_same_v<T, void>;
 
         // we only check self if the method is not a global
-        if (!isGlobal)
+        T* obj;
+        if constexpr (!isGlobal)
         {
             obj = E->CHECKOBJ<T>(1);
             if (!obj)
@@ -439,15 +433,18 @@ public:
         int top = lua_gettop(L);
 
         int expected = 0;
-        std::visit([&](auto&& func)
+        if constexpr (isGlobal)
         {
-            using FuncType = std::decay_t<decltype(func)>;
-            if constexpr (std::is_same_v<FuncType, int(*)(Eluna*)>) // global method
-                expected = func(E);
-            else if constexpr (std::is_same_v<FuncType, int(*)(Eluna*, T*)>) // non-global method
-                expected = func(E, obj);
-
-        }, l->mfunc);
+            auto func = std::get_if<int(*)(Eluna*)>(&l->mfunc);
+            if (func)
+                expected = (*func)(E);
+        }
+        else
+        {
+            auto func = std::get_if<int(*)(Eluna*, T*)>(&l->mfunc);
+            if (func)
+                expected = (*func)(E, obj);
+        }
 
         int args = lua_gettop(L) - top;
         if (args < 0 || args > expected)
