@@ -2974,7 +2974,7 @@ namespace LuaGlobalFunctions
         { "GetPlayerByName", &LuaGlobalFunctions::GetPlayerByName, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetGameTime", &LuaGlobalFunctions::GetGameTime },
         { "GetPlayersInWorld", &LuaGlobalFunctions::GetPlayersInWorld, METHOD_REG_WORLD }, // World state method only in multistate
-        { "GetPlayersOnMap", nullptr, METHOD_REG_NONE }, // Map state method only in multistate TODO
+        { "GetPlayersOnMap", METHOD_REG_NONE }, // Map state method only in multistate TODO
         { "GetGuildByName", &LuaGlobalFunctions::GetGuildByName },
         { "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID },
         { "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
@@ -3037,9 +3037,9 @@ namespace LuaGlobalFunctions
         { "StopGameEvent", &LuaGlobalFunctions::StopGameEvent },
 
         // unimplemented
-        { "WorldDBQueryAsync", nullptr, METHOD_REG_NONE },
-        { "CharDBQueryAsync", nullptr, METHOD_REG_NONE },
-        { "AuthDBQueryAsync", nullptr, METHOD_REG_NONE },
+        { "WorldDBQueryAsync", METHOD_REG_NONE },
+        { "CharDBQueryAsync", METHOD_REG_NONE },
+        { "AuthDBQueryAsync", METHOD_REG_NONE },
 
         { nullptr, METHOD_REG_NONE }
     };

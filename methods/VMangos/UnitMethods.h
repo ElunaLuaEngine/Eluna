@@ -3145,20 +3145,20 @@ namespace LuaUnit
 #endif
 
         // Not implemented mehtods
-        { "GetVehicle", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SetStunned", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SetCanFly", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SetVisible", nullptr, METHOD_REG_NONE }, // not implemented
-        { "IsVisible", nullptr, METHOD_REG_NONE }, // not implemented,
-        { "IsMoving", nullptr, METHOD_REG_NONE }, // not implemented
-        { "IsFlying", nullptr, METHOD_REG_NONE }, // not implemented
-        { "RestoreDisplayId", nullptr, METHOD_REG_NONE }, // not implemented
-        { "RestoreFaction", nullptr, METHOD_REG_NONE }, // not implemented
-        { "RemoveBindSightAuras", nullptr, METHOD_REG_NONE }, // not implemented
-        { "RemoveCharmAuras", nullptr, METHOD_REG_NONE }, // not implemented
-        { "DisableMelee", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SummonGuardian", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SetImmuneTo", nullptr, METHOD_REG_NONE }, // not implemented
+        { "GetVehicle", METHOD_REG_NONE }, // not implemented
+        { "SetStunned", METHOD_REG_NONE }, // not implemented
+        { "SetCanFly", METHOD_REG_NONE }, // not implemented
+        { "SetVisible", METHOD_REG_NONE }, // not implemented
+        { "IsVisible", METHOD_REG_NONE }, // not implemented,
+        { "IsMoving", METHOD_REG_NONE }, // not implemented
+        { "IsFlying", METHOD_REG_NONE }, // not implemented
+        { "RestoreDisplayId", METHOD_REG_NONE }, // not implemented
+        { "RestoreFaction", METHOD_REG_NONE }, // not implemented
+        { "RemoveBindSightAuras", METHOD_REG_NONE }, // not implemented
+        { "RemoveCharmAuras", METHOD_REG_NONE }, // not implemented
+        { "DisableMelee", METHOD_REG_NONE }, // not implemented
+        { "SummonGuardian", METHOD_REG_NONE }, // not implemented
+        { "SetImmuneTo", METHOD_REG_NONE }, // not implemented
 
         { nullptr, METHOD_REG_NONE }
     };

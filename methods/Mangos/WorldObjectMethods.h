@@ -1133,8 +1133,8 @@ namespace LuaWorldObject
         { "GetPhaseMask", &LuaWorldObject::GetPhaseMask },
         { "SetPhaseMask", &LuaWorldObject::SetPhaseMask },
 #else
-        { "GetPhaseMask", nullptr, METHOD_REG_NONE },
-        { "SetPhaseMask", nullptr, METHOD_REG_NONE },
+        { "GetPhaseMask", METHOD_REG_NONE },
+        { "SetPhaseMask", METHOD_REG_NONE },
 #endif
         { "GetInstanceId", &LuaWorldObject::GetInstanceId },
         { "GetAreaId", &LuaWorldObject::GetAreaId },

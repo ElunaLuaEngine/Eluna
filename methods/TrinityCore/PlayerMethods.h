@@ -3973,20 +3973,20 @@ namespace LuaPlayer
         { "SendMovieStart", &LuaPlayer::SendMovieStart },
 
         // Not implemented methods
-        { "GetHonorStoredKills", nullptr, METHOD_REG_NONE }, // classic only
-        { "GetRankPoints", nullptr, METHOD_REG_NONE }, // classic only
-        { "GetHonorLastWeekStandingPos", nullptr, METHOD_REG_NONE }, // classic only
+        { "GetHonorStoredKills", METHOD_REG_NONE }, // classic only
+        { "GetRankPoints", METHOD_REG_NONE }, // classic only
+        { "GetHonorLastWeekStandingPos", METHOD_REG_NONE }, // classic only
 
-        { "SetHonorStoredKills", nullptr, METHOD_REG_NONE }, // classic only
-        { "SetRankPoints", nullptr, METHOD_REG_NONE }, // classic only
-        { "SetHonorLastWeekStandingPos", nullptr, METHOD_REG_NONE }, // classic only
+        { "SetHonorStoredKills", METHOD_REG_NONE }, // classic only
+        { "SetRankPoints", METHOD_REG_NONE }, // classic only
+        { "SetHonorLastWeekStandingPos", METHOD_REG_NONE }, // classic only
 
-        { "CanFlyInZone", nullptr, METHOD_REG_NONE }, // not implemented
+        { "CanFlyInZone", METHOD_REG_NONE }, // not implemented
 
-        { "UpdateHonor", nullptr, METHOD_REG_NONE }, // classic only
-        { "ResetHonor", nullptr, METHOD_REG_NONE }, // classic only
-        { "ClearHonorInfo", nullptr, METHOD_REG_NONE }, // classic only
-        { "GainSpellComboPoints", nullptr, METHOD_REG_NONE }, // not implemented
+        { "UpdateHonor", METHOD_REG_NONE }, // classic only
+        { "ResetHonor", METHOD_REG_NONE }, // classic only
+        { "ClearHonorInfo", METHOD_REG_NONE }, // classic only
+        { "GainSpellComboPoints", METHOD_REG_NONE }, // not implemented
 
         { nullptr, METHOD_REG_NONE }
     };

@@ -188,12 +188,12 @@ namespace LuaQuest
 #if defined(TBC) || defined(WOTLK)
         { "IsDaily", &LuaQuest::IsDaily },
 #else
-        { "IsDaily", nullptr, METHOD_REG_NONE },
+        { "IsDaily", METHOD_REG_NONE },
 #endif
         { "IsRepeatable", &LuaQuest::IsRepeatable },
 
         // Not implemented methods
-        { "GetMaxLevel", nullptr, METHOD_REG_NONE },  // not implemented
+        { "GetMaxLevel", METHOD_REG_NONE },  // not implemented
 
         { nullptr, METHOD_REG_NONE }
     };

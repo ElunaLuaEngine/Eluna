@@ -189,11 +189,11 @@ namespace LuaQuest
 #ifndef CLASSIC
         { "IsDaily", &LuaQuest::IsDaily },
 #else
-        { "IsDaily", nullptr, METHOD_REG_NONE },
+        { "IsDaily", METHOD_REG_NONE },
 #endif
 
         // Not implemented methods
-        { "GetMaxLevel", nullptr, METHOD_REG_NONE },  // not implemented
+        { "GetMaxLevel", METHOD_REG_NONE },  // not implemented
 
         { nullptr, METHOD_REG_NONE }
     };

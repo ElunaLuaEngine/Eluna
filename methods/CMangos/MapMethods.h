@@ -357,8 +357,8 @@ namespace LuaMap
         { "IsArena", &LuaMap::IsArena },
         { "IsHeroic", &LuaMap::IsHeroic },
 #else
-        { "IsArena", nullptr, METHOD_REG_NONE },
-        { "IsHeroic", nullptr, METHOD_REG_NONE },
+        { "IsArena", METHOD_REG_NONE },
+        { "IsHeroic", METHOD_REG_NONE },
 #endif
 
         // Other

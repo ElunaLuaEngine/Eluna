@@ -1222,7 +1222,7 @@ namespace LuaCreature
 #ifndef CATA
         { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
 #else
-        { "GetShieldBlockValue", nullptr, METHOD_REG_NONE },
+        { "GetShieldBlockValue", METHOD_REG_NONE },
 #endif
 
         // Setters
@@ -1243,7 +1243,7 @@ namespace LuaCreature
 #ifndef CATA
         { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
 #else
-        { "SetDisableReputationGain", nullptr, METHOD_REG_NONE },
+        { "SetDisableReputationGain", METHOD_REG_NONE },
 #endif
 
         // Boolean
@@ -1271,7 +1271,7 @@ namespace LuaCreature
 #ifndef CATA
         { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
 #else
-        { "IsReputationGainDisabled", nullptr, METHOD_REG_NONE },
+        { "IsReputationGainDisabled", METHOD_REG_NONE },
 #endif
 
         // Other
@@ -1291,24 +1291,24 @@ namespace LuaCreature
         { "RemoveFromWorld", &LuaCreature::RemoveFromWorld },
         
         // Not implemented methods
-        { "GetWaypointPath", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "GetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "SetRegeneratingHealth", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "SetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "SetReactState", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "IsDungeonBoss", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "IsTrigger", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "CanStartAttack", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "IsDamageEnoughForLootingAndReward", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "HasLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "AddLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "ResetLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "RemoveLootMode", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "GetThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "ClearThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "ResetAllThreat", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "FixateTarget", nullptr, METHOD_REG_NONE }, // TC/Acore
-        { "ClearFixate", nullptr, METHOD_REG_NONE }, // TC/Acore
+        { "GetWaypointPath", METHOD_REG_NONE }, // TC/Acore
+        { "GetLootMode", METHOD_REG_NONE }, // TC/Acore
+        { "SetRegeneratingHealth", METHOD_REG_NONE }, // TC/Acore
+        { "SetLootMode", METHOD_REG_NONE }, // TC/Acore
+        { "SetReactState", METHOD_REG_NONE }, // TC/Acore
+        { "IsDungeonBoss", METHOD_REG_NONE }, // TC/Acore
+        { "IsTrigger", METHOD_REG_NONE }, // TC/Acore
+        { "CanStartAttack", METHOD_REG_NONE }, // TC/Acore
+        { "IsDamageEnoughForLootingAndReward", METHOD_REG_NONE }, // TC/Acore
+        { "HasLootMode", METHOD_REG_NONE }, // TC/Acore
+        { "AddLootMode", METHOD_REG_NONE }, // TC/Acore
+        { "ResetLootMode", METHOD_REG_NONE }, // TC/Acore
+        { "RemoveLootMode", METHOD_REG_NONE }, // TC/Acore
+        { "GetThreat", METHOD_REG_NONE }, // TC/Acore
+        { "ClearThreat", METHOD_REG_NONE }, // TC/Acore
+        { "ResetAllThreat", METHOD_REG_NONE }, // TC/Acore
+        { "FixateTarget", METHOD_REG_NONE }, // TC/Acore
+        { "ClearFixate", METHOD_REG_NONE }, // TC/Acore
 
         { nullptr, METHOD_REG_NONE }
     };

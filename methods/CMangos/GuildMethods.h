@@ -255,13 +255,13 @@ namespace LuaGuild
 #if defined(TBC) || defined(WOTLK)
         { "SetBankTabText", &LuaGuild::SetBankTabText, METHOD_REG_WORLD }, // World state method only in multistate
 #else
-        { "SetBankTabText", nullptr, METHOD_REG_NONE },
+        { "SetBankTabText", METHOD_REG_NONE },
 #endif
         { "SetMemberRank", &LuaGuild::SetMemberRank, METHOD_REG_WORLD }, // World state method only in multistate
 #ifndef CATA
         { "SetLeader", &LuaGuild::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
 #else
-        { "SetLeader", nullptr, METHOD_REG_NONE },
+        { "SetLeader", METHOD_REG_NONE },
 #endif
 
         // Other

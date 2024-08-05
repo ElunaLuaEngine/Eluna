@@ -2719,7 +2719,7 @@ namespace LuaUnit
         { "DealHeal", &LuaUnit::DealHeal },
 
         // Not implemented methods
-        { "SummonGuardian", nullptr, METHOD_REG_NONE }, // not implemented
+        { "SummonGuardian", METHOD_REG_NONE }, // not implemented
 
         { nullptr, METHOD_REG_NONE }
     };

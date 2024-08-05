@@ -2586,30 +2586,30 @@ namespace LuaUnit
         { "SetCritterGUID", &LuaUnit::SetCritterGUID },
         { "MoveJump", &LuaUnit::MoveJump },
 #else
-        { "GetCritterGUID", nullptr, METHOD_REG_NONE },
-        { "GetVehicleKit", nullptr, METHOD_REG_NONE },
-        { "SetFFA", nullptr, METHOD_REG_NONE },
-        { "SetSanctuary", nullptr, METHOD_REG_NONE },
-        { "SetCritterGUID", nullptr, METHOD_REG_NONE },
-        { "IsOnVehicle", nullptr, METHOD_REG_NONE },
-        { "RemoveArenaAuras", nullptr, METHOD_REG_NONE },
-        { "MoveJump", nullptr, METHOD_REG_NONE },
+        { "GetCritterGUID", METHOD_REG_NONE },
+        { "GetVehicleKit", METHOD_REG_NONE },
+        { "SetFFA", METHOD_REG_NONE },
+        { "SetSanctuary", METHOD_REG_NONE },
+        { "SetCritterGUID", METHOD_REG_NONE },
+        { "IsOnVehicle", METHOD_REG_NONE },
+        { "RemoveArenaAuras", METHOD_REG_NONE },
+        { "MoveJump", METHOD_REG_NONE },
 #endif
 
         // Not implemented methods
-        { "GetVehicle", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SetStunned", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SetCanFly", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SetVisible", nullptr, METHOD_REG_NONE }, // not implemented
-        { "IsVisible", nullptr, METHOD_REG_NONE }, // not implemented
-        { "IsMoving", nullptr, METHOD_REG_NONE }, // not implemented
-        { "IsFlying", nullptr, METHOD_REG_NONE }, // not implemented
-        { "RestoreDisplayId", nullptr, METHOD_REG_NONE }, // not implemented
-        { "RestoreFaction", nullptr, METHOD_REG_NONE }, //not implemented
-        { "RemoveBindSightAuras", nullptr, METHOD_REG_NONE }, // not implemented
-        { "RemoveCharmAuras", nullptr, METHOD_REG_NONE }, // not implemented
-        { "DisableMelee", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SummonGuardian", nullptr, METHOD_REG_NONE }, // not implemented
+        { "GetVehicle", METHOD_REG_NONE }, // not implemented
+        { "SetStunned", METHOD_REG_NONE }, // not implemented
+        { "SetCanFly", METHOD_REG_NONE }, // not implemented
+        { "SetVisible", METHOD_REG_NONE }, // not implemented
+        { "IsVisible", METHOD_REG_NONE }, // not implemented
+        { "IsMoving", METHOD_REG_NONE }, // not implemented
+        { "IsFlying", METHOD_REG_NONE }, // not implemented
+        { "RestoreDisplayId", METHOD_REG_NONE }, // not implemented
+        { "RestoreFaction", METHOD_REG_NONE }, //not implemented
+        { "RemoveBindSightAuras", METHOD_REG_NONE }, // not implemented
+        { "RemoveCharmAuras", METHOD_REG_NONE }, // not implemented
+        { "DisableMelee", METHOD_REG_NONE }, // not implemented
+        { "SummonGuardian", METHOD_REG_NONE }, // not implemented
 
         { nullptr, METHOD_REG_NONE }
     };

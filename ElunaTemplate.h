@@ -168,10 +168,6 @@ struct ElunaRegister
         : name(name), mfunc(func), regState(state) {}
 
     // constructor for nullptr functions and METHOD_REG_NONE (unimplemented methods)
-    ElunaRegister(const char* name, std::nullptr_t, MethodRegisterState state = METHOD_REG_NONE)
-        : name(name), mfunc(std::monostate{}), regState(state) {}
-
-    // constructor for empty entry (last entry of method table)
     ElunaRegister(const char* name = nullptr, MethodRegisterState state = METHOD_REG_NONE)
         : name(name), mfunc(std::monostate{}), regState(state) {}
 };
