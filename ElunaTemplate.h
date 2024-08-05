@@ -284,14 +284,8 @@ public:
         ASSERT(methodTable);
 
         // determine if the method table functions are global or non-global
-        bool isGlobal = false;
         const auto& firstMethod = methodTable[0];
-        std::visit([&isGlobal](auto&& func)
-        {
-            using FuncType = std::decay_t<decltype(func)>;
-            if constexpr (std::is_same_v<FuncType, int(*)(Eluna*)>)
-                isGlobal = true;
-        }, firstMethod.mfunc);
+        bool isGlobal = std::holds_alternative<int(*)(Eluna*)>(firstMethod.mfunc);
 
         if (isGlobal)
         {
