@@ -157,7 +157,7 @@ struct ElunaRegister
 {
     const char* name;
     std::variant<std::monostate, int(*)(Eluna*, T*), int(*)(Eluna*)> mfunc;
-    MethodRegisterState regState = METHOD_REG_ALL;
+    MethodRegisterState regState;
 
     // constructor for non-globals (with T*)
     ElunaRegister(const char* name, int(*func)(Eluna*, T*), MethodRegisterState state = METHOD_REG_ALL)
