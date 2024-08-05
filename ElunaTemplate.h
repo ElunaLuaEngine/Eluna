@@ -198,7 +198,7 @@ public:
 
         // create metatable for userdata of this type
         luaL_newmetatable(E->L, tname);
-        int metatable  = lua_gettop(E->L);
+        int metatable = lua_gettop(E->L);
 
         // push methodtable to stack to be accessed and modified by users
         lua_pushvalue(E->L, metatable);
