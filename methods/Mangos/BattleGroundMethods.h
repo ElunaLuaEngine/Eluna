@@ -245,7 +245,7 @@ namespace LuaBattleGround
         { "GetWinner", &LuaBattleGround::GetWinner },
         { "GetStatus", &LuaBattleGround::GetStatus },
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

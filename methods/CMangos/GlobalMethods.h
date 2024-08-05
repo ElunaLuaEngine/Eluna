@@ -3180,7 +3180,7 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
-    ElunaGlobal::ElunaRegister GlobalMethods[] =
+    ElunaRegister<> GlobalMethods[] =
     {
         // Hooks
         { "RegisterPacketEvent", &LuaGlobalFunctions::RegisterPacketEvent },
@@ -3297,7 +3297,7 @@ namespace LuaGlobalFunctions
         { "StartGameEvent", &LuaGlobalFunctions::StartGameEvent },
         { "StopGameEvent", &LuaGlobalFunctions::StopGameEvent },
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 }
 #endif

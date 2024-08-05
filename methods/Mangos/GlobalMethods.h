@@ -2923,7 +2923,7 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
-    ElunaGlobal::ElunaRegister GlobalMethods[] =
+    ElunaRegister<> GlobalMethods[] =
     {
         // Hooks
         { "RegisterPacketEvent", &LuaGlobalFunctions::RegisterPacketEvent },
@@ -3041,7 +3041,7 @@ namespace LuaGlobalFunctions
         { "CharDBQueryAsync", nullptr, METHOD_REG_NONE },
         { "AuthDBQueryAsync", nullptr, METHOD_REG_NONE },
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 }
 #endif

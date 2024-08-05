@@ -340,7 +340,7 @@ namespace LuaPacket
         { "WriteFloat", &LuaPacket::WriteFloat },
         { "WriteDouble", &LuaPacket::WriteDouble },
 
-        { NULL, NULL }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 

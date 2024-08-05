@@ -1310,7 +1310,7 @@ namespace LuaCreature
         { "FixateTarget", nullptr, METHOD_REG_NONE }, // TC/Acore
         { "ClearFixate", nullptr, METHOD_REG_NONE }, // TC/Acore
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

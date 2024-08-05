@@ -723,7 +723,7 @@ namespace LuaItem
         { "IsWeaponVellum", nullptr, METHOD_REG_NONE },  // not implemented
         { "IsArmorVellum", nullptr, METHOD_REG_NONE },  // not implemented
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

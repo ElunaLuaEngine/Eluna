@@ -326,7 +326,7 @@ namespace LuaMap
         { "IsArena", nullptr, METHOD_REG_NONE },
         { "IsHeroic", nullptr, METHOD_REG_NONE },
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

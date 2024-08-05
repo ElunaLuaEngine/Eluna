@@ -337,7 +337,7 @@ namespace LuaQuery
         { "NextRow", &LuaQuery::NextRow },
         { "IsNull", &LuaQuery::IsNull },
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #undef RESULT

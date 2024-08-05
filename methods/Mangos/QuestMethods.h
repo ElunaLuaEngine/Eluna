@@ -195,7 +195,7 @@ namespace LuaQuest
         // Not implemented methods
         { "GetMaxLevel", nullptr, METHOD_REG_NONE },  // not implemented
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

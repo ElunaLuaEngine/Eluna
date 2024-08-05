@@ -3160,7 +3160,7 @@ namespace LuaUnit
         { "SummonGuardian", nullptr, METHOD_REG_NONE }, // not implemented
         { "SetImmuneTo", nullptr, METHOD_REG_NONE }, // not implemented
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

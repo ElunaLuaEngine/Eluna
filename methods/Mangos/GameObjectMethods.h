@@ -339,7 +339,7 @@ namespace LuaGameObject
         // Not implemented methods
         { "IsDestructible", nullptr, METHOD_REG_NONE },  // Not implemented
 
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

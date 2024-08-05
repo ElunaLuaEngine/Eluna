@@ -3978,7 +3978,7 @@ namespace LuaPlayer
         { "CanCompleteRepeatableQuest", nullptr, METHOD_REG_NONE }, // not implemented
         { "CanRewardQuest", nullptr, METHOD_REG_NONE }, // not implemented
 
-        { NULL, NULL }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif

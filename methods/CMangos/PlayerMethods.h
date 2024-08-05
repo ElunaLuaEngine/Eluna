@@ -4061,7 +4061,7 @@ namespace LuaPlayer
         { "GetXP", nullptr, METHOD_REG_NONE }, // not implemented
         { "GetXPForNextLevel", nullptr, METHOD_REG_NONE }, // not implemented
         
-        { NULL, NULL, METHOD_REG_NONE }
+        { nullptr, METHOD_REG_NONE }
     };
 };
 #endif
