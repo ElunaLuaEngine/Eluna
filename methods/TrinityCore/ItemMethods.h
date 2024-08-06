@@ -840,9 +840,7 @@ namespace LuaItem
         { "ClearEnchantment", &LuaItem::ClearEnchantment },
 
         // Other
-        { "SaveToDB", &LuaItem::SaveToDB },
-
-        { nullptr, METHOD_REG_NONE }
+        { "SaveToDB", &LuaItem::SaveToDB }
     };
 };
 #endif

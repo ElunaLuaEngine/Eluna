@@ -3976,9 +3976,7 @@ namespace LuaPlayer
         { "GetXP", METHOD_REG_NONE }, // not implemented
         { "GetXPForNextLevel", METHOD_REG_NONE }, // not implemented
         { "CanCompleteRepeatableQuest", METHOD_REG_NONE }, // not implemented
-        { "CanRewardQuest", METHOD_REG_NONE }, // not implemented
-
-        { nullptr, METHOD_REG_NONE }
+        { "CanRewardQuest", METHOD_REG_NONE } // not implemented
     };
 };
 #endif

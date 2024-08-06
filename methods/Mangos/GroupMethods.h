@@ -411,9 +411,7 @@ namespace LuaGroup
         { "IsBFGroup", METHOD_REG_NONE },   // not implemented
         { "ConvertToLFG", METHOD_REG_NONE },    // not implemented
         { "GetMemberFlags", METHOD_REG_NONE },    // not implemented
-        { "SetMemberFlag", METHOD_REG_NONE },    // not implemented
-
-        { nullptr, METHOD_REG_NONE }
+        { "SetMemberFlag", METHOD_REG_NONE }    // not implemented
     };
 };
 

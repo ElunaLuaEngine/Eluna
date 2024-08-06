@@ -380,9 +380,7 @@ namespace LuaMap
 
         // Other
         { "SaveInstanceData", &LuaMap::SaveInstanceData },
-        { "Data", &LuaMap::Data },
-
-        { nullptr, METHOD_REG_NONE }
+        { "Data", &LuaMap::Data }
     };
 };
 #endif

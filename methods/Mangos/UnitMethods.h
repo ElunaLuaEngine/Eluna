@@ -2616,9 +2616,7 @@ namespace LuaUnit
         { "RemoveCharmAuras", METHOD_REG_NONE }, // not implemented
         { "DisableMelee", METHOD_REG_NONE }, // not implemented
         { "SummonGuardian", METHOD_REG_NONE }, // not implemented
-        { "SetImmuneTo", METHOD_REG_NONE }, // not implemented
-
-        { nullptr, METHOD_REG_NONE }
+        { "SetImmuneTo", METHOD_REG_NONE } // not implemented
     };
 };
 #endif

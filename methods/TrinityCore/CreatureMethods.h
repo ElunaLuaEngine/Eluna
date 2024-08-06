@@ -1509,9 +1509,7 @@ namespace LuaCreature
         { "ResetAllThreat", &LuaCreature::ResetAllThreat },
         { "FixateTarget", &LuaCreature::FixateTarget },
         { "ClearFixate", &LuaCreature::ClearFixate },
-        { "RemoveFromWorld", &LuaCreature::RemoveFromWorld },
-
-        { nullptr, METHOD_REG_NONE }
+        { "RemoveFromWorld", &LuaCreature::RemoveFromWorld }
     };
 };
 #endif

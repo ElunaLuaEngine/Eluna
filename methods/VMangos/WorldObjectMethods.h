@@ -1223,9 +1223,7 @@ namespace LuaWorldObject
         { "RemoveEvents", &LuaWorldObject::RemoveEvents },
         { "PlayMusic", &LuaWorldObject::PlayMusic },
         { "PlayDirectSound", &LuaWorldObject::PlayDirectSound },
-        { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound },
-
-        { nullptr, METHOD_REG_NONE }
+        { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound }
     };
 };
 #endif

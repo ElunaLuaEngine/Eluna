@@ -1214,9 +1214,7 @@ namespace LuaCreature
         { "AddLootMode", METHOD_REG_NONE },   // not implemented
         { "ResetLootMode", METHOD_REG_NONE },   // not implemented
         { "RemoveLootMode", METHOD_REG_NONE },   // not implemented
-        { "RemoveFromWorld", METHOD_REG_NONE }, // not implemented
-
-        { nullptr, METHOD_REG_NONE }
+        { "RemoveFromWorld", METHOD_REG_NONE } // not implemented
     };
 };
 #endif

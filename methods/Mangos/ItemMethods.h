@@ -867,9 +867,7 @@ namespace LuaItem
         { "SaveToDB", &LuaItem::SaveToDB },
 
         // Not implemented methods
-        { "IsRefundExpired", METHOD_REG_NONE }, // not implemented
-
-        { nullptr, METHOD_REG_NONE }
+        { "IsRefundExpired", METHOD_REG_NONE } // not implemented
     };
 };
 #endif

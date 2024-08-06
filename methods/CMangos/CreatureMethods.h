@@ -1308,9 +1308,7 @@ namespace LuaCreature
         { "ClearThreat", METHOD_REG_NONE }, // TC/Acore
         { "ResetAllThreat", METHOD_REG_NONE }, // TC/Acore
         { "FixateTarget", METHOD_REG_NONE }, // TC/Acore
-        { "ClearFixate", METHOD_REG_NONE }, // TC/Acore
-
-        { nullptr, METHOD_REG_NONE }
+        { "ClearFixate", METHOD_REG_NONE } // TC/Acore
     };
 };
 #endif

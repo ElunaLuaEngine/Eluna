@@ -168,7 +168,7 @@ struct ElunaRegister
         : name(name), mfunc(func), regState(state) {}
 
     // constructor for nullptr functions and METHOD_REG_NONE (unimplemented methods)
-    ElunaRegister(const char* name = nullptr, MethodRegisterState state = METHOD_REG_NONE)
+    ElunaRegister(const char* name, MethodRegisterState state = METHOD_REG_NONE)
         : name(name), mfunc(nullptr), regState(state) {}
 };
 
@@ -277,8 +277,8 @@ public:
         lua_pop(E->L, 1);
     }
 
-    template<typename C>
-    static void SetMethods(Eluna* E, ElunaRegister<C>* methodTable)
+    template<typename C, size_t N>
+    static void SetMethods(Eluna* E, ElunaRegister<C> const (&methodTable)[N])
     {
         ASSERT(E);
         ASSERT(methodTable);
@@ -301,13 +301,15 @@ public:
         }
 
         // load all core-specific methods
-        for (; methodTable && methodTable->name; ++methodTable)
+        for (int i = 0; i < N; i++)
         {
+            const auto& method = methodTable + i;
+
             // push the method name to the Lua stack
-            lua_pushstring(E->L, methodTable->name);
+            lua_pushstring(E->L, method->name);
 
             // if the method should not be registered, push a closure to error output function
-            if (methodTable->regState == METHOD_REG_NONE)
+            if (method->regState == METHOD_REG_NONE)
             {
                 lua_pushcclosure(E->L, MethodUnimpl, 0);
                 lua_rawset(E->L, -3);
@@ -315,11 +317,11 @@ public:
             }
 
             // if we're in multistate mode, we need to check whether a method is flagged as a world or a map specific method
-            if (!E->GetCompatibilityMode() && methodTable->regState != METHOD_REG_ALL)
+            if (!E->GetCompatibilityMode() && method->regState != METHOD_REG_ALL)
             {
                 // if the method should not be registered, push a closure to error output function
-                if ((E->GetBoundMapId() == -1 && methodTable->regState == METHOD_REG_MAP) ||
-                    (E->GetBoundMapId() != -1 && methodTable->regState == METHOD_REG_WORLD))
+                if ((E->GetBoundMapId() == -1 && method->regState == METHOD_REG_MAP) ||
+                    (E->GetBoundMapId() != -1 && method->regState == METHOD_REG_WORLD))
                 {
                     lua_pushcclosure(E->L, MethodWrongState, 0);
                     lua_rawset(E->L, -3);
@@ -328,7 +330,7 @@ public:
             }
 
             // push method table and Eluna object pointers as light user data
-            lua_pushlightuserdata(E->L, (void*)methodTable);
+            lua_pushlightuserdata(E->L, (void*)method);
             lua_pushlightuserdata(E->L, (void*)E);
 
             // push a closure to the thunk function with 2 upvalues (method table and Eluna object)

@@ -186,9 +186,7 @@ namespace LuaAura
         { "SetStackAmount", &LuaAura::SetStackAmount },
 
         // Other
-        { "Remove", &LuaAura::Remove },
-
-        { nullptr, METHOD_REG_NONE }
+        { "Remove", &LuaAura::Remove }
     };
 };
 #endif

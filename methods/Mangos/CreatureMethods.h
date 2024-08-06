@@ -1206,9 +1206,7 @@ namespace LuaCreature
         { "ResetLootMode", METHOD_REG_NONE },   // not implemented
         { "RemoveLootMode", METHOD_REG_NONE },   // not implemented
         { "RemoveFromWorld", METHOD_REG_NONE }, // not implemented
-        { "GetRank", METHOD_REG_NONE }, // not implemented
-
-        { nullptr, METHOD_REG_NONE }
+        { "GetRank", METHOD_REG_NONE } // not implemented
     };
 };
 #endif

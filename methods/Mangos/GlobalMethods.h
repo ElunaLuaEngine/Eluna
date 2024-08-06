@@ -3039,9 +3039,7 @@ namespace LuaGlobalFunctions
         // unimplemented
         { "WorldDBQueryAsync", METHOD_REG_NONE },
         { "CharDBQueryAsync", METHOD_REG_NONE },
-        { "AuthDBQueryAsync", METHOD_REG_NONE },
-
-        { nullptr, METHOD_REG_NONE }
+        { "AuthDBQueryAsync", METHOD_REG_NONE }
     };
 }
 #endif

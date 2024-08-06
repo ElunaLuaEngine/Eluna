@@ -324,9 +324,7 @@ namespace LuaMap
         { "SaveInstanceData", &LuaMap::SaveInstanceData },
 
         { "IsArena", METHOD_REG_NONE },
-        { "IsHeroic", METHOD_REG_NONE },
-
-        { nullptr, METHOD_REG_NONE }
+        { "IsHeroic", METHOD_REG_NONE }
     };
 };
 #endif
