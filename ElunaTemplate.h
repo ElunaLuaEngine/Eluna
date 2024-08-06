@@ -311,7 +311,8 @@ public:
             // if the method should not be registered, push a closure to error output function
             if (method->regState == METHOD_REG_NONE)
             {
-                lua_pushcclosure(E->L, MethodUnimpl, 0);
+                lua_pushstring(E->L, method->name);
+                lua_pushcclosure(E->L, MethodUnimpl, 1);
                 lua_rawset(E->L, -3);
                 continue;
             }
@@ -323,7 +324,8 @@ public:
                 if ((E->GetBoundMapId() == -1 && method->regState == METHOD_REG_MAP) ||
                     (E->GetBoundMapId() != -1 && method->regState == METHOD_REG_WORLD))
                 {
-                    lua_pushcclosure(E->L, MethodWrongState, 0);
+                    lua_pushstring(E->L, method->name);
+                    lua_pushcclosure(E->L, MethodWrongState, 1);
                     lua_rawset(E->L, -3);
                     continue;
                 }
@@ -481,8 +483,8 @@ public:
     static int LessOrEqual(lua_State* L) { return CompareError(L); }
     static int Call(lua_State* L) { return luaL_error(L, "attempt to call a %s value", tname); }
 
-    static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call a method that does not exist for state: %d", Eluna::GetEluna(L)->GetBoundMapId()); return 0; }
-    static int MethodUnimpl(lua_State* L) { luaL_error(L, "attempt to call a method that is not implemented for this emulator"); return 0; }
+    static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call method '%s' that does not exist for state: %d", lua_tostring(L, lua_upvalueindex(1)), Eluna::GetEluna(L)->GetBoundMapId()); return 0; }
+    static int MethodUnimpl(lua_State* L) { luaL_error(L, "attempt to call method '%s' that is not implemented for this emulator", lua_tostring(L, lua_upvalueindex(1))); return 0; }
 };
 
 template<typename T> const char* ElunaTemplate<T>::tname = NULL;
