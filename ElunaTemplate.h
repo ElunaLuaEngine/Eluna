@@ -301,7 +301,7 @@ public:
         }
 
         // load all core-specific methods
-        for (int i = 0; i < N; i++)
+        for (std::size_t i = 0; i < N; i++)
         {
             const auto& method = methodTable + i;
 
