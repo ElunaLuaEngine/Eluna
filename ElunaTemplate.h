@@ -187,94 +187,96 @@ public:
         ASSERT(E);
         ASSERT(name);
 
+        lua_State* L = E->L;
+
         // check that metatable isn't already there
-        lua_getglobal(E->L, name);
-        ASSERT(lua_isnoneornil(E->L, -1));
+        lua_getglobal(L, name);
+        ASSERT(lua_isnoneornil(L, -1));
 
         // pop nil
-        lua_pop(E->L, 1);
+        lua_pop(L, 1);
 
         tname = name;
 
         // create metatable for userdata of this type
-        luaL_newmetatable(E->L, tname);
-        int metatable = lua_gettop(E->L);
+        luaL_newmetatable(L, tname);
+        int metatable = lua_gettop(L);
 
         // push methodtable to stack to be accessed and modified by users
-        lua_pushvalue(E->L, metatable);
-        lua_setglobal(E->L, tname);
+        lua_pushvalue(L, metatable);
+        lua_setglobal(L, tname);
 
         // tostring
-        lua_pushcfunction(E->L, ToString);
-        lua_setfield(E->L, metatable, "__tostring");
+        lua_pushcfunction(L, ToString);
+        lua_setfield(L, metatable, "__tostring");
 
         // garbage collecting
-        lua_pushcfunction(E->L, CollectGarbage);
-        lua_setfield(E->L, metatable, "__gc");
+        lua_pushcfunction(L, CollectGarbage);
+        lua_setfield(L, metatable, "__gc");
 
         // TODO: Safe to remove this?
         // make methods accessible through metatable
-        lua_pushvalue(E->L, metatable);
-        lua_setfield(E->L, metatable, "__index");
+        lua_pushvalue(L, metatable);
+        lua_setfield(L, metatable, "__index");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, Add);
-        lua_setfield(E->L, metatable, "__add");
+        lua_pushcfunction(L, Add);
+        lua_setfield(L, metatable, "__add");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, Substract);
-        lua_setfield(E->L, metatable, "__sub");
+        lua_pushcfunction(L, Substract);
+        lua_setfield(L, metatable, "__sub");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, Multiply);
-        lua_setfield(E->L, metatable, "__mul");
+        lua_pushcfunction(L, Multiply);
+        lua_setfield(L, metatable, "__mul");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, Divide);
-        lua_setfield(E->L, metatable, "__div");
+        lua_pushcfunction(L, Divide);
+        lua_setfield(L, metatable, "__div");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, Mod);
-        lua_setfield(E->L, metatable, "__mod");
+        lua_pushcfunction(L, Mod);
+        lua_setfield(L, metatable, "__mod");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, Pow);
-        lua_setfield(E->L, metatable, "__pow");
+        lua_pushcfunction(L, Pow);
+        lua_setfield(L, metatable, "__pow");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, UnaryMinus);
-        lua_setfield(E->L, metatable, "__unm");
+        lua_pushcfunction(L, UnaryMinus);
+        lua_setfield(L, metatable, "__unm");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, Concat);
-        lua_setfield(E->L, metatable, "__concat");
+        lua_pushcfunction(L, Concat);
+        lua_setfield(L, metatable, "__concat");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, Length);
-        lua_setfield(E->L, metatable, "__len");
+        lua_pushcfunction(L, Length);
+        lua_setfield(L, metatable, "__len");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, Equal);
-        lua_setfield(E->L, metatable, "__eq");
+        lua_pushcfunction(L, Equal);
+        lua_setfield(L, metatable, "__eq");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, Less);
-        lua_setfield(E->L, metatable, "__lt");
+        lua_pushcfunction(L, Less);
+        lua_setfield(L, metatable, "__lt");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, LessOrEqual);
-        lua_setfield(E->L, metatable, "__le");
+        lua_pushcfunction(L, LessOrEqual);
+        lua_setfield(L, metatable, "__le");
 
         // make new indexes saved to methods
-        lua_pushcfunction(E->L, Call);
-        lua_setfield(E->L, metatable, "__call");
+        lua_pushcfunction(L, Call);
+        lua_setfield(L, metatable, "__call");
 
         // special method to get the object type
-        lua_pushcfunction(E->L, GetType);
-        lua_setfield(E->L, metatable, "GetObjectType");
+        lua_pushcfunction(L, GetType);
+        lua_setfield(L, metatable, "GetObjectType");
 
         // pop metatable
-        lua_pop(E->L, 1);
+        lua_pop(L, 1);
     }
 
     template<typename C, size_t N>
@@ -283,21 +285,23 @@ public:
         ASSERT(E);
         ASSERT(methodTable);
 
+        lua_State* L = E->L;
+
         // determine if the method table functions are global or non-global
         constexpr bool isGlobal = std::is_same_v<C, void>;
 
         if constexpr (isGlobal)
         {
-            lua_pushglobaltable(E->L);
+            lua_pushglobaltable(L);
         }
         else
         {
             ASSERT(tname);
 
             // get metatable
-            lua_pushstring(E->L, tname);
-            lua_rawget(E->L, LUA_REGISTRYINDEX);
-            ASSERT(lua_istable(E->L, -1));
+            lua_pushstring(L, tname);
+            lua_rawget(L, LUA_REGISTRYINDEX);
+            ASSERT(lua_istable(L, -1));
         }
 
         // load all core-specific methods
@@ -306,14 +310,14 @@ public:
             const auto& method = methodTable + i;
 
             // push the method name to the Lua stack
-            lua_pushstring(E->L, method->name);
+            lua_pushstring(L, method->name);
 
             // if the method should not be registered, push a closure to error output function
             if (method->regState == METHOD_REG_NONE)
             {
-                lua_pushstring(E->L, method->name);
-                lua_pushcclosure(E->L, MethodUnimpl, 1);
-                lua_rawset(E->L, -3);
+                lua_pushstring(L, method->name);
+                lua_pushcclosure(L, MethodUnimpl, 1);
+                lua_rawset(L, -3);
                 continue;
             }
 
@@ -326,21 +330,21 @@ public:
                 if ((mapId == -1 && method->regState == METHOD_REG_MAP) ||
                     (mapId != -1 && method->regState == METHOD_REG_WORLD))
                 {
-                    lua_pushstring(E->L, method->name);
-                    lua_pushinteger(E->L, mapId);
-                    lua_pushcclosure(E->L, MethodWrongState, 2);
-                    lua_rawset(E->L, -3);
+                    lua_pushstring(L, method->name);
+                    lua_pushinteger(L, mapId);
+                    lua_pushcclosure(L, MethodWrongState, 2);
+                    lua_rawset(L, -3);
                     continue;
                 }
             }
 
             // push a closure to the thunk with the method pointer as light user data
-            lua_pushlightuserdata(E->L, (void*)method);
-            lua_pushcclosure(E->L, thunk, 1);
-            lua_rawset(E->L, -3);
+            lua_pushlightuserdata(L, (void*)method);
+            lua_pushcclosure(L, thunk, 1);
+            lua_rawset(L, -3);
         }
 
-        lua_pop(E->L, 1);
+        lua_pop(L, 1);
     }
 
     static int Push(Eluna* E, T const* obj)
