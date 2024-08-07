@@ -320,23 +320,23 @@ public:
             // if we're in multistate mode, we need to check whether a method is flagged as a world or a map specific method
             if (!E->GetCompatibilityMode() && method->regState != METHOD_REG_ALL)
             {
+                int32 mapId = E->GetBoundMapId();
+
                 // if the method should not be registered, push a closure to error output function
-                if ((E->GetBoundMapId() == -1 && method->regState == METHOD_REG_MAP) ||
-                    (E->GetBoundMapId() != -1 && method->regState == METHOD_REG_WORLD))
+                if ((mapId == -1 && method->regState == METHOD_REG_MAP) ||
+                    (mapId != -1 && method->regState == METHOD_REG_WORLD))
                 {
                     lua_pushstring(E->L, method->name);
-                    lua_pushcclosure(E->L, MethodWrongState, 1);
+                    lua_pushinteger(E->L, mapId);
+                    lua_pushcclosure(E->L, MethodWrongState, 2);
                     lua_rawset(E->L, -3);
                     continue;
                 }
             }
 
-            // push method table and Eluna object pointers as light user data
+            // push a closure to the thunk with the method pointer as light user data
             lua_pushlightuserdata(E->L, (void*)method);
-            lua_pushlightuserdata(E->L, (void*)E);
-
-            // push a closure to the thunk function with 2 upvalues (method table and Eluna object)
-            lua_pushcclosure(E->L, thunk, 2);
+            lua_pushcclosure(E->L, thunk, 1);
             lua_rawset(E->L, -3);
         }
 
@@ -413,7 +413,7 @@ public:
     static int thunk(lua_State* L)
     {
         ElunaRegister<T>* l = static_cast<ElunaRegister<T>*>(lua_touserdata(L, lua_upvalueindex(1)));
-        Eluna* E = static_cast<Eluna*>(lua_touserdata(L, lua_upvalueindex(2)));
+        Eluna* E = Eluna::GetEluna(L);
 
         // determine if the method table functions are global or non-global
         constexpr bool isGlobal = std::is_same_v<T, void>;
@@ -483,7 +483,7 @@ public:
     static int LessOrEqual(lua_State* L) { return CompareError(L); }
     static int Call(lua_State* L) { return luaL_error(L, "attempt to call a %s value", tname); }
 
-    static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call method '%s' that does not exist for state: %d", lua_tostring(L, lua_upvalueindex(1)), Eluna::GetEluna(L)->GetBoundMapId()); return 0; }
+    static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call method '%s' that does not exist for state: %d", lua_tostring(L, lua_upvalueindex(1)), lua_tointeger(L, lua_upvalueindex(2))); return 0; }
     static int MethodUnimpl(lua_State* L) { luaL_error(L, "attempt to call method '%s' that is not implemented for this emulator", lua_tostring(L, lua_upvalueindex(1))); return 0; }
 };
 
