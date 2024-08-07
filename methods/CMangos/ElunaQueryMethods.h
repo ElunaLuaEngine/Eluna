@@ -333,9 +333,7 @@ namespace LuaQuery
 
         // Boolean
         { "NextRow", &LuaQuery::NextRow },
-        { "IsNull", &LuaQuery::IsNull },
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "IsNull", &LuaQuery::IsNull }
     };
 };
 #undef RESULT

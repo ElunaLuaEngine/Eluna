@@ -337,9 +337,7 @@ namespace LuaGameObject
         { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },
         { "Despawn", &LuaGameObject::Despawn },
         { "Respawn", &LuaGameObject::Respawn },
-        { "SaveToDB", &LuaGameObject::SaveToDB },
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "SaveToDB", &LuaGameObject::SaveToDB }
     };
 };
 #endif

@@ -279,9 +279,7 @@ namespace LuaGuild
         { "SendPacketToRanked", &LuaGuild::SendPacketToRanked },
         { "Disband", &LuaGuild::Disband, METHOD_REG_WORLD }, // World state method only in multistate
         { "AddMember", &LuaGuild::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
-        { "DeleteMember", &LuaGuild::DeleteMember, METHOD_REG_WORLD }, // World state method only in multistate
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "DeleteMember", &LuaGuild::DeleteMember, METHOD_REG_WORLD } // World state method only in multistate
     };
 };
 #endif

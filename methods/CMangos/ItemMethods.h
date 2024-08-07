@@ -793,7 +793,7 @@ namespace LuaItem
 #if (!defined(TBC) && !defined(CLASSIC))
         { "GetFlags2", &LuaItem::GetFlags2 },
 #else
-        { "GetFlags2", nullptr, METHOD_REG_NONE },
+        { "GetFlags2", METHOD_REG_NONE },
 #endif
         { "GetExtraFlags", &LuaItem::GetExtraFlags },
         { "GetBuyCount", &LuaItem::GetBuyCount },
@@ -810,12 +810,12 @@ namespace LuaItem
 #if defined(TBC) || defined(WOTLK)
         { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
 #else
-        { "GetRandomSuffix", nullptr, METHOD_REG_NONE },
+        { "GetRandomSuffix", METHOD_REG_NONE },
 #endif
 #if defined(WOTLK)
         { "GetStatsCount", &LuaItem::GetStatsCount },
 #else
-        { "GetStatsCount", nullptr, METHOD_REG_NONE },
+        { "GetStatsCount", METHOD_REG_NONE },
 #endif
 
         // Setters
@@ -843,24 +843,22 @@ namespace LuaItem
 #if defined(TBC) || defined(WOTLK)
         { "IsCurrencyToken", &LuaItem::IsCurrencyToken },
 #else
-        { "IsCurrencyToken", nullptr, METHOD_REG_NONE },
+        { "IsCurrencyToken", METHOD_REG_NONE },
 #endif
 #if defined(WOTLK)
         { "IsBoundAccountWide", &LuaItem::IsBoundAccountWide },
         { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
         { "IsArmorVellum", &LuaItem::IsArmorVellum },
 #else
-        { "IsBoundAccountWide", nullptr, METHOD_REG_NONE },
-        { "IsWeaponVellum", nullptr, METHOD_REG_NONE },
-        { "IsArmorVellum", nullptr, METHOD_REG_NONE },
+        { "IsBoundAccountWide", METHOD_REG_NONE },
+        { "IsWeaponVellum", METHOD_REG_NONE },
+        { "IsArmorVellum", METHOD_REG_NONE },
 #endif
         // Other
         { "SaveToDB", &LuaItem::SaveToDB },
 
         // Not implemented methods
-        { "IsRefundExpired", nullptr, METHOD_REG_NONE }, // not implemented
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "IsRefundExpired", METHOD_REG_NONE } // not implemented
     };
 };
 #endif

@@ -1201,22 +1201,20 @@ namespace LuaCreature
         { "UpdateEntry", &LuaCreature::UpdateEntry },
 
         // Not implemented methods
-        { "GetWaypointPath", nullptr, METHOD_REG_NONE },   // not implemented
-        { "GetLootMode", nullptr, METHOD_REG_NONE },   // not implemented
-        { "SetRegeneratingHealth", nullptr, METHOD_REG_NONE },   // not implemented
-        { "SetLootMode", nullptr, METHOD_REG_NONE },   // not implemented
-        { "SetReactState", nullptr, METHOD_REG_NONE },   // not implemented
-        { "IsDungeonBoss", nullptr, METHOD_REG_NONE },   // not implemented
-        { "IsTrigger", nullptr, METHOD_REG_NONE },   // not implemented
-        { "CanStartAttack", nullptr, METHOD_REG_NONE },   // not implemented
-        { "IsDamageEnoughForLootingAndReward", nullptr, METHOD_REG_NONE },   // not implemented
-        { "HasLootMode", nullptr, METHOD_REG_NONE },   // not implemented
-        { "AddLootMode", nullptr, METHOD_REG_NONE },   // not implemented
-        { "ResetLootMode", nullptr, METHOD_REG_NONE },   // not implemented
-        { "RemoveLootMode", nullptr, METHOD_REG_NONE },   // not implemented
-        { "RemoveFromWorld", nullptr, METHOD_REG_NONE }, // not implemented
-
-        { NULL, NULL }
+        { "GetWaypointPath", METHOD_REG_NONE },   // not implemented
+        { "GetLootMode", METHOD_REG_NONE },   // not implemented
+        { "SetRegeneratingHealth", METHOD_REG_NONE },   // not implemented
+        { "SetLootMode", METHOD_REG_NONE },   // not implemented
+        { "SetReactState", METHOD_REG_NONE },   // not implemented
+        { "IsDungeonBoss", METHOD_REG_NONE },   // not implemented
+        { "IsTrigger", METHOD_REG_NONE },   // not implemented
+        { "CanStartAttack", METHOD_REG_NONE },   // not implemented
+        { "IsDamageEnoughForLootingAndReward", METHOD_REG_NONE },   // not implemented
+        { "HasLootMode", METHOD_REG_NONE },   // not implemented
+        { "AddLootMode", METHOD_REG_NONE },   // not implemented
+        { "ResetLootMode", METHOD_REG_NONE },   // not implemented
+        { "RemoveLootMode", METHOD_REG_NONE },   // not implemented
+        { "RemoveFromWorld", METHOD_REG_NONE } // not implemented
     };
 };
 #endif

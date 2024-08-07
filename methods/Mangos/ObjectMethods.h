@@ -490,9 +490,7 @@ namespace LuaObject
         { "ToCreature", &LuaObject::ToCreature },
         { "ToPlayer", &LuaObject::ToPlayer },
         { "ToCorpse", &LuaObject::ToCorpse },
-        { "RemoveFlag", &LuaObject::RemoveFlag },
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "RemoveFlag", &LuaObject::RemoveFlag }
     };
 };
 #endif

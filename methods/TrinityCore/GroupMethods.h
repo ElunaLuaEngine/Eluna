@@ -485,9 +485,7 @@ namespace LuaGroup
         // Other
         { "SendPacket", &LuaGroup::SendPacket },
         { "ConvertToLFG", &LuaGroup::ConvertToLFG, METHOD_REG_WORLD }, // World state method only in multistate
-        { "ConvertToRaid", &LuaGroup::ConvertToRaid, METHOD_REG_WORLD }, // World state method only in multistate
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "ConvertToRaid", &LuaGroup::ConvertToRaid, METHOD_REG_WORLD } // World state method only in multistate
     };
 };
 

@@ -244,9 +244,7 @@ namespace LuaGuild
         { "AddMember", &LuaGuild::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
         { "DeleteMember", &LuaGuild::DeleteMember, METHOD_REG_WORLD }, // World state method only in multistate
 
-        { "SetBankTabText", nullptr, METHOD_REG_NONE }, // not implemented
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "SetBankTabText", METHOD_REG_NONE } // not implemented
     };
 };
 #endif

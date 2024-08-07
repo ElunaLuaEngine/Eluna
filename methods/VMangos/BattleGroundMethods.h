@@ -241,9 +241,7 @@ namespace LuaBattleGround
         { "GetMaxPlayersPerTeam", &LuaBattleGround::GetMaxPlayersPerTeam },
         { "GetMinPlayersPerTeam", &LuaBattleGround::GetMinPlayersPerTeam },
         { "GetWinner", &LuaBattleGround::GetWinner },
-        { "GetStatus", &LuaBattleGround::GetStatus },
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "GetStatus", &LuaBattleGround::GetStatus }
     };
 };
 #endif

@@ -196,9 +196,7 @@ namespace LuaQuest
         // Boolean
         { "HasFlag", &LuaQuest::HasFlag },
         { "IsDaily", &LuaQuest::IsDaily },
-        { "IsRepeatable", &LuaQuest::IsRepeatable },
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "IsRepeatable", &LuaQuest::IsRepeatable }
     };
 };
 #endif

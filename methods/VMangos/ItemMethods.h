@@ -713,17 +713,15 @@ namespace LuaItem
         { "SaveToDB", &LuaItem::SaveToDB },
 
         // Not implemented methods
-        { "GetRandomSuffix", nullptr, METHOD_REG_NONE },  // not implemented
-        { "GetStatsCount", nullptr, METHOD_REG_NONE },  // not implemented
-        { "GetFlags2", nullptr, METHOD_REG_NONE }, // not avaliable in Classic/TBC
-        { "IsPotion", nullptr, METHOD_REG_NONE }, // not implemented in VMANGOS
-        { "IsRefundExpired", nullptr, METHOD_REG_NONE }, // not implemented
-        { "IsCurrencyToken", nullptr, METHOD_REG_NONE },  // not implemented
-        { "IsBoundAccountWide", nullptr, METHOD_REG_NONE },  // not implemented
-        { "IsWeaponVellum", nullptr, METHOD_REG_NONE },  // not implemented
-        { "IsArmorVellum", nullptr, METHOD_REG_NONE },  // not implemented
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "GetRandomSuffix", METHOD_REG_NONE },  // not implemented
+        { "GetStatsCount", METHOD_REG_NONE },  // not implemented
+        { "GetFlags2", METHOD_REG_NONE }, // not avaliable in Classic/TBC
+        { "IsPotion", METHOD_REG_NONE }, // not implemented in VMANGOS
+        { "IsRefundExpired", METHOD_REG_NONE }, // not implemented
+        { "IsCurrencyToken", METHOD_REG_NONE },  // not implemented
+        { "IsBoundAccountWide", METHOD_REG_NONE },  // not implemented
+        { "IsWeaponVellum", METHOD_REG_NONE },  // not implemented
+        { "IsArmorVellum", METHOD_REG_NONE }  // not implemented
     };
 };
 #endif

@@ -105,9 +105,7 @@ namespace LuaVehicle
 
         // Other
         { "AddPassenger", &LuaVehicle::AddPassenger },
-        { "RemovePassenger", &LuaVehicle::RemovePassenger },
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "RemovePassenger", &LuaVehicle::RemovePassenger }
     };
 }
 

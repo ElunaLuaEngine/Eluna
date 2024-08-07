@@ -83,9 +83,7 @@ namespace LuaCorpse
 
         // Other
         { "ResetGhostTime", &LuaCorpse::ResetGhostTime },
-        { "SaveToDB", &LuaCorpse::SaveToDB },
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "SaveToDB", &LuaCorpse::SaveToDB }
     };
 };
 #endif

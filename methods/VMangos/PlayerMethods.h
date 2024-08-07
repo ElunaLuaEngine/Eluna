@@ -4366,37 +4366,35 @@ namespace LuaPlayer
 #endif
 
         // Not implemented methods
-        { "GetChampioningFaction", nullptr, METHOD_REG_NONE }, // not implemented
-        { "GetRecruiterId", nullptr, METHOD_REG_NONE }, // not implemented
-        { "GetMailItem", nullptr, METHOD_REG_NONE }, //not implemented in VMaNGOS
-        { "SetMovement", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SetFFA", nullptr, METHOD_REG_NONE }, // not implemented
-        { "IsImmuneToEnvironmentalDamage", nullptr, METHOD_REG_NONE }, // not implemented
-        { "InRandomLfgDungeon", nullptr, METHOD_REG_NONE }, // not implemented
-        { "HasPendingBind", nullptr, METHOD_REG_NONE }, // not implemented
-        { "CanFlyInZone", nullptr, METHOD_REG_NONE }, // not implemented
-        { "IsNeverVisible", nullptr, METHOD_REG_NONE }, // not implemented,
-        { "IsUsingLfg", nullptr, METHOD_REG_NONE }, // not implemented,
-        { "HasReceivedQuestReward", nullptr, METHOD_REG_NONE }, // not implemented,
-        { "IsOutdoorPvPActive", nullptr, METHOD_REG_NONE }, // not implemented,
-        { "IsARecruiter", nullptr, METHOD_REG_NONE }, // not implemented,
-        { "RemovePet", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SummonPet", nullptr, METHOD_REG_NONE }, // not implemented
-        { "RemoveActiveQuest", nullptr, METHOD_REG_NONE }, // not implemented
-        { "RemoveRewardedQuest", nullptr, METHOD_REG_NONE }, // not implemented
-        { "KilledPlayerCredit", nullptr, METHOD_REG_NONE }, // not implemented
-        { "KillGOCredit", nullptr, METHOD_REG_NONE }, // not implemented
-        { "GainSpellComboPoints", nullptr, METHOD_REG_NONE }, // not implemented
-        { "AddTalent", nullptr, METHOD_REG_NONE }, // not implemented
-        { "BindToInstance", nullptr, METHOD_REG_NONE }, // not implemented
-        { "SetAchievement", nullptr, METHOD_REG_NONE }, // not implemented
-        { "GetMailCount", nullptr, METHOD_REG_NONE }, // not implemented
-        { "GetXP", nullptr, METHOD_REG_NONE }, // not implemented
-        { "GetXPForNextLevel", nullptr, METHOD_REG_NONE }, // not implemented
-        { "CanCompleteRepeatableQuest", nullptr, METHOD_REG_NONE }, // not implemented
-        { "CanRewardQuest", nullptr, METHOD_REG_NONE }, // not implemented
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "GetChampioningFaction", METHOD_REG_NONE }, // not implemented
+        { "GetRecruiterId", METHOD_REG_NONE }, // not implemented
+        { "GetMailItem", METHOD_REG_NONE }, //not implemented in VMaNGOS
+        { "SetMovement", METHOD_REG_NONE }, // not implemented
+        { "SetFFA", METHOD_REG_NONE }, // not implemented
+        { "IsImmuneToEnvironmentalDamage", METHOD_REG_NONE }, // not implemented
+        { "InRandomLfgDungeon", METHOD_REG_NONE }, // not implemented
+        { "HasPendingBind", METHOD_REG_NONE }, // not implemented
+        { "CanFlyInZone", METHOD_REG_NONE }, // not implemented
+        { "IsNeverVisible", METHOD_REG_NONE }, // not implemented,
+        { "IsUsingLfg", METHOD_REG_NONE }, // not implemented,
+        { "HasReceivedQuestReward", METHOD_REG_NONE }, // not implemented,
+        { "IsOutdoorPvPActive", METHOD_REG_NONE }, // not implemented,
+        { "IsARecruiter", METHOD_REG_NONE }, // not implemented,
+        { "RemovePet", METHOD_REG_NONE }, // not implemented
+        { "SummonPet", METHOD_REG_NONE }, // not implemented
+        { "RemoveActiveQuest", METHOD_REG_NONE }, // not implemented
+        { "RemoveRewardedQuest", METHOD_REG_NONE }, // not implemented
+        { "KilledPlayerCredit", METHOD_REG_NONE }, // not implemented
+        { "KillGOCredit", METHOD_REG_NONE }, // not implemented
+        { "GainSpellComboPoints", METHOD_REG_NONE }, // not implemented
+        { "AddTalent", METHOD_REG_NONE }, // not implemented
+        { "BindToInstance", METHOD_REG_NONE }, // not implemented
+        { "SetAchievement", METHOD_REG_NONE }, // not implemented
+        { "GetMailCount", METHOD_REG_NONE }, // not implemented
+        { "GetXP", METHOD_REG_NONE }, // not implemented
+        { "GetXPForNextLevel", METHOD_REG_NONE }, // not implemented
+        { "CanCompleteRepeatableQuest", METHOD_REG_NONE }, // not implemented
+        { "CanRewardQuest", METHOD_REG_NONE } // not implemented
     };
 };
 #endif

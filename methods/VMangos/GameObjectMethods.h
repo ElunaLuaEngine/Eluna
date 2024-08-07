@@ -330,9 +330,7 @@ namespace LuaGameObject
         { "SaveToDB", &LuaGameObject::SaveToDB },
 
         // Not implemented methods
-        { "IsDestructible", nullptr, METHOD_REG_NONE },  // Not implemented
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "IsDestructible", METHOD_REG_NONE } // Not implemented
     };
 };
 #endif

@@ -1158,8 +1158,8 @@ namespace LuaWorldObject
         { "GetPhaseMask", &LuaWorldObject::GetPhaseMask },
         { "SetPhaseMask", &LuaWorldObject::SetPhaseMask },
 #else
-        { "GetPhaseMask", nullptr, METHOD_REG_NONE },
-        { "SetPhaseMask", nullptr, METHOD_REG_NONE },
+        { "GetPhaseMask", METHOD_REG_NONE },
+        { "SetPhaseMask", METHOD_REG_NONE },
 #endif
 
         // Boolean
@@ -1185,9 +1185,7 @@ namespace LuaWorldObject
         { "PlayMusic", &LuaWorldObject::PlayMusic },
         { "PlayDirectSound", &LuaWorldObject::PlayDirectSound },
         { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound },
-        { "Data", &LuaWorldObject::Data },
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "Data", &LuaWorldObject::Data }
     };
 };
 #endif

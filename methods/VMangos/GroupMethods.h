@@ -383,13 +383,11 @@ namespace LuaGroup
         { "ConvertToRaid", &LuaGroup::ConvertToRaid, METHOD_REG_WORLD }, // World state method only in multistate
 
         // Not implemented methods
-        { "IsLFGGroup", nullptr, METHOD_REG_NONE },       // not implemented
-        { "IsBFGroup", nullptr, METHOD_REG_NONE  },       // not implemented
-        { "ConvertToLFG", nullptr, METHOD_REG_NONE  },    // not implemented
-        { "GetMemberFlags", nullptr, METHOD_REG_NONE  },  // not implemented
-        { "SetMemberFlag", nullptr, METHOD_REG_NONE  },   // not implemented
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "IsLFGGroup", METHOD_REG_NONE },      // not implemented
+        { "IsBFGroup", METHOD_REG_NONE },       // not implemented
+        { "ConvertToLFG", METHOD_REG_NONE },    // not implemented
+        { "GetMemberFlags", METHOD_REG_NONE },  // not implemented
+        { "SetMemberFlag", METHOD_REG_NONE }    // not implemented
     };
 };
 

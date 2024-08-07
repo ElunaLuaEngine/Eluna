@@ -190,9 +190,7 @@ namespace LuaSpell
         // Other
         { "Cancel", &LuaSpell::Cancel },
         { "Cast", &LuaSpell::Cast },
-        { "Finish", &LuaSpell::Finish },
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "Finish", &LuaSpell::Finish }
     };
 };
 #endif

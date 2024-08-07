@@ -1185,9 +1185,7 @@ namespace LuaWorldObject
         { "PlayMusic", &LuaWorldObject::PlayMusic },
         { "PlayDirectSound", &LuaWorldObject::PlayDirectSound },
         { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound },
-        { "Data", &LuaWorldObject::Data },
-
-        { NULL, NULL, METHOD_REG_NONE }
+        { "Data", &LuaWorldObject::Data }
     };
 };
 #endif

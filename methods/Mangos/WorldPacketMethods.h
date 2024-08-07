@@ -338,9 +338,7 @@ namespace LuaPacket
         { "WriteGUID", &LuaPacket::WriteGUID },
         { "WriteString", &LuaPacket::WriteString },
         { "WriteFloat", &LuaPacket::WriteFloat },
-        { "WriteDouble", &LuaPacket::WriteDouble },
-
-        { NULL, NULL }
+        { "WriteDouble", &LuaPacket::WriteDouble }
     };
 };
 
