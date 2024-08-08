@@ -123,7 +123,7 @@ namespace LuaAura
     {
         int32 duration = E->CHECKVAL<int32>(2);
         aura->GetHolder()->SetAuraDuration(duration);
-#if (defined(TBC) || defined(CLASSIC))
+#if ELUNA_EXPANSION < WOTLK
         aura->GetHolder()->UpdateAuraDuration();
 #else
         aura->GetHolder()->SendAuraUpdate(false);
@@ -143,7 +143,7 @@ namespace LuaAura
     {
         int32 duration = E->CHECKVAL<int32>(2);
         aura->GetHolder()->SetAuraMaxDuration(duration);
-#if (defined(TBC) || defined(CLASSIC))
+#if ELUNA_EXPANSION < WOTLK
         aura->GetHolder()->UpdateAuraDuration();
 #else
         aura->GetHolder()->SendAuraUpdate(false);
@@ -162,7 +162,7 @@ namespace LuaAura
     int SetStackAmount(Eluna* E, Aura* aura)
     {
         uint8 amount = E->CHECKVAL<uint8>(2);
-#ifndef CATA
+#if ELUNA_EXPANSION < CATA
         aura->GetHolder()->SetStackAmount(amount, aura->GetTarget());
 #else
         aura->GetHolder()->SetStackAmount(amount);

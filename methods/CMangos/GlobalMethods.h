@@ -78,13 +78,13 @@ namespace LuaGlobalFunctions
      */
     int GetCoreExpansion(Eluna* E)
     {
-#ifdef CLASSIC
+#if ELUNA_EXPANSION == CLASSIC
         E->Push(0);
-#elif defined(TBC)
+#elif ELUNA_EXPANSION == TBC
         E->Push(1);
-#elif defined(WOTLK)
+#elif ELUNA_EXPANSION == WOTLK
         E->Push(2);
-#elif defined(CATA)
+#elif ELUNA_EXPANSION == CATA
         E->Push(3);
 #endif
         return 1;
@@ -460,7 +460,7 @@ namespace LuaGlobalFunctions
         std::ostringstream oss;
         oss << "|c" << std::hex << ItemQualityColors[temp->Quality] << std::dec <<
             "|Hitem:" << entry << ":0:" <<
-#ifndef CLASSIC
+#if ELUNA_EXPANSION > CLASSIC
             "0:0:0:0:" <<
 #endif
             "0:0:0:0|h[" << name << "]|h|r";
@@ -1678,7 +1678,7 @@ namespace LuaGlobalFunctions
         float o = E->CHECKVAL<float>(8);
         bool save = E->CHECKVAL<bool>(9, false);
         uint32 durorresptime = E->CHECKVAL<uint32>(10, 0);
-#if (!defined(TBC) && !defined(CLASSIC))
+#if ELUNA_EXPANSION >= WOTLK
         uint32 phase = E->CHECKVAL<uint32>(11, PHASEMASK_NORMAL);
         if (!phase)
         {
@@ -1705,7 +1705,7 @@ namespace LuaGlobalFunctions
                     return 1;
                 }
 
-#if (defined(TBC) || defined(CLASSIC))
+#if ELUNA_EXPANSION <= TBC
                 CreatureCreatePos pos(map, x, y, z, o);
 #else
                 CreatureCreatePos pos(map, x, y, z, o, phase);
@@ -1718,7 +1718,7 @@ namespace LuaGlobalFunctions
                     E->Push();
                     return 1;
                 }
-#ifndef CATA
+#if ELUNA_EXPANSION < CATA
                 if (!pCreature->Create(lowguid, lowguid, pos, cinfo))
 #else
                 if (!pCreature->Create(lowguid, pos, cinfo))
@@ -1729,9 +1729,9 @@ namespace LuaGlobalFunctions
                     return 1;
                 }
 
-#ifdef TBC
+#if ELUNA_EXPANSION == TBC
                 pCreature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()));
-#elif defined(CLASSIC)
+#elif ELUNA_EXPANSION == CLASSIC
                 pCreature->SaveToDB(map->GetId());
 #else
                 pCreature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
@@ -1740,7 +1740,7 @@ namespace LuaGlobalFunctions
                 uint32 db_guid = pCreature->GetGUIDLow();
 
                 // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells();
-#ifndef CATA
+#if ELUNA_EXPANSION < CATA
                 pCreature->LoadFromDB(db_guid, map, db_guid, 0);
 #else
                 pCreature->LoadFromDB(db_guid, map);
@@ -1764,12 +1764,12 @@ namespace LuaGlobalFunctions
 
                 TemporarySpawn* pCreature = new TemporarySpawn(ObjectGuid(uint64(0)));
 
-#if (defined(TBC) || defined(CLASSIC))
+#if ELUNA_EXPANSION <= TBC
                 CreatureCreatePos pos(map, x, y, z, o);
 #else
                 CreatureCreatePos pos(map, x, y, z, o, phase);
 #endif
-#ifdef CATA
+#if ELUNA_EXPANSION == CATA
                 if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo))
 #else
                 if (!pCreature->Create(map->GenerateLocalLowGuid(cinfo->GetHighGuid()), map->GenerateLocalLowGuid(cinfo->GetHighGuid()), pos, cinfo))
@@ -1820,9 +1820,9 @@ namespace LuaGlobalFunctions
                 }
 
                 GameObject* pGameObj = new GameObject;
-#if (defined(TBC) || defined(CLASSIC))
+#if ELUNA_EXPANSION <= TBC
                 if (!pGameObj->Create(db_lowGUID, db_lowGUID, gInfo->id, map, x, y, z, o))
-#elif defined CATA
+#elif ELUNA_EXPANSION == CATA
                 if (!pGameObj->Create(db_lowGUID, gInfo->id, map, phase, x, y, z, o))
 #else
                 if (!pGameObj->Create(db_lowGUID, db_lowGUID, gInfo->id, map, phase, x, y, z, o))
@@ -1837,16 +1837,16 @@ namespace LuaGlobalFunctions
                     pGameObj->SetRespawnTime(durorresptime);
 
                 // fill the gameobject data and save to the db
-#ifdef TBC
+#if ELUNA_EXPANSION == TBC
                 pGameObj->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()));
-#elif defined(CLASSIC)
+#elif ELUNA_EXPANSION == CLASSIC
                 pGameObj->SaveToDB(map->GetId());
 #else
                 pGameObj->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
 #endif
 
                 // this will generate a new guid if the object is in an instance
-#ifndef CATA
+#if ELUNA_EXPANSION < CATA
                 if (!pGameObj->LoadFromDB(db_lowGUID, map, db_lowGUID, 0))
 #else
                 if (!pGameObj->LoadFromDB(db_lowGUID, map))
@@ -1869,9 +1869,9 @@ namespace LuaGlobalFunctions
             else
             {
                 GameObject* pGameObj = new GameObject;
-#if (defined(TBC) || defined(CLASSIC))
+#if ELUNA_EXPANSION <= TBC
                 if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), entry, map, x, y, z, o))
-#elif !defined CATA
+#elif ELUNA_EXPANSION == WOTLK
                 if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), entry, map, phase, x, y, z, o))
 #else
                 if (!pGameObj->Create(map->GenerateLocalLowGuid(HIGHGUID_GAMEOBJECT), entry, map, phase, x, y, z, o))
@@ -1910,7 +1910,7 @@ namespace LuaGlobalFunctions
         if (opcode >= NUM_MSG_TYPES)
             return luaL_argerror(E->L, 1, "valid opcode expected");
 
-#ifdef CLASSIC
+#if ELUNA_EXPANSION == CLASSIC
         E->Push(new WorldPacket((Opcodes)opcode, size));
 #else
         E->Push(new WorldPacket((OpcodesList)opcode, size));
@@ -1935,15 +1935,15 @@ namespace LuaGlobalFunctions
         uint32 incrtime = E->CHECKVAL<uint32>(4);
         uint32 extendedcost = E->CHECKVAL<uint32>(5);
 
-#ifndef CATA
+#if ELUNA_EXPANSION < CATA
         if (!eObjectMgr->IsVendorItemValid(false, "npc_vendor", entry, item, maxcount, incrtime, extendedcost, 0))
 #else
         if (!eObjectMgr->IsVendorItemValid(false, "npc_vendor", entry, item, VENDOR_ITEM_TYPE_ITEM, maxcount, incrtime, extendedcost, 0))
 #endif
             return 0;
-#ifdef CATA
+#if ELUNA_EXPANSION == CATA
         eObjectMgr->AddVendorItem(entry, item, VENDOR_ITEM_TYPE_ITEM, maxcount, incrtime, extendedcost);
-#elif !defined CLASSIC
+#elif ELUNA_EXPANSION > CLASSIC
         eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime, extendedcost);
 #else
         eObjectMgr->AddVendorItem(entry, item, maxcount, incrtime);
@@ -1964,7 +1964,7 @@ namespace LuaGlobalFunctions
         if (!eObjectMgr->GetCreatureTemplate(entry))
             return luaL_argerror(E->L, 1, "valid CreatureEntry expected");
 
-#if defined(CATA)
+#if ELUNA_EXPANSION == CATA
         eObjectMgr->RemoveVendorItem(entry, item, 1);
 #else
         eObjectMgr->RemoveVendorItem(entry, item);
@@ -1987,7 +1987,7 @@ namespace LuaGlobalFunctions
 
         auto const itemlist = items->m_items;
         for (auto itr = itemlist.begin(); itr != itemlist.end(); ++itr)
-#if defined(CATA)
+#if ELUNA_EXPANSION == CATA
             eObjectMgr->RemoveVendorItem(entry, (*itr)->item, 1);
 #else
             eObjectMgr->RemoveVendorItem(entry, (*itr)->item);
@@ -2370,7 +2370,7 @@ namespace LuaGlobalFunctions
 
             sTaxiNodesStore.InsertEntry(nodeEntry, nodeId++);
 
-#ifdef CATA
+#if ELUNA_EXPANSION == CATA
             sTaxiPathNodesByPath[pathId][index++] = new TaxiPathNodeEntry(entry);
 #else
             sTaxiPathNodesByPath[pathId].set(index++, new TaxiPathNodeEntry(entry));

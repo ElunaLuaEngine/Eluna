@@ -17,7 +17,7 @@
 namespace LuaMap
 {
 
-#ifndef CLASSIC
+#if ELUNA_EXPANSION >= TBC
     /**
      * Returns `true` if the [Map] is an arena [BattleGround], `false` otherwise.
      *
@@ -63,7 +63,7 @@ namespace LuaMap
         return 1;
     }
 
-#ifndef CLASSIC
+#if ELUNA_EXPANSION >= TBC
     /**
      * Returns `true` if the [Map] is a heroic, `false` otherwise.
      *
@@ -111,7 +111,7 @@ namespace LuaMap
     {
         float x = E->CHECKVAL<float>(2);
         float y = E->CHECKVAL<float>(3);
-#if (defined(TBC) || defined(CLASSIC))
+#if ELUNA_EXPANSION <= TBC
         float z = map->GetHeight(x, y, MAX_HEIGHT);
 #else
         uint32 phasemask = E->CHECKVAL<uint32>(4, 1);
@@ -131,7 +131,7 @@ namespace LuaMap
      */
     int GetDifficulty(Eluna* E, Map* map)
     {
-#ifndef CLASSIC
+#if ELUNA_EXPANSION >= TBC
         E->Push(map->GetDifficulty());
 #else
         E->Push((Difficulty)0);
@@ -353,7 +353,7 @@ namespace LuaMap
         { "IsDungeon", &LuaMap::IsDungeon },
         { "IsEmpty", &LuaMap::IsEmpty },
         { "IsRaid", &LuaMap::IsRaid },
-#if defined(TBC) || defined(WOTLK)
+#if ELUNA_EXPANSION >= TBC
         { "IsArena", &LuaMap::IsArena },
         { "IsHeroic", &LuaMap::IsHeroic },
 #else

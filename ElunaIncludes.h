@@ -93,7 +93,6 @@
 #include "Spells/SpellAuras.h"
 #include "Spells/SpellMgr.h"
 #include "Tools/Language.h"
-#include "AI/BaseAI/UnitAI.h"
 #include "Server/SQLStorages.h"
 #if ELUNA_EXPANSION > CLASSIC
 #include "Arena/ArenaTeam.h"
@@ -103,6 +102,8 @@
 #endif
 #if ELUNA_EXPANSION >= CATA
 #include "AI/BaseAI/AggressorAI.h"
+#else
+#include "AI/BaseAI/UnitAI.h"
 #endif
 #endif
 

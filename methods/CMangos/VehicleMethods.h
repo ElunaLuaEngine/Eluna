@@ -6,8 +6,7 @@
 
 #ifndef VEHICLEMETHODS_H
 #define VEHICLEMETHODS_H
-#ifndef CLASSIC
-#ifndef TBC
+#if ELUNA_EXPANSION >= WOTLK
 
 /***
  * Inherits all methods from: none
@@ -108,6 +107,5 @@ namespace LuaVehicle
     };
 }
 
-#endif // CLASSIC
-#endif // TBC
+#endif // EXPANSION >= WOTLK
 #endif // VEHICLEMETHODS_H
