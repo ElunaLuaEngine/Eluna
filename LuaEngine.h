@@ -395,11 +395,7 @@ public:
     void OnResurrect(Player* pPlayer);
     void OnQuestAbandon(Player* pPlayer, uint32 questId);
     void OnQuestStatusChanged(Player* pPlayer, uint32 questId, uint8 status);
-#if ELUNA_EXPANSION == RETAIL
-    void OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 spellid);
-#else
     void OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, uint32 spellid);
-#endif
     void OnSkillChange(Player* pPlayer, uint32 skillId, uint32 skillValue);
     void OnLearnSpell(Player* pPlayer, uint32 spellid);
     InventoryResult OnCanUseItem(const Player* pPlayer, uint32 itemEntry);

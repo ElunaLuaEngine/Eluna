@@ -26,16 +26,6 @@ using namespace Hooks;
     if (!PlayerEventBindings->HasBindingsFor(key))\
         return RETVAL;
 
-#if ELUNA_EXPANSION == RETAIL
-void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 spellid)
-{
-    START_HOOK(PLAYER_EVENT_ON_LEARN_TALENTS);
-    HookPush(pPlayer);
-    HookPush(talentId);
-    HookPush(spellid);
-    CallAllFunctions(PlayerEventBindings, key);
-}
-#else
 void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, uint32 spellid)
 {
     START_HOOK(PLAYER_EVENT_ON_LEARN_TALENTS);
@@ -45,7 +35,6 @@ void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, 
     HookPush(spellid);
     CallAllFunctions(PlayerEventBindings, key);
 }
-#endif
 
 void Eluna::OnSkillChange(Player* pPlayer, uint32 skillId, uint32 skillValue)
 {

@@ -79,13 +79,7 @@ namespace LuaGlobalFunctions
      */
     int GetCoreExpansion(Eluna* E)
     {
-#if ELUNA_EXPANSION == WOTLK
-        E->Push(2);
-#elif ELUNA_EXPANSION == CATA
-        E->Push(3);
-#elif ELUNA_EXPANSION == RETAIL
-        E->Push(9);
-#endif
+        E->Push(ELUNA_EXPANSION);
         return 1;
     }
 
