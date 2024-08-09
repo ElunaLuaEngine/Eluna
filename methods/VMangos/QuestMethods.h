@@ -52,26 +52,10 @@ namespace LuaQuest
     int HasFlag(Eluna* E, Quest* quest)
     {
         uint32 flag = E->CHECKVAL<uint32>(2);
-#if defined TRINITY || AZEROTHCORE
-        E->Push(quest->HasFlag(flag));
-#else
-        E->Push(quest->HasQuestFlag((QuestFlags)flag));
-#endif
-        return 1;
-    }
 
-#ifndef CLASSIC
-    /**
-     * Returns 'true' if the [Quest] is a daily quest, false otherwise.
-     *
-     * @return bool isDaily
-     */
-    int IsDaily(Eluna* E, Quest* quest)
-    {
-        E->Push(quest->IsDaily());
+        E->Push(quest->HasQuestFlag((QuestFlags)flag));
         return 1;
     }
-#endif
 
     /**
      * Returns 'true' if the [Quest] is repeatable, false otherwise.
@@ -157,11 +141,7 @@ namespace LuaQuest
      */
     int GetFlags(Eluna* E, Quest* quest)
     {
-#if defined TRINITY || AZEROTHCORE
-        E->Push(quest->GetFlags());
-#else
         E->Push(quest->GetQuestFlags());
-#endif
         return 1;
     }
 
@@ -199,12 +179,10 @@ namespace LuaQuest
         // Boolean
         { "HasFlag", &LuaQuest::HasFlag },
         { "IsRepeatable", &LuaQuest::IsRepeatable },
-#ifndef CLASSIC
-        { "IsDaily", &LuaQuest::IsDaily },
-#endif
 
         // Not implemented methods
-        { "GetMaxLevel", METHOD_REG_NONE } // not implemented
+        { "GetMaxLevel", METHOD_REG_NONE }, // not implemented
+        { "IsDaily",METHOD_REG_NONE } // not in VMaNGOS
     };
 };
 #endif

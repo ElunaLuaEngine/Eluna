@@ -17,19 +17,6 @@
 namespace LuaMap
 {
 
-#ifndef CLASSIC
-    /**
-     * Returns `true` if the [Map] is an arena [BattleGround], `false` otherwise.
-     *
-     * @return bool isArena
-     */
-    int IsArena(Eluna* E, Map* map)
-    {
-        E->Push(map->IsBattleArena());
-        return 1;
-    }
-#endif
-
     /**
      * Returns `true` if the [Map] is a non-arena [BattleGround], `false` otherwise.
      *
@@ -62,19 +49,6 @@ namespace LuaMap
         E->Push(map->isEmpty());
         return 1;
     }
-
-#ifndef CLASSIC
-    /**
-     * Returns `true` if the [Map] is a heroic, `false` otherwise.
-     *
-     * @return bool isHeroic
-     */
-    int IsHeroic(Eluna* E, Map* map)
-    {
-        E->Push(map->IsHeroic());
-        return 1;
-    }
-#endif
 
     /**
      * Returns `true` if the [Map] is a raid, `false` otherwise.

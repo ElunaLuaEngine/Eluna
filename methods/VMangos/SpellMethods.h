@@ -76,11 +76,7 @@ namespace LuaSpell
      */
     int GetDuration(Eluna* E, Spell* spell)
     {
-#if defined TRINITY || AZEROTHCORE || defined VMANGOS
         E->Push(spell->GetSpellInfo()->GetDuration());
-#else
-        E->Push(GetSpellDuration(spell->m_spellInfo));
-#endif
         return 1;
     }
 
@@ -93,17 +89,10 @@ namespace LuaSpell
      */
     int GetTargetDest(Eluna* E, Spell* spell)
     {
-#if defined TRINITY || AZEROTHCORE
-        if (!spell->m_targets.HasDst())
-            return 3;
-        float x, y, z;
-        spell->m_targets.GetDstPos()->GetPosition(x, y, z);
-#else
         if (!(spell->m_targets.m_targetMask & TARGET_FLAG_DEST_LOCATION))
             return 3;
         float x, y, z;
         spell->m_targets.getDestination(x, y, z);
-#endif
         E->Push(x);
         E->Push(y);
         E->Push(z);
@@ -124,18 +113,6 @@ namespace LuaSpell
      */
     int GetTarget(Eluna* E, Spell* spell)
     {
-#if defined TRINITY || AZEROTHCORE
-        if (GameObject* target = spell->m_targets.GetGOTarget())
-            E->Push(target);
-        else if (Item* target = spell->m_targets.GetItemTarget())
-            E->Push(target);
-        else if (Corpse* target = spell->m_targets.GetCorpseTarget())
-            E->Push(target);
-        else if (Unit* target = spell->m_targets.GetUnitTarget())
-            E->Push(target);
-        else if (WorldObject* target = spell->m_targets.GetObjectTarget())
-            E->Push(target);
-#else
         if (GameObject* target = spell->m_targets.getGOTarget())
             E->Push(target);
         else if (Item* target = spell->m_targets.getItemTarget())
@@ -144,7 +121,6 @@ namespace LuaSpell
             E->Push(target);
         else if (Unit* target = spell->m_targets.getUnitTarget())
             E->Push(target);
-#endif
         return 1;
     }
 
