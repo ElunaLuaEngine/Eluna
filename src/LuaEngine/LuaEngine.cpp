@@ -7,6 +7,7 @@
 #include "Hooks.h"
 #include "LuaEngine.h"
 #include "BindingMap.h"
+#include "Chat.h"
 #include "ElunaEventMgr.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
@@ -136,7 +137,7 @@ void Eluna::_ReloadEluna()
     if (eConfigMgr->GetOption<bool>("Eluna.PlayerAnnounceReload", false))
         eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
     else
-        eWorld->SendGMText(SERVER_MSG_STRING, "Reloading Eluna...");
+        ChatHandler(nullptr).SendGMText(SERVER_MSG_STRING, "Reloading Eluna...");
 
     // Remove all timed events
     sEluna->eventMgr->SetStates(LUAEVENT_STATE_ERASE);
