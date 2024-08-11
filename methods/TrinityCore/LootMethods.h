@@ -105,11 +105,13 @@ namespace LuaLoot
      * 
      * @param uint32 itemid : The entry ID of the item to check (optionnal).
      * @param uint32 count : The count of item to check (optionnal).
+     * @param bool force_remove : Force if the item is removed, true remove the item and false set the item is looted (not removed from object)
      */
     int RemoveItem(Eluna* E, Loot* loot)
     {
         uint32 itemid = E->CHECKVAL<uint32>(2);
         uint32 count = E->CHECKVAL<uint32>(3, 0);
+        bool force_remove = E->CHECKVAL<bool>(3, false);
         bool isCountSpecified = count != 0 ? true : false;
 
         for (auto it = loot->items.begin(); it != loot->items.end();)
@@ -124,11 +126,17 @@ namespace LuaLoot
                         break;
                     }
                 }
-                it = loot->items.erase(it);
+                if (force_remove)
+                    it = loot->items.erase(it);
+                else
+                    it->is_looted = true;
+
+                loot->unlootedCount -= 1;
             }
             else
                 ++it;
         }
+
 
         return 0;
     }
@@ -257,6 +265,8 @@ namespace LuaLoot
 
     /**
      * Set the specified item with specified count is already looter for the [Loot].
+     * 
+     * This doesn't work for quest, ffa and conditionnal items (thanks @Shauren).
      * 
      * @param uint32 itemid
      * @param uint32 count : specified count is already looter (if 0 or nil all specified item is tag to already looted)
