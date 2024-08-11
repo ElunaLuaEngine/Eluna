@@ -181,13 +181,114 @@ namespace LuaLoot
         return 0;
     }
 
+    /**
+     * Set the unlooted count in [Loot].
+     * 
+     * @param uint32 unlooted_count : the unlooted item count in [Loot]
+     */
+    int SetUnlootedCount(Eluna* E, Loot* loot)
+    {
+        uint32 unlootedcount = E->CHECKVAL<uint32>(2);
+
+        loot->unlootedCount = unlootedcount;
+        return 0;
+    }
+
+    /**
+     * Returns the amount of unlooted count item of the [Loot].
+     *
+     * @return uint32 unlooted_count
+     */
+    int GetUnlootedCount(Eluna* E, Loot* loot)
+    {
+        E->Push(loot->unlootedCount);
+        return 1;
+    }
+
+    /**
+     * Returns a table with all data from the items in the [Loot]
+     * 
+     * @return table lootItems
+     */
+    int GetItems(Eluna* E, Loot* loot)
+    {
+        lua_createtable(E->L, loot->items.size(), 0);
+        int tbl = lua_gettop(E->L);
+
+        for (unsigned int i = 0; i < loot->items.size(); i++)
+        {
+            lua_newtable(E->L);
+
+            E->Push(loot->items[i].itemid);
+            lua_setfield(E->L, -2, "id");
+
+            E->Push(loot->items[i].itemIndex);
+            lua_setfield(E->L, -2, "index");
+
+            E->Push(loot->items[i].count);
+            lua_setfield(E->L, -2, "count");
+
+            E->Push(loot->items[i].needs_quest);
+            lua_setfield(E->L, -2, "needs_quest");
+
+            E->Push(loot->items[i].is_looted);
+            lua_setfield(E->L, -2, "is_looted");
+
+            E->Push(loot->items[i].rollWinnerGUID);
+            lua_setfield(E->L, -2, "rollWinnerGUID");
+
+            lua_rawseti(E->L, tbl, i + 1);
+        }
+
+        lua_settop(E->L, tbl);
+        return 1;
+    }
+
+    /**
+     * Update the item_index for the [Loot].
+     */
+    int UpdateItemIndex(Eluna* /*E*/, Loot* loot)
+    {
+        for (unsigned int i = 0; i < loot->items.size(); i++)
+            loot->items[i].itemIndex = i;
+
+        return 0;
+    }
+
+    /**
+     * Set the specified item with specified count is already looter for the [Loot].
+     * 
+     * @param uint32 itemid
+     * @param uint32 count : specified count is already looter (if 0 or nil all specified item is tag to already looted)
+     */
+    int SetItemLooted(Eluna* E, Loot* loot)
+    {
+        uint32 itemid = E->CHECKVAL<uint32>(2);
+        uint32 count = E->CHECKVAL<uint32>(3, 0);
+
+        for (auto &lootItem : loot->items)
+        {
+            if (lootItem.itemid == itemid && (count == 0 || lootItem.count == count))
+            {
+                lootItem.is_looted = true;
+                break;
+            }
+        }
+
+        return 0;
+    }
+
     ElunaRegister<Loot> LootMethods[] =
     {
         // Getters
         { "GetMoney", &LuaLoot::GetMoney },
+        { "GetUnlootedCount", &LuaLoot::GetUnlootedCount },
+        { "GetItems", &LuaLoot::GetItems },
 
         // Setters
         { "SetMoney", &LuaLoot::SetMoney },
+        { "SetUnlootedCount", &LuaLoot::SetUnlootedCount },
+        { "SetItemLooted", &LuaLoot::SetItemLooted },
 
         // Boolean
         { "IsLooted", &LuaLoot::IsLooted },
@@ -198,6 +299,8 @@ namespace LuaLoot
         { "RemoveItem", &LuaLoot::RemoveItem },
         { "GenerateMoney", &LuaLoot::GenerateMoney },
         { "Clear", &LuaLoot::Clear },
+        { "UpdateItemIndex", &LuaLoot::UpdateItemIndex },
     };
 }
+
 #endif

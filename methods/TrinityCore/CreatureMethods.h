@@ -1409,6 +1409,26 @@ namespace LuaCreature
         return 0;
     }
 
+    /**
+    * Return the [Loot] object from the [Creature]
+    *
+    * @return [Loot] loot
+    */
+    int GetLoot(Eluna* E, Creature* creature)
+    {
+        E->Push(&creature->loot);
+        return 1;
+    }
+
+    /**
+     * Set all loot removed from corpse for the [Creature]
+     */
+    int AllLootRemoved(Eluna* /*E*/, Creature* creature)
+    {
+        creature->AllLootRemovedFromCorpse();
+        return 0;
+    }
+
     ElunaRegister<Creature> CreatureMethods[] =
     {
         // Getters
@@ -1438,6 +1458,7 @@ namespace LuaCreature
         { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
         { "GetThreat", &LuaCreature::GetThreat },
+        { "GetLoot", &LuaCreature::GetLoot },
 
         // Setters
         { "SetRegeneratingHealth", &LuaCreature::SetRegeneratingHealth },
@@ -1509,7 +1530,8 @@ namespace LuaCreature
         { "ResetAllThreat", &LuaCreature::ResetAllThreat },
         { "FixateTarget", &LuaCreature::FixateTarget },
         { "ClearFixate", &LuaCreature::ClearFixate },
-        { "RemoveFromWorld", &LuaCreature::RemoveFromWorld }
+        { "RemoveFromWorld", &LuaCreature::RemoveFromWorld },
+        { "AllLootRemoved", &LuaCreature::AllLootRemoved },
     };
 };
 #endif
