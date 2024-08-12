@@ -2735,16 +2735,10 @@ namespace LuaUnit
         { "DealHeal", &LuaUnit::DealHeal },
 
         // Not implemented methods
-<<<<<<< Updated upstream
-        { "SummonGuardian", METHOD_REG_NONE } // not implemented
-=======
-        { "SummonGuardian", nullptr, METHOD_REG_NONE }, // not implemented
+        { "SummonGuardian", METHOD_REG_NONE }, // not implemented
 
         // Custom
         { "KillWithLoot", &KillWithLoot },
-
-        { NULL, NULL, METHOD_REG_NONE }
->>>>>>> Stashed changes
     };
 };
 #endif

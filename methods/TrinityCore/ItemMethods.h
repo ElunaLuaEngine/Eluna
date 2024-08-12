@@ -875,25 +875,12 @@ namespace LuaItem
         { "ClearEnchantment", &LuaItem::ClearEnchantment },
 
         // Other
-<<<<<<< Updated upstream
-        { "SaveToDB", &LuaItem::SaveToDB }
-=======
         { "SaveToDB", &LuaItem::SaveToDB },
-
-#ifdef CATA //Not implemented in TCPP
-        { "GetStatsCount", nullptr, METHOD_REG_NONE },
-        { "IsWeaponVellum", nullptr, METHOD_REG_NONE },
-        { "IsArmorVellum", nullptr, METHOD_REG_NONE },
-        { "IsRefundExpired", nullptr, METHOD_REG_NONE },
-#endif
 
         // Custom
         { "GetArmor", &LuaItem::GetArmor },
         { "GetMinDamage", &LuaItem::GetMinDamage },
         { "GetMaxDamage", &LuaItem::GetMaxDamage },
-
-        { NULL, NULL, METHOD_REG_NONE }
->>>>>>> Stashed changes
     };
 };
 #endif

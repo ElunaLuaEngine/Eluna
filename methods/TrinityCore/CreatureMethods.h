@@ -1524,20 +1524,11 @@ namespace LuaCreature
         { "ResetAllThreat", &LuaCreature::ResetAllThreat },
         { "FixateTarget", &LuaCreature::FixateTarget },
         { "ClearFixate", &LuaCreature::ClearFixate },
-<<<<<<< Updated upstream
-        { "RemoveFromWorld", &LuaCreature::RemoveFromWorld }
-=======
         { "RemoveFromWorld", &LuaCreature::RemoveFromWorld },
 
-#ifdef CATA //Not implemented in TCPP
-        { "GetShieldBlockValue", nullptr },
-#endif
         // ###> Custom ###
         { "GetNameLocale", &LuaCreature::GetNameLocale },
         // ###< Custom ###
-
-        { NULL, NULL, METHOD_REG_NONE }
->>>>>>> Stashed changes
     };
 };
 #endif
