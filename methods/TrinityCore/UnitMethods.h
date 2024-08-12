@@ -2546,6 +2546,22 @@ namespace LuaUnit
     return 1;
     }*/
 
+    /** ###> Custom ### */
+        /**
+         * Makes the [Unit] kill the target [Unit]
+         *
+         * @param [Unit] target : [Unit] to kill
+         */
+        int KillWithLoot(Eluna* E, Unit* unit)
+        {
+            Unit* target = E->CHECKOBJ<Unit>(2);
+
+            Unit::DealDamage(unit, target, target->GetHealth(), nullptr, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, nullptr, false);
+            
+            return 0;
+        }
+    /** ###< Custom ### */
+
     ElunaRegister<Unit> UnitMethods[] =
     {
         // Getters
@@ -2719,7 +2735,16 @@ namespace LuaUnit
         { "DealHeal", &LuaUnit::DealHeal },
 
         // Not implemented methods
+<<<<<<< Updated upstream
         { "SummonGuardian", METHOD_REG_NONE } // not implemented
+=======
+        { "SummonGuardian", nullptr, METHOD_REG_NONE }, // not implemented
+
+        // Custom
+        { "KillWithLoot", &KillWithLoot },
+
+        { NULL, NULL, METHOD_REG_NONE }
+>>>>>>> Stashed changes
     };
 };
 #endif

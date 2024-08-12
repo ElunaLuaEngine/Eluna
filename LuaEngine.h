@@ -513,6 +513,11 @@ public:
     void OnMapChanged(Player* pPlayer);
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
     void OnAchievementComplete(Player* pPlayer, uint32 achievementId);
+    // ###> Custom ###
+    void OnBuyItem(Player* pPlayer, Creature* pVendor, Item* pItem, int32 quantity, int32 price);
+    void OnSellItem(Player* pPlayer, Creature* pVendor, Item* pItem, int32 quantity, int32 price);
+    // ###< Custom ###
+    
 
 #if ELUNA_EXPANSION >= WOTLK
     /* Vehicle */

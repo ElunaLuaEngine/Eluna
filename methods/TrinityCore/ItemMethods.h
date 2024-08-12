@@ -774,6 +774,41 @@ namespace LuaItem
         item->SaveToDB(trans);
         return 0;
     }
+
+    
+    // ###> Custom ###
+    int GetArmor(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->Armor);
+
+        return 1;
+    }
+
+
+    int GetMinDamage(Eluna* E, Item* item)
+    {
+        uint32 index = E->CHECKVAL<uint32>(2);
+        
+        if (index >= MAX_ITEM_PROTO_DAMAGES)
+            return luaL_argerror(E->L, 2, "valid damageIndex expected");
+
+        E->Push(item->GetTemplate()->Damage[index].DamageMin);
+
+        return 1;
+    }
+    
+    int GetMaxDamage(Eluna* E, Item* item)
+    {
+        uint32 index = E->CHECKVAL<uint32>(2);
+
+        if (index >= MAX_ITEM_PROTO_DAMAGES)
+            return luaL_argerror(E->L, 2, "valid damageIndex expected");
+
+        E->Push(item->GetTemplate()->Damage[index].DamageMax);
+
+        return 1;
+    }
+    // ###< Custom ###
     
     ElunaRegister<Item> ItemMethods[] =
     {
@@ -840,7 +875,25 @@ namespace LuaItem
         { "ClearEnchantment", &LuaItem::ClearEnchantment },
 
         // Other
+<<<<<<< Updated upstream
         { "SaveToDB", &LuaItem::SaveToDB }
+=======
+        { "SaveToDB", &LuaItem::SaveToDB },
+
+#ifdef CATA //Not implemented in TCPP
+        { "GetStatsCount", nullptr, METHOD_REG_NONE },
+        { "IsWeaponVellum", nullptr, METHOD_REG_NONE },
+        { "IsArmorVellum", nullptr, METHOD_REG_NONE },
+        { "IsRefundExpired", nullptr, METHOD_REG_NONE },
+#endif
+
+        // Custom
+        { "GetArmor", &LuaItem::GetArmor },
+        { "GetMinDamage", &LuaItem::GetMinDamage },
+        { "GetMaxDamage", &LuaItem::GetMaxDamage },
+
+        { NULL, NULL, METHOD_REG_NONE }
+>>>>>>> Stashed changes
     };
 };
 #endif

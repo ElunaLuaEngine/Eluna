@@ -1409,6 +1409,21 @@ namespace LuaCreature
         return 0;
     }
 
+    /** ###> CUSTOM METHODS ### */
+        /**
+         * Returns the name of the [WorldObject]
+         *
+         * @return string name
+         */
+        int GetNameLocale(Eluna *E, Creature *creature)
+        {
+            uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
+
+            E->Push(creature->GetNameForLocaleIdx(static_cast<LocaleConstant>(locale)));
+            return 1;
+        }
+    /** ###< CUSTOM METHODS ### */
+
     ElunaRegister<Creature> CreatureMethods[] =
     {
         // Getters
@@ -1509,7 +1524,20 @@ namespace LuaCreature
         { "ResetAllThreat", &LuaCreature::ResetAllThreat },
         { "FixateTarget", &LuaCreature::FixateTarget },
         { "ClearFixate", &LuaCreature::ClearFixate },
+<<<<<<< Updated upstream
         { "RemoveFromWorld", &LuaCreature::RemoveFromWorld }
+=======
+        { "RemoveFromWorld", &LuaCreature::RemoveFromWorld },
+
+#ifdef CATA //Not implemented in TCPP
+        { "GetShieldBlockValue", nullptr },
+#endif
+        // ###> Custom ###
+        { "GetNameLocale", &LuaCreature::GetNameLocale },
+        // ###< Custom ###
+
+        { NULL, NULL, METHOD_REG_NONE }
+>>>>>>> Stashed changes
     };
 };
 #endif

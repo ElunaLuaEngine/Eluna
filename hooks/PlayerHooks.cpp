@@ -675,3 +675,27 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     CleanUpStack(5);
     return result;
 }
+
+// ###> Custom ###
+void Eluna::OnBuyItem(Player* pPlayer, Creature* pVendor, Item* pItem, int32 quantity, int32 price)
+{
+    START_HOOK(PLAYER_EVENT_ON_BUY_ITEM);
+    HookPush(pPlayer);
+    HookPush(pVendor);
+    HookPush(pItem);
+    HookPush(quantity);
+    HookPush(price);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
+void Eluna::OnSellItem(Player* pPlayer, Creature* pVendor, Item* pItem, int32 quantity, int32 price)
+{
+    START_HOOK(PLAYER_EVENT_ON_SELL_ITEM);
+    HookPush(pPlayer);
+    HookPush(pVendor);
+    HookPush(pItem);
+    HookPush(quantity);
+    HookPush(price);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+// ###< Custom ###
