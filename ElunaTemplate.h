@@ -20,6 +20,7 @@ extern "C"
 #include "SharedDefines.h"
 #else
 #include "Globals/SharedDefines.h"
+#include "Util/UniqueTrackablePtr.h"
 #endif
 
 #if defined ELUNA_TRINITY

@@ -135,6 +135,9 @@ enum MethodRegisterState
 #define TRACKABLE_PTR_NAMESPACE ::Trinity::
 #else
 #define ELUNA_GAME_API
+#if defined ELUNA_CMANGOS
+#define TRACKABLE_PTR_NAMESPACE ::MaNGOS::
+#endif
 #endif
 
 class ELUNA_GAME_API Eluna

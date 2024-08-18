@@ -3158,10 +3158,7 @@ namespace LuaPlayer
         }
         else
         {
-            bool all = itemCount >= item->GetCount();
             player->DestroyItemCount(item, itemCount, true);
-            if (all)
-                E->CHECKOBJ<ElunaObject>(2)->Invalidate();
         }
         return 0;
     }
