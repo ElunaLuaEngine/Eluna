@@ -219,6 +219,7 @@ namespace Hooks
         PLAYER_EVENT_ON_QUEST_STATUS_CHANGED    =     54,       // (event, player, questId, status)
         PLAYER_EVENT_ON_BUY_ITEM                =     55,       // (event, player, vendor, item, quantity, price)
         PLAYER_EVENT_ON_SELL_ITEM               =     56,       // (event, player, vendor, item, quantity, price)
+        PLAYER_EVENT_ON_UNEQUIP                 =     57,       // (event, player, item, bag, slot)
 
         PLAYER_EVENT_COUNT
     };

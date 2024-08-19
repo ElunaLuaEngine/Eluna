@@ -403,6 +403,9 @@ public:
     bool OnTradeAccept(Player* trader, Player* tradee);
     bool OnSendMail(Player* sender, ObjectGuid recipientGuid);
     void OnDiscoverArea(Player* player, uint32 area);
+    /* ###> Custom ### */
+        void OnUnequip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
+    /* ###< Custom ### */
 
     /* Item */
     void OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget);
@@ -514,8 +517,8 @@ public:
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
     void OnAchievementComplete(Player* pPlayer, uint32 achievementId);
     // ###> Custom ###
-    void OnBuyItem(Player* pPlayer, Creature* pVendor, Item* pItem, int32 quantity, int32 price);
-    void OnSellItem(Player* pPlayer, Creature* pVendor, Item* pItem, int32 quantity, int32 price);
+        void OnBuyItem(Player* pPlayer, Creature* pVendor, Item* pItem, int32 quantity, int32 price);
+        void OnSellItem(Player* pPlayer, Creature* pVendor, Item* pItem, int32 quantity, int32 price);
     // ###< Custom ###
     
 
