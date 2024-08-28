@@ -3829,7 +3829,7 @@ namespace LuaPlayer
         { "IsInArenaTeam", METHOD_REG_NONE },
         { "InArena", METHOD_REG_NONE },
         { "CanFly", METHOD_REG_NONE },
-        { "IsFlying",nullptr, METHOD_REG_NONE },
+        { "IsFlying", METHOD_REG_NONE },
 #endif
 #if (!defined(TBC) && !defined(CLASSIC))
         { "HasAchieved", &LuaPlayer::HasAchieved },

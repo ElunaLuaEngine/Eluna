@@ -3010,17 +3010,6 @@ namespace LuaPlayer
         return 0;
     }
 
-#if !defined(CLASSIC)
-    /**
-     * Remove cooldowns on spells that have less than 10 minutes of cooldown from the [Player], similarly to when you enter an arena.
-     */
-    int RemoveArenaSpellCooldowns(Eluna* /*E*/, Player* player)
-    {
-        player->RemoveArenaSpellCooldowns();
-        return 0;
-    }
-#endif
-
     /**
      * Resurrects the [Player].
      *

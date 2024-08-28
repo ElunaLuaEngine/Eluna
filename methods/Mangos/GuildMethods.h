@@ -251,7 +251,7 @@ namespace LuaGuild
 #ifndef CLASSIC
         { "SetBankTabText", &LuaGuild::SetBankTabText, METHOD_REG_WORLD }, // World state method only in multistate
 #else
-        { "SetBankTabText", nullptr,  METHOD_REG_NONE},
+        { "SetBankTabText",  METHOD_REG_NONE},
 #endif
 
         // Other

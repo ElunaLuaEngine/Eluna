@@ -55,11 +55,13 @@
 #elif defined ELUNA_VMANGOS
 #include "BasicAI.h"
 #include "SQLStorages.h"
+#elif defined ELUNA_MANGOS
+#include "SQLStorages.h"
 #endif  // ELUNA_TRINITY
-#if ELUNA_EXPANSION > CLASSIC
+#if ELUNA_EXPANSION > EXP_CLASSIC
 #include "ArenaTeam.h"
 #endif
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
 #include "Vehicle.h"
 #endif
 #else
@@ -94,13 +96,13 @@
 #include "Spells/SpellMgr.h"
 #include "Tools/Language.h"
 #include "Server/SQLStorages.h"
-#if ELUNA_EXPANSION > CLASSIC
+#if ELUNA_EXPANSION > EXP_CLASSIC
 #include "Arena/ArenaTeam.h"
 #endif
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
 #include "Entities/Vehicle.h"
 #endif
-#if ELUNA_EXPANSION >= CATA
+#if ELUNA_EXPANSION >= EXP_CATA
 #include "AI/BaseAI/AggressorAI.h"
 #else
 #include "AI/BaseAI/UnitAI.h"
@@ -110,10 +112,15 @@
 #if !defined ELUNA_TRINITY
 #include "Config/Config.h"
 #include "BattleGroundMgr.h"
+#if !defined ELUNA_MANGOS
 #include "revision.h"
+#else
+#include "GitRevision.h"
+#include "revision_data.h"
+#endif
 #endif
 
-#if ELUNA_EXPANSION > CLASSIC
+#if ELUNA_EXPANSION > EXP_CLASSIC
 typedef Opcodes OpcodesList;
 #endif
 
@@ -124,7 +131,7 @@ typedef Opcodes OpcodesList;
 #if defined ELUNA_CMANGOS
 #define CORE_NAME               "cMaNGOS"
 #define CORE_VERSION            REVISION_DATE " " REVISION_ID
-#if ELUNA_EXPANSION == CATA
+#if ELUNA_EXPANSION == EXP_CATA
 #define NUM_MSG_TYPES           MAX_OPCODE_TABLE_SIZE
 #endif
 #endif
@@ -133,6 +140,14 @@ typedef Opcodes OpcodesList;
 #define CORE_NAME               "vMaNGOS"
 #define CORE_VERSION            REVISION_HASH
 #define DEFAULT_LOCALE          LOCALE_enUS
+#endif
+
+#if defined ELUNA_MANGOS
+#define CORE_NAME               "MaNGOS"
+#define CORE_VERSION            PROJECT_REVISION_NR
+#if ELUNA_EXPANSION >= EXP_CATA
+#define NUM_MSG_TYPES           NUM_OPCODE_HANDLERS
+#endif
 #endif
 
 #if defined ELUNA_TRINITY
@@ -169,15 +184,15 @@ typedef Opcodes OpcodesList;
 #endif
 
 
-#if ELUNA_EXPANSION >= CATA || defined ELUNA_VMANGOS
+#if ELUNA_EXPANSION >= EXP_CATA || defined ELUNA_VMANGOS
 #define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
 #endif
 
-#if ELUNA_EXPANSION == TBC
+#if ELUNA_EXPANSION == EXP_TBC
 #define SPELL_AURA_MOD_KILL_XP_PCT  SPELL_AURA_MOD_XP_PCT
 #endif
 
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
 #define UNIT_BYTE2_FLAG_SANCTUARY   UNIT_BYTE2_FLAG_SUPPORTABLE
 #endif
 

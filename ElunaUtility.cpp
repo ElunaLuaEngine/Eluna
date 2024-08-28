@@ -22,7 +22,7 @@
 
 uint32 ElunaUtil::GetCurrTime()
 {
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || ELUNA_MANGOS
     return getMSTime();
 #else
     return WorldTimer::getMSTime();
@@ -31,7 +31,7 @@ uint32 ElunaUtil::GetCurrTime()
 
 uint32 ElunaUtil::GetTimeDiff(uint32 oldMSTime)
 {
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || ELUNA_MANGOS
     return GetMSTimeDiffToNow(oldMSTime);
 #else
     return WorldTimer::getMSTimeDiff(oldMSTime, WorldTimer::getMSTime());
@@ -98,7 +98,11 @@ bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
             {
                 if (i_obj_fact)
                 {
+#if !defined ELUNA_MANGOS
                     if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))
+#else
+                    if ((i_obj_fact->IsHostileTo(*target->getFactionTemplateEntry())) != (i_hostile == 1))
+#endif
                         return false;
                 }
                 else if (i_hostile == 1)

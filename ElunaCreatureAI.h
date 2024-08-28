@@ -15,7 +15,7 @@
 #if defined ELUNA_TRINITY
 struct ScriptedAI;
 typedef ScriptedAI NativeScriptedAI;
-#elif defined ELUNA_CMANGOS
+#elif defined ELUNA_CMANGOS || ELUNA_MANGOS
 class CreatureAI;
 typedef CreatureAI NativeScriptedAI;
 #elif defined ELUNA_VMANGOS
@@ -64,7 +64,11 @@ struct ElunaCreatureAI : NativeScriptedAI
 
         if (!me->GetEluna()->UpdateAI(me, diff))
         {
+#if !defined ELUNA_MANGOS
             if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
+#else
+            if (!me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE))
+#endif
                 NativeScriptedAI::UpdateAI(diff);
         }
     }
