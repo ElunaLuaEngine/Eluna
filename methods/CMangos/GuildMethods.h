@@ -121,7 +121,7 @@ namespace LuaGuild
         return 1;
     }
 
-#if ELUNA_EXPANSION <= WOTLK
+#if ELUNA_EXPANSION <= EXP_WOTLK
     /**
      * Sets the leader of this [Guild]
      *
@@ -136,7 +136,7 @@ namespace LuaGuild
     }
 #endif
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Sets the information of the bank tab specified
      *
@@ -252,13 +252,13 @@ namespace LuaGuild
         { "GetMemberCount", &LuaGuild::GetMemberCount },
 
         // Setters
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
         { "SetBankTabText", &LuaGuild::SetBankTabText, METHOD_REG_WORLD }, // World state method only in multistate
 #else
         { "SetBankTabText", METHOD_REG_NONE },
 #endif
         { "SetMemberRank", &LuaGuild::SetMemberRank, METHOD_REG_WORLD }, // World state method only in multistate
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         { "SetLeader", &LuaGuild::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
 #else
         { "SetLeader", METHOD_REG_NONE },

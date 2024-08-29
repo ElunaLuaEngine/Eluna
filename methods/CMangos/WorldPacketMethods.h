@@ -52,7 +52,7 @@ namespace LuaPacket
         uint32 opcode = E->CHECKVAL<uint32>(2);
         if (opcode >= NUM_MSG_TYPES)
             return luaL_argerror(E->L, 2, "valid opcode expected");
-#if ELUNA_EXPANSION == CLASSIC
+#if ELUNA_EXPANSION == EXP_CLASSIC
         packet->SetOpcode((Opcodes)opcode);
 #else
         packet->SetOpcode((OpcodesList)opcode);

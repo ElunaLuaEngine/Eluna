@@ -107,5 +107,5 @@ namespace LuaVehicle
     };
 }
 
-#endif // EXPANSION >= WOTLK
+#endif // EXPANSION >= EXP_WOTLK
 #endif // VEHICLEMETHODS_H

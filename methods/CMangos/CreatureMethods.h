@@ -26,7 +26,7 @@ namespace LuaCreature
         return 1;
     }
 
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
     /**
      * Returns `true` if the [Creature] is set to not give reputation when killed,
      *   and returns `false` otherwise.
@@ -66,7 +66,7 @@ namespace LuaCreature
     {
         bool mustBeDead = E->CHECKVAL<bool>(2, false);
 
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         E->Push(creature->IsTargetableForAttack(mustBeDead));
 #else
         E->Push(creature->isTargetableForAttack(mustBeDead));
@@ -715,7 +715,7 @@ namespace LuaCreature
         return 1;
     }
 
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
     /**
      * Returns the [Creature]'s shield block value.
      *
@@ -827,7 +827,7 @@ namespace LuaCreature
         return 0;
     }
 
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
     /**
      * Sets whether the [Creature] gives reputation or not.
      *
@@ -1056,7 +1056,7 @@ namespace LuaCreature
         uint32 entry = E->CHECKVAL<uint32>(2);
         uint32 dataGuidLow = E->CHECKVAL<uint32>(3, 0);
 
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         creature->UpdateEntry(entry, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);
 #else
         creature->UpdateEntry(entry, ALLIANCE, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);
@@ -1160,7 +1160,7 @@ namespace LuaCreature
         SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
         creature->AddThreat(victim, threat, false, (SpellSchoolMask)schoolMask, spellEntry);
 
-#if ELUNA_EXPANSION == CLASSIC
+#if ELUNA_EXPANSION == EXP_CLASSIC
         creature->AddThreat(victim, threat, false, spellEntry ? GetSchoolMask(spellEntry->School) : SPELL_SCHOOL_MASK_NONE, spellEntry);
 #else
         creature->AddThreat(victim, threat, false, spellEntry ? static_cast<SpellSchoolMask>(spellEntry->SchoolMask) : SPELL_SCHOOL_MASK_NONE, spellEntry);
@@ -1219,7 +1219,7 @@ namespace LuaCreature
         { "GetRank", &LuaCreature::GetRank },
         { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
 #else
         { "GetShieldBlockValue", METHOD_REG_NONE },
@@ -1240,7 +1240,7 @@ namespace LuaCreature
         { "SetWalk", &LuaCreature::SetWalk },
         { "SetHomePosition", &LuaCreature::SetHomePosition },
         { "SetEquipmentSlots", &LuaCreature::SetEquipmentSlots },
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
 #else
         { "SetDisableReputationGain", METHOD_REG_NONE },
@@ -1268,7 +1268,7 @@ namespace LuaCreature
         { "HasQuest", &LuaCreature::HasQuest },
         { "HasSpellCooldown", &LuaCreature::HasSpellCooldown },
         { "CanFly", &LuaCreature::CanFly },
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
 #else
         { "IsReputationGainDisabled", METHOD_REG_NONE },

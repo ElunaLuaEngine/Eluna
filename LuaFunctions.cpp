@@ -65,7 +65,7 @@ ElunaConstrainedObjectRef<Object> GetWeakPtrForObjectImpl(Object const* obj)
 }
 ElunaConstrainedObjectRef<Quest> GetWeakPtrFor(Quest const* obj) { return { obj->GetWeakPtr(), nullptr }; }
 ElunaConstrainedObjectRef<Spell> GetWeakPtrFor(Spell const* obj) { return { obj->GetWeakPtr(), obj->GetCaster()->GetMap() }; }
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
 ElunaConstrainedObjectRef<Vehicle> GetWeakPtrFor(Vehicle const* obj)
 {
 #if defined ELUNA_TRINITY

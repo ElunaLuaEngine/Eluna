@@ -107,7 +107,7 @@ namespace LuaBattleGround
      */
     int GetInstanceId(Eluna* E, BattleGround* bg)
     {
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         E->Push(bg->GetInstanceId());
 #else
         E->Push(bg->GetInstanceID());
