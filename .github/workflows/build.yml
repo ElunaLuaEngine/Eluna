@@ -248,3 +248,38 @@ jobs:
         cmake ../ -DCMAKE_INSTALL_PREFIX=../_install -DWITH_WARNINGS=0 -DUSE_EXTRACTORS=1
         make -j2
         make install
+
+  mangos-Eluna:
+    strategy:
+      fail-fast: false
+      matrix:
+        eluna: [1, 0]
+#        patch: [Classic, TBC, WotLK, Cata]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          repository: Niam5/server
+          ref: master
+      - uses: actions/checkout@v4
+        with:
+          path: src/game/LuaEngine
+      - name: Dependencies and Environment
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y git make cmake clang libssl-dev libbz2-dev build-essential default-libmysqlclient-dev libace-dev
+          sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
+          sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang 100
+      - name: Configure
+        env:
+          ELUNA: ${{ matrix.eluna }}
+        run: |
+          test -d _build || mkdir _build
+          test -d _install || mkdir _install
+          cd _build
+          cmake .. -DCMAKE_INSTALL_PREFIX=../_install -DBUILD_TOOLS:BOOL=1 -DBUILD_MANGOSD:BOOL=1 -DBUILD_REALMD:BOOL=1 -DSOAP:BOOL=1 -DSCRIPT_LIB_ELUNA:BOOL=$ELUNA -DSCRIPT_LIB_SD3:BOOL=1 -DPLAYERBOTS:BOOL=1 -DUSE_STORMLIB:BOOL=1
+      - name: Build
+        run: |
+          cd _build
+          make -j 6
