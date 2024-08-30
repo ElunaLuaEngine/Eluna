@@ -194,8 +194,10 @@ typedef Opcodes OpcodesList;
 #define SPELL_AURA_MOD_KILL_XP_PCT  SPELL_AURA_MOD_XP_PCT
 #endif
 
+#if !defined ELUNA_MANGOS
 #if ELUNA_EXPANSION >= EXP_WOTLK
 #define UNIT_BYTE2_FLAG_SANCTUARY   UNIT_BYTE2_FLAG_SUPPORTABLE
+#endif
 #endif
 
 #if !defined ELUNA_CMANGOS
