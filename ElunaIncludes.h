@@ -120,8 +120,10 @@
 #endif
 #endif
 
+#if !defined ELUNA_MANGOS
 #if ELUNA_EXPANSION > EXP_CLASSIC
 typedef Opcodes OpcodesList;
+#endif
 #endif
 
 /*
