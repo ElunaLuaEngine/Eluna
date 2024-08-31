@@ -160,7 +160,7 @@ jobs:
       fail-fast: false
       matrix:
         eluna: [ON, OFF]
-        patch: [zero, one, two]
+        patch: [zero, one, two, three]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
