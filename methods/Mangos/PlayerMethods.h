@@ -2437,12 +2437,9 @@ namespace LuaPlayer
     {
         bool no_cost = E->CHECKVAL<bool>(2, true);
 
-#ifdef CATA
-        player->ResetTalents(no_cost);
-#else
         player->resetTalents(no_cost);
-#endif
-#if (!defined(TBC) && !defined(CLASSIC))
+
+#if ELUNA_EXPANSION >= EXP_WOTLK
         player->SendTalentsInfoData(false);
 #endif
         return 0;
