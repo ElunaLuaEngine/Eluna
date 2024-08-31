@@ -115,7 +115,6 @@ namespace LuaGuild
         return 1;
     }
 
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     /**
      * Sets the leader of this [Guild]
      *
@@ -128,7 +127,6 @@ namespace LuaGuild
         guild->SetLeader(player->GET_GUID());
         return 0;
     }
-#endif
 
 #ifndef CLASSIC
     /**

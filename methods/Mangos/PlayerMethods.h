@@ -724,7 +724,7 @@ namespace LuaPlayer
         return 1;
     }
 #endif
-#if defined(CLASSIC) || defined(TBC) || defined (WOTLK)
+
     /**
      * Returns the [Player]s current shield block value
      *
@@ -732,10 +732,13 @@ namespace LuaPlayer
      */
     int GetShieldBlockValue(Eluna* E, Player* player)
     {
+#if ELUNA_EXPANSION == EXP_CATA
+        E->Push(player->GetShieldBlockDamageValue());
+#else
         E->Push(player->GetShieldBlockValue());
+#endif
         return 1;
     }
-#endif
 
     /**
      * Returns the [Player]s cooldown delay by specified [Spell] ID
