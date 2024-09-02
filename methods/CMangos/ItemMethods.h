@@ -845,12 +845,15 @@ namespace LuaItem
 #else
         { "IsCurrencyToken", METHOD_REG_NONE },
 #endif
-#if ELUNA_EXPANSION == EXP_WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
         { "IsBoundAccountWide", &LuaItem::IsBoundAccountWide },
+#else
+        { "IsBoundAccountWide", METHOD_REG_NONE },
+#endif
+#if ELUNA_EXPANSION == EXP_WOTLK
         { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
         { "IsArmorVellum", &LuaItem::IsArmorVellum },
 #else
-        { "IsBoundAccountWide", METHOD_REG_NONE },
         { "IsWeaponVellum", METHOD_REG_NONE },
         { "IsArmorVellum", METHOD_REG_NONE },
 #endif

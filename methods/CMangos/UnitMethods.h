@@ -2641,7 +2641,11 @@ namespace LuaUnit
 #if ELUNA_EXPANSION >= EXP_TBC
         { "IsOnVehicle", &LuaUnit::IsOnVehicle },
         { "RemoveArenaAuras", &LuaUnit::RemoveArenaAuras },
-#elif ELUNA_EXPANSION >= EXP_WOTLK
+#else
+        { "IsOnVehicle", METHOD_REG_NONE },
+        { "RemoveArenaAuras", METHOD_REG_NONE },
+#endif
+#if ELUNA_EXPANSION >= EXP_WOTLK
         { "GetCritterGUID", &LuaUnit::GetCritterGUID },
         { "GetVehicleKit", &LuaUnit::GetVehicleKit },
         { "SetFFA", &LuaUnit::SetFFA },
@@ -2654,8 +2658,6 @@ namespace LuaUnit
         { "SetFFA", METHOD_REG_NONE },
         { "SetSanctuary", METHOD_REG_NONE },
         { "SetCritterGUID", METHOD_REG_NONE },
-        { "IsOnVehicle", METHOD_REG_NONE },
-        { "RemoveArenaAuras", METHOD_REG_NONE },
         { "MoveJump", METHOD_REG_NONE },
 #endif
 

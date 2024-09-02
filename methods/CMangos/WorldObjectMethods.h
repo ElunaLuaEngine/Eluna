@@ -1154,7 +1154,7 @@ namespace LuaWorldObject
         { "GetExactDistance2d", &LuaWorldObject::GetExactDistance2d },
         { "GetRelativePoint", &LuaWorldObject::GetRelativePoint },
         { "GetAngle", &LuaWorldObject::GetAngle },
-#if ELUNA_EXPANSION == EXP_WOTLK
+#if ELUNA_EXPANSION > EXP_TBC
         { "GetPhaseMask", &LuaWorldObject::GetPhaseMask },
         { "SetPhaseMask", &LuaWorldObject::SetPhaseMask },
 #else

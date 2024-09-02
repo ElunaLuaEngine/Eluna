@@ -724,7 +724,7 @@ namespace LuaPlayer
     }
 #endif
 
-#if ELUNA_EXPANSION == EXP_WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
     /**
      * Returns the normal phase of the player instead of the actual phase possibly containing GM phase
      *
@@ -3802,7 +3802,7 @@ namespace LuaPlayer
         { "GetArenaPoints", METHOD_REG_NONE },
         { "GetHonorPoints", METHOD_REG_NONE },
 #endif
-#if ELUNA_EXPANSION == EXP_WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
         { "GetPhaseMaskForSpawn", &LuaPlayer::GetPhaseMaskForSpawn },
         { "GetActiveSpec", &LuaPlayer::GetActiveSpec },
         { "GetSpecsCount", &LuaPlayer::GetSpecsCount },
@@ -3916,7 +3916,7 @@ namespace LuaPlayer
         { "CanFly", METHOD_REG_NONE },
         { "IsFlying", METHOD_REG_NONE },
 #endif
-#if ELUNA_EXPANSION == EXP_WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
         { "HasAchieved", &LuaPlayer::HasAchieved },
         { "HasTalent", &LuaPlayer::HasTalent },
         { "CanTitanGrip", &LuaPlayer::CanTitanGrip },
@@ -4019,7 +4019,7 @@ namespace LuaPlayer
         { "ModifyHonorPoints", METHOD_REG_NONE },
         { "ModifyArenaPoints", METHOD_REG_NONE },
 #endif
-#if ELUNA_EXPANSION == EXP_WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
         { "ResetPetTalents", &LuaPlayer::ResetPetTalents },
         { "ResetAchievements", &LuaPlayer::ResetAchievements },
         { "SendMovieStart", &LuaPlayer::SendMovieStart },
