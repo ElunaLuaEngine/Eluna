@@ -9,10 +9,10 @@
 
 #include "Common.h"
 
-#define CLASSIC 0
-#define TBC 1
-#define WOTLK 2
-#define CATA 3
+#define EXP_CLASSIC 0
+#define EXP_TBC 1
+#define EXP_WOTLK 2
+#define EXP_CATA 3
 
 #if !defined ELUNA_CMANGOS
 #include "SharedDefines.h"
@@ -35,7 +35,7 @@
 #include <mutex>
 #include <memory>
 
-#if !defined ELUNA_VMANGOS
+#if defined ELUNA_TRINITY || ELUNA_CMANGOS
 #define USING_BOOST
 #endif
 

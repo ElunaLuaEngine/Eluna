@@ -115,7 +115,6 @@ namespace LuaGuild
         return 1;
     }
 
-#if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
     /**
      * Sets the leader of this [Guild]
      *
@@ -128,7 +127,6 @@ namespace LuaGuild
         guild->SetLeader(player->GET_GUID());
         return 0;
     }
-#endif
 
 #ifndef CLASSIC
     /**
@@ -251,7 +249,7 @@ namespace LuaGuild
 #ifndef CLASSIC
         { "SetBankTabText", &LuaGuild::SetBankTabText, METHOD_REG_WORLD }, // World state method only in multistate
 #else
-        { "SetBankTabText", nullptr,  METHOD_REG_NONE},
+        { "SetBankTabText",  METHOD_REG_NONE},
 #endif
 
         // Other

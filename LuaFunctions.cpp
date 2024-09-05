@@ -39,8 +39,16 @@ extern "C"
 #include "LootMethods.h"
 
 #if defined TRACKABLE_PTR_NAMESPACE
-ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj) { return { obj->GetWeakPtr(), obj->GetOwner()->GetMap() }; }
-ElunaConstrainedObjectRef<Battleground> GetWeakPtrFor(Battleground const* obj) { return { obj->GetWeakPtr(), obj->GetBgMap() }; }
+ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj)
+{
+#if defined ELUNA_TRINITY
+    Map* map = obj->GetOwner()->GetMap();
+#elif defined ELUNA_CMANGOS
+    Map* map = obj->GetTarget()->GetMap();
+#endif
+    return { obj->GetWeakPtr(), map };
+}
+ElunaConstrainedObjectRef<BattleGround> GetWeakPtrFor(BattleGround const* obj) { return { obj->GetWeakPtr(), obj->GetBgMap() }; }
 ElunaConstrainedObjectRef<Group> GetWeakPtrFor(Group const* obj) { return { obj->GetWeakPtr(), nullptr }; }
 ElunaConstrainedObjectRef<Guild> GetWeakPtrFor(Guild const* obj) { return { obj->GetWeakPtr(), nullptr }; }
 ElunaConstrainedObjectRef<Map> GetWeakPtrFor(Map const* obj) { return { obj->GetWeakPtr(), obj }; }
@@ -58,7 +66,17 @@ ElunaConstrainedObjectRef<Object> GetWeakPtrForObjectImpl(Object const* obj)
 }
 ElunaConstrainedObjectRef<Quest> GetWeakPtrFor(Quest const* obj) { return { obj->GetWeakPtr(), nullptr }; }
 ElunaConstrainedObjectRef<Spell> GetWeakPtrFor(Spell const* obj) { return { obj->GetWeakPtr(), obj->GetCaster()->GetMap() }; }
-ElunaConstrainedObjectRef<Vehicle> GetWeakPtrFor(Vehicle const* obj) { return { obj->GetWeakPtr(), obj->GetBase()->GetMap() }; }
+#if ELUNA_EXPANSION >= EXP_WOTLK
+ElunaConstrainedObjectRef<Vehicle> GetWeakPtrFor(Vehicle const* obj)
+{
+#if defined ELUNA_TRINITY
+    Map* map = obj->GetBase()->GetMap();
+#elif defined ELUNA_CMANGOS
+    Map* map = obj->GetOwner()->GetMap();
+#endif
+    return { obj->GetWeakPtr(), map };
+}
+#endif
 #endif
 
 // Template by Mud from http://stackoverflow.com/questions/4484437/lua-integer-type/4485511#4485511
@@ -168,7 +186,7 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<Item>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<Item>::SetMethods(E, LuaItem::ItemMethods);
 
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
     ElunaTemplate<Vehicle>::Register(E, "Vehicle");
     ElunaTemplate<Vehicle>::SetMethods(E, LuaVehicle::VehicleMethods);
 #endif

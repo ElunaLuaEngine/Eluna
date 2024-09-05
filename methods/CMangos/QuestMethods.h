@@ -57,7 +57,7 @@ namespace LuaQuest
         return 1;
     }
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Returns 'true' if the [Quest] is a daily quest, false otherwise.
      *
@@ -185,7 +185,7 @@ namespace LuaQuest
 
         // Boolean
         { "HasFlag", &LuaQuest::HasFlag },
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
         { "IsDaily", &LuaQuest::IsDaily },
 #else
         { "IsDaily", METHOD_REG_NONE },

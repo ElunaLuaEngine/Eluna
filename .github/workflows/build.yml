@@ -155,36 +155,40 @@ jobs:
 #      - name: Check startup errors
 #        run: source ./apps/ci/ci-error-check.sh
 
-# Disable Mangos builds for now until Mangos deps are fixed and multistate can be ported
-#  mangos-Eluna:
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        eluna: [ON, OFF]
-#        patch: [zero, one, two]
-#    runs-on: ubuntu-20.04
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          submodules: recursive
-#          repository: mangos${{ matrix.patch }}/server
-#          ref: master
-#      - uses: actions/checkout@v4
-#        with:
-#          path: src/modules/Eluna
-#      - name: Configure
-#        env:
-#         ELUNA: ${{ matrix.eluna }}
-#        run: |
-#          mkdir bin
-#          cd bin
-#          cmake .. -DSCRIPT_LIB_ELUNA=$ELUNA -DCMAKE_INSTALL_PREFIX=install -DSOAP=1 -DPLAYERBOTS=0 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/
-#          cd ..
-#      - name: Build
-#        run: |
-#          cd bin
-#          make -j4
-#          make install
+  mangos-Eluna:
+    strategy:
+      fail-fast: false
+      matrix:
+        eluna: [ON, OFF]
+        patch: [zero, one, two, three]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          repository: mangos${{ matrix.patch }}/server
+          ref: master
+      - uses: actions/checkout@v4
+        with:
+          path: src/game/LuaEngine
+      - name: Dependencies and Environment
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y git make cmake clang libssl-dev libbz2-dev build-essential default-libmysqlclient-dev libace-dev
+          sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
+          sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang 100
+      - name: Configure
+        env:
+          ELUNA: ${{ matrix.eluna }}
+        run: |
+          test -d _build || mkdir _build
+          test -d _install || mkdir _install
+          cd _build
+          cmake .. -DCMAKE_INSTALL_PREFIX=../_install -DBUILD_TOOLS:BOOL=1 -DBUILD_MANGOSD:BOOL=1 -DBUILD_REALMD:BOOL=1 -DSOAP:BOOL=1 -DSCRIPT_LIB_ELUNA:BOOL=$ELUNA -DSCRIPT_LIB_SD3:BOOL=1 -DPLAYERBOTS:BOOL=0 -DUSE_STORMLIB:BOOL=1
+      - name: Build
+        run: |
+          cd _build
+          make -j 6
           
   cmangos-Eluna:
     strategy:

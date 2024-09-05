@@ -12,7 +12,7 @@
  */
 namespace LuaPlayer
 {
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
     /**
      * Returns 'true' if the [Player] can Titan Grip, 'false' otherwise.
      *
@@ -127,7 +127,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Returns 'true' if the [Player] has a title by specific ID, 'false' otherwise.
      *
@@ -251,7 +251,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Returns 'true' if the [Player] can fly, 'false' otherwise.
      *
@@ -264,7 +264,7 @@ namespace LuaPlayer
     }
 #endif
 
-#if ELUNA_EXPANSION == CLASSIC
+#if ELUNA_EXPANSION == EXP_CLASSIC
     /**
      * Returns [Player] kills
      *
@@ -324,7 +324,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#if ELUNA_EXPANSION == CLASSIC
+#if ELUNA_EXPANSION == EXP_CLASSIC
     /**
      * Updates the [Player]s weekly honor status
      */
@@ -353,7 +353,7 @@ namespace LuaPlayer
     }
 #endif
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Returns 'true' if the [Player] is currently flying, 'false' otherwise.
      *
@@ -401,7 +401,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Returns 'true' if the [Player] is in an arena team specified by type, 'false' otherwise.
      *
@@ -654,7 +654,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Returns 'true' if the [Player] is currently in an arena, 'false' otherwise.
      *
@@ -700,7 +700,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
     /**
      * Returns the amount of available specs the [Player] currently has
      *
@@ -724,7 +724,7 @@ namespace LuaPlayer
     }
 #endif
 
-#if ELUNA_EXPANSION == WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
     /**
      * Returns the normal phase of the player instead of the actual phase possibly containing GM phase
      *
@@ -737,7 +737,7 @@ namespace LuaPlayer
     }
 #endif
 
-#if ELUNA_EXPANSION >= TBC && ELUNA_EXPANSION <= WOTLK
+#if ELUNA_EXPANSION >= EXP_TBC && ELUNA_EXPANSION <= EXP_WOTLK
     /**
      * Returns the [Player]s current amount of Arena Points
      *
@@ -760,7 +760,7 @@ namespace LuaPlayer
         return 1;
     }
 #endif
-#if ELUNA_EXPANSION <= WOTLK
+#if ELUNA_EXPANSION <= EXP_WOTLK
     /**
      * Returns the [Player]s current shield block value
      *
@@ -830,7 +830,7 @@ namespace LuaPlayer
     {
         float radius = E->CHECKVAL<float>(2);
 
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         E->Push(player->GetNextRandomRaidMember(radius, SPELL_AURA_NONE));
 #else
         E->Push(player->GetNextRandomRaidMember(radius));
@@ -930,7 +930,7 @@ namespace LuaPlayer
     int GetSkillTempBonusValue(Eluna* E, Player* player)
     {
         uint32 skill = E->CHECKVAL<uint32>(2);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         E->Push(player->GetSkillBonusTemporary(skill));
 #else
         E->Push(player->GetSkillTempBonusValue(skill));
@@ -947,7 +947,7 @@ namespace LuaPlayer
     int GetSkillPermBonusValue(Eluna* E, Player* player)
     {
         uint32 skill = E->CHECKVAL<uint32>(2);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         E->Push(player->GetSkillBonusPermanent(skill));
 #else
         E->Push(player->GetSkillPermBonusValue(skill));
@@ -964,7 +964,7 @@ namespace LuaPlayer
     int GetPureSkillValue(Eluna* E, Player* player)
     {
         uint32 skill = E->CHECKVAL<uint32>(2);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         E->Push(player->GetSkillValuePure(skill));
 #else
         E->Push(player->GetPureSkillValue(skill));
@@ -981,7 +981,7 @@ namespace LuaPlayer
     int GetBaseSkillValue(Eluna* E, Player* player)
     {
         uint32 skill = E->CHECKVAL<uint32>(2);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         E->Push(player->GetSkillValueBase(skill));
 #else
         E->Push(player->GetBaseSkillValue(skill));
@@ -1012,7 +1012,7 @@ namespace LuaPlayer
     int GetPureMaxSkillValue(Eluna* E, Player* player)
     {
         uint32 skill = E->CHECKVAL<uint32>(2);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         E->Push(player->GetSkillMaxPure(skill));
 #else
         E->Push(player->GetPureMaxSkillValue(skill));
@@ -1029,7 +1029,7 @@ namespace LuaPlayer
     int GetMaxSkillValue(Eluna* E, Player* player)
     {
         uint32 skill = E->CHECKVAL<uint32>(2);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         E->Push(player->GetSkillMax(skill));
 #else
         E->Push(player->GetMaxSkillValue(skill));
@@ -1067,9 +1067,9 @@ namespace LuaPlayer
      */
     int GetDifficulty(Eluna* E, Player* player)
     {
-#if ELUNA_EXPANSION == TBC
+#if ELUNA_EXPANSION == EXP_TBC
         E->Push(player->GetDifficulty());
-#elif ELUNA_EXPANSION == CLASSIC
+#elif ELUNA_EXPANSION == EXP_CLASSIC
         E->Push((Difficulty)0);
 #else
         bool isRaid = E->CHECKVAL<bool>(2, true);
@@ -1566,7 +1566,7 @@ namespace LuaPlayer
         if (apply)
         {
             player->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED | UNIT_FLAG_SILENCED);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
             player->UpdateClientControl(player, 0);
 #else
             player->SetClientControl(player, 0);
@@ -1575,7 +1575,7 @@ namespace LuaPlayer
         else
         {
             player->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED | UNIT_FLAG_SILENCED);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
             player->UpdateClientControl(player, 1);
 #else
             player->SetClientControl(player, 1);
@@ -1683,7 +1683,7 @@ namespace LuaPlayer
         uint32 points = E->CHECKVAL<uint32>(2);
 
         player->SetFreeTalentPoints(points);
-#if ELUNA_EXPANSION > TBC
+#if ELUNA_EXPANSION > EXP_TBC
         player->SendTalentsInfoData(false);
 #endif
         return 0;
@@ -1699,7 +1699,7 @@ namespace LuaPlayer
     {
         uint32 faction = E->CHECKVAL<uint32>(2);
         int32 value = E->CHECKVAL<int32>(3);
-#if ELUNA_EXPANSION == TBC
+#if ELUNA_EXPANSION == EXP_TBC
         FactionEntry const* factionEntry = sFactionStore.LookupEntry<FactionEntry>(faction);
 #else
         FactionEntry const* factionEntry = sFactionStore.LookupEntry(faction);
@@ -1847,7 +1847,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#if ELUNA_EXPANSION >= TBC && ELUNA_EXPANSION <= WOTLK
+#if ELUNA_EXPANSION >= EXP_TBC && ELUNA_EXPANSION <= EXP_WOTLK
     /**
      * Sets the [Player]s Arena Points to the amount specified
      *
@@ -1873,7 +1873,7 @@ namespace LuaPlayer
     }
 #endif
 
-#if ELUNA_EXPANSION == CLASSIC
+#if ELUNA_EXPANSION == EXP_CLASSIC
     /**
      * Sets kills
      *
@@ -1962,7 +1962,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Adds the specified title to the [Player]s list of known titles
      *
@@ -1991,7 +1991,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#if ELUNA_EXPANSION > TBC
+#if ELUNA_EXPANSION > EXP_TBC
     /**
      * Resets the [Player]s pets talent points
      */
@@ -2023,7 +2023,7 @@ namespace LuaPlayer
     {
         ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2, player->GET_GUID());
 
-#if ELUNA_EXPANSION <= TBC
+#if ELUNA_EXPANSION <= EXP_TBC
         WorldPacket data(CMSG_GET_MAIL_LIST, 8);
         data << guid;
         player->GetSession()->HandleGetMailList(data);
@@ -2033,7 +2033,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#if ELUNA_EXPANSION >= TBC && ELUNA_EXPANSION <= WOTLK
+#if ELUNA_EXPANSION >= EXP_TBC && ELUNA_EXPANSION <= EXP_WOTLK
     /**
      * Adds or detracts from the [Player]s current Arena Points
      *
@@ -2081,7 +2081,7 @@ namespace LuaPlayer
 
         float x, y, z;
         summoner->GetPosition(x,y,z);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         player->SetSummonPoint(summoner->GetMapId(), x, y, z, summoner->GetMasterGuid());
 #else
         player->SetSummonPoint(summoner->GetMapId(), x, y, z);
@@ -2265,7 +2265,7 @@ namespace LuaPlayer
     int LogoutPlayer(Eluna* E, Player* player)
     {
         bool save = E->CHECKVAL<bool>(2, true);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         player->GetSession()->LogoutPlayer();
 #else
         player->GetSession()->LogoutPlayer(save);
@@ -2293,12 +2293,12 @@ namespace LuaPlayer
     int UnbindInstance(Eluna* E, Player* player)
     {
         uint32 map = E->CHECKVAL<uint32>(2);
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
         uint32 difficulty = E->CHECKVAL<uint32>(3, 0);
 
         if (difficulty < MAX_DIFFICULTY)
             player->UnbindInstance(map, (Difficulty)difficulty);
-#else//CLASSIC
+#else//EXP_CLASSIC
         player->UnbindInstance(map);
 #endif
         return 0;
@@ -2309,7 +2309,7 @@ namespace LuaPlayer
      */
     int UnbindAllInstances(Eluna* /*E*/, Player* player)
     {
-#if ELUNA_EXPANSION == CLASSIC
+#if ELUNA_EXPANSION == EXP_CLASSIC
         Player::BoundInstancesMap& binds = player->GetBoundInstances();
         for (Player::BoundInstancesMap::iterator itr = binds.begin(); itr != binds.end();)
         {
@@ -2359,7 +2359,7 @@ namespace LuaPlayer
         bool takeCost = E->CHECKVAL<bool>(3, true);
         float discountMod = E->CHECKVAL<float>(4, 1.0f);
 
-#if ELUNA_EXPANSION == CLASSIC
+#if ELUNA_EXPANSION == EXP_CLASSIC
         player->DurabilityRepair(position, takeCost, discountMod);
 #else
         player->DurabilityRepair(position, takeCost, discountMod, false);
@@ -2380,7 +2380,7 @@ namespace LuaPlayer
         float discountMod = E->CHECKVAL<float>(3, 1.0f);
         bool guildBank = E->CHECKVAL<bool>(4, false);
 
-#if ELUNA_EXPANSION == CLASSIC
+#if ELUNA_EXPANSION == EXP_CLASSIC
         player->DurabilityRepairAll(takeCost, discountMod);
 #else
         player->DurabilityRepairAll(takeCost, discountMod, guildBank);
@@ -2506,7 +2506,7 @@ namespace LuaPlayer
         bool no_cost = E->CHECKVAL<bool>(2, true);
 
         player->resetTalents(no_cost);
-#if ELUNA_EXPANSION > TBC
+#if ELUNA_EXPANSION > EXP_TBC
         player->SendTalentsInfoData(false);
 #endif
         return 0;
@@ -2683,7 +2683,7 @@ namespace LuaPlayer
             {
                 if (CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(creature))
                     for (uint16 z = 0; z < creaturecount; ++z)
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
                         player->KilledMonster(cInfo, nullptr);
 #else
                         player->KilledMonster(cInfo, ObjectGuid());
@@ -2703,7 +2703,7 @@ namespace LuaPlayer
             uint32 repValue = quest->GetRepObjectiveValue();
             uint32 curRep = player->GetReputationMgr().GetReputation(repFaction);
             if (curRep < repValue)
-#if ELUNA_EXPANSION == TBC
+#if ELUNA_EXPANSION == EXP_TBC
                 if (FactionEntry const* factionEntry = sFactionStore.LookupEntry<FactionEntry>(repFaction))
 #else
                 if (FactionEntry const* factionEntry = sFactionStore.LookupEntry(repFaction))
@@ -2949,7 +2949,7 @@ namespace LuaPlayer
                 return 1;
             }
             player->ItemAddedQuestCheck(entry, 1);
-#if ELUNA_EXPANSION > TBC
+#if ELUNA_EXPANSION > EXP_TBC
             player->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_RECEIVE_EPIC_ITEM, entry, 1);
 #endif
         }
@@ -3011,7 +3011,7 @@ namespace LuaPlayer
         return 1;
     }
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Removes a title by ID from the [Player]s list of known titles
      *
@@ -3098,7 +3098,7 @@ namespace LuaPlayer
         float z = E->CHECKVAL<float>(5);
         float o = E->CHECKVAL<float>(6);
 
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         if (player->IsTaxiFlying())
             player->TaxiFlightInterrupt();
         else
@@ -3158,10 +3158,7 @@ namespace LuaPlayer
         }
         else
         {
-            bool all = itemCount >= item->GetCount();
             player->DestroyItemCount(item, itemCount, true);
-            if (all)
-                E->CHECKOBJ<ElunaObject>(2)->Invalidate();
         }
         return 0;
     }
@@ -3300,7 +3297,7 @@ namespace LuaPlayer
         data << uint8(channel);
         data << int32(LANG_ADDON);
         data << player->GET_GUID();
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
         data << uint32(0);
         data << receiver->GET_GUID();
 #endif
@@ -3359,7 +3356,7 @@ namespace LuaPlayer
         uint32 rank = E->CHECKVAL<uint32>(3);
 
         player->LearnTalent(id, rank);
-#if ELUNA_EXPANSION > TBC
+#if ELUNA_EXPANSION > EXP_TBC
         player->SendTalentsInfoData(false);
 #endif
 
@@ -3369,7 +3366,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Remove cooldowns on spells that have less than 10 minutes of cooldown from the [Player], similarly to when you enter an arena.
      */
@@ -3422,11 +3419,11 @@ namespace LuaPlayer
         bool _code = E->CHECKVAL<bool>(6, false);
         const char* _promptMsg = E->CHECKVAL<const char*>(7, "");
         uint32 _money = E->CHECKVAL<uint32>(8, 0);
-#if ELUNA_EXPANSION >= TBC && ELUNA_EXPANSION <= WOTLK
+#if ELUNA_EXPANSION >= EXP_TBC && ELUNA_EXPANSION <= EXP_WOTLK
         player->GetPlayerMenu()->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
-#elif ELUNA_EXPANSION == CLASSIC
+#elif ELUNA_EXPANSION == EXP_CLASSIC
         player->GetPlayerMenu()->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _code);
-#elif ELUNA_EXPANSION == CATA
+#elif ELUNA_EXPANSION == EXP_CATA
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg, _sender, _intid, _promptMsg, _money, _code);
 #endif
         return 0;
@@ -3439,7 +3436,7 @@ namespace LuaPlayer
      */
     int GossipComplete(Eluna* /*E*/, Player* player)
     {
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         player->GetPlayerMenu()->CloseGossip();
 #else
         player->PlayerTalkClass->CloseGossip();
@@ -3468,13 +3465,13 @@ namespace LuaPlayer
         if (sender->GetTypeId() == TYPEID_PLAYER)
         {
             uint32 menu_id = E->CHECKVAL<uint32>(4);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
             player->GetPlayerMenu()->GetGossipMenu().SetMenuId(menu_id);
 #else
             player->PlayerTalkClass->GetGossipMenu().SetMenuId(menu_id);
 #endif
         }
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         player->GetPlayerMenu()->SendGossipMenu(npc_text, sender->GET_GUID());
 #else
         player->PlayerTalkClass->SendGossipMenu(npc_text, sender->GET_GUID());
@@ -3492,7 +3489,7 @@ namespace LuaPlayer
      */
     int GossipClearMenu(Eluna* /*E*/, Player* player)
     {
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         player->GetPlayerMenu()->ClearMenus();
 #else
         player->PlayerTalkClass->ClearMenus();
@@ -3581,7 +3578,7 @@ namespace LuaPlayer
         if (!quest)
             return 0;
 
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         player->GetPlayerMenu()->SendQuestGiverQuestDetails(quest, player->GET_GUID(), activateAccept);
 #else
         player->PlayerTalkClass->SendQuestGiverQuestDetails(quest, player->GET_GUID(), activateAccept);
@@ -3648,7 +3645,7 @@ namespace LuaPlayer
 
         if (success)
         {
-#if ELUNA_EXPANSION <= TBC
+#if ELUNA_EXPANSION <= EXP_TBC
             WorldPacket data(SMSG_GROUP_INVITE, 10);                // guess size
             data << player->GetName();
             invited->GetSession()->SendPacket(data);
@@ -3722,7 +3719,7 @@ namespace LuaPlayer
         return 0;
     }
 
-#if ELUNA_EXPANSION > TBC
+#if ELUNA_EXPANSION > EXP_TBC
     /**
      * Starts a movie for the [Player]
      *
@@ -3798,14 +3795,14 @@ namespace LuaPlayer
         { "GetCorpse", &LuaPlayer::GetCorpse },
         { "GetGossipTextId", &LuaPlayer::GetGossipTextId },
         { "GetQuestRewardStatus", &LuaPlayer::GetQuestRewardStatus },
-#if ELUNA_EXPANSION >= TBC && ELUNA_EXPANSION <= WOTLK
+#if ELUNA_EXPANSION >= EXP_TBC && ELUNA_EXPANSION <= EXP_WOTLK
         { "GetArenaPoints", &LuaPlayer::GetArenaPoints },
         { "GetHonorPoints", &LuaPlayer::GetHonorPoints },
 #else
         { "GetArenaPoints", METHOD_REG_NONE },
         { "GetHonorPoints", METHOD_REG_NONE },
 #endif
-#if ELUNA_EXPANSION == WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
         { "GetPhaseMaskForSpawn", &LuaPlayer::GetPhaseMaskForSpawn },
         { "GetActiveSpec", &LuaPlayer::GetActiveSpec },
         { "GetSpecsCount", &LuaPlayer::GetSpecsCount },
@@ -3814,7 +3811,7 @@ namespace LuaPlayer
         { "GetActiveSpec", METHOD_REG_NONE },
         { "GetSpecsCount", METHOD_REG_NONE },
 #endif
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
 #else
         { "GetShieldBlockValue", METHOD_REG_NONE },
@@ -3847,14 +3844,14 @@ namespace LuaPlayer
         { "SetPlayerLock", &LuaPlayer::SetPlayerLock },
         { "SetGender", &LuaPlayer::SetGender },
         { "SetSheath", &LuaPlayer::SetSheath },
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
         { "SetKnownTitle", &LuaPlayer::SetKnownTitle },
         { "UnsetKnownTitle", &LuaPlayer::UnsetKnownTitle },
 #else
         { "SetKnownTitle", METHOD_REG_NONE },
         { "UnsetKnownTitle", METHOD_REG_NONE },
 #endif
-#if ELUNA_EXPANSION >= TBC && ELUNA_EXPANSION <= WOTLK
+#if ELUNA_EXPANSION >= EXP_TBC && ELUNA_EXPANSION <= EXP_WOTLK
         { "SetArenaPoints", &LuaPlayer::SetArenaPoints },
         { "SetHonorPoints", &LuaPlayer::SetHonorPoints },
 #else
@@ -3906,7 +3903,7 @@ namespace LuaPlayer
         { "HasSpellCooldown", &LuaPlayer::HasSpellCooldown },
         { "IsInWater", &LuaPlayer::IsInWater },
         { "IsMoving", &LuaPlayer::IsMoving },
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
         { "HasTitle", &LuaPlayer::HasTitle },
         { "IsInArenaTeam", &LuaPlayer::IsInArenaTeam },
         { "InArena", &LuaPlayer::InArena },
@@ -3919,7 +3916,7 @@ namespace LuaPlayer
         { "CanFly", METHOD_REG_NONE },
         { "IsFlying", METHOD_REG_NONE },
 #endif
-#if ELUNA_EXPANSION == WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
         { "HasAchieved", &LuaPlayer::HasAchieved },
         { "HasTalent", &LuaPlayer::HasTalent },
         { "CanTitanGrip", &LuaPlayer::CanTitanGrip },
@@ -4010,19 +4007,19 @@ namespace LuaPlayer
         { "GroupInvite", &LuaPlayer::GroupInvite, METHOD_REG_WORLD }, // World state method only in multistate
         { "GroupCreate", &LuaPlayer::GroupCreate, METHOD_REG_WORLD }, // World state method only in multistate
         { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
         { "RemoveArenaSpellCooldowns", &LuaPlayer::RemoveArenaSpellCooldowns },
 #else
         { "RemoveArenaSpellCooldowns", METHOD_REG_NONE },
 #endif
-#if ELUNA_EXPANSION >= TBC && ELUNA_EXPANSION <= WOTLK
+#if ELUNA_EXPANSION >= EXP_TBC && ELUNA_EXPANSION <= EXP_WOTLK
         { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
         { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
 #else
         { "ModifyHonorPoints", METHOD_REG_NONE },
         { "ModifyArenaPoints", METHOD_REG_NONE },
 #endif
-#if ELUNA_EXPANSION == WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
         { "ResetPetTalents", &LuaPlayer::ResetPetTalents },
         { "ResetAchievements", &LuaPlayer::ResetAchievements },
         { "SendMovieStart", &LuaPlayer::SendMovieStart },

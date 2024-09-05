@@ -724,7 +724,7 @@ namespace LuaPlayer
         return 1;
     }
 #endif
-#if defined(CLASSIC) || defined(TBC) || defined (WOTLK)
+
     /**
      * Returns the [Player]s current shield block value
      *
@@ -732,10 +732,13 @@ namespace LuaPlayer
      */
     int GetShieldBlockValue(Eluna* E, Player* player)
     {
+#if ELUNA_EXPANSION == EXP_CATA
+        E->Push(player->GetShieldBlockDamageValue());
+#else
         E->Push(player->GetShieldBlockValue());
+#endif
         return 1;
     }
-#endif
 
     /**
      * Returns the [Player]s cooldown delay by specified [Spell] ID
@@ -2434,12 +2437,9 @@ namespace LuaPlayer
     {
         bool no_cost = E->CHECKVAL<bool>(2, true);
 
-#ifdef CATA
-        player->ResetTalents(no_cost);
-#else
         player->resetTalents(no_cost);
-#endif
-#if (!defined(TBC) && !defined(CLASSIC))
+
+#if ELUNA_EXPANSION >= EXP_WOTLK
         player->SendTalentsInfoData(false);
 #endif
         return 0;
@@ -3829,7 +3829,7 @@ namespace LuaPlayer
         { "IsInArenaTeam", METHOD_REG_NONE },
         { "InArena", METHOD_REG_NONE },
         { "CanFly", METHOD_REG_NONE },
-        { "IsFlying",nullptr, METHOD_REG_NONE },
+        { "IsFlying", METHOD_REG_NONE },
 #endif
 #if (!defined(TBC) && !defined(CLASSIC))
         { "HasAchieved", &LuaPlayer::HasAchieved },

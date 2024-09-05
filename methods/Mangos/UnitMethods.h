@@ -1935,7 +1935,7 @@ namespace LuaUnit
         float maxHeight = E->CHECKVAL<float>(6);
         uint32 id = E->CHECKVAL<uint32>(7, 0);
 
-#if WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
         unit->GetMotionMaster()->MoveJump(x, y, z, zSpeed, maxHeight, id);
 #else
         Position pos(x, y, z);
@@ -2178,7 +2178,12 @@ namespace LuaUnit
 
         for (uint32 i = 0; i < MAX_EFFECT_INDEX; ++i)
         {
+#if ELUNA_EXPANSION == EXP_CATA
+            SpellEffectEntry const* spellEffect = spellEntry->GetSpellEffect(SpellEffectIndex(i));
+            uint8 eff = spellEffect->Effect;
+#else
             uint8 eff = spellEntry->Effect[i];
+#endif
             if (eff >= TOTAL_SPELL_EFFECTS)
                 continue;
 
@@ -2418,6 +2423,71 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+    * Returns whether or not the [Unit] can have stat modifiers applied.
+    *
+    * @return bool canModifyStats
+    */
+    int CanModifyStats(Eluna* E, Unit* unit)
+    {
+        E->Push(unit->CanModifyStats());
+        return 1;
+    }
+
+    /**
+    * Modifies a flat amount of a specific stat of the [Unit]
+    *
+    * <pre>
+    * enum UnitModifierFlatType
+    * {
+    *      BASE_VALUE = 0,
+    *      TOTAL_VALUE = 1
+    * };
+    * </pre>
+    *
+    * @param uint32 statType : The stat to modify
+    * @param [UnitModifierFlatType] modType : The type of modifier to apply
+    * @param float value : The value to apply to the stat
+    * @param bool apply = true : True applies a positive modifier, false applies a negative
+    */
+    int AddFlatStatModifier(Eluna* E, Unit* unit)
+    {
+        uint32 statType = E->CHECKVAL<uint32>(2);
+        uint8 modType = E->CHECKVAL<uint8>(3);
+        float value = E->CHECKVAL<float>(4);
+        bool apply = E->CHECKVAL<bool>(5, true);
+        UnitModifierType type = (modType == 0) ? BASE_VALUE : TOTAL_VALUE;
+
+        unit->HandleStatModifier(UnitMods(UNIT_MOD_STAT_START + statType), (UnitModifierType)type, value, apply);
+        return 0;
+    }
+
+    /**
+    * Modifies a percentage amount of a specific stat of the [Unit]
+    *
+    * <pre>
+    * enum UnitModifierPctType
+    * {
+    *      BASE_PCT = 0,
+    *      TOTAL_PCT = 1
+    * };
+    * </pre>
+    *
+    * @param uint32 statType : The stat to modify
+    * @param [UnitModifierPctType] modType : The type of modifier to apply
+    * @param float value : The value to apply to the stat
+    */
+    int AddPctStatModifier(Eluna* E, Unit* unit)
+    {
+        uint32 statType = E->CHECKVAL<uint32>(2);
+        uint8 modType = E->CHECKVAL<uint8>(3);
+        float value = E->CHECKVAL<float>(4);
+        UnitModifierType type = (modType == 0) ? BASE_PCT : TOTAL_PCT;
+
+        unit->HandleStatModifier(UnitMods(UNIT_MOD_STAT_START + statType), (UnitModifierType)type, value, true);
+        return 0;
+    }
+
     ElunaRegister<Unit> UnitMethods[] =
     {
         // Getters
@@ -2549,6 +2619,7 @@ namespace LuaUnit
 #else
         { "IsOnVehicle", METHOD_REG_NONE },
 #endif
+        { "CanModifyStats", &LuaUnit::CanModifyStats },
 
         // Other
         { "AddAura", &LuaUnit::AddAura },
@@ -2601,6 +2672,8 @@ namespace LuaUnit
 #else
         { "MoveJump", METHOD_REG_NONE },
 #endif
+        { "AddFlatStatModifier", &LuaUnit::AddFlatStatModifier },
+        { "AddPctStatModifier", &LuaUnit::AddPctStatModifier },
 
         // Not implemented mehtods
         { "GetVehicle", METHOD_REG_NONE }, // not implemented
@@ -2616,7 +2689,7 @@ namespace LuaUnit
         { "RemoveCharmAuras", METHOD_REG_NONE }, // not implemented
         { "DisableMelee", METHOD_REG_NONE }, // not implemented
         { "SummonGuardian", METHOD_REG_NONE }, // not implemented
-        { "SetImmuneTo", METHOD_REG_NONE } // not implemented
+        { "SetImmuneTo", METHOD_REG_NONE }, // not implemented
     };
 };
 #endif

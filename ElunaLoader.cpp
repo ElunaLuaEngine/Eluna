@@ -25,7 +25,7 @@ namespace fs = std::filesystem;
 #include <Windows.h>
 #endif
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || ELUNA_MANGOS
 #include "MapManager.h"
 #elif defined ELUNA_CMANGOS
 #include "Maps/MapManager.h"

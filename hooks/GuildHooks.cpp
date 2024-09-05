@@ -94,7 +94,7 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, b
     CleanUpStack(4);
 }
 
-#if ELUNA_EXPANSION >= CATA
+#if ELUNA_EXPANSION >= EXP_CATA
 void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_WITHDRAW);
@@ -149,7 +149,7 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
     CleanUpStack(3);
 }
 
-#if ELUNA_EXPANSION >= CATA
+#if ELUNA_EXPANSION >= EXP_CATA
 void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_DEPOSIT);

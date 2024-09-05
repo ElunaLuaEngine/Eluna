@@ -36,7 +36,7 @@ namespace LuaGroup
         return 1;
     }
 
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
     /**
      * Returns 'true' if the [Group] is a LFG group
      *
@@ -200,7 +200,7 @@ namespace LuaGroup
      */
     int GetGUID(Eluna* E, Group* group)
     {
-#if ELUNA_EXPANSION == CLASSIC
+#if ELUNA_EXPANSION == EXP_CLASSIC
         E->Push(group->GetId());
 #else
         E->Push(group->GET_GUID());
@@ -361,7 +361,7 @@ namespace LuaGroup
         if (icon >= TARGETICONCOUNT)
             return luaL_argerror(E->L, 2, "valid target icon expected");
 
-#if ELUNA_EXPANSION <= TBC
+#if ELUNA_EXPANSION <= EXP_TBC
         group->SetTargetIcon(icon, target);
 #else
         group->SetTargetIcon(icon, setter, target);
@@ -402,7 +402,7 @@ namespace LuaGroup
         { "IsAssistant", &LuaGroup::IsAssistant },
         { "SameSubGroup", &LuaGroup::SameSubGroup },
         { "HasFreeSlotSubGroup", &LuaGroup::HasFreeSlotSubGroup },
-#if ELUNA_EXPANSION == WOTLK
+#if ELUNA_EXPANSION == EXP_WOTLK
         { "IsLFGGroup", &LuaGroup::IsLFGGroup },
 #else
         { "IsLFGGroup", METHOD_REG_NONE },

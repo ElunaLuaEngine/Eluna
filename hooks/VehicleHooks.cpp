@@ -10,7 +10,7 @@
 #include "BindingMap.h"
 #include "ElunaTemplate.h"
 
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
 
 using namespace Hooks;
 

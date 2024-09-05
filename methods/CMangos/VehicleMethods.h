@@ -6,7 +6,7 @@
 
 #ifndef VEHICLEMETHODS_H
 #define VEHICLEMETHODS_H
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
 
 /***
  * Inherits all methods from: none
@@ -107,5 +107,5 @@ namespace LuaVehicle
     };
 }
 
-#endif // EXPANSION >= WOTLK
+#endif // EXPANSION >= EXP_WOTLK
 #endif // VEHICLEMETHODS_H

@@ -58,7 +58,7 @@ namespace LuaUnit
         int32 immunity = E->CHECKVAL<int32>(2);
         bool apply = E->CHECKVAL<bool>(3, true);
 
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         unit->ApplySpellImmune(nullptr, 5, immunity, apply);
 #else
         unit->ApplySpellImmune(0, 5, immunity, apply);
@@ -383,7 +383,7 @@ namespace LuaUnit
         return 1;
     }
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Returns true if the [Unit] is on a [Vehicle].
      *
@@ -1126,7 +1126,7 @@ namespace LuaUnit
         return 1;
     }
 
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
     /**
      * Returns [Unit]'s [Vehicle] methods
      *
@@ -1605,7 +1605,7 @@ namespace LuaUnit
         return 0;
     }
 
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
     /**
      * Sets the [Unit]'s FFA flag on or off.
      *
@@ -1922,7 +1922,7 @@ namespace LuaUnit
         float y = E->CHECKVAL<float>(4);
         float z = E->CHECKVAL<float>(5);
         bool genPath = E->CHECKVAL<bool>(6, true);
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         unit->GetMotionMaster()->MovePoint(id, x, y, z, FORCED_MOVEMENT_NONE, genPath);
 #else
         unit->GetMotionMaster()->MovePoint(id, x, y, z, genPath);
@@ -1930,7 +1930,7 @@ namespace LuaUnit
         return 0;
     }
 
-#if ELUNA_EXPANSION >= WOTLK
+#if ELUNA_EXPANSION >= EXP_WOTLK
     /**
      * Makes the [Unit] jump to the coordinates
      *
@@ -2181,7 +2181,7 @@ namespace LuaUnit
 
         for (uint32 i = 0; i < MAX_EFFECT_INDEX; ++i)
         {
-#if ELUNA_EXPANSION == CATA
+#if ELUNA_EXPANSION == EXP_CATA
             SpellEffectEntry const* spellEffect = spellEntry->GetSpellEffect(SpellEffectIndex(i));
             if (!spellEffect)
                 continue;
@@ -2189,7 +2189,7 @@ namespace LuaUnit
 #else
             uint8 eff = spellEntry->Effect[i];
 #endif
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
             if (eff >= MAX_SPELL_EFFECTS)
 #else
             if (eff >= TOTAL_SPELL_EFFECTS)
@@ -2199,7 +2199,7 @@ namespace LuaUnit
                 eff == SPELL_EFFECT_APPLY_AURA ||
                 eff == SPELL_EFFECT_PERSISTENT_AREA_AURA)
             {
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
                 Aura* aur = CreateAura(spellEntry, SpellEffIndex(i), NULL, NULL, holder, target);
 #else
                 Aura* aur = CreateAura(spellEntry, SpellEffIndex(i), NULL, holder, target);
@@ -2234,7 +2234,7 @@ namespace LuaUnit
         return 0;
     }
 
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
     /**
      * Removes all positive visible [Aura]'s from the [Unit].
      */
@@ -2326,7 +2326,7 @@ namespace LuaUnit
         // flat melee damage without resistence/etc reduction
         if (school == MAX_SPELL_SCHOOL)
         {
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
             Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
             unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
 #else
@@ -2339,7 +2339,7 @@ namespace LuaUnit
         SpellSchoolMask schoolmask = SpellSchoolMask(1 << school);
 
         if (schoolmask & SPELL_SCHOOL_MASK_NORMAL)
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
             damage = unit->CalcArmorReducedDamage(unit, target, damage);
 #else
             damage = unit->CalcArmorReducedDamage(target, damage);
@@ -2349,7 +2349,7 @@ namespace LuaUnit
         if (!spell)
         {
             uint32 absorb = 0;
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
             int32 resist = 0;
 #else
             uint32 resist = 0;
@@ -2361,7 +2361,7 @@ namespace LuaUnit
             else
                 damage -= absorb + resist;
 
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
             unit->DealDamageMods(unit, target, damage, &absorb, DIRECT_DAMAGE);
             unit->DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
 #else
@@ -2409,11 +2409,76 @@ namespace LuaUnit
         Unit* target = E->CHECKOBJ<Unit>(2);
         bool durLoss = E->CHECKVAL<bool>(3, true);
 
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         unit->DealDamage(unit, target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
 #else
         unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
 #endif
+        return 0;
+    }
+
+    /**
+    * Returns whether or not the [Unit] can have stat modifiers applied.
+    *
+    * @return bool canModifyStats
+    */
+    int CanModifyStats(Eluna* E, Unit* unit)
+    {
+        E->Push(unit->CanModifyStats());
+        return 1;
+    }
+
+    /**
+    * Modifies a flat amount of a specific stat of the [Unit]
+    *
+    * <pre>
+    * enum UnitModifierFlatType
+    * {
+    *      BASE_VALUE = 0,
+    *      TOTAL_VALUE = 1
+    * };
+    * </pre>
+    *
+    * @param uint32 statType : The stat to modify
+    * @param [UnitModifierFlatType] modType : The type of modifier to apply
+    * @param float value : The value to apply to the stat
+    * @param bool apply = true : True applies a positive modifier, false applies a negative
+    */
+    int AddFlatStatModifier(Eluna* E, Unit* unit)
+    {
+        uint32 statType = E->CHECKVAL<uint32>(2);
+        uint8 modType = E->CHECKVAL<uint8>(3);
+        float value = E->CHECKVAL<float>(4);
+        bool apply = E->CHECKVAL<bool>(5, true);
+        UnitModifierType type = (modType == 0) ? BASE_VALUE : TOTAL_VALUE;
+
+        unit->HandleStatModifier(UnitMods(UNIT_MOD_STAT_START + statType), (UnitModifierType)type, value, apply);
+        return 0;
+    }
+
+    /**
+    * Modifies a percentage amount of a specific stat of the [Unit]
+    *
+    * <pre>
+    * enum UnitModifierPctType
+    * {
+    *      BASE_PCT = 0,
+    *      TOTAL_PCT = 1
+    * };
+    * </pre>
+    *
+    * @param uint32 statType : The stat to modify
+    * @param [UnitModifierPctType] modType : The type of modifier to apply
+    * @param float value : The value to apply to the stat
+    */
+    int AddPctStatModifier(Eluna* E, Unit* unit)
+    {
+        uint32 statType = E->CHECKVAL<uint32>(2);
+        uint8 modType = E->CHECKVAL<uint8>(3);
+        float value = E->CHECKVAL<float>(4);
+        UnitModifierType type = (modType == 0) ? BASE_PCT : TOTAL_PCT;
+
+        unit->HandleStatModifier(UnitMods(UNIT_MOD_STAT_START + statType), (UnitModifierType)type, value, true);
         return 0;
     }
 
@@ -2528,6 +2593,7 @@ namespace LuaUnit
         { "HasAura", &LuaUnit::HasAura },
         { "IsCasting", &LuaUnit::IsCasting },
         { "IsStandState", &LuaUnit::IsStandState },
+        { "CanModifyStats", &LuaUnit::CanModifyStats },
 
         // Other
         { "AddAura", &LuaUnit::AddAura },
@@ -2568,12 +2634,18 @@ namespace LuaUnit
         { "MoveClear", &LuaUnit::MoveClear },
         { "DealDamage", &LuaUnit::DealDamage },
         { "DealHeal", &LuaUnit::DealHeal },
+        { "AddFlatStatModifier", &LuaUnit::AddFlatStatModifier },
+        { "AddPctStatModifier", &LuaUnit::AddPctStatModifier },
 
         // Expansion specific methods
-#if ELUNA_EXPANSION >= TBC
+#if ELUNA_EXPANSION >= EXP_TBC
         { "IsOnVehicle", &LuaUnit::IsOnVehicle },
         { "RemoveArenaAuras", &LuaUnit::RemoveArenaAuras },
-#elif ELUNA_EXPANSION >= WOTLK
+#else
+        { "IsOnVehicle", METHOD_REG_NONE },
+        { "RemoveArenaAuras", METHOD_REG_NONE },
+#endif
+#if ELUNA_EXPANSION >= EXP_WOTLK
         { "GetCritterGUID", &LuaUnit::GetCritterGUID },
         { "GetVehicleKit", &LuaUnit::GetVehicleKit },
         { "SetFFA", &LuaUnit::SetFFA },
@@ -2586,8 +2658,6 @@ namespace LuaUnit
         { "SetFFA", METHOD_REG_NONE },
         { "SetSanctuary", METHOD_REG_NONE },
         { "SetCritterGUID", METHOD_REG_NONE },
-        { "IsOnVehicle", METHOD_REG_NONE },
-        { "RemoveArenaAuras", METHOD_REG_NONE },
         { "MoveJump", METHOD_REG_NONE },
 #endif
 
@@ -2604,7 +2674,7 @@ namespace LuaUnit
         { "RemoveBindSightAuras", METHOD_REG_NONE }, // not implemented
         { "RemoveCharmAuras", METHOD_REG_NONE }, // not implemented
         { "DisableMelee", METHOD_REG_NONE }, // not implemented
-        { "SummonGuardian", METHOD_REG_NONE } // not implemented
+        { "SummonGuardian", METHOD_REG_NONE }, // not implemented
     };
 };
 #endif

@@ -20,6 +20,7 @@ extern "C"
 #include "SharedDefines.h"
 #else
 #include "Globals/SharedDefines.h"
+#include "Util/UniqueTrackablePtr.h"
 #endif
 
 #if defined ELUNA_TRINITY
@@ -60,14 +61,16 @@ struct ElunaConstrainedObjectRef
 };
 
 ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj);
-ElunaConstrainedObjectRef<Battleground> GetWeakPtrFor(Battleground const* obj);
+ElunaConstrainedObjectRef<BattleGround> GetWeakPtrFor(BattleGround const* obj);
 ElunaConstrainedObjectRef<Group> GetWeakPtrFor(Group const* obj);
 ElunaConstrainedObjectRef<Guild> GetWeakPtrFor(Guild const* obj);
 ElunaConstrainedObjectRef<Map> GetWeakPtrFor(Map const* obj);
 ElunaConstrainedObjectRef<Object> GetWeakPtrForObjectImpl(Object const* obj);
 ElunaConstrainedObjectRef<Quest> GetWeakPtrFor(Quest const* obj);
 ElunaConstrainedObjectRef<Spell> GetWeakPtrFor(Spell const* obj);
+#if ELUNA_EXPANSION >= EXP_WOTLK
 ElunaConstrainedObjectRef<Vehicle> GetWeakPtrFor(Vehicle const* obj);
+#endif
 
 template <typename T>
 ElunaConstrainedObjectRef<T> GetWeakPtrFor(T const* obj)

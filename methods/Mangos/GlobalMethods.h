@@ -78,15 +78,7 @@ namespace LuaGlobalFunctions
      */
     int GetCoreExpansion(Eluna* E)
     {
-#ifdef CLASSIC
-        E->Push(0);
-#elif defined(TBC)
-        E->Push(1);
-#elif defined(WOTLK)
-        E->Push(2);
-#elif defined(CATA)
-        E->Push(3);
-#endif
+        E->Push(ELUNA_EXPANSION);
         return 1;
     }
 
@@ -1756,8 +1748,11 @@ namespace LuaGlobalFunctions
 
         auto const itemlist = items->m_items;
         for (auto itr = itemlist.begin(); itr != itemlist.end(); ++itr)
+#if ELUNA_EXPANSION == EXP_CATA
+            eObjectMgr->RemoveVendorItem(entry, (*itr)->item, (*itr)->type);
+#else
             eObjectMgr->RemoveVendorItem(entry, (*itr)->item);
-
+#endif
         return 0;
     }
 
