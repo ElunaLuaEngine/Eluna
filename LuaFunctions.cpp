@@ -36,6 +36,7 @@ extern "C"
 #include "CorpseMethods.h"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
+#include "ElunaStateCommunication.h"
 
 #if defined TRACKABLE_PTR_NAMESPACE
 ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj)
@@ -224,4 +225,5 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<ObjectGuid>::Register(E, "ObjectGuid");
 
     LuaVal::Register(E->L);
+    ElunaStateCommunication::Register(E->L);
 }
