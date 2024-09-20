@@ -175,12 +175,11 @@ namespace LuaGlobalFunctions
      *
      * Does not return players that may be teleporting or otherwise not on any map.
      *
-     *     enum TeamId
-     *     {
-     *         TEAM_ALLIANCE = 0,
-     *         TEAM_HORDE = 1,
-     *         TEAM_NEUTRAL = 2
-     *     };
+     * @table
+     * @columns [Team, ID]
+     * @values [ALLIANCE, 0]
+     * @values [HORDE, 1]
+     * @values [NEUTRAL, 2]
      *
      * In multistate, this method is only available in the WORLD state
      *
@@ -223,12 +222,11 @@ namespace LuaGlobalFunctions
      *
      * Does not return players that may be teleporting or otherwise not on the map.
      *
-     *     enum TeamId
-     *     {
-     *         TEAM_ALLIANCE = 0,
-     *         TEAM_HORDE = 1,
-     *         TEAM_NEUTRAL = 2
-     *     };
+     * @table
+     * @columns [Team, ID]
+     * @values [ALLIANCE, 0]
+     * @values [HORDE, 1]
+     * @values [NEUTRAL, 2]
      *
      * In multistate, this method is only available in the MAP state
      *
@@ -423,20 +421,19 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns an chat link for an [Item].
+     * Returns a chat link for an [Item].
      *
-     *     enum LocaleConstant
-     *     {
-     *         LOCALE_enUS = 0,
-     *         LOCALE_koKR = 1,
-     *         LOCALE_frFR = 2,
-     *         LOCALE_deDE = 3,
-     *         LOCALE_zhCN = 4,
-     *         LOCALE_zhTW = 5,
-     *         LOCALE_esES = 6,
-     *         LOCALE_esMX = 7,
-     *         LOCALE_ruRU = 8
-     *     };
+     * @table 
+     * @columns [Locale, Value]
+     * @values [enUS, 0]
+     * @values [koKR, 1]
+     * @values [frFR, 2]
+     * @values [deDE, 3]
+     * @values [zhCN, 4]
+     * @values [zhTW, 5]
+     * @values [esES, 6]
+     * @values [esMX, 7]
+     * @values [ruRU, 8]
      *
      * @param uint32 entry : entry ID of an [Item]
      * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the [Item] name in
@@ -502,18 +499,17 @@ namespace LuaGlobalFunctions
     /**
      * Returns the area or zone's name.
      *
-     *     enum LocaleConstant
-     *     {
-     *         LOCALE_enUS = 0,
-     *         LOCALE_koKR = 1,
-     *         LOCALE_frFR = 2,
-     *         LOCALE_deDE = 3,
-     *         LOCALE_zhCN = 4,
-     *         LOCALE_zhTW = 5,
-     *         LOCALE_esES = 6,
-     *         LOCALE_esMX = 7,
-     *         LOCALE_ruRU = 8
-     *     };
+     * @table 
+     * @columns [Locale, Value]
+     * @values [enUS, 0]
+     * @values [koKR, 1]
+     * @values [frFR, 2]
+     * @values [deDE, 3]
+     * @values [zhCN, 4]
+     * @values [zhTW, 5]
+     * @values [esES, 6]
+     * @values [esMX, 7]
+     * @values [ruRU, 8]
      *
      * @param uint32 areaOrZoneId : area ID or zone ID
      * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the name in
@@ -609,68 +605,47 @@ namespace LuaGlobalFunctions
     /**
      * Registers a server event handler.
      *
-     *     enum ServerEvents
-     *     {
-     *         // Server
-     *         SERVER_EVENT_ON_NETWORK_START           =     1,       // Not Implemented
-     *         SERVER_EVENT_ON_NETWORK_STOP            =     2,       // Not Implemented
-     *         SERVER_EVENT_ON_SOCKET_OPEN             =     3,       // Not Implemented
-     *         SERVER_EVENT_ON_SOCKET_CLOSE            =     4,       // Not Implemented
-     *         SERVER_EVENT_ON_PACKET_RECEIVE          =     5,       // (event, packet, player) - Player only if accessible. Can return false, newPacket
-     *         SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN  =     6,       // Not Implemented
-     *         SERVER_EVENT_ON_PACKET_SEND             =     7,       // (event, packet, player) - Player only if accessible. Can return false
-     *
-     *         // World
-     *         WORLD_EVENT_ON_OPEN_STATE_CHANGE        =     8,        // (event, open) - Needs core support on Mangos
-     *         WORLD_EVENT_ON_CONFIG_LOAD              =     9,        // (event, reload)
-     *         // UNUSED                               =     10,
-     *         WORLD_EVENT_ON_SHUTDOWN_INIT            =     11,       // (event, code, mask)
-     *         WORLD_EVENT_ON_SHUTDOWN_CANCEL          =     12,       // (event)
-     *         WORLD_EVENT_ON_UPDATE                   =     13,       // (event, diff)
-     *         WORLD_EVENT_ON_STARTUP                  =     14,       // (event)
-     *         WORLD_EVENT_ON_SHUTDOWN                 =     15,       // (event)
-     *
-     *         // Eluna
-     *         ELUNA_EVENT_ON_LUA_STATE_CLOSE          =     16,       // (event) - triggers just before shutting down eluna (on shutdown and restart)
-     *
-     *         // Map
-     *         MAP_EVENT_ON_CREATE                     =     17,       // (event, map)
-     *         MAP_EVENT_ON_DESTROY                    =     18,       // (event, map)
-     *         MAP_EVENT_ON_GRID_LOAD                  =     19,       // Not Implemented
-     *         MAP_EVENT_ON_GRID_UNLOAD                =     20,       // Not Implemented
-     *         MAP_EVENT_ON_PLAYER_ENTER               =     21,       // (event, map, player)
-     *         MAP_EVENT_ON_PLAYER_LEAVE               =     22,       // (event, map, player)
-     *         MAP_EVENT_ON_UPDATE                     =     23,       // (event, map, diff)
-     *
-     *         // Area trigger
-     *         TRIGGER_EVENT_ON_TRIGGER                =     24,       // (event, player, triggerId) - Can return true
-     *
-     *         // Weather
-     *         WEATHER_EVENT_ON_CHANGE                 =     25,       // (event, zoneId, state, grade)
-     *
-     *         // Auction house
-     *         AUCTION_EVENT_ON_ADD                    =     26,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
-     *         AUCTION_EVENT_ON_REMOVE                 =     27,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
-     *         AUCTION_EVENT_ON_SUCCESSFUL             =     28,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
-     *         AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
-     *
-     *         // AddOns
-     *         ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel. Can return false
-     *
-     *         WORLD_EVENT_ON_DELETE_CREATURE          =     31,       // (event, creature)
-     *         WORLD_EVENT_ON_DELETE_GAMEOBJECT        =     32,       // (event, gameobject)
-     *
-     *         // Eluna
-     *         ELUNA_EVENT_ON_LUA_STATE_OPEN           =     33,       // (event) - triggers after all scripts are loaded
-     *
-     *         GAME_EVENT_START                        =     34,       // (event, gameeventid)
-     *         GAME_EVENT_STOP                         =     35,       // (event, gameeventid)
-     *     };
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, SERVER_EVENT_ON_NETWORK_START, "", "Not Implemented"]
+     * @values [2, SERVER_EVENT_ON_NETWORK_STOP, "", "Not Implemented"]
+     * @values [3, SERVER_EVENT_ON_SOCKET_OPEN, "", "Not Implemented"]
+     * @values [4, SERVER_EVENT_ON_SOCKET_CLOSE, "", "Not Implemented"]
+     * @values [5, SERVER_EVENT_ON_PACKET_RECEIVE, "event, packet, player", "Player only if accessible. Can return false, newPacket"]
+     * @values [6, SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN, "", "Not Implemented"]
+     * @values [7, SERVER_EVENT_ON_PACKET_SEND, "event, packet, player", "Player only if accessible. Can return false"]
+     * @values [8, WORLD_EVENT_ON_OPEN_STATE_CHANGE, "event, open", "Needs core support on Mangos"]
+     * @values [9, WORLD_EVENT_ON_CONFIG_LOAD, "event, reload", ""]
+     * @values [11, WORLD_EVENT_ON_SHUTDOWN_INIT, "event, code, mask", ""]
+     * @values [12, WORLD_EVENT_ON_SHUTDOWN_CANCEL, "event", ""]
+     * @values [13, WORLD_EVENT_ON_UPDATE, "event, diff", ""]
+     * @values [14, WORLD_EVENT_ON_STARTUP, "event", ""]
+     * @values [15, WORLD_EVENT_ON_SHUTDOWN, "event", ""]
+     * @values [16, ELUNA_EVENT_ON_LUA_STATE_CLOSE, "event", "triggers just before shutting down eluna (on shutdown and restart)"]
+     * @values [17, MAP_EVENT_ON_CREATE, "event, map", ""]
+     * @values [18, MAP_EVENT_ON_DESTROY, "event, map", ""]
+     * @values [19, MAP_EVENT_ON_GRID_LOAD, "", "Not Implemented"]
+     * @values [20, MAP_EVENT_ON_GRID_UNLOAD, "", "Not Implemented"]
+     * @values [21, MAP_EVENT_ON_PLAYER_ENTER, "event, map, player", ""]
+     * @values [22, MAP_EVENT_ON_PLAYER_LEAVE, "event, map, player", ""]
+     * @values [23, MAP_EVENT_ON_UPDATE, "event, map, diff", ""]
+     * @values [24, TRIGGER_EVENT_ON_TRIGGER, "event, player, triggerId", "Can return true"]
+     * @values [25, WEATHER_EVENT_ON_CHANGE, "event, zoneId, state, grade", ""]
+     * @values [26, AUCTION_EVENT_ON_ADD, "event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow", ""]
+     * @values [27, AUCTION_EVENT_ON_REMOVE, "event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow", ""]
+     * @values [28, AUCTION_EVENT_ON_SUCCESSFUL, "event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow", ""]
+     * @values [29, AUCTION_EVENT_ON_EXPIRE, "event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow", ""]
+     * @values [30, ADDON_EVENT_ON_MESSAGE, "event, sender, type, prefix, msg, target", "Target can be nil/whisper_target/guild/group/channel. Can return false"]
+     * @values [31, WORLD_EVENT_ON_DELETE_CREATURE, "event, creature", ""]
+     * @values [32, WORLD_EVENT_ON_DELETE_GAMEOBJECT, "event, gameobject", ""]
+     * @values [33, ELUNA_EVENT_ON_LUA_STATE_OPEN, "event", "Triggers after all scripts are loaded"]
+     * @values [34, GAME_EVENT_START, "event, gameeventid", ""]
+     * @values [35, GAME_EVENT_STOP, "event, gameeventid", ""]
      *
      * @proto cancel = (event, function)
      * @proto cancel = (event, function, shots)
      *
-     * @param uint32 event : server event ID, refer to ServerEvents above
+     * @param uint32 event : server event ID, refer to table above
      * @param function function : function that will be called when the event occurs
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -684,72 +659,63 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Player] event handler.
      *
-     * <pre>
-     * enum PlayerEvents
-     * {
-     *     PLAYER_EVENT_ON_CHARACTER_CREATE        =     1,        // (event, player)
-     *     PLAYER_EVENT_ON_CHARACTER_DELETE        =     2,        // (event, guid)
-     *     PLAYER_EVENT_ON_LOGIN                   =     3,        // (event, player)
-     *     PLAYER_EVENT_ON_LOGOUT                  =     4,        // (event, player)
-     *     PLAYER_EVENT_ON_SPELL_CAST              =     5,        // (event, player, spell, skipCheck)
-     *     PLAYER_EVENT_ON_KILL_PLAYER             =     6,        // (event, killer, killed)
-     *     PLAYER_EVENT_ON_KILL_CREATURE           =     7,        // (event, killer, killed)
-     *     PLAYER_EVENT_ON_KILLED_BY_CREATURE      =     8,        // (event, killer, killed)
-     *     PLAYER_EVENT_ON_DUEL_REQUEST            =     9,        // (event, target, challenger)
-     *     PLAYER_EVENT_ON_DUEL_START              =     10,       // (event, player1, player2)
-     *     PLAYER_EVENT_ON_DUEL_END                =     11,       // (event, winner, loser, type)
-     *     PLAYER_EVENT_ON_GIVE_XP                 =     12,       // (event, player, amount, victim) - Can return new XP amount
-     *     PLAYER_EVENT_ON_LEVEL_CHANGE            =     13,       // (event, player, oldLevel)
-     *     PLAYER_EVENT_ON_MONEY_CHANGE            =     14,       // (event, player, amount) - Can return new money amount
-     *     PLAYER_EVENT_ON_REPUTATION_CHANGE       =     15,       // (event, player, factionId, standing, incremental) - Can return new standing
-     *     PLAYER_EVENT_ON_TALENTS_CHANGE          =     16,       // (event, player, points)
-     *     PLAYER_EVENT_ON_TALENTS_RESET           =     17,       // (event, player, noCost)
-     *     PLAYER_EVENT_ON_CHAT                    =     18,       // (event, player, msg, Type, lang) - Can return false, newMessage
-     *     PLAYER_EVENT_ON_WHISPER                 =     19,       // (event, player, msg, Type, lang, receiver) - Can return false, newMessage
-     *     PLAYER_EVENT_ON_GROUP_CHAT              =     20,       // (event, player, msg, Type, lang, group) - Can return false, newMessage
-     *     PLAYER_EVENT_ON_GUILD_CHAT              =     21,       // (event, player, msg, Type, lang, guild) - Can return false, newMessage
-     *     PLAYER_EVENT_ON_CHANNEL_CHAT            =     22,       // (event, player, msg, Type, lang, channel) - Can return false, newMessage
-     *     PLAYER_EVENT_ON_EMOTE                   =     23,       // (event, player, emote) - Not triggered on any known emote
-     *     PLAYER_EVENT_ON_TEXT_EMOTE              =     24,       // (event, player, textEmote, emoteNum, guid)
-     *     PLAYER_EVENT_ON_SAVE                    =     25,       // (event, player)
-     *     PLAYER_EVENT_ON_BIND_TO_INSTANCE        =     26,       // (event, player, difficulty, mapid, permanent)
-     *     PLAYER_EVENT_ON_UPDATE_ZONE             =     27,       // (event, player, newZone, newArea)
-     *     PLAYER_EVENT_ON_MAP_CHANGE              =     28,       // (event, player)
-     *
-     *     // Custom
-     *     PLAYER_EVENT_ON_EQUIP                   =     29,       // (event, player, item, bag, slot)
-     *     PLAYER_EVENT_ON_FIRST_LOGIN             =     30,       // (event, player)
-     *     PLAYER_EVENT_ON_CAN_USE_ITEM            =     31,       // (event, player, itemEntry) - Can return InventoryResult enum value
-     *     PLAYER_EVENT_ON_LOOT_ITEM               =     32,       // (event, player, item, count)
-     *     PLAYER_EVENT_ON_ENTER_COMBAT            =     33,       // (event, player, enemy)
-     *     PLAYER_EVENT_ON_LEAVE_COMBAT            =     34,       // (event, player)
-     *     PLAYER_EVENT_ON_REPOP                   =     35,       // (event, player)
-     *     PLAYER_EVENT_ON_RESURRECT               =     36,       // (event, player)
-     *     PLAYER_EVENT_ON_LOOT_MONEY              =     37,       // (event, player, amount)
-     *     PLAYER_EVENT_ON_QUEST_ABANDON           =     38,       // (event, player, questId)
-     *     PLAYER_EVENT_ON_LEARN_TALENTS           =     39,       // (event, player, talentId, talentRank, spellid)
-     *     PLAYER_EVENT_ON_ENVIRONMENTAL_DEATH     =     40,       // (event, player, environmentalDamageType)
-     *     PLAYER_EVENT_ON_TRADE_ACCEPT            =     41,       // (event, player, target) - Can return false to interrupt trade
-     *     PLAYER_EVENT_ON_COMMAND                 =     42,       // (event, player, command) - player is nil if command used from console. Can return false
-     *     PLAYER_EVENT_ON_SKILL_CHANGE            =     43,       // (event, player, skillId, skillValue) - Returns new skill level value
-     *     PLAYER_EVENT_ON_LEARN_SPELL             =     44,       // (event, player, spellId)
-     *     PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE    =     45,       // (event, player, achievementId)
-     *     PLAYER_EVENT_ON_DISCOVER_AREA           =     46,       // (event, player, area)
-     *     PLAYER_EVENT_ON_UPDATE_AREA             =     47,       // (event, player, oldArea, newArea)
-     *     PLAYER_EVENT_ON_TRADE_INIT              =     48,       // (event, player, target) - Can return false to interrupt trade
-     *     PLAYER_EVENT_ON_SEND_MAIL               =     49,       // (event, player, recipientGuid) - Can return false to interrupt sending
-     *     // UNUSED                               =     50,       // (event, player)
-     *     // UNUSED                               =     51,       // (event, player)
-     *     // UNUSED                               =     52,       // (event, player)
-     *     // UNUSED                               =     53,       // (event, player)
-     *     PLAYER_EVENT_ON_QUEST_STATUS_CHANGED    =     54,       // (event, player, questId, status)
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_CHARACTER_CREATE, "event, player", ""]
+     * @values [2, ON_CHARACTER_DELETE, "event, guid", ""]
+     * @values [3, ON_LOGIN, "event, player", ""]
+     * @values [4, ON_LOGOUT, "event, player", ""]
+     * @values [5, ON_SPELL_CAST, "event, player, spell, skipCheck", ""]
+     * @values [6, ON_KILL_PLAYER, "event, killer, killed", ""]
+     * @values [7, ON_KILL_CREATURE, "event, killer, killed", ""]
+     * @values [8, ON_KILLED_BY_CREATURE, "event, killer, killed", ""]
+     * @values [9, ON_DUEL_REQUEST, "event, target, challenger", ""]
+     * @values [10, ON_DUEL_START, "event, player1, player2", ""]
+     * @values [11, ON_DUEL_END, "event, winner, loser, type", ""]
+     * @values [12, ON_GIVE_XP, "event, player, amount, victim", "Can return new XP amount"]
+     * @values [13, ON_LEVEL_CHANGE, "event, player, oldLevel", ""]
+     * @values [14, ON_MONEY_CHANGE, "event, player, amount", "Can return new money amount"]
+     * @values [15, ON_REPUTATION_CHANGE, "event, player, factionId, standing, incremental", "Can return new standing"]
+     * @values [16, ON_TALENTS_CHANGE, "event, player, points", ""]
+     * @values [17, ON_TALENTS_RESET, "event, player, noCost", ""]
+     * @values [18, ON_CHAT, "event, player, msg, Type, lang", "Can return false, newMessage"]
+     * @values [19, ON_WHISPER, "event, player, msg, Type, lang, receiver", "Can return false, newMessage"]
+     * @values [20, ON_GROUP_CHAT, "event, player, msg, Type, lang, group", "Can return false, newMessage"]
+     * @values [21, ON_GUILD_CHAT, "event, player, msg, Type, lang, guild", "Can return false, newMessage"]
+     * @values [22, ON_CHANNEL_CHAT, "event, player, msg, Type, lang, channel", "Can return false, newMessage"]
+     * @values [23, ON_EMOTE, "event, player, emote", "Not triggered on any known emote"]
+     * @values [24, ON_TEXT_EMOTE, "event, player, textEmote, emoteNum, guid", ""]
+     * @values [25, ON_SAVE, "event, player", ""]
+     * @values [26, ON_BIND_TO_INSTANCE, "event, player, difficulty, mapid, permanent", ""]
+     * @values [27, ON_UPDATE_ZONE, "event, player, newZone, newArea", ""]
+     * @values [28, ON_MAP_CHANGE, "event, player", ""]
+     * @values [29, ON_EQUIP, "event, player, item, bag, slot", ""]
+     * @values [30, ON_FIRST_LOGIN, "event, player", ""]
+     * @values [31, ON_CAN_USE_ITEM, "event, player, itemEntry", "Can return InventoryResult enum value"]
+     * @values [32, ON_LOOT_ITEM, "event, player, item, count", ""]
+     * @values [33, ON_ENTER_COMBAT, "event, player, enemy", ""]
+     * @values [34, ON_LEAVE_COMBAT, "event, player", ""]
+     * @values [35, ON_REPOP, "event, player", ""]
+     * @values [36, ON_RESURRECT, "event, player", ""]
+     * @values [37, ON_LOOT_MONEY, "event, player, amount", ""]
+     * @values [38, ON_QUEST_ABANDON, "event, player, questId", ""]
+     * @values [39, ON_LEARN_TALENTS, "event, player, talentId, talentRank, spellid", ""]
+     * @values [40, ON_ENVIRONMENTAL_DEATH, "event, player, environmentalDamageType", ""]
+     * @values [41, ON_TRADE_ACCEPT, "event, player, target", "Can return false to interrupt trade"]
+     * @values [42, ON_COMMAND, "event, player, command", "Player is nil if command used from console. Can return false"]
+     * @values [43, ON_SKILL_CHANGE, "event, player, skillId, skillValue", "Returns new skill level value"]
+     * @values [44, ON_LEARN_SPELL, "event, player, spellId", ""]
+     * @values [45, ON_ACHIEVEMENT_COMPLETE, "event, player, achievementId", ""]
+     * @values [46, ON_DISCOVER_AREA, "event, player, area", ""]
+     * @values [47, ON_UPDATE_AREA, "event, player, oldArea, newArea", ""]
+     * @values [48, ON_TRADE_INIT, "event, player, target", "Can return false to interrupt trade"]
+     * @values [49, ON_SEND_MAIL, "event, player, recipientGuid", "Can return false to interrupt sending"]
+     * @values [54, ON_QUEST_STATUS_CHANGED, "event, player, questId, status", ""]
      *
      * @proto cancel = (event, function)
      * @proto cancel = (event, function, shots)
      *
-     * @param uint32 event : [Player] event Id, refer to PlayerEvents above
+     * @param uint32 event : [Player] event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -763,30 +729,24 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Guild] event handler.
      *
-     * <pre>
-     * enum GuildEvents
-     * {
-     *     // Guild
-     *     GUILD_EVENT_ON_ADD_MEMBER               =     1,       // (event, guild, player, rank)
-     *     GUILD_EVENT_ON_REMOVE_MEMBER            =     2,       // (event, guild, player, isDisbanding)
-     *     GUILD_EVENT_ON_MOTD_CHANGE              =     3,       // (event, guild, newMotd)
-     *     GUILD_EVENT_ON_INFO_CHANGE              =     4,       // (event, guild, newInfo)
-     *     GUILD_EVENT_ON_CREATE                   =     5,       // (event, guild, leader, name)  // Not on TC
-     *     GUILD_EVENT_ON_DISBAND                  =     6,       // (event, guild)
-     *     GUILD_EVENT_ON_MONEY_WITHDRAW           =     7,       // (event, guild, player, amount, isRepair) - Can return new money amount
-     *     GUILD_EVENT_ON_MONEY_DEPOSIT            =     8,       // (event, guild, player, amount) - Can return new money amount
-     *     GUILD_EVENT_ON_ITEM_MOVE                =     9,       // (event, guild, player, item, isSrcBank, srcContainer, srcSlotId, isDestBank, destContainer, destSlotId)   // TODO
-     *     GUILD_EVENT_ON_EVENT                    =     10,      // (event, guild, eventType, plrGUIDLow1, plrGUIDLow2, newRank)  // TODO
-     *     GUILD_EVENT_ON_BANK_EVENT               =     11,      // (event, guild, eventType, tabId, playerGUIDLow, itemOrMoney, itemStackCount, destTabId)
-     *
-     *     GUILD_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_ADD_MEMBER, "event, guild, player, rank", ""]
+     * @values [2, ON_REMOVE_MEMBER, "event, guild, player, isDisbanding", ""]
+     * @values [3, ON_MOTD_CHANGE, "event, guild, newMotd", ""]
+     * @values [4, ON_INFO_CHANGE, "event, guild, newInfo", ""]
+     * @values [5, ON_CREATE, "event, guild, leader, name", "Not on TC"]
+     * @values [6, ON_DISBAND, "event, guild", ""]
+     * @values [7, ON_MONEY_WITHDRAW, "event, guild, player, amount, isRepair", "Can return new money amount"]
+     * @values [8, ON_MONEY_DEPOSIT, "event, guild, player, amount", "Can return new money amount"]
+     * @values [9, ON_ITEM_MOVE, "event, guild, player, item, isSrcBank, srcContainer, srcSlotId, isDestBank, destContainer, destSlotId", "TODO"]
+     * @values [10, ON_EVENT, "event, guild, eventType, plrGUIDLow1, plrGUIDLow2, newRank", "TODO"]
+     * @values [11, ON_BANK_EVENT, "event, guild, eventType, tabId, playerGUIDLow, itemOrMoney, itemStackCount, destTabId", ""]
      *
      * @proto cancel = (event, function)
      * @proto cancel = (event, function, shots)
      *
-     * @param uint32 event : [Guild] event Id, refer to GuildEvents above
+     * @param uint32 event : [Guild] event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -800,26 +760,20 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Group] event handler.
      *
-     * <pre>
-     * enum GroupEvents
-     * {
-     *     // Group
-     *     GROUP_EVENT_ON_MEMBER_ADD               =     1,       // (event, group, guid)
-     *     GROUP_EVENT_ON_MEMBER_INVITE            =     2,       // (event, group, guid)
-     *     GROUP_EVENT_ON_MEMBER_REMOVE            =     3,       // (event, group, guid, method, kicker, reason)
-     *     GROUP_EVENT_ON_LEADER_CHANGE            =     4,       // (event, group, newLeaderGuid, oldLeaderGuid)
-     *     GROUP_EVENT_ON_DISBAND                  =     5,       // (event, group)
-     *     GROUP_EVENT_ON_CREATE                   =     6,       // (event, group, leaderGuid, groupType)
-     *     GROUP_EVENT_ON_MEMBER_ACCEPT            =     7,       // (event, group, player) - Can return false to disable accepting
-     *
-     *     GROUP_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_MEMBER_ADD, "event, group, guid", ""]
+     * @values [2, ON_MEMBER_INVITE, "event, group, guid, ""]
+     * @values [3, ON_MEMBER_REMOVE, "event, group, guid, method, kicker, reason", ""]
+     * @values [4, ON_LEADER_CHANGE, "event, group, newLeaderGuid, oldLeaderGuid", ""]
+     * @values [5, ON_DISBAND, "event, group", ""]
+     * @values [6, ON_CREATE, "event, group, leaderGuid, groupType", ""]
+     * @values [7, ON_MEMBER_ACCEPT, "event, group, player", "Can return false to disable accepting"]
      *
      * @proto cancel = (event, function)
      * @proto cancel = (event, function, shots)
      *
-     * @param uint32 event : [Group] event Id, refer to GroupEvents above
+     * @param uint32 event : [Group] event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -833,21 +787,17 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [BattleGround] event handler.
      *
-     * <pre>
-     * enum BGEvents
-     * {
-     *     BG_EVENT_ON_START                               = 1,    // (event, bg, bgId, instanceId) - Needs to be added to TC
-     *     BG_EVENT_ON_END                                 = 2,    // (event, bg, bgId, instanceId, winner) - Needs to be added to TC
-     *     BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId) - Needs to be added to TC
-     *     BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId) - Needs to be added to TC
-     *     BG_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_START, "event, bg, bgId, instanceId", Needs to be added to TC"]
+     * @values [2, ON_END, "event, bg, bgId, instanceId, winner", Needs to be added to TC"]
+     * @values [3, ON_CREATE, "event, bg, bgId, instanceId", Needs to be added to TC"]
+     * @values [4, ON_PRE_DESTROY, "event, bg, bgId, instanceId", Needs to be added to TC"]
      *
      * @proto cancel = (event, function)
      * @proto cancel = (event, function, shots)
      *
-     * @param uint32 event : [BattleGround] event Id, refer to BGEvents above
+     * @param uint32 event : [BattleGround] event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -861,22 +811,17 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [WorldPacket] event handler.
      *
-     * <pre>
-     * enum PacketEvents
-     * {
-     *     PACKET_EVENT_ON_PACKET_RECEIVE          =     5,       // (event, packet, player) - Player only if accessible. Can return false, newPacket
-     *     PACKET_EVENT_ON_PACKET_RECEIVE_UNKNOWN  =     6,       // Not Implemented
-     *     PACKET_EVENT_ON_PACKET_SEND             =     7,       // (event, packet, player) - Player only if accessible. Can return false
-     *
-     *     PACKET_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [5, ON_PACKET_RECEIVE, "event, packet, player", "Player only if accessible. Can return false, newPacket"]
+     * @values [6, ON_PACKET_RECEIVE_UNKNOWN, "", "Not implemented"]
+     * @values [7, ON_PACKET_SEND, "event, packet, player", "Player only if accessible. Can return false"]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : opcode
-     * @param uint32 event : packet event Id, refer to PacketEvents above
+     * @param uint32 event : packet event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -890,20 +835,16 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Creature] gossip event handler.
      *
-     * <pre>
-     * enum GossipEvents
-     * {
-     *     GOSSIP_EVENT_ON_HELLO                           = 1,    // (event, player, object) - Object is the Creature/GameObject/Item. Can return false to do default action. For item gossip can return false to stop spell casting.
-     *     GOSSIP_EVENT_ON_SELECT                          = 2,    // (event, player, object, sender, intid, code, menu_id) - Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action.
-     *     GOSSIP_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_HELLO, "event, player, object", "Object is the Creature/GameObject/Item. Can return false to do default action."]
+     * @values [2, ON_SELECT, "event, player, object, sender, intid, code, menu_id", "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : [Creature] entry Id
-     * @param uint32 event : [Creature] gossip event Id, refer to GossipEvents above
+     * @param uint32 event : [Creature] gossip event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -917,20 +858,16 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [GameObject] gossip event handler.
      *
-     * <pre>
-     * enum GossipEvents
-     * {
-     *     GOSSIP_EVENT_ON_HELLO                           = 1,    // (event, player, object) - Object is the Creature/GameObject/Item. Can return false to do default action. For item gossip can return false to stop spell casting.
-     *     GOSSIP_EVENT_ON_SELECT                          = 2,    // (event, player, object, sender, intid, code, menu_id) - Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action.
-     *     GOSSIP_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_HELLO, "event, player, object", "Object is the Creature/GameObject/Item. Can return false to do default action."]
+     * @values [2, ON_SELECT, "event, player, object, sender, intid, code, menu_id", "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : [GameObject] entry Id
-     * @param uint32 event : [GameObject] gossip event Id, refer to GossipEvents above
+     * @param uint32 event : [GameObject] gossip event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -944,26 +881,22 @@ namespace LuaGlobalFunctions
     /**
      * Registers an [Item] event handler.
      *
-     * <pre>
-     * enum ItemEvents
-     * {
-     *     ITEM_EVENT_ON_DUMMY_EFFECT                      = 1,    // (event, caster, spellid, effindex, item)
-     *     ITEM_EVENT_ON_USE                               = 2,    // (event, player, item, target) - Can return false to stop the spell casting
-     *     ITEM_EVENT_ON_QUEST_ACCEPT                      = 3,    // (event, player, item, quest) - Can return true
-     *     ITEM_EVENT_ON_EXPIRE                            = 4,    // (event, player, itemid) - Can return true
-     *     ITEM_EVENT_ON_REMOVE                            = 5,    // (event, player, item) - Can return true
-     *     ITEM_EVENT_ON_ADD                               = 6,    // (event, player, item)
-     *     ITEM_EVENT_ON_EQUIP                             = 7,    // (event, player, item, slot)
-     *     ITEM_EVENT_ON_UNEQUIP                           = 8,    // (event, player, item, slot)
-     *     ITEM_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_DUMMY_EFFECT, "event, caster, spellid, effindex, item", ""]
+     * @values [2, ON_USE         , "event, player, item, target", "Can return false to stop the spell casting"]
+     * @values [3, ON_QUEST_ACCEPT, "event, player, item, quest", "Can return true"]
+     * @values [4, ON_EXPIRE      , "event, player, itemid", "Can return true"]
+     * @values [5, ON_REMOVE      , "event, player, item", "Can return true"]
+     * @values [6, ON_ADD         , "event, player, item", ""]
+     * @values [7, ON_EQUIP       , "event, player, item, slot", ""]
+     * @values [8, ON_UNEQUIP     , "event, player, item, slot", ""]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : [Item] entry Id
-     * @param uint32 event : [Item] event Id, refer to ItemEvents above
+     * @param uint32 event : [Item] event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -977,20 +910,16 @@ namespace LuaGlobalFunctions
     /**
      * Registers an [Item] gossip event handler.
      *
-     * <pre>
-     * enum GossipEvents
-     * {
-     *     GOSSIP_EVENT_ON_HELLO                           = 1,    // (event, player, object) - Object is the Creature/GameObject/Item. Can return false to do default action. For item gossip can return false to stop spell casting.
-     *     GOSSIP_EVENT_ON_SELECT                          = 2,    // (event, player, object, sender, intid, code, menu_id) - Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action.
-     *     GOSSIP_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_HELLO, "event, player, object", "Object is the Creature/GameObject/Item. Can return false to do default action. For item gossip can return false to stop spell casting."]
+     * @values [2, ON_SELECT, "event, player, object, sender, intid, code, menu_id", "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : [Item] entry Id
-     * @param uint32 event : [Item] gossip event Id, refer to GossipEvents above
+     * @param uint32 event : [Item] gossip event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -1004,22 +933,18 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Map] event handler for all instance of a [Map].
      *
-     * <pre>
-     * enum InstanceEvents
-     * {
-     *     INSTANCE_EVENT_ON_INITIALIZE                    = 1,    // (event, instance_data, map)
-     *     INSTANCE_EVENT_ON_LOAD                          = 2,    // (event, instance_data, map)
-     *     INSTANCE_EVENT_ON_UPDATE                        = 3,    // (event, instance_data, map, diff)
-     *     INSTANCE_EVENT_ON_PLAYER_ENTER                  = 4,    // (event, instance_data, map, player)
-     *     INSTANCE_EVENT_ON_CREATURE_CREATE               = 5,    // (event, instance_data, map, creature)
-     *     INSTANCE_EVENT_ON_GAMEOBJECT_CREATE             = 6,    // (event, instance_data, map, go)
-     *     INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS   = 7,    // (event, instance_data, map)
-     *     INSTANCE_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_INITIALIZE                 , "event, instance_data, map", ""]
+     * @values [2, ON_LOAD                       , "event, instance_data, map", ""]
+     * @values [3, ON_UPDATE                     , "event, instance_data, map, diff", ""]
+     * @values [4, ON_PLAYER_ENTER               , "event, instance_data, map, player", ""]
+     * @values [5, ON_CREATURE_CREATE            , "event, instance_data, map, creature", ""]
+     * @values [6, ON_GAMEOBJECT_CREATE          , "event, instance_data, map, go", ""]
+     * @values [7, ON_CHECK_ENCOUNTER_IN_PROGRESS, "event, instance_data, map", ""]
      *
      * @param uint32 map_id : ID of a [Map]
-     * @param uint32 event : [Map] event ID, refer to MapEvents above
+     * @param uint32 event : [Map] event ID, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
@@ -1031,22 +956,18 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Map] event handler for one instance of a [Map].
      *
-     * <pre>
-     * enum InstanceEvents
-     * {
-     *     INSTANCE_EVENT_ON_INITIALIZE                    = 1,    // (event, instance_data, map)
-     *     INSTANCE_EVENT_ON_LOAD                          = 2,    // (event, instance_data, map)
-     *     INSTANCE_EVENT_ON_UPDATE                        = 3,    // (event, instance_data, map, diff)
-     *     INSTANCE_EVENT_ON_PLAYER_ENTER                  = 4,    // (event, instance_data, map, player)
-     *     INSTANCE_EVENT_ON_CREATURE_CREATE               = 5,    // (event, instance_data, map, creature)
-     *     INSTANCE_EVENT_ON_GAMEOBJECT_CREATE             = 6,    // (event, instance_data, map, go)
-     *     INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS   = 7,    // (event, instance_data, map)
-     *     INSTANCE_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_INITIALIZE                 , "event, instance_data, map", ""]
+     * @values [2, ON_LOAD                       , "event, instance_data, map", ""]
+     * @values [3, ON_UPDATE                     , "event, instance_data, map, diff", ""]
+     * @values [4, ON_PLAYER_ENTER               , "event, instance_data, map, player", ""]
+     * @values [5, ON_CREATURE_CREATE            , "event, instance_data, map, creature", ""]
+     * @values [6, ON_GAMEOBJECT_CREATE          , "event, instance_data, map, go", ""]
+     * @values [7, ON_CHECK_ENCOUNTER_IN_PROGRESS, "event, instance_data, map", ""]
      *
      * @param uint32 instance_id : ID of an instance of a [Map]
-     * @param uint32 event : [Map] event ID, refer to MapEvents above
+     * @param uint32 event : [Map] event ID, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
@@ -1058,22 +979,18 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Player] gossip event handler.
      *
-     * Note that you can not use `GOSSIP_EVENT_ON_HELLO` with this hook. It does nothing since players dont have an "on hello".
+     * Note that you can not use `ON_HELLO` with this hook. It does nothing since players dont have an "on hello".
      *
-     * <pre>
-     * enum GossipEvents
-     * {
-     *     GOSSIP_EVENT_ON_HELLO                           = 1,    // (event, player, object) - Object is the Creature/GameObject/Item. Can return false to do default action. For item gossip can return false to stop spell casting.
-     *     GOSSIP_EVENT_ON_SELECT                          = 2,    // (event, player, object, sender, intid, code, menu_id) - Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action.
-     *     GOSSIP_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_HELLO, "event, player, object", "Object is the Creature/GameObject/Item. Can return false to do default action. For item gossip can return false to stop spell casting."]
+     * @values [2, ON_SELECT, "event, player, object, sender, intid, code, menu_id", "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
      *
      * @proto cancel = (menu_id, event, function)
      * @proto cancel = (menu_id, event, function, shots)
      *
      * @param uint32 menu_id : [Player] gossip menu Id
-     * @param uint32 event : [Player] gossip event Id, refer to GossipEvents above
+     * @param uint32 event : [Player] gossip event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -1087,55 +1004,42 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Creature] event handler.
      *
-     * <pre>
-     * enum CreatureEvents
-     * {
-     *     CREATURE_EVENT_ON_ENTER_COMBAT                    = 1,  // (event, creature, target) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_LEAVE_COMBAT                    = 2,  // (event, creature) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_TARGET_DIED                     = 3,  // (event, creature, victim) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_DIED                            = 4,  // (event, creature, killer) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_SPAWN                           = 5,  // (event, creature) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_REACH_WP                        = 6,  // (event, creature, type, id) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_AIUPDATE                        = 7,  // (event, creature, diff) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_RECEIVE_EMOTE                   = 8,  // (event, creature, player, emoteid) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_DAMAGE_TAKEN                    = 9,  // (event, creature, attacker, damage) - Can return true to stop normal action, can return new damage as second return value.
-     *     CREATURE_EVENT_ON_PRE_COMBAT                      = 10, // (event, creature, target) - Can return true to stop normal action
-     *     // UNUSED
-     *     CREATURE_EVENT_ON_OWNER_ATTACKED                  = 12, // (event, creature, target) - Can return true to stop normal action            // Not on mangos
-     *     CREATURE_EVENT_ON_OWNER_ATTACKED_AT               = 13, // (event, creature, attacker) - Can return true to stop normal action          // Not on mangos
-     *     CREATURE_EVENT_ON_HIT_BY_SPELL                    = 14, // (event, creature, caster, spellid) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_SPELL_HIT_TARGET                = 15, // (event, creature, target, spellid) - Can return true to stop normal action
-     *     // UNUSED                                         = 16, // (event, creature)
-     *     // UNUSED                                         = 17, // (event, creature)
-     *     // UNUSED                                         = 18, // (event, creature)
-     *     CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE          = 19, // (event, creature, summon) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN       = 20, // (event, creature, summon) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED          = 21, // (event, creature, summon, killer) - Can return true to stop normal action    // Not on mangos
-     *     CREATURE_EVENT_ON_SUMMONED                        = 22, // (event, creature, summoner) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_RESET                           = 23, // (event, creature)
-     *     CREATURE_EVENT_ON_REACH_HOME                      = 24, // (event, creature) - Can return true to stop normal action
-     *     // UNUSED                                         = 25, // (event, creature)
-     *     CREATURE_EVENT_ON_CORPSE_REMOVED                  = 26, // (event, creature, respawndelay) - Can return true to stop normal action, can return new respawndelay as second return value
-     *     CREATURE_EVENT_ON_MOVE_IN_LOS                     = 27, // (event, creature, unit) - Can return true to stop normal action. Does not actually check LOS, just uses the sight range
-     *     // UNUSED                                         = 28, // (event, creature)
-     *     // UNUSED                                         = 29, // (event, creature)
-     *     CREATURE_EVENT_ON_DUMMY_EFFECT                    = 30, // (event, caster, spellid, effindex, creature)
-     *     CREATURE_EVENT_ON_QUEST_ACCEPT                    = 31, // (event, player, creature, quest) - Can return true
-     *     // UNUSED                                         = 32, // (event, creature)
-     *     // UNUSED                                         = 33, // (event, creature)
-     *     CREATURE_EVENT_ON_QUEST_REWARD                    = 34, // (event, player, creature, quest, opt) - Can return true
-     *     CREATURE_EVENT_ON_DIALOG_STATUS                   = 35, // (event, player, creature)
-     *     CREATURE_EVENT_ON_ADD                             = 36, // (event, creature)
-     *     CREATURE_EVENT_ON_REMOVE                          = 37, // (event, creature)
-     *     CREATURE_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1,  ON_ENTER_COMBAT, "event, creature, target", "Can return true to stop normal action"]
+     * @values [2,  ON_LEAVE_COMBAT, "event, creature", "Can return true to stop normal action"]
+     * @values [3,  ON_TARGET_DIED, "event, creature, victim", "Can return true to stop normal action"]
+     * @values [4,  ON_DIED, "event, creature, killer", "Can return true to stop normal action"]
+     * @values [5,  ON_SPAWN, "event, creature", "Can return true to stop normal action"]
+     * @values [6,  ON_REACH_WP, "event, creature, type, id", "Can return true to stop normal action"]
+     * @values [7,  ON_AIUPDATE, "event, creature, diff", "Can return true to stop normal action"]
+     * @values [8,  ON_RECEIVE_EMOTE, "event, creature, player, emoteid", "Can return true to stop normal action"]
+     * @values [9,  ON_DAMAGE_TAKEN, "event, creature, attacker, damage", "Can return true to stop normal action, can return new damage as second return value."]
+     * @values [10, ON_PRE_COMBAT, "event, creature, target", "Can return true to stop normal action"]
+     * @values [12, ON_OWNER_ATTACKED, "event, creature, target", "Can return true to stop normal action. Not on mangos"]
+     * @values [13, ON_OWNER_ATTACKED_AT, "event, creature, attacker", "Can return true to stop normal action. Not on mangos"]
+     * @values [14, ON_HIT_BY_SPELL, "event, creature, caster, spellid", "Can return true to stop normal action"]
+     * @values [15, ON_SPELL_HIT_TARGET, "event, creature, target, spellid", "Can return true to stop normal action"]
+     * @values [19, ON_JUST_SUMMONED_CREATURE, "event, creature, summon", "Can return true to stop normal action"]
+     * @values [20, ON_SUMMONED_CREATURE_DESPAWN, "event, creature, summon", "Can return true to stop normal action"]
+     * @values [21, ON_SUMMONED_CREATURE_DIED, "event, creature, summon, killer", "Can return true to stop normal action. Not on mangos"]
+     * @values [22, ON_SUMMONED, "event, creature, summoner", "Can return true to stop normal action"]
+     * @values [23, ON_RESET, "event, creature", ""]
+     * @values [24, ON_REACH_HOME, "event, creature", "Can return true to stop normal action"]
+     * @values [26, ON_CORPSE_REMOVED, "event, creature, respawndelay", "Can return true to stop normal action, can return new respawndelay as second return value"]
+     * @values [27, ON_MOVE_IN_LOS, "event, creature, unit", "Can return true to stop normal action. Does not actually check LOS, just uses the sight range"]
+     * @values [30, ON_DUMMY_EFFECT, "event, caster, spellid, effindex, creature", ""]
+     * @values [31, ON_QUEST_ACCEPT, "event, player, creature, quest", "Can return true"]
+     * @values [34, ON_QUEST_REWARD, "event, player, creature, quest, opt", "Can return true"]
+     * @values [35, ON_DIALOG_STATUS, "event, player, creature", ""]
+     * @values [36, ON_ADD, "event, creature", ""]
+     * @values [37, ON_REMOVE, "event, creature", ""]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : the ID of one or more [Creature]s
-     * @param uint32 event : refer to CreatureEvents above
+     * @param uint32 event : refer to table above
      * @param function function : function that will be called when the event occurs
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -1149,56 +1053,43 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Creature] event handler for a *single* [Creature].
      *
-     * <pre>
-     * enum CreatureEvents
-     * {
-     *     CREATURE_EVENT_ON_ENTER_COMBAT                    = 1,  // (event, creature, target) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_LEAVE_COMBAT                    = 2,  // (event, creature) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_TARGET_DIED                     = 3,  // (event, creature, victim) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_DIED                            = 4,  // (event, creature, killer) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_SPAWN                           = 5,  // (event, creature) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_REACH_WP                        = 6,  // (event, creature, type, id) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_AIUPDATE                        = 7,  // (event, creature, diff) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_RECEIVE_EMOTE                   = 8,  // (event, creature, player, emoteid) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_DAMAGE_TAKEN                    = 9,  // (event, creature, attacker, damage) - Can return true to stop normal action, can return new damage as second return value.
-     *     CREATURE_EVENT_ON_PRE_COMBAT                      = 10, // (event, creature, target) - Can return true to stop normal action
-     *     // UNUSED
-     *     CREATURE_EVENT_ON_OWNER_ATTACKED                  = 12, // (event, creature, target) - Can return true to stop normal action            // Not on mangos
-     *     CREATURE_EVENT_ON_OWNER_ATTACKED_AT               = 13, // (event, creature, attacker) - Can return true to stop normal action          // Not on mangos
-     *     CREATURE_EVENT_ON_HIT_BY_SPELL                    = 14, // (event, creature, caster, spellid) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_SPELL_HIT_TARGET                = 15, // (event, creature, target, spellid) - Can return true to stop normal action
-     *     // UNUSED                                         = 16, // (event, creature)
-     *     // UNUSED                                         = 17, // (event, creature)
-     *     // UNUSED                                         = 18, // (event, creature)
-     *     CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE          = 19, // (event, creature, summon) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN       = 20, // (event, creature, summon) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED          = 21, // (event, creature, summon, killer) - Can return true to stop normal action    // Not on mangos
-     *     CREATURE_EVENT_ON_SUMMONED                        = 22, // (event, creature, summoner) - Can return true to stop normal action
-     *     CREATURE_EVENT_ON_RESET                           = 23, // (event, creature)
-     *     CREATURE_EVENT_ON_REACH_HOME                      = 24, // (event, creature) - Can return true to stop normal action
-     *     // UNUSED                                         = 25, // (event, creature)
-     *     CREATURE_EVENT_ON_CORPSE_REMOVED                  = 26, // (event, creature, respawndelay) - Can return true to stop normal action, can return new respawndelay as second return value
-     *     CREATURE_EVENT_ON_MOVE_IN_LOS                     = 27, // (event, creature, unit) - Can return true to stop normal action. Does not actually check LOS, just uses the sight range
-     *     // UNUSED                                         = 28, // (event, creature)
-     *     // UNUSED                                         = 29, // (event, creature)
-     *     CREATURE_EVENT_ON_DUMMY_EFFECT                    = 30, // (event, caster, spellid, effindex, creature)
-     *     CREATURE_EVENT_ON_QUEST_ACCEPT                    = 31, // (event, player, creature, quest) - Can return true
-     *     // UNUSED                                         = 32, // (event, creature)
-     *     // UNUSED                                         = 33, // (event, creature)
-     *     CREATURE_EVENT_ON_QUEST_REWARD                    = 34, // (event, player, creature, quest, opt) - Can return true
-     *     CREATURE_EVENT_ON_DIALOG_STATUS                   = 35, // (event, player, creature)
-     *     CREATURE_EVENT_ON_ADD                             = 36, // (event, creature)
-     *     CREATURE_EVENT_ON_REMOVE                          = 37, // (event, creature)
-     *     CREATURE_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1,  ON_ENTER_COMBAT, "event, creature, target", "Can return true to stop normal action"]
+     * @values [2,  ON_LEAVE_COMBAT, "event, creature", "Can return true to stop normal action"]
+     * @values [3,  ON_TARGET_DIED, "event, creature, victim", "Can return true to stop normal action"]
+     * @values [4,  ON_DIED, "event, creature, killer", "Can return true to stop normal action"]
+     * @values [5,  ON_SPAWN, "event, creature", "Can return true to stop normal action"]
+     * @values [6,  ON_REACH_WP, "event, creature, type, id", "Can return true to stop normal action"]
+     * @values [7,  ON_AIUPDATE, "event, creature, diff", "Can return true to stop normal action"]
+     * @values [8,  ON_RECEIVE_EMOTE, "event, creature, player, emoteid", "Can return true to stop normal action"]
+     * @values [9,  ON_DAMAGE_TAKEN, "event, creature, attacker, damage", "Can return true to stop normal action, can return new damage as second return value."]
+     * @values [10, ON_PRE_COMBAT, "event, creature, target", "Can return true to stop normal action"]
+     * @values [12, ON_OWNER_ATTACKED, "event, creature, target", "Can return true to stop normal action. Not on mangos"]
+     * @values [13, ON_OWNER_ATTACKED_AT, "event, creature, attacker", "Can return true to stop normal action. Not on mangos"]
+     * @values [14, ON_HIT_BY_SPELL, "event, creature, caster, spellid", "Can return true to stop normal action"]
+     * @values [15, ON_SPELL_HIT_TARGET, "event, creature, target, spellid", "Can return true to stop normal action"]
+     * @values [19, ON_JUST_SUMMONED_CREATURE, "event, creature, summon", "Can return true to stop normal action"]
+     * @values [20, ON_SUMMONED_CREATURE_DESPAWN, "event, creature, summon", "Can return true to stop normal action"]
+     * @values [21, ON_SUMMONED_CREATURE_DIED, "event, creature, summon, killer", "Can return true to stop normal action. Not on mangos"]
+     * @values [22, ON_SUMMONED, "event, creature, summoner", "Can return true to stop normal action"]
+     * @values [23, ON_RESET, "event, creature", ""]
+     * @values [24, ON_REACH_HOME, "event, creature", "Can return true to stop normal action"]
+     * @values [26, ON_CORPSE_REMOVED, "event, creature, respawndelay", "Can return true to stop normal action, can return new respawndelay as second return value"]
+     * @values [27, ON_MOVE_IN_LOS, "event, creature, unit", "Can return true to stop normal action. Does not actually check LOS, just uses the sight range"]
+     * @values [30, ON_DUMMY_EFFECT, "event, caster, spellid, effindex, creature", ""]
+     * @values [31, ON_QUEST_ACCEPT, "event, player, creature, quest", "Can return true"]
+     * @values [34, ON_QUEST_REWARD, "event, player, creature, quest, opt", "Can return true"]
+     * @values [35, ON_DIALOG_STATUS, "event, player, creature", ""]
+     * @values [36, ON_ADD, "event, creature", ""]
+     * @values [37, ON_REMOVE, "event, creature", ""]
      *
      * @proto cancel = (guid, instance_id, event, function)
      * @proto cancel = (guid, instance_id, event, function, shots)
      *
      * @param ObjectGuid guid : the GUID of a single [Creature]
      * @param uint32 instance_id : the instance ID of a single [Creature]
-     * @param uint32 event : refer to CreatureEvents above
+     * @param uint32 event : refer to table above
      * @param function function : function that will be called when the event occurs
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -1212,32 +1103,27 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [GameObject] event handler.
      *
-     * <pre>
-     * enum GameObjectEvents
-     * {
-     *     GAMEOBJECT_EVENT_ON_AIUPDATE                    = 1,    // (event, go, diff)
-     *     GAMEOBJECT_EVENT_ON_SPAWN                       = 2,    // (event, go)
-     *     GAMEOBJECT_EVENT_ON_DUMMY_EFFECT                = 3,    // (event, caster, spellid, effindex, go) - Can return true to stop normal action
-     *     GAMEOBJECT_EVENT_ON_QUEST_ACCEPT                = 4,    // (event, player, go, quest) - Can return true to stop normal action
-     *     GAMEOBJECT_EVENT_ON_QUEST_REWARD                = 5,    // (event, player, go, quest, opt) - Can return true to stop normal action
-     *     GAMEOBJECT_EVENT_ON_DIALOG_STATUS               = 6,    // (event, player, go)
-     *     GAMEOBJECT_EVENT_ON_DESTROYED                   = 7,    // (event, go, attacker)
-     *     GAMEOBJECT_EVENT_ON_DAMAGED                     = 8,    // (event, go, attacker)
-     *     GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE           = 9,    // (event, go, state)
-     *     GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED            = 10,   // (event, go, state)
-     *     // UNUSED                                       = 11,   // (event, gameobject)
-     *     GAMEOBJECT_EVENT_ON_ADD                         = 12,   // (event, gameobject)
-     *     GAMEOBJECT_EVENT_ON_REMOVE                      = 13,   // (event, gameobject)
-     *     GAMEOBJECT_EVENT_ON_USE                         = 14,   // (event, go, player) - Can return true to stop normal action
-     *     GAMEOBJECT_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1,  ON_AIUPDATE, "event, go, diff", ""]
+     * @values [2,  ON_SPAWN, "event, go", ""]
+     * @values [3,  ON_DUMMY_EFFECT, "event, caster, spellid, effindex, go", "Can return true to stop normal action"]
+     * @values [4,  ON_QUEST_ACCEPT, "event, player, go, quest", "Can return true to stop normal action"]
+     * @values [5,  ON_QUEST_REWARD, "event, player, go, quest, opt", "Can return true to stop normal action"]
+     * @values [6,  ON_DIALOG_STATUS, "event, player, go", ""]
+     * @values [7,  ON_DESTROYED, "event, go, attacker", ""]
+     * @values [8,  ON_DAMAGED, "event, go, attacker", ""]
+     * @values [9,  ON_LOOT_STATE_CHANGE, "event, go, state", ""]
+     * @values [10, ON_GO_STATE_CHANGED, "event, go, state", ""]
+     * @values [12, ON_ADD, "event, gameobject", ""]
+     * @values [13, ON_REMOVE, "event, gameobject", ""]
+     * @values [14, ON_USE, "event, go, player", "Can return true to stop normal action"]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : [GameObject] entry Id
-     * @param uint32 event : [GameObject] event Id, refer to GameObjectEvents above
+     * @param uint32 event : [GameObject] event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -1251,19 +1137,15 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Spell] event handler.
      *
-     * <pre>
-     * enum SpellEvents
-     * {
-     *     SPELL_EVENT_ON_CAST                             = 1,    // (event, spell, skipCheck)
-     *     SPELL_EVENT_COUNT
-     * };
-     * </pre>
+     * @table
+     * @columns [ID, Event, Parameters, Comment]
+     * @values [1, ON_CAST, "event, spell, skipCheck", ""]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
      *
      * @param uint32 entry : [Spell] entry Id
-     * @param uint32 event : [Spell] event Id, refer to SpellEvents above
+     * @param uint32 event : [Spell] event Id, refer to table above
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      *
@@ -1935,14 +1817,13 @@ namespace LuaGlobalFunctions
     /**
      * Ban's a [Player]'s account, character or IP
      *
-     *     enum BanMode
-     *     {
-     *         BAN_ACCOUNT = 0,
-     *         BAN_CHARACTER = 1,
-     *         BAN_IP = 2
-     *     };
+     * @table
+     * @columns [Mode, Value]
+     * @values [ACCOUNT, 0]
+     * @values [CHARACTER, 1]
+     * @values [IP, 2]
      *
-     * @param [BanMode] banMode : method of ban, refer to BanMode above
+     * @param [BanMode] banMode : method of ban, refer to table above
      * @param string nameOrIP : If BanMode is 0 then accountname, if 1 then charactername if 2 then ip
      * @param uint32 duration : duration (in seconds) of the ban
      * @param string reason = "" : ban reason, this is optional
@@ -2019,22 +1900,21 @@ namespace LuaGlobalFunctions
      * There can be several item entry-amount pairs at the end of the function.
      * There can be maximum of 12 different items.
      *
-     *     enum MailStationery
-     *     {
-     *         MAIL_STATIONERY_TEST = 1,
-     *         MAIL_STATIONERY_DEFAULT = 41,
-     *         MAIL_STATIONERY_GM = 61,
-     *         MAIL_STATIONERY_AUCTION = 62,
-     *         MAIL_STATIONERY_VAL = 64, // Valentine
-     *         MAIL_STATIONERY_CHR = 65, // Christmas
-     *         MAIL_STATIONERY_ORP = 67 // Orphan
-     *     };
+     * @table 
+     * @columns [Stationery, ID, Comment]
+     * @values [TEST, 1, ""]
+     * @values [DEFAULT, 41, ""]
+     * @values [GM, 61, ""]
+     * @values [AUCTION, 62, ""]
+     * @values [VAL, 64, "Valentine"]
+     * @values [CHR, 65, "Christmas"]
+     * @values [ORP, 67, "Orphan"]
      *
      * @param string subject : title (subject) of the mail
      * @param string text : contents of the mail
      * @param uint32 receiverGUIDLow : low GUID of the receiver
      * @param uint32 senderGUIDLow = 0 : low GUID of the sender
-     * @param [MailStationery] stationary = MAIL_STATIONERY_DEFAULT : type of mail that is being sent as, refer to MailStationery above
+     * @param [MailStationery] stationary = MAIL_STATIONERY_DEFAULT : type of mail that is being sent as, refer to table above
      * @param uint32 delay = 0 : mail send delay in milliseconds
      * @param uint32 money = 0 : money to send
      * @param uint32 cod = 0 : cod money amount

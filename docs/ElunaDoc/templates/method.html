@@ -46,7 +46,16 @@
         <p>This method is <em>undocumented</em>. <strong>Use at your own risk.</strong></p>
         <p>For temporary documentation, please check the <a href="https://github.com/ElunaLuaEngine/Eluna/blob/master/LuaFunctions.cpp">LuaFunctions</a> source file.</p>
         {%- endif %}
-
+        
+        {%- if current_method.table %}
+        <div class="table-container">
+        <p>
+            {{ current_method.table }}
+        </p>
+        </div>
+        {%- endif %}
+        
+        
         <h2 id="synopsis" class='section-header'>
             <a href="#synopsis">Synopsis</a>
         </h2>
