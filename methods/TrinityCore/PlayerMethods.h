@@ -10,6 +10,7 @@
 #include "LuaValue.h"
 #include "NPCPackets.h"
 #include "PartyPackets.h"
+#include "Unit.h"
 #include <boost/callable_traits/args.hpp>
 
 /***
@@ -1971,7 +1972,20 @@ namespace LuaPlayer
     {
         int32 pType = E->CHECKVAL<int32>(2);
 
-        player->SetMovement((PlayerMovementType)pType);
+        switch (pType)
+        {
+            case 1: // MOVE_ROOT
+                player->SetRooted(true);
+            case 2: // MOVE_UNROOT
+                player->SetRooted(false);
+            case 3: // MOVE_WATER_WALK
+                player->SetWaterWalking(true);
+            case 4: // MOVE_LAND_WALK
+                player->SetWaterWalking(false);
+            default:
+                return 0;
+        }
+
         return 0;
     }
 
