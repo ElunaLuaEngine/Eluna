@@ -1976,14 +1976,18 @@ namespace LuaPlayer
         {
             case 1: // MOVE_ROOT
                 player->SetRooted(true);
+                break;
             case 2: // MOVE_UNROOT
                 player->SetRooted(false);
+                break;
             case 3: // MOVE_WATER_WALK
                 player->SetWaterWalking(true);
+                break;
             case 4: // MOVE_LAND_WALK
                 player->SetWaterWalking(false);
+                break;
             default:
-                return 0;
+                break;
         }
 
         return 0;
