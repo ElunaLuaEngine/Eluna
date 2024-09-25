@@ -62,45 +62,75 @@
 
 /* General structure and fonts */
 
+/* base color defines */
+:root {
+    --clr-light-main: #fff;
+    --clr-light-codebox: #F5F5F5;
+    --clr-light-current-selection: #8c6067;
+    --clr-light-table-border: #ddd;
+    --clr-light-table-header: #f5f5f5;
+    --clr-light-table-nth: #f9f9f9;
+    --clr-light-content-highlight: #c6afb3;
+    
+    --clr-dark-main: #333;
+    --clr-dark-codebox: #2f2f2f;
+    --clr-dark-current-selection: #4d76ae;
+    --clr-dark-table: #2f2f2f;
+    --clr-dark-table-border: #444;
+    --clr-dark-table-header: #3a3a3a;
+    --clr-dark-table-nth: #333;
+    --clr-dark-content-highlight: #d5eeff;
+}
+
 body {
-    color: #333;
+    background-color: var(--clr-light-main);
+    color: var(--clr-dark-main);
     min-width: 500px;
     font: 16px/1.4 "Source Serif Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin: 0;
     position: relative;
     padding: 10px 15px 20px 15px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 h1 {
     font-size: 1.5em;
 }
+
 h2 {
     font-size: 1.4em;
 }
+
 h3 {
     font-size: 1.3em;
 }
+
 h1, h2, h3:not(.impl):not(.method), h4:not(.method) {
-    color: black;
+    color: var(--clr-dark-main);
     font-weight: 500;
     margin: 20px 0 15px 0;
     padding-bottom: 6px;
 }
+
 h1.fqn {
     border-bottom: 1px dashed #D5D5D5;
     margin-top: 0;
 }
+
 h2, h3:not(.impl):not(.method), h4:not(.method) {
     border-bottom: 1px solid #DDDDDD;
 }
+
 h3.impl, h3.method, h4.method {
     font-weight: 600;
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
 h3.impl, h3.method {
     margin-top: 15px;
 }
+
 h1, h2, h3, h4, section.sidebar, a.source, .search-input, .content table a, .collapse-toggle {
     font-family: "Fira Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -108,6 +138,7 @@ h1, h2, h3, h4, section.sidebar, a.source, .search-input, .content table a, .col
 ol, ul {
     padding-left: 25px;
 }
+
 ul ul, ol ul, ul ol, ol ol {
     margin-bottom: 0;
 }
@@ -120,13 +151,15 @@ code, pre {
     font-family: "Source Code Pro", Menlo, Monaco, Consolas, "DejaVu Sans Mono", Inconsolata, monospace;
     white-space: pre-wrap;
 }
+
 .docblock code {
-    background-color: #F5F5F5;
-    border-radius: 3px;
-    /*padding: 0 0.2em;*/
+    background-color: var(--clr-light-codebox);
+    border-radius: 4px;
+    transition: background-color 0.3s;
 }
+
 pre {
-    background-color: #F5F5F5;
+    background-color: var(--clr-light-codebox);
     padding: 14px;
 }
 
@@ -145,6 +178,8 @@ pre {
 nav.sub {
     font-size: 16px;
     text-transform: uppercase;
+    flex-flow: row nowrap;
+    display: flex;
 }
 
 .sidebar {
@@ -169,26 +204,27 @@ nav.sub {
     table-layout: auto;
     margin-bottom: 20px;
     font-family: "Source Code Pro", Menlo, Monaco, Consolas, "DejaVu Sans Mono", Inconsolata, monospace;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .docblock th, .docblock td {
     padding: 10px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: 1px solid var(--clr-light-table-border);
     white-space: nowrap;
 }
 
 .docblock th {
-    background-color: #f5f5f5;
+    background-color: var(--clr-light-table-header);
     font-weight: bold;
 }
 
 .docblock tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: var(--clr-light-table-nth);
 }
 
-.docblock table {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.docblock th, .docblock td, .docblock tr {
+    transition: background-color 0.3s;
 }
 
 /* Everything else */
@@ -215,6 +251,7 @@ nav.sub {
     padding: 0 10px;
     margin-bottom: 14px;
 }
+
 .block h2 {
     margin-top: 0;
     margin-bottom: 8px;
@@ -233,7 +270,7 @@ nav.sub {
 }
 
 .block a:hover {
-    background: #F5F5F5;
+    background: var(--clr-light-codebox);
 }
 
 .content {
@@ -261,7 +298,7 @@ nav.sub {
 .content .highlighted.mod { background-color: #afc6e4; }
 .content .highlighted.enum { background-color: #b4d1b9; }
 .content .highlighted.struct { background-color: #e7b1a0; }
-.content .highlighted.fn { background-color: #c6afb3; }
+.content .highlighted.fn { background-color: var(--clr-light-content-highlight); }
 
 .docblock.short.nowrap {
     display: block;
@@ -344,7 +381,6 @@ nav.main .separator {
     margin: 0 20px;
 }
 nav.sum { text-align: right; }
-nav.sub form { display: inline; }
 
 nav, .content {
     margin-left: 230px;
@@ -352,7 +388,7 @@ nav, .content {
 
 a {
     text-decoration: none;
-    color: #000;
+    color: var(--clr-dark-main);
     background: transparent;
 }
 p a { color: #4e8bca; }
@@ -362,11 +398,16 @@ p a:hover { text-decoration: underline; }
 .content a.mod, .block a.current.mod { color: #4d76ae; }
 .content a.enum, .block a.current.enum { color: #5e9766; }
 .content a.struct, .block a.current.struct { color: #e53700; }
-.content a.fn, .block a.current.fn { color: #8c6067; }
-.content .fnname { color: #8c6067; }
+.content a.fn, .block a.current.fn { color: var(--clr-light-current-selection); }
+.content .fnname { color: var(--clr-light-current-selection); }
+
+.search-form {
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+}
 
 .search-input {
-    width: 100%;
     /* Override Normalize.css: we have margins and do
      not want to overflow - the `moz` attribute is necessary
      until Firefox 29, too early to drop at this point */
@@ -383,6 +424,8 @@ p a:hover { text-decoration: underline; }
     transition: border-color 300ms ease;
     transition: border-radius 300ms ease-in-out;
     transition: box-shadow 300ms ease-in-out;
+    flex-grow: 1;
+    height: 35px;
 }
 
 .search-input:focus {
@@ -400,38 +443,11 @@ p a:hover { text-decoration: underline; }
     display: block;
 }
 
-#help {
-    background: #e9e9e9;
-    border-radius: 4px;
-    box-shadow: 0 0 6px rgba(0,0,0,.2);
-    position: absolute;
-    top: 300px;
-    left: 50%;
-    margin-top: -125px;
-    margin-left: -275px;
-    width: 550px;
-    height: 300px;
-    border: 1px solid #bfbfbf;
-}
-
-#help dt {
-    float: left;
-    border-radius: 3px;
-    border: 1px solid #bfbfbf;
-    background: #fff;
-    width: 23px;
+.toggle-container {
+    margin: auto;
     text-align: center;
-    clear: left;
-    display: block;
-    margin-top: -1px;
-}
-#help dd { margin: 5px 33px; }
-#help .infos { padding-left: 0; }
-#help h1 { margin-top: 0; }
-#help div {
-    width: 50%;
-    float: left;
-    padding: 20px;
+    height: 25px;
+    width: 35px;
 }
 
 .stability {
@@ -551,4 +567,87 @@ pre.rust { position: relative; }
 .toggle-label {
     color: #999;
     font-style: italic;
+}
+
+/* dark mode */
+
+.dark-mode body {
+    background-color: var(--clr-dark-main);
+    color: var(--clr-light-main);
+}
+
+.dark-mode h1 {
+    color: var(--clr-light-main);
+}
+
+.dark-mode h2 {
+    color: var(--clr-light-main);
+}
+
+.dark-mode h3 {
+    color: var(--clr-light-main);
+}
+
+.dark-mode h4 {
+    color: var(--clr-light-main);
+}
+
+.dark-mode .docblock code {
+    background-color: var(--clr-dark-codebox);
+}
+
+.dark-mode pre {
+    background-color: var(--clr-dark-codebox);
+}
+
+.dark-mode .docblock table {
+    background-color: var(--clr-dark-table);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .docblock th, .dark-mode .docblock td {
+    border: 1px solid var(--clr-dark-table-border);
+}
+
+.dark-mode .docblock th {
+    background-color: var(--clr-dark-table-header);
+}
+
+.dark-mode .docblock tr:nth-child(even) {
+    background-color: var(--clr-dark-table-nth);
+}
+
+.dark-mode .block a:hover {
+    background: var(--clr-dark-codebox);
+}
+
+.dark-mode .content .highlighted.fn { background-color: var(--clr-dark-content-highlight); }
+
+.dark-mode a {
+    color: var(--clr-light-main);
+}
+
+.dark-mode p a { color: #4e8bca; }
+
+.dark-mode .content a.fn, .dark-mode .block a.current.fn { color: var(--clr-dark-current-selection); }
+.dark-mode .content .fnname { color: var(--clr-dark-current-selection); }
+
+.dark-mode :target { background: var(--clr-dark-current-selection); }
+
+.sun-icon, .moon-icon {
+    width: 28px;
+    height: 28px;
+    transition: opacity 0.3s;
+}
+
+.moon-icon {
+    display: none;
+}
+
+.dark-mode .sun-icon {
+    display: none;
+}
+
+.dark-mode .moon-icon {
+    display: inline-block;
 }

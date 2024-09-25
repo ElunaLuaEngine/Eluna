@@ -11,16 +11,18 @@
     <link rel="stylesheet" type="text/css" href="{{ static('main.css') }}">
 
     <link rel="shortcut icon" href="{{ static('favicon.ico') }}">
-
+    
+    <script>
+    // Inline script to set theme before the rest of the document loads
+    (function() {
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            document.documentElement.classList.add(currentTheme);
+        }
+    })();
+    </script>
 </head>
 <body class="rustdoc">
-<!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
 <section class="sidebar">
     <a href='{{ root('index.html') }}'><img src='{{ static('eluna-logo.png') }}' alt='Eluna Logo' width='100'></a>
     <div class="block">
@@ -35,11 +37,26 @@
 
 <nav class="sub">
     <form class="search-form js-only">
-        <div class="search-container">
-            <input class="search-input" name="search"
-                   autocomplete="off"
-                   placeholder="Click or press 'S' to search, '?' for more options..."
-                   type="search">
+        <input class="search-input" name="search"
+               autocomplete="off"
+               placeholder="Click or press 'S' to search, '?' for more options..."
+               type="search">
+                   
+        <div class="toggle-container" id="themeToggle">
+            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
         </div>
     </form>
 </nav>
@@ -98,6 +115,7 @@
 </script>
 <script src="{{ static('jquery.js') }}"></script>
 <script src="{{ static('main.js') }}"></script>
+<script src="{{ static('theme.js') }}"></script>
 <script async src="{{ root('search-index.js') }}"></script>
 <center>Generated on <script src="{{ root('date.js') }}"></script></center>
 <center>&copy; 2010 - 2024 Eluna Lua Engine</center>
