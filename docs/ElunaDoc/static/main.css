@@ -527,12 +527,9 @@ pre.rust { position: relative; }
         display: none;
     }
 
-    .content {
+    nav, .content {
         margin-left: 0px;
-    }
-
-    nav.sub {
-        margin: 0 auto;
+        max-width: 100vw;
     }
 }
 
