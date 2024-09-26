@@ -67,7 +67,7 @@
     --clr-light-main: #fff;
     --clr-light-searchbox-back: #fff;
     --clr-light-searchbox-text: #555;
-    --clr-light-codebox: #F5F5F5;
+    --clr-light-element-highlight: #F5F5F5;
     --clr-light-current-selection: #8c6067;
     --clr-light-table-border: #ddd;
     --clr-light-table-header: #f5f5f5;
@@ -77,7 +77,7 @@
     --clr-dark-main: #333;
     --clr-dark-searchbox-back: #2f2f2f;
     --clr-dark-searchbox-text: #fff;
-    --clr-dark-codebox: #2f2f2f;
+    --clr-dark-element-highlight: #2d2d2d;
     --clr-dark-current-selection: #4d76ae;
     --clr-dark-table: #2f2f2f;
     --clr-dark-table-border: #444;
@@ -157,13 +157,13 @@ code, pre {
 }
 
 .docblock code {
-    background-color: var(--clr-light-codebox);
+    background-color: var(--clr-light-element-highlight);
     border-radius: 4px;
     transition: background-color 0.3s;
 }
 
 pre {
-    background-color: var(--clr-light-codebox);
+    background-color: var(--clr-light-element-highlight);
     padding: 14px;
 }
 
@@ -274,7 +274,7 @@ nav.sub {
 }
 
 .block a:hover {
-    background: var(--clr-light-codebox);
+    background: var(--clr-light-element-highlight);
 }
 
 .content {
@@ -291,18 +291,6 @@ nav.sub {
 .line-numbers .line-highlighted {
     background-color: #f6fdb0;
 }
-
-.content .highlighted {
-    cursor: pointer;
-    color: #000 !important;
-    background-color: #ccc;
-}
-.content .highlighted a { color: #000 !important; }
-.content .highlighted.trait { background-color: #fece7e; }
-.content .highlighted.mod { background-color: #afc6e4; }
-.content .highlighted.enum { background-color: #b4d1b9; }
-.content .highlighted.struct { background-color: #e7b1a0; }
-.content .highlighted.fn { background-color: var(--clr-light-content-highlight); }
 
 .docblock.short.nowrap {
     display: block;
@@ -446,6 +434,10 @@ p a:hover { text-decoration: underline; }
     text-overflow: ellipsis;
     overflow: hidden;
     display: block;
+}
+
+tr.result:hover {
+    background-color: var(--clr-light-element-highlight);
 }
 
 .toggle-container {
@@ -595,11 +587,11 @@ pre.rust { position: relative; }
 }
 
 .dark-mode .docblock code {
-    background-color: var(--clr-dark-codebox);
+    background-color: var(--clr-dark-element-highlight);
 }
 
 .dark-mode pre {
-    background-color: var(--clr-dark-codebox);
+    background-color: var(--clr-dark-element-highlight);
 }
 
 .dark-mode .docblock table {
@@ -620,10 +612,8 @@ pre.rust { position: relative; }
 }
 
 .dark-mode .block a:hover {
-    background: var(--clr-dark-codebox);
+    background: var(--clr-dark-element-highlight);
 }
-
-.dark-mode .content .highlighted.fn { background-color: var(--clr-dark-content-highlight); }
 
 .dark-mode a {
     color: var(--clr-light-main);
@@ -639,6 +629,10 @@ pre.rust { position: relative; }
 .dark-mode .search-input {
     color: var(--clr-dark-searchbox-text);
     background-color: var(--clr-dark-searchbox-back);
+}
+
+.dark-mode tr.result:hover {
+    background-color: var(--clr-dark-element-highlight);
 }
 
 .sun-icon, .moon-icon {

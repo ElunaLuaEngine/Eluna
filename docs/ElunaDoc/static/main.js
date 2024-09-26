@@ -396,13 +396,6 @@
                     $('#main').removeClass('hidden');
                 }
                 document.location.href = dst.href;
-            }).on('mouseover', function() {
-                var $el = $(this);
-                clearTimeout(hoverTimeout);
-                hoverTimeout = setTimeout(function() {
-                    $results.removeClass('highlighted');
-                    $el.addClass('highlighted');
-                }, 20);
             });
 
             $(document).off('keydown.searchnav');
