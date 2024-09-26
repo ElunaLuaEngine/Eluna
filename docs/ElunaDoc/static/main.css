@@ -65,6 +65,8 @@
 /* base color defines */
 :root {
     --clr-light-main: #fff;
+    --clr-light-searchbox-back: #fff;
+    --clr-light-searchbox-text: #555;
     --clr-light-codebox: #F5F5F5;
     --clr-light-current-selection: #8c6067;
     --clr-light-table-border: #ddd;
@@ -73,6 +75,8 @@
     --clr-light-content-highlight: #c6afb3;
     
     --clr-dark-main: #333;
+    --clr-dark-searchbox-back: #2f2f2f;
+    --clr-dark-searchbox-text: #fff;
     --clr-dark-codebox: #2f2f2f;
     --clr-dark-current-selection: #4d76ae;
     --clr-dark-table: #2f2f2f;
@@ -416,24 +420,25 @@ p a:hover { text-decoration: underline; }
     outline: none;
     border: none;
     border-radius: 1px;
-    color: #555;
+    color: var(--clr-light-searchbox-text);
+    background-color: var(--clr-light-searchbox-back);
     margin-top: 5px;
     padding: 10px 16px;
     font-size: 17px;
-    box-shadow: 0 0 0 1px #e0e0e0, 0 0 0 2px transparent;
+    box-shadow: 0 0 0 1px rgba(224, 224, 224, 1), 0 0 0 2px transparent;
     transition: border-color 300ms ease;
     transition: border-radius 300ms ease-in-out;
     transition: box-shadow 300ms ease-in-out;
+    transition: background-color 0.3s, color 0.3s;
     flex-grow: 1;
     height: 35px;
 }
 
 .search-input:focus {
-    border-color: #66afe9;
     border-radius: 2px;
     border: 0;
     outline: 0;
-    box-shadow: 0 0 8px #078dd8;
+    box-shadow: 0 0 0 1px rgba(224, 224, 224, 0.5), 0 0 8px 2px #078dd8;
 }
 
 .search-results .desc {
@@ -631,10 +636,19 @@ pre.rust { position: relative; }
 
 .dark-mode :target { background: var(--clr-dark-current-selection); }
 
+.dark-mode .search-input {
+    color: var(--clr-dark-searchbox-text);
+    background-color: var(--clr-dark-searchbox-back);
+}
+
 .sun-icon, .moon-icon {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     transition: opacity 0.3s;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
 }
 
 .moon-icon {
