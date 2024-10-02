@@ -142,10 +142,10 @@ class ClassParser(object):
     table_columns_regex = re.compile(r"\s*\*\s@columns\s*\[(.+)\]")
     table_values_regex = re.compile(r"\s*\*\s@values\s*\[(.+)\]")
     
-    param_regex = re.compile(r"""\s*\*\s@param\s    # The @param tag starts with opt. whitespace followed by "* @param ".
-                                 ([^\s]+)\s(\w+)?   # The data type, a space, and the name of the param.
-                                 (?:\s=\s(\w+))?    # The default value: a = surrounded by spaces, followed by text.
-                                 (?:\s:\s(.+))?     # The description: a colon surrounded by spaces, followed by text.
+    param_regex = re.compile(r"""\s*\*\s@param\s        # The @param tag starts with opt. whitespace followed by "* @param ".
+                                 ([^\s]+)\s(\w+)?       # The data type, a space, and the name of the param.
+                                 (?:\s=\s([^\s:]+))?    # The default value: a space, =, and a value that can include periods but stops at whitespace or a colon.
+                                 (?:\s:\s(.+))?         # The description: a colon surrounded by spaces, followed by text.
                                  """, re.X)
     # This is the same as the @param tag, minus the default value part.
     return_regex = re.compile(r"""\s*\*\s@return\s
@@ -153,9 +153,9 @@ class ClassParser(object):
                                   (?:\s:\s(.+))?
                                   """, re.X)
     proto_regex = re.compile(r"""\s*\*\s@proto\s
-                                 ([\w\s,]+)?          # The list of arguments.
-                                 (?:=\s)?             # An equals sign and a space separate the args and returns.
-                                 (?:\(([\w\s,]+)\))?  # The list of return values, in parens.
+                                 ([\w\s,]+)?            # The list of arguments.
+                                 (?:=\s)?               # An equals sign and a space separate the args and returns.
+                                 (?:\(([\w\s,]+)\))?    # The list of return values, in parens.
                                  """, re.X)
 
     comment_end_regex = re.compile(r"\s*\*/")  # The end of the comment portion, i.e. */
