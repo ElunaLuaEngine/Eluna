@@ -9,6 +9,7 @@
     <title>{% block title %}Eluna API{% endblock %}</title>
 
     <link rel="stylesheet" type="text/css" href="{{ static('main.css') }}">
+    <link rel="stylesheet" href="{{ static('highlight.css') }}">
 
     <link rel="shortcut icon" href="{{ static('favicon.ico') }}">
     
@@ -21,6 +22,8 @@
         }
     })();
     </script>
+    <script src="{{ static('highlight.min.js') }}"></script>
+    <script src="{{ static('lua.min.js') }}"></script>
 </head>
 <body class="rustdoc">
 <section class="sidebar">

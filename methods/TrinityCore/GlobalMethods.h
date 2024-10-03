@@ -1315,16 +1315,14 @@ namespace LuaGlobalFunctions
      * The query is executed asynchronously, and the provided Lua function is called when the query completes.
      * The callback function parameter is the query result (an [ElunaQuery] or nil if no rows found).
      *
-     * <pre>
-     * WorldDBQueryAsync("SELECT entry, name FROM creature_template LIMIT 10", function(results)
-     *    if results then
-     *        repeat
-     *            local entry, name = results:GetUInt32(0), results:GetString(1)
-     *            print(entry, name)
-     *        until not results:NextRow()
-     *    end
-     * end)
-     * </pre>
+     *     WorldDBQueryAsync("SELECT entry, name FROM creature_template LIMIT 10", function(results)
+     *        if results then
+     *            repeat
+     *                local entry, name = results:GetUInt32(0), results:GetString(1)
+     *                print(entry, name)
+     *            until not results:NextRow()
+     *        end
+     *     end)
      *
      * @param string sql : query to execute asynchronously
      * @param function callback : the callback function to be called with the query results

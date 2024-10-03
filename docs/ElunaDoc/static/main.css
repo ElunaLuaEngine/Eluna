@@ -164,7 +164,7 @@ code, pre {
 
 pre {
     background-color: var(--clr-light-element-highlight);
-    padding: 14px;
+    margin: 0px 0px;
 }
 
 .source pre {

@@ -15,4 +15,8 @@ themeToggle.addEventListener('click', () => {
     } else {
         localStorage.setItem('theme', '');
     }
+    
+    hljs.highlightAll();
 });
+
+hljs.highlightAll();
