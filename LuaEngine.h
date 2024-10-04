@@ -9,6 +9,7 @@
 
 #include "Common.h"
 #include "ElunaUtility.h"
+#include "ElunaStateCommunication.h"
 #include "Hooks.h"
 
 #if !defined ELUNA_CMANGOS
