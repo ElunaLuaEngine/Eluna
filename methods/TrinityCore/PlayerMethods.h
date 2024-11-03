@@ -3726,6 +3726,19 @@ namespace LuaPlayer
         return 0;
     }
 
+    /**
+     * Runs a command as the [Player].
+     *
+     * @param string command : the command to run
+     */
+    int RunCommand(Eluna* E, Player* player)
+    {
+        const char* command = E->CHECKVAL<const char*>(2);
+        if (std::string(command).length() > 0)
+            ChatHandler(player->GetSession())._ParseCommands(command);
+        return 0;
+    }
+
     ElunaRegister<Player> PlayerMethods[] =
     {
         // Getters
@@ -3989,6 +4002,7 @@ namespace LuaPlayer
         { "GroupCreate", &LuaPlayer::GroupCreate, METHOD_REG_WORLD }, // World state method only in multistate
         { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
         { "SendMovieStart", &LuaPlayer::SendMovieStart },
+        { "RunCommand", &LuaPlayer::RunCommand },
 
         // Not implemented methods
         { "GetHonorStoredKills", METHOD_REG_NONE }, // classic only
