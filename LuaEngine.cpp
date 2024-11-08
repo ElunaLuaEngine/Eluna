@@ -989,6 +989,7 @@ void Eluna::UpdateEluna(uint32 diff)
 #endif
             _ReloadEluna();
 
+    ElunaStateCommunication::Update(L);
     eventMgr->globalProcessor->Update(diff);
 #if defined ELUNA_TRINITY
     GetQueryProcessor().ProcessReadyCallbacks();
