@@ -2222,14 +2222,27 @@ namespace LuaGlobalFunctions
 
     static std::string GetStackAsString(Eluna* E)
     {
-        std::ostringstream oss;
+        std::string output;
         int top = lua_gettop(E->L);
         for (int i = 1; i <= top; ++i)
         {
-            oss << luaL_tolstring(E->L, i, NULL);
-            lua_pop(E->L, 1);
+            if (lua_isstring(E->L, i))
+            {
+                output += lua_tostring(E->L, i);
+            }
+            else
+            {
+                lua_getglobal(E->L, "tostring");
+                lua_pushvalue(E->L, i);
+                lua_call(E->L, 1, 1);
+                output += lua_tostring(E->L, -1);
+                lua_pop(E->L, 1);
+            }
+
+            if (i < top)
+                output += "\t";
         }
-        return oss.str();
+        return output;
     }
 
     /**
