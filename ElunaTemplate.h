@@ -474,8 +474,8 @@ public:
         return 1;
     }
 
-    template <typename T>
-    static int PerformBinaryOp(lua_State* L, std::function<T(T, T)> binaryOp)
+    template<typename F>
+    static int PerformBinaryOp(lua_State* L, std::function<F(F, F)> binaryOp)
     {
         Eluna* E = Eluna::GetEluna(L);
 
@@ -485,17 +485,16 @@ public:
         return 1;
     }
 
-    template <typename T>
-    static int PerformUnaryOp(lua_State* L, std::function<T(T)> unaryOp)
+    template<typename F>
+    static int PerformUnaryOp(lua_State* L, std::function<F(F)> unaryOp)
     {
         Eluna* E = Eluna::GetEluna(L);
 
-        T val1 = E->CHECKVAL<T>(1);
-        E->Push(unaryOp(val1));
+        T val = E->CHECKVAL<T>(1);
+        E->Push(unaryOp(val));
         return 1;
     }
 
-    template <typename T>
     static int ToStringHelper(lua_State* L)
     {
         Eluna* E = Eluna::GetEluna(L);
@@ -507,7 +506,6 @@ public:
         return 1;
     }
 
-    template <typename T>
     static int PowHelper(lua_State* L)
     {
         Eluna* E = Eluna::GetEluna(L);
