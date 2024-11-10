@@ -227,7 +227,7 @@ public:
         lua_setfield(L, metatable, "__add");
 
         // make new indexes saved to methods
-        lua_pushcfunction(L, Substract);
+        lua_pushcfunction(L, Subtract);
         lua_setfield(L, metatable, "__sub");
 
         // make new indexes saved to methods
@@ -477,7 +477,7 @@ public:
     static int ArithmeticError(lua_State* L) { return luaL_error(L, "attempt to perform arithmetic on a %s value", tname); }
     static int CompareError(lua_State* L) { return luaL_error(L, "attempt to compare %s", tname); }
     static int Add(lua_State* L) { return ArithmeticError(L); }
-    static int Substract(lua_State* L) { return ArithmeticError(L); }
+    static int Subtract(lua_State* L) { return ArithmeticError(L); }
     static int Multiply(lua_State* L) { return ArithmeticError(L); }
     static int Divide(lua_State* L) { return ArithmeticError(L); }
     static int Mod(lua_State* L) { return ArithmeticError(L); }
@@ -495,5 +495,49 @@ public:
 };
 
 template<typename T> const char* ElunaTemplate<T>::tname = NULL;
+
+template <typename T>
+class ElunaTemplateHelper
+{
+public:
+    static int PerformOp(lua_State* L, std::function<T(T, T)> op)
+    {
+        Eluna* E = Eluna::GetEluna(L);
+        T val1 = E->CHECKVAL<T>(1);
+        T val2 = E->CHECKVAL<T>(2);
+        E->Push(op(val1, val2));
+        return 1;
+    }
+
+    static int PerformOp(lua_State* L, std::function<T(T)> op)
+    {
+        Eluna* E = Eluna::GetEluna(L);
+
+        T val = E->CHECKVAL<T>(1);
+        E->Push(op(val));
+        return 1;
+    }
+
+    static int ToString(lua_State* L)
+    {
+        Eluna* E = Eluna::GetEluna(L);
+
+        T val = E->CHECKVAL<T>(1);
+        std::ostringstream ss;
+        ss << val;
+        E->Push(ss.str());
+        return 1;
+    }
+
+    static int Pow(lua_State* L)
+    {
+        Eluna* E = Eluna::GetEluna(L);
+
+        T val1 = E->CHECKVAL<T>(1);
+        T val2 = E->CHECKVAL<T>(2);
+        E->Push(static_cast<T>(powl(static_cast<long double>(val1), static_cast<long double>(val2))));
+        return 1;
+    }
+};
 
 #endif
