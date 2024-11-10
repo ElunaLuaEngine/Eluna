@@ -7,6 +7,7 @@
 // Eluna
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
+#include "ElunaUtility.h"
 
 // Method includes
 #include "GlobalMethods.h"
