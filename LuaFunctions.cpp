@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2023 Eluna Lua Engine <https://elunaluaengine.github.io/>
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -77,71 +77,6 @@ ElunaConstrainedObjectRef<Vehicle> GetWeakPtrFor(Vehicle const* obj)
 }
 #endif
 #endif
-
-// Template by Mud from http://stackoverflow.com/questions/4484437/lua-integer-type/4485511#4485511
-template<> int ElunaTemplate<unsigned long long>::Add(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) + E->CHECKVAL<unsigned long long>(2)); return 1; }
-template<> int ElunaTemplate<unsigned long long>::Substract(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) - E->CHECKVAL<unsigned long long>(2)); return 1; }
-template<> int ElunaTemplate<unsigned long long>::Multiply(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) * E->CHECKVAL<unsigned long long>(2)); return 1; }
-template<> int ElunaTemplate<unsigned long long>::Divide(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) / E->CHECKVAL<unsigned long long>(2)); return 1; }
-template<> int ElunaTemplate<unsigned long long>::Mod(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) % E->CHECKVAL<unsigned long long>(2)); return 1; }
-// template<> int ElunaTemplate<unsigned long long>::UnaryMinus(lua_State* L) { Eluna::GetEluna(L)->Push(-E->CHECKVAL<unsigned long long>(L, 1)); return 1; }
-template<> int ElunaTemplate<unsigned long long>::Equal(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) == E->CHECKVAL<unsigned long long>(2)); return 1; }
-template<> int ElunaTemplate<unsigned long long>::Less(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) < E->CHECKVAL<unsigned long long>(2)); return 1; }
-template<> int ElunaTemplate<unsigned long long>::LessOrEqual(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<unsigned long long>(1) <= E->CHECKVAL<unsigned long long>(2)); return 1; }
-template<> int ElunaTemplate<unsigned long long>::Pow(lua_State* L)
-{
-    Eluna* E = Eluna::GetEluna(L);
-    E->Push(static_cast<unsigned long long>(powl(static_cast<long double>(E->CHECKVAL<unsigned long long>(1)), static_cast<long double>(E->CHECKVAL<unsigned long long>(2)))));
-    return 1;
-}
-template<> int ElunaTemplate<unsigned long long>::ToString(lua_State* L)
-{
-    Eluna* E = Eluna::GetEluna(L);
-
-    unsigned long long l = E->CHECKVAL<unsigned long long>(1);
-    std::ostringstream ss;
-    ss << l;
-    E->Push(ss.str());
-    return 1;
-}
-
-template<> int ElunaTemplate<long long>::Add(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<long long>(1) + E->CHECKVAL<long long>(2)); return 1; }
-template<> int ElunaTemplate<long long>::Substract(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<long long>(1) - E->CHECKVAL<long long>(2)); return 1; }
-template<> int ElunaTemplate<long long>::Multiply(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<long long>(1) * E->CHECKVAL<long long>(2)); return 1; }
-template<> int ElunaTemplate<long long>::Divide(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<long long>(1) / E->CHECKVAL<long long>(2)); return 1; }
-template<> int ElunaTemplate<long long>::Mod(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<long long>(1) % E->CHECKVAL<long long>(2)); return 1; }
-template<> int ElunaTemplate<long long>::UnaryMinus(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(-E->CHECKVAL<long long>(1)); return 1; }
-template<> int ElunaTemplate<long long>::Equal(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<long long>(1) == E->CHECKVAL<long long>(2)); return 1; }
-template<> int ElunaTemplate<long long>::Less(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<long long>(1) < E->CHECKVAL<long long>(2)); return 1; }
-template<> int ElunaTemplate<long long>::LessOrEqual(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<long long>(1) <= E->CHECKVAL<long long>(2)); return 1; }
-template<> int ElunaTemplate<long long>::Pow(lua_State* L)
-{
-    Eluna* E = Eluna::GetEluna(L);
-    E->Push(static_cast<long long>(powl(static_cast<long double>(E->CHECKVAL<long long>(1)), static_cast<long double>(E->CHECKVAL<long long>(2)))));
-    return 1;
-}
-template<> int ElunaTemplate<long long>::ToString(lua_State* L)
-{
-    Eluna* E = Eluna::GetEluna(L);
-
-    long long l = E->CHECKVAL<long long>(1);
-    std::ostringstream ss;
-    ss << l;
-    E->Push(ss.str());
-    return 1;
-}
-
-template<> int ElunaTemplate<ObjectGuid>::Equal(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<ObjectGuid>(1) == E->CHECKVAL<ObjectGuid>(2)); return 1; }
-template<> int ElunaTemplate<ObjectGuid>::ToString(lua_State* L)
-{
-    Eluna* E = Eluna::GetEluna(L);
-#if defined ELUNA_TRINITY
-    E->Push(E->CHECKVAL<ObjectGuid>(1).ToString());
-#else
-    E->Push(E->CHECKVAL<ObjectGuid>(1).GetString());
-#endif
-    return 1;
-}
 
 void RegisterFunctions(Eluna* E)
 {
@@ -224,4 +159,39 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<ObjectGuid>::Register(E, "ObjectGuid");
 
     LuaVal::Register(E->L);
+}
+
+template<> int ElunaTemplate<unsigned long long>::Add(lua_State* L) { return PerformBinaryOp<unsigned long long>(L, std::plus<unsigned long long>()); }
+template<> int ElunaTemplate<unsigned long long>::Subtract(lua_State* L) { return PerformBinaryOp<unsigned long long>(L, std::minus<unsigned long long>()); }
+template<> int ElunaTemplate<unsigned long long>::Multiply(lua_State* L) { return PerformBinaryOp<unsigned long long>(L, std::multiplies<unsigned long long>()); }
+template<> int ElunaTemplate<unsigned long long>::Divide(lua_State* L) { return PerformBinaryOp<unsigned long long>(L, std::divides<unsigned long long>()); }
+template<> int ElunaTemplate<unsigned long long>::Mod(lua_State* L) { return PerformBinaryOp<unsigned long long>(L, std::modulus<unsigned long long>()); }
+template<> int ElunaTemplate<unsigned long long>::Equal(lua_State* L) { return PerformBinaryOp<unsigned long long>(L, std::equal_to<unsigned long long>()); }
+template<> int ElunaTemplate<unsigned long long>::Less(lua_State* L) { return PerformBinaryOp<unsigned long long>(L, std::less<unsigned long long>()); }
+template<> int ElunaTemplate<unsigned long long>::LessOrEqual(lua_State* L) { return PerformBinaryOp<unsigned long long>(L, std::less_equal<unsigned long long>()); }
+template<> int ElunaTemplate<unsigned long long>::ToString(lua_State* L) { return ToStringHelper<unsigned long long>(L); }
+template<> int ElunaTemplate<unsigned long long>::Pow(lua_State* L) { return PowHelper<unsigned long long>(L); }
+
+template<> int ElunaTemplate<long long>::Add(lua_State* L) { return PerformBinaryOp<long long>(L, std::plus<long long>()); }
+template<> int ElunaTemplate<long long>::Subtract(lua_State* L) { return PerformBinaryOp<long long>(L, std::minus<long long>()); }
+template<> int ElunaTemplate<long long>::Multiply(lua_State* L) { return PerformBinaryOp<long long>(L, std::multiplies<long long>()); }
+template<> int ElunaTemplate<long long>::Divide(lua_State* L) { return PerformBinaryOp<long long>(L, std::divides<long long>()); }
+template<> int ElunaTemplate<long long>::Mod(lua_State* L) { return PerformBinaryOp<long long>(L, std::modulus<long long>()); }
+template<> int ElunaTemplate<long long>::UnaryMinus(lua_State* L) { return PerformUnaryOp<long long>(L, std::negate<long long>()); }
+template<> int ElunaTemplate<long long>::Equal(lua_State* L) { return PerformBinaryOp<long long>(L, std::equal_to<long long>()); }
+template<> int ElunaTemplate<long long>::Less(lua_State* L) { return PerformBinaryOp<long long>(L, std::less<long long>()); }
+template<> int ElunaTemplate<long long>::LessOrEqual(lua_State* L) { return PerformBinaryOp<long long>(L, std::less_equal<long long>()); }
+template<> int ElunaTemplate<long long>::ToString(lua_State* L) { return ToStringHelper<long long>(L); }
+template<> int ElunaTemplate<long long>::Pow(lua_State* L) { return PowHelper<long long>(L); }
+
+template<> int ElunaTemplate<ObjectGuid>::Equal(lua_State* L) { Eluna* E = Eluna::GetEluna(L); E->Push(E->CHECKVAL<ObjectGuid>(1) == E->CHECKVAL<ObjectGuid>(2)); return 1; }
+template<> int ElunaTemplate<ObjectGuid>::ToString(lua_State* L)
+{
+    Eluna* E = Eluna::GetEluna(L);
+#if defined ELUNA_TRINITY
+    E->Push(E->CHECKVAL<ObjectGuid>(1).ToString());
+#else
+    E->Push(E->CHECKVAL<ObjectGuid>(1).GetString());
+#endif
+    return 1;
 }

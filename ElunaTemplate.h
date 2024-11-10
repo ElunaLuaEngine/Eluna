@@ -227,7 +227,7 @@ public:
         lua_setfield(L, metatable, "__add");
 
         // make new indexes saved to methods
-        lua_pushcfunction(L, Substract);
+        lua_pushcfunction(L, Subtract);
         lua_setfield(L, metatable, "__sub");
 
         // make new indexes saved to methods
@@ -474,10 +474,54 @@ public:
         return 1;
     }
 
+    template <typename T>
+    static int PerformBinaryOp(lua_State* L, std::function<T(T, T)> binaryOp)
+    {
+        Eluna* E = Eluna::GetEluna(L);
+
+        T val1 = E->CHECKVAL<T>(1);
+        T val2 = E->CHECKVAL<T>(2);
+        E->Push(binaryOp(val1, val2));
+        return 1;
+    }
+
+    template <typename T>
+    static int PerformUnaryOp(lua_State* L, std::function<T(T)> unaryOp)
+    {
+        Eluna* E = Eluna::GetEluna(L);
+
+        T val1 = E->CHECKVAL<T>(1);
+        E->Push(unaryOp(val1));
+        return 1;
+    }
+
+    template <typename T>
+    static int ToStringHelper(lua_State* L)
+    {
+        Eluna* E = Eluna::GetEluna(L);
+
+        T val = E->CHECKVAL<T>(1);
+        std::ostringstream ss;
+        ss << val;
+        E->Push(ss.str());
+        return 1;
+    }
+
+    template <typename T>
+    static int PowHelper(lua_State* L)
+    {
+        Eluna* E = Eluna::GetEluna(L);
+
+        T val1 = E->CHECKVAL<T>(1);
+        T val2 = E->CHECKVAL<T>(2);
+        E->Push(static_cast<T>(powl(static_cast<long double>(val1), static_cast<long double>(val2))));
+        return 1;
+    }
+
     static int ArithmeticError(lua_State* L) { return luaL_error(L, "attempt to perform arithmetic on a %s value", tname); }
     static int CompareError(lua_State* L) { return luaL_error(L, "attempt to compare %s", tname); }
     static int Add(lua_State* L) { return ArithmeticError(L); }
-    static int Substract(lua_State* L) { return ArithmeticError(L); }
+    static int Subtract(lua_State* L) { return ArithmeticError(L); }
     static int Multiply(lua_State* L) { return ArithmeticError(L); }
     static int Divide(lua_State* L) { return ArithmeticError(L); }
     static int Mod(lua_State* L) { return ArithmeticError(L); }
