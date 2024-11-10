@@ -27,7 +27,7 @@ extern "C"
 // Additional lua libraries
 };
 
-extern void RegisterMethods(Eluna* E);
+extern void RegisterFunctions(Eluna* E);
 
 void Eluna::_ReloadEluna()
 {
@@ -146,7 +146,7 @@ void Eluna::OpenLua()
     luaL_openlibs(L);
 
     // Register methods and functions
-    RegisterMethods(this);
+    RegisterFunctions(this);
 
     // get require paths
     const std::string& requirepath = sElunaLoader->GetRequirePath();
