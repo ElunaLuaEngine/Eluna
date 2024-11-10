@@ -29,7 +29,7 @@
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
 
-void RegisterFunctions(Eluna* E)
+void RegisterMethods(Eluna* E)
 {
     ElunaTemplate<>::SetMethods(E, LuaGlobalFunctions::GlobalMethods);
 
