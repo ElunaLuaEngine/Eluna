@@ -1,18 +1,15 @@
 ### [![Eluna](docs/Eluna.png)](https://github.com/ElunaLuaEngine/Eluna)
+# Eluna Lua Engine
 
-## About
+__Eluna Lua Engine__ is an embedded Lua scripting engine designed for World of Warcraft emulators. It provides powerful scripting capabilities and supports several popular emulators, including MaNGOS, CMaNGOS and TrinityCore.
 
-Eluna Lua Engine &copy; is a lua engine embedded to World of Warcraft emulators. Eluna supports MaNGOS, CMaNGOS, TrinityCore and AzerothCore.
-We are currently working hard to make Eluna better from inside and outside.  
+We are continually working to improve Eluna's functionality and performance, and strive to deliver an extensive, intuitive and unified scripting experience across emulators.
 
-If you are having trouble with installation or scripts, please feel free to open an issue.
-For documentation and reference see [Eluna API](http://elunaluaengine.github.io/) and [Lua reference manual](http://www.lua.org/manual/5.2/).
-
-Special thanks to [MaNGOS](http://getmangos.eu/) for their continued support and use of Eluna. Please head over to their forums and show them some love!
+If you encounter any issues during installation or while working on scripts, please feel free to [open an issue](https://github.com/ElunaLuaEngine/Eluna/issues) or join our community Discord server.
 
 ## Community
 
-You can join the official Eluna Discord server, where you'll be able to find resources, releases and support provided by the community.
+Join the official Eluna Discord server to connect with other community members, access resources and releases, and receive support. 
 
 <a href="https://discord.gg/bjkCVWqqfX">
     <img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" />
@@ -20,51 +17,46 @@ You can join the official Eluna Discord server, where you'll be able to find res
 
 ## Documentation
 
-* [__Installation__](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/INSTALL.md)
-* [Getting started](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/USAGE.md)
-* [Eluna features](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/IMPL_DETAILS.md)
-* [Function documentation](http://elunaluaengine.github.io/)
-* [Hook documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/hooks/Hooks.h)
-* [Lua reference manual](http://www.lua.org/manual/5.2/)
-* [Discord - support, releases, guides](https://discord.gg/bjkCVWqqfX)
-* [Example scripts](https://github.com/ElunaLuaEngine/Scripts)
-* [Contributing](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/CONTRIBUTING.md)
+For comprehensive information on using Eluna, please refer to the resources below:
+
+* [Eluna API Documentation](http://elunaluaengine.github.io/) – Detailed API documentation.
+* [Lua Reference Manual](http://www.lua.org/manual/5.2/) – Official Lua 5.2 reference manual.
+
+### Additional Resources
+
+* [Installation Guide](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/INSTALL.md) – Step-by-step installation instructions.
+* [Getting Started](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/USAGE.md) – Basic usage and examples.
+* [Eluna Features](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/IMPL_DETAILS.md) – Overview of key features and implementation details.
+* [Hook Documentation](https://github.com/ElunaLuaEngine/Eluna/blob/master/hooks/Hooks.h) – Documentation of available hooks.
+* [Example Scripts](https://github.com/ElunaLuaEngine/Scripts) – Sample scripts to get you started.
+* [Contributing Guide](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/CONTRIBUTING.md) – Instructions for contributing to Eluna.
 
 ## Source
-Eluna source code: [Source](https://github.com/ElunaLuaEngine/Eluna)
 
-Core sources and forks with required modifications for Eluna:
+The Eluna source code is available on GitHub:
 
-[TrinityCore WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk) [![automerge](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk/actions/workflows/auto-merge.yml/badge.svg)](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk/actions/workflows/auto-merge.yml)
+- [Eluna Source](https://github.com/ElunaLuaEngine/Eluna)
 
-[Official MaNGOS Zero with Eluna](https://github.com/mangoszero/server)  
-[Official MaNGOS One with Eluna](https://github.com/mangosone/server)  
-[Official MaNGOS Two with Eluna](https://github.com/mangostwo/server)
+### Emulator sources and forks
 
-[Eluna cMaNGOS Classic](https://github.com/Niam5/Eluna-CMaNGOS-Classic) - maintained by [Niam5](https://github.com/Niam5)  
-[Eluna cMaNGOS TBC](https://github.com/Niam5/Eluna-CMaNGOS-TBC) - maintained by [Niam5](https://github.com/Niam5)  
-[Eluna cMaNGOS WoTLK](https://github.com/Niam5/Eluna-CMaNGOS-WotLK) - maintained by [Niam5](https://github.com/Niam5)  
+Below are the emulator sources and specific forks that include the required modifications for Eluna compatibility:
 
-[AzerothCore Eluna Module](https://github.com/azerothcore/mod-eluna)
+- **TrinityCore with Eluna** - Maintained by us!
+    - [WotLK](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk) [![automerge](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk/actions/workflows/auto-merge.yml/badge.svg)](https://github.com/ElunaLuaEngine/ElunaTrinityWotlk/actions/workflows/auto-merge.yml)
 
-## Links
+- **MaNGOS with Eluna**
+  - [Vanilla](https://github.com/mangoszero/server)  
+  - [TBC](https://github.com/mangosone/server)  
+  - [WoTLK](https://github.com/mangostwo/server)  
 
-* [MaNGOS](http://getmangos.eu/)
-* [cMaNGOS](http://cmangos.net/)
-* [TrinityCore](http://www.trinitycore.org/)
-* [AzerothCore](http://www.azerothcore.org/)
-* [Lua.org](http://www.lua.org/)
-* [License](https://github.com/ElunaLuaEngine/Eluna/blob/master/docs/LICENSE.md)
+- **cMaNGOS with Eluna** – Maintained by __[Niam5](https://github.com/Niam5)__
+  - [Vanilla](https://github.com/Niam5/Eluna-CMaNGOS-Classic)
+  - [TBC](https://github.com/Niam5/Eluna-CMaNGOS-TBC)
+  - [WoTLK](https://github.com/Niam5/Eluna-CMaNGOS-WotLK)
 
-## Current maintainers
+- **AzerothCore Eluna Module** - Third party fork maintained by AzerothCore
+  - [AzerothCore Eluna Module](https://github.com/azerothcore/mod-eluna)
 
-* [Rochet2](https://github.com/Rochet2)
-* [Foereaper](https://github.com/Foereaper)
-* [TB](https://github.com/Terrorblade)
-* [Niam5](https://github.com/Niam5)
+## License
 
-## Former maintainers
-
-* [Tommy (Easelm)](https://github.com/Easelm)
-* [Salja](https://github.com/Salja)
-* [Patman64](https://github.com/Patman64)
+This project is licensed under the terms described in the [LICENSE](https://github.com/ElunaLuaEngine/Eluna/blob/master/LICENSE) file.
