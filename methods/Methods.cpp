@@ -115,8 +115,8 @@ void RegisterMethods(Eluna* E)
 
     ElunaTemplate<ObjectGuid>::Register(E, "ObjectGuid");
 
-    // Register custom functions
-    LuaCustom::RegisterCustomFunctions(E);
+    // Register custom methods
+    LuaCustom::RegisterCustomMethods(E);
 
     LuaVal::Register(E->L);
 }

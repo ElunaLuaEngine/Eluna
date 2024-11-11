@@ -18,7 +18,7 @@
 namespace LuaCustom
 {
     // See the CustomMethods header file in the TC method directory for an example.
-    inline void RegisterCustomFunctions([[maybe_unused]] Eluna* E)
+    inline void RegisterCustomMethods([[maybe_unused]] Eluna* E)
     {
 
     };

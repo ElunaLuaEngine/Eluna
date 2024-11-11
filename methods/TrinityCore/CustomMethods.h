@@ -31,7 +31,7 @@ namespace LuaCustom
         { "CustomPlayerMethod", &LuaCustom::CustomPlayerMethod },
     };
 
-    inline void RegisterCustomFunctions([[maybe_unused]] Eluna* E)
+    inline void RegisterCustomMethods([[maybe_unused]] Eluna* E)
     {
         // Append all the custom Player methods to the Player object
         ElunaTemplate<Player>::SetMethods(E, CustomPlayerMethods);
