@@ -32,6 +32,9 @@
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
 
+// Custom methods
+#include "CustomMethods.h"
+
 void RegisterMethods(Eluna* E)
 {
     ElunaTemplate<>::SetMethods(E, LuaGlobalFunctions::GlobalMethods);
@@ -111,6 +114,9 @@ void RegisterMethods(Eluna* E)
     ElunaTemplate<unsigned long long>::Register(E, "unsigned long long");
 
     ElunaTemplate<ObjectGuid>::Register(E, "ObjectGuid");
+
+    // Register custom functions
+    LuaCustom::RegisterCustomFunctions(E);
 
     LuaVal::Register(E->L);
 }
