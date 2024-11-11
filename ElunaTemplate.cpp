@@ -5,8 +5,10 @@
 */
 
 // Eluna
+#include "LuaEngine.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
+#include "ElunaUtility.h"
 
 #if defined TRACKABLE_PTR_NAMESPACE
 ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj)
