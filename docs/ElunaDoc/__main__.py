@@ -19,8 +19,8 @@ def find_class_files(search_path):
     # Get the current working dir and switch to the search path.
     old_dir = os.getcwd()
     os.chdir(search_path)
-    # Search for all files ending in "Methods.h".
-    method_file_names = glob.glob('*Methods.h')
+    # Search for all files ending in "Methods.h", and exclude CustomMethods.h
+    method_file_names = [file_name for file_name in glob.glob('*Methods.h') if file_name != 'CustomMethods.h']
     # Open each file.
     method_files = [open(file_name, 'r') for file_name in method_file_names]
     # Go back to where we were before.
