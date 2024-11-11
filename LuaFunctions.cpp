@@ -31,6 +31,7 @@
 #include "CorpseMethods.h"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
+#include "LootMethods.h"
 
 #if defined TRACKABLE_PTR_NAMESPACE
 ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj)
@@ -181,6 +182,9 @@ void RegisterFunctions(Eluna* E)
 
     ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery");
     ElunaTemplate<ElunaQuery>::SetMethods(E, LuaQuery::QueryMethods);
+
+    ElunaTemplate<Loot>::Register(E, "ElunaLoot");
+    ElunaTemplate<Loot>::SetMethods(E, LuaLoot::LootMethods);
 
     ElunaTemplate<long long>::Register(E, "long long");
 
