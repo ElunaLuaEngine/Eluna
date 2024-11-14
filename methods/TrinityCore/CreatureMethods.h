@@ -767,7 +767,6 @@ namespace LuaCreature
      *
      * @table
      * @columns [SpellSchoolMask, ID]
-     * enum SpellSchoolMask
      * @values [SPELL_SCHOOL_MASK_NONE, 0]
      * @values [SPELL_SCHOOL_MASK_NORMAL, 1]
      * @values [SPELL_SCHOOL_MASK_HOLY, 2]
