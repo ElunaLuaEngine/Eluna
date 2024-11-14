@@ -259,14 +259,11 @@ namespace LuaGroup
     /**
      * Returns the [Group] members' flags
      *
-     * <pre>
-     * enum GroupMemberFlags
-     * {
-     *     MEMBER_FLAG_ASSISTANT   = 1,
-     *     MEMBER_FLAG_MAINTANK    = 2,
-     *     MEMBER_FLAG_MAINASSIST  = 4
-     * };
-     * </pre>
+     * @table
+     * @columns [GroupMemberFlags, ID]
+     * @values [MEMBER_FLAG_ASSISTANT, 1]
+     * @values [MEMBER_FLAG_MAINTANK, 2]
+     * @values [MEMBER_FLAG_MAINASSIST, 4]
      *
      * @param ObjectGuid guid : guid of the player
      * @return uint8 flags
@@ -315,15 +312,12 @@ namespace LuaGroup
      *
      * In multistate, this method is only available in the WORLD state
      *
-     * <pre>
-     * enum RemoveMethod
-     * {
-     *     GROUP_REMOVEMETHOD_DEFAULT  = 0,
-     *     GROUP_REMOVEMETHOD_KICK     = 1,
-     *     GROUP_REMOVEMETHOD_LEAVE    = 2,
-     *     GROUP_REMOVEMETHOD_KICK_LFG = 3
-     * };
-     * </pre>
+     * @table
+     * @columns [RemoveMethod, ID]
+     * @values [GROUP_REMOVEMETHOD_DEFAULT, 0]
+     * @values [GROUP_REMOVEMETHOD_KICK, 1]
+     * @values [GROUP_REMOVEMETHOD_LEAVE, 2]
+     * @values [GROUP_REMOVEMETHOD_KICK_LFG, 3]
      *
      * @param ObjectGuid guid : guid of the player to remove
      * @param [RemoveMethod] method : method used to remove the player
@@ -414,7 +408,6 @@ namespace LuaGroup
      * Converts the [Group] to a LFG group
      *
      * In multistate, this method is only available in the WORLD state
-     *
      */
     int ConvertToLFG(Eluna* /*E*/, Group* group)
     {
@@ -427,14 +420,11 @@ namespace LuaGroup
      *
      * In multistate, this method is only available in the WORLD state
      *
-     * <pre>
-     * enum GroupMemberFlags
-     * {
-     *     MEMBER_FLAG_ASSISTANT   = 1,
-     *     MEMBER_FLAG_MAINTANK    = 2,
-     *     MEMBER_FLAG_MAINASSIST  = 4
-     * };
-     * </pre>
+     * @table
+     * @columns [GroupMemberFlags, ID]
+     * @values [MEMBER_FLAG_ASSISTANT, 1]
+     * @values [MEMBER_FLAG_MAINTANK, 2]
+     * @values [MEMBER_FLAG_MAINASSIST, 4]
      *
      * @param ObjectGuid target : GUID of the target
      * @param bool apply : add the `flag` if `true`, remove the `flag` otherwise
