@@ -4077,7 +4077,9 @@ namespace LuaPlayer
         { "ResetHonor", METHOD_REG_NONE },  // classic only
         { "ClearHonorInfo", METHOD_REG_NONE },  // classic only
         { "GetXP", METHOD_REG_NONE }, // not implemented
-        { "GetXPForNextLevel", METHOD_REG_NONE } // not implemented
+        { "GetXPForNextLevel", METHOD_REG_NONE }, // not implemented
+        { "HasRecruited", METHOD_REG_NONE }, // not implemented
+        { "IsRecruited", METHOD_REG_NONE } // not implemented
     };
 };
 #endif
