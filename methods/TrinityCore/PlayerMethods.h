@@ -468,6 +468,12 @@ namespace LuaPlayer
         return 1;
     }
 
+    /**
+     * Returns whether or not the [Player]s [Group] is visible for the other specific [Player].
+     *
+     * @param [Player] player
+     * @return bool isGroupVisible
+     */
     int IsGroupVisibleFor(Eluna* E, Player* player)
     {
         Player* target = E->CHECKOBJ<Player>(2);
