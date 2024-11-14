@@ -765,19 +765,17 @@ namespace LuaCreature
     /**
      * Adds threat to the [Creature] from the victim.
      *
-     * <pre>
+     * @table
+     * @columns [SpellSchoolMask, ID]
      * enum SpellSchoolMask
-     * {
-     *     SPELL_SCHOOL_MASK_NONE    = 0,
-     *     SPELL_SCHOOL_MASK_NORMAL  = 1,
-     *     SPELL_SCHOOL_MASK_HOLY    = 2,
-     *     SPELL_SCHOOL_MASK_FIRE    = 4,
-     *     SPELL_SCHOOL_MASK_NATURE  = 8,
-     *     SPELL_SCHOOL_MASK_FROST   = 16,
-     *     SPELL_SCHOOL_MASK_SHADOW  = 32,
-     *     SPELL_SCHOOL_MASK_ARCANE  = 64,
-     * }
-     * </pre>
+     * @values [SPELL_SCHOOL_MASK_NONE, 0]
+     * @values [SPELL_SCHOOL_MASK_NORMAL, 1]
+     * @values [SPELL_SCHOOL_MASK_HOLY, 2]
+     * @values [SPELL_SCHOOL_MASK_FIRE, 4]
+     * @values [SPELL_SCHOOL_MASK_NATURE, 8]
+     * @values [SPELL_SCHOOL_MASK_FROST, 16]
+     * @values [SPELL_SCHOOL_MASK_SHADOW, 32]
+     * @values [SPELL_SCHOOL_MASK_ARCANE, 64]
      *
      * @param [Unit] victim : [Unit] that caused the threat
      * @param float threat : threat amount
@@ -914,14 +912,14 @@ namespace LuaCreature
     /**
      * Returns the loot mode for the [Creature].
      *
-     * <pre>
-     *   LOOT_MODE_DEFAULT          = 1,
-     *   LOOT_MODE_HARD_MODE_1      = 2,
-     *   LOOT_MODE_HARD_MODE_2      = 4,
-     *   LOOT_MODE_HARD_MODE_3      = 8,
-     *   LOOT_MODE_HARD_MODE_4      = 16,
-     *   LOOT_MODE_JUNK_FISH        = 32768
-     * </pre>
+     * @table
+     * @columns [Mode, ID]
+     * @values [LOOT_MODE_DEFAULT, 1]
+     * @values [LOOT_MODE_HARD_MODE_1, 2]
+     * @values [LOOT_MODE_HARD_MODE_2, 4]
+     * @values [LOOT_MODE_HARD_MODE_3, 8]
+     * @values [LOOT_MODE_HARD_MODE_4, 16]
+     * @values [LOOT_MODE_JUNK_FISH, 32768]
      *
      * @return uint16 lootMode
      */
@@ -984,14 +982,14 @@ namespace LuaCreature
     /**
      * Sets the loot mode for the [Creature].
      *
-     * <pre>
-     *   LOOT_MODE_DEFAULT          = 1,
-     *   LOOT_MODE_HARD_MODE_1      = 2,
-     *   LOOT_MODE_HARD_MODE_2      = 4,
-     *   LOOT_MODE_HARD_MODE_3      = 8,
-     *   LOOT_MODE_HARD_MODE_4      = 16,
-     *   LOOT_MODE_JUNK_FISH        = 32768
-     * </pre>
+     * @table
+     * @columns [Mode, ID]
+     * @values [LOOT_MODE_DEFAULT, 1]
+     * @values [LOOT_MODE_HARD_MODE_1, 2]
+     * @values [LOOT_MODE_HARD_MODE_2, 4]
+     * @values [LOOT_MODE_HARD_MODE_3, 8]
+     * @values [LOOT_MODE_HARD_MODE_4, 16]
+     * @values [LOOT_MODE_JUNK_FISH, 32768]
      * 
      * @param uint16 lootMode
      */
@@ -1327,54 +1325,51 @@ namespace LuaCreature
     /**
      * Returns the [Creature]'s creature family ID (enumerated in CreatureFamily.dbc).
      *
-     * <pre>
-     * enum CreatureFamily
-     * {
-     *     CREATURE_FAMILY_NONE                = 0,    // TrinityCore only
-     *     CREATURE_FAMILY_WOLF                = 1,
-     *     CREATURE_FAMILY_CAT                 = 2,
-     *     CREATURE_FAMILY_SPIDER              = 3,
-     *     CREATURE_FAMILY_BEAR                = 4,
-     *     CREATURE_FAMILY_BOAR                = 5,
-     *     CREATURE_FAMILY_CROCOLISK           = 6,
-     *     CREATURE_FAMILY_CARRION_BIRD        = 7,
-     *     CREATURE_FAMILY_CRAB                = 8,
-     *     CREATURE_FAMILY_GORILLA             = 9,
-     *     CREATURE_FAMILY_HORSE_CUSTOM        = 10,   // Does not exist in DBC but used for horse like beasts in DB
-     *     CREATURE_FAMILY_RAPTOR              = 11,
-     *     CREATURE_FAMILY_TALLSTRIDER         = 12,
-     *     CREATURE_FAMILY_FELHUNTER           = 15,
-     *     CREATURE_FAMILY_VOIDWALKER          = 16,
-     *     CREATURE_FAMILY_SUCCUBUS            = 17,
-     *     CREATURE_FAMILY_DOOMGUARD           = 19,
-     *     CREATURE_FAMILY_SCORPID             = 20,
-     *     CREATURE_FAMILY_TURTLE              = 21,
-     *     CREATURE_FAMILY_IMP                 = 23,
-     *     CREATURE_FAMILY_BAT                 = 24,
-     *     CREATURE_FAMILY_HYENA               = 25,
-     *     CREATURE_FAMILY_BIRD_OF_PREY        = 26,   // Named CREATURE_FAMILY_OWL in Mangos
-     *     CREATURE_FAMILY_WIND_SERPENT        = 27,
-     *     CREATURE_FAMILY_REMOTE_CONTROL      = 28,
-     *     CREATURE_FAMILY_FELGUARD            = 29,   // This and below is TBC+
-     *     CREATURE_FAMILY_DRAGONHAWK          = 30,
-     *     CREATURE_FAMILY_RAVAGER             = 31,
-     *     CREATURE_FAMILY_WARP_STALKER        = 32,
-     *     CREATURE_FAMILY_SPOREBAT            = 33,
-     *     CREATURE_FAMILY_NETHER_RAY          = 34,
-     *     CREATURE_FAMILY_SERPENT             = 35,
-     *     CREATURE_FAMILY_SEA_LION            = 36,   // TBC only
-     *     CREATURE_FAMILY_MOTH                = 37,   // This and below is WotLK+
-     *     CREATURE_FAMILY_CHIMAERA            = 38,
-     *     CREATURE_FAMILY_DEVILSAUR           = 39,
-     *     CREATURE_FAMILY_GHOUL               = 40,
-     *     CREATURE_FAMILY_SILITHID            = 41,
-     *     CREATURE_FAMILY_WORM                = 42,
-     *     CREATURE_FAMILY_RHINO               = 43,
-     *     CREATURE_FAMILY_WASP                = 44,
-     *     CREATURE_FAMILY_CORE_HOUND          = 45,
-     *     CREATURE_FAMILY_SPIRIT_BEAST        = 46
-     * };
-     * </pre>
+     * @table
+     * @columns [CreatureFamily, ID, Comment]
+     * @values [CREATURE_FAMILY_NONE, 0,  "TrinityCore only"]
+     * @values [CREATURE_FAMILY_WOLF, 1,  ""]
+     * @values [CREATURE_FAMILY_CAT, 2,  ""]
+     * @values [CREATURE_FAMILY_SPIDER, 3,  ""]
+     * @values [CREATURE_FAMILY_BEAR, 4,  ""]
+     * @values [CREATURE_FAMILY_BOAR, 5,  ""]
+     * @values [CREATURE_FAMILY_CROCOLISK, 6,  ""]
+     * @values [CREATURE_FAMILY_CARRION_BIRD, 7,  ""]
+     * @values [CREATURE_FAMILY_CRAB, 8,  ""]
+     * @values [CREATURE_FAMILY_GORILLA, 9,  ""]
+     * @values [CREATURE_FAMILY_HORSE_CUSTOM, 10, "Does not exist in DBC but used for horse like beasts in DB"]
+     * @values [CREATURE_FAMILY_RAPTOR, 11, ""]
+     * @values [CREATURE_FAMILY_TALLSTRIDER, 12, ""]
+     * @values [CREATURE_FAMILY_FELHUNTER, 15, ""]
+     * @values [CREATURE_FAMILY_VOIDWALKER, 16, ""]
+     * @values [CREATURE_FAMILY_SUCCUBUS, 17, ""]
+     * @values [CREATURE_FAMILY_DOOMGUARD, 19, ""]
+     * @values [CREATURE_FAMILY_SCORPID, 20, ""]
+     * @values [CREATURE_FAMILY_TURTLE, 21, ""]
+     * @values [CREATURE_FAMILY_IMP, 23, ""]
+     * @values [CREATURE_FAMILY_BAT, 24, ""]
+     * @values [CREATURE_FAMILY_HYENA, 25, ""]
+     * @values [CREATURE_FAMILY_BIRD_OF_PREY, 26, "Named CREATURE_FAMILY_OWL in Mangos"]
+     * @values [CREATURE_FAMILY_WIND_SERPENT, 27, ""]
+     * @values [CREATURE_FAMILY_REMOTE_CONTROL, 28, ""]
+     * @values [CREATURE_FAMILY_FELGUARD, 29, "This and below is TBC+"]
+     * @values [CREATURE_FAMILY_DRAGONHAWK, 30, ""]
+     * @values [CREATURE_FAMILY_RAVAGER, 31, ""]
+     * @values [CREATURE_FAMILY_WARP_STALKER, 32, ""]
+     * @values [CREATURE_FAMILY_SPOREBAT, 33, ""]
+     * @values [CREATURE_FAMILY_NETHER_RAY, 34, ""]
+     * @values [CREATURE_FAMILY_SERPENT, 35, ""]
+     * @values [CREATURE_FAMILY_SEA_LION, 36, "TBC only"]
+     * @values [CREATURE_FAMILY_MOTH, 37, "This and below is WotLK+"]
+     * @values [CREATURE_FAMILY_CHIMAERA, 38, ""]
+     * @values [CREATURE_FAMILY_DEVILSAUR, 39, ""]
+     * @values [CREATURE_FAMILY_GHOUL, 40, ""]
+     * @values [CREATURE_FAMILY_SILITHID, 41, ""]
+     * @values [CREATURE_FAMILY_WORM, 42, ""]
+     * @values [CREATURE_FAMILY_RHINO, 43, ""]
+     * @values [CREATURE_FAMILY_WASP, 44, ""]
+     * @values [CREATURE_FAMILY_CORE_HOUND, 45, ""]
+     * @values [CREATURE_FAMILY_SPIRIT_BEAST, 46, ""]
      *
      * @return [CreatureFamily] creatureFamily
      */

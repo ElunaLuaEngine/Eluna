@@ -15,40 +15,40 @@ namespace LuaUnit
     /**
     * Sets a mechanic immunity for the [Unit].
     *
-    * <pre>
-    *   MECHANIC_NONE             = 0,
-    *   MECHANIC_CHARM            = 1,
-    *   MECHANIC_DISORIENTED      = 2,
-    *   MECHANIC_DISARM           = 3,
-    *   MECHANIC_DISTRACT         = 4,
-    *   MECHANIC_FEAR             = 5,
-    *   MECHANIC_GRIP             = 6,
-    *   MECHANIC_ROOT             = 7,
-    *   MECHANIC_SLOW_ATTACK      = 8,
-    *   MECHANIC_SILENCE          = 9,
-    *   MECHANIC_SLEEP            = 10,
-    *   MECHANIC_SNARE            = 11,
-    *   MECHANIC_STUN             = 12,
-    *   MECHANIC_FREEZE           = 13,
-    *   MECHANIC_KNOCKOUT         = 14,
-    *   MECHANIC_BLEED            = 15,
-    *   MECHANIC_BANDAGE          = 16,
-    *   MECHANIC_POLYMORPH        = 17,
-    *   MECHANIC_BANISH           = 18,
-    *   MECHANIC_SHIELD           = 19,
-    *   MECHANIC_SHACKLE          = 20,
-    *   MECHANIC_MOUNT            = 21,
-    *   MECHANIC_INFECTED         = 22,
-    *   MECHANIC_TURN             = 23,
-    *   MECHANIC_HORROR           = 24,
-    *   MECHANIC_INVULNERABILITY  = 25,
-    *   MECHANIC_INTERRUPT        = 26,
-    *   MECHANIC_DAZE             = 27,
-    *   MECHANIC_DISCOVERY        = 28,
-    *   MECHANIC_IMMUNE_SHIELD    = 29,     // Divine (Blessing) Shield/Protection and Ice Block
-    *   MECHANIC_SAPPED           = 30,
-    *   MECHANIC_ENRAGED          = 31
-    * </pre>
+    * @table
+    * @columns [Mechanic, ID, Comment]
+    * @values [MECHANIC_NONE, 0,  ""]
+    * @values [MECHANIC_CHARM, 1,  ""]
+    * @values [MECHANIC_DISORIENTED, 2,  ""]
+    * @values [MECHANIC_DISARM, 3,  ""]
+    * @values [MECHANIC_DISTRACT, 4,  ""]
+    * @values [MECHANIC_FEAR, 5,  ""]
+    * @values [MECHANIC_GRIP, 6,  ""]
+    * @values [MECHANIC_ROOT, 7,  ""]
+    * @values [MECHANIC_SLOW_ATTACK, 8,  ""]
+    * @values [MECHANIC_SILENCE, 9,  ""]
+    * @values [MECHANIC_SLEEP, 10, ""]
+    * @values [MECHANIC_SNARE, 11, ""]
+    * @values [MECHANIC_STUN, 12, ""]
+    * @values [MECHANIC_FREEZE, 13, ""]
+    * @values [MECHANIC_KNOCKOUT, 14, ""]
+    * @values [MECHANIC_BLEED, 15, ""]
+    * @values [MECHANIC_BANDAGE, 16, ""]
+    * @values [MECHANIC_POLYMORPH, 17, ""]
+    * @values [MECHANIC_BANISH, 18, ""]
+    * @values [MECHANIC_SHIELD, 19, ""]
+    * @values [MECHANIC_SHACKLE, 20, ""]
+    * @values [MECHANIC_MOUNT, 21, ""]
+    * @values [MECHANIC_INFECTED, 22, ""]
+    * @values [MECHANIC_TURN, 23, ""]
+    * @values [MECHANIC_HORROR, 24, ""]
+    * @values [MECHANIC_INVULNERABILITY, 25, ""]
+    * @values [MECHANIC_INTERRUPT, 26, ""]
+    * @values [MECHANIC_DAZE, 27, ""]
+    * @values [MECHANIC_DISCOVERY, 28, ""]
+    * @values [MECHANIC_IMMUNE_SHIELD, 29, "Divine (Blessing) Shield/Protection and Ice Block"]
+    * @values [MECHANIC_SAPPED, 30, ""]
+    * @values [MECHANIC_ENRAGED, 31, ""]
     *
     * @param int32 immunity : new value for the immunity mask
     * @param bool apply = true : if true, the immunity is applied, otherwise it is removed
@@ -687,15 +687,12 @@ namespace LuaUnit
     /**
      * Returns the currently casted [Spell] of given type or nil.
      *
-     * <pre>
-     * enum CurrentSpellTypes
-     * {
-     *     CURRENT_MELEE_SPELL             = 0,
-     *     CURRENT_GENERIC_SPELL           = 1,
-     *     CURRENT_CHANNELED_SPELL         = 2,
-     *     CURRENT_AUTOREPEAT_SPELL        = 3
-     * };
-     * </pre>
+     * @table
+     * @columns [CurrentSpellTypes, ID]
+     * @values [CURRENT_MELEE_SPELL, 0]
+     * @values [CURRENT_GENERIC_SPELL, 1]
+     * @values [CURRENT_CHANNELED_SPELL, 2]
+     * @values [CURRENT_AUTOREPEAT_SPELL, 3]
      *
      * @param [CurrentSpellTypes] spellType
      * @return [Spell] castedSpell
@@ -779,19 +776,18 @@ namespace LuaUnit
     /**
      * Returns the [Unit]'s power amount for given power type.
      *
-     *     enum Powers
-     *     {
-     *         POWER_MANA        = 0,
-     *         POWER_RAGE        = 1,
-     *         POWER_FOCUS       = 2,
-     *         POWER_ENERGY      = 3,
-     *         POWER_HAPPINESS   = 4,
-     *         POWER_RUNE        = 5,
-     *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
-     *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
-     *     };
+     * @table
+     * @columns [Powers, ID, Comment]
+     * @values [POWER_MANA, 0, ""]
+     * @values [POWER_RAGE, 1, ""]
+     * @values [POWER_FOCUS, 2, ""]
+     * @values [POWER_ENERGY, 3, ""]
+     * @values [POWER_HAPPINESS, 4, ""]
+     * @values [POWER_RUNE, 5, ""]
+     * @values [POWER_RUNIC_POWER, 6, ""]
+     * @values [MAX_POWERS, 7, ""]
+     * @values [POWER_ALL, 127, "default for class?"]
+     * @values [POWER_HEALTH, 0xFFFFFFFE, "-2 as signed value"]
      *
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
      * @return uint32 powerAmount
@@ -808,19 +804,18 @@ namespace LuaUnit
     /**
      * Returns the [Unit]'s max power amount for given power type.
      *
-     *     enum Powers
-     *     {
-     *         POWER_MANA        = 0,
-     *         POWER_RAGE        = 1,
-     *         POWER_FOCUS       = 2,
-     *         POWER_ENERGY      = 3,
-     *         POWER_HAPPINESS   = 4,
-     *         POWER_RUNE        = 5,
-     *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
-     *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
-     *     };
+     * @table
+     * @columns [Powers, ID, Comment]
+     * @values [POWER_MANA, 0, ""]
+     * @values [POWER_RAGE, 1, ""]
+     * @values [POWER_FOCUS, 2, ""]
+     * @values [POWER_ENERGY, 3, ""]
+     * @values [POWER_HAPPINESS, 4, ""]
+     * @values [POWER_RUNE, 5, ""]
+     * @values [POWER_RUNIC_POWER, 6, ""]
+     * @values [MAX_POWERS, 7, ""]
+     * @values [POWER_ALL, 127, "default for class?"]
+     * @values [POWER_HEALTH, 0xFFFFFFFE, "-2 as signed value"]
      *
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
      * @return uint32 maxPowerAmount
@@ -837,19 +832,18 @@ namespace LuaUnit
     /**
      * Returns the [Unit]'s power percent for given power type.
      *
-     *     enum Powers
-     *     {
-     *         POWER_MANA        = 0,
-     *         POWER_RAGE        = 1,
-     *         POWER_FOCUS       = 2,
-     *         POWER_ENERGY      = 3,
-     *         POWER_HAPPINESS   = 4,
-     *         POWER_RUNE        = 5,
-     *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
-     *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
-     *     };
+     * @table
+     * @columns [Powers, ID, Comment]
+     * @values [POWER_MANA, 0, ""]
+     * @values [POWER_RAGE, 1, ""]
+     * @values [POWER_FOCUS, 2, ""]
+     * @values [POWER_ENERGY, 3, ""]
+     * @values [POWER_HAPPINESS, 4, ""]
+     * @values [POWER_RUNE, 5, ""]
+     * @values [POWER_RUNIC_POWER, 6, ""]
+     * @values [MAX_POWERS, 7, ""]
+     * @values [POWER_ALL, 127, "default for class?"]
+     * @values [POWER_HEALTH, 0xFFFFFFFE, "-2 as signed value"]
      *
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
      * @return float powerPct
@@ -868,19 +862,18 @@ namespace LuaUnit
     /**
      * Returns the [Unit]'s current power type.
      *
-     *     enum Powers
-     *     {
-     *         POWER_MANA        = 0,
-     *         POWER_RAGE        = 1,
-     *         POWER_FOCUS       = 2,
-     *         POWER_ENERGY      = 3,
-     *         POWER_HAPPINESS   = 4,
-     *         POWER_RUNE        = 5,
-     *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
-     *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
-     *     };
+     * @table
+     * @columns [Powers, ID, Comment]
+     * @values [POWER_MANA, 0, ""]
+     * @values [POWER_RAGE, 1, ""]
+     * @values [POWER_FOCUS, 2, ""]
+     * @values [POWER_ENERGY, 3, ""]
+     * @values [POWER_HAPPINESS, 4, ""]
+     * @values [POWER_RUNE, 5, ""]
+     * @values [POWER_RUNIC_POWER, 6, ""]
+     * @values [MAX_POWERS, 7, ""]
+     * @values [POWER_ALL, 127, "default for class?"]
+     * @values [POWER_HEALTH, 0xFFFFFFFE, "-2 as signed value"]
      *
      * @return [Powers] powerType
      */
@@ -970,24 +963,21 @@ namespace LuaUnit
     /**
      * Returns the [Unit]'s creature type ID (enumerated in CreatureType.dbc).
      *
-     * <pre>
-     * enum CreatureType
-     * {
-     *     CREATURE_TYPE_BEAST            = 1,
-     *     CREATURE_TYPE_DRAGONKIN        = 2,
-     *     CREATURE_TYPE_DEMON            = 3,
-     *     CREATURE_TYPE_ELEMENTAL        = 4,
-     *     CREATURE_TYPE_GIANT            = 5,
-     *     CREATURE_TYPE_UNDEAD           = 6,
-     *     CREATURE_TYPE_HUMANOID         = 7,
-     *     CREATURE_TYPE_CRITTER          = 8,
-     *     CREATURE_TYPE_MECHANICAL       = 9,
-     *     CREATURE_TYPE_NOT_SPECIFIED    = 10,
-     *     CREATURE_TYPE_TOTEM            = 11,
-     *     CREATURE_TYPE_NON_COMBAT_PET   = 12,     // This and below is TBC+
-     *     CREATURE_TYPE_GAS_CLOUD        = 13
-     * };
-     * </pre>
+     * @table
+     * @columns [CreatureType, ID]
+     * @values [CREATURE_TYPE_BEAST, 1]
+     * @values [CREATURE_TYPE_DRAGONKIN, 2]
+     * @values [CREATURE_TYPE_DEMON, 3]
+     * @values [CREATURE_TYPE_ELEMENTAL, 4]
+     * @values [CREATURE_TYPE_GIANT, 5]
+     * @values [CREATURE_TYPE_UNDEAD, 6]
+     * @values [CREATURE_TYPE_HUMANOID, 7]
+     * @values [CREATURE_TYPE_CRITTER, 8]
+     * @values [CREATURE_TYPE_MECHANICAL, 9]
+     * @values [CREATURE_TYPE_NOT_SPECIFIED, 10]
+     * @values [CREATURE_TYPE_TOTEM, 11]
+     * @values [CREATURE_TYPE_NON_COMBAT_PET, 12]
+     * @values [CREATURE_TYPE_GAS_CLOUD, 13]
      *
      * @return [CreatureType] creatureType
      */
@@ -1000,20 +990,17 @@ namespace LuaUnit
     /**
      * Returns the [Unit]'s class' name in given or default locale or nil.
      *
-     * <pre>
-     * enum LocaleConstant
-     * {
-     *     LOCALE_enUS = 0,
-     *     LOCALE_koKR = 1,
-     *     LOCALE_frFR = 2,
-     *     LOCALE_deDE = 3,
-     *     LOCALE_zhCN = 4,
-     *     LOCALE_zhTW = 5,
-     *     LOCALE_esES = 6,
-     *     LOCALE_esMX = 7,
-     *     LOCALE_ruRU = 8
-     * };
-     * </pre>
+     * @table
+     * @columns [Locale, ID]
+     * @values [LOCALE_enUS, 0]
+     * @values [LOCALE_koKR, 1]
+     * @values [LOCALE_frFR, 2]
+     * @values [LOCALE_deDE, 3]
+     * @values [LOCALE_zhCN, 4]
+     * @values [LOCALE_zhTW, 5]
+     * @values [LOCALE_esES, 6]
+     * @values [LOCALE_esMX, 7]
+     * @values [LOCALE_ruRU, 8]
      *
      * @param [LocaleConstant] locale = DEFAULT_LOCALE
      * @return string className : class name or nil
@@ -1035,20 +1022,17 @@ namespace LuaUnit
     /**
      * Returns the [Unit]'s race's name in given or default locale or nil.
      *
-     * <pre>
-     * enum LocaleConstant
-     * {
-     *     LOCALE_enUS = 0,
-     *     LOCALE_koKR = 1,
-     *     LOCALE_frFR = 2,
-     *     LOCALE_deDE = 3,
-     *     LOCALE_zhCN = 4,
-     *     LOCALE_zhTW = 5,
-     *     LOCALE_esES = 6,
-     *     LOCALE_esMX = 7,
-     *     LOCALE_ruRU = 8
-     * };
-     * </pre>
+     * @table
+     * @columns [Locale, ID]
+     * @values [LOCALE_enUS, 0]
+     * @values [LOCALE_koKR, 1]
+     * @values [LOCALE_frFR, 2]
+     * @values [LOCALE_deDE, 3]
+     * @values [LOCALE_zhCN, 4]
+     * @values [LOCALE_zhTW, 5]
+     * @values [LOCALE_esES, 6]
+     * @values [LOCALE_esMX, 7]
+     * @values [LOCALE_ruRU, 8]
      *
      * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the race name in
      * @return string raceName : race name or nil
@@ -1167,6 +1151,11 @@ namespace LuaUnit
         return 1;
     }
 
+    /**
+     * Returns [Unit]'s [Vehicle] object
+     *
+     * @return [Vehicle] vehicle
+     */
     int GetVehicle(Eluna* E, Unit* unit)
     {
         E->Push(unit->GetVehicle());
@@ -1187,20 +1176,17 @@ namespace LuaUnit
     /**
      * Returns the [Unit]'s speed of given [UnitMoveType].
      *
-     * <pre>
-     * enum UnitMoveType
-     * {
-     *     MOVE_WALK           = 0,
-     *     MOVE_RUN            = 1,
-     *     MOVE_RUN_BACK       = 2,
-     *     MOVE_SWIM           = 3,
-     *     MOVE_SWIM_BACK      = 4,
-     *     MOVE_TURN_RATE      = 5,
-     *     MOVE_FLIGHT         = 6,
-     *     MOVE_FLIGHT_BACK    = 7,
-     *     MOVE_PITCH_RATE     = 8
-     * };
-     * </pre>
+     * @table
+     * @columns [UnitMoveType, ID]
+     * @values [MOVE_WALK, 0]
+     * @values [MOVE_RUN, 1]
+     * @values [MOVE_RUN_BACK, 2]
+     * @values [MOVE_SWIM, 3]
+     * @values [MOVE_SWIM_BACK, 4]
+     * @values [MOVE_TURN_RATE, 5]
+     * @values [MOVE_FLIGHT, 6]
+     * @values [MOVE_FLIGHT_BACK, 7]
+     * @values [MOVE_PITCH_RATE, 8]
      *
      * @param [UnitMoveType] type
      * @return float speed
@@ -1218,32 +1204,28 @@ namespace LuaUnit
     /**
      * Returns the current movement type for this [Unit].
      *
-     * <pre>
-     * enum MovementGeneratorType
-     * {
-     *     IDLE_MOTION_TYPE                = 0,
-     *     RANDOM_MOTION_TYPE              = 1,
-     *     WAYPOINT_MOTION_TYPE            = 2,
-     *     MAX_DB_MOTION_TYPE              = 3,
-     *     ANIMAL_RANDOM_MOTION_TYPE       = 3, // TC
-     *
-     *     CONFUSED_MOTION_TYPE            = 4,
-     *     CHASE_MOTION_TYPE               = 5,
-     *     HOME_MOTION_TYPE                = 6,
-     *     FLIGHT_MOTION_TYPE              = 7,
-     *     POINT_MOTION_TYPE               = 8,
-     *     FLEEING_MOTION_TYPE             = 9,
-     *     DISTRACT_MOTION_TYPE            = 10,
-     *     ASSISTANCE_MOTION_TYPE          = 11,
-     *     ASSISTANCE_DISTRACT_MOTION_TYPE = 12,
-     *     TIMED_FLEEING_MOTION_TYPE       = 13,
-     *     FOLLOW_MOTION_TYPE              = 14,
-     *     EFFECT_MOTION_TYPE              = 15, // mangos
-     *     ROTATE_MOTION_TYPE              = 15, // TC
-     *     EFFECT_MOTION_TYPE              = 16, // TC
-     *     NULL_MOTION_TYPE                = 17, // TC
-     * };
-     * </pre>
+     * @table
+     * @columns [MovementGeneratorType, ID, Comment]
+     * @values [IDLE_MOTION_TYPE, 0,  ""]
+     * @values [RANDOM_MOTION_TYPE, 1,  ""]
+     * @values [WAYPOINT_MOTION_TYPE, 2,  ""]
+     * @values [MAX_DB_MOTION_TYPE, 3,  ""]
+     * @values [ANIMAL_RANDOM_MOTION_TYPE, 3,  "TC"]
+     * @values [CONFUSED_MOTION_TYPE, 4,  ""]
+     * @values [CHASE_MOTION_TYPE, 5,  ""]
+     * @values [HOME_MOTION_TYPE, 6,  ""]
+     * @values [FLIGHT_MOTION_TYPE, 7,  ""]
+     * @values [POINT_MOTION_TYPE, 8,  ""]
+     * @values [FLEEING_MOTION_TYPE, 9,  ""]
+     * @values [DISTRACT_MOTION_TYPE, 10, ""]
+     * @values [ASSISTANCE_MOTION_TYPE, 11, ""]
+     * @values [ASSISTANCE_DISTRACT_MOTION_TYPE, 12, ""]
+     * @values [TIMED_FLEEING_MOTION_TYPE, 13, ""]
+     * @values [FOLLOW_MOTION_TYPE, 14, ""]
+     * @values [EFFECT_MOTION_TYPE, 15, "mangos"]
+     * @values [ROTATE_MOTION_TYPE, 15, "TC"]
+     * @values [EFFECT_MOTION_TYPE, 16, "TC"]
+     * @values [NULL_MOTION_TYPE, 17, "TC"]
      *
      * @return [MovementGeneratorType] movementType
      */
@@ -1282,12 +1264,11 @@ namespace LuaUnit
     /**
      * Sets the [Unit]'s sheath state.
      *
-     *     enum SheathState
-     *     {
-     *         SHEATH_STATE_UNARMED  = 0, // non prepared weapon
-     *         SHEATH_STATE_MELEE    = 1, // prepared melee weapon
-     *         SHEATH_STATE_RANGED   = 2  // prepared ranged weapon
-     *     };
+     * @table
+     * @columns [SheathState, ID, Comment]
+     * @values [SHEATH_STATE_UNARMED, 0, "non prepared weapon"]
+     * @values [SHEATH_STATE_MELEE, 1, "prepared melee weapon"]
+     * @values [SHEATH_STATE_RANGED, 2, "prepared ranged weapon"]
      *
      * @param [SheathState] sheathState : valid SheathState
      */
@@ -1318,20 +1299,17 @@ namespace LuaUnit
      * Sets the [Unit]'s speed of given [UnitMoveType] to given rate.
      * If forced, packets sent to clients forcing the visual change.
      *
-     * <pre>
-     * enum UnitMoveType
-     * {
-     *     MOVE_WALK           = 0,
-     *     MOVE_RUN            = 1,
-     *     MOVE_RUN_BACK       = 2,
-     *     MOVE_SWIM           = 3,
-     *     MOVE_SWIM_BACK      = 4,
-     *     MOVE_TURN_RATE      = 5,
-     *     MOVE_FLIGHT         = 6,
-     *     MOVE_FLIGHT_BACK    = 7,
-     *     MOVE_PITCH_RATE     = 8
-     * };
-     * </pre>
+     * @table
+     * @columns [UnitMoveType, ID]
+     * @values [MOVE_WALK, 0]
+     * @values [MOVE_RUN, 1]
+     * @values [MOVE_RUN_BACK, 2]
+     * @values [MOVE_SWIM, 3]
+     * @values [MOVE_SWIM_BACK, 4]
+     * @values [MOVE_TURN_RATE, 5]
+     * @values [MOVE_FLIGHT, 6]
+     * @values [MOVE_FLIGHT_BACK, 7]
+     * @values [MOVE_PITCH_RATE, 8]
      *
      * @param [UnitMoveType] type
      * @param float rate
@@ -1414,19 +1392,18 @@ namespace LuaUnit
     /**
      * Sets the [Unit]'s power amount for the given power type.
      *
-     *     enum Powers
-     *     {
-     *         POWER_MANA        = 0,
-     *         POWER_RAGE        = 1,
-     *         POWER_FOCUS       = 2,
-     *         POWER_ENERGY      = 3,
-     *         POWER_HAPPINESS   = 4,
-     *         POWER_RUNE        = 5,
-     *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
-     *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
-     *     };
+     * @table
+     * @columns [Powers, ID, Comment]
+     * @values [POWER_MANA, 0, ""]
+     * @values [POWER_RAGE, 1, ""]
+     * @values [POWER_FOCUS, 2, ""]
+     * @values [POWER_ENERGY, 3, ""]
+     * @values [POWER_HAPPINESS, 4, ""]
+     * @values [POWER_RUNE, 5, ""]
+     * @values [POWER_RUNIC_POWER, 6, ""]
+     * @values [MAX_POWERS, 7, ""]
+     * @values [POWER_ALL, 127, "default for class?"]
+     * @values [POWER_HEALTH, 0xFFFFFFFE, "-2 as signed value"]
      *
      * @param uint32 amount : new power amount
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
@@ -1444,19 +1421,18 @@ namespace LuaUnit
     /**
      * modifies the [Unit]'s power amount for the given power type.
      *
-     *     enum Powers
-     *     {
-     *         POWER_MANA        = 0,
-     *         POWER_RAGE        = 1,
-     *         POWER_FOCUS       = 2,
-     *         POWER_ENERGY      = 3,
-     *         POWER_HAPPINESS   = 4,
-     *         POWER_RUNE        = 5,
-     *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
-     *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
-     *     };
+     * @table
+     * @columns [Powers, ID, Comment]
+     * @values [POWER_MANA, 0, ""]
+     * @values [POWER_RAGE, 1, ""]
+     * @values [POWER_FOCUS, 2, ""]
+     * @values [POWER_ENERGY, 3, ""]
+     * @values [POWER_HAPPINESS, 4, ""]
+     * @values [POWER_RUNE, 5, ""]
+     * @values [POWER_RUNIC_POWER, 6, ""]
+     * @values [MAX_POWERS, 7, ""]
+     * @values [POWER_ALL, 127, "default for class?"]
+     * @values [POWER_HEALTH, 0xFFFFFFFE, "-2 as signed value"]
      *
      * @param int32 amount : amount to modify
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
@@ -1474,19 +1450,18 @@ namespace LuaUnit
     /**
      * Sets the [Unit]'s max power amount for the given power type.
      *
-     *     enum Powers
-     *     {
-     *         POWER_MANA        = 0,
-     *         POWER_RAGE        = 1,
-     *         POWER_FOCUS       = 2,
-     *         POWER_ENERGY      = 3,
-     *         POWER_HAPPINESS   = 4,
-     *         POWER_RUNE        = 5,
-     *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
-     *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
-     *     };
+     * @table
+     * @columns [Powers, ID, Comment]
+     * @values [POWER_MANA, 0, ""]
+     * @values [POWER_RAGE, 1, ""]
+     * @values [POWER_FOCUS, 2, ""]
+     * @values [POWER_ENERGY, 3, ""]
+     * @values [POWER_HAPPINESS, 4, ""]
+     * @values [POWER_RUNE, 5, ""]
+     * @values [POWER_RUNIC_POWER, 6, ""]
+     * @values [MAX_POWERS, 7, ""]
+     * @values [POWER_ALL, 127, "default for class?"]
+     * @values [POWER_HEALTH, 0xFFFFFFFE, "-2 as signed value"]
      *
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
      * @param uint32 maxPower : new max power amount
@@ -1504,19 +1479,18 @@ namespace LuaUnit
     /**
      * Sets the [Unit]'s power type.
      *
-     *     enum Powers
-     *     {
-     *         POWER_MANA        = 0,
-     *         POWER_RAGE        = 1,
-     *         POWER_FOCUS       = 2,
-     *         POWER_ENERGY      = 3,
-     *         POWER_HAPPINESS   = 4,
-     *         POWER_RUNE        = 5,
-     *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
-     *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
-     *     };
+     * @table
+     * @columns [Powers, ID, Comment]
+     * @values [POWER_MANA, 0, ""]
+     * @values [POWER_RAGE, 1, ""]
+     * @values [POWER_FOCUS, 2, ""]
+     * @values [POWER_ENERGY, 3, ""]
+     * @values [POWER_HAPPINESS, 4, ""]
+     * @values [POWER_RUNE, 5, ""]
+     * @values [POWER_RUNIC_POWER, 6, ""]
+     * @values [MAX_POWERS, 7, ""]
+     * @values [POWER_ALL, 127, "default for class?"]
+     * @values [POWER_HEALTH, 0xFFFFFFFE, "-2 as signed value"]
      *
      * @param [Powers] type : a valid power type
      */
@@ -1688,6 +1662,11 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Sets the [Unit]s critter GUID field.
+     *
+     * @param [ObjectGuid] guid
+     */
     int SetCritterGUID(Eluna* E, Unit* unit)
     {
         ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
@@ -1695,7 +1674,11 @@ namespace LuaUnit
         return 0;
     }
 
-
+    /**
+     * Sets whether or not the [Unit] is stunned.
+     *
+     * @param bool stunned = true
+     */
     int SetStunned(Eluna* E, Unit* unit)
     {
         bool apply = E->CHECKVAL<bool>(2, true);
@@ -1742,6 +1725,11 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Sets whether or not the [Unit] can fly.
+     *
+     * @param bool canFly = true
+     */
     int SetCanFly(Eluna* E, Unit* unit)
     {
         bool apply = E->CHECKVAL<bool>(2, true);
@@ -1750,6 +1738,11 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Sets whether or not the [Unit] is visible.
+     *
+     * @param bool visible = true
+     */
     int SetVisible(Eluna* E, Unit* unit)
     {
         bool x = E->CHECKVAL<bool>(2, true);
@@ -2353,19 +2346,16 @@ namespace LuaUnit
     /**
      * Makes the [Unit] damage the target [Unit]
      *
-     * <pre>
-     * enum SpellSchools
-     * {
-     *     SPELL_SCHOOL_NORMAL  = 0,
-     *     SPELL_SCHOOL_HOLY    = 1,
-     *     SPELL_SCHOOL_FIRE    = 2,
-     *     SPELL_SCHOOL_NATURE  = 3,
-     *     SPELL_SCHOOL_FROST   = 4,
-     *     SPELL_SCHOOL_SHADOW  = 5,
-     *     SPELL_SCHOOL_ARCANE  = 6,
-     *     MAX_SPELL_SCHOOL     = 7
-     * };
-     * </pre>
+     * @table
+     * @columns [SpellSchools, ID]
+     * @values [SPELL_SCHOOL_NORMAL, 0]
+     * @values [SPELL_SCHOOL_HOLY, 1]
+     * @values [SPELL_SCHOOL_FIRE, 2]
+     * @values [SPELL_SCHOOL_NATURE, 3]
+     * @values [SPELL_SCHOOL_FROST, 4]
+     * @values [SPELL_SCHOOL_SHADOW, 5]
+     * @values [SPELL_SCHOOL_ARCANE, 6]
+     * @values [MAX_SPELL_SCHOOL, 7]
      *
      * @param [Unit] target : [Unit] to damage
      * @param uint32 damage : amount to damage
@@ -2470,30 +2460,47 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Restores the [Unit]s display ID to default
+     */
     int RestoreDisplayId(Eluna* /*E*/, Unit* unit)
     {
         unit->RestoreDisplayId();
         return 0;
     }
 
+    /**
+     * Restores the [Unit]s faction to default
+     */
     int RestoreFaction(Eluna* /*E*/, Unit* unit)
     {
         unit->RestoreFaction();
         return 0;
     }
 
+    /**
+     * Removes all bind sight auras from the [Unit].
+     */
     int RemoveBindSightAuras(Eluna* /*E*/, Unit* unit)
     {
         unit->RemoveBindSightAuras();
         return 0;
     }
 
+    /**
+     * Removes all charm auras from the [Unit].
+     */
     int RemoveCharmAuras(Eluna* /*E*/, Unit* unit)
     {
         unit->RemoveCharmAuras();
         return 0;
     }
 
+    /**
+     * Enables or disables whether or not the [Unit] can melee auto attack.
+     *
+     * @param bool disable = true : True to disable melee attack, false to enable
+     */
     int DisableMelee(Eluna* E, Unit* unit)
     {
         bool apply = E->CHECKVAL<bool>(2, true);
@@ -2520,13 +2527,10 @@ namespace LuaUnit
     /**
      * Modifies a flat amount of a specific stat of the [Unit]
      *
-     * <pre>
-     * enum UnitModifierFlatType
-     * {
-     *      BASE_VALUE = 0,
-     *      TOTAL_VALUE = 1
-     * };
-     * </pre>
+     * @table
+     * @columns [UnitModifierFlatType, ID]
+     * @values [BASE_VALUE, 0]
+     * @values [TOTAL_VALUE, 1]
      *
      * @param uint32 statType : The stat to modify
      * @param [UnitModifierFlatType] modType : The type of modifier to apply
@@ -2547,13 +2551,10 @@ namespace LuaUnit
     /**
      * Modifies a percentage amount of a specific stat of the [Unit]
      *
-     * <pre>
-     * enum UnitModifierPctType
-     * {
-     *      BASE_PCT = 0,
-     *      TOTAL_PCT = 1
-     * };
-     * </pre>
+     * @table
+     * @columns [UnitModifierPctType, ID]
+     * @values [BASE_PCT, 0]
+     * @values [TOTAL_PCT, 1]
      *
      * @param uint32 statType : The stat to modify
      * @param [UnitModifierPctType] modType : The type of modifier to apply
@@ -2568,46 +2569,6 @@ namespace LuaUnit
         unit->ApplyStatPctModifier(UnitMods(UNIT_MOD_STAT_START + statType), (UnitModifierPctType)modType, value);
         return 0;
     }
-
-    /*int SummonGuardian(Eluna* E, Unit* unit)
-    {
-    uint32 entry = E->CHECKVAL<uint32>(2);
-    float x = E->CHECKVAL<float>(3);
-    float y = E->CHECKVAL<float>(4);
-    float z = E->CHECKVAL<float>(5);
-    float o = E->CHECKVAL<float>(6);
-    uint32 desp = E->CHECKVAL<uint32>(7, 0);
-
-    SummonPropertiesEntry const* properties = sSummonPropertiesStore.LookupEntry(61);
-    if (!properties)
-    return 1;
-    Position pos;
-    pos.Relocate(x,y,z,o);
-    TempSummon* summon = unit->GetMap()->SummonCreature(entry, pos, properties, desp, unit);
-
-    if (!summon)
-    return 1;
-
-    if (summon->HasUnitTypeMask(UNIT_MASK_GUARDIAN))
-    ((Guardian*)summon)->InitStatsForLevel(unit->getLevel());
-
-    if (properties && properties->Category == SUMMON_CATEGORY_ALLY)
-    summon->setFaction(unit->getFaction());
-    if (summon->GetEntry() == 27893)
-    {
-    if (uint32 weapon = unit->GetUInt32Value(PLAYER_VISIBLE_ITEM_16_ENTRYID))
-    {
-    summon->SetDisplayId(11686);
-    summon->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, weapon);
-    }
-    else
-    summon->SetDisplayId(1126);
-    }
-    summon->AI()->EnterEvadeMode();
-
-    E->Push(summon);
-    return 1;
-    }*/
 
     ElunaRegister<Unit> UnitMethods[] =
     {
