@@ -3733,6 +3733,19 @@ namespace LuaPlayer
         return 0;
     }
 #endif
+
+    /**
+    * Runs a command as the [Player].
+    *
+    * @param string command : the command to run
+    */
+    int RunCommand(Eluna* E, Player* player)
+    {
+        const char* command = E->CHECKVAL<const char*>(2);
+        if (std::string(command).length() > 0)
+            ChatHandler(player->GetSession()).ExecuteCommand(command);
+        return 0;
+    }
     
     ElunaRegister<Player> PlayerMethods[] =
     {
@@ -4028,6 +4041,8 @@ namespace LuaPlayer
         { "ResetAchievements", METHOD_REG_NONE },
         { "SendMovieStart", METHOD_REG_NONE },
 #endif
+        { "RunCommand", &LuaPlayer::RunCommand },
+
         // Not implemented methods
         { "GetChampioningFaction", METHOD_REG_NONE }, // ACore & TC only
         { "GetRecruiterId", METHOD_REG_NONE }, // not implemented
@@ -4062,8 +4077,7 @@ namespace LuaPlayer
         { "ResetHonor", METHOD_REG_NONE },  // classic only
         { "ClearHonorInfo", METHOD_REG_NONE },  // classic only
         { "GetXP", METHOD_REG_NONE }, // not implemented
-        { "GetXPForNextLevel", METHOD_REG_NONE }, // not implemented
-        { "RunCommand", METHOD_REG_NONE } // not implemented
+        { "GetXPForNextLevel", METHOD_REG_NONE } // not implemented
     };
 };
 #endif
