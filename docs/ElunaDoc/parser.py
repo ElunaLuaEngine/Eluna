@@ -68,23 +68,34 @@ class ParameterDoc(object):
 
 class MethodDoc(object):
     """The documentation data of an Eluna method."""
-    @params(self=object, name=str, description=str, table=TableDict, prototypes=[str], parameters=[ParameterDoc], returned=[ParameterDoc])
-    def __init__(self, name, description, table, prototypes, parameters, returned):
+    @params(self=object, name=str, description=str, tables=[TableDict], prototypes=[str], parameters=[ParameterDoc], returned=[ParameterDoc])
+    def __init__(self, name, description, tables, prototypes, parameters, returned):
         self.name = name
         self.prototypes = prototypes
-        self.table = table
+        self.tables = tables
         self.parameters = parameters
         self.returned = returned
-        
-        if table:
-            # Generate Markdown Table
-            md_table = '| ' + ' | '.join(table['columns']) + ' |\n'  # Header
-            md_table += '| ' + ' | '.join(['---'] * len(table['columns'])) + ' |\n'  # Separator
 
-            for row in table['values']:
-                md_table += '| ' + ' | '.join(row) + ' |\n'  # Rows
+        if tables:
+            html_tables = []
+            
+            for table in tables:
+                print("-------------")
+                # Generate Markdown Table for each table
+                md_table = '| ' + ' | '.join(table['columns']) + ' |\n'  # Header
+                md_table += '| ' + ' | '.join(['---'] * len(table['columns'])) + ' |\n'  # Separator
+
+                for row in table['values']:
+                    md_table += '| ' + ' | '.join(row) + ' |\n'  # Rows
                 
-            self.table = markdown.markdown(md_table, extensions=['tables'])
+                # Convert the generated Markdown table to HTML
+                html_table = markdown.markdown(md_table, extensions=['tables'])
+                
+                # Append the HTML table to the list
+                html_tables.append(html_table)
+
+            # Combine all HTML tables into a single string (separated by two newlines)
+            self.tables = ''.join(html_tables)
         
         # Parse the description as Markdown.
         self.description = markdown.markdown(description)
@@ -182,7 +193,7 @@ class ClassParser(object):
         self.returned = []
         self.method_name = None
         self.prototypes = []
-        self.table = {}
+        self.tables = []
 
     def handle_class_body(self, match):
         text = match.group(1)
@@ -193,19 +204,20 @@ class ClassParser(object):
         self.description += text + '\n'
 
     def handle_table(self, line):
-        self.table = {
+        new_table = {
             "columns": [],
             "values": []
         }
+        self.tables.append(new_table)
 
     def handle_table_columns(self, match):
-        if self.table:
-            self.table["columns"] = match.group(1).split(", ")
+        if self.tables:
+            self.tables[-1]["columns"] = match.group(1).split(", ")
     
     def handle_table_values(self, match):
-        if self.table:
+        if self.tables:
             values = re.findall(r'(?:[^,"]|"(?:\\.|[^"])*")+', match.group(1))
-            self.table["values"].append([v.strip(' "') for v in values])
+            self.tables[-1]["values"].append([v.strip(' "') for v in values])
 
     def handle_param(self, match):
         data_type, name, default, description = match.group(1), match.group(2), match.group(3), match.group(4)
@@ -282,7 +294,7 @@ class ClassParser(object):
             # Format the method name into each prototype.
             self.prototypes = [proto.format(self.method_name) for proto in self.prototypes]
 
-        self.methods.append(MethodDoc(self.method_name, self.description, self.table, self.prototypes, self.params, self.returned))
+        self.methods.append(MethodDoc(self.method_name, self.description, self.tables, self.prototypes, self.params, self.returned))
 
     # Table of which handler is used to handle each regular expressions.
     regex_handlers = {
@@ -313,7 +325,7 @@ class ClassParser(object):
         proto_regex: [table_regex, param_regex, return_regex, proto_regex, comment_end_regex, body_regex],
         table_regex: [table_regex, table_columns_regex, param_regex, return_regex, comment_end_regex, body_regex],
         table_columns_regex: [table_values_regex, param_regex, return_regex, comment_end_regex, body_regex],
-        table_values_regex: [table_values_regex, param_regex, return_regex, comment_end_regex, body_regex],
+        table_values_regex: [table_values_regex, table_regex, param_regex, return_regex, comment_end_regex, body_regex],
         param_regex: [table_regex, param_regex, return_regex, comment_end_regex, body_regex],
         return_regex: [return_regex, comment_end_regex],
         comment_end_regex: [end_regex],

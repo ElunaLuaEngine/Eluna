@@ -2939,7 +2939,7 @@ namespace LuaPlayer
      * Equips the given item or item entry to the given slot. Returns the equipped item or nil.
      *
      * @table
-     * @columns [Slot, ID]
+     * @columns [EquipSlot, ID]
      * @values [EQUIPMENT_SLOT_HEAD, 0]
      * @values [EQUIPMENT_SLOT_NECK, 1]
      * @values [EQUIPMENT_SLOT_SHOULDERS, 2]
@@ -2960,11 +2960,10 @@ namespace LuaPlayer
      * @values [EQUIPMENT_SLOT_RANGED, 17]
      * @values [EQUIPMENT_SLOT_TABARD, 18]
      *
-     *     enum InventorySlots // 4 slots
-     *     {
-     *         INVENTORY_SLOT_BAG_START    = 19,
-     *         INVENTORY_SLOT_BAG_END      = 23
-     *     };
+     * @table
+     * @columns [BagSlot, ID]
+     * @values [INVENTORY_SLOT_BAG_START, 19]
+     * @values [INVENTORY_SLOT_BAG_END, 23]
      *
      * @proto equippedItem = (item, slot)
      * @proto equippedItem = (entry, slot)
@@ -3859,6 +3858,7 @@ namespace LuaPlayer
         player->SummonPet(entry, x, y, z, o, (PetType)petType, despwtime);
         return 0;
     }
+
     /**
      * Removes the [Player]'s active pet.
      *
