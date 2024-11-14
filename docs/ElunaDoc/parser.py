@@ -80,7 +80,6 @@ class MethodDoc(object):
             html_tables = []
             
             for table in tables:
-                print("-------------")
                 # Generate Markdown Table for each table
                 md_table = '| ' + ' | '.join(table['columns']) + ' |\n'  # Header
                 md_table += '| ' + ' | '.join(['---'] * len(table['columns'])) + ' |\n'  # Separator
