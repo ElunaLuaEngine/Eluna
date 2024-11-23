@@ -225,15 +225,14 @@ namespace LuaMap
     /**
      * Sets the [Weather] type based on [WeatherType] and grade supplied.
      *
-     *     enum WeatherType
-     *     {
-     *         WEATHER_TYPE_FINE       = 0,
-     *         WEATHER_TYPE_RAIN       = 1,
-     *         WEATHER_TYPE_SNOW       = 2,
-     *         WEATHER_TYPE_STORM      = 3,
-     *         WEATHER_TYPE_THUNDERS   = 86,
-     *         WEATHER_TYPE_BLACKRAIN  = 90
-     *     };
+     * @table
+     * @columns [WeatherType, ID]
+     * @values [WEATHER_TYPE_FINE, 0]
+     * @values [WEATHER_TYPE_RAIN, 1]
+     * @values [WEATHER_TYPE_SNOW, 2]
+     * @values [WEATHER_TYPE_STORM, 3]
+     * @values [WEATHER_TYPE_THUNDERS, 86]
+     * @values [WEATHER_TYPE_BLACKRAIN, 90]
      *
      * @param uint32 zone : id of the zone to set the weather for
      * @param [WeatherType] type : the [WeatherType], see above available weather types
@@ -291,12 +290,11 @@ namespace LuaMap
     /**
     * Returns a table with all the current [Player]s in the map
     *
-    *     enum TeamId
-    *     {
-    *         TEAM_ALLIANCE = 0,
-    *         TEAM_HORDE = 1,
-    *         TEAM_NEUTRAL = 2
-    *     };
+    * @table
+    * @columns [Team, ID]
+    * @values [ALLIANCE, 0]
+    * @values [HORDE, 1]
+    * @values [NEUTRAL, 2]
     *
     * @param [TeamId] team : optional check team of the [Player], Alliance, Horde or Neutral (All)
     * @return table mapPlayers

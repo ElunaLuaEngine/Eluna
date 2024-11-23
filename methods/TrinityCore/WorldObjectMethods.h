@@ -648,19 +648,18 @@ namespace LuaWorldObject
     /**
      * Spawns the creature at specified location.
      *
-     *     enum TempSummonType
-     *     {
-     *         TEMPSUMMON_TIMED_OR_DEAD_DESPAWN       = 1, // despawns after a specified time OR when the creature disappears
-     *         TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN     = 2, // despawns after a specified time OR when the creature dies
-     *         TEMPSUMMON_TIMED_DESPAWN               = 3, // despawns after a specified time
-     *         TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT = 4, // despawns after a specified time after the creature is out of combat
-     *         TEMPSUMMON_CORPSE_DESPAWN              = 5, // despawns instantly after death
-     *         TEMPSUMMON_CORPSE_TIMED_DESPAWN        = 6, // despawns after a specified time after death
-     *         TEMPSUMMON_DEAD_DESPAWN                = 7, // despawns when the creature disappears
-     *         TEMPSUMMON_MANUAL_DESPAWN              = 8, // despawns when UnSummon() is called
-     *         TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN = 9, // despawns after a specified time (OOC) OR when the creature dies
-     *         TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN   = 10 // despawns after a specified time (OOC) OR when the creature disappears
-     *     };
+     * @table
+     * @columns [TempSummonType, ID, Comment]
+     * @values [TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1, "despawns after a specified time OR when the creature disappears"]
+     * @values [TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 2, "despawns after a specified time OR when the creature dies"]
+     * @values [TEMPSUMMON_TIMED_DESPAWN, 3, "despawns after a specified time"]
+     * @values [TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 4, "despawns after a specified time after the creature is out of combat"]
+     * @values [TEMPSUMMON_CORPSE_DESPAWN, 5, "despawns instantly after death"]
+     * @values [TEMPSUMMON_CORPSE_TIMED_DESPAWN, 6, "despawns after a specified time after death"]
+     * @values [TEMPSUMMON_DEAD_DESPAWN, 7, "despawns when the creature disappears"]
+     * @values [TEMPSUMMON_MANUAL_DESPAWN, 8, "despawns when UnSummon() is called"]
+     * @values [TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN, 9, "despawns after a specified time (OOC) OR when the creature dies"]
+     * @values [TEMPSUMMON_TIMED_OOC_OR_DEAD_DESPAWN, 10, "despawns after a specified time (OOC) OR when the creature disappears"]
      *
      * @param uint32 entry : [Creature]'s entry ID
      * @param float x

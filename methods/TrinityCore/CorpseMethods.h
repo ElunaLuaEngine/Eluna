@@ -39,12 +39,11 @@ namespace LuaCorpse
     /**
      * Returns the [CorpseType] of a [Corpse].
      *
-     *     enum CorpseType
-     *     {
-     *         CORPSE_BONES             = 0,
-     *         CORPSE_RESURRECTABLE_PVE = 1,
-     *         CORPSE_RESURRECTABLE_PVP = 2
-     *     };
+     * @table
+     * @columns [CorpseType, ID]
+     * @values [CORPSE_BONES, 0]
+     * @values [CORPSE_RESURRECTABLE_PVE, 1]
+     * @values [CORPSE_RESURRECTABLE_PVP, 2]
      *
      * @return [CorpseType] corpseType
      */
