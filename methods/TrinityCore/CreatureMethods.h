@@ -629,14 +629,13 @@ namespace LuaCreature
     * Returns a target from the [Creature]'s threat list based on the
     *   supplied arguments.
     *
-    *     enum SelectAggroTarget
-    *     {
-    *         SELECT_TARGET_RANDOM = 0,  //Just selects a random target
-    *         SELECT_TARGET_TOPAGGRO,    //Selects targets from top aggro to bottom
-    *         SELECT_TARGET_BOTTOMAGGRO, //Selects targets from bottom aggro to top
-    *         SELECT_TARGET_NEAREST,
-    *         SELECT_TARGET_FARTHEST
-    *     };
+    * @table
+    * @columns [SelectAggroTarget, ID, Comment]
+    * @values [SELECT_TARGET_RANDOM, 0, "Just selects a random target"]
+    * @values [SELECT_TARGET_TOPAGGRO, 1, "Sorts targets from top aggro to bottom"]
+    * @values [SELECT_TARGET_BOTTOMAGGRO, 2, "Sorts targets from bottom aggro to top"]
+    * @values [SELECT_TARGET_NEAREST, 3, "Sorts targets from the nearest to the furthest"]
+    * @values [SELECT_TARGET_FARTHEST, 4, "Sorts targets from the furthest to the nearest"]
     *
     * For example, if you wanted to select the third-farthest [Player]
     *   within 50 yards that has the [Aura] "Corrupted Blood" (ID 24328),
