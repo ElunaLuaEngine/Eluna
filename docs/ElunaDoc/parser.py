@@ -85,7 +85,15 @@ class MethodDoc(object):
                 md_table += '| ' + ' | '.join(['---'] * len(table['columns'])) + ' |\n'  # Separator
 
                 for row in table['values']:
-                    md_table += '| ' + ' | '.join(row) + ' |\n'  # Rows
+                    md_row = '| '
+                    for value in row:
+                        if isinstance(value, dict):
+                            # If the value is a dictionary, format the values and preserve the type in the documentation
+                            md_row += self._format_dict_values(value)
+                        else:
+                            md_row += value
+                        md_row += ' | '
+                    md_table += md_row + '\n'
                 
                 # Convert the generated Markdown table to HTML
                 html_table = markdown.markdown(md_table, extensions=['tables'])
@@ -102,6 +110,17 @@ class MethodDoc(object):
         self.short_description = self.description.split('</p>')[0][3:]
         # If it has a description, it is "documented".
         self.documented = self.description != ''
+
+    """Helper function to parse table dictionaries. Only used in Register methods for now."""
+    def _format_dict_values(self, d):
+        html_str = ""
+        html_parts = []
+
+        for key, value in d.items():
+            html_parts.append(f'<span title="{value}">{key}</span>')
+
+        html_str = ', '.join(html_parts)
+        return html_str
 
 
 class MangosClassDoc(object):
@@ -150,7 +169,7 @@ class ClassParser(object):
     # Regular expressions for parsing a table.
     table_regex = re.compile(r"\s*\*\s@table")
     table_columns_regex = re.compile(r"\s*\*\s@columns\s*\[(.+)\]")
-    table_values_regex = re.compile(r"\s*\*\s@values\s*\[(.+)\]")
+    table_values_regex = re.compile(r"\s*\*\s@values\s*\[(.+?)\]")
     
     param_regex = re.compile(r"""\s*\*\s@param\s        # The @param tag starts with opt. whitespace followed by "* @param ".
                                  ([^\s]+)\s(\w+)?       # The data type, a space, and the name of the param.
@@ -212,11 +231,27 @@ class ClassParser(object):
     def handle_table_columns(self, match):
         if self.tables:
             self.tables[-1]["columns"] = match.group(1).split(", ")
-    
+
     def handle_table_values(self, match):
         if self.tables:
-            values = re.findall(r'(?:[^,"]|"(?:\\.|[^"])*")+', match.group(1))
-            self.tables[-1]["values"].append([v.strip(' "') for v in values])
+            values = re.findall(r'(?:[^,<>"]|"(?:\\.|[^"])*"|<[^>]*>)+', match.group(1))
+            processed_values = []
+
+            for value in values:
+                stripped_value = value.strip(' "')
+                # Parse the content inside < >
+                if stripped_value.startswith("<") and stripped_value.endswith(">"):
+                    # Remove prefix and suffix
+                    inner_content = stripped_value[1:-1]
+
+                    # Convert inner key-value pairs to a dict
+                    pair_regex = re.compile(r"(\w+):\s*([\w\s]+)")
+                    stripped_value = dict(pair_regex.findall(inner_content))
+                
+                processed_values.append(stripped_value)
+            
+            # Append the processed values to the last table
+            self.tables[-1]["values"].append(processed_values)
 
     def handle_param(self, match):
         data_type, name, default, description = match.group(1), match.group(2), match.group(3), match.group(4)
