@@ -669,56 +669,56 @@ namespace LuaGlobalFunctions
      * 
      * @table
      * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_CHARACTER_CREATE, "WORLD", <event: Number, player: Player>, ""] -
-     * @values [2, ON_CHARACTER_DELETE, "WORLD", <event: Number, guidLow: Number>, ""] -
-     * @values [3, ON_LOGIN, "WORLD", <event: Number, player: Player>, ""] -
-     * @values [4, ON_LOGOUT, "WORLD", <event: Number, player: Player>, ""] -
-     * @values [5, ON_SPELL_CAST, "MAP", <event: Number, player: Player, spell: Spell, skipCheck: Boolean>, ""] -
-     * @values [6, ON_KILL_PLAYER, "MAP", <event: Number, killer: Player, killed: Player>, ""] -
-     * @values [7, ON_KILL_CREATURE, "MAP", <event: Number, killer: Player, killed: Creature>, ""] -
-     * @values [8, ON_KILLED_BY_CREATURE, "MAP", <event: Number, killer: Creature, killed: Player>, ""] -
-     * @values [9, ON_DUEL_REQUEST, "MAP", <event: Number, target: Player, challenger: Player>, ""]- 
-     * @values [10, ON_DUEL_START, "MAP", <event: Number, player1: Player, player2: Player>, ""] -
-     * @values [11, ON_DUEL_END, "MAP", <event: Number, winner: Player, loser: Player, type: Number>, ""] -
-     * @values [12, ON_GIVE_XP, "MAP", <event: Number, player: Player, amount: Number, victim: Unit>, "Can return new XP amount"] -
-     * @values [13, ON_LEVEL_CHANGE, "MAP", <event: Number, player: Player, oldLevel: Number>, ""] -
-     * @values [14, ON_MONEY_CHANGE, "MAP", <event: Number, player: Player, amount: Number>, "Can return new money amount"]
-     * @values [15, ON_REPUTATION_CHANGE, "MAP", <event: Number, player: Player, factionId: Number, standing: Number, incremental: Boolean>, "Can return new standing"]
-     * @values [16, ON_TALENTS_CHANGE, "MAP", <event: Number, player: Player, points: Number>, ""]
-     * @values [17, ON_TALENTS_RESET, "MAP", <event: Number, player: Player, noCost: Boolean>, ""]
-     * @values [18, ON_CHAT, "WORLD", <event: Number, player: Player, msg: String, Type: Number, lang: Number>, "Can return false, newMessage"]
-     * @values [19, ON_WHISPER, "WORLD", <event: Number, player: Player, msg: String, Type: Number, lang: Number, receiver: Player>, "Can return false, newMessage"]
-     * @values [20, ON_GROUP_CHAT, "WORLD", <event: Number, player: Player, msg: String, Type: Number, lang: Number, group: Group>, "Can return false, newMessage"]
-     * @values [21, ON_GUILD_CHAT, "WORLD", <event: Number, player: Player, msg: String, Type: Number, lang: Number, guild: Guild>, "Can return false, newMessage"]
-     * @values [22, ON_CHANNEL_CHAT, "WORLD", <event: Number, player: Player, msg: String, Type: Number, lang: Number, channel: Number>, "Can return false, newMessage"]
-     * @values [23, ON_EMOTE, "MAP", <event: Number, player: Player, emote: Number>, "Not triggered on any known emote"]
-     * @values [24, ON_TEXT_EMOTE, "MAP", <event: Number, player: Player, textEmote: Number, emoteNum: Number, guid: Number>, ""]
-     * @values [25, ON_SAVE, "MAP", <event: Number, player: Player>, ""] -
-     * @values [26, ON_BIND_TO_INSTANCE, "MAP", <event: Number, player: Player, difficulty: Number, mapid: Number, permanent: Boolean>, ""]
-     * @values [27, ON_UPDATE_ZONE, "MAP", <event: Number, player: Player, newZone: Number, newArea: Number>, ""]
-     * @values [28, ON_MAP_CHANGE, "MAP", <event: Number, player: Player>, ""] -
-     * @values [29, ON_EQUIP, "MAP", <event: Number, player: Player, item: Item, bag: Number, slot: Number>, ""]
-     * @values [30, ON_FIRST_LOGIN, "WORLD", <event: Number, player: Player>, ""] -
-     * @values [31, ON_CAN_USE_ITEM, "MAP", <event: Number, player: Player, itemEntry: Number>, "Can return InventoryResult enum value"]
-     * @values [32, ON_LOOT_ITEM, "MAP", <event: Number, player: Player, item: Item, count: Number>, ""]
-     * @values [33, ON_ENTER_COMBAT, "MAP", <event: Number, player: Player, enemy: Unit>, ""]
-     * @values [34, ON_LEAVE_COMBAT, "MAP", <event: Number, player: Player>, ""] -
-     * @values [35, ON_REPOP, "MAP", <event: Number, player: Player>, ""] -
-     * @values [36, ON_RESURRECT, "MAP", <event: Number, player: Player>, ""] -
-     * @values [37, ON_LOOT_MONEY, "MAP", <event: Number, player: Player, amount: Number>, ""]
-     * @values [38, ON_QUEST_ABANDON, "MAP", <event: Number, player: Player, questId: Number>, ""]
-     * @values [39, ON_LEARN_TALENTS, "MAP", <event: Number, player: Player, talentId: Number, talentRank: Number, spellid: Number>, ""]
-     * @values [40, ON_ENVIRONMENTAL_DEATH, "MAP", <event: Number, player: Player, environmentalDamageType: Number>, ""]
-     * @values [41, ON_TRADE_ACCEPT, "MAP", <event: Number, player: Player, target: Player>, "Can return false to interrupt trade"]
-     * @values [42, ON_COMMAND, "MAP", <event: Number, player: Player, command: String>, "Player is nil if command used from console. Can return false"]
-     * @values [43, ON_SKILL_CHANGE, "MAP", <event: Number, player: Player, skillId: Number, skillValue: Number>, "Returns new skill level value"]
-     * @values [44, ON_LEARN_SPELL, "MAP", <event: Number, player: Player, spellId: Number>, ""]
-     * @values [45, ON_ACHIEVEMENT_COMPLETE, "MAP", <event: Number, player: Player, achievementId: Number>, ""]
-     * @values [46, ON_DISCOVER_AREA, "MAP", <event: Number, player: Player, area: Number>, ""]
-     * @values [47, ON_UPDATE_AREA, "MAP", <event: Number, player: Player, oldArea: Number, newArea: Number>, ""]
-     * @values [48, ON_TRADE_INIT, "MAP", <event: Number, player: Player, target: Player>, "Can return false to interrupt trade"]
-     * @values [49, ON_SEND_MAIL, "MAP", <event: Number, player: Player, recipientGuid: Number>, "Can return false to interrupt sending"]
-     * @values [54, ON_QUEST_STATUS_CHANGED, "MAP", <event: Number, player: Player, questId: Number, status: Number>, ""] -
+     * @values [1, ON_CHARACTER_CREATE, "WORLD", <event: number, player: Player>, ""]
+     * @values [2, ON_CHARACTER_DELETE, "WORLD", <event: number, guidLow: number>, ""]
+     * @values [3, ON_LOGIN, "WORLD", <event: number, player: Player>, ""]
+     * @values [4, ON_LOGOUT, "WORLD", <event: number, player: Player>, ""]
+     * @values [5, ON_SPELL_CAST, "MAP", <event: number, player: Player, spell: Spell, skipCheck: boolean>, ""]
+     * @values [6, ON_KILL_PLAYER, "MAP", <event: number, killer: Player, killed: Player>, ""]
+     * @values [7, ON_KILL_CREATURE, "MAP", <event: number, killer: Player, killed: Creature>, ""]
+     * @values [8, ON_KILLED_BY_CREATURE, "MAP", <event: number, killer: Creature, killed: Player>, ""]
+     * @values [9, ON_DUEL_REQUEST, "MAP", <event: number, target: Player, challenger: Player>, ""]
+     * @values [10, ON_DUEL_START, "MAP", <event: number, player1: Player, player2: Player>, ""]
+     * @values [11, ON_DUEL_END, "MAP", <event: number, winner: Player, loser: Player, type: number>, ""]
+     * @values [12, ON_GIVE_XP, "MAP", <event: number, player: Player, amount: number, victim: Unit>, "Can return new XP amount"]
+     * @values [13, ON_LEVEL_CHANGE, "MAP", <event: number, player: Player, oldLevel: number>, ""]
+     * @values [14, ON_MONEY_CHANGE, "MAP", <event: number, player: Player, amount: number>, "Can return new money amount"]
+     * @values [15, ON_REPUTATION_CHANGE, "MAP", <event: number, player: Player, factionId: number, standing: number, incremental: boolean>, "Can return new standing"]
+     * @values [16, ON_TALENTS_CHANGE, "MAP", <event: number, player: Player, points: number>, ""]
+     * @values [17, ON_TALENTS_RESET, "MAP", <event: number, player: Player, noCost: boolean>, ""]
+     * @values [18, ON_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number>, "Can return false, newMessage"]
+     * @values [19, ON_WHISPER, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, receiver: Player>, "Can return false, newMessage"]
+     * @values [20, ON_GROUP_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, group: Group>, "Can return false, newMessage"]
+     * @values [21, ON_GUILD_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, guild: Guild>, "Can return false, newMessage"]
+     * @values [22, ON_CHANNEL_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, channel: number>, "Can return false, newMessage"]
+     * @values [23, ON_EMOTE, "MAP", <event: number, player: Player, emote: number>, "Not triggered on any known emote"]
+     * @values [24, ON_TEXT_EMOTE, "MAP", <event: number, player: Player, textEmote: number, emoteNum: number, guid: number>, ""]
+     * @values [25, ON_SAVE, "MAP", <event: number, player: Player>, ""]
+     * @values [26, ON_BIND_TO_INSTANCE, "MAP", <event: number, player: Player, difficulty: number, mapid: number, permanent: boolean>, ""]
+     * @values [27, ON_UPDATE_ZONE, "MAP", <event: number, player: Player, newZone: number, newArea: number>, ""]
+     * @values [28, ON_MAP_CHANGE, "MAP", <event: number, player: Player>, ""]
+     * @values [29, ON_EQUIP, "MAP", <event: number, player: Player, item: Item, bag: number, slot: number>, ""]
+     * @values [30, ON_FIRST_LOGIN, "WORLD", <event: number, player: Player>, ""]
+     * @values [31, ON_CAN_USE_ITEM, "MAP", <event: number, player: Player, itemEntry: number>, "Can return InventoryResult enum value"]
+     * @values [32, ON_LOOT_ITEM, "MAP", <event: number, player: Player, item: Item, count: number>, ""]
+     * @values [33, ON_ENTER_COMBAT, "MAP", <event: number, player: Player, enemy: Unit>, ""]
+     * @values [34, ON_LEAVE_COMBAT, "MAP", <event: number, player: Player>, ""]
+     * @values [35, ON_REPOP, "MAP", <event: number, player: Player>, ""]
+     * @values [36, ON_RESURRECT, "MAP", <event: number, player: Player>, ""]
+     * @values [37, ON_LOOT_MONEY, "MAP", <event: number, player: Player, amount: number>, ""]
+     * @values [38, ON_QUEST_ABANDON, "MAP", <event: number, player: Player, questId: number>, ""]
+     * @values [39, ON_LEARN_TALENTS, "MAP", <event: number, player: Player, talentId: number, talentRank: number, spellid: number>, ""]
+     * @values [40, ON_ENVIRONMENTAL_DEATH, "MAP", <event: number, player: Player, environmentalDamageType: number>, ""]
+     * @values [41, ON_TRADE_ACCEPT, "MAP", <event: number, player: Player, target: Player>, "Can return false to interrupt trade"]
+     * @values [42, ON_COMMAND, "MAP", <event: number, player: Player, command: string>, "Player is nil if command used from console. Can return false"]
+     * @values [43, ON_SKILL_CHANGE, "MAP", <event: number, player: Player, skillId: number, skillValue: number>, "Returns new skill level value"]
+     * @values [44, ON_LEARN_SPELL, "MAP", <event: number, player: Player, spellId: number>, ""]
+     * @values [45, ON_ACHIEVEMENT_COMPLETE, "MAP", <event: number, player: Player, achievementId: number>, ""]
+     * @values [46, ON_DISCOVER_AREA, "MAP", <event: number, player: Player, area: number>, ""]
+     * @values [47, ON_UPDATE_AREA, "MAP", <event: number, player: Player, oldArea: number, newArea: number>, ""]
+     * @values [48, ON_TRADE_INIT, "MAP", <event: number, player: Player, target: Player>, "Can return false to interrupt trade"]
+     * @values [49, ON_SEND_MAIL, "MAP", <event: number, player: Player, recipientGuid: number>, "Can return false to interrupt sending"]
+     * @values [54, ON_QUEST_STATUS_CHANGED, "MAP", <event: number, player: Player, questId: number, status: number>, ""]
      *
      * @proto cancel = (event, function)
      * @proto cancel = (event, function, shots)
