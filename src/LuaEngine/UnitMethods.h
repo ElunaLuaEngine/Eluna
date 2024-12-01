@@ -139,7 +139,7 @@ namespace LuaUnit
      */
     int IsRooted(lua_State* L, Unit* unit)
     {
-        Eluna::Push(L, unit->isInRoots() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT));
+        Eluna::Push(L, unit->HasRootAura() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT));
 
         return 1;
     }
