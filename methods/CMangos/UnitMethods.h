@@ -2181,14 +2181,7 @@ namespace LuaUnit
 
         for (uint32 i = 0; i < MAX_EFFECT_INDEX; ++i)
         {
-#if ELUNA_EXPANSION == EXP_CATA
-            SpellEffectEntry const* spellEffect = spellEntry->GetSpellEffect(SpellEffectIndex(i));
-            if (!spellEffect)
-                continue;
-            uint8 eff = spellEffect->Effect;
-#else
             uint8 eff = spellEntry->Effect[i];
-#endif
 #if ELUNA_EXPANSION < EXP_CATA
             if (eff >= MAX_SPELL_EFFECTS)
 #else
