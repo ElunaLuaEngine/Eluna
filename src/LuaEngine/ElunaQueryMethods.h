@@ -29,7 +29,7 @@ namespace LuaQuery
         if (field >= count)
         {
             char arr[256];
-            sprintf(arr, "trying to access invalid field index %u. There are %u fields available and the indexes start from 0", field, count);
+            snprintf(arr, sizeof(arr), "trying to access invalid field index %u. There are %u fields available and the indexes start from 0", field, count);
             luaL_argerror(L, 2, arr);
         }
     }
