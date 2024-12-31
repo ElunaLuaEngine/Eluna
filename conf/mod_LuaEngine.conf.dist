@@ -117,4 +117,4 @@ Appender.ElunaConsole=1,4,0,"0 9 0 3 5 0"
 #                     AppenderList: List of appenders linked to logger
 #                     (Using spaces as separator).
 #
-Logger.eluna=6,ElunaLog ElunaConsole
+Logger.eluna=4,ElunaLog ElunaConsole
