@@ -3793,7 +3793,7 @@ namespace LuaPlayer
     {
         std::string msg = Eluna::CHECKVAL<std::string>(L, 2);
         if (msg.length() > 0)
-            player->GetSession()->SendAreaTriggerMessage("%s", msg.c_str());
+            player->GetSession()->SendAreaTriggerMessage("{}", msg.c_str());
         return 0;
     }
 
