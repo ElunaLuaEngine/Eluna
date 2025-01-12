@@ -14,6 +14,7 @@ extern "C"
 #include "lauxlib.h"
 };
 #include "LuaEngine.h"
+#include "ElunaCompat.h"
 #include "ElunaUtility.h"
 #include "SharedDefines.h"
 

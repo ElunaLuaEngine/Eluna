@@ -8,6 +8,7 @@
 #include "LuaEngine.h"
 #include "BindingMap.h"
 #include "Chat.h"
+#include "ElunaCompat.h"
 #include "ElunaEventMgr.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
