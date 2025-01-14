@@ -7,7 +7,7 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
   cmake_policy(SET CMP0135 NEW)
 endif()
 
-option(LUA_STATIC "link lua statically" OFF)
+option(LUA_STATIC "link lua statically" ON)
 if (LUA_STATIC)
   MESSAGE(STATUS "Lua linking: static")
 else()
