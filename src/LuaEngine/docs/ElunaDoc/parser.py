@@ -1,3 +1,4 @@
+import os
 import re
 import typing
 import markdown
@@ -321,7 +322,7 @@ class ClassParser(object):
     def parse_file(file):
         """Parse the file `file` into a documented class."""
         # Get the class name from "ClassMethods.h" by stripping off "Methods.h".
-        class_name = file.name[:-len('Methods.h')]
+        class_name = os.path.basename(file.name)[:-len('Methods.h')]
         parser = ClassParser(class_name)
 
         line = file.readline()

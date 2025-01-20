@@ -16,15 +16,10 @@ def find_class_files(search_path):
     :param search_path: the path to search for Eluna methods in
     :return: a list of all files containing Eluna methods, and the name of their respective classes
     """
-    # Get the current working dir and switch to the search path.
-    old_dir = os.getcwd()
-    os.chdir(search_path)
     # Search for all files ending in "Methods.h".
-    method_file_names = glob.glob('*Methods.h')
+    method_file_names = glob.glob(os.path.join(search_path, '**', '*Methods.h'))
     # Open each file.
     method_files = [open(file_name, 'r') for file_name in method_file_names]
-    # Go back to where we were before.
-    os.chdir(old_dir)
     return method_files
 
 
