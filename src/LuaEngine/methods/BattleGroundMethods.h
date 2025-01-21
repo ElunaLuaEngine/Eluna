@@ -35,11 +35,7 @@ namespace LuaBattleGround
     {
         uint32 team = Eluna::CHECKVAL<uint32>(L, 2);
 
-#ifndef AZEROTHCORE
-        Eluna::Push(L, bg->GetAlivePlayersCountByTeam((Team)team));
-#else
         Eluna::Push(L, bg->GetAlivePlayersCountByTeam((TeamId)team));
-#endif
         return 1;
     }
 
@@ -68,19 +64,6 @@ namespace LuaBattleGround
         return 1;
     }
 
-#ifndef AZEROTHCORE
-    /**
-     * Returns the bracket ID of the specific [BattleGround].
-     *
-     * @return [BattleGroundBracketId] bracketId
-     */
-    int GetBracketId(lua_State* L, BattleGround* bg)
-    {
-        Eluna::Push(L, bg->GetBracketId());
-        return 1;
-    }
-#endif
-
     /**
      * Returns the end time of the [BattleGround].
      *
@@ -88,11 +71,7 @@ namespace LuaBattleGround
      */
     int GetEndTime(lua_State* L, BattleGround* bg)
     {
-#ifdef CATA
-        Eluna::Push(L, bg->GetRemainingTime());
-#else
         Eluna::Push(L, bg->GetEndTime());
-#endif
         return 1;
     }
 
@@ -106,11 +85,7 @@ namespace LuaBattleGround
     {
         uint32 team = Eluna::CHECKVAL<uint32>(L, 2);
 
-#ifndef AZEROTHCORE
-        Eluna::Push(L, bg->GetFreeSlotsForTeam((Team)team));
-#else
         Eluna::Push(L, bg->GetFreeSlotsForTeam((TeamId)team));
-#endif
         return 1;
     }
 
@@ -143,11 +118,7 @@ namespace LuaBattleGround
      */
     int GetTypeId(lua_State* L, BattleGround* bg)
     {
-#ifndef AZEROTHCORE
-        Eluna::Push(L, bg->GetTypeID());
-#else
         Eluna::Push(L, bg->GetBgTypeID());
-#endif
         return 1;
     }
 
@@ -180,11 +151,7 @@ namespace LuaBattleGround
      */
     int GetMaxPlayers(lua_State* L, BattleGround* bg)
     {
-#ifndef AZEROTHCORE
-        Eluna::Push(L, bg->GetMaxPlayers());
-#else
         Eluna::Push(L, bg->GetMaxPlayersPerTeam() * 2);
-#endif
         return 1;
     }
 
@@ -195,11 +162,7 @@ namespace LuaBattleGround
      */
     int GetMinPlayers(lua_State* L, BattleGround* bg)
     {
-#ifndef AZEROTHCORE
-        Eluna::Push(L, bg->GetMinPlayers());
-#else
         Eluna::Push(L, bg->GetMaxPlayersPerTeam() * 2);
-#endif
         return 1;
     }
 

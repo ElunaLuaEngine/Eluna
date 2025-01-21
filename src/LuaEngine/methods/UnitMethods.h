@@ -403,7 +403,6 @@ namespace LuaUnit
         return 1;
     }
 
-#ifndef CLASSIC
     /**
      * Returns true if the [Unit] is on a [Vehicle].
      *
@@ -414,7 +413,6 @@ namespace LuaUnit
         Eluna::Push(L, unit->GetVehicle());
         return 1;
     }
-#endif
 
     /**
      * Returns true if the [Unit] is in combat.
@@ -1166,7 +1164,6 @@ namespace LuaUnit
         return 1;
     }
 
-#if (!defined(TBC) && !defined(CLASSIC))
     /**
      * Returns [Unit]'s [Vehicle] methods
      *
@@ -1196,7 +1193,6 @@ namespace LuaUnit
         Eluna::Push(L, unit->GetCritterGUID());
         return 1;
     }
-#endif
 
     /**
      * Returns the [Unit]'s speed of given [UnitMoveType].
@@ -1752,7 +1748,6 @@ namespace LuaUnit
         return 0;
     }
 
-#if (!defined(TBC) && !defined(CLASSIC))
     /**
      * Sets the [Unit]'s FFA flag on or off.
      *
@@ -1804,7 +1799,6 @@ namespace LuaUnit
         unit->SetCritterGUID(guid);
         return 0;
     }
-#endif
 
     /*int SetStunned(lua_State* L, Unit* unit)
     {
@@ -2157,7 +2151,6 @@ namespace LuaUnit
         return 0;
     }
 
-#if (!defined(TBC) && !defined(CLASSIC))
     /**
      * Makes the [Unit] jump to the coordinates
      *
@@ -2180,7 +2173,6 @@ namespace LuaUnit
         unit->GetMotionMaster()->MoveJump(pos, zSpeed, maxHeight, id);
         return 0;
     }
-#endif
 
     /**
      * The [Unit] will whisper the message to a [Player]
@@ -2426,7 +2418,6 @@ namespace LuaUnit
         return 0;
     }
 
-#if !defined(CLASSIC)
     /**
      * Removes all positive visible [Aura]'s from the [Unit].
      */
@@ -2435,7 +2426,6 @@ namespace LuaUnit
         unit->RemoveArenaAuras();
         return 0;
     }
-#endif
 
     /**
      * Adds the given unit state for the [Unit].

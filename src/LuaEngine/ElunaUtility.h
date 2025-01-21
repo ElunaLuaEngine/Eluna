@@ -14,18 +14,9 @@
 #include "Common.h"
 #include "SharedDefines.h"
 #include "ObjectGuid.h"
-#ifdef TRINITY
-#include "QueryResult.h"
-#include "Log.h"
-#ifdef CATA
-#include "Object.h"
-#endif
-#else
 #include "Database/QueryResult.h"
 #include "Log.h"
-#endif
 
-#if defined(TRINITY) || defined(AZEROTHCORE)
 typedef QueryResult ElunaQuery;
 #define GET_GUID                GetGUID
 #define HIGHGUID_PLAYER         HighGuid::Player
@@ -41,29 +32,11 @@ typedef QueryResult ElunaQuery;
 #define HIGHGUID_MO_TRANSPORT   HighGuid::Mo_Transport
 #define HIGHGUID_INSTANCE       HighGuid::Instance
 #define HIGHGUID_GROUP          HighGuid::Group
-#endif
 
-#ifdef TRINITY
-#define ELUNA_LOG_INFO(...)     TC_LOG_INFO("eluna", __VA_ARGS__);
-#define ELUNA_LOG_ERROR(...)    TC_LOG_ERROR("eluna", __VA_ARGS__);
-#define ELUNA_LOG_DEBUG(...)    TC_LOG_DEBUG("eluna", __VA_ARGS__);
-#elif defined(AZEROTHCORE)
 #define ELUNA_LOG_INFO(...)     LOG_INFO("eluna", __VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    LOG_ERROR("eluna", __VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    LOG_DEBUG("eluna", __VA_ARGS__);
-#else
-typedef QueryNamedResult ElunaQuery;
-#define ASSERT                  MANGOS_ASSERT
-#define ELUNA_LOG_INFO(...)     sLog.outString(__VA_ARGS__);
-#define ELUNA_LOG_ERROR(...)    sLog.outErrorEluna(__VA_ARGS__);
-#define ELUNA_LOG_DEBUG(...)    sLog.outDebug(__VA_ARGS__);
-#define GET_GUID                GetObjectGuid
-#define GetGameObjectTemplate   GetGameObjectInfo
-#define GetItemTemplate         GetItemPrototype
-#define GetTemplate             GetProto
-#endif
 
-#if defined(TRINITY) || defined(AZEROTHCORE) || defined(MANGOS)
 #ifndef MAKE_NEW_GUID
 #define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
 #endif
@@ -75,7 +48,6 @@ typedef QueryNamedResult ElunaQuery;
 #endif
 #ifndef GUID_HIPART
 #define GUID_HIPART(guid)       ObjectGuid(guid).GetHigh()
-#endif
 #endif
 
 class Unit;

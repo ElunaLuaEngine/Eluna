@@ -149,13 +149,9 @@ namespace LuaGroup
         if (player->GetGroupInvite())
             player->UninviteFromGroup();
 
-#if defined TRINITY || AZEROTHCORE
         bool success = group->AddMember(player);
         if (success)
             group->BroadcastGroupUpdate();
-#else
-        bool success = group->AddMember(player->GetObjectGuid(), player->GetName());
-#endif
 
         Eluna::Push(L, success);
         return 1;
@@ -186,11 +182,7 @@ namespace LuaGroup
 
         for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
         {
-#if defined TRINITY || AZEROTHCORE
             Player* member = itr->GetSource();
-#else
-            Player* member = itr->getSource();
-#endif
 
             if (!member || !member->GetSession())
                 continue;
@@ -210,11 +202,7 @@ namespace LuaGroup
      */
     int GetLeaderGUID(lua_State* L, Group* group)
     {
-#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, group->GetLeaderGUID());
-#else
-        Eluna::Push(L, group->GetLeaderGuid());
-#endif
         return 1;
     }
 
@@ -225,11 +213,7 @@ namespace LuaGroup
      */
     int GetGUID(lua_State* L, Group* group)
     {
-#ifdef CLASSIC
-        Eluna::Push(L, group->GetId());
-#else
         Eluna::Push(L, group->GET_GUID());
-#endif
         return 1;
     }
 
@@ -242,11 +226,8 @@ namespace LuaGroup
     int GetMemberGUID(lua_State* L, Group* group)
     {
         const char* name = Eluna::CHECKVAL<const char*>(L, 2);
-#if defined TRINITY || AZEROTHCORE
+
         Eluna::Push(L, group->GetMemberGUID(name));
-#else
-        Eluna::Push(L, group->GetMemberGuid(name));
-#endif
         return 1;
     }
 
@@ -322,11 +303,7 @@ namespace LuaGroup
         bool ignorePlayersInBg = Eluna::CHECKVAL<bool>(L, 3);
         ObjectGuid ignore = Eluna::CHECKVAL<ObjectGuid>(L, 4);
 
-#ifdef CMANGOS
-        group->BroadcastPacket(*data, ignorePlayersInBg, -1, ignore);
-#else
         group->BroadcastPacket(data, ignorePlayersInBg, -1, ignore);
-#endif
         return 0;
     }
 
@@ -352,11 +329,7 @@ namespace LuaGroup
         ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
         uint32 method = Eluna::CHECKVAL<uint32>(L, 3, 0);
 
-#if defined TRINITY || AZEROTHCORE
         Eluna::Push(L, group->RemoveMember(guid, (RemoveMethod)method));
-#else
-        Eluna::Push(L, group->RemoveMember(guid, method));
-#endif
         return 1;
     }
 
@@ -420,11 +393,7 @@ namespace LuaGroup
         if (icon >= TARGETICONCOUNT)
             return luaL_argerror(L, 2, "valid target icon expected");
 
-#if (defined(CLASSIC) || defined(TBC))
-        group->SetTargetIcon(icon, target);
-#else
         group->SetTargetIcon(icon, setter, target);
-#endif
         return 0;
     }
 

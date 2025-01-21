@@ -10,9 +10,6 @@
 #include "BindingMap.h"
 #include "ElunaTemplate.h"
 
-#ifndef CLASSIC
-#ifndef TBC
-
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
@@ -61,6 +58,3 @@ void Eluna::OnRemovePassenger(Vehicle* vehicle, Unit* passenger)
     Push(passenger);
     CallAllFunctions(VehicleEventBindings, key);
 }
-
-#endif // CLASSIC
-#endif // TBC

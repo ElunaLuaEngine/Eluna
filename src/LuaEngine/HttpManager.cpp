@@ -5,9 +5,8 @@ extern "C"
 #include "lauxlib.h"
 };
 
-#if defined TRINITY || defined AZEROTHCORE
 #define CPPHTTPLIB_OPENSSL_SUPPORT
-#endif
+
 #include "libs/httplib.h"
 #include "HttpManager.h"
 #include "LuaEngine.h"
