@@ -17,13 +17,15 @@ jobs:
           repository: 'azerothcore/azerothcore-wotlk'
           ref: 'master'
           submodules: 'recursive'
+          fetch-depth: 0
 
       - name: Check out module repository 📂
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           path: 'modules/${{ github.event.repository.name }}'
-          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Cache compilation artifacts 💾
         uses: actions/cache@v4
