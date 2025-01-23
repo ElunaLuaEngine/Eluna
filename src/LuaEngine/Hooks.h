@@ -86,6 +86,7 @@ namespace Hooks
         REGTYPE_BG,
         REGTYPE_MAP,
         REGTYPE_INSTANCE,
+        REGTYPE_SPELL,
         REGTYPE_COUNT
     };
 
@@ -364,6 +365,14 @@ namespace Hooks
         INSTANCE_EVENT_ON_GAMEOBJECT_CREATE             = 6,    // (event, instance_data, map, go)
         INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS   = 7,    // (event, instance_data, map)
         INSTANCE_EVENT_COUNT
+    };
+
+    enum SpellEvents
+    {
+        SPELL_EVENT_ON_PREPARE                          = 1, // (event, caster, spell)
+        SPELL_EVENT_ON_CAST                             = 2, // (event, caster, spell, skipCheck)
+        SPELL_EVENT_ON_CAST_CANCEL                      = 3, // (event, caster, spell, bySelf)
+        SPELL_EVENT_COUNT
     };
 };
 

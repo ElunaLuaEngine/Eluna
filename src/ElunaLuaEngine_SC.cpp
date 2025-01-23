@@ -695,7 +695,7 @@ public:
 
     void OnSpellCast(Player* player, Spell* spell, bool skipCheck) override
     {
-        sEluna->OnSpellCast(player, spell, skipCheck);
+        sEluna->OnPlayerSpellCast(player, spell, skipCheck);
     }
 
     void OnLogin(Player* player) override
@@ -854,6 +854,21 @@ public:
     void OnDummyEffect(WorldObject* caster, uint32 spellID, SpellEffIndex effIndex, Item* itemTarget) override
     {
         sEluna->OnDummyEffect(caster, spellID, effIndex, itemTarget);
+    }
+
+    void OnSpellCastCancel(Spell* spell, Unit* caster, SpellInfo const* spellInfo, bool bySelf) override
+    {
+        sEluna->OnSpellCastCancel(caster, spell, spellInfo, bySelf);
+    }
+
+    void OnSpellCast(Spell* spell, Unit* caster, SpellInfo const* spellInfo, bool skipCheck) override
+    {
+        sEluna->OnSpellCast(caster, spell, spellInfo, skipCheck);
+    }
+
+    void OnSpellPrepare(Spell* spell, Unit* caster, SpellInfo const* spellInfo) override
+    {
+        sEluna->OnSpellPrepare(caster, spell, spellInfo);
     }
 };
 

@@ -60,6 +60,7 @@ luaL_Reg GlobalMethods[] =
     { "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent },
     { "RegisterMapEvent", &LuaGlobalFunctions::RegisterMapEvent },
     { "RegisterInstanceEvent", &LuaGlobalFunctions::RegisterInstanceEvent },
+    { "RegisterSpellEvent", &LuaGlobalFunctions::RegisterSpellEvent },
 
     { "ClearBattleGroundEvents", &LuaGlobalFunctions::ClearBattleGroundEvents },
     { "ClearCreatureEvents", &LuaGlobalFunctions::ClearCreatureEvents },
@@ -77,6 +78,7 @@ luaL_Reg GlobalMethods[] =
     { "ClearServerEvents", &LuaGlobalFunctions::ClearServerEvents },
     { "ClearMapEvents", &LuaGlobalFunctions::ClearMapEvents },
     { "ClearInstanceEvents", &LuaGlobalFunctions::ClearInstanceEvents },
+    { "ClearSpellEvents", &LuaGlobalFunctions::ClearSpellEvents },
 
     // Getters
     { "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine },

@@ -1216,6 +1216,29 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Registers a [Spell] event handler.
+     *
+     * <pre>
+     * enum SpellEvents
+     * {
+     *     SPELL_EVENT_ON_PREPARE                          = 1, // (event, caster, spell)
+     *     SPELL_EVENT_ON_CAST                             = 2, // (event, caster, spell, skipCheck)
+     *     SPELL_EVENT_ON_CAST_CANCEL                      = 3, // (event, caster, spell, bySelf)
+     *     SPELL_EVENT_COUNT
+     * };
+     * </pre>
+     *
+     * @param uint32 entry : [Spell] entry Id
+     * @param uint32 event : event ID, refer to SpellEvents above
+     * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+     */
+    int RegisterSpellEvent(lua_State* L)
+    {
+        return RegisterEntryHelper(L, Hooks::REGTYPE_SPELL);
+    }
+
+    /**
      * Reloads the Lua engine.
      */
     int ReloadEluna(lua_State* /*L*/)
@@ -3090,6 +3113,40 @@ namespace LuaGlobalFunctions
             Eluna::GetEluna(L)->InstanceEventBindings->Clear(Key((Hooks::InstanceEvents)event_type, entry));
         }
 
+        return 0;
+    }
+
+    /**
+     * Unbinds event handlers for either all of a [Spell]'s events, or one type of event.
+     *
+     * If `event_type` is `nil`, all the [Spell]'s event handlers are cleared.
+     *
+     * Otherwise, only event handlers for `event_type` are cleared.
+     *
+     *
+     * @proto (entry)
+     * @proto (entry, event_type)
+     * @param uint32 entry : the ID of a [Spell]s
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterSpellEvent]
+     */
+    int ClearSpellEvents(lua_State* L)
+    {
+        typedef EntryKey<Hooks::SpellEvents> Key;
+
+        if (lua_isnoneornil(L, 2))
+        {
+            uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+
+            Eluna* E = Eluna::GetEluna(L);
+            for (uint32 i = 1; i < Hooks::SPELL_EVENT_COUNT; ++i)
+                E->SpellEventBindings->Clear(Key((Hooks::SpellEvents)i, entry));
+        }
+        else
+        {
+            uint32 entry = Eluna::CHECKVAL<uint32>(L, 1);
+            uint32 event_type = Eluna::CHECKVAL<uint32>(L, 2);
+            Eluna::GetEluna(L)->SpellEventBindings->Clear(Key((Hooks::SpellEvents)event_type, entry));
+        }
         return 0;
     }
 
