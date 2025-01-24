@@ -694,6 +694,16 @@ void Eluna::Push(lua_State* luastate, ObjectGuid const guid)
     ElunaTemplate<unsigned long long>::Push(luastate, new unsigned long long(guid.GetRawValue()));
 }
 
+void Eluna::Push(lua_State* luastate, GemPropertiesEntry const& gemProperties)
+{
+    Push(luastate, &gemProperties);
+}
+
+void Eluna::Push(lua_State* luastate, SpellEntry const& spell)
+{
+    Push(luastate, &spell);
+}
+
 std::string Eluna::FormatQuery(lua_State* L, const char* query)
 {
     int numArgs = lua_gettop(L);

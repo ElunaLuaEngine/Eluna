@@ -41,6 +41,10 @@ extern "C"
 #include "ItemTemplateMethods.h"
 #include "RollMethods.h"
 
+// DBCStores includes
+#include "GemPropertiesEntryMethods.h"
+#include "SpellEntryMethods.h"
+
 luaL_Reg GlobalMethods[] =
 {
     // Hooks
@@ -162,6 +166,7 @@ luaL_Reg GlobalMethods[] =
     { "StopGameEvent", &LuaGlobalFunctions::StopGameEvent },
     { "HttpRequest", &LuaGlobalFunctions::HttpRequest },
     { "SetOwnerHalaa", &LuaGlobalFunctions::SetOwnerHalaa },
+    { "LookupEntry", &LuaGlobalFunctions::LookupEntry },
 
     { NULL, NULL }
 };
@@ -1292,6 +1297,114 @@ ElunaRegister<Roll> RollMethods[] =
     { NULL, NULL }
 };
 
+ElunaRegister<GemPropertiesEntry> GemPropertiesEntryMethods[] =
+{
+    // Getters
+    { "GetId", &LuaGemPropertiesEntry::GetId },
+    { "GetSpellItemEnchantement", &LuaGemPropertiesEntry::GetSpellItemEnchantement },
+
+    { NULL, NULL }
+};
+
+ElunaRegister<SpellEntry> SpellEntryMethods[] =
+{
+    // Getters
+    { "GetId", &LuaSpellEntry::GetId },
+    { "GetCategory", &LuaSpellEntry::GetCategory },
+    { "GetDispel", &LuaSpellEntry::GetDispel },
+    { "GetMechanic", &LuaSpellEntry::GetMechanic },
+    { "GetAttributes", &LuaSpellEntry::GetAttributes },
+    { "GetAttributesEx", &LuaSpellEntry::GetAttributesEx },
+    { "GetAttributesEx2", &LuaSpellEntry::GetAttributesEx2 },
+    { "GetAttributesEx3", &LuaSpellEntry::GetAttributesEx3 },
+    { "GetAttributesEx4", &LuaSpellEntry::GetAttributesEx4 },
+    { "GetAttributesEx5", &LuaSpellEntry::GetAttributesEx5 },
+    { "GetAttributesEx6", &LuaSpellEntry::GetAttributesEx6 },
+    { "GetAttributesEx7", &LuaSpellEntry::GetAttributesEx7 },
+    { "GetStances", &LuaSpellEntry::GetStances },
+    { "GetStancesNot", &LuaSpellEntry::GetStancesNot },
+    { "GetTargets", &LuaSpellEntry::GetTargets },
+    { "GetTargetCreatureType", &LuaSpellEntry::GetTargetCreatureType },
+    { "GetRequiresSpellFocus", &LuaSpellEntry::GetRequiresSpellFocus },
+    { "GetFacingCasterFlags", &LuaSpellEntry::GetFacingCasterFlags },
+    { "GetCasterAuraState", &LuaSpellEntry::GetCasterAuraState },
+    { "GetTargetAuraState", &LuaSpellEntry::GetTargetAuraState },
+    { "GetCasterAuraStateNot", &LuaSpellEntry::GetCasterAuraStateNot },
+    { "GetTargetAuraStateNot", &LuaSpellEntry::GetTargetAuraStateNot },
+    { "GetCasterAuraSpell", &LuaSpellEntry::GetCasterAuraSpell },
+    { "GetTargetAuraSpell", &LuaSpellEntry::GetTargetAuraSpell },
+    { "GetExcludeCasterAuraSpell", &LuaSpellEntry::GetExcludeCasterAuraSpell },
+    { "GetExcludeTargetAuraSpell", &LuaSpellEntry::GetExcludeTargetAuraSpell },
+    { "GetCastingTimeIndex", &LuaSpellEntry::GetCastingTimeIndex },
+    { "GetRecoveryTime", &LuaSpellEntry::GetRecoveryTime },
+    { "GetCategoryRecoveryTime", &LuaSpellEntry::GetCategoryRecoveryTime },
+    { "GetInterruptFlags", &LuaSpellEntry::GetInterruptFlags },
+    { "GetAuraInterruptFlags", &LuaSpellEntry::GetAuraInterruptFlags },
+    { "GetChannelInterruptFlags", &LuaSpellEntry::GetChannelInterruptFlags },
+    { "GetProcFlags", &LuaSpellEntry::GetProcFlags },
+    { "GetProcChance", &LuaSpellEntry::GetProcChance },
+    { "GetProcCharges", &LuaSpellEntry::GetProcCharges },
+    { "GetMaxLevel", &LuaSpellEntry::GetMaxLevel },
+    { "GetBaseLevel", &LuaSpellEntry::GetBaseLevel },
+    { "GetSpellLevel", &LuaSpellEntry::GetSpellLevel },
+    { "GetDurationIndex", &LuaSpellEntry::GetDurationIndex },
+    { "GetPowerType", &LuaSpellEntry::GetPowerType },
+    { "GetManaCost", &LuaSpellEntry::GetManaCost },
+    { "GetManaCostPerlevel", &LuaSpellEntry::GetManaCostPerlevel },
+    { "GetManaPerSecond", &LuaSpellEntry::GetManaPerSecond },
+    { "GetManaPerSecondPerLevel", &LuaSpellEntry::GetManaPerSecondPerLevel },
+    { "GetRangeIndex", &LuaSpellEntry::GetRangeIndex },
+    { "GetSpeed", &LuaSpellEntry::GetSpeed },
+    { "GetStackAmount", &LuaSpellEntry::GetStackAmount },
+    { "GetTotem", &LuaSpellEntry::GetTotem },
+    { "GetReagent", &LuaSpellEntry::GetReagent },
+    { "GetReagentCount", &LuaSpellEntry::GetReagentCount },
+    { "GetEquippedItemClass", &LuaSpellEntry::GetEquippedItemClass },
+    { "GetEquippedItemSubClassMask", &LuaSpellEntry::GetEquippedItemSubClassMask },
+    { "GetEquippedItemInventoryTypeMask", &LuaSpellEntry::GetEquippedItemInventoryTypeMask },
+    { "GetEffect", &LuaSpellEntry::GetEffect },
+    { "GetEffectDieSides", &LuaSpellEntry::GetEffectDieSides },
+    { "GetEffectRealPointsPerLevel", &LuaSpellEntry::GetEffectRealPointsPerLevel },
+    { "GetEffectBasePoints", &LuaSpellEntry::GetEffectBasePoints },
+    { "GetEffectMechanic", &LuaSpellEntry::GetEffectMechanic },
+    { "GetEffectImplicitTargetA", &LuaSpellEntry::GetEffectImplicitTargetA },
+    { "GetEffectImplicitTargetB", &LuaSpellEntry::GetEffectImplicitTargetB },
+    { "GetEffectRadiusIndex", &LuaSpellEntry::GetEffectRadiusIndex },
+    { "GetEffectApplyAuraName", &LuaSpellEntry::GetEffectApplyAuraName },
+    { "GetEffectAmplitude", &LuaSpellEntry::GetEffectAmplitude },
+    { "GetEffectValueMultiplier", &LuaSpellEntry::GetEffectValueMultiplier },
+    { "GetEffectChainTarget", &LuaSpellEntry::GetEffectChainTarget },
+    { "GetEffectItemType", &LuaSpellEntry::GetEffectItemType },
+    { "GetEffectMiscValue", &LuaSpellEntry::GetEffectMiscValue },
+    { "GetEffectMiscValueB", &LuaSpellEntry::GetEffectMiscValueB },
+    { "GetEffectTriggerSpell", &LuaSpellEntry::GetEffectTriggerSpell },
+    { "GetEffectPointsPerComboPoint", &LuaSpellEntry::GetEffectPointsPerComboPoint },
+    { "GetEffectSpellClassMask", &LuaSpellEntry::GetEffectSpellClassMask },
+    { "GetSpellVisual", &LuaSpellEntry::GetSpellVisual },
+    { "GetSpellIconID", &LuaSpellEntry::GetSpellIconID },
+    { "GetActiveIconID", &LuaSpellEntry::GetActiveIconID },
+    { "GetSpellPriority", &LuaSpellEntry::GetSpellPriority },
+    { "GetSpellName", &LuaSpellEntry::GetSpellName },
+    { "GetRank", &LuaSpellEntry::GetRank },
+    { "GetManaCostPercentage", &LuaSpellEntry::GetManaCostPercentage },
+    { "GetStartRecoveryCategory", &LuaSpellEntry::GetStartRecoveryCategory },
+    { "GetStartRecoveryTime", &LuaSpellEntry::GetStartRecoveryTime },
+    { "GetMaxTargetLevel", &LuaSpellEntry::GetMaxTargetLevel },
+    { "GetSpellFamilyName", &LuaSpellEntry::GetSpellFamilyName },
+    { "GetSpellFamilyFlags", &LuaSpellEntry::GetSpellFamilyFlags },
+    { "GetMaxAffectedTargets", &LuaSpellEntry::GetMaxAffectedTargets },
+    { "GetDmgClass", &LuaSpellEntry::GetDmgClass },
+    { "GetPreventionType", &LuaSpellEntry::GetPreventionType },
+    { "GetEffectDamageMultiplier", &LuaSpellEntry::GetEffectDamageMultiplier },
+    { "GetTotemCategory", &LuaSpellEntry::GetTotemCategory },
+    { "GetAreaGroupId", &LuaSpellEntry::GetAreaGroupId },
+    { "GetSchoolMask", &LuaSpellEntry::GetSchoolMask },
+    { "GetRuneCostID", &LuaSpellEntry::GetRuneCostID },
+    { "GetEffectBonusMultiplier", &LuaSpellEntry::GetEffectBonusMultiplier },
+
+    { NULL, NULL }
+};
+
 // fix compile error about accessing vehicle destructor
 template<> int ElunaTemplate<Vehicle>::CollectGarbage(lua_State* L)
 {
@@ -1436,6 +1549,12 @@ void RegisterFunctions(Eluna* E)
 
     ElunaTemplate<Roll>::Register(E, "Roll");
     ElunaTemplate<Roll>::SetMethods(E, RollMethods);
+
+    ElunaTemplate<GemPropertiesEntry>::Register(E, "GemPropertiesEntry");
+    ElunaTemplate<GemPropertiesEntry>::SetMethods(E, GemPropertiesEntryMethods);
+
+    ElunaTemplate<SpellEntry>::Register(E, "SpellEntry");
+    ElunaTemplate<SpellEntry>::SetMethods(E, SpellEntryMethods);
 
     ElunaTemplate<long long>::Register(E, "long long", true);
 

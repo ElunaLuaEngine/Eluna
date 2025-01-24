@@ -8,12 +8,14 @@
 #define GLOBALMETHODS_H
 
 #include "BindingMap.h"
+#include "ElunaDBCRegistry.h"
 
 #include "BanMgr.h"
 #include "GameTime.h"
 #include "SharedDefines.h"
 #include "OutdoorPvPMgr.h"
 #include "../../../../src/server/scripts/OutdoorPvP/OutdoorPvPNA.h"
+
 
 enum BanMode
 {
@@ -3226,6 +3228,38 @@ namespace LuaGlobalFunctions
         }
 
         return 0;
+    }
+
+    /**
+     * Returns the instance of the specified DBC (DatabaseClient) store.
+     *
+     * This function retrieves the DBC store associated with the provided name 
+     * and pushes it onto the Lua stack.
+     *
+     * @param const char* dbcName : The name of the DBC store to retrieve.
+     * @param uint32 id : The ID used to look up within the specified DBC store.
+     *
+     * @return [DBCStore] store : The requested DBC store instance.
+     */
+    int LookupEntry(lua_State* L)
+    {
+        const char* dbcName = Eluna::CHECKVAL<const char*>(L, 1);
+        uint32 id = Eluna::CHECKVAL<uint32>(L, 2);
+
+        for (const auto& dbc : dbcRegistry)
+        {
+            if (dbc.name == dbcName)
+            {
+                const void* entry = dbc.lookupFunction(id);
+                if (!entry)
+                    return 0;
+
+                dbc.pushFunction(L, entry);
+                return 1;
+            }
+        }
+
+        return luaL_error(L, "Invalid DBC name: %s", dbcName);
     }
 }
 #endif
