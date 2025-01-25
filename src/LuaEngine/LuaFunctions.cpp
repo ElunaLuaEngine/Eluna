@@ -1081,11 +1081,14 @@ ElunaRegister<Guild> GuildMethods[] =
     { "GetMOTD", &LuaGuild::GetMOTD },
     { "GetInfo", &LuaGuild::GetInfo },
     { "GetMemberCount", &LuaGuild::GetMemberCount },
+    { "GetCreatedDate", &LuaGuild::GetCreatedDate },
+    { "GetTotalBankMoney", &LuaGuild::GetTotalBankMoney },
 
     // Setters
     { "SetBankTabText", &LuaGuild::SetBankTabText },
     { "SetMemberRank", &LuaGuild::SetMemberRank },
     { "SetLeader", &LuaGuild::SetLeader },
+    { "SetName", &LuaGuild::SetName },
 
     // Other
     { "SendPacket", &LuaGuild::SendPacket },
@@ -1093,6 +1096,13 @@ ElunaRegister<Guild> GuildMethods[] =
     { "Disband", &LuaGuild::Disband },
     { "AddMember", &LuaGuild::AddMember },
     { "DeleteMember", &LuaGuild::DeleteMember },
+    { "SendMessage", &LuaGuild::SendMessage },
+    { "UpdateMemberData", &LuaGuild::UpdateMemberData },
+    { "MassInviteToEvent", &LuaGuild::MassInviteToEvent },
+    { "SwapItems", &LuaGuild::SwapItems },
+    { "SwapItemsWithInventory", &LuaGuild::SwapItemsWithInventory },
+    { "ResetTimes", &LuaGuild::ResetTimes },
+    { "ModifyBankMoney", &LuaGuild::ModifyBankMoney },
 
     { NULL, NULL }
 };

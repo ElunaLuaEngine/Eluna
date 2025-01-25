@@ -234,5 +234,177 @@ namespace LuaGuild
         guild->ChangeMemberRank(player->GET_GUID(), newRank);
         return 0;
     }
+
+    /**
+     * Sets the new name of the specified [Guild].
+     *
+     * @param string name : new name of this guild
+     */
+    int SetName(lua_State* L, Guild* guild)
+    {
+        std::string name = Eluna::CHECKVAL<std::string>(L, 2);
+        
+        guild->SetName(name);
+        return 0;
+    }
+
+    /**
+     * Update [Player] data in [Guild] member list.
+     * 
+     *     enum GuildMemberData
+     *     {
+     *         GUILD_MEMBER_DATA_ZONEID =  0
+     *         GUILD_MEMBER_DATA_LEVEL  =  1
+     *     };
+     * 
+     *  @param [Player] player = plkayer you need to update data
+     *  @param [GuildMemberData] dataid = data you need to update
+     *  @param uint32 value
+     */
+    int UpdateMemberData(lua_State* L, Guild* guild)
+    {
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        uint8 dataid = Eluna::CHECKVAL<uint8>(L, 3);
+        uint32 value = Eluna::CHECKVAL<uint32>(L, 4);
+
+        guild->UpdateMemberData(player, dataid, value);
+        return 0;
+    }
+
+    /**
+     * Send message to [Guild] from specific [Player].
+     * 
+     * @param [Player] player = the [Player] is the author of the message
+     * @param bool officierOnly = send message only on officier channel
+     * @param string msg = the message you need to send
+     * @param uint32 lang = language the [Player] will speak
+     */
+    int SendMessage(lua_State* L, Guild* guild)
+    {
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        bool officierOnly = Eluna::CHECKVAL<bool>(L, 3, false);
+        std::string msg = Eluna::CHECKVAL<std::string>(L, 4);
+        uint32 language = Eluna::CHECKVAL<uint32>(L, 5, false);
+
+        guild->BroadcastToGuild(player->GetSession(), officierOnly, msg, language);
+        return 0;
+    }
+
+    /**
+     * Invites [Guild] members to events based on level and rank filters.
+     * 
+     * @param Player player = who sends the invitation
+     * @param minLevel = the required min level
+     * @param maxLevel = the required max level
+     * @param minRank = the required min rank
+     */
+    int MassInviteToEvent(lua_State* L, Guild* guild)
+    { 
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        uint32 minLevel = Eluna::CHECKVAL<uint32>(L, 3);
+        uint32 maxLevel = Eluna::CHECKVAL<uint32>(L, 4);
+        uint32 minRank = Eluna::CHECKVAL<uint32>(L, 5);
+
+        guild->MassInviteToEvent(player->GetSession(), minLevel, maxLevel, minRank);
+        return 0;
+    }
+
+    /**
+     * Swap item from a specific tab and slot [Guild] bank to another one.
+     * 
+     * @param [Player] player = who Swap the item
+     * @param uint8 tabId = source tab id
+     * @param uint8 slotId = source slot id
+     * @param uint8 destTabId = destination tab id
+     * @param uint8 destSlotId = destination slot id
+     * @param uint8 splitedAmount = if the item is stackable, how much should be swaped
+     */
+    int SwapItems(lua_State* L, Guild* guild)
+    { 
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        uint8 tabId = Eluna::CHECKVAL<uint32>(L, 3);
+        uint8 slotId = Eluna::CHECKVAL<uint32>(L, 4);
+        uint8 destTabId = Eluna::CHECKVAL<uint32>(L, 5);
+        uint8 destSlotId = Eluna::CHECKVAL<uint32>(L, 6);
+        uint32 splitedAmount = Eluna::CHECKVAL<uint32>(L, 7);
+
+        guild->SwapItems(player, tabId, slotId, destTabId, destSlotId, splitedAmount);
+        return 0;
+    }
+
+    /**
+     * Swap an item from a specific tab and location in the [guild] bank to the bags and locations in the inventory of a specific [player] and vice versa.
+     * 
+     * @param [Player] player = who Swap the item
+     * @param bool toChar = the item goes to the [Player]'s inventory or comes from the [Player]'s inventory
+     * @param uint8 tabId = tab id
+     * @param uint8 slotId = slot id
+     * @param uint8 playerBag = bag id
+     * @param uint8 playerSlotId = slot id
+     * @param uint32 splitedAmount = if the item is stackable, how much should be swaped
+     */
+    int SwapItemsWithInventory(lua_State* L, Guild* guild)
+    { 
+        Player* player = Eluna::CHECKOBJ<Player>(L, 2);
+        bool toChar = Eluna::CHECKVAL<bool>(L, 3, false);
+        uint8 tabId = Eluna::CHECKVAL<uint8>(L, 4);
+        uint8 slotId = Eluna::CHECKVAL<uint8>(L, 5);
+        uint8 playerBag = Eluna::CHECKVAL<uint8>(L, 6);
+        uint8 playerSlotId = Eluna::CHECKVAL<uint8>(L, 7);
+        uint32 splitedAmount = Eluna::CHECKVAL<uint32>(L, 8);
+
+        guild->SwapItemsWithInventory(player, toChar, tabId, slotId, playerBag, playerSlotId, splitedAmount);
+        return 0;
+    }
+
+    /**
+     * Return the total bank money.
+     * 
+     * @return number totalBankMoney
+     */
+    int GetTotalBankMoney(lua_State* L, Guild* guild)
+    { 
+        Eluna::Push(L, guild->GetTotalBankMoney());
+        return 1;
+    }
+
+    /**
+     * Return the created date.
+     * 
+     * @return uint64 created date
+     */
+    int GetCreatedDate(lua_State* L, Guild* guild)
+    { 
+        Eluna::Push(L, guild->GetCreatedDate());
+        return 1;
+    }
+
+    /**
+     * Resets the number of item withdraw in all tab's for all [Guild] members.
+     */
+    int ResetTimes(lua_State* L, Guild* guild)
+    { 
+        guild->ResetTimes();
+        return 0;
+    }
+
+    /**
+     * Modify the [Guild] bank money. You can deposit or withdraw.
+     * 
+     * @param uint64 amount = amount to add or remove
+     * @param bool add = true (add money) | false (withdraw money)
+     * @return bool is_applied
+     */
+    int ModifyBankMoney(lua_State* L, Guild* guild)
+    { 
+        uint64 amount = Eluna::CHECKVAL<uint64>(L, 2);
+        bool add = Eluna::CHECKVAL<bool>(L, 2);
+
+        CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
+        Eluna::Push(L, guild->ModifyBankMoney(trans, amount, add));
+
+        CharacterDatabase.CommitTransaction(trans);
+        return 1;
+    }
 };
 #endif
