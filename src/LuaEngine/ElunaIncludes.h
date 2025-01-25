@@ -33,6 +33,7 @@
 #include "ScriptMgr.h"
 #include "Spell.h"
 #include "SpellAuras.h"
+#include "SpellInfo.h"
 #include "SpellMgr.h"
 #include "TemporarySummon.h"
 #include "WorldPacket.h"

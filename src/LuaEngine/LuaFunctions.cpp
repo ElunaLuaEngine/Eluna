@@ -40,6 +40,7 @@ extern "C"
 #include "AchievementMethods.h"
 #include "ItemTemplateMethods.h"
 #include "RollMethods.h"
+#include "SpellInfoMethods.h"
 
 // DBCStores includes
 #include "GemPropertiesEntryMethods.h"
@@ -125,6 +126,7 @@ luaL_Reg GlobalMethods[] =
     { "PrintError", &LuaGlobalFunctions::PrintError },
     { "PrintDebug", &LuaGlobalFunctions::PrintDebug },
     { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
+    { "GetSpellInfo", &LuaGlobalFunctions::GetSpellInfo },
 
     // Boolean
     { "IsCompatibilityMode", &LuaGlobalFunctions::IsCompatibilityMode },
@@ -1307,6 +1309,77 @@ ElunaRegister<Roll> RollMethods[] =
     { NULL, NULL }
 };
 
+ElunaRegister<SpellInfo> SpellInfoMethods[] =
+{
+    // Getters
+    { "GetAttributes", &LuaSpellInfo::GetAttributes },
+    { "GetCategory", &LuaSpellInfo::GetCategory },
+    { "GetName", &LuaSpellInfo::GetName },
+    { "CheckShapeshift", &LuaSpellInfo::CheckShapeshift },
+    { "CheckLocation", &LuaSpellInfo::CheckLocation },
+    { "CheckTarget", &LuaSpellInfo::CheckTarget },
+    { "CheckExplicitTarget", &LuaSpellInfo::CheckExplicitTarget },
+    { "CheckTargetCreatureType", &LuaSpellInfo::CheckTargetCreatureType },
+    { "CheckTargetCreatureType", &LuaSpellInfo::CheckTargetCreatureType },
+    { "GetSchoolMask", &LuaSpellInfo::GetSchoolMask },
+    { "GetAllEffectsMechanicMask", &LuaSpellInfo::GetAllEffectsMechanicMask },
+    { "GetEffectMechanicMask", &LuaSpellInfo::GetEffectMechanicMask },
+    { "GetSpellMechanicMaskByEffectMask", &LuaSpellInfo::GetSpellMechanicMaskByEffectMask },
+    { "GetEffectMechanic", &LuaSpellInfo::GetEffectMechanic },
+    { "GetDispelMask", &LuaSpellInfo::GetDispelMask },
+    { "GetExplicitTargetMask", &LuaSpellInfo::GetExplicitTargetMask },
+    { "GetAuraState", &LuaSpellInfo::GetAuraState },
+    { "GetSpellSpecific", &LuaSpellInfo::GetSpellSpecific },
+
+    // Setters
+
+    // Boolean
+    { "HasAreaAuraEffect", &LuaSpellInfo::HasAreaAuraEffect },
+    { "HasAttribute", &LuaSpellInfo::HasAttribute },
+    { "HasAura", &LuaSpellInfo::HasAura },
+    { "HasEffect", &LuaSpellInfo::HasEffect },
+
+    { "IsAbilityLearnedWithProfession", &LuaSpellInfo::IsAbilityLearnedWithProfession },
+    { "IsAbilityOfSkillType", &LuaSpellInfo::IsAbilityOfSkillType },
+    { "IsAffectingArea", &LuaSpellInfo::IsAffectingArea },
+    { "IsAllowingDeadTarget", &LuaSpellInfo::IsAllowingDeadTarget },
+    { "IsAutocastable", &LuaSpellInfo::IsAutocastable },
+    { "IsAutoRepeatRangedSpell", &LuaSpellInfo::IsAutoRepeatRangedSpell },
+    { "IsBreakingStealth", &LuaSpellInfo::IsBreakingStealth },
+    { "IsChanneled", &LuaSpellInfo::IsChanneled },
+    { "IsCooldownStartedOnEvent", &LuaSpellInfo::IsCooldownStartedOnEvent },
+    { "IsDeathPersistent", &LuaSpellInfo::IsDeathPersistent },
+    { "IsExplicitDiscovery", &LuaSpellInfo::IsExplicitDiscovery },
+    { "IsLootCrafting", &LuaSpellInfo::IsLootCrafting },
+    { "IsMultiSlotAura", &LuaSpellInfo::IsMultiSlotAura },
+    { "IsPassive", &LuaSpellInfo::IsPassive },
+    { "IsPassiveStackableWithRanks", &LuaSpellInfo::IsPassiveStackableWithRanks },
+    { "IsPositive", &LuaSpellInfo::IsPositive },
+    { "IsPositiveEffect", &LuaSpellInfo::IsPositiveEffect },
+    { "IsPrimaryProfession", &LuaSpellInfo::IsPrimaryProfession },
+    { "IsPrimaryProfessionFirstRank", &LuaSpellInfo::IsPrimaryProfessionFirstRank },
+    { "IsProfession", &LuaSpellInfo::IsProfession },
+    { "IsProfessionOrRiding", &LuaSpellInfo::IsProfessionOrRiding },
+    { "IsRangedWeaponSpell", &LuaSpellInfo::IsRangedWeaponSpell },
+    { "IsRequiringDeadTarget", &LuaSpellInfo::IsRequiringDeadTarget },
+    { "IsStackableWithRanks", &LuaSpellInfo::IsStackableWithRanks },
+    { "IsTargetingArea", &LuaSpellInfo::IsTargetingArea },
+    { "IsAffectedBySpellMods", &LuaSpellInfo::IsAffectedBySpellMods },
+    /* { "IsAffectedBySpellMod", &LuaSpellInfo::IsAffectedBySpellMod }, */
+    { "CanPierceImmuneAura", &LuaSpellInfo::CanPierceImmuneAura },
+    { "CanDispelAura", &LuaSpellInfo::CanDispelAura },
+    { "IsSingleTarget", &LuaSpellInfo::IsSingleTarget },
+    { "IsAuraExclusiveBySpecificWith", &LuaSpellInfo::IsAuraExclusiveBySpecificWith },
+    { "IsAuraExclusiveBySpecificPerCasterWith", &LuaSpellInfo::IsAuraExclusiveBySpecificPerCasterWith },
+    { "CanBeUsedInCombat", &LuaSpellInfo::CanBeUsedInCombat },
+
+    { "NeedsComboPoints", &LuaSpellInfo::NeedsComboPoints },
+    { "NeedsExplicitUnitTarget", &LuaSpellInfo::NeedsExplicitUnitTarget },
+    { "NeedsToBeTriggeredByCaster", &LuaSpellInfo::NeedsToBeTriggeredByCaster },
+
+    { NULL, NULL }
+};
+
 ElunaRegister<GemPropertiesEntry> GemPropertiesEntryMethods[] =
 {
     // Getters
@@ -1559,6 +1632,9 @@ void RegisterFunctions(Eluna* E)
 
     ElunaTemplate<Roll>::Register(E, "Roll");
     ElunaTemplate<Roll>::SetMethods(E, RollMethods);
+
+    ElunaTemplate<SpellInfo>::Register(E, "SpellInfo");
+    ElunaTemplate<SpellInfo>::SetMethods(E, SpellInfoMethods);
 
     ElunaTemplate<GemPropertiesEntry>::Register(E, "GemPropertiesEntry");
     ElunaTemplate<GemPropertiesEntry>::SetMethods(E, GemPropertiesEntryMethods);
