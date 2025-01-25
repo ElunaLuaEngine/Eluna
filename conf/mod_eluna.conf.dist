@@ -24,11 +24,26 @@
 #       Default:    false - (disabled)
 #                   true  - (enabled)
 #
+#   Eluna.RequirePaths
+#       Description: Sets the location of additional require paths.
+#                    These paths are absolute and follows the standard Lua require path patterns.
+#                    Below are a set of "standard" paths used by most package managers.
+#                    "/usr/share/%s/?.lua;/usr/local/share/lua/%s/?.lua;/usr/local/share/lua/%s/?/init.lua;/usr/share/lua/%s/?.lua;/usr/share/lua/%s/?/init.lua;"
+#       Default:     ""
+#
+#   Eluna.RequireCPaths
+#       Description: Sets the location of additional require C paths.
+#                    These paths are absolute and follows the standard Lua require path patterns.
+#                    Below are a set of "standard" paths used by most package managers.
+#                    "/usr/local/lib/lua/%s/?.so;/usr/lib/x86_64-linux-gnu/lua/%s/?.so;/usr/local/lib/lua/%s/loadall.so;"
+#       Default:     ""
 
 Eluna.Enabled = true
 Eluna.TraceBack = false
 Eluna.ScriptPath = "lua_scripts"
 Eluna.PlayerAnnounceReload = false
+Eluna.RequirePaths = ""
+Eluna.RequirecPaths = ""
 
 
 ###################################################################################################

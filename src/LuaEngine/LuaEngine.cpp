@@ -40,6 +40,7 @@ Eluna::ScriptList Eluna::lua_scripts;
 Eluna::ScriptList Eluna::lua_extensions;
 std::string Eluna::lua_folderpath;
 std::string Eluna::lua_requirepath;
+std::string Eluna::lua_requirecpath;
 Eluna* Eluna::GEluna = NULL;
 bool Eluna::reload = false;
 bool Eluna::initialized = false;
@@ -88,6 +89,8 @@ void Eluna::LoadScriptPaths()
     lua_extensions.clear();
 
     lua_folderpath = eConfigMgr->GetOption<std::string>("Eluna.ScriptPath", "lua_scripts");
+    const std::string& lua_path_extra = eConfigMgr->GetOption<std::string>("Eluna.RequirePaths", "");
+    const std::string& lua_cpath_extra = eConfigMgr->GetOption<std::string>("Eluna.RequireCPaths", "");
 
 #ifndef ELUNA_WINDOWS
     if (lua_folderpath[0] == '~')
@@ -95,11 +98,26 @@ void Eluna::LoadScriptPaths()
             lua_folderpath.replace(0, 1, home);
 #endif
     ELUNA_LOG_INFO("[Eluna]: Searching scripts from `{}`", lua_folderpath);
+
+    // clear all cache variables
     lua_requirepath.clear();
+    lua_requirecpath.clear();
+
     GetScripts(lua_folderpath);
+
+    // append our custom require paths and cpaths if the config variables are not empty
+    if (!lua_path_extra.empty())
+        lua_requirepath += lua_path_extra;
+
+    if (!lua_cpath_extra.empty())
+        lua_requirecpath += lua_cpath_extra;
+
     // Erase last ;
     if (!lua_requirepath.empty())
         lua_requirepath.erase(lua_requirepath.end() - 1);
+
+    if (!lua_requirecpath.empty())
+        lua_requirecpath.erase(lua_requirecpath.end() - 1);
 
     ELUNA_LOG_DEBUG("[Eluna]: Loaded {} scripts in {} ms", lua_scripts.size() + lua_extensions.size(), ElunaUtil::GetTimeDiff(oldMSTime));
 }
@@ -226,10 +244,19 @@ void Eluna::OpenLua()
 
     // Set lua require folder paths (scripts folder structure)
     lua_getglobal(L, "package");
-    lua_pushstring(L, lua_requirepath.c_str());
+    lua_pushstring(L, GetRequirePath().c_str());
     lua_setfield(L, -2, "path");
-    lua_pushstring(L, ""); // erase cpath
+    lua_pushstring(L, GetRequireCPath().c_str());
     lua_setfield(L, -2, "cpath");
+
+    // Set package.loaders loader for precompiled scripts
+    lua_getfield(L, -1, "loaders");
+    if (lua_isnil(L, -1)) {
+        // Lua 5.2+ uses searchers instead of loaders
+        lua_pop(L, 1);
+        lua_getfield(L, -1, "searchers");
+    }
+
     lua_pop(L, 1);
 }
 
@@ -316,7 +343,7 @@ void Eluna::AddScriptPath(std::string filename, const std::string& fullpath)
     filename = filename.substr(0, extDot);
 
     // check extension and add path to scripts to load
-    if (ext != ".lua" && ext != ".dll" && ext != ".so" && ext != ".ext")
+    if (ext != ".lua" && ext != ".dll" && ext != ".so" && ext != ".ext" && ext !=".moon")
         return;
     bool extension = ext == ".ext";
 
@@ -344,7 +371,10 @@ void Eluna::GetScripts(std::string path)
     {
         lua_requirepath +=
             path + "/?.lua;" +
-            path + "/?.ext;" +
+            path + "/?.moon" +
+            path + "/?.ext;";
+        
+        lua_requirecpath +=
             path + "/?.dll;" +
             path + "/?.so;";
 
@@ -428,16 +458,31 @@ void Eluna::RunScripts()
         lua_pop(L, 1);
         // Stack: package, modules
 
-        if (luaL_loadfile(L, it->filepath.c_str()))
+        if (it->fileext == ".moon")
         {
-            // Stack: package, modules, errmsg
-            ELUNA_LOG_ERROR("[Eluna]: Error loading `{}`", it->filepath);
-            Report(L);
-            // Stack: package, modules
-            continue;
+            std::string str = "return require('moonscript').loadfile([[" + it->filepath + "]])";
+            if (luaL_loadstring(L, str.c_str()) || lua_pcall(L, 0, LUA_MULTRET, 0))
+            {
+                // Stack: package, modules, errmsg
+                ELUNA_LOG_ERROR("[Eluna]: Error loading MoonScript `{}`", it->filepath);
+                Report(L);
+                // Stack: package, modules
+                continue;
+            }
         }
-        // Stack: package, modules, filefunc
+        else
+        {
+           if (luaL_loadfile(L, it->filepath.c_str()))
+           {
+               // Stack: package, modules, errmsg
+               ELUNA_LOG_ERROR("[Eluna]: Error loading `{}`", it->filepath);
+               Report(L);
+               // Stack: package, modules
+               continue;
+           }
+        }
 
+        // Stack: package, modules, filefunc
         if (ExecuteCall(0, 1))
         {
             // Stack: package, modules, result
