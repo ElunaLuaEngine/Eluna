@@ -294,33 +294,48 @@ namespace LuaSpellEntry
     int GetTotem(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->Totem.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->Totem.size(); ++index)
         {
-            Eluna::Push(L, entry->Totem[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->Totem[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetReagent(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->Reagent.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->Reagent.size(); ++index)
         {
-            Eluna::Push(L, entry->Reagent[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->Reagent[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetReagentCount(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->ReagentCount.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->ReagentCount.size(); ++index)
         {
-            Eluna::Push(L, entry->ReagentCount[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->ReagentCount[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -345,209 +360,304 @@ namespace LuaSpellEntry
     int GetEffect(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->Effect.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->Effect.size(); ++index)
         {
-            Eluna::Push(L, entry->Effect[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->Effect[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectDieSides(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectDieSides.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectDieSides.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectDieSides[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectDieSides[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectRealPointsPerLevel(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectRealPointsPerLevel.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectRealPointsPerLevel.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectRealPointsPerLevel[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectRealPointsPerLevel[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectBasePoints(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectBasePoints.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectBasePoints.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectBasePoints[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectBasePoints[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectMechanic(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectMechanic.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectMechanic.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectMechanic[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectMechanic[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectImplicitTargetA(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectImplicitTargetA.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectImplicitTargetA.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectImplicitTargetA[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectImplicitTargetA[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectImplicitTargetB(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectImplicitTargetB.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectImplicitTargetB.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectImplicitTargetB[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectImplicitTargetB[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectRadiusIndex(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectRadiusIndex.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectRadiusIndex.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectRadiusIndex[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectRadiusIndex[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectApplyAuraName(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectApplyAuraName.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectApplyAuraName.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectApplyAuraName[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectApplyAuraName[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectAmplitude(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectAmplitude.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectAmplitude.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectAmplitude[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectAmplitude[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectValueMultiplier(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectValueMultiplier.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectValueMultiplier.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectValueMultiplier[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectValueMultiplier[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectChainTarget(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectChainTarget.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectChainTarget.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectChainTarget[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectChainTarget[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectItemType(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectItemType.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectItemType.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectItemType[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectItemType[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectMiscValue(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectMiscValue.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectMiscValue.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectMiscValue[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectMiscValue[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectMiscValueB(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectMiscValueB.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectMiscValueB.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectMiscValueB[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectMiscValueB[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectTriggerSpell(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectTriggerSpell.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectTriggerSpell.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectTriggerSpell[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectTriggerSpell[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectPointsPerComboPoint(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectPointsPerComboPoint.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectPointsPerComboPoint.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectPointsPerComboPoint[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectPointsPerComboPoint[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetEffectSpellClassMask(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectSpellClassMask.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectSpellClassMask.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectSpellClassMask[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectSpellClassMask[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetSpellVisual(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->SpellVisual.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->SpellVisual.size(); ++index)
         {
-            Eluna::Push(L, entry->SpellVisual[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->SpellVisual[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -572,22 +682,32 @@ namespace LuaSpellEntry
     int GetSpellName(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->SpellName.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->SpellName.size(); ++index)
         {
-            Eluna::Push(L, entry->SpellName[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->SpellName[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetRank(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->Rank.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->Rank.size(); ++index)
         {
-            Eluna::Push(L, entry->Rank[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->Rank[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -648,22 +768,32 @@ namespace LuaSpellEntry
     int GetEffectDamageMultiplier(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectDamageMultiplier.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectDamageMultiplier.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectDamageMultiplier[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectDamageMultiplier[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
     int GetTotemCategory(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->TotemCategory.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->TotemCategory.size(); ++index)
         {
-            Eluna::Push(L, entry->TotemCategory[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->TotemCategory[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -688,11 +818,16 @@ namespace LuaSpellEntry
     int GetEffectBonusMultiplier(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
-        for (size_t i = 0; i < entry->EffectBonusMultiplier.size(); ++i)
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        for (size_t index = 0; index < entry->EffectBonusMultiplier.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectBonusMultiplier[i]);
-            lua_rawseti(L, -2, i + 1);
+            Eluna::Push(L, entry->EffectBonusMultiplier[index]);
+            lua_rawseti(L, tbl, ++i);
         }
+        
+        lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
 }
