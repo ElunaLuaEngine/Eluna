@@ -43,8 +43,7 @@ Eluna.TraceBack = false
 Eluna.ScriptPath = "lua_scripts"
 Eluna.PlayerAnnounceReload = false
 Eluna.RequirePaths = ""
-Eluna.RequirecPaths = ""
-
+Eluna.RequireCPaths = ""
 
 ###################################################################################################
 # LOGGING SYSTEM SETTINGS
