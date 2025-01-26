@@ -325,5 +325,62 @@ namespace LuaMap
         lua_settop(L, tbl);
         return 1;
     }
+
+    /**
+     * Returns a table with all the current [Creature]s in the map
+     * 
+     * @return table mapCreatures
+     */
+    int GetCreatures(lua_State* L, Map* map)
+    {
+        const auto& creatures = map->GetCreatureBySpawnIdStore();
+
+        lua_createtable(L, creatures.size(), 0);
+        int tbl = lua_gettop(L);
+
+        for (const auto& pair : creatures)
+        {
+            Creature* creature = pair.second;
+
+            Eluna::Push(L, creature);
+            lua_rawseti(L, tbl, creature->GetSpawnId());
+        }
+
+        lua_settop(L, tbl);
+        return 1;
+    }
+
+    /**
+     * Returns a table with all the current [Creature]s in the specific area id
+     * 
+     * @param number areaId : specific area id
+     * @return table mapCreatures
+     */
+    int GetCreaturesByAreaId(lua_State* L, Map* map)
+    {
+        uint32 areaId = Eluna::CHECKVAL<uint32>(L, 2, -1);
+        std::vector<Creature*> filteredCreatures;
+
+        for (const auto& pair : map->GetCreatureBySpawnIdStore())
+        {
+            Creature* creature = pair.second;
+            if (areaId == -1 || creature->GetAreaId() == areaId)
+            {
+                filteredCreatures.push_back(creature);
+            }
+        }
+
+        lua_createtable(L, filteredCreatures.size(), 0);
+        int tbl = lua_gettop(L);
+
+        for (Creature* creature : filteredCreatures)
+        {
+            Eluna::Push(L, creature);
+            lua_rawseti(L, tbl, creature->GetSpawnId());
+        }
+
+        lua_settop(L, tbl);
+        return 1;
+    }
 };
 #endif
