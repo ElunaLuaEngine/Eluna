@@ -353,5 +353,20 @@ namespace LuaGameObject
         go->SetRespawnTime(respawn);
         return 0;
     }
+
+    /**
+     * Sets the respawn or despawn time for the gameobject.
+     *
+     * Respawn time is also used as despawn time depending on gameobject settings
+     *
+     * @param int32 delay = 0 : cooldown time in seconds to respawn or despawn the object. 0 means never
+     */
+    int SetRespawnDelay(lua_State* L, GameObject* go)
+    {
+        int32 respawn = Eluna::CHECKVAL<int32>(L, 2);
+
+        go->SetRespawnDelay(respawn);
+        return 0;
+    }
 };
 #endif
