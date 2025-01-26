@@ -45,13 +45,23 @@ namespace LuaItemTemplate
     }
 
     /**
-     * Returns the [ItemTemplate]'s name.
+     * Returns the [ItemTemplate]'s name in the [Player]'s locale.
      *
+     * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the [ItemTemplate] name in (it's optional default: LOCALE_enUS)
+     * 
      * @return string name
      */
     int GetName(lua_State* L, ItemTemplate* itemTemplate)
     {
-        Eluna::Push(L, itemTemplate->Name1);
+        uint32 loc_idx = Eluna::CHECKVAL<uint32>(L, 2, LocaleConstant::LOCALE_enUS);
+
+        const ItemLocale* itemLocale = eObjectMgr->GetItemLocale(itemTemplate->ItemId);
+        std::string name = itemTemplate->Name1;
+
+        if (itemLocale && !itemLocale->Name[loc_idx].empty())
+            name = itemLocale->Name[loc_idx];
+
+        Eluna::Push(L, name);
         return 1;
     }
 
