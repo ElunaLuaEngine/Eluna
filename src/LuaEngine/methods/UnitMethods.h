@@ -2714,5 +2714,41 @@ namespace LuaUnit
     Eluna::Push(L, summon);
     return 1;
     }*/
+
+    /**
+     * Clear the threat of a [Unit] in the threat list.
+     *
+     * @param [Unit] target
+     */
+    int ClearThreat(lua_State* L, Unit* unit)
+    {
+        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+
+        unit->GetThreatMgr().ClearThreat(target);
+        return 0;
+    }
+
+    /**
+     * Resets the [Unit]'s threat list, setting all threat targets' threat to 0.
+     */
+    int ResetAllThreat(lua_State* /*L*/, Unit* unit)
+    {
+        unit->GetThreatMgr().ResetAllThreat();
+        return 0;
+    }
+
+    /**
+     * Returns the threat of a [Unit].
+     *
+     * @param [Unit] target
+     * @return float threat
+     */
+    int GetThreat(lua_State* L, Unit* unit)
+    {
+        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+
+        Eluna::Push(L, unit->GetThreatMgr().GetThreat(target));
+        return 1;
+    }
 };
 #endif
