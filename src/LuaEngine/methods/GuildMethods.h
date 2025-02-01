@@ -382,7 +382,7 @@ namespace LuaGuild
     /**
      * Resets the number of item withdraw in all tab's for all [Guild] members.
      */
-    int ResetTimes(lua_State* L, Guild* guild)
+    int ResetTimes(lua_State* /*L*/, Guild* guild)
     { 
         guild->ResetTimes();
         return 0;
