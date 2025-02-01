@@ -567,6 +567,8 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SetPlayerLock", &LuaPlayer::SetPlayerLock },
     { "SetGender", &LuaPlayer::SetGender },
     { "SetSheath", &LuaPlayer::SetSheath },
+    { "GetHomebind", &LuaPlayer::GetHomebind },
+    { "GetSpells", &LuaPlayer::GetSpells },
 
     // Boolean
     { "HasTankSpec", &LuaPlayer::HasTankSpec },
@@ -737,6 +739,7 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
     { "SendMovieStart", &LuaPlayer::SendMovieStart },
     { "UpdatePlayerSetting", &LuaPlayer::UpdatePlayerSetting },
+    { "TeleportTo", &LuaPlayer::TeleportTo },
 
     { NULL, NULL }
 };

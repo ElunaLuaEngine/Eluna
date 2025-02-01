@@ -3913,5 +3913,79 @@ namespace LuaPlayer
     player->RemovePet(player->GetPet(), (PetSaveMode)mode, returnreagent);
     return 0;
     }*/
+
+    /**
+     *  Returns the [Player] spells list
+     *
+     * @return table playerSpells
+     */
+    int GetSpells(lua_State* L, Player* player)
+    {
+        std::list<uint32> list;
+        lua_createtable(L, list.size(), 0);
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        PlayerSpellMap spellMap = player->GetSpellMap();
+        for (PlayerSpellMap::const_iterator itr = spellMap.begin(); itr != spellMap.end(); ++itr)
+        {
+            SpellInfo const* spellInfo = sSpellMgr->AssertSpellInfo(itr->first);
+            Eluna::Push(L, spellInfo->Id);
+            lua_rawseti(L, tbl, ++i);
+        }
+
+        lua_settop(L, tbl);
+        return 1;
+    }
+
+    /**
+     *  Returns the [Player] homebind location.
+     *
+     *  @return table homebind : a table containing the player's homebind information:
+     *      - uint32 mapId: The ID of the map where the player is bound.
+     *      - float x: The X coordinate of the homebind location.
+     *      - float y: The Y coordinate of the homebind location.
+     *      - float z: The Z coordinate of the homebind location.
+     */
+    int GetHomebind(lua_State* L, Player* player)
+    {
+        lua_newtable(L);
+        lua_pushinteger(L, player->m_homebindMapId);
+        lua_setfield(L, -2, "mapId");
+
+        lua_pushnumber(L, player->m_homebindX);
+        lua_setfield(L, -2, "x");
+
+        lua_pushnumber(L, player->m_homebindY);
+        lua_setfield(L, -2, "y");
+
+        lua_pushnumber(L, player->m_homebindZ);
+        lua_setfield(L, -2, "z");
+
+        return 1;
+    }
+
+    /**
+     *  Teleports [Player] to a predefined location based on the teleport name.
+     *
+     *  @param string tele : The name of the predefined teleport location.
+     */
+    int TeleportTo(lua_State* L, Player* player)
+    {
+        std::string tele = Eluna::CHECKVAL<std::string>(L, 2);
+        const GameTele* game_tele = sObjectMgr->GetGameTele(tele);
+
+        MapEntry const* map = sMapStore.LookupEntry(game_tele->mapId);
+
+        if (player->IsInFlight())
+        {
+            player->GetMotionMaster()->MovementExpired();
+            player->m_taxi.ClearTaxiDestinations();
+        }
+
+        player->TeleportTo(game_tele->mapId, game_tele->position_x, game_tele->position_y, game_tele->position_z, game_tele->orientation);
+        return 0;
+    }
 };
 #endif
+
