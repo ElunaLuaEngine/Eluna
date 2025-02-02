@@ -3365,12 +3365,14 @@ namespace LuaPlayer
         bool update = E->CHECKVAL<bool>(3, true);
         (void)update; // ensure that the variable is referenced in order to pass compiler checks
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         player->GetSpellHistory()->ResetCooldowns([category](SpellHistory::CooldownStorageType::iterator itr) -> bool
         {
-#if ELUNA_EXPANSION < EXP_RETAIL
             SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(itr->first);
 #else
-            SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(itr->first, DIFFICULTY_NONE);
+        player->GetSpellHistory()->ResetCooldowns([category](SpellHistory::CooldownEntry const& cooldownEntry) -> bool
+        {
+            SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(cooldownEntry.SpellId, DIFFICULTY_NONE);
 #endif
             return spellInfo && spellInfo->GetCategory() == category;
         }, update);
