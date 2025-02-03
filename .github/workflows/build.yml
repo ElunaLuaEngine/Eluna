@@ -174,7 +174,7 @@ jobs:
       - name: Dependencies and Environment
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y git make cmake clang libssl-dev libbz2-dev build-essential default-libmysqlclient-dev libace-dev
+          sudo apt-get install -y git make cmake clang libssl-dev libbz2-dev build-essential default-libmysqlclient-dev libace-dev libreadline-dev
           sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
           sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang 100
       - name: Configure
@@ -242,7 +242,7 @@ jobs:
     - name: Dependencies
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install build-essential cmake cppcheck git libace-dev libiberty-dev libmysql++-dev libssl-dev libtbb-dev make openssl
+        sudo apt-get -qq install build-essential cmake cppcheck git libace-dev libiberty-dev libmysql++-dev libssl-dev libtbb-dev make openssl libreadline-dev
 
     - name: Configure and Build
       run: |
