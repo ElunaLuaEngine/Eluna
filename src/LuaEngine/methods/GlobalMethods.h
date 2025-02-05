@@ -3231,6 +3231,85 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Gets the localized OptionText and BoxText for a specific gossip menu option.
+     * If the text for the specified locale is not found, it returns the default text.
+     *
+     * @param uint32 menuId : The ID of the gossip menu.
+     * @param uint32 optionId : The ID of the gossip menu option.
+     * @param uint8 locale : The locale to retrieve the text for. 0 represents the default locale.
+     *
+     * @return string, string : The localized OptionText and BoxText for the gossip menu option, or the default text if no localization is found.
+     */
+    int GetGossipMenuOptionLocale(lua_State* L)
+    {
+        uint32 menuId = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 optionId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint8 locale = Eluna::CHECKVAL<uint8>(L, 3);
+
+        std::string strOptionText;
+        std::string strBoxText;
+
+        if (locale != DEFAULT_LOCALE)
+        {
+            if (GossipMenuItemsLocale const* gossipMenuLocale = sObjectMgr->GetGossipMenuItemsLocale(MAKE_PAIR32(menuId, optionId)))
+            {
+                ObjectMgr::GetLocaleString(gossipMenuLocale->OptionText, LocaleConstant(locale), strOptionText);
+                ObjectMgr::GetLocaleString(gossipMenuLocale->BoxText, LocaleConstant(locale), strBoxText);
+            }
+        }
+
+        if (strOptionText.empty() || strBoxText.empty())
+        {
+            GossipMenuItemsMapBounds bounds = sObjectMgr->GetGossipMenuItemsMapBounds(menuId);
+            for (auto itr = bounds.first; itr != bounds.second; ++itr)
+            {
+                if (itr->second.OptionID == optionId)
+                {
+                    if (strOptionText.empty())
+                        strOptionText = itr->second.OptionText;
+                    if (strBoxText.empty())
+                        strBoxText = itr->second.BoxText;
+                    break;
+                }
+            }
+        }
+
+        Eluna::Push(L, strOptionText);
+        Eluna::Push(L, strBoxText);
+        return 2;
+    }
+
+    /**
+     * Return the entrance position (x, y, z, o) of the specified dungeon map id
+     *
+     * @param uint32 mapId
+     *
+     * return uint32 pos_x
+     * return uint32 pos_y
+     * return uint32 pos_z
+     * return uint32 pos_o
+     * 
+     */
+    int GetMapEntrance(lua_State* L)
+    {
+        uint32 mapId = Eluna::CHECKVAL<uint32>(L, 1);
+        AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(mapId);
+
+        if (!at)
+        {
+            lua_pushnil(L);
+            return 1;
+        }
+
+        Eluna::Push(L, at->target_X);
+        Eluna::Push(L, at->target_Y);
+        Eluna::Push(L, at->target_Z);
+        Eluna::Push(L, at->target_Orientation);
+
+        return 5;
+    }
+      
+    /**  
      * Get the [SpellInfo] for the specified [Spell] id
      *
      * @param uint32 spellId : the ID of the spell
