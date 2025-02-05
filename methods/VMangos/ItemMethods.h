@@ -721,7 +721,13 @@ namespace LuaItem
         { "IsCurrencyToken", METHOD_REG_NONE },  // not implemented
         { "IsBoundAccountWide", METHOD_REG_NONE },  // not implemented
         { "IsWeaponVellum", METHOD_REG_NONE },  // not implemented
-        { "IsArmorVellum", METHOD_REG_NONE }  // not implemented
+        { "IsArmorVellum", METHOD_REG_NONE },  // not implemented
+        { "GetStatInfo", METHOD_REG_NONE }, // not implemented
+        { "GetDamageInfo", METHOD_REG_NONE }, // not implemented
+        { "GetSpeed", METHOD_REG_NONE }, // not implemented
+        { "GetArmor", METHOD_REG_NONE }, // not implemented
+        { "GetMaxDurability", METHOD_REG_NONE }, // not implemented
+        { "GetDurability", METHOD_REG_NONE } // not implemented
     };
 };
 #endif

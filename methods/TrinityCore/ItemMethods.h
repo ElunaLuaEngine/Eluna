@@ -610,6 +610,104 @@ namespace LuaItem
     }
 
     /**
+     * Returns the stat info of the specified stat slot of this [Item]
+     *
+     * @param uint8 statSlot : the stat slot specified
+     * @return int32 statValue
+     * @return int32 statType
+     */
+    int GetStatInfo(Eluna* E, Item* item)
+    {
+        uint8 statSlot = E->CHECKVAL<uint8>(2);
+        int32 statValue = 0;
+        int32 statType = 0;
+
+        if (statSlot > 0 && statSlot <= item->GetTemplate()->StatsCount)
+        {
+            auto& statEntry = item->GetTemplate()->ItemStat[statSlot - 1];
+            statValue = statEntry.ItemStatValue;
+            statType = statEntry.ItemStatType;
+        }
+
+        E->Push(statValue);
+        E->Push(statType);
+        return 2;
+    }
+
+    /**
+     * Returns the damage info of the specified damage slot of this [Item]
+     *
+     * @param uint8 damageSlot : the damage slot specified (1 or 2)
+     * @return uint32 damageType
+     * @return float minDamage
+     * @return float maxDamage
+     */
+    int GetDamageInfo(Eluna* E, Item* item)
+    {
+        uint8 damageSlot = E->CHECKVAL<uint8>(2);
+        uint32 damageType = 0;
+        float damageMin = 0;
+        float damageMax = 0;
+
+        if (damageSlot > 0 && damageSlot <= MAX_ITEM_PROTO_DAMAGES)
+        {
+            auto& damageEntry = item->GetTemplate()->Damage[damageSlot - 1];
+            damageType = damageEntry.DamageType;
+            damageMin = damageEntry.DamageMin;
+            damageMax = damageEntry.DamageMax;
+        }
+
+        E->Push(damageType);
+        E->Push(damageMin);
+        E->Push(damageMax);
+        return 3;
+    }
+
+    /**
+     * Returns the base attack speed of this [Item]
+     *
+     * @return uint32 speed
+     */
+    int GetSpeed(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->Delay);
+        return 1;
+    }
+
+    /**
+     * Returns the base armor of this [Item]
+     *
+     * @return uint32 armor
+     */
+    int GetArmor(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->Armor);
+        return 1;
+    }
+
+    /**
+     * Returns the max durability of this [Item]
+     *
+     * @return uint32 maxDurability
+     */
+    int GetMaxDurability(Eluna* E, Item* item)
+    {
+        E->Push(item->GetUInt32Value(ITEM_FIELD_MAXDURABILITY));
+        return 1;
+    }
+
+    /**
+     * Returns the current durability of this [Item]
+     *
+     * @return uint32 durabiliy
+     */
+    int GetDurability(Eluna* E, Item* item)
+    {
+        E->Push(item->GetUInt32Value(ITEM_FIELD_DURABILITY));
+        return 1;
+    }
+
+    /**
      * Returns the random property ID of this [Item]
      *
      * @return uint32 randomPropertyId
@@ -807,6 +905,12 @@ namespace LuaItem
         { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
         { "GetItemSet", &LuaItem::GetItemSet },
         { "GetBagSize", &LuaItem::GetBagSize },
+        { "GetStatInfo", &LuaItem::GetStatInfo },
+        { "GetDamageInfo", &LuaItem::GetDamageInfo },
+        { "GetSpeed", &LuaItem::GetSpeed },
+        { "GetArmor", &LuaItem::GetArmor },
+        { "GetMaxDurability", &LuaItem::GetMaxDurability },
+        { "GetDurability", &LuaItem::GetDurability },
 
         // Setters
         { "SetOwner", &LuaItem::SetOwner },

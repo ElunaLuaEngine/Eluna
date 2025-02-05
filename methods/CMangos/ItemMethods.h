@@ -861,7 +861,13 @@ namespace LuaItem
         { "SaveToDB", &LuaItem::SaveToDB },
 
         // Not implemented methods
-        { "IsRefundExpired", METHOD_REG_NONE } // not implemented
+        { "IsRefundExpired", METHOD_REG_NONE }, // not implemented
+        { "GetStatInfo", METHOD_REG_NONE }, // not implemented
+        { "GetDamageInfo", METHOD_REG_NONE }, // not implemented
+        { "GetSpeed", METHOD_REG_NONE }, // not implemented
+        { "GetArmor", METHOD_REG_NONE }, // not implemented
+        { "GetMaxDurability", METHOD_REG_NONE }, // not implemented
+        { "GetDurability", METHOD_REG_NONE } // not implemented
     };
 };
 #endif
