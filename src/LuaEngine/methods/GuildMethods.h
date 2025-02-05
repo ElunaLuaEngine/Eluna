@@ -257,8 +257,8 @@ namespace LuaGuild
      *         GUILD_MEMBER_DATA_LEVEL  =  1
      *     };
      * 
-     *  @param [Player] player = plkayer you need to update data
-     *  @param [GuildMemberData] dataid = data you need to update
+     *  @param [Player] player : plkayer you need to update data
+     *  @param [GuildMemberData] dataid : data you need to update
      *  @param uint32 value
      */
     int UpdateMemberData(lua_State* L, Guild* guild)
@@ -274,10 +274,10 @@ namespace LuaGuild
     /**
      * Send message to [Guild] from specific [Player].
      * 
-     * @param [Player] player = the [Player] is the author of the message
-     * @param bool officierOnly = send message only on officier channel
-     * @param string msg = the message you need to send
-     * @param uint32 lang = language the [Player] will speak
+     * @param [Player] player : the [Player] is the author of the message
+     * @param bool officierOnly : send message only on officier channel
+     * @param string msg : the message you need to send
+     * @param uint32 lang : language the [Player] will speak
      */
     int SendMessage(lua_State* L, Guild* guild)
     {
@@ -293,10 +293,10 @@ namespace LuaGuild
     /**
      * Invites [Guild] members to events based on level and rank filters.
      * 
-     * @param Player player = who sends the invitation
-     * @param minLevel = the required min level
-     * @param maxLevel = the required max level
-     * @param minRank = the required min rank
+     * @param Player player : who sends the invitation
+     * @param minLevel : the required min level
+     * @param maxLevel : the required max level
+     * @param minRank : the required min rank
      */
     int MassInviteToEvent(lua_State* L, Guild* guild)
     { 
@@ -312,12 +312,12 @@ namespace LuaGuild
     /**
      * Swap item from a specific tab and slot [Guild] bank to another one.
      * 
-     * @param [Player] player = who Swap the item
-     * @param uint8 tabId = source tab id
-     * @param uint8 slotId = source slot id
-     * @param uint8 destTabId = destination tab id
-     * @param uint8 destSlotId = destination slot id
-     * @param uint8 splitedAmount = if the item is stackable, how much should be swaped
+     * @param [Player] player : who Swap the item
+     * @param uint8 tabId : source tab id
+     * @param uint8 slotId : source slot id
+     * @param uint8 destTabId : destination tab id
+     * @param uint8 destSlotId : destination slot id
+     * @param uint8 splitedAmount : if the item is stackable, how much should be swaped
      */
     int SwapItems(lua_State* L, Guild* guild)
     { 
@@ -335,13 +335,13 @@ namespace LuaGuild
     /**
      * Swap an item from a specific tab and location in the [guild] bank to the bags and locations in the inventory of a specific [player] and vice versa.
      * 
-     * @param [Player] player = who Swap the item
-     * @param bool toChar = the item goes to the [Player]'s inventory or comes from the [Player]'s inventory
-     * @param uint8 tabId = tab id
-     * @param uint8 slotId = slot id
-     * @param uint8 playerBag = bag id
-     * @param uint8 playerSlotId = slot id
-     * @param uint32 splitedAmount = if the item is stackable, how much should be swaped
+     * @param [Player] player : who Swap the item
+     * @param bool toChar : the item goes to the [Player]'s inventory or comes from the [Player]'s inventory
+     * @param uint8 tabId : tab id
+     * @param uint8 slotId : slot id
+     * @param uint8 playerBag : bag id
+     * @param uint8 playerSlotId : slot id
+     * @param uint32 splitedAmount : if the item is stackable, how much should be swaped
      */
     int SwapItemsWithInventory(lua_State* L, Guild* guild)
     { 
@@ -391,8 +391,8 @@ namespace LuaGuild
     /**
      * Modify the [Guild] bank money. You can deposit or withdraw.
      * 
-     * @param uint64 amount = amount to add or remove
-     * @param bool add = true (add money) | false (withdraw money)
+     * @param uint64 amount : amount to add or remove
+     * @param bool add : true (add money) | false (withdraw money)
      * @return bool is_applied
      */
     int ModifyBankMoney(lua_State* L, Guild* guild)
