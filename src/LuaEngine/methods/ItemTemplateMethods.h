@@ -196,6 +196,22 @@ namespace LuaItemTemplate
         Eluna::Push(L, itemTemplate->RequiredLevel);
         return 1;
     }
+
+    /**
+     * Returns the icon is used by this [ItemTemplate].
+     * 
+     * @return string itemIcon
+     */
+    int GetIcon(lua_State* L, ItemTemplate* itemTemplate)
+    {   
+        uint32 display_id = itemTemplate->DisplayInfoID;
+        
+        ItemDisplayInfoEntry const* displayInfo = sItemDisplayInfoStore.LookupEntry(display_id);       
+        const char* icon = displayInfo->inventoryIcon;
+
+        Eluna::Push(L, icon);
+        return 1;
+    }
 }
 
 #endif
