@@ -706,3 +706,11 @@ void Eluna::OnCreatureKilledByPet(Player* player, Creature* killed)
     Push(killed);
     CallAllFunctions(PlayerEventBindings, key);
 }
+
+bool Eluna::CanPlayerResurrect(Player* player)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_RESURRECT, true);
+    Push(player);
+    return CallAllFunctionsBool(PlayerEventBindings, key);
+}
+

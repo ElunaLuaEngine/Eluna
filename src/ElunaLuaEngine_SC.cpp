@@ -812,6 +812,11 @@ public:
     {
         sEluna->OnCreatureKilledByPet(player, killed);
     }
+
+    bool CanPlayerResurrect(Player* player) override
+    {
+        return sEluna->CanPlayerResurrect(player);
+    }
 };
 
 class Eluna_ServerScript : public ServerScript
