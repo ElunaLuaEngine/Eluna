@@ -4025,8 +4025,6 @@ namespace LuaPlayer
         std::string tele = Eluna::CHECKVAL<std::string>(L, 2);
         const GameTele* game_tele = sObjectMgr->GetGameTele(tele);
 
-        MapEntry const* map = sMapStore.LookupEntry(game_tele->mapId);
-
         if (player->IsInFlight())
         {
             player->GetMotionMaster()->MovementExpired();
