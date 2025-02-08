@@ -358,13 +358,13 @@ namespace LuaMap
      */
     int GetCreaturesByAreaId(lua_State* L, Map* map)
     {
-        uint32 areaId = Eluna::CHECKVAL<uint32>(L, 2, -1);
+        int32 areaId = Eluna::CHECKVAL<int32>(L, 2, -1);
         std::vector<Creature*> filteredCreatures;
 
         for (const auto& pair : map->GetCreatureBySpawnIdStore())
         {
             Creature* creature = pair.second;
-            if (areaId == -1 || creature->GetAreaId() == areaId)
+            if (areaId == -1 || creature->GetAreaId() == (uint32)areaId)
             {
                 filteredCreatures.push_back(creature);
             }

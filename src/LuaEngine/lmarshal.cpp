@@ -204,7 +204,7 @@ static void mar_encode_value(lua_State *L, mar_Buffer *buf, int val, size_t *idx
         }
         else {
             mar_Buffer rec_buf;
-            unsigned int i;
+            unsigned char i;
             lua_Debug ar;
             lua_pop(L, 1); /* pop nil */
 

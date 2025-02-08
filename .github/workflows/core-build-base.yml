@@ -58,6 +58,8 @@ jobs:
             -DCMAKE_BUILD_TYPE="Release" \
             -DCMAKE_CXX_COMPILER_LAUNCHER="ccache" \
             -DCMAKE_C_COMPILER_LAUNCHER="ccache" \
+            -DCMAKE_C_FLAGS="-Werror" \
+            -DCMAKE_CXX_FLAGS="-Werror" \
             -DLUA_VERSION=${{ inputs.lua_version }}
           make -j$(nproc)
           cd ..
