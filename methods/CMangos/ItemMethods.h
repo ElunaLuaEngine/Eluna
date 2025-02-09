@@ -639,14 +639,15 @@ namespace LuaItem
     /**
      * Returns the damage info of the specified damage slot of this [Item]
      *
-     * @param uint8 damageSlot : the damage slot specified (1 or 2)
+     * @param uint8 damageSlot : the damage slot specified (1 or 2), slot does not apply to Cata
      * @return uint32 damageType
      * @return float minDamage
      * @return float maxDamage
      */
     int GetDamageInfo(Eluna* E, Item* item)
     {
-        uint8 damageSlot = E->CHECKVAL<uint8>(2);
+        uint8 damageSlot = E->CHECKVAL<uint8>(2); // Not used in Cata but reading for compatibility
+#if ELUNA_EXPANSION < CATA
         uint32 damageType = 0;
         float damageMin = 0;
         float damageMax = 0;
@@ -662,6 +663,11 @@ namespace LuaItem
         E->Push(damageType);
         E->Push(damageMin);
         E->Push(damageMax);
+#else
+        E->Push(item->GetTemplate()->DamageType);
+        E->Push(item->GetTemplate()->GetMinDamage());
+        E->Push(item->GetTemplate()->GetMaxDamage());
+#endif
         return 3;
     }
 
@@ -683,7 +689,11 @@ namespace LuaItem
      */
     int GetArmor(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION < EXP_CATA
         E->Push(item->GetTemplate()->Armor);
+#else
+        E->Push(item->GetTemplate()->GetArmor());
+#endif
         return 1;
     }
 
