@@ -647,7 +647,7 @@ namespace LuaItem
     int GetDamageInfo(Eluna* E, Item* item)
     {
         uint8 damageSlot = E->CHECKVAL<uint8>(2); // Not used in Cata but reading for compatibility
-#if ELUNA_EXPANSION < CATA
+#if ELUNA_EXPANSION < EXP_CATA
         uint32 damageType = 0;
         float damageMin = 0;
         float damageMax = 0;
