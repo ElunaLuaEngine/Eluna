@@ -128,7 +128,7 @@ void Eluna::_ReloadEluna()
     ASSERT(IsInitialized());
 
     if (eConfigMgr->GetOption<bool>("Eluna.PlayerAnnounceReload", false))
-        eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
+        eWorldSessionMgr->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
     else
         ChatHandler(nullptr).SendGMText(SERVER_MSG_STRING, "Reloading Eluna...");
 

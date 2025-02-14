@@ -52,6 +52,7 @@
 #include "Bag.h"
 #include "Vehicle.h"
 #include "ArenaTeam.h"
+#include "WorldSessionMgr.h"
 
 typedef Opcodes                 OpcodesList;
 
@@ -62,6 +63,7 @@ typedef Opcodes                 OpcodesList;
 #define CORE_NAME               "AzerothCore"
 
 #define CORE_VERSION            (GitRevision::GetFullVersion())
+#define eWorldSessionMgr        (sWorldSessionMgr)
 #define eWorld                  (sWorld)
 #define eMapMgr                 (sMapMgr)
 #define eConfigMgr              (sConfigMgr)
