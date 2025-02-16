@@ -523,7 +523,7 @@ public:
         sEluna->OnResurrect(player);
     }
 
-    bool CanPlayerUseChat(Player* player, uint32 type, uint32 lang, std::string& msg) override
+    bool OnPlayerCanUseChat(Player* player, uint32 type, uint32 lang, std::string& msg) override
     {
         if (type != CHAT_MSG_SAY && type != CHAT_MSG_YELL && type != CHAT_MSG_EMOTE)
             return true;
@@ -534,7 +534,7 @@ public:
         return true;
     }
 
-    bool CanPlayerUseChat(Player* player, uint32 type, uint32 lang, std::string& msg, Player* target) override
+    bool OnPlayerCanUseChat(Player* player, uint32 type, uint32 lang, std::string& msg, Player* target) override
     {
         if (!sEluna->OnChat(player, type, lang, msg, target))
             return false;
@@ -542,7 +542,7 @@ public:
         return true;
     }
 
-    bool CanPlayerUseChat(Player* player, uint32 type, uint32 lang, std::string& msg, Group* group) override
+    bool OnPlayerCanUseChat(Player* player, uint32 type, uint32 lang, std::string& msg, Group* group) override
     {
         if (!sEluna->OnChat(player, type, lang, msg, group))
             return false;
@@ -550,7 +550,7 @@ public:
         return true;
     }
 
-    bool CanPlayerUseChat(Player* player, uint32 type, uint32 lang, std::string& msg, Guild* guild) override
+    bool OnPlayerCanUseChat(Player* player, uint32 type, uint32 lang, std::string& msg, Guild* guild) override
     {
         if (!sEluna->OnChat(player, type, lang, msg, guild))
             return false;
@@ -558,7 +558,7 @@ public:
         return true;
     }
 
-    bool CanPlayerUseChat(Player* player, uint32 type, uint32 lang, std::string& msg, Channel* channel) override
+    bool OnPlayerCanUseChat(Player* player, uint32 type, uint32 lang, std::string& msg, Channel* channel) override
     {
         if (!sEluna->OnChat(player, type, lang, msg, channel))
             return false;
@@ -566,7 +566,7 @@ public:
         return true;
     }
 
-    void OnLootItem(Player* player, Item* item, uint32 count, ObjectGuid lootguid) override
+    void OnPlayerLootItem(Player* player, Item* item, uint32 count, ObjectGuid lootguid) override
     {
         sEluna->OnLootItem(player, item, count, lootguid);
     }
@@ -576,13 +576,13 @@ public:
         sEluna->OnLearnTalents(player, talentId, talentRank, spellid);
     }
 
-    bool CanUseItem(Player* player, ItemTemplate const* proto, InventoryResult& result) override
+    bool OnPlayerCanUseItem(Player* player, ItemTemplate const* proto, InventoryResult& result) override
     {
         result = sEluna->OnCanUseItem(player, proto->ItemId);
         return result != EQUIP_ERR_OK ? false : true;
     }
 
-    void OnEquip(Player* player, Item* it, uint8 bag, uint8 slot, bool /*update*/) override
+    void OnPlayerEquip(Player* player, Item* it, uint8 bag, uint8 slot, bool /*update*/) override
     {
         sEluna->OnEquip(player, it, bag, slot);
     }
@@ -597,38 +597,38 @@ public:
         sEluna->OnPlayerLeaveCombat(player);
     }
 
-    bool CanRepopAtGraveyard(Player* player) override
+    bool OnPlayerCanRepopAtGraveyard(Player* player) override
     {
         sEluna->OnRepop(player);
         return true;
     }
 
-    void OnQuestAbandon(Player* player, uint32 questId) override
+    void OnPlayerQuestAbandon(Player* player, uint32 questId) override
     {
         sEluna->OnQuestAbandon(player, questId);
     }
 
-    void OnMapChanged(Player* player) override
+    void OnPlayerMapChanged(Player* player) override
     {
         sEluna->OnMapChanged(player);
     }
 
-    void OnGossipSelect(Player* player, uint32 menu_id, uint32 sender, uint32 action) override
+    void OnPlayerGossipSelect(Player* player, uint32 menu_id, uint32 sender, uint32 action) override
     {
         sEluna->HandleGossipSelectOption(player, menu_id, sender, action, "");
     }
 
-    void OnGossipSelectCode(Player* player, uint32 menu_id, uint32 sender, uint32 action, const char* code) override
+    void OnPlayerGossipSelectCode(Player* player, uint32 menu_id, uint32 sender, uint32 action, const char* code) override
     {
         sEluna->HandleGossipSelectOption(player, menu_id, sender, action, code);
     }
 
-    void OnPVPKill(Player* killer, Player* killed) override
+    void OnPlayerPVPKill(Player* killer, Player* killed) override
     {
         sEluna->OnPVPKill(killer, killed);
     }
 
-    void OnCreatureKill(Player* killer, Creature* killed) override
+    void OnPlayerCreatureKill(Player* killer, Creature* killed) override
     {
         sEluna->OnCreatureKill(killer, killed);
     }
@@ -638,157 +638,157 @@ public:
         sEluna->OnPlayerKilledByCreature(killer, killed);
     }
 
-    void OnLevelChanged(Player* player, uint8 oldLevel) override
+    void OnPlayerLevelChanged(Player* player, uint8 oldLevel) override
     {
         sEluna->OnLevelChanged(player, oldLevel);
     }
 
-    void OnFreeTalentPointsChanged(Player* player, uint32 points) override
+    void OnPlayerFreeTalentPointsChanged(Player* player, uint32 points) override
     {
         sEluna->OnFreeTalentPointsChanged(player, points);
     }
 
-    void OnTalentsReset(Player* player, bool noCost) override
+    void OnPlayerTalentsReset(Player* player, bool noCost) override
     {
         sEluna->OnTalentsReset(player, noCost);
     }
 
-    void OnMoneyChanged(Player* player, int32& amount) override
+    void OnPlayerMoneyChanged(Player* player, int32& amount) override
     {
         sEluna->OnMoneyChanged(player, amount);
     }
 
-    void OnGiveXP(Player* player, uint32& amount, Unit* victim, uint8 xpSource) override
+    void OnPlayerGiveXP(Player* player, uint32& amount, Unit* victim, uint8 xpSource) override
     {
         sEluna->OnGiveXP(player, amount, victim, xpSource);
     }
 
-    bool OnReputationChange(Player* player, uint32 factionID, int32& standing, bool incremental) override
+    bool OnPlayerReputationChange(Player* player, uint32 factionID, int32& standing, bool incremental) override
     {
         return sEluna->OnReputationChange(player, factionID, standing, incremental);
     }
 
-    void OnDuelRequest(Player* target, Player* challenger) override
+    void OnPlayerDuelRequest(Player* target, Player* challenger) override
     {
         sEluna->OnDuelRequest(target, challenger);
     }
 
-    void OnDuelStart(Player* player1, Player* player2) override
+    void OnPlayerDuelStart(Player* player1, Player* player2) override
     {
         sEluna->OnDuelStart(player1, player2);
     }
 
-    void OnDuelEnd(Player* winner, Player* loser, DuelCompleteType type) override
+    void OnPlayerDuelEnd(Player* winner, Player* loser, DuelCompleteType type) override
     {
         sEluna->OnDuelEnd(winner, loser, type);
     }
 
-    void OnEmote(Player* player, uint32 emote) override
+    void OnPlayerEmote(Player* player, uint32 emote) override
     {
         sEluna->OnEmote(player, emote);
     }
 
-    void OnTextEmote(Player* player, uint32 textEmote, uint32 emoteNum, ObjectGuid guid) override
+    void OnPlayerTextEmote(Player* player, uint32 textEmote, uint32 emoteNum, ObjectGuid guid) override
     {
         sEluna->OnTextEmote(player, textEmote, emoteNum, guid);
     }
 
-    void OnSpellCast(Player* player, Spell* spell, bool skipCheck) override
+    void OnPlayerSpellCast(Player* player, Spell* spell, bool skipCheck) override
     {
         sEluna->OnPlayerSpellCast(player, spell, skipCheck);
     }
 
-    void OnLogin(Player* player) override
+    void OnPlayerLogin(Player* player) override
     {
         sEluna->OnLogin(player);
     }
 
-    void OnLogout(Player* player) override
+    void OnPlayerLogout(Player* player) override
     {
         sEluna->OnLogout(player);
     }
 
-    void OnCreate(Player* player) override
+    void OnPlayerCreate(Player* player) override
     {
         sEluna->OnCreate(player);
     }
 
-    void OnSave(Player* player) override
+    void OnPlayerSave(Player* player) override
     {
         sEluna->OnSave(player);
     }
 
-    void OnDelete(ObjectGuid guid, uint32 /*accountId*/) override
+    void OnPlayerDelete(ObjectGuid guid, uint32 /*accountId*/) override
     {
         sEluna->OnDelete(guid.GetCounter());
     }
 
-    void OnBindToInstance(Player* player, Difficulty difficulty, uint32 mapid, bool permanent) override
+    void OnPlayerBindToInstance(Player* player, Difficulty difficulty, uint32 mapid, bool permanent) override
     {
         sEluna->OnBindToInstance(player, difficulty, mapid, permanent);
     }
 
-    void OnUpdateArea(Player* player, uint32 oldArea, uint32 newArea) override
+    void OnPlayerUpdateArea(Player* player, uint32 oldArea, uint32 newArea) override
     {
         sEluna->OnUpdateArea(player, oldArea, newArea);
     }
 
-    void OnUpdateZone(Player* player, uint32 newZone, uint32 newArea) override
+    void OnPlayerUpdateZone(Player* player, uint32 newZone, uint32 newArea) override
     {
         sEluna->OnUpdateZone(player, newZone, newArea);
     }
 
-    void OnFirstLogin(Player* player) override
+    void OnPlayerFirstLogin(Player* player) override
     {
         sEluna->OnFirstLogin(player);
     }
 
-    void OnLearnSpell(Player* player, uint32 spellId) override
+    void OnPlayerLearnSpell(Player* player, uint32 spellId) override
     {
         sEluna->OnLearnSpell(player, spellId);
     }
 
-    void OnAchiComplete(Player* player, AchievementEntry const* achievement) override
+    void OnPlayerAchievementComplete(Player* player, AchievementEntry const* achievement) override
     {
         sEluna->OnAchiComplete(player, achievement);
     }
 
-    void OnFfaPvpStateUpdate(Player* player, bool IsFlaggedForFfaPvp) override
+    void OnPlayerFfaPvpStateUpdate(Player* player, bool IsFlaggedForFfaPvp) override
     {
         sEluna->OnFfaPvpStateUpdate(player, IsFlaggedForFfaPvp);
     }
 
-    bool CanInitTrade(Player* player, Player* target) override
+    bool OnPlayerCanInitTrade(Player* player, Player* target) override
     {
         return sEluna->OnCanInitTrade(player, target);
     }
 
-    bool CanSendMail(Player* player, ObjectGuid receiverGuid, ObjectGuid mailbox, std::string& subject, std::string& body, uint32 money, uint32 cod, Item* item) override
+    bool OnPlayerCanSendMail(Player* player, ObjectGuid receiverGuid, ObjectGuid mailbox, std::string& subject, std::string& body, uint32 money, uint32 cod, Item* item) override
     {
         return sEluna->OnCanSendMail(player, receiverGuid, mailbox, subject, body, money, cod, item);
     }
 
-    bool CanJoinLfg(Player* player, uint8 roles, lfg::LfgDungeonSet& dungeons, const std::string& comment) override
+    bool OnPlayerCanJoinLfg(Player* player, uint8 roles, lfg::LfgDungeonSet& dungeons, const std::string& comment) override
     {
         return sEluna->OnCanJoinLfg(player, roles, dungeons, comment);
     }
 
-    void OnQuestRewardItem(Player* player, Item* item, uint32 count) override
+    void OnPlayerQuestRewardItem(Player* player, Item* item, uint32 count) override
     {
         sEluna->OnQuestRewardItem(player, item, count);
     }
 
-    void OnGroupRollRewardItem(Player* player, Item* item, uint32 count, RollVote voteType, Roll* roll) override
+    void OnPlayerGroupRollRewardItem(Player* player, Item* item, uint32 count, RollVote voteType, Roll* roll) override
     {
         sEluna->OnGroupRollRewardItem(player, item, count, voteType, roll);
     }
 
-    void OnCreateItem(Player* player, Item* item, uint32 count) override
+    void OnPlayerCreateItem(Player* player, Item* item, uint32 count) override
     {
         sEluna->OnCreateItem(player, item, count);
     }
 
-    void OnStoreNewItem(Player* player, Item* item, uint32 count) override
+    void OnPlayerStoreNewItem(Player* player, Item* item, uint32 count) override
     {
         sEluna->OnStoreNewItem(player, item, count);
     }
@@ -798,22 +798,22 @@ public:
         sEluna->OnPlayerCompleteQuest(player, quest);
     }
 
-    bool CanGroupInvite(Player* player, std::string& memberName) override
+    bool OnPlayerCanGroupInvite(Player* player, std::string& memberName) override
     {
         return sEluna->OnCanGroupInvite(player, memberName);
     }
 
-    void OnBattlegroundDesertion(Player* player, const BattlegroundDesertionType type) override
+    void OnPlayerBattlegroundDesertion(Player* player, const BattlegroundDesertionType type) override
     {
         sEluna->OnBattlegroundDesertion(player, type);
     }
 
-    void OnCreatureKilledByPet(Player* player, Creature* killed) override
+    void OnPlayerCreatureKilledByPet(Player* player, Creature* killed) override
     {
         sEluna->OnCreatureKilledByPet(player, killed);
     }
 
-    bool CanPlayerResurrect(Player* player) override
+    bool OnPlayerCanResurrect(Player* player) override
     {
         return sEluna->CanPlayerResurrect(player);
     }
