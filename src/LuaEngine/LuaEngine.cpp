@@ -177,6 +177,7 @@ ItemGossipBindings(NULL),
 PlayerGossipBindings(NULL),
 MapEventBindings(NULL),
 InstanceEventBindings(NULL),
+TicketEventBindings(NULL),
 SpellEventBindings(NULL),
 
 CreatureUniqueBindings(NULL)
@@ -270,6 +271,7 @@ void Eluna::CreateBindStores()
     GroupEventBindings       = new BindingMap< EventKey<Hooks::GroupEvents> >(L);
     VehicleEventBindings     = new BindingMap< EventKey<Hooks::VehicleEvents> >(L);
     BGEventBindings          = new BindingMap< EventKey<Hooks::BGEvents> >(L);
+    TicketEventBindings      = new BindingMap< EventKey<Hooks::TicketEvents> >(L);
 
     PacketEventBindings      = new BindingMap< EntryKey<Hooks::PacketEvents> >(L);
     CreatureEventBindings    = new BindingMap< EntryKey<Hooks::CreatureEvents> >(L);
@@ -1206,6 +1208,15 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, 
                 auto key = EntryKey<Hooks::InstanceEvents>((Hooks::InstanceEvents)event_id, entry);
                 bindingID = InstanceEventBindings->Insert(key, functionRef, shots);
                 createCancelCallback(L, bindingID, InstanceEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
+      case Hooks::REGTYPE_TICKET:
+            if (event_id < Hooks::TICKET_EVENT_COUNT)
+            {
+                auto key = EventKey<Hooks::TicketEvents>((Hooks::TicketEvents)event_id);
+                bindingID = TicketEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(L, bindingID, TicketEventBindings);
                 return 1; // Stack: callback
             }
             break;

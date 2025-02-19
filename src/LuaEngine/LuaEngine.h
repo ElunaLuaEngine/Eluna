@@ -22,6 +22,7 @@
 #include "ElunaUtility.h"
 #include "HttpManager.h"
 #include "EventEmitter.h"
+#include "TicketMgr.h"
 #include <mutex>
 #include <memory>
 
@@ -220,6 +221,7 @@ public:
     BindingMap< EntryKey<Hooks::GossipEvents> >*     PlayerGossipBindings;
     BindingMap< EntryKey<Hooks::InstanceEvents> >*   MapEventBindings;
     BindingMap< EntryKey<Hooks::InstanceEvents> >*   InstanceEventBindings;
+    BindingMap< EventKey<Hooks::TicketEvents> >*     TicketEventBindings;
     BindingMap< EntryKey<Hooks::SpellEvents> >*      SpellEventBindings;
 
     BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >*  CreatureUniqueBindings;
@@ -531,6 +533,12 @@ public:
     void OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
     void OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
 
+    /* Ticket */
+    void OnTicketCreate(GmTicket* ticket);
+    void OnTicketClose(GmTicket* ticket);
+    void OnTicketUpdateLastChange(GmTicket* ticket);
+    void OnTicketResolve(GmTicket* ticket);
+  
     /* Spell */
     void OnSpellPrepare(Unit* caster, Spell* spell, SpellInfo const* spellInfo);
     void OnSpellCast(Unit* caster, Spell* spell, SpellInfo const* spellInfo, bool skipCheck);
