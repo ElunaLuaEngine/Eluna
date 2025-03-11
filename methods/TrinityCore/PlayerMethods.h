@@ -1620,7 +1620,7 @@ namespace LuaPlayer
 
     /**
      * Returns the closest [GameObject] to the [Player].
-     * 
+     *
      * @return [GameObject] gameobject
      */
     int GetNearbyGameObject(Eluna* E, Player* player)
@@ -2070,7 +2070,7 @@ namespace LuaPlayer
      * @values [MOVE_UNROOT, 2]
      * @values [MOVE_WATER_WALK, 3]
      * @values [MOVE_LAND_WALK, 4]
-     * 
+     *
      * @param int32 movementType
      */
     int SetMovement(Eluna* E, Player* player)
@@ -3873,7 +3873,7 @@ namespace LuaPlayer
      *
      * @param int saveMode = -1
      * @param bool returnReagent = false
-     * 
+     *
      */
     int RemovePet(Eluna* E, Player* player)
     {
@@ -4074,6 +4074,7 @@ namespace LuaPlayer
 
         // Gossip
         { "GossipMenuAddItem", &LuaPlayer::GossipMenuAddItem },
+        { "GossipMenuAddItemData", METHOD_REG_NONE }, // not implemented
         { "GossipSendMenu", &LuaPlayer::GossipSendMenu },
         { "GossipComplete", &LuaPlayer::GossipComplete },
         { "GossipClearMenu", &LuaPlayer::GossipClearMenu },
