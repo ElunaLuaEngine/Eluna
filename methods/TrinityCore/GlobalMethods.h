@@ -710,7 +710,7 @@ namespace LuaGlobalFunctions
      * @values [39, ON_LEARN_TALENTS, "MAP", <event: number, player: Player, talentId: number, talentRank: number, spellid: number>, ""]
      * @values [40, ON_ENVIRONMENTAL_DEATH, "MAP", <event: number, player: Player, environmentalDamageType: number>, ""]
      * @values [41, ON_TRADE_ACCEPT, "MAP", <event: number, player: Player, target: Player>, "Can return false to interrupt trade"]
-     * @values [42, ON_COMMAND, "MAP", <event: number, player: Player, command: string>, "Player is nil if command used from console. Can return false"]
+     * @values [42, ON_COMMAND, "WORLD", <event: number, player: Player, command: string>, "Player is nil if command used from console. Can return false"]
      * @values [43, ON_SKILL_CHANGE, "MAP", <event: number, player: Player, skillId: number, skillValue: number>, "Returns new skill level value"]
      * @values [44, ON_LEARN_SPELL, "MAP", <event: number, player: Player, spellId: number>, ""]
      * @values [45, ON_ACHIEVEMENT_COMPLETE, "MAP", <event: number, player: Player, achievementId: number>, ""]
