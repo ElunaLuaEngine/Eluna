@@ -1486,23 +1486,23 @@ namespace LuaGlobalFunctions
             return 0;
         }
 
-        // Add an asynchronous query callback
-        E->GetQueryProcessor().AddCallback(CharacterDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
-        {
-            ElunaQuery* eq = result ? &result : nullptr;
+            // Add an asynchronous query callback
+            E->GetQueryProcessor().AddCallback(CharacterDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+            {
+                ElunaQuery* eq = result ? &result : nullptr;
 
-            // Get the Lua function from the registry
-            lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+                // Get the Lua function from the registry
+                lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
 
-            // Push the query results as a parameter
-            E->Push(eq);
+                // Push the query results as a parameter
+                E->Push(eq);
 
-            // Call the Lua function
-            E->ExecuteCall(1, 0);
+                // Call the Lua function
+                E->ExecuteCall(1, 0);
 
-            // Unreference the Lua function
-            luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
-        }));
+                // Unreference the Lua function
+                luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
+            }));
         return 0;
     }
 
@@ -3108,6 +3108,45 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    /**
+     * 
+     */
+    int IsOutDoor(Eluna* E)
+    {
+        WorldObject* actor = E->CHECKOBJ<WorldObject>(1, false);
+        Map* map = nullptr;
+        float x, y, z;
+
+        if (actor) {
+            map = actor->GetMap();
+            x = actor->GetPositionX();
+            y = actor->GetPositionY();
+            z = actor->GetPositionZ();
+        } else {
+            uint32 mapID = E->CHECKVAL<uint32>(1);
+            uint32 instanceID = E->CHECKVAL<uint32>(2);
+            x = E->CHECKVAL<float>(3);
+            y = E->CHECKVAL<float>(4);
+            z = E->CHECKVAL<float>(5);
+
+            map = eMapMgr->FindMap(mapID, instanceID);
+        }
+        
+        if (!map) {
+            E->Push();
+            return 1;
+        }
+
+        PositionFullTerrainStatus data;
+        map->GetFullTerrainStatusForPosition(1, x, y, z, data, MAP_ALL_LIQUIDS, DEFAULT_COLLISION_HEIGHT);
+
+        E->Push(data.outdoors);
+        return 1;
+    }
+
+    // PositionFullTerrainStatus data;
+    // GetMap()->GetFullTerrainStatusForPosition(GetPhaseMask(), GetPositionX(), GetPositionY(), GetPositionZ(), data, MAP_ALL_LIQUIDS, GetCollisionHeight());
+
     ElunaRegister<> GlobalMethods[] =
     {
         // Hooks
@@ -3194,6 +3233,7 @@ namespace LuaGlobalFunctions
         { "IsBankPos", &LuaGlobalFunctions::IsBankPos },
         { "IsBagPos", &LuaGlobalFunctions::IsBagPos },
         { "IsGameEventActive", &LuaGlobalFunctions::IsGameEventActive },
+        { "IsOutDoor", &LuaGlobalFunctions::IsOutDoor },
 
         // Other
         { "ReloadEluna", &LuaGlobalFunctions::ReloadEluna },

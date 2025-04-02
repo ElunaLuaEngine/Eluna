@@ -252,6 +252,40 @@ namespace LuaMap
     }
 
     /**
+     * Get the [Weather] type based on [WeatherType] and grade supplied.
+     *
+     *  enum WeatherState : uint32
+     *  {
+     *      WEATHER_STATE_FINE              = 0,
+     *      WEATHER_STATE_FOG               = 1,
+     *      WEATHER_STATE_DRIZZLE           = 2,
+     *      WEATHER_STATE_LIGHT_RAIN        = 3,
+     *      WEATHER_STATE_MEDIUM_RAIN       = 4,
+     *      WEATHER_STATE_HEAVY_RAIN        = 5,
+     *      WEATHER_STATE_LIGHT_SNOW        = 6,
+     *      WEATHER_STATE_MEDIUM_SNOW       = 7,
+     *      WEATHER_STATE_HEAVY_SNOW        = 8,
+     *      WEATHER_STATE_LIGHT_SANDSTORM   = 22,
+     *      WEATHER_STATE_MEDIUM_SANDSTORM  = 41,
+     *      WEATHER_STATE_HEAVY_SANDSTORM   = 42,
+     *      WEATHER_STATE_THUNDERS          = 86,
+     *      WEATHER_STATE_BLACKRAIN         = 90,
+     *      WEATHER_STATE_BLACKSNOW         = 106
+     *  };
+     *
+     * @param uint32 zone : id of the zone to get the weather for
+     */
+    int GetWeather(Eluna* E, Map* map)
+    {
+        (void)map; // ensure that the variable is referenced in order to pass compiler checks
+        uint32 zoneId = E->CHECKVAL<uint32>(2);
+
+        if (Weather * weather = map->GetOrGenerateZoneDefaultWeather(zoneId))
+            E->Push(weather->GetWeatherCurrent());
+        return 1;
+    }
+
+    /**
      * Gets the instance data table for the [Map], if it exists.
      *
      * The instance must be scripted using Eluna for this to succeed.
@@ -366,6 +400,7 @@ namespace LuaMap
         { "GetAreaId", &LuaMap::GetAreaId },
         { "GetHeight", &LuaMap::GetHeight },
         { "GetWorldObject", &LuaMap::GetWorldObject },
+        { "GetWeather", &LuaMap::GetWeather },
 
         // Setters
         { "SetWeather", &LuaMap::SetWeather },

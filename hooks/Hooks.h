@@ -220,6 +220,9 @@ namespace Hooks
         PLAYER_EVENT_ON_BUY_ITEM                =     55,       // (event, player, vendor, item, quantity, price)
         PLAYER_EVENT_ON_SELL_ITEM               =     56,       // (event, player, vendor, item, quantity, price)
         PLAYER_EVENT_ON_UNEQUIP                 =     57,       // (event, player, item, bag, slot)
+        PLAYER_EVENT_ON_STAND_STATE_CHANGED     =     58,       // (event, player, previousState, newState)
+        PLAYER_EVENT_ON_CAN_EQUIP               =     59,       // (event, player, item)
+        PLAYER_EVENT_ON_BEFORE_ADD_ITEM         =     60,       // (event, player, itemID, class, subclass)
 
         PLAYER_EVENT_COUNT
     };

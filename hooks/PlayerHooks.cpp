@@ -153,6 +153,14 @@ void Eluna::OnQuestStatusChanged(Player* pPlayer, uint32 questId, uint8 status)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+bool Eluna::OnCanEquipItem(Player* pPlayer, Item* pItem)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_EQUIP, true);
+    HookPush(pPlayer);
+    HookPush(pItem);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+}
+
 void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
 {
     START_HOOK(PLAYER_EVENT_ON_EQUIP);
@@ -171,6 +179,16 @@ void Eluna::OnUnequip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
     HookPush(bag);
     HookPush(slot);
     CallAllFunctions(PlayerEventBindings, key);
+}
+
+bool Eluna::OnBeforeAddItem(Player* pPlayer, uint32 ItemID, uint32 Class, uint32 Subclass)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_BEFORE_ADD_ITEM, true);
+    HookPush(pPlayer);
+    HookPush(ItemID);
+    HookPush(Class);
+    HookPush(Subclass);
+    return CallAllFunctionsBool(PlayerEventBindings, key, true);
 }
 
 InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
@@ -706,6 +724,15 @@ void Eluna::OnSellItem(Player* pPlayer, Creature* pVendor, Item* pItem, int32 qu
     HookPush(pItem);
     HookPush(quantity);
     HookPush(price);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
+void Eluna::OnStandStateChange(Player* pPlayer, uint8 previousState, uint8 newState)
+{
+    START_HOOK(PLAYER_EVENT_ON_STAND_STATE_CHANGED);
+    HookPush(pPlayer);
+    HookPush(previousState);
+    HookPush(newState);
     CallAllFunctions(PlayerEventBindings, key);
 }
 // ###< Custom ###

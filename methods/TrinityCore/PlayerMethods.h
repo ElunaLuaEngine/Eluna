@@ -2858,6 +2858,7 @@ namespace LuaPlayer
         uint16 dest = 0;
         Item* item = E->CHECKOBJ<Item>(2, false);
         uint32 slot = E->CHECKVAL<uint32>(3);
+        bool swap = E->CHECKVAL<bool>(4, false);
 
         if (slot >= INVENTORY_SLOT_BAG_END)
             return 1;
@@ -2869,7 +2870,7 @@ namespace LuaPlayer
             if (!item)
                 return 1;
 
-            InventoryResult result = player->CanEquipItem(slot, dest, item, false);
+            InventoryResult result = player->CanEquipItem(slot, dest, item, swap);
             if (result != EQUIP_ERR_OK)
             {
                 delete item;
@@ -2880,7 +2881,7 @@ namespace LuaPlayer
         }
         else
         {
-            InventoryResult result = player->CanEquipItem(slot, dest, item, false);
+            InventoryResult result = player->CanEquipItem(slot, dest, item, swap);
             if (result != EQUIP_ERR_OK)
                 return 1;
             player->RemoveItem(item->GetBagSlot(), item->GetSlot(), true);
@@ -3065,7 +3066,8 @@ namespace LuaPlayer
             player->SendNewItem(item, itemCount, true, false);
 
         E->Push(item);
-        return 1;
+        E->Push(itemCount);
+        return 2;
     }
 
     /**
@@ -3708,6 +3710,19 @@ namespace LuaPlayer
         return 0;
     }
 
+    /**
+     * Runs a command as the [Player].
+     *
+     * @param string command : the command to run
+     */
+    int RunCommand(Eluna* E, Player* player)
+    {
+        const char* command = E->CHECKVAL<const char*>(2);
+        if (std::string(command).length() > 0)
+            ChatHandler(player->GetSession())._ParseCommands(command);
+        return 0;
+    }
+
     ElunaRegister<Player> PlayerMethods[] =
     {
         // Getters
@@ -3986,7 +4001,11 @@ namespace LuaPlayer
         { "UpdateHonor", METHOD_REG_NONE }, // classic only
         { "ResetHonor", METHOD_REG_NONE }, // classic only
         { "ClearHonorInfo", METHOD_REG_NONE }, // classic only
-        { "GainSpellComboPoints", METHOD_REG_NONE } // not implemented
+        { "GainSpellComboPoints", METHOD_REG_NONE }, // not implemented
+
+
+        // Custom
+        { "RunCommand", &LuaPlayer::RunCommand }
     };
 };
 #endif

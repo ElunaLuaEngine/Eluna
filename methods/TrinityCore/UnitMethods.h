@@ -2560,6 +2560,17 @@ namespace LuaUnit
             
             return 0;
         }
+
+        /**
+         * Makes the [Unit] kill the target [Unit]
+         *
+         * @param [Unit] target : [Unit] to kill
+         */
+        int IsWalking(Eluna* E, Unit* unit)
+        {
+            E->Push(unit->IsWalking());
+            return 1;
+        }
     /** ###< Custom ### */
 
     ElunaRegister<Unit> UnitMethods[] =
@@ -2739,6 +2750,7 @@ namespace LuaUnit
 
         // Custom
         { "KillWithLoot", &KillWithLoot },
+        { "IsWalking", &IsWalking },
     };
 };
 #endif

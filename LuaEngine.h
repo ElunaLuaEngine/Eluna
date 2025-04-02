@@ -387,6 +387,7 @@ public:
     void OnLootItem(Player* pPlayer, Item* pItem, uint32 count, ObjectGuid guid);
     void OnLootMoney(Player* pPlayer, uint32 amount);
     void OnFirstLogin(Player* pPlayer);
+    bool OnCanEquipItem(Player* pPlayer, Item* pItem);
     void OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
     void OnRepop(Player* pPlayer);
     void OnResurrect(Player* pPlayer);
@@ -405,6 +406,9 @@ public:
     void OnDiscoverArea(Player* player, uint32 area);
     /* ###> Custom ### */
         void OnUnequip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot);
+        // bool BeforeOnUnequip(Player* pPlayer, Item* pItem);
+        bool OnBeforeAddItem(Player* pPlayer, uint32 ItemID, uint32 Class, uint32 Subclass);
+        void OnStandStateChange(Player* pPlayer, uint8 previousState, uint8 newState);
     /* ###< Custom ### */
 
     /* Item */
