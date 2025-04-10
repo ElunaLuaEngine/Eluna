@@ -242,7 +242,7 @@ namespace LuaUnit
 #if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(unit->IsSpiritGuide());
 #else
-        E->Push(unit->IsSpiritService());
+        E->Push(unit->IsAreaSpiritHealer());
 #endif
         return 1;
     }
@@ -668,7 +668,6 @@ namespace LuaUnit
         return 1;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the [Unit]'s base spell power
      *
@@ -682,10 +681,13 @@ namespace LuaUnit
         if (spellschool >= MAX_SPELL_SCHOOL)
             return 1;
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(unit->GetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS + spellschool));
+#else
+        E->Push(unit->GetOwner()->ToPlayer()->m_activePlayerData->ModDamageDonePos[spellschool]); //Not sure if this is correct
+#endif
         return 1;
     }
-#endif
 
     /**
      * Returns the [Unit]'s current victim target or nil.

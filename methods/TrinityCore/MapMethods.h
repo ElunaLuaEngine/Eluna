@@ -372,15 +372,15 @@ namespace LuaMap
     {
         // Getters
         { "GetName", &LuaMap::GetName },
+        { "GetDifficulty", &LuaMap::GetDifficulty },
         { "GetInstanceId", &LuaMap::GetInstanceId },
         { "GetInstanceData", &LuaMap::GetInstanceData },
         { "GetPlayerCount", &LuaMap::GetPlayerCount },
         { "GetPlayers", &LuaMap::GetPlayers },
         { "GetMapId", &LuaMap::GetMapId },
-        { "GetWorldObject", &LuaMap::GetWorldObject },
-        { "GetDifficulty", &LuaMap::GetDifficulty },
         { "GetAreaId", &LuaMap::GetAreaId },
         { "GetHeight", &LuaMap::GetHeight },
+        { "GetWorldObject", &LuaMap::GetWorldObject },
 
         // Setters
         { "SetWeather", &LuaMap::SetWeather },
