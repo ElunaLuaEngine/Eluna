@@ -188,6 +188,10 @@ namespace ElunaUtil
      * The returned result buffer must be `delete[]`ed by the caller.
      */
     unsigned char* DecodeData(const char* data, size_t *output_length);
+
+#if ELUNA_EXPANSION == EXP_RETAIL
+    bool IsIPAddress(std::string const& text);
+#endif
 };
 
 #endif
