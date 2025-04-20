@@ -1959,7 +1959,11 @@ namespace LuaGlobalFunctions
                 mode = BanMode::BAN_CHARACTER;
                 break;
             case BAN_IP:
+#if ELUNA_EXPANSION < EXP_RETAIL
                 if (!IsIPAddress(nameOrIP.c_str()))
+#else
+                if (!ElunaUtil::IsIPAddress(nameOrIP))
+#endif
                     return luaL_argerror(E->L, 2, "invalid ip");
                 mode = BanMode::BAN_IP;
                 break;
