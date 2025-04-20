@@ -133,7 +133,7 @@ namespace LuaMap
 #if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(map->GetDifficulty());
 #else
-        E->Push(map->GetMapDifficulty());
+        E->Push(map->GetDifficultyID());
 #endif
         return 1;
     }
