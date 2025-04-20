@@ -12,6 +12,7 @@
 #include "GameObject.h"
 #if ELUNA_EXPANSION == EXP_RETAIL
 #include "DB2Stores.h"
+#include "IpAddress.h"
 #else
 #include "DBCStores.h"
 #endif
@@ -216,3 +217,12 @@ unsigned char* ElunaUtil::DecodeData(const char *data, size_t *output_length)
 
     return decoded_data;
 }
+
+#if ELUNA_EXPANSION == EXP_RETAIL
+bool ElunaUtil::IsIPAddress(std::string const& text)
+{
+    boost::system::error_code error;
+    Trinity::Net::make_address(text, error);
+    return !error;
+}
+#endif
