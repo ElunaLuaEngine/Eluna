@@ -75,55 +75,41 @@ else()
   add_library(lualib SHARED ${LOCAL_SOURCES_H} ${LOCAL_SOURCES_C})
   set_property(TARGET lualib PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
-add_library(lualib_static STATIC ${LOCAL_SOURCES_H} ${LOCAL_SOURCES_C})
+
 set_target_properties(lualib PROPERTIES LINKER_LANGUAGE C)
-set_target_properties(lualib_static PROPERTIES LINKER_LANGUAGE C)
 target_include_directories(lualib PUBLIC "${LUA_SOURCE_FOLDER}" "${CMAKE_CURRENT_SOURCE_DIR}")
-target_include_directories(lualib_static PUBLIC "${LUA_SOURCE_FOLDER}" "${CMAKE_CURRENT_SOURCE_DIR}")
+
 if (WIN32)
   set_target_properties(lualib PROPERTIES OUTPUT_NAME ${LUA_VERSION})
   install(TARGETS lualib DESTINATION "${CMAKE_INSTALL_PREFIX}")
   if (NOT LUA_STATIC)
     install(FILES $<TARGET_PDB_FILE:lualib> DESTINATION "${CMAKE_INSTALL_PREFIX}" OPTIONAL)
   endif()
-  # set_target_properties(lualib PROPERTIES PUBLIC_HEADER "${LOCAL_SOURCES_H};${CMAKE_CURRENT_SOURCE_DIR}/lua.hpp")
-  # install(TARGETS lualib PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include")
-  # set_target_properties(lualib_static PROPERTIES OUTPUT_NAME ${LUA_VERSION}_static)
-  # install(TARGETS lualib_static DESTINATION "${CMAKE_INSTALL_PREFIX}")
 else()
   set_target_properties(lualib PROPERTIES PUBLIC_HEADER "${LOCAL_SOURCES_H};${CMAKE_CURRENT_SOURCE_DIR}/lua.hpp")
   install(TARGETS lualib
-      DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
-      PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
+          DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
+          PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
   )
-  install(TARGETS lualib_static DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
 endif()
+
 if (WIN32)
   target_compile_definitions(lualib PRIVATE _CRT_SECURE_NO_WARNINGS)
-  target_compile_definitions(lualib_static PRIVATE _CRT_SECURE_NO_WARNINGS)
   if (NOT LUA_STATIC)
     target_compile_definitions(lualib PRIVATE LUA_BUILD_AS_DLL)
   endif()
 elseif (APPLE)
   target_compile_definitions(lualib PUBLIC LUA_USE_MACOSX)
-  target_compile_definitions(lualib_static PUBLIC LUA_USE_MACOSX)
   target_compile_options(lualib PRIVATE -Wno-deprecated-declarations -Wno-empty-body)
-  target_compile_options(lualib_static PRIVATE -Wno-deprecated-declarations -Wno-empty-body)
   target_link_libraries(lualib readline)
-  target_link_libraries(lualib_static readline)
-  # set_target_properties(lualib PROPERTIES COMPILE_FLAGS -undefined dynamic_lookup)
-  # set_target_properties(lualib_static PROPERTIES COMPILE_FLAGS -undefined dynamic_lookup)
 elseif (UNIX)
   target_compile_definitions(lualib PUBLIC LUA_USE_LINUX)
   target_link_libraries(lualib ${CMAKE_DL_LIBS} m readline)
-  target_compile_definitions(lualib_static PUBLIC LUA_USE_LINUX)
-  target_link_libraries(lualib_static ${CMAKE_DL_LIBS} m readline)
   set_target_properties(lualib PROPERTIES OUTPUT_NAME ${LUA_VERSION})
-  set_target_properties(lualib_static PROPERTIES OUTPUT_NAME ${LUA_VERSION})
 endif()
 
 add_executable(lua_interpreter ${LUA_SOURCE_FOLDER}/lua.c)
-target_link_libraries(lua_interpreter lualib_static)
+target_link_libraries(lua_interpreter lualib)
 target_compile_definitions(lua_interpreter PRIVATE _CRT_SECURE_NO_WARNINGS)
 set_target_properties(lua_interpreter PROPERTIES OUTPUT_NAME ${LUA_VERSION}_interpreter)
 if (WIN32)
@@ -132,15 +118,9 @@ if (WIN32)
 else()
   install(TARGETS lua_interpreter DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 endif()
-#install(TARGETS lualib
-#    DESTINATION "${CMAKE_INSTALL_PREFIX}"
-#    LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lua/lib"
-#    RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/lua/lib"
-#    ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lua/lib"
-#)
 
 add_executable(lua_compiler ${LUA_SOURCE_FOLDER}/luac.c)
-target_link_libraries(lua_compiler lualib_static)
+target_link_libraries(lua_compiler lualib)
 target_compile_definitions(lua_compiler PRIVATE _CRT_SECURE_NO_WARNINGS)
 set_target_properties(lua_compiler PROPERTIES OUTPUT_NAME ${LUA_VERSION}_compiler)
 if (WIN32)
@@ -149,4 +129,3 @@ if (WIN32)
 else()
   install(TARGETS lua_compiler DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 endif()
-
