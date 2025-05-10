@@ -55,20 +55,6 @@ namespace LuaPlayer
     }
 
     /**
-     * Returns true if [Player] has specified login flag
-     *
-     * @param uint32 flag
-     * @return bool hasLoginFlag
-     */
-    int HasAtLoginFlag(Eluna* E, Player* player)
-    {
-        uint32 flag = E->CHECKVAL<uint32>(2);
-
-        E->Push(player->HasAtLoginFlag((AtLoginFlags)flag));
-        return 1;
-    }
-
-    /**
      * Returns true if [Player] has [Quest] for [GameObject]
      *
      * @param int32 entry : entry of a [GameObject]
@@ -1411,19 +1397,6 @@ namespace LuaPlayer
             player->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED | UNIT_FLAG_SILENCED);
             player->SetClientControl(player, 1);
         }
-        return 0;
-    }
-
-    /**
-     * Sets the [Player]s login flag to the flag specified
-     *
-     * @param uint32 flag
-     */
-    int SetAtLoginFlag(Eluna* E, Player* player)
-    {
-        uint32 flag = E->CHECKVAL<uint32>(2);
-
-        player->SetAtLoginFlag((AtLoginFlags)flag);
         return 0;
     }
 
@@ -3485,7 +3458,6 @@ namespace LuaPlayer
         { "SetSkill", &LuaPlayer::SetSkill },
         { "SetFactionForRace", &LuaPlayer::SetFactionForRace },
         { "SetDrunkValue", &LuaPlayer::SetDrunkValue },
-        { "SetAtLoginFlag", &LuaPlayer::SetAtLoginFlag },
         { "SetPlayerLock", &LuaPlayer::SetPlayerLock },
         { "SetGender", &LuaPlayer::SetGender },
         { "SetSheath", &LuaPlayer::SetSheath },
@@ -3517,7 +3489,6 @@ namespace LuaPlayer
         { "HasQuest", &LuaPlayer::HasQuest },
         { "InBattlegroundQueue", &LuaPlayer::InBattlegroundQueue },
         { "CanSpeak", &LuaPlayer::CanSpeak },
-        { "HasAtLoginFlag", &LuaPlayer::HasAtLoginFlag },
         { "CanUninviteFromGroup", &LuaPlayer::CanUninviteFromGroup },
         { "IsRested", &LuaPlayer::IsRested },
         { "IsVisibleForPlayer", &LuaPlayer::IsVisibleForPlayer },
@@ -3679,7 +3650,9 @@ namespace LuaPlayer
         { "CanRewardQuest", METHOD_REG_NONE }, // not implemented
         { "RunCommand", METHOD_REG_NONE }, // not implemented
         { "HasRecruited", METHOD_REG_NONE }, // not implemented
-        { "IsRecruited", METHOD_REG_NONE } // not implemented
+        { "IsRecruited", METHOD_REG_NONE }, // not implemented
+        { "HasAtLoginFlag", METHOD_REG_NONE }, // function removed from core
+        { "SetAtLoginFlag", METHOD_REG_NONE } // function removed from core
     };
 };
 #endif
