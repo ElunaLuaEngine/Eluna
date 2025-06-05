@@ -767,7 +767,7 @@ namespace LuaWorldObject
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
         if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
         {
-            obj->elunaEvents->AddEvent(functionRef, min, max, repeats);
+            obj->GetElunaEvents(E->GetBoundMapId())->AddEvent(functionRef, min, max, repeats);
             E->Push(functionRef);
         }
         return 1;
@@ -783,7 +783,7 @@ namespace LuaWorldObject
     int RemoveEventById(Eluna* E, WorldObject* obj)
     {
         int eventId = E->CHECKVAL<int>(2);
-        obj->elunaEvents->SetState(eventId, LUAEVENT_STATE_ABORT);
+        obj->GetElunaEvents(E->GetBoundMapId())->SetState(eventId, LUAEVENT_STATE_ABORT);
         return 0;
     }
 
@@ -793,9 +793,9 @@ namespace LuaWorldObject
      * In multistate, this method is only available in the MAP states
      *
      */
-    int RemoveEvents(Eluna* /*E*/, WorldObject* obj)
+    int RemoveEvents(Eluna* E, WorldObject* obj)
     {
-        obj->elunaEvents->SetStates(LUAEVENT_STATE_ABORT);
+        obj->GetElunaEvents(E->GetBoundMapId())->SetStates(LUAEVENT_STATE_ABORT);
         return 0;
     }
 
@@ -1178,9 +1178,9 @@ namespace LuaWorldObject
         { "SummonGameObject", &LuaWorldObject::SummonGameObject },
         { "SpawnCreature", &LuaWorldObject::SpawnCreature },
         { "SendPacket", &LuaWorldObject::SendPacket },
-        { "RegisterEvent", &LuaWorldObject::RegisterEvent, METHOD_REG_MAP }, // Map state method only in multistate
-        { "RemoveEventById", &LuaWorldObject::RemoveEventById, METHOD_REG_MAP }, // Map state method only in multistate
-        { "RemoveEvents", &LuaWorldObject::RemoveEvents, METHOD_REG_MAP }, // Map state method only in multistate
+        { "RegisterEvent", &LuaWorldObject::RegisterEvent },
+        { "RemoveEventById", &LuaWorldObject::RemoveEventById },
+        { "RemoveEvents", &LuaWorldObject::RemoveEvents },
         { "PlayMusic", &LuaWorldObject::PlayMusic },
         { "PlayDirectSound", &LuaWorldObject::PlayDirectSound },
         { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound },
