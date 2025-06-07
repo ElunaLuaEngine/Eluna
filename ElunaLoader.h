@@ -69,7 +69,7 @@ private:
     void ReloadScriptCache();
     void ReadFiles(lua_State* L, std::string path);
     void CombineLists();
-    void ProcessScript(lua_State* L, std::string filename, const std::string& fullpath, int32 mapId);
+    void ProcessScript(lua_State* L, std::string filename, const size_t& filesize, const std::string& fullpath, int32 mapId);
     bool CompileScript(lua_State* L, LuaScript& script);
     static int LoadBytecodeChunk(lua_State* L, uint8* bytes, size_t len, BytecodeBuffer* buffer);
 
