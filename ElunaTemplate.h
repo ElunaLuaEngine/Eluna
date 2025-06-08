@@ -325,7 +325,7 @@ public:
             }
 
             // if we're in multistate mode, we need to check whether a method is flagged as a world or a map specific method
-            if (!E->GetCompatibilityMode() && method->regState != METHOD_REG_ALL)
+            if (method->regState != METHOD_REG_ALL)
             {
                 int32 mapId = E->GetBoundMapId();
 

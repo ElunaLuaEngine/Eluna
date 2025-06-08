@@ -171,9 +171,6 @@ private:
 
     Map* const boundMap;
 
-    // Whether or not Eluna is in compatibility mode. Used in some method wrappers.
-    bool compatibilityMode;
-
     // Map from instance ID -> Lua table ref
     std::unordered_map<uint32, int> instanceDataRefs;
     // Map from map ID -> Lua table ref
@@ -370,9 +367,7 @@ public:
         return 0;
     }
 
-    bool GetCompatibilityMode() const { return compatibilityMode; }
-
-    Eluna(Map * map, bool compatMode = false);
+    Eluna(Map * map);
     ~Eluna();
 
     // Prevent copy
