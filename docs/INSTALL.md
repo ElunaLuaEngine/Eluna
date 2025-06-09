@@ -23,7 +23,7 @@ For example `git clone https://github.com/ElunaLuaEngine/ElunaTrinityWotlk.git`
 4. Use the git command `git submodule init` followed by `git submodule update`
    * If you really do not get how to use git bash (and do try!) you can navigate to the `LuaEngine` folder and clone the [eluna repository](https://github.com/ElunaLuaEngine/Eluna) there. This is not recommended though.
 4. Continue compiling the core normally using the official instructions
-   * [TrinityCore](http://collab.kpsn.org/display/tc/Installation+Guide)
+   * [TrinityCore](https://trinitycore.info/install/Core-Installation)
    * [cMaNGOS](https://github.com/cmangos/issues/wiki/Installation-Instructions)
 
 __Important!__ After compiling use the new configuration files. They contain Eluna settings and without them Eluna may not function correctly. For example you do not get any error messages or error log.
