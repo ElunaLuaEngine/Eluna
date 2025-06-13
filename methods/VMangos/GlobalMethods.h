@@ -1553,7 +1553,7 @@ namespace LuaGlobalFunctions
         {
             if (save)
             {
-                const GameObjectInfo* gInfo = ObjectMgr::GetGameObjectInfo(entry);
+                const GameObjectInfo* gInfo = eObjectMgr->GetGameObjectInfo(entry);
                 if (!gInfo)
                 {
                     E->Push();
