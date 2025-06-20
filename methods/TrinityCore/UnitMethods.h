@@ -1003,7 +1003,6 @@ namespace LuaUnit
         return 1;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the [Unit]'s class' name in given or default locale or nil.
      *
@@ -1024,7 +1023,11 @@ namespace LuaUnit
      */
     int GetClassAsString(Eluna* E, Unit* unit)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
+#else
+        LocaleConstant locale = static_cast<LocaleConstant>(E->CHECKVAL<uint8>(2, DEFAULT_LOCALE));
+#endif
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -1056,7 +1059,11 @@ namespace LuaUnit
      */
     int GetRaceAsString(Eluna* E, Unit* unit)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
+#else
+        LocaleConstant locale = static_cast<LocaleConstant>(E->CHECKVAL<uint8>(2, DEFAULT_LOCALE));
+#endif
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -1067,7 +1074,6 @@ namespace LuaUnit
         E->Push(entry->Name[locale]);
         return 1;
     }
-#endif
 
     /**
      * Returns the [Unit]'s faction ID.
@@ -2636,6 +2642,8 @@ namespace LuaUnit
         { "GetClass", &LuaUnit::GetClass },
         { "GetRaceMask", &LuaUnit::GetRaceMask },
         { "GetClassMask", &LuaUnit::GetClassMask },
+        { "GetRaceAsString", &LuaUnit::GetRaceAsString },
+        { "GetClassAsString", &LuaUnit::GetClassAsString },
         { "GetAura", &LuaUnit::GetAura },
         { "GetFaction", &LuaUnit::GetFaction },
         { "GetCurrentSpell", &LuaUnit::GetCurrentSpell },
@@ -2661,12 +2669,9 @@ namespace LuaUnit
         { "GetVehicle", &LuaUnit::GetVehicle },
         { "GetMovementType", &LuaUnit::GetMovementType },
 #if ELUNA_EXPANSION < EXP_RETAIL
-        { "GetRaceAsString", &LuaUnit::GetRaceAsString },
-        { "GetClassAsString", &LuaUnit::GetClassAsString },
+
         { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
 #else
-        { "GetRaceAsString", METHOD_REG_NONE },
-        { "GetClassAsString", METHOD_REG_NONE },
         { "GetBaseSpellPower", METHOD_REG_NONE },
 #endif
 
