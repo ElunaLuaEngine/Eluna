@@ -27,7 +27,11 @@ namespace LuaPlayer
     {
         Item* item = E->CHECKOBJ<Item>(2);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(player->CanTitanGrip(item));
+#else
+        E->Push(player->CanTitanGrip());
+#endif
         return 1;
     }
 
