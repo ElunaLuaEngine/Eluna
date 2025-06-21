@@ -4037,6 +4037,36 @@ namespace LuaPlayer
         return 0;
     }
 
+#if ELUNA_EXPANSION == EXP_RETAIL
+    /**
+     * Add item appearance to the [Player].
+     *
+     * @param uint32 itemId : the ID of the item to add appearance from
+     */
+    int AddItemAppearance(Eluna* E, Player* player)
+    {
+        uint32 entry = E->CHECKVAL<uint32>(2);
+
+        player->GetSession()->GetCollectionMgr()->AddItemAppearance(entry);
+
+        return 0;
+    }
+
+    /**
+     * Add transmog set appearances to the [Player].
+     *
+     * @param uint32 transmogSetId : the ID of the set to add all appearances from
+     */
+    int AddTransmogSet(Eluna* E, Player* player)
+    {
+        uint32 entry = E->CHECKVAL<uint32>(2);
+
+        player->GetSession()->GetCollectionMgr()->AddTransmogSet(entry);
+
+        return 0;
+    }
+#endif
+
     ElunaRegister<Player> PlayerMethods[] =
     {
         // Getters
@@ -4344,6 +4374,8 @@ namespace LuaPlayer
         { "UnbindAllInstances", &LuaPlayer::UnbindAllInstances },
         { "SendAuctionMenu", &LuaPlayer::SendAuctionMenu },
         { "GossipAddQuests", &LuaPlayer::GossipAddQuests },
+        { "AddItemAppearance", METHOD_REG_NONE },
+        { "AddTransmogSet", METHOD_REG_NONE },
 #else
         { "SendAreaTriggerMessage", METHOD_REG_NONE },
         { "SendAddonMessage", METHOD_REG_NONE },
@@ -4363,6 +4395,8 @@ namespace LuaPlayer
         { "UnbindAllInstances", METHOD_REG_NONE },
         { "SendAuctionMenu", METHOD_REG_NONE },
         { "GossipAddQuests", METHOD_REG_NONE },
+        { "AddItemAppearance", &LuaPlayer::AddItemAppearance },
+        { "AddTransmogSet", &LuaPlayer::AddTransmogSet },
 #endif
 
         // Not implemented methods
