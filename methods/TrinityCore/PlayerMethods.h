@@ -25,7 +25,7 @@ namespace LuaPlayer
      */
     int CanTitanGrip(Eluna* E, Player* player)
     {
-        Item* item = E->CHECKOBJ<Item>(2);
+        [[maybe_unused]] Item* item = E->CHECKOBJ<Item>(2);
 
 #if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(player->CanTitanGrip(item));
@@ -2370,7 +2370,8 @@ namespace LuaPlayer
         Creature* obj = E->CHECKOBJ<Creature>(2);
 
 #if ELUNA_EXPANSION >= EXP_CATA
-        player->GetSession()->SendTrainerList(obj, NULL);
+        uint32 trainerId = obj->GetTrainerId();
+        player->GetSession()->SendTrainerList(obj, trainerId);
 #else
         player->GetSession()->SendTrainerList(obj);
 #endif
