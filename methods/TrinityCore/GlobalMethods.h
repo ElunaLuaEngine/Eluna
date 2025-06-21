@@ -322,7 +322,6 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Builds a [Player]'s GUID
      *
@@ -336,7 +335,11 @@ namespace LuaGlobalFunctions
     int GetPlayerGUID(Eluna* E)
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(MAKE_NEW_GUID(lowguid, 0, HIGHGUID_PLAYER));
+#else
+        E->Push(ObjectGuid::Create<HighGuid::Player>(lowguid));
+#endif
         return 1;
     }
 
@@ -352,10 +355,14 @@ namespace LuaGlobalFunctions
     int GetItemGUID(Eluna* E)
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(MAKE_NEW_GUID(lowguid, 0, HIGHGUID_ITEM));
+#else
+        E->Push(ObjectGuid::Create<HighGuid::Item>(lowguid));
+#endif
         return 1;
     }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Builds a [GameObject]'s GUID.
      *
@@ -422,7 +429,6 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns a chat link for an [Item].
      *
@@ -445,7 +451,11 @@ namespace LuaGlobalFunctions
     int GetItemLink(Eluna* E)
     {
         uint32 entry = E->CHECKVAL<uint32>(1);
+#if ELUNA_EXPANSION < EXP_RETAIL
         uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
+#else
+        LocaleConstant locale = static_cast<LocaleConstant>(E->CHECKVAL<uint8>(2, DEFAULT_LOCALE));
+#endif
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -453,12 +463,19 @@ namespace LuaGlobalFunctions
         if (!temp)
             return luaL_argerror(E->L, 1, "valid ItemEntry expected");
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         std::string name = temp->Name1;
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(entry))
             ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(locale), name);
 
         std::ostringstream oss;
         oss << "|c" << std::hex << ItemQualityColors[temp->Quality] << std::dec <<
+#else
+        std::string name = temp->GetName(locale);
+
+        std::ostringstream oss;
+        oss << "|c" << std::hex << ItemQualityColors[temp->GetQuality()] << std::dec <<
+#endif
             "|Hitem:" << entry << ":0:" <<
             "0:0:0:0:" <<
             "0:0:0:0|h[" << name << "]|h|r";
@@ -466,7 +483,6 @@ namespace LuaGlobalFunctions
         E->Push(oss.str());
         return 1;
     }
-#endif
 
     /**
      * Returns the type ID from a GUID.
@@ -500,7 +516,6 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the area or zone's name.
      *
@@ -523,7 +538,11 @@ namespace LuaGlobalFunctions
     int GetAreaName(Eluna* E)
     {
         uint32 areaOrZoneId = E->CHECKVAL<uint32>(1);
+#if ELUNA_EXPANSION < EXP_RETAIL
         uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
+#else
+        LocaleConstant locale = static_cast<LocaleConstant>(E->CHECKVAL<uint8>(2, DEFAULT_LOCALE));
+#endif
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -534,7 +553,6 @@ namespace LuaGlobalFunctions
         E->Push(areaEntry->AreaName[locale]);
         return 1;
     }
-#endif
 
     /**
      * Returns the currently active game events.
@@ -2070,7 +2088,11 @@ namespace LuaGlobalFunctions
                 continue;
             }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
             if (amount < 1 || (item_proto->MaxCount > 0 && amount > uint32(item_proto->MaxCount)))
+#else
+            if (amount < 1 || (item_proto->GetMaxCount() > 0 && amount > uint32(item_proto->GetMaxCount())))
+#endif
             {
                 luaL_error(E->L, "Item entry %d has invalid amount %d", entry, amount);
                 continue;
@@ -2084,7 +2106,11 @@ namespace LuaGlobalFunctions
             }
         }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         Player* receiverPlayer = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(receiverGUIDLow, 0, HIGHGUID_PLAYER));
+#else
+        Player* receiverPlayer = eObjectAccessor()FindPlayer(ObjectGuid::Create<HighGuid::Player>(receiverGUIDLow));
+#endif
         draft.SendMailTo(trans, MailReceiver(receiverPlayer, receiverGUIDLow), sender, MAIL_CHECK_MASK_NONE, delay);
         CharacterDatabase.CommitTransaction(trans);
 
@@ -2668,7 +2694,6 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Unbinds event handlers for either all of a [Creature]'s events, or one type of event.
      *
@@ -2707,7 +2732,6 @@ namespace LuaGlobalFunctions
         }
         return 0;
     }
-#endif
 
     /**
      * Unbinds event handlers for either all of a [Creature]'s gossip events, or one type of event.
@@ -3157,11 +3181,7 @@ namespace LuaGlobalFunctions
         { "RegisterInstanceEvent", &LuaGlobalFunctions::RegisterInstanceEvent },
         { "ClearBattleGroundEvents", &LuaGlobalFunctions::ClearBattleGroundEvents },
         { "ClearCreatureEvents", &LuaGlobalFunctions::ClearCreatureEvents },
-#if ELUNA_EXPANSION < EXP_RETAIL
         { "ClearUniqueCreatureEvents", &LuaGlobalFunctions::ClearUniqueCreatureEvents },
-#else
-        { "ClearUniqueCreatureEvents", METHOD_REG_NONE },
-#endif
         { "ClearCreatureGossipEvents", &LuaGlobalFunctions::ClearCreatureGossipEvents },
         { "ClearGameObjectEvents", &LuaGlobalFunctions::ClearGameObjectEvents },
         { "ClearGameObjectGossipEvents", &LuaGlobalFunctions::ClearGameObjectGossipEvents },
@@ -3194,26 +3214,18 @@ namespace LuaGlobalFunctions
         { "GetGuildByName", &LuaGlobalFunctions::GetGuildByName },
         { "GetGuildByLeaderGUID", &LuaGlobalFunctions::GetGuildByLeaderGUID },
         { "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
-#if ELUNA_EXPANSION < EXP_RETAIL
         { "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID },
         { "GetItemGUID", &LuaGlobalFunctions::GetItemGUID },
-        { "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID },
-        { "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID },
         { "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow },
         { "GetGUIDType", &LuaGlobalFunctions::GetGUIDType },
         { "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry },
         { "GetAreaName", &LuaGlobalFunctions::GetAreaName },
-        { "GetItemLink", &LuaGlobalFunctions::GetItemLink },
+#if ELUNA_EXPANSION < EXP_RETAIL
+        { "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID },
+        { "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID },
 #else
-        { "GetPlayerGUID", METHOD_REG_NONE },
-        { "GetItemGUID", METHOD_REG_NONE },
         { "GetObjectGUID", METHOD_REG_NONE },
         { "GetUnitGUID", METHOD_REG_NONE },
-        { "GetGUIDLow", METHOD_REG_NONE },
-        { "GetGUIDType", METHOD_REG_NONE },
-        { "GetGUIDEntry", METHOD_REG_NONE },
-        { "GetAreaName", METHOD_REG_NONE },
-        { "GetItemLink", METHOD_REG_NONE },
 #endif
         { "bit_not", &LuaGlobalFunctions::bit_not },
         { "bit_xor", &LuaGlobalFunctions::bit_xor },
@@ -3221,6 +3233,7 @@ namespace LuaGlobalFunctions
         { "bit_lshift", &LuaGlobalFunctions::bit_lshift },
         { "bit_or", &LuaGlobalFunctions::bit_or },
         { "bit_and", &LuaGlobalFunctions::bit_and },
+        { "GetItemLink", &LuaGlobalFunctions::GetItemLink },
         { "GetMapById", &LuaGlobalFunctions::GetMapById, METHOD_REG_WORLD }, // World state method only in multistate
         { "GetCurrTime", &LuaGlobalFunctions::GetCurrTime },
         { "GetTimeDiff", &LuaGlobalFunctions::GetTimeDiff },
