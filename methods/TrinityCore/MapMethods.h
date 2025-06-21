@@ -108,7 +108,7 @@ namespace LuaMap
     {
         float x = E->CHECKVAL<float>(2);
         float y = E->CHECKVAL<float>(3);
-        uint32 phasemask = E->CHECKVAL<uint32>(4, 1);
+        [[maybe_unused]] uint32 phasemask = E->CHECKVAL<uint32>(4, 1);
 
 #if ELUNA_EXPANSION < EXP_RETAIL
         float z = map->GetHeight(phasemask, x, y, MAX_HEIGHT);
