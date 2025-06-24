@@ -4037,6 +4037,7 @@ namespace LuaPlayer
         return 0;
     }
 
+#if ELUNA_EXPANSION == EXP_RETAIL
     /**
      * Add item appearance to the [Player].
      *
@@ -4064,6 +4065,7 @@ namespace LuaPlayer
 
         return 0;
     }
+#endif
 
     ElunaRegister<Player> PlayerMethods[] =
     {
@@ -4272,8 +4274,6 @@ namespace LuaPlayer
         { "CanRewardQuest", &LuaPlayer::CanRewardQuest },
         { "HasRecruited", &LuaPlayer::HasRecruited },
         { "IsRecruited", &LuaPlayer::IsRecruited },
-        { "AddItemAppearance", &LuaPlayer::AddItemAppearance },
-        { "AddTransmogSet", &LuaPlayer::AddTransmogSet },
 
         // Gossip
 #if ELUNA_EXPANSION < EXP_RETAIL
@@ -4374,6 +4374,8 @@ namespace LuaPlayer
         { "UnbindAllInstances", &LuaPlayer::UnbindAllInstances },
         { "SendAuctionMenu", &LuaPlayer::SendAuctionMenu },
         { "GossipAddQuests", &LuaPlayer::GossipAddQuests },
+        { "AddItemAppearance", METHOD_REG_NONE },
+        { "AddTransmogSet", METHOD_REG_NONE },
 #else
         { "SendAreaTriggerMessage", METHOD_REG_NONE },
         { "SendAddonMessage", METHOD_REG_NONE },
@@ -4393,6 +4395,8 @@ namespace LuaPlayer
         { "UnbindAllInstances", METHOD_REG_NONE },
         { "SendAuctionMenu", METHOD_REG_NONE },
         { "GossipAddQuests", METHOD_REG_NONE },
+        { "AddItemAppearance", &LuaPlayer::AddItemAppearance },
+        { "AddTransmogSet", &LuaPlayer::AddTransmogSet },
 #endif
 
         // Not implemented methods
