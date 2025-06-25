@@ -143,13 +143,13 @@ private:
 
 #define ELUNA_MATH_OP(type, func, op) \
 template<> \
-static int ElunaTemplate<type>::func(lua_State* L) { \
+int ElunaTemplate<type>::func(lua_State* L) { \
     return ElunaTemplateHelper<type>::PerformOp(L, std::op()); \
 }
 
 #define ELUNA_SIMPLE_FORWARD(type, func) \
 template<> \
-static int ElunaTemplate<type>::func(lua_State* L) { \
+int ElunaTemplate<type>::func(lua_State* L) { \
     return ElunaTemplateHelper<type>::func(L); \
 }
 
