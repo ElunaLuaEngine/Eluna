@@ -31,9 +31,7 @@
 #include "CorpseMethods.h"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
-
-// Custom methods
-#include "CustomMethods.h"
+#include "CustomMethodsInterface.h"
 
 void RegisterMethods(Eluna* E)
 {
@@ -115,7 +113,6 @@ void RegisterMethods(Eluna* E)
 
     ElunaTemplate<ObjectGuid>::Register(E, "ObjectGuid");
 
-    // Register custom methods
     LuaCustom::RegisterCustomMethods(E);
 
     LuaVal::Register(E->L);
