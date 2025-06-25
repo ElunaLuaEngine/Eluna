@@ -560,7 +560,7 @@ public:
     void OnDestroy(Map* map);
     void OnPlayerEnter(Map* map, Player* player);
     void OnPlayerLeave(Map* map, Player* player);
-    void OnUpdate(Map* map, uint32 diff);
+	void OnMapUpdate(Map* map, uint32 diff);
     void OnAddToWorld(Creature* creature);
     void OnRemoveFromWorld(Creature* creature);
     void OnAddToWorld(GameObject* gameobject);

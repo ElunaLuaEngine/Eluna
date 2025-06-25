@@ -318,7 +318,7 @@ void Eluna::OnPlayerLeave(Map* map, Player* player)
     CallAllFunctions(ServerEventBindings, key);
 }
 
-void Eluna::OnUpdate(Map* map, uint32 diff)
+void Eluna::OnMapUpdate(Map* map, uint32 diff)
 {
     START_HOOK(MAP_EVENT_ON_UPDATE);
     HookPush(map);
