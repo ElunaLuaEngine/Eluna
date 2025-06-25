@@ -29,7 +29,6 @@ void ElunaConfig::Initialize()
 {
     // Load bools
     SetConfig(CONFIG_ELUNA_ENABLED, "Eluna.Enabled", true);
-    SetConfig(CONFIG_ELUNA_COMPATIBILITY_MODE, "Eluna.CompatibilityMode", false);
     SetConfig(CONFIG_ELUNA_TRACEBACK, "Eluna.TraceBack", false);
     SetConfig(CONFIG_ELUNA_SCRIPT_RELOADER, "Eluna.ScriptReloader", false);
 
@@ -66,11 +65,6 @@ void ElunaConfig::SetConfig(ElunaConfigStringValues index, char const* fieldname
 bool ElunaConfig::IsElunaEnabled()
 {
     return GetConfig(CONFIG_ELUNA_ENABLED);
-}
-
-bool ElunaConfig::IsElunaCompatibilityMode()
-{
-    return GetConfig(CONFIG_ELUNA_COMPATIBILITY_MODE);
 }
 
 bool ElunaConfig::ShouldMapLoadEluna(uint32 id)

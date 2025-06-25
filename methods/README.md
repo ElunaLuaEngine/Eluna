@@ -1,14 +1,12 @@
-/*
-* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
-* This program is free software licensed under GPL version 3
-* Please see the included DOCS/LICENSE.md for more information
-*/
+## How to Add Custom Methods
 
-// This file is used for custom Lua methods, without needing to edit the existing method header files.
-// This can also be used to override default methods without needing to edit existing methods.
-// It follows the same structure as any other method header, except you can use RegisterCustomFunction
-// to register multiple method tables in a single file.
+You can extend the available methods by creating a directory named `Custom` in the `Methods` directory, and adding a header file named `CustomMethods.h` inside it.
 
+Once this file is added, re-run cmake and recompile.
+
+## Example: `Custom/CustomMethods.h`
+
+```cpp
 #include "ElunaTemplate.h"
 #include "ElunaIncludes.h"
 
@@ -39,3 +37,4 @@ namespace LuaCustom
 };
 
 #endif
+```

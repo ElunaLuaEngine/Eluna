@@ -2270,7 +2270,7 @@ namespace LuaGlobalFunctions
      */
     int IsCompatibilityMode(Eluna* E)
     {
-        E->Push(E->GetCompatibilityMode());
+        E->Push(false);
         return 1;
     }
 

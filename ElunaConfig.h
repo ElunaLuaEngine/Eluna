@@ -12,7 +12,6 @@
 enum ElunaConfigBoolValues
 {
     CONFIG_ELUNA_ENABLED,
-    CONFIG_ELUNA_COMPATIBILITY_MODE,
     CONFIG_ELUNA_TRACEBACK,
     CONFIG_ELUNA_SCRIPT_RELOADER,
     CONFIG_ELUNA_BOOL_COUNT
@@ -46,7 +45,6 @@ public:
     void SetConfig(ElunaConfigStringValues index, std::string value) { _configStringValues[index] = value; }
 
     bool IsElunaEnabled();
-    bool IsElunaCompatibilityMode();
     bool ShouldMapLoadEluna(uint32 mapId);
 
 private:
