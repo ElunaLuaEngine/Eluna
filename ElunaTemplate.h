@@ -16,6 +16,7 @@ extern "C"
 #include "LuaEngine.h"
 #include "ElunaUtility.h"
 #include "ElunaCompat.h"
+#include "ElunaConfig.h"
 #if !defined ELUNA_CMANGOS
 #include "SharedDefines.h"
 #else
@@ -161,18 +162,19 @@ struct ElunaRegister
     const char* name;
     typename std::conditional<std::is_same_v<T, void>, int(*)(Eluna*), int(*)(Eluna*, T*)>::type mfunc;
     MethodRegisterState regState;
+    MethodFlags flags;
 
-    // constructor for non-globals (with T*)
-    ElunaRegister(const char* name, int(*func)(Eluna*, T*), MethodRegisterState state = METHOD_REG_ALL)
-        : name(name), mfunc(func), regState(state) {}
+    // constructor for class methods
+    ElunaRegister(const char* name, int(*func)(Eluna*, T*), MethodRegisterState state = METHOD_REG_ALL, uint32 flags = METHOD_FLAG_NONE)
+        : name(name), mfunc(func), regState(state), flags(static_cast<MethodFlags>(flags)) {}
 
-    // constructor for globals (without T*)
-    ElunaRegister(const char* name, int(*func)(Eluna*), MethodRegisterState state = METHOD_REG_ALL)
-        : name(name), mfunc(func), regState(state) {}
+    // constructor for global methods
+    ElunaRegister(const char* name, int(*func)(Eluna*), MethodRegisterState state = METHOD_REG_ALL, uint32 flags = METHOD_FLAG_NONE)
+        : name(name), mfunc(func), regState(state), flags(static_cast<MethodFlags>(flags)) {}
 
-    // constructor for nullptr functions and METHOD_REG_NONE (unimplemented methods)
-    ElunaRegister(const char* name, MethodRegisterState state = METHOD_REG_NONE)
-        : name(name), mfunc(nullptr), regState(state) {}
+    // constructor for unimplemented methods
+    ElunaRegister(const char* name, MethodRegisterState state = METHOD_REG_NONE, uint32 flags = METHOD_FLAG_NONE)
+        : name(name), mfunc(nullptr), regState(state), flags(static_cast<MethodFlags>(flags)) {}
 };
 
 template<typename T = void>
@@ -320,6 +322,24 @@ public:
             {
                 lua_pushstring(L, method->name);
                 lua_pushcclosure(L, MethodUnimpl, 1);
+                lua_rawset(L, -3);
+                continue;
+            }
+
+            // if the method is considered unsafe, and unsafe methods have not been enabled, push a closure to error output function
+            if (method->flags & METHOD_FLAG_UNSAFE && !sElunaConfig->UnsafeMethodsEnabled())
+            {
+                lua_pushstring(L, method->name);
+                lua_pushcclosure(L, MethodUnsafe, 1);
+                lua_rawset(L, -3);
+                continue;
+            }
+
+            // if the method is considered deprecated, and deprecated methods have not been enabled, push a closure to error output function
+            if (method->flags & METHOD_FLAG_DEPRECATED && !sElunaConfig->DeprecatedMethodsEnabled())
+            {
+                lua_pushstring(L, method->name);
+                lua_pushcclosure(L, MethodDeprecated, 1);
                 lua_rawset(L, -3);
                 continue;
             }
@@ -492,6 +512,8 @@ public:
 
     static int MethodWrongState(lua_State* L) { luaL_error(L, "attempt to call method '%s' that does not exist for state: %d", lua_tostring(L, lua_upvalueindex(1)), lua_tointeger(L, lua_upvalueindex(2))); return 0; }
     static int MethodUnimpl(lua_State* L) { luaL_error(L, "attempt to call method '%s' that is not implemented for this emulator", lua_tostring(L, lua_upvalueindex(1))); return 0; }
+    static int MethodUnsafe(lua_State* L) { luaL_error(L, "attempt to call method '%s' that is flagged as unsafe! to use this method, enable unsafe methods in the config file", lua_tostring(L, lua_upvalueindex(1))); return 0; }
+    static int MethodDeprecated(lua_State* L) { luaL_error(L, "attempt to call method '%s' that is flagged as deprecated! this method will be removed in the future. to use this method, enable deprecated methods in the config file", lua_tostring(L, lua_upvalueindex(1))); return 0; }
 };
 
 template<typename T> const char* ElunaTemplate<T>::tname = NULL;

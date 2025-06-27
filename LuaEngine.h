@@ -128,6 +128,13 @@ enum MethodRegisterState
     METHOD_REG_ALL
 };
 
+enum MethodFlags : uint32
+{
+    METHOD_FLAG_NONE = 0x0,
+    METHOD_FLAG_UNSAFE = 0x1,
+    METHOD_FLAG_DEPRECATED = 0x2
+};
+
 #define ELUNA_STATE_PTR "Eluna State Ptr"
 
 #if defined ELUNA_TRINITY

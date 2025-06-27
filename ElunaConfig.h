@@ -14,6 +14,8 @@ enum ElunaConfigBoolValues
     CONFIG_ELUNA_ENABLED,
     CONFIG_ELUNA_TRACEBACK,
     CONFIG_ELUNA_SCRIPT_RELOADER,
+    CONFIG_ELUNA_ENABLE_UNSAFE,
+    CONFIG_ELUNA_ENABLE_DEPRECATED,
     CONFIG_ELUNA_BOOL_COUNT
 };
 
@@ -44,7 +46,9 @@ public:
     void SetConfig(ElunaConfigBoolValues index, bool value) { _configBoolValues[index] = value; }
     void SetConfig(ElunaConfigStringValues index, std::string value) { _configStringValues[index] = value; }
 
-    bool IsElunaEnabled();
+    bool IsElunaEnabled() { return GetConfig(CONFIG_ELUNA_ENABLED); }
+    bool UnsafeMethodsEnabled() { return GetConfig(CONFIG_ELUNA_ENABLE_UNSAFE); }
+    bool DeprecatedMethodsEnabled() { return GetConfig(CONFIG_ELUNA_ENABLE_DEPRECATED); }
     bool ShouldMapLoadEluna(uint32 mapId);
 
 private:
