@@ -31,6 +31,8 @@ void ElunaConfig::Initialize()
     SetConfig(CONFIG_ELUNA_ENABLED, "Eluna.Enabled", true);
     SetConfig(CONFIG_ELUNA_TRACEBACK, "Eluna.TraceBack", false);
     SetConfig(CONFIG_ELUNA_SCRIPT_RELOADER, "Eluna.ScriptReloader", false);
+    SetConfig(CONFIG_ELUNA_ENABLE_UNSAFE, "Eluna.UseUnsafeMethods", true);
+    SetConfig(CONFIG_ELUNA_ENABLE_DEPRECATED, "Eluna.UseDeprecatedMethods", true);
 
     // Load strings
     SetConfig(CONFIG_ELUNA_SCRIPT_PATH, "Eluna.ScriptPath", "lua_scripts");
@@ -60,11 +62,6 @@ void ElunaConfig::SetConfig(ElunaConfigStringValues index, char const* fieldname
 #else
     SetConfig(index, sConfig.GetStringDefault(fieldname, defvalue.c_str()));
 #endif
-}
-
-bool ElunaConfig::IsElunaEnabled()
-{
-    return GetConfig(CONFIG_ELUNA_ENABLED);
 }
 
 bool ElunaConfig::ShouldMapLoadEluna(uint32 id)
