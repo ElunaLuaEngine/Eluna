@@ -141,18 +141,6 @@ private:
     T _obj;
 };
 
-#define ELUNA_MATH_OP(type, func, op) \
-template<> \
-int ElunaTemplate<type>::func(lua_State* L) { \
-    return ElunaTemplateHelper<type>::PerformOp(L, std::op()); \
-}
-
-#define ELUNA_SIMPLE_FORWARD(type, func) \
-template<> \
-int ElunaTemplate<type>::func(lua_State* L) { \
-    return ElunaTemplateHelper<type>::func(L); \
-}
-
 #define MAKE_ELUNA_OBJECT_VALUE_IMPL(type) \
 template <> \
 class ElunaObjectImpl<type> : public ElunaObjectValueImpl<type> \
@@ -507,49 +495,5 @@ public:
 };
 
 template<typename T> const char* ElunaTemplate<T>::tname = NULL;
-
-template <typename T>
-class ElunaTemplateHelper
-{
-public:
-    static int PerformOp(lua_State* L, std::function<T(T, T)> op)
-    {
-        Eluna* E = Eluna::GetEluna(L);
-        T val1 = E->CHECKVAL<T>(1);
-        T val2 = E->CHECKVAL<T>(2);
-        E->Push(op(val1, val2));
-        return 1;
-    }
-
-    static int PerformOp(lua_State* L, std::function<T(T)> op)
-    {
-        Eluna* E = Eluna::GetEluna(L);
-
-        T val = E->CHECKVAL<T>(1);
-        E->Push(op(val));
-        return 1;
-    }
-
-    static int ToString(lua_State* L)
-    {
-        Eluna* E = Eluna::GetEluna(L);
-
-        T val = E->CHECKVAL<T>(1);
-        std::ostringstream ss;
-        ss << val;
-        E->Push(ss.str());
-        return 1;
-    }
-
-    static int Pow(lua_State* L)
-    {
-        Eluna* E = Eluna::GetEluna(L);
-
-        T val1 = E->CHECKVAL<T>(1);
-        T val2 = E->CHECKVAL<T>(2);
-        E->Push(static_cast<T>(powl(static_cast<long double>(val1), static_cast<long double>(val2))));
-        return 1;
-    }
-};
 
 #endif

@@ -31,48 +31,8 @@
 #include "CorpseMethods.h"
 #include "VehicleMethods.h"
 #include "BattleGroundMethods.h"
+#include "BigIntMethods.h"
 #include "CustomMethodsInterface.h"
-
-ELUNA_MATH_OP(unsigned long long, Add, plus)
-ELUNA_MATH_OP(unsigned long long, Subtract, minus)
-ELUNA_MATH_OP(unsigned long long, Multiply, multiplies)
-ELUNA_MATH_OP(unsigned long long, Divide, divides)
-ELUNA_MATH_OP(unsigned long long, Mod, modulus)
-ELUNA_MATH_OP(unsigned long long, Equal, equal_to)
-ELUNA_MATH_OP(unsigned long long, Less, less)
-ELUNA_MATH_OP(unsigned long long, LessOrEqual, less_equal)
-ELUNA_SIMPLE_FORWARD(unsigned long long, ToString)
-ELUNA_SIMPLE_FORWARD(unsigned long long, Pow)
-
-ELUNA_MATH_OP(long long, Add, plus)
-ELUNA_MATH_OP(long long, Subtract, minus)
-ELUNA_MATH_OP(long long, Multiply, multiplies)
-ELUNA_MATH_OP(long long, Divide, divides)
-ELUNA_MATH_OP(long long, Mod, modulus)
-ELUNA_MATH_OP(long long, UnaryMinus, negate)
-ELUNA_MATH_OP(long long, Equal, equal_to)
-ELUNA_MATH_OP(long long, Less, less)
-ELUNA_MATH_OP(long long, LessOrEqual, less_equal)
-ELUNA_SIMPLE_FORWARD(long long, ToString)
-ELUNA_SIMPLE_FORWARD(long long, Pow)
-
-template<> int ElunaTemplate<ObjectGuid>::Equal(lua_State* L)
-{
-    Eluna* E = Eluna::GetEluna(L);
-    E->Push(E->CHECKVAL<ObjectGuid>(1) == E->CHECKVAL<ObjectGuid>(2));
-    return 1;
-}
-
-template<> int ElunaTemplate<ObjectGuid>::ToString(lua_State* L)
-{
-    Eluna* E = Eluna::GetEluna(L);
-#if defined ELUNA_TRINITY
-    E->Push(E->CHECKVAL<ObjectGuid>(1).ToString());
-#else
-    E->Push(E->CHECKVAL<ObjectGuid>(1).GetString());
-#endif
-    return 1;
-}
 
 void RegisterMethods(Eluna* E)
 {
@@ -149,10 +109,13 @@ void RegisterMethods(Eluna* E)
     ElunaTemplate<ElunaQuery>::SetMethods(E, LuaQuery::QueryMethods);
 
     ElunaTemplate<long long>::Register(E, "long long");
+    ElunaTemplate<long long>::SetMethods(E, LuaBigInt::LongLongMethods);
 
     ElunaTemplate<unsigned long long>::Register(E, "unsigned long long");
+    ElunaTemplate<unsigned long long>::SetMethods(E, LuaBigInt::ULongLongMethods);
 
     ElunaTemplate<ObjectGuid>::Register(E, "ObjectGuid");
+    ElunaTemplate<ObjectGuid>::SetMethods(E, LuaBigInt::ObjectGuidMethods);
 
     LuaCustom::RegisterCustomMethods(E);
 
