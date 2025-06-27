@@ -73,7 +73,7 @@ void Eluna::OnLearnSpell(Player* pPlayer, uint32 spellId)
 bool Eluna::OnCommand(Player* player, const char* text)
 {
     // If from console, player is NULL
-    if (!player || player->GetSession()->GetSecurity() >= SEC_ADMINISTRATOR)
+    if (sElunaConfig->IsReloadCommandEnabled() && (!player || player->GetSession()->GetSecurity() >= sElunaConfig->GetReloadSecurityLevel()))
     {
         std::string reload = text;
         std::transform(reload.begin(), reload.end(), reload.begin(), ::tolower);
