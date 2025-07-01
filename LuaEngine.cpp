@@ -853,7 +853,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     std::ostringstream oss;
-    oss << "regtype " << static_cast<std::underlying_type_t<Hooks::RegisterTypes>>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " <<
+    oss << "regtype " << static_cast<unsigned int>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " <<
 #if defined ELUNA_TRINITY
         guid.ToHexString()
 #else
