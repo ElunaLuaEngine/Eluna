@@ -666,7 +666,7 @@ static void createCancelCallback(Eluna* e, uint64 bindingID, BindingMap<K>* bind
 }
 
 template<typename K>
-int RegisterBasicEvent(Eluna* e, std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32 event_id, int functionRef, uint32 shots)
+int RegisterBasicBinding(Eluna* e, std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32 event_id, int functionRef, uint32 shots)
 {
     typedef EventKey<K> Key;
     auto binding = e->GetBinding<Key>(regtype);
@@ -677,7 +677,7 @@ int RegisterBasicEvent(Eluna* e, std::underlying_type_t<Hooks::RegisterTypes> re
 }
 
 template<typename K>
-int RegisterEntryEvent(Eluna* e, std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32 entry, uint32 event_id, int functionRef, uint32 shots)
+int RegisterEntryBinding(Eluna* e, std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32 entry, uint32 event_id, int functionRef, uint32 shots)
 {
     typedef EntryKey<K> Key;
     auto binding = e->GetBinding<Key>(regtype);
@@ -688,7 +688,7 @@ int RegisterEntryEvent(Eluna* e, std::underlying_type_t<Hooks::RegisterTypes> re
 }
 
 template<typename K>
-int RegisterUniqueEvent(Eluna* e, std::underlying_type_t<Hooks::RegisterTypes> regtype, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
+int RegisterUniqueBinding(Eluna* e, std::underlying_type_t<Hooks::RegisterTypes> regtype, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
 {
     typedef UniqueObjectKey<K> Key;
     auto binding = e->GetBinding<Key>(regtype);
@@ -705,32 +705,32 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
     {
         case Hooks::REGTYPE_SERVER:
             if (event_id < Hooks::SERVER_EVENT_COUNT)
-                return RegisterBasicEvent<Hooks::ServerEvents>(this, regtype, event_id, functionRef, shots);
+                return RegisterBasicBinding<Hooks::ServerEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_PLAYER:
             if (event_id < Hooks::PLAYER_EVENT_COUNT)
-                return RegisterBasicEvent<Hooks::PlayerEvents>(this, regtype, event_id, functionRef, shots);
+                return RegisterBasicBinding<Hooks::PlayerEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_GUILD:
             if (event_id < Hooks::GUILD_EVENT_COUNT)
-                return RegisterBasicEvent<Hooks::GuildEvents>(this, regtype, event_id, functionRef, shots);
+                return RegisterBasicBinding<Hooks::GuildEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_GROUP:
             if (event_id < Hooks::GROUP_EVENT_COUNT)
-                return RegisterBasicEvent<Hooks::GroupEvents>(this, regtype, event_id, functionRef, shots);
+                return RegisterBasicBinding<Hooks::GroupEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_VEHICLE:
             if (event_id < Hooks::VEHICLE_EVENT_COUNT)
-                return RegisterBasicEvent<Hooks::VehicleEvents>(this, regtype, event_id, functionRef, shots);
+                return RegisterBasicBinding<Hooks::VehicleEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_BG:
             if (event_id < Hooks::BG_EVENT_COUNT)
-                return RegisterBasicEvent<Hooks::BGEvents>(this, regtype, event_id, functionRef, shots);
+                return RegisterBasicBinding<Hooks::BGEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_PACKET:
@@ -742,7 +742,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-                return RegisterEntryEvent<Hooks::PacketEvents>(this, regtype, entry, event_id, functionRef, shots);
+                return RegisterEntryBinding<Hooks::PacketEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
@@ -755,7 +755,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-                return RegisterEntryEvent<Hooks::CreatureEvents>(this, regtype, entry, event_id, functionRef, shots);
+                return RegisterEntryBinding<Hooks::CreatureEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
@@ -768,7 +768,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "guid was 0!");
                     return 0; // Stack: (empty)
                 }
-                return RegisterUniqueEvent<Hooks::CreatureEvents>(this, regtype, guid, instanceId, event_id, functionRef, shots);
+                return RegisterUniqueBinding<Hooks::CreatureEvents>(this, regtype, guid, instanceId, event_id, functionRef, shots);
             }
             break;
 
@@ -781,7 +781,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-                return RegisterEntryEvent<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
+                return RegisterEntryBinding<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
@@ -794,7 +794,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a gameobject with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-                return RegisterEntryEvent<Hooks::GameObjectEvents>(this, regtype, entry, event_id, functionRef, shots);
+                return RegisterEntryBinding<Hooks::GameObjectEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
@@ -807,13 +807,13 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a gameobject with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-                return RegisterEntryEvent<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
+                return RegisterEntryBinding<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
         case Hooks::REGTYPE_SPELL:
             if (event_id < Hooks::SPELL_EVENT_COUNT)
-                return RegisterEntryEvent<Hooks::SpellEvents>(this, regtype, entry, event_id, functionRef, shots);
+                return RegisterEntryBinding<Hooks::SpellEvents>(this, regtype, entry, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_ITEM:
@@ -826,7 +826,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     return 0; // Stack: (empty)
                 }
 
-                return RegisterEntryEvent<Hooks::ItemEvents>(this, regtype, entry, event_id, functionRef, shots);
+                return RegisterEntryBinding<Hooks::ItemEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
@@ -840,19 +840,19 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     return 0; // Stack: (empty)
                 }
 
-                return RegisterEntryEvent<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
+                return RegisterEntryBinding<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
         case Hooks::REGTYPE_PLAYER_GOSSIP:
             if (event_id < Hooks::GOSSIP_EVENT_COUNT)
-                return RegisterEntryEvent<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
+                return RegisterEntryBinding<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_MAP:
         case Hooks::REGTYPE_INSTANCE:
             if (event_id < Hooks::INSTANCE_EVENT_COUNT)
-                return RegisterEntryEvent<Hooks::InstanceEvents>(this, regtype, entry, event_id, functionRef, shots);
+                return RegisterEntryBinding<Hooks::InstanceEvents>(this, regtype, entry, event_id, functionRef, shots);
             break;
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
