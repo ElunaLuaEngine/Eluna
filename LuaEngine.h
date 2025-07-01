@@ -151,8 +151,6 @@ enum MethodFlags : uint32
 class ELUNA_GAME_API Eluna
 {
 public:
-    typedef std::list<LuaScript> ScriptList;
-    typedef std::recursive_mutex LockType;
 
     void ReloadEluna() { reload = true; }
     bool ExecuteCall(int params, int res);
@@ -183,6 +181,14 @@ private:
     std::unordered_map<uint32, int> instanceDataRefs;
     // Map from map ID -> Lua table ref
     std::unordered_map<uint32, int> continentDataRefs;
+
+    std::unordered_map<std::underlying_type_t<Hooks::RegisterTypes>, std::unique_ptr<BaseBindingMap>> bindingMaps;
+
+    template<typename T>
+    void CreateBinding(Hooks::RegisterTypes type)
+    {
+        bindingMaps[std::underlying_type_t<Hooks::RegisterTypes>(type)] = std::make_unique<BindingMap<T>>(L);
+    }
 
     void OpenLua();
     void CloseLua();
@@ -247,27 +253,6 @@ public:
     QueryCallbackProcessor queryProcessor;
     QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 #endif
-    std::unordered_map<std::underlying_type_t<Hooks::RegisterTypes>, std::unique_ptr<BaseBindingMap>> bindingMaps;
-
-    template<typename T>
-    void CreateBinding(Hooks::RegisterTypes type)
-    {
-        bindingMaps[std::underlying_type_t<Hooks::RegisterTypes>(type)] = std::make_unique<BindingMap<T>>(L);
-    }
-
-    template<typename T>
-    BindingMap<T>* GetBinding(std::underlying_type_t<Hooks::RegisterTypes> type)
-    {
-        auto it = bindingMaps.find(type);
-        if (it == bindingMaps.end()) return nullptr;
-        return dynamic_cast<BindingMap<T>*>(it->second.get());
-    }
-
-    template<typename T>
-    BindingMap<T>* GetBinding(Hooks::RegisterTypes type)
-    {
-        return GetBinding<T>(static_cast<std::underlying_type_t<Hooks::RegisterTypes>>(type));
-    }
 
     static int StackTrace(lua_State* _L);
     static void Report(lua_State* _L);
@@ -373,6 +358,20 @@ public:
             return map->GetInstanceId();
 
         return 0;
+    }
+
+    template<typename T>
+    BindingMap<T>* GetBinding(std::underlying_type_t<Hooks::RegisterTypes> type)
+    {
+        auto it = bindingMaps.find(type);
+        if (it == bindingMaps.end()) return nullptr;
+        return dynamic_cast<BindingMap<T>*>(it->second.get());
+    }
+
+    template<typename T>
+    BindingMap<T>* GetBinding(Hooks::RegisterTypes type)
+    {
+        return GetBinding<T>(static_cast<std::underlying_type_t<Hooks::RegisterTypes>>(type));
     }
 
     Eluna(Map * map);
