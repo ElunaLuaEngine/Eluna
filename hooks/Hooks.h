@@ -68,7 +68,7 @@
 
 namespace Hooks
 {
-    enum RegisterTypes
+    enum RegisterTypes : uint8
     {
         REGTYPE_PACKET,
         REGTYPE_SERVER,

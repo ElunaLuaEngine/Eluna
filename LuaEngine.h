@@ -247,18 +247,18 @@ public:
     QueryCallbackProcessor queryProcessor;
     QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 #endif
-    std::unordered_map<uint8, std::unique_ptr<BaseBindingMap>> bindingMaps;
+    std::unordered_map<std::underlying_type_t<Hooks::RegisterTypes>, std::unique_ptr<BaseBindingMap>> bindingMaps;
 
     template<typename T>
     void CreateBinding(Hooks::RegisterTypes type)
     {
-        bindingMaps[static_cast<uint8>(type)] = std::make_unique<BindingMap<T>>(L);
+        bindingMaps[std::underlying_type_t<Hooks::RegisterTypes>(type)] = std::make_unique<BindingMap<T>>(L);
     }
 
     template<typename T>
-    BindingMap<T>* GetBinding(uint8 type)
+    BindingMap<T>* GetBinding(std::underlying_type_t<Hooks::RegisterTypes> type)
     {
-        auto it = bindingMaps.find(static_cast<uint8>(type));
+        auto it = bindingMaps.find(type);
         if (it == bindingMaps.end()) return nullptr;
         return dynamic_cast<BindingMap<T>*>(it->second.get());
     }
@@ -266,7 +266,7 @@ public:
     template<typename T>
     BindingMap<T>* GetBinding(Hooks::RegisterTypes type)
     {
-        return GetBinding<T>(static_cast<uint8>(type));
+        return GetBinding<T>(static_cast<std::underlying_type_t<Hooks::RegisterTypes>>(type));
     }
 
     static int StackTrace(lua_State* _L);
@@ -338,7 +338,7 @@ public:
 #if !defined TRACKABLE_PTR_NAMESPACE
     uint64 GetCallstackId() const { return callstackid; }
 #endif
-    int Register(uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
+    int Register(std::underlying_type_t<Hooks::RegisterTypes> reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
     void UpdateEluna(uint32 diff);
 
     // Checks
