@@ -1107,10 +1107,12 @@ void Eluna::FreeInstanceId(uint32 instanceId)
 {
     for (int i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
     {
-        auto key = EntryKey<Hooks::InstanceEvents>((Hooks::InstanceEvents)i, instanceId);
+        typedef EntryKey<Hooks::InstanceEvents> Key;
 
-        auto MapEventBindings = GetBinding<EntryKey<Hooks::InstanceEvents>>("MapEvents");
-        auto InstanceEventBindings = GetBinding<EntryKey<Hooks::InstanceEvents>>("InstanceEvents");
+        auto key = Key((Hooks::InstanceEvents)i, instanceId);
+
+        auto MapEventBindings = GetBinding<Key>("MapEvents");
+        auto InstanceEventBindings = GetBinding<Key>("InstanceEvents");
 
         if (MapEventBindings->HasBindingsFor(key))
             MapEventBindings->Clear(key);
