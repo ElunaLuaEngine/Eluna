@@ -766,36 +766,37 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
         case Hooks::REGTYPE_CREATURE:
             if (event_id < Hooks::CREATURE_EVENT_COUNT)
             {
-                if (entry != 0)
+                if (!eObjectMgr->GetCreatureTemplate(entry))
                 {
-                    if (!eObjectMgr->GetCreatureTemplate(entry))
-                    {
-                        luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-                        luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
-                        return 0; // Stack: (empty)
-                    }
-
-                    typedef EntryKey<Hooks::CreatureEvents> Key;
-                    auto binding = GetBinding<Key>(regtype);
-                    auto key = Key((Hooks::CreatureEvents)event_id, entry);
-                    bindingID = binding->Insert(key, functionRef, shots);
-                    createCancelCallback(this, bindingID, binding);
+                    luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                    luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
+                    return 0; // Stack: (empty)
                 }
-                else
+
+                typedef EntryKey<Hooks::CreatureEvents> Key;
+                auto binding = GetBinding<Key>(regtype);
+                auto key = Key((Hooks::CreatureEvents)event_id, entry);
+                bindingID = binding->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, binding);
+                return 1; // Stack: callback
+            }
+            break;
+
+        case Hooks::REGTYPE_CREATURE_UNIQUE:
+            if (event_id < Hooks::CREATURE_EVENT_COUNT)
+            {
+                if (guid.IsEmpty())
                 {
-                    if (guid.IsEmpty())
-                    {
-                        luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
-                        luaL_error(L, "guid was 0!");
-                        return 0; // Stack: (empty)
-                    }
-
-                    typedef UniqueObjectKey<Hooks::CreatureEvents> Key;
-                    auto binding = GetBinding<Key>(regtype);
-                    auto key = Key((Hooks::CreatureEvents)event_id, guid, instanceId);
-                    bindingID = binding->Insert(key, functionRef, shots);
-                    createCancelCallback(this, bindingID, binding);
+                    luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                    luaL_error(L, "guid was 0!");
+                    return 0; // Stack: (empty)
                 }
+
+                typedef UniqueObjectKey<Hooks::CreatureEvents> Key;
+                auto binding = GetBinding<Key>(regtype);
+                auto key = Key((Hooks::CreatureEvents)event_id, guid, instanceId);
+                bindingID = binding->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, binding);
                 return 1; // Stack: callback
             }
             break;

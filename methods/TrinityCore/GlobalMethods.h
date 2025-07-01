@@ -1157,7 +1157,7 @@ namespace LuaGlobalFunctions
      */
     int RegisterUniqueCreatureEvent(Eluna* E)
     {
-        return RegisterUniqueHelper(E, Hooks::REGTYPE_CREATURE);
+        return RegisterUniqueHelper(E, Hooks::REGTYPE_CREATURE_UNIQUE);
     }
 
     /**
