@@ -101,11 +101,7 @@ namespace LuaBigInt
 
     int ToString(Eluna* E, ObjectGuid*)
     {
-#if defined ELUNA_TRINITY
-        E->Push(E->CHECKVAL<ObjectGuid>(1).ToString());
-#else
         E->Push(E->CHECKVAL<ObjectGuid>(1).GetString());
-#endif
         return 1;
     }
 
