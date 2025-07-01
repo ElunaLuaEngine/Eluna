@@ -821,7 +821,6 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a item with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-
                 return RegisterEntryBinding<Hooks::ItemEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
@@ -835,7 +834,6 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a item with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-
                 return RegisterEntryBinding<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
