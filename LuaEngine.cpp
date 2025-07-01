@@ -665,83 +665,72 @@ static void createCancelCallback(Eluna* e, uint64 bindingID, BindingMap<K>* bind
     // Stack: cancel_callback
 }
 
+template<typename K>
+int RegisterBasicEvent(Eluna* e, std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32 event_id, int functionRef, uint32 shots)
+{
+    typedef EventKey<K> Key;
+    auto binding = e->GetBinding<Key>(regtype);
+    auto key = Key(static_cast<K>(event_id));
+    uint64 bindingID = binding->Insert(key, functionRef, shots);
+    createCancelCallback(e, bindingID, binding);
+    return 1; // Stack: callback
+}
+
+template<typename K>
+int RegisterEntryEvent(Eluna* e, std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32 entry, uint32 event_id, int functionRef, uint32 shots)
+{
+    typedef EntryKey<K> Key;
+    auto binding = e->GetBinding<Key>(regtype);
+    auto key = Key(static_cast<K>(event_id), entry);
+    uint64 bindingID = binding->Insert(key, functionRef, shots);
+    createCancelCallback(e, bindingID, binding);
+    return 1; // Stack: callback
+}
+
+template<typename K>
+int RegisterUniqueEvent(Eluna* e, std::underlying_type_t<Hooks::RegisterTypes> regtype, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
+{
+    typedef UniqueObjectKey<K> Key;
+    auto binding = e->GetBinding<Key>(regtype);
+    auto key = Key(static_cast<K>(event_id), guid, instanceId);
+    uint64 bindingID = binding->Insert(key, functionRef, shots);
+    createCancelCallback(e, bindingID, binding);
+    return 1; // Stack: callback
+}
+
 // Saves the function reference ID given to the register type's store for given entry under the given event
 int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
 {
-    uint64 bindingID;
-
     switch (regtype)
     {
         case Hooks::REGTYPE_SERVER:
             if (event_id < Hooks::SERVER_EVENT_COUNT)
-            {
-                typedef EventKey<Hooks::ServerEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::ServerEvents)event_id);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
-            }
+                return RegisterBasicEvent<Hooks::ServerEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_PLAYER:
             if (event_id < Hooks::PLAYER_EVENT_COUNT)
-            {
-                typedef EventKey<Hooks::PlayerEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::PlayerEvents)event_id);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
-            }
+                return RegisterBasicEvent<Hooks::PlayerEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_GUILD:
             if (event_id < Hooks::GUILD_EVENT_COUNT)
-            {
-                typedef EventKey<Hooks::GuildEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::GuildEvents)event_id);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
-            }
+                return RegisterBasicEvent<Hooks::GuildEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_GROUP:
             if (event_id < Hooks::GROUP_EVENT_COUNT)
-            {
-                typedef EventKey<Hooks::GroupEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::GroupEvents)event_id);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
-            }
+                return RegisterBasicEvent<Hooks::GroupEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_VEHICLE:
             if (event_id < Hooks::VEHICLE_EVENT_COUNT)
-            {
-                typedef EventKey<Hooks::VehicleEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::VehicleEvents)event_id);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
-            }
+                return RegisterBasicEvent<Hooks::VehicleEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_BG:
             if (event_id < Hooks::BG_EVENT_COUNT)
-            {
-                typedef EventKey<Hooks::BGEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::BGEvents)event_id);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
-            }
+                return RegisterBasicEvent<Hooks::BGEvents>(this, regtype, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_PACKET:
@@ -753,13 +742,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-
-                typedef EntryKey<Hooks::PacketEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::PacketEvents)event_id, entry);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
+                return RegisterEntryEvent<Hooks::PacketEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
@@ -772,13 +755,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-
-                typedef EntryKey<Hooks::CreatureEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::CreatureEvents)event_id, entry);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
+                return RegisterEntryEvent<Hooks::CreatureEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
@@ -791,13 +768,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "guid was 0!");
                     return 0; // Stack: (empty)
                 }
-
-                typedef UniqueObjectKey<Hooks::CreatureEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::CreatureEvents)event_id, guid, instanceId);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
+                return RegisterUniqueEvent<Hooks::CreatureEvents>(this, regtype, guid, instanceId, event_id, functionRef, shots);
             }
             break;
 
@@ -810,13 +781,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a creature with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-
-                typedef EntryKey<Hooks::GossipEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::GossipEvents)event_id, entry);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
+                return RegisterEntryEvent<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
@@ -829,13 +794,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a gameobject with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-
-                typedef EntryKey<Hooks::GameObjectEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = EntryKey<Hooks::GameObjectEvents>((Hooks::GameObjectEvents)event_id, entry);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
+                return RegisterEntryEvent<Hooks::GameObjectEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
@@ -848,26 +807,13 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     luaL_error(L, "Couldn't find a gameobject with (ID: %d)!", entry);
                     return 0; // Stack: (empty)
                 }
-
-                typedef EntryKey<Hooks::GossipEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::GossipEvents)event_id, entry);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
+                return RegisterEntryEvent<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
         case Hooks::REGTYPE_SPELL:
             if (event_id < Hooks::SPELL_EVENT_COUNT)
-            {
-                typedef EntryKey<Hooks::SpellEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::SpellEvents)event_id, entry);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
-            }
+                return RegisterEntryEvent<Hooks::SpellEvents>(this, regtype, entry, event_id, functionRef, shots);
             break;
 
         case Hooks::REGTYPE_ITEM:
@@ -880,12 +826,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     return 0; // Stack: (empty)
                 }
 
-                typedef EntryKey<Hooks::ItemEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::ItemEvents)event_id, entry);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
+                return RegisterEntryEvent<Hooks::ItemEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
@@ -899,52 +840,24 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
                     return 0; // Stack: (empty)
                 }
 
-                typedef EntryKey<Hooks::GossipEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::GossipEvents)event_id, entry);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
+                return RegisterEntryEvent<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
             }
             break;
 
         case Hooks::REGTYPE_PLAYER_GOSSIP:
             if (event_id < Hooks::GOSSIP_EVENT_COUNT)
-            {
-                typedef EntryKey<Hooks::GossipEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::GossipEvents)event_id, entry);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
-            }
+                return RegisterEntryEvent<Hooks::GossipEvents>(this, regtype, entry, event_id, functionRef, shots);
             break;
+
         case Hooks::REGTYPE_MAP:
-            if (event_id < Hooks::INSTANCE_EVENT_COUNT)
-            {
-                typedef EntryKey<Hooks::InstanceEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::InstanceEvents)event_id, entry);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
-            }
-            break;
         case Hooks::REGTYPE_INSTANCE:
             if (event_id < Hooks::INSTANCE_EVENT_COUNT)
-            {
-                typedef EntryKey<Hooks::InstanceEvents> Key;
-                auto binding = GetBinding<Key>(regtype);
-                auto key = Key((Hooks::InstanceEvents)event_id, entry);
-                bindingID = binding->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, binding);
-                return 1; // Stack: callback
-            }
+                return RegisterEntryEvent<Hooks::InstanceEvents>(this, regtype, entry, event_id, functionRef, shots);
             break;
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     std::ostringstream oss;
-    oss << "regtype " << static_cast<uint8>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " <<
+    oss << "regtype " << static_cast<std::underlying_type_t<Hooks::RegisterTypes>>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " <<
 #if defined ELUNA_TRINITY
         guid.ToHexString()
 #else
