@@ -15,6 +15,7 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
+    auto VehicleEventBindings = GetBinding<EventKey<VehicleEvents>>("VehicleEvents");\
     auto key = EventKey<VehicleEvents>(EVENT);\
     if (!VehicleEventBindings->HasBindingsFor(key))\
         return;

@@ -14,11 +14,13 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT, ENTRY) \
+    auto ItemEventBindings = GetBinding<EntryKey<ItemEvents>>("ItemEvents");\
     auto key = EntryKey<ItemEvents>(EVENT, ENTRY);\
     if (!ItemEventBindings->HasBindingsFor(key))\
         return;
 
 #define START_HOOK_WITH_RETVAL(EVENT, ENTRY, RETVAL) \
+    auto ItemEventBindings = GetBinding<EntryKey<ItemEvents>>("ItemEvents");\
     auto key = EntryKey<ItemEvents>(EVENT, ENTRY);\
     if (!ItemEventBindings->HasBindingsFor(key))\
         return RETVAL;

@@ -103,6 +103,7 @@ typedef VehicleInfo Vehicle;
 struct lua_State;
 class EventMgr;
 class ElunaObject;
+class BaseBindingMap;
 template<typename T> class ElunaTemplate;
 
 template<typename K> class BindingMap;
@@ -246,27 +247,21 @@ public:
     QueryCallbackProcessor queryProcessor;
     QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 #endif
+    std::unordered_map<std::string, std::unique_ptr<BaseBindingMap>> bindingMaps;
 
-    BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
-    BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;
-    BindingMap< EventKey<Hooks::GuildEvents> >*      GuildEventBindings;
-    BindingMap< EventKey<Hooks::GroupEvents> >*      GroupEventBindings;
-    BindingMap< EventKey<Hooks::VehicleEvents> >*    VehicleEventBindings;
-    BindingMap< EventKey<Hooks::BGEvents> >*         BGEventBindings;
+    template<typename T>
+    void CreateBinding(const std::string& name)
+    {
+        bindingMaps[name] = std::make_unique<BindingMap<T>>(L);
+    }
 
-    BindingMap< EntryKey<Hooks::PacketEvents> >*     PacketEventBindings;
-    BindingMap< EntryKey<Hooks::CreatureEvents> >*   CreatureEventBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >*     CreatureGossipBindings;
-    BindingMap< EntryKey<Hooks::GameObjectEvents> >* GameObjectEventBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >*     GameObjectGossipBindings;
-    BindingMap< EntryKey<Hooks::SpellEvents> >*      SpellEventBindings;
-    BindingMap< EntryKey<Hooks::ItemEvents> >*       ItemEventBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >*     ItemGossipBindings;
-    BindingMap< EntryKey<Hooks::GossipEvents> >*     PlayerGossipBindings;
-    BindingMap< EntryKey<Hooks::InstanceEvents> >*   MapEventBindings;
-    BindingMap< EntryKey<Hooks::InstanceEvents> >*   InstanceEventBindings;
-
-    BindingMap< UniqueObjectKey<Hooks::CreatureEvents> >* CreatureUniqueBindings;
+    template<typename T>
+    BindingMap<T>* GetBinding(const std::string& name)
+    {
+        auto it = bindingMaps.find(name);
+        if (it == bindingMaps.end()) return nullptr;
+        return dynamic_cast<BindingMap<T>*>(it->second.get());
+    }
 
     static int StackTrace(lua_State* _L);
     static void Report(lua_State* _L);
