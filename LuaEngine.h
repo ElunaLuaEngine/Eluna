@@ -338,7 +338,7 @@ public:
 #if !defined TRACKABLE_PTR_NAMESPACE
     uint64 GetCallstackId() const { return callstackid; }
 #endif
-    int Register(std::underlying_type_t<Hooks::RegisterTypes> reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
+    int Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
     void UpdateEluna(uint32 diff);
 
     // Checks
