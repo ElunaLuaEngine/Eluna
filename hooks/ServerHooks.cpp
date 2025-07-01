@@ -15,13 +15,13 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
-    auto ServerEventBindings = GetBinding<EventKey<ServerEvents>>("ServerEvents");\
+    auto ServerEventBindings = GetBinding<EventKey<ServerEvents>>(REGTYPE_SERVER);\
     auto key = EventKey<ServerEvents>(EVENT);\
     if (!ServerEventBindings->HasBindingsFor(key))\
         return;
 
 #define START_HOOK_WITH_RETVAL(EVENT, RETVAL) \
-    auto ServerEventBindings = GetBinding<EventKey<ServerEvents>>("ServerEvents");\
+    auto ServerEventBindings = GetBinding<EventKey<ServerEvents>>(REGTYPE_SERVER);\
     auto key = EventKey<ServerEvents>(EVENT);\
     if (!ServerEventBindings->HasBindingsFor(key))\
         return RETVAL;

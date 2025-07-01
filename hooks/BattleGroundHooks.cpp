@@ -13,7 +13,7 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
-    auto BGEventBindings = GetBinding<EventKey<BGEvents>>("BGEvents");\
+    auto BGEventBindings = GetBinding<EventKey<BGEvents>>(REGTYPE_BG);\
     auto key = EventKey<BGEvents>(EVENT);\
     if (!BGEventBindings->HasBindingsFor(key))\
         return;

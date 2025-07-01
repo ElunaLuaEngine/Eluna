@@ -13,7 +13,7 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
-    auto GuildEventBindings = GetBinding<EventKey<GuildEvents>>("GuildEvents");\
+    auto GuildEventBindings = GetBinding<EventKey<GuildEvents>>(REGTYPE_GUILD);\
     auto key = EventKey<GuildEvents>(EVENT);\
     if (!GuildEventBindings->HasBindingsFor(key))\
         return;

@@ -15,8 +15,8 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT, AI) \
-    auto MapEventBindings = GetBinding<EntryKey<InstanceEvents>>("MapEvents");\
-    auto InstanceEventBindings = GetBinding<EntryKey<InstanceEvents>>("InstanceEvents");\
+    auto MapEventBindings = GetBinding<EntryKey<InstanceEvents>>(REGTYPE_MAP);\
+    auto InstanceEventBindings = GetBinding<EntryKey<InstanceEvents>>(REGTYPE_INSTANCE);\
     auto mapKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetId());\
     auto instanceKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetInstanceId());\
     if (!MapEventBindings->HasBindingsFor(mapKey) && !InstanceEventBindings->HasBindingsFor(instanceKey))\
@@ -25,8 +25,8 @@ using namespace Hooks;
     HookPush<Map>(AI->instance)
 
 #define START_HOOK_WITH_RETVAL(EVENT, AI, RETVAL) \
-    auto MapEventBindings = GetBinding<EntryKey<InstanceEvents>>("MapEvents");\
-    auto InstanceEventBindings = GetBinding<EntryKey<InstanceEvents>>("InstanceEvents");\
+    auto MapEventBindings = GetBinding<EntryKey<InstanceEvents>>(REGTYPE_MAP);\
+    auto InstanceEventBindings = GetBinding<EntryKey<InstanceEvents>>(REGTYPE_INSTANCE);\
     auto mapKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetId());\
     auto instanceKey = EntryKey<InstanceEvents>(EVENT, AI->instance->GetInstanceId());\
     if (!MapEventBindings->HasBindingsFor(mapKey) && !InstanceEventBindings->HasBindingsFor(instanceKey))\

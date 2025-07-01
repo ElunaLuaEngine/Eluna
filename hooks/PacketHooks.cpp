@@ -14,13 +14,13 @@
 using namespace Hooks;
 
 #define START_HOOK_SERVER(EVENT) \
-    auto ServerEventBindings = GetBinding<EventKey<ServerEvents>>("ServerEvents");\
+    auto ServerEventBindings = GetBinding<EventKey<ServerEvents>>(REGTYPE_SERVER);\
     auto key = EventKey<ServerEvents>(EVENT);\
     if (!ServerEventBindings->HasBindingsFor(key))\
         return;
 
 #define START_HOOK_PACKET(EVENT, OPCODE) \
-    auto PacketEventBindings = GetBinding<EntryKey<PacketEvents>>("PacketEvents");\
+    auto PacketEventBindings = GetBinding<EntryKey<PacketEvents>>(REGTYPE_PACKET);\
     auto key = EntryKey<PacketEvents>(EVENT, OPCODE);\
     if (!PacketEventBindings->HasBindingsFor(key))\
         return;

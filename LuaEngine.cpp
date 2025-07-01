@@ -157,26 +157,26 @@ void Eluna::CreateBindStores()
 {
     DestroyBindStores();
 
-    CreateBinding<EventKey<Hooks::ServerEvents>>("ServerEvents");
-    CreateBinding<EventKey<Hooks::PlayerEvents>>("PlayerEvents");
-    CreateBinding<EventKey<Hooks::GuildEvents>>("GuildEvents");
-    CreateBinding<EventKey<Hooks::GroupEvents>>("GroupEvents");
-    CreateBinding<EventKey<Hooks::VehicleEvents>>("VehicleEvents");
-    CreateBinding<EventKey<Hooks::BGEvents>>("BGEvents");
+    CreateBinding<EventKey<Hooks::ServerEvents>>(Hooks::REGTYPE_SERVER);
+    CreateBinding<EventKey<Hooks::PlayerEvents>>(Hooks::REGTYPE_PLAYER);
+    CreateBinding<EventKey<Hooks::GuildEvents>>(Hooks::REGTYPE_GUILD);
+    CreateBinding<EventKey<Hooks::GroupEvents>>(Hooks::REGTYPE_GROUP);
+    CreateBinding<EventKey<Hooks::VehicleEvents>>(Hooks::REGTYPE_VEHICLE);
+    CreateBinding<EventKey<Hooks::BGEvents>>(Hooks::REGTYPE_BG);
 
-    CreateBinding<EntryKey<Hooks::PacketEvents>>("PacketEvents");
-    CreateBinding<EntryKey<Hooks::CreatureEvents>>("CreatureEvents");
-    CreateBinding<EntryKey<Hooks::GossipEvents>>("CreatureGossip");
-    CreateBinding<EntryKey<Hooks::GameObjectEvents>>("GameObjectEvents");
-    CreateBinding<EntryKey<Hooks::GossipEvents>>("GameObjectGossip");
-    CreateBinding<EntryKey<Hooks::SpellEvents>>("SpellEvents");
-    CreateBinding<EntryKey<Hooks::ItemEvents>>("ItemEvents");
-    CreateBinding<EntryKey<Hooks::GossipEvents>>("ItemGossip");
-    CreateBinding<EntryKey<Hooks::GossipEvents>>("PlayerGossip");
-    CreateBinding<EntryKey<Hooks::InstanceEvents>>("MapEvents");
-    CreateBinding<EntryKey<Hooks::InstanceEvents>>("InstanceEvents");
+    CreateBinding<EntryKey<Hooks::PacketEvents>>(Hooks::REGTYPE_PACKET);
+    CreateBinding<EntryKey<Hooks::CreatureEvents>>(Hooks::REGTYPE_CREATURE);
+    CreateBinding<EntryKey<Hooks::GossipEvents>>(Hooks::REGTYPE_CREATURE_GOSSIP);
+    CreateBinding<EntryKey<Hooks::GameObjectEvents>>(Hooks::REGTYPE_GAMEOBJECT);
+    CreateBinding<EntryKey<Hooks::GossipEvents>>(Hooks::REGTYPE_GAMEOBJECT_GOSSIP);
+    CreateBinding<EntryKey<Hooks::SpellEvents>>(Hooks::REGTYPE_SPELL);
+    CreateBinding<EntryKey<Hooks::ItemEvents>>(Hooks::REGTYPE_ITEM);
+    CreateBinding<EntryKey<Hooks::GossipEvents>>(Hooks::REGTYPE_ITEM_GOSSIP);
+    CreateBinding<EntryKey<Hooks::GossipEvents>>(Hooks::REGTYPE_PLAYER_GOSSIP);
+    CreateBinding<EntryKey<Hooks::InstanceEvents>>(Hooks::REGTYPE_MAP);
+    CreateBinding<EntryKey<Hooks::InstanceEvents>>(Hooks::REGTYPE_INSTANCE);
 
-    CreateBinding<UniqueObjectKey<Hooks::CreatureEvents>>("CreatureUnique");
+    CreateBinding<UniqueObjectKey<Hooks::CreatureEvents>>(Hooks::REGTYPE_CREATURE_UNIQUE);
 }
 
 void Eluna::DestroyBindStores()
@@ -676,7 +676,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             if (event_id < Hooks::SERVER_EVENT_COUNT)
             {
                 typedef EventKey<Hooks::ServerEvents> Key;
-                auto binding = GetBinding<Key>("ServerEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::ServerEvents)event_id);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -688,7 +688,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             if (event_id < Hooks::PLAYER_EVENT_COUNT)
             {
                 typedef EventKey<Hooks::PlayerEvents> Key;
-                auto binding = GetBinding<Key>("PlayerEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::PlayerEvents)event_id);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -700,7 +700,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             if (event_id < Hooks::GUILD_EVENT_COUNT)
             {
                 typedef EventKey<Hooks::GuildEvents> Key;
-                auto binding = GetBinding<Key>("GuildEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::GuildEvents)event_id);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -712,7 +712,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             if (event_id < Hooks::GROUP_EVENT_COUNT)
             {
                 typedef EventKey<Hooks::GroupEvents> Key;
-                auto binding = GetBinding<Key>("GroupEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::GroupEvents)event_id);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -724,7 +724,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             if (event_id < Hooks::VEHICLE_EVENT_COUNT)
             {
                 typedef EventKey<Hooks::VehicleEvents> Key;
-                auto binding = GetBinding<Key>("VehicleEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::VehicleEvents)event_id);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -736,7 +736,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             if (event_id < Hooks::BG_EVENT_COUNT)
             {
                 typedef EventKey<Hooks::BGEvents> Key;
-                auto binding = GetBinding<Key>("BGEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::BGEvents)event_id);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -755,7 +755,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
                 }
 
                 typedef EntryKey<Hooks::PacketEvents> Key;
-                auto binding = GetBinding<Key>("PacketEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::PacketEvents)event_id, entry);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -776,7 +776,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
                     }
 
                     typedef EntryKey<Hooks::CreatureEvents> Key;
-                    auto binding = GetBinding<Key>("CreatureEvents");
+                    auto binding = GetBinding<Key>(regtype);
                     auto key = Key((Hooks::CreatureEvents)event_id, entry);
                     bindingID = binding->Insert(key, functionRef, shots);
                     createCancelCallback(this, bindingID, binding);
@@ -791,7 +791,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
                     }
 
                     typedef UniqueObjectKey<Hooks::CreatureEvents> Key;
-                    auto binding = GetBinding<Key>("CreatureUnique");
+                    auto binding = GetBinding<Key>(regtype);
                     auto key = Key((Hooks::CreatureEvents)event_id, guid, instanceId);
                     bindingID = binding->Insert(key, functionRef, shots);
                     createCancelCallback(this, bindingID, binding);
@@ -811,7 +811,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
                 }
 
                 typedef EntryKey<Hooks::GossipEvents> Key;
-                auto binding = GetBinding<Key>("CreatureGossip");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::GossipEvents)event_id, entry);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -830,7 +830,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
                 }
 
                 typedef EntryKey<Hooks::GameObjectEvents> Key;
-                auto binding = GetBinding<Key>("GameObjectEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = EntryKey<Hooks::GameObjectEvents>((Hooks::GameObjectEvents)event_id, entry);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -849,7 +849,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
                 }
 
                 typedef EntryKey<Hooks::GossipEvents> Key;
-                auto binding = GetBinding<Key>("GameObjectGossip");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::GossipEvents)event_id, entry);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -861,7 +861,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             if (event_id < Hooks::SPELL_EVENT_COUNT)
             {
                 typedef EntryKey<Hooks::SpellEvents> Key;
-                auto binding = GetBinding<Key>("SpellEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::SpellEvents)event_id, entry);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -880,7 +880,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
                 }
 
                 typedef EntryKey<Hooks::ItemEvents> Key;
-                auto binding = GetBinding<Key>("ItemEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::ItemEvents)event_id, entry);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -899,7 +899,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
                 }
 
                 typedef EntryKey<Hooks::GossipEvents> Key;
-                auto binding = GetBinding<Key>("ItemGossip");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::GossipEvents)event_id, entry);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -911,7 +911,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             if (event_id < Hooks::GOSSIP_EVENT_COUNT)
             {
                 typedef EntryKey<Hooks::GossipEvents> Key;
-                auto binding = GetBinding<Key>("PlayerGossip");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::GossipEvents)event_id, entry);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -922,7 +922,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             if (event_id < Hooks::INSTANCE_EVENT_COUNT)
             {
                 typedef EntryKey<Hooks::InstanceEvents> Key;
-                auto binding = GetBinding<Key>("MapEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::InstanceEvents)event_id, entry);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -933,7 +933,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             if (event_id < Hooks::INSTANCE_EVENT_COUNT)
             {
                 typedef EntryKey<Hooks::InstanceEvents> Key;
-                auto binding = GetBinding<Key>("InstanceEvents");
+                auto binding = GetBinding<Key>(regtype);
                 auto key = Key((Hooks::InstanceEvents)event_id, entry);
                 bindingID = binding->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, binding);
@@ -943,7 +943,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
     }
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     std::ostringstream oss;
-    oss << "regtype " << static_cast<uint32>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " <<
+    oss << "regtype " << static_cast<uint8>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " <<
 #if defined ELUNA_TRINITY
         guid.ToHexString()
 #else
@@ -1026,8 +1026,8 @@ CreatureAI* Eluna::GetAI(Creature* creature)
         auto entryKey = EKey(event_id, creature->GetEntry());
         auto uniqueKey = UKey(event_id, creature->GET_GUID(), creature->GetInstanceId());
 
-        auto CreatureEBindings = GetBinding<EKey>("CreatureEvents");
-        auto CreatureUBindings = GetBinding<UKey>("CreatureUnique");
+        auto CreatureEBindings = GetBinding<EKey>(Hooks::REGTYPE_CREATURE);
+        auto CreatureUBindings = GetBinding<UKey>(Hooks::REGTYPE_CREATURE_UNIQUE);
 
         if (CreatureEBindings->HasBindingsFor(entryKey) ||
             CreatureUBindings->HasBindingsFor(uniqueKey))
@@ -1047,8 +1047,8 @@ InstanceData* Eluna::GetInstanceData(Map* map)
 
         auto key = Key(event_id, map->GetId());
 
-        auto MapBindings = GetBinding<Key>("MapEvents");
-        auto InstanceBindings = GetBinding<Key>("InstanceEvents");
+        auto MapBindings = GetBinding<Key>(Hooks::REGTYPE_MAP);
+        auto InstanceBindings = GetBinding<Key>(Hooks::REGTYPE_INSTANCE);
 
         if (MapBindings->HasBindingsFor(key) ||
             InstanceBindings->HasBindingsFor(key))
@@ -1111,8 +1111,8 @@ void Eluna::FreeInstanceId(uint32 instanceId)
 
         auto key = Key((Hooks::InstanceEvents)i, instanceId);
 
-        auto MapEventBindings = GetBinding<Key>("MapEvents");
-        auto InstanceEventBindings = GetBinding<Key>("InstanceEvents");
+        auto MapEventBindings = GetBinding<Key>(Hooks::REGTYPE_MAP);
+        auto InstanceEventBindings = GetBinding<Key>(Hooks::REGTYPE_INSTANCE);
 
         if (MapEventBindings->HasBindingsFor(key))
             MapEventBindings->Clear(key);

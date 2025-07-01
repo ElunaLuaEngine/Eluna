@@ -247,20 +247,26 @@ public:
     QueryCallbackProcessor queryProcessor;
     QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 #endif
-    std::unordered_map<std::string, std::unique_ptr<BaseBindingMap>> bindingMaps;
+    std::unordered_map<uint8, std::unique_ptr<BaseBindingMap>> bindingMaps;
 
     template<typename T>
-    void CreateBinding(const std::string& name)
+    void CreateBinding(Hooks::RegisterTypes type)
     {
-        bindingMaps[name] = std::make_unique<BindingMap<T>>(L);
+        bindingMaps[static_cast<uint8>(type)] = std::make_unique<BindingMap<T>>(L);
     }
 
     template<typename T>
-    BindingMap<T>* GetBinding(const std::string& name)
+    BindingMap<T>* GetBinding(uint8 type)
     {
-        auto it = bindingMaps.find(name);
+        auto it = bindingMaps.find(static_cast<uint8>(type));
         if (it == bindingMaps.end()) return nullptr;
         return dynamic_cast<BindingMap<T>*>(it->second.get());
+    }
+
+    template<typename T>
+    BindingMap<T>* GetBinding(Hooks::RegisterTypes type)
+    {
+        return GetBinding<T>(static_cast<uint8>(type));
     }
 
     static int StackTrace(lua_State* _L);

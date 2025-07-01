@@ -13,21 +13,21 @@
 
 using namespace Hooks;
 
-#define START_HOOK(BINDINGSTORE, EVENT, ENTRY) \
-    auto binding = GetBinding<EntryKey<GossipEvents>>(BINDINGSTORE);\
+#define START_HOOK(REGTYPE, EVENT, ENTRY) \
+    auto binding = GetBinding<EntryKey<GossipEvents>>(REGTYPE);\
     auto key = EntryKey<GossipEvents>(EVENT, ENTRY);\
     if (!binding->HasBindingsFor(key))\
         return;
 
-#define START_HOOK_WITH_RETVAL(BINDINGSTORE, EVENT, ENTRY, RETVAL) \
-    auto binding = GetBinding<EntryKey<GossipEvents>>(BINDINGSTORE);\
+#define START_HOOK_WITH_RETVAL(REGTYPE, EVENT, ENTRY, RETVAL) \
+    auto binding = GetBinding<EntryKey<GossipEvents>>(REGTYPE);\
     auto key = EntryKey<GossipEvents>(EVENT, ENTRY);\
     if (!binding->HasBindingsFor(key))\
         return RETVAL;
 
 bool Eluna::OnGossipHello(Player* pPlayer, GameObject* pGameObject)
 {
-    START_HOOK_WITH_RETVAL("GameObjectGossip", GOSSIP_EVENT_ON_HELLO, pGameObject->GetEntry(), false);
+    START_HOOK_WITH_RETVAL(REGTYPE_GAMEOBJECT_GOSSIP, GOSSIP_EVENT_ON_HELLO, pGameObject->GetEntry(), false);
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
     pPlayer->GetPlayerMenu()->ClearMenus();
 #else
@@ -40,7 +40,7 @@ bool Eluna::OnGossipHello(Player* pPlayer, GameObject* pGameObject)
 
 bool Eluna::OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action)
 {
-    START_HOOK_WITH_RETVAL("GameObjectGossip", GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry(), false);
+    START_HOOK_WITH_RETVAL(REGTYPE_GAMEOBJECT_GOSSIP, GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry(), false);
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
     pPlayer->GetPlayerMenu()->ClearMenus();
 #else
@@ -55,7 +55,7 @@ bool Eluna::OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 send
 
 bool Eluna::OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action, const char* code)
 {
-    START_HOOK_WITH_RETVAL("GameObjectGossip", GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry(), false);
+    START_HOOK_WITH_RETVAL(REGTYPE_GAMEOBJECT_GOSSIP, GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry(), false);
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
     pPlayer->GetPlayerMenu()->ClearMenus();
 #else
@@ -71,7 +71,7 @@ bool Eluna::OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 
 
 void Eluna::HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code)
 {
-    START_HOOK("PlayerGossip", GOSSIP_EVENT_ON_SELECT, menuId);
+    START_HOOK(REGTYPE_PLAYER_GOSSIP, GOSSIP_EVENT_ON_SELECT, menuId);
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
     pPlayer->GetPlayerMenu()->ClearMenus();
 #else
@@ -92,7 +92,7 @@ void Eluna::HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 send
 
 bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& /*targets*/)
 {
-    START_HOOK_WITH_RETVAL("ItemGossip", GOSSIP_EVENT_ON_HELLO, pItem->GetEntry(), true);
+    START_HOOK_WITH_RETVAL(REGTYPE_ITEM_GOSSIP, GOSSIP_EVENT_ON_HELLO, pItem->GetEntry(), true);
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
     pPlayer->GetPlayerMenu()->ClearMenus();
 #else
@@ -105,7 +105,7 @@ bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& /
 
 void Eluna::HandleGossipSelectOption(Player* pPlayer, Item* pItem, uint32 sender, uint32 action, const std::string& code)
 {
-    START_HOOK("ItemGossip", GOSSIP_EVENT_ON_SELECT, pItem->GetEntry());
+    START_HOOK(REGTYPE_ITEM_GOSSIP, GOSSIP_EVENT_ON_SELECT, pItem->GetEntry());
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
     pPlayer->GetPlayerMenu()->ClearMenus();
 #else
@@ -126,7 +126,7 @@ void Eluna::HandleGossipSelectOption(Player* pPlayer, Item* pItem, uint32 sender
 
 bool Eluna::OnGossipHello(Player* pPlayer, Creature* pCreature)
 {
-    START_HOOK_WITH_RETVAL("CreatureGossip", GOSSIP_EVENT_ON_HELLO, pCreature->GetEntry(), false);
+    START_HOOK_WITH_RETVAL(REGTYPE_CREATURE_GOSSIP, GOSSIP_EVENT_ON_HELLO, pCreature->GetEntry(), false);
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
     pPlayer->GetPlayerMenu()->ClearMenus();
 #else
@@ -139,7 +139,7 @@ bool Eluna::OnGossipHello(Player* pPlayer, Creature* pCreature)
 
 bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
-    START_HOOK_WITH_RETVAL("CreatureGossip", GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry(), false);
+    START_HOOK_WITH_RETVAL(REGTYPE_CREATURE_GOSSIP, GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry(), false);
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
     auto original_menu = *pPlayer->GetPlayerMenu();
     pPlayer->GetPlayerMenu()->ClearMenus();
@@ -164,7 +164,7 @@ bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, 
 
 bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code)
 {
-    START_HOOK_WITH_RETVAL("CreatureGossip", GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry(), false);
+    START_HOOK_WITH_RETVAL(REGTYPE_CREATURE_GOSSIP, GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry(), false);
 #if defined ELUNA_CMANGOS && ELUNA_EXPANSION < EXP_CATA
     auto original_menu = *pPlayer->GetPlayerMenu();
     pPlayer->GetPlayerMenu()->ClearMenus();

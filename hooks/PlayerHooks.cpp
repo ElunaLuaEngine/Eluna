@@ -17,13 +17,13 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
-    auto PlayerEventBindings = GetBinding<EventKey<PlayerEvents>>("PlayerEvents");\
+    auto PlayerEventBindings = GetBinding<EventKey<PlayerEvents>>(REGTYPE_PLAYER);\
     auto key = EventKey<PlayerEvents>(EVENT);\
     if (!PlayerEventBindings->HasBindingsFor(key))\
         return;
 
 #define START_HOOK_WITH_RETVAL(EVENT, RETVAL) \
-    auto PlayerEventBindings = GetBinding<EventKey<PlayerEvents>>("PlayerEvents");\
+    auto PlayerEventBindings = GetBinding<EventKey<PlayerEvents>>(REGTYPE_PLAYER);\
     auto key = EventKey<PlayerEvents>(EVENT);\
     if (!PlayerEventBindings->HasBindingsFor(key))\
         return RETVAL;

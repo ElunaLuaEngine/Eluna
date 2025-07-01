@@ -2568,7 +2568,7 @@ namespace LuaGlobalFunctions
     int ClearBattleGroundEvents(Eluna* E)
     {
         typedef EventKey<Hooks::BGEvents> Key;
-        auto binding = E->GetBinding<Key>("BGEvents");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_BG);
 
         if (lua_isnoneornil(E->L, 1))
         {
@@ -2600,7 +2600,7 @@ namespace LuaGlobalFunctions
     int ClearCreatureEvents(Eluna* E)
     {
         typedef EntryKey<Hooks::CreatureEvents> Key;
-        auto binding = E->GetBinding<Key>("CreatureEvents");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_CREATURE);
 
         if (lua_isnoneornil(E->L, 2))
         {
@@ -2637,7 +2637,7 @@ namespace LuaGlobalFunctions
     int ClearUniqueCreatureEvents(Eluna* E)
     {
         typedef UniqueObjectKey<Hooks::CreatureEvents> Key;
-        auto binding = E->GetBinding<Key>("CreatureUnique");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_CREATURE_UNIQUE);
 
         if (lua_isnoneornil(E->L, 3))
         {
@@ -2675,7 +2675,7 @@ namespace LuaGlobalFunctions
     int ClearCreatureGossipEvents(Eluna* E)
     {
         typedef EntryKey<Hooks::GossipEvents> Key;
-        auto binding = E->GetBinding<Key>("CreatureGossip");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_CREATURE_GOSSIP);
 
         if (lua_isnoneornil(E->L, 2))
         {
@@ -2711,7 +2711,7 @@ namespace LuaGlobalFunctions
     int ClearGameObjectEvents(Eluna* E)
     {
         typedef EntryKey<Hooks::GameObjectEvents> Key;
-        auto binding = E->GetBinding<Key>("GameObjectEvents");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_GAMEOBJECT);
 
         if (lua_isnoneornil(E->L, 2))
         {
@@ -2747,7 +2747,7 @@ namespace LuaGlobalFunctions
     int ClearGameObjectGossipEvents(Eluna* E)
     {
         typedef EntryKey<Hooks::GossipEvents> Key;
-        auto binding = E->GetBinding<Key>("GameObjectGossip");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_GAMEOBJECT_GOSSIP);
 
         if (lua_isnoneornil(E->L, 2))
         {
@@ -2779,7 +2779,7 @@ namespace LuaGlobalFunctions
     int ClearGroupEvents(Eluna* E)
     {
         typedef EventKey<Hooks::GroupEvents> Key;
-        auto binding = E->GetBinding<Key>("GroupEvents");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_GROUP);
 
         if (lua_isnoneornil(E->L, 1))
         {
@@ -2807,7 +2807,7 @@ namespace LuaGlobalFunctions
     int ClearGuildEvents(Eluna* E)
     {
         typedef EventKey<Hooks::GuildEvents> Key;
-        auto binding = E->GetBinding<Key>("GuildEvents");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_GUILD);
 
         if (lua_isnoneornil(E->L, 1))
         {
@@ -2839,7 +2839,7 @@ namespace LuaGlobalFunctions
     int ClearItemEvents(Eluna* E)
     {
         typedef EntryKey<Hooks::ItemEvents> Key;
-        auto binding = E->GetBinding<Key>("ItemEvents");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_ITEM);
 
         if (lua_isnoneornil(E->L, 2))
         {
@@ -2875,7 +2875,7 @@ namespace LuaGlobalFunctions
     int ClearItemGossipEvents(Eluna* E)
     {
         typedef EntryKey<Hooks::GossipEvents> Key;
-        auto binding = E->GetBinding<Key>("ItemGossip");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_ITEM_GOSSIP);
 
         if (lua_isnoneornil(E->L, 2))
         {
@@ -2908,7 +2908,7 @@ namespace LuaGlobalFunctions
     int ClearPacketEvents(Eluna* E)
     {
         typedef EntryKey<Hooks::PacketEvents> Key;
-        auto binding = E->GetBinding<Key>("PacketEvents");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_PACKET);
 
         if (lua_isnoneornil(E->L, 2))
         {
@@ -2940,7 +2940,7 @@ namespace LuaGlobalFunctions
     int ClearPlayerEvents(Eluna* E)
     {
         typedef EventKey<Hooks::PlayerEvents> Key;
-        auto binding = E->GetBinding<Key>("PlayerEvents");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_PLAYER);
 
         if (lua_isnoneornil(E->L, 1))
         {
@@ -2969,7 +2969,7 @@ namespace LuaGlobalFunctions
     int ClearPlayerGossipEvents(Eluna* E)
     {
         typedef EntryKey<Hooks::GossipEvents> Key;
-        auto binding = E->GetBinding<Key>("PlayerGossip");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_PLAYER_GOSSIP);
 
         if (lua_isnoneornil(E->L, 2))
         {
@@ -3001,7 +3001,7 @@ namespace LuaGlobalFunctions
     int ClearServerEvents(Eluna* E)
     {
         typedef EventKey<Hooks::ServerEvents> Key;
-        auto binding = E->GetBinding<Key>("ServerEvents");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_SERVER);
 
         if (lua_isnoneornil(E->L, 1))
         {
@@ -3030,7 +3030,7 @@ namespace LuaGlobalFunctions
     int ClearMapEvents(Eluna* E)
     {
         typedef EntryKey<Hooks::InstanceEvents> Key;
-        auto binding = E->GetBinding<Key>("MapEvents");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_MAP);
 
         if (lua_isnoneornil(E->L, 2))
         {
@@ -3064,7 +3064,7 @@ namespace LuaGlobalFunctions
     int ClearInstanceEvents(Eluna* E)
     {
         typedef EntryKey<Hooks::InstanceEvents> Key;
-        auto binding = E->GetBinding<Key>("InstanceEvents");
+        auto binding = E->GetBinding<Key>(Hooks::REGTYPE_INSTANCE);
 
         if (lua_isnoneornil(E->L, 2))
         {
