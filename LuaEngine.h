@@ -241,7 +241,7 @@ private:
 public:
 
     lua_State* L;
-    EventMgr* eventMgr;
+    std::unique_ptr<EventMgr> eventMgr;
 
 #if defined ELUNA_TRINITY
     QueryCallbackProcessor queryProcessor;

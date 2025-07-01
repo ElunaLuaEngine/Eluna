@@ -50,12 +50,10 @@ Eluna::Eluna(Map* map) :
 event_level(0),
 push_counter(0),
 boundMap(map),
-
-L(NULL),
-eventMgr(NULL)
+L(NULL)
 {
     OpenLua();
-    eventMgr = new EventMgr(this);
+    eventMgr = std::make_unique<EventMgr>(this);
 
     // if the script cache is ready, run scripts, otherwise flag state for reload
     if (sElunaLoader->GetCacheState() == SCRIPT_CACHE_READY)
@@ -67,8 +65,6 @@ eventMgr(NULL)
 Eluna::~Eluna()
 {
     CloseLua();
-    delete eventMgr;
-    eventMgr = NULL;
 }
 
 void Eluna::CloseLua()
