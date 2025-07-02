@@ -13,8 +13,9 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
+    auto binding = GetBinding<EventKey<GuildEvents>>(REGTYPE_GUILD);\
     auto key = EventKey<GuildEvents>(EVENT);\
-    if (!GuildEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return;
 
 void Eluna::OnAddMember(Guild* guild, Player* player, uint32 plRank)
@@ -23,7 +24,7 @@ void Eluna::OnAddMember(Guild* guild, Player* player, uint32 plRank)
     HookPush(guild);
     HookPush(player);
     HookPush(plRank);
-    CallAllFunctions(GuildEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnRemoveMember(Guild* guild, Player* player, bool isDisbanding)
@@ -32,7 +33,7 @@ void Eluna::OnRemoveMember(Guild* guild, Player* player, bool isDisbanding)
     HookPush(guild);
     HookPush(player);
     HookPush(isDisbanding);
-    CallAllFunctions(GuildEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnMOTDChanged(Guild* guild, const std::string& newMotd)
@@ -40,7 +41,7 @@ void Eluna::OnMOTDChanged(Guild* guild, const std::string& newMotd)
     START_HOOK(GUILD_EVENT_ON_MOTD_CHANGE);
     HookPush(guild);
     HookPush(newMotd);
-    CallAllFunctions(GuildEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnInfoChanged(Guild* guild, const std::string& newInfo)
@@ -48,7 +49,7 @@ void Eluna::OnInfoChanged(Guild* guild, const std::string& newInfo)
     START_HOOK(GUILD_EVENT_ON_INFO_CHANGE);
     HookPush(guild);
     HookPush(newInfo);
-    CallAllFunctions(GuildEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnCreate(Guild* guild, Player* leader, const std::string& name)
@@ -57,14 +58,14 @@ void Eluna::OnCreate(Guild* guild, Player* leader, const std::string& name)
     HookPush(guild);
     HookPush(leader);
     HookPush(name);
-    CallAllFunctions(GuildEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnDisband(Guild* guild)
 {
     START_HOOK(GUILD_EVENT_ON_DISBAND);
     HookPush(guild);
-    CallAllFunctions(GuildEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair)
@@ -75,7 +76,7 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, b
     HookPush(amount);
     HookPush(isRepair); // isRepair not a part of Mangos, implement?
     int amountIndex = lua_gettop(L) - 1;
-    int n = SetupStack(GuildEventBindings, key, 4);
+    int n = SetupStack(binding, key, 4);
 
     while (n > 0)
     {
@@ -103,7 +104,7 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, b
     HookPush(amount);
     HookPush(isRepair); // isRepair not a part of Mangos, implement?
     int amountIndex = lua_gettop(L) - 1;
-    int n = SetupStack(GuildEventBindings, key, 4);
+    int n = SetupStack(binding, key, 4);
 
     while (n > 0)
     {
@@ -130,7 +131,7 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
     HookPush(player);
     HookPush(amount);
     int amountIndex = lua_gettop(L);
-    int n = SetupStack(GuildEventBindings, key, 3);
+    int n = SetupStack(binding, key, 3);
 
     while (n > 0)
     {
@@ -157,7 +158,7 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount)
     HookPush(player);
     HookPush(amount);
     int amountIndex = lua_gettop(L);
-    int n = SetupStack(GuildEventBindings, key, 3);
+    int n = SetupStack(binding, key, 3);
 
     while (n > 0)
     {
@@ -190,7 +191,7 @@ void Eluna::OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank
     HookPush(isDestBank);
     HookPush(destContainer);
     HookPush(destSlotId);
-    CallAllFunctions(GuildEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnEvent(Guild* guild, uint8 eventType, uint32 playerGuid1, uint32 playerGuid2, uint8 newRank)
@@ -201,7 +202,7 @@ void Eluna::OnEvent(Guild* guild, uint8 eventType, uint32 playerGuid1, uint32 pl
     HookPush(playerGuid1);
     HookPush(playerGuid2);
     HookPush(newRank);
-    CallAllFunctions(GuildEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playerGuid, uint32 itemOrMoney, uint16 itemStackCount, uint8 destTabId)
@@ -214,5 +215,5 @@ void Eluna::OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, uint32 playe
     HookPush(itemOrMoney);
     HookPush(itemStackCount);
     HookPush(destTabId);
-    CallAllFunctions(GuildEventBindings, key);
+    CallAllFunctions(binding, key);
 }

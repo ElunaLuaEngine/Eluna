@@ -17,13 +17,15 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
+    auto binding = GetBinding<EventKey<PlayerEvents>>(REGTYPE_PLAYER);\
     auto key = EventKey<PlayerEvents>(EVENT);\
-    if (!PlayerEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return;
 
 #define START_HOOK_WITH_RETVAL(EVENT, RETVAL) \
+    auto binding = GetBinding<EventKey<PlayerEvents>>(REGTYPE_PLAYER);\
     auto key = EventKey<PlayerEvents>(EVENT);\
-    if (!PlayerEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return RETVAL;
 
 void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, uint32 spellid)
@@ -33,7 +35,7 @@ void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, 
     HookPush(talentId);
     HookPush(talentRank);
     HookPush(spellid);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnSkillChange(Player* pPlayer, uint32 skillId, uint32 skillValue)
@@ -43,7 +45,7 @@ void Eluna::OnSkillChange(Player* pPlayer, uint32 skillId, uint32 skillValue)
     HookPush(skillId);
     HookPush(skillValue);
     int valueIndex = lua_gettop(L) - 1;
-    int n = SetupStack(PlayerEventBindings, key, 3);
+    int n = SetupStack(binding, key, 3);
 
     while (n > 0)
     {
@@ -67,7 +69,7 @@ void Eluna::OnLearnSpell(Player* pPlayer, uint32 spellId)
     START_HOOK(PLAYER_EVENT_ON_LEARN_SPELL);
     HookPush(pPlayer);
     HookPush(spellId);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 bool Eluna::OnCommand(Player* player, const char* text)
@@ -94,7 +96,7 @@ bool Eluna::OnCommand(Player* player, const char* text)
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_COMMAND, true);
     HookPush(player);
     HookPush(text);
-    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+    return CallAllFunctionsBool(binding, key, true);
 }
 
 void Eluna::OnLootItem(Player* pPlayer, Item* pItem, uint32 count, ObjectGuid guid)
@@ -104,7 +106,7 @@ void Eluna::OnLootItem(Player* pPlayer, Item* pItem, uint32 count, ObjectGuid gu
     HookPush(pItem);
     HookPush(count);
     HookPush(guid);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnLootMoney(Player* pPlayer, uint32 amount)
@@ -112,28 +114,28 @@ void Eluna::OnLootMoney(Player* pPlayer, uint32 amount)
     START_HOOK(PLAYER_EVENT_ON_LOOT_MONEY);
     HookPush(pPlayer);
     HookPush(amount);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnFirstLogin(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_FIRST_LOGIN);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnRepop(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_REPOP);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnResurrect(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_RESURRECT);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnQuestAbandon(Player* pPlayer, uint32 questId)
@@ -141,7 +143,7 @@ void Eluna::OnQuestAbandon(Player* pPlayer, uint32 questId)
     START_HOOK(PLAYER_EVENT_ON_QUEST_ABANDON);
     HookPush(pPlayer);
     HookPush(questId);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnQuestStatusChanged(Player* pPlayer, uint32 questId, uint8 status)
@@ -150,7 +152,7 @@ void Eluna::OnQuestStatusChanged(Player* pPlayer, uint32 questId, uint8 status)
     HookPush(pPlayer);
     HookPush(questId);
     HookPush(status);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
@@ -160,7 +162,7 @@ void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
     HookPush(pItem);
     HookPush(bag);
     HookPush(slot);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
@@ -169,7 +171,7 @@ InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
     InventoryResult result = EQUIP_ERR_OK;
     HookPush(pPlayer);
     HookPush(itemEntry);
-    int n = SetupStack(PlayerEventBindings, key, 2);
+    int n = SetupStack(binding, key, 2);
 
     while (n > 0)
     {
@@ -189,14 +191,14 @@ void Eluna::OnPlayerEnterCombat(Player* pPlayer, Unit* pEnemy)
     START_HOOK(PLAYER_EVENT_ON_ENTER_COMBAT);
     HookPush(pPlayer);
     HookPush(pEnemy);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnPlayerLeaveCombat(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_LEAVE_COMBAT);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnPVPKill(Player* pKiller, Player* pKilled)
@@ -204,7 +206,7 @@ void Eluna::OnPVPKill(Player* pKiller, Player* pKilled)
     START_HOOK(PLAYER_EVENT_ON_KILL_PLAYER);
     HookPush(pKiller);
     HookPush(pKilled);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnCreatureKill(Player* pKiller, Creature* pKilled)
@@ -212,7 +214,7 @@ void Eluna::OnCreatureKill(Player* pKiller, Creature* pKilled)
     START_HOOK(PLAYER_EVENT_ON_KILL_CREATURE);
     HookPush(pKiller);
     HookPush(pKilled);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled)
@@ -220,7 +222,7 @@ void Eluna::OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled)
     START_HOOK(PLAYER_EVENT_ON_KILLED_BY_CREATURE);
     HookPush(pKiller);
     HookPush(pKilled);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnPlayerKilledByEnvironment(Player* pKilled, uint8 damageType)
@@ -228,7 +230,7 @@ void Eluna::OnPlayerKilledByEnvironment(Player* pKilled, uint8 damageType)
     START_HOOK(PLAYER_EVENT_ON_ENVIRONMENTAL_DEATH);
     HookPush(pKilled);
     HookPush(damageType);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnLevelChanged(Player* pPlayer, uint8 oldLevel)
@@ -236,7 +238,7 @@ void Eluna::OnLevelChanged(Player* pPlayer, uint8 oldLevel)
     START_HOOK(PLAYER_EVENT_ON_LEVEL_CHANGE);
     HookPush(pPlayer);
     HookPush(oldLevel);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints)
@@ -244,7 +246,7 @@ void Eluna::OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints)
     START_HOOK(PLAYER_EVENT_ON_TALENTS_CHANGE);
     HookPush(pPlayer);
     HookPush(newPoints);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnTalentsReset(Player* pPlayer, bool noCost)
@@ -252,7 +254,7 @@ void Eluna::OnTalentsReset(Player* pPlayer, bool noCost)
     START_HOOK(PLAYER_EVENT_ON_TALENTS_RESET);
     HookPush(pPlayer);
     HookPush(noCost);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
@@ -261,7 +263,7 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
     HookPush(pPlayer);
     HookPush(amount);
     int amountIndex = lua_gettop(L);
-    int n = SetupStack(PlayerEventBindings, key, 2);
+    int n = SetupStack(binding, key, 2);
 
     while (n > 0)
     {
@@ -287,7 +289,7 @@ void Eluna::OnMoneyChanged(Player* pPlayer, int64& amount)
     HookPush(pPlayer);
     HookPush(amount);
     int amountIndex = lua_gettop(L);
-    int n = SetupStack(PlayerEventBindings, key, 2);
+    int n = SetupStack(binding, key, 2);
 
     while (n > 0)
     {
@@ -314,7 +316,7 @@ void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim)
     HookPush(amount);
     HookPush(pVictim);
     int amountIndex = lua_gettop(L) - 1;
-    int n = SetupStack(PlayerEventBindings, key, 3);
+    int n = SetupStack(binding, key, 3);
 
     while (n > 0)
     {
@@ -341,7 +343,7 @@ void Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standin
     HookPush(standing);
     HookPush(incremental);
     int standingIndex = lua_gettop(L) - 1;
-    int n = SetupStack(PlayerEventBindings, key, 4);
+    int n = SetupStack(binding, key, 4);
 
     while (n > 0)
     {
@@ -365,7 +367,7 @@ void Eluna::OnDuelRequest(Player* pTarget, Player* pChallenger)
     START_HOOK(PLAYER_EVENT_ON_DUEL_REQUEST);
     HookPush(pTarget);
     HookPush(pChallenger);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnDuelStart(Player* pStarter, Player* pChallenger)
@@ -373,7 +375,7 @@ void Eluna::OnDuelStart(Player* pStarter, Player* pChallenger)
     START_HOOK(PLAYER_EVENT_ON_DUEL_START);
     HookPush(pStarter);
     HookPush(pChallenger);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnDuelEnd(Player* pWinner, Player* pLoser, DuelCompleteType type)
@@ -382,7 +384,7 @@ void Eluna::OnDuelEnd(Player* pWinner, Player* pLoser, DuelCompleteType type)
     HookPush(pWinner);
     HookPush(pLoser);
     HookPush(type);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnEmote(Player* pPlayer, uint32 emote)
@@ -390,7 +392,7 @@ void Eluna::OnEmote(Player* pPlayer, uint32 emote)
     START_HOOK(PLAYER_EVENT_ON_EMOTE);
     HookPush(pPlayer);
     HookPush(emote);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, ObjectGuid guid)
@@ -400,7 +402,7 @@ void Eluna::OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, Obje
     HookPush(textEmote);
     HookPush(emoteNum);
     HookPush(guid);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck)
@@ -409,42 +411,42 @@ void Eluna::OnSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck)
     HookPush(pPlayer);
     HookPush(pSpell);
     HookPush(skipCheck);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnLogin(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_LOGIN);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnLogout(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_LOGOUT);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnCreate(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_CHARACTER_CREATE);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnDelete(uint32 guidlow)
 {
     START_HOOK(PLAYER_EVENT_ON_CHARACTER_DELETE);
     HookPush(guidlow);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnSave(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_SAVE);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapid, bool permanent)
@@ -454,7 +456,7 @@ void Eluna::OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapi
     HookPush(difficulty);
     HookPush(mapid);
     HookPush(permanent);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea)
@@ -463,7 +465,7 @@ void Eluna::OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea)
     HookPush(pPlayer);
     HookPush(newZone);
     HookPush(newArea);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnUpdateArea(Player* pPlayer, uint32 oldArea, uint32 newArea)
@@ -472,14 +474,14 @@ void Eluna::OnUpdateArea(Player* pPlayer, uint32 oldArea, uint32 newArea)
     HookPush(pPlayer);
     HookPush(oldArea);
     HookPush(newArea);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnMapChanged(Player* player)
 {
     START_HOOK(PLAYER_EVENT_ON_MAP_CHANGE);
     HookPush(player);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnAchievementComplete(Player* player, uint32 achievementId)
@@ -487,7 +489,7 @@ void Eluna::OnAchievementComplete(Player* player, uint32 achievementId)
     START_HOOK(PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE);
     HookPush(player);
     HookPush(achievementId);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 bool Eluna::OnTradeInit(Player* trader, Player* tradee)
@@ -495,7 +497,7 @@ bool Eluna::OnTradeInit(Player* trader, Player* tradee)
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_TRADE_INIT, true);
     HookPush(trader);
     HookPush(tradee);
-    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+    return CallAllFunctionsBool(binding, key, true);
 }
 
 bool Eluna::OnTradeAccept(Player* trader, Player* tradee)
@@ -503,7 +505,7 @@ bool Eluna::OnTradeAccept(Player* trader, Player* tradee)
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_TRADE_ACCEPT, true);
     HookPush(trader);
     HookPush(tradee);
-    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+    return CallAllFunctionsBool(binding, key, true);
 }
 
 bool Eluna::OnSendMail(Player* sender, ObjectGuid recipientGuid)
@@ -511,7 +513,7 @@ bool Eluna::OnSendMail(Player* sender, ObjectGuid recipientGuid)
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_SEND_MAIL, true);
     HookPush(sender);
     HookPush(recipientGuid);
-    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+    return CallAllFunctionsBool(binding, key, true);
 }
 
 void Eluna::OnDiscoverArea(Player* player, uint32 area)
@@ -519,7 +521,7 @@ void Eluna::OnDiscoverArea(Player* player, uint32 area)
     START_HOOK(PLAYER_EVENT_ON_DISCOVER_AREA);
     HookPush(player);
     HookPush(area);
-    CallAllFunctions(PlayerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
@@ -533,7 +535,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
     HookPush(msg);
     HookPush(type);
     HookPush(lang);
-    int n = SetupStack(PlayerEventBindings, key, 4);
+    int n = SetupStack(binding, key, 4);
 
     while (n > 0)
     {
@@ -564,7 +566,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     HookPush(type);
     HookPush(lang);
     HookPush(pGroup);
-    int n = SetupStack(PlayerEventBindings, key, 5);
+    int n = SetupStack(binding, key, 5);
 
     while (n > 0)
     {
@@ -595,7 +597,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     HookPush(type);
     HookPush(lang);
     HookPush(pGuild);
-    int n = SetupStack(PlayerEventBindings, key, 5);
+    int n = SetupStack(binding, key, 5);
 
     while (n > 0)
     {
@@ -626,7 +628,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     HookPush(type);
     HookPush(lang);
     HookPush(pChannel->GetChannelId());
-    int n = SetupStack(PlayerEventBindings, key, 5);
+    int n = SetupStack(binding, key, 5);
 
     while (n > 0)
     {
@@ -657,7 +659,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
     HookPush(type);
     HookPush(lang);
     HookPush(pReceiver);
-    int n = SetupStack(PlayerEventBindings, key, 5);
+    int n = SetupStack(binding, key, 5);
 
     while (n > 0)
     {

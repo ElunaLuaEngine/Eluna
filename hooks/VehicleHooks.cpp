@@ -15,22 +15,23 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
+    auto binding = GetBinding<EventKey<VehicleEvents>>(REGTYPE_VEHICLE);\
     auto key = EventKey<VehicleEvents>(EVENT);\
-    if (!VehicleEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return;
 
 void Eluna::OnInstall(Vehicle* vehicle)
 {
     START_HOOK(VEHICLE_EVENT_ON_INSTALL);
     HookPush(vehicle);
-    CallAllFunctions(VehicleEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnUninstall(Vehicle* vehicle)
 {
     START_HOOK(VEHICLE_EVENT_ON_UNINSTALL);
     HookPush(vehicle);
-    CallAllFunctions(VehicleEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnInstallAccessory(Vehicle* vehicle, Creature* accessory)
@@ -38,7 +39,7 @@ void Eluna::OnInstallAccessory(Vehicle* vehicle, Creature* accessory)
     START_HOOK(VEHICLE_EVENT_ON_INSTALL_ACCESSORY);
     HookPush(vehicle);
     HookPush(accessory);
-    CallAllFunctions(VehicleEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId)
@@ -47,7 +48,7 @@ void Eluna::OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId)
     HookPush(vehicle);
     HookPush(passenger);
     HookPush(seatId);
-    CallAllFunctions(VehicleEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnRemovePassenger(Vehicle* vehicle, Unit* passenger)
@@ -55,7 +56,7 @@ void Eluna::OnRemovePassenger(Vehicle* vehicle, Unit* passenger)
     START_HOOK(VEHICLE_EVENT_ON_REMOVE_PASSENGER);
     HookPush(vehicle);
     HookPush(passenger);
-    CallAllFunctions(VehicleEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 #endif

@@ -14,13 +14,15 @@
 using namespace Hooks;
 
 #define START_HOOK_SERVER(EVENT) \
+    auto binding = GetBinding<EventKey<ServerEvents>>(REGTYPE_SERVER);\
     auto key = EventKey<ServerEvents>(EVENT);\
-    if (!ServerEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return;
 
 #define START_HOOK_PACKET(EVENT, OPCODE) \
+    auto binding = GetBinding<EntryKey<PacketEvents>>(REGTYPE_PACKET);\
     auto key = EntryKey<PacketEvents>(EVENT, OPCODE);\
-    if (!PacketEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return;
 
 bool Eluna::OnPacketSend(WorldSession* session, const WorldPacket& packet)
@@ -38,7 +40,7 @@ void Eluna::OnPacketSendAny(Player* player, const WorldPacket& packet, bool& res
     START_HOOK_SERVER(SERVER_EVENT_ON_PACKET_SEND);
     HookPush(&packet); // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     HookPush(player);
-    int n = SetupStack(ServerEventBindings, key, 2);
+    int n = SetupStack(binding, key, 2);
 
     while (n > 0)
     {
@@ -58,7 +60,7 @@ void Eluna::OnPacketSendOne(Player* player, const WorldPacket& packet, bool& res
     START_HOOK_PACKET(PACKET_EVENT_ON_PACKET_SEND, packet.GetOpcode());
     HookPush(&packet); // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     HookPush(player);
-    int n = SetupStack(PacketEventBindings, key, 2);
+    int n = SetupStack(binding, key, 2);
 
     while (n > 0)
     {
@@ -89,7 +91,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
     START_HOOK_SERVER(SERVER_EVENT_ON_PACKET_RECEIVE);
     HookPush(&packet); // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     HookPush(player);
-    int n = SetupStack(ServerEventBindings, key, 2);
+    int n = SetupStack(binding, key, 2);
 
     while (n > 0)
     {
@@ -119,7 +121,7 @@ void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result
     START_HOOK_PACKET(PACKET_EVENT_ON_PACKET_RECEIVE, packet.GetOpcode());
     HookPush(&packet); // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     HookPush(player);
-    int n = SetupStack(PacketEventBindings, key, 2);
+    int n = SetupStack(binding, key, 2);
 
     while (n > 0)
     {

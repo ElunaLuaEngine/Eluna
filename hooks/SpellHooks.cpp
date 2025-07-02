@@ -14,13 +14,15 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT, SPELL) \
+    auto binding = GetBinding<EntryKey<SpellEvents>>(REGTYPE_SPELL);\
     auto key = EntryKey<SpellEvents>(EVENT, SPELL->m_spellInfo->Id);\
-    if (!SpellEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return;
 
 #define START_HOOK_WITH_RETVAL(EVENT, SPELL, RETVAL) \
+    auto binding = GetBinding<EntryKey<SpellEvents>>(REGTYPE_SPELL);\
     auto key = EntryKey<SpellEvents>(EVENT, SPELL->m_spellInfo->Id);\
-    if (!SpellEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return RETVAL;
 
 void Eluna::OnSpellCast(Spell* pSpell, bool skipCheck)
@@ -28,5 +30,5 @@ void Eluna::OnSpellCast(Spell* pSpell, bool skipCheck)
     START_HOOK(SPELL_EVENT_ON_CAST, pSpell);
     HookPush(pSpell);
     HookPush(skipCheck);
-    CallAllFunctions(SpellEventBindings, key);
+    CallAllFunctions(binding, key);
 }

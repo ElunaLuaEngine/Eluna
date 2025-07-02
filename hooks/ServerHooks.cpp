@@ -15,13 +15,15 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT) \
+    auto binding = GetBinding<EventKey<ServerEvents>>(REGTYPE_SERVER);\
     auto key = EventKey<ServerEvents>(EVENT);\
-    if (!ServerEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return;
 
 #define START_HOOK_WITH_RETVAL(EVENT, RETVAL) \
+    auto binding = GetBinding<EventKey<ServerEvents>>(REGTYPE_SERVER);\
     auto key = EventKey<ServerEvents>(EVENT);\
-    if (!ServerEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return RETVAL;
 
 bool Eluna::OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player* receiver, Guild* guild, Group* group, Channel* channel)
@@ -55,7 +57,7 @@ bool Eluna::OnAddonMessage(Player* sender, uint32 type, std::string& msg, Player
     else
         HookPush();
 
-    return CallAllFunctionsBool(ServerEventBindings, key, true);
+    return CallAllFunctionsBool(binding, key, true);
 }
 
 void Eluna::OnTimedEvent(int funcRef, uint32 delay, uint32 calls, WorldObject* obj)
@@ -84,26 +86,26 @@ void Eluna::OnGameEventStart(uint32 eventid)
 {
     START_HOOK(GAME_EVENT_START);
     HookPush(eventid);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnGameEventStop(uint32 eventid)
 {
     START_HOOK(GAME_EVENT_STOP);
     HookPush(eventid);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnLuaStateClose()
 {
     START_HOOK(ELUNA_EVENT_ON_LUA_STATE_CLOSE);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnLuaStateOpen()
 {
     START_HOOK(ELUNA_EVENT_ON_LUA_STATE_OPEN);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 // AreaTrigger
@@ -117,7 +119,7 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
     HookPush(pTrigger->id);
 #endif
 
-    return CallAllFunctionsBool(ServerEventBindings, key);
+    return CallAllFunctionsBool(binding, key);
 }
 
 // Weather
@@ -127,7 +129,7 @@ void Eluna::OnChange(Weather* /*weather*/, uint32 zone, WeatherState state, floa
     HookPush(zone);
     HookPush(state);
     HookPush(grade);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 // Auction House
@@ -155,7 +157,7 @@ void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     HookPush(entry->startbid);
     HookPush(entry->bid);
     HookPush(entry->bidder);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
@@ -183,7 +185,7 @@ void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     HookPush(entry->startbid);
     HookPush(entry->bid);
     HookPush(entry->bidder);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
@@ -210,7 +212,7 @@ void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     HookPush(entry->startbid);
     HookPush(entry->bid);
     HookPush(entry->bidder);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
@@ -237,21 +239,21 @@ void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
     HookPush(entry->startbid);
     HookPush(entry->bid);
     HookPush(entry->bidder);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnOpenStateChange(bool open)
 {
     START_HOOK(WORLD_EVENT_ON_OPEN_STATE_CHANGE);
     HookPush(open);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnConfigLoad(bool reload)
 {
     START_HOOK(WORLD_EVENT_ON_CONFIG_LOAD);
     HookPush(reload);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask)
@@ -259,32 +261,32 @@ void Eluna::OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask)
     START_HOOK(WORLD_EVENT_ON_SHUTDOWN_INIT);
     HookPush(code);
     HookPush(mask);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnShutdownCancel()
 {
     START_HOOK(WORLD_EVENT_ON_SHUTDOWN_CANCEL);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnWorldUpdate(uint32 diff)
 {
     START_HOOK(WORLD_EVENT_ON_UPDATE);
     HookPush(diff);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnStartup()
 {
     START_HOOK(WORLD_EVENT_ON_STARTUP);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnShutdown()
 {
     START_HOOK(WORLD_EVENT_ON_SHUTDOWN);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 /* Map */
@@ -292,14 +294,14 @@ void Eluna::OnCreate(Map* map)
 {
     START_HOOK(MAP_EVENT_ON_CREATE);
     HookPush(map);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnDestroy(Map* map)
 {
     START_HOOK(MAP_EVENT_ON_DESTROY);
     HookPush(map);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnPlayerEnter(Map* map, Player* player)
@@ -307,7 +309,7 @@ void Eluna::OnPlayerEnter(Map* map, Player* player)
     START_HOOK(MAP_EVENT_ON_PLAYER_ENTER);
     HookPush(map);
     HookPush(player);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnPlayerLeave(Map* map, Player* player)
@@ -315,7 +317,7 @@ void Eluna::OnPlayerLeave(Map* map, Player* player)
     START_HOOK(MAP_EVENT_ON_PLAYER_LEAVE);
     HookPush(map);
     HookPush(player);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnMapUpdate(Map* map, uint32 diff)
@@ -323,19 +325,19 @@ void Eluna::OnMapUpdate(Map* map, uint32 diff)
     START_HOOK(MAP_EVENT_ON_UPDATE);
     HookPush(map);
     HookPush(diff);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnRemove(GameObject* gameobject)
 {
     START_HOOK(WORLD_EVENT_ON_DELETE_GAMEOBJECT);
     HookPush(gameobject);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnRemove(Creature* creature)
 {
     START_HOOK(WORLD_EVENT_ON_DELETE_CREATURE);
     HookPush(creature);
-    CallAllFunctions(ServerEventBindings, key);
+    CallAllFunctions(binding, key);
 }

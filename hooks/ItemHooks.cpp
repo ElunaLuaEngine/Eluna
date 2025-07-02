@@ -14,13 +14,15 @@
 using namespace Hooks;
 
 #define START_HOOK(EVENT, ENTRY) \
+    auto binding = GetBinding<EntryKey<ItemEvents>>(REGTYPE_ITEM);\
     auto key = EntryKey<ItemEvents>(EVENT, ENTRY);\
-    if (!ItemEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return;
 
 #define START_HOOK_WITH_RETVAL(EVENT, ENTRY, RETVAL) \
+    auto binding = GetBinding<EntryKey<ItemEvents>>(REGTYPE_ITEM);\
     auto key = EntryKey<ItemEvents>(EVENT, ENTRY);\
-    if (!ItemEventBindings->HasBindingsFor(key))\
+    if (!binding->HasBindingsFor(key))\
         return RETVAL;
 
 void Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget)
@@ -30,7 +32,7 @@ void Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex ef
     HookPush(spellId);
     HookPush(effIndex);
     HookPush(pTarget);
-    CallAllFunctions(ItemEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 bool Eluna::OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest)
@@ -39,7 +41,7 @@ bool Eluna::OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest)
     HookPush(pPlayer);
     HookPush(pItem);
     HookPush(pQuest);
-    return CallAllFunctionsBool(ItemEventBindings, key);
+    return CallAllFunctionsBool(binding, key);
 }
 
 bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
@@ -98,7 +100,7 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
         HookPush();
 #endif
 
-    return CallAllFunctionsBool(ItemEventBindings, key, true);
+    return CallAllFunctionsBool(binding, key, true);
 }
 
 bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
@@ -106,7 +108,7 @@ bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_EXPIRE, pProto->ItemId, false);
     HookPush(pPlayer);
     HookPush(pProto->ItemId);
-    return CallAllFunctionsBool(ItemEventBindings, key);
+    return CallAllFunctionsBool(binding, key);
 }
 
 bool Eluna::OnRemove(Player* pPlayer, Item* pItem)
@@ -114,7 +116,7 @@ bool Eluna::OnRemove(Player* pPlayer, Item* pItem)
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_REMOVE, pItem->GetEntry(), false);
     HookPush(pPlayer);
     HookPush(pItem);
-    return CallAllFunctionsBool(ItemEventBindings, key);
+    return CallAllFunctionsBool(binding, key);
 }
 
 void Eluna::OnAdd(Player* pPlayer, Item* pItem)
@@ -122,7 +124,7 @@ void Eluna::OnAdd(Player* pPlayer, Item* pItem)
     START_HOOK(ITEM_EVENT_ON_ADD, pItem->GetEntry());
     HookPush(pPlayer);
     HookPush(pItem);
-    CallAllFunctions(ItemEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnItemEquip(Player* pPlayer, Item* pItem, uint8 slot)
@@ -131,7 +133,7 @@ void Eluna::OnItemEquip(Player* pPlayer, Item* pItem, uint8 slot)
     HookPush(pPlayer);
     HookPush(pItem);
     HookPush(slot);
-    CallAllFunctions(ItemEventBindings, key);
+    CallAllFunctions(binding, key);
 }
 
 void Eluna::OnItemUnEquip(Player* pPlayer, Item* pItem, uint8 slot)
@@ -140,5 +142,5 @@ void Eluna::OnItemUnEquip(Player* pPlayer, Item* pItem, uint8 slot)
     HookPush(pPlayer);
     HookPush(pItem);
     HookPush(slot);
-    CallAllFunctions(ItemEventBindings, key);
+    CallAllFunctions(binding, key);
 }

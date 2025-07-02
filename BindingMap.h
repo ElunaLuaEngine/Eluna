@@ -18,12 +18,16 @@ extern "C"
 #include "lauxlib.h"
 };
 
+class BaseBindingMap {
+public:
+    virtual ~BaseBindingMap() = default;
+};
 
 /*
  * A set of bindings from keys of type `K` to Lua references.
  */
 template<typename K>
-class BindingMap
+class BindingMap : public BaseBindingMap
 {
 private:
     lua_State* L;

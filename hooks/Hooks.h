@@ -68,7 +68,7 @@
 
 namespace Hooks
 {
-    enum RegisterTypes
+    enum RegisterTypes : uint8
     {
         REGTYPE_PACKET,
         REGTYPE_SERVER,
@@ -76,6 +76,7 @@ namespace Hooks
         REGTYPE_GUILD,
         REGTYPE_GROUP,
         REGTYPE_CREATURE,
+        REGTYPE_CREATURE_UNIQUE,
         REGTYPE_VEHICLE,
         REGTYPE_CREATURE_GOSSIP,
         REGTYPE_GAMEOBJECT,
