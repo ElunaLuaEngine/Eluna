@@ -2388,7 +2388,7 @@ namespace LuaGlobalFunctions
      */
     int IsCompatibilityMode(Eluna* E)
     {
-        E->Push(E->GetCompatibilityMode());
+        E->Push(false);
         return 1;
     }
 
@@ -3291,13 +3291,13 @@ namespace LuaGlobalFunctions
         { "ReloadEluna", &LuaGlobalFunctions::ReloadEluna },
         { "RunCommand", &LuaGlobalFunctions::RunCommand },
         { "SendWorldMessage", &LuaGlobalFunctions::SendWorldMessage },
-        { "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery },
+        { "WorldDBQuery", &LuaGlobalFunctions::WorldDBQuery, METHOD_REG_ALL, METHOD_FLAG_UNSAFE },
         { "WorldDBExecute", &LuaGlobalFunctions::WorldDBExecute },
         { "WorldDBQueryAsync", &LuaGlobalFunctions::WorldDBQueryAsync, METHOD_REG_NONE }, // TODO: Implement
-        { "CharDBQuery", &LuaGlobalFunctions::CharDBQuery },
+        { "CharDBQuery", &LuaGlobalFunctions::CharDBQuery, METHOD_REG_ALL, METHOD_FLAG_UNSAFE },
         { "CharDBExecute", &LuaGlobalFunctions::CharDBExecute },
         { "CharDBQueryAsync", &LuaGlobalFunctions::CharDBQueryAsync, METHOD_REG_NONE }, // TODO: Implement
-        { "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery },
+        { "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery, METHOD_REG_ALL, METHOD_FLAG_UNSAFE },
         { "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute },
         { "AuthDBQueryAsync", &LuaGlobalFunctions::AuthDBQueryAsync, METHOD_REG_NONE }, // TODO: Implement
         { "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
