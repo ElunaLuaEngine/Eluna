@@ -177,7 +177,8 @@ void Eluna::CreateBindStores()
 
 void Eluna::DestroyBindStores()
 {
-    bindingMaps.clear();
+    for (auto& binding : bindingMaps)
+        binding.reset();
 }
 
 void Eluna::RunScripts()

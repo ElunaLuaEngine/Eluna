@@ -182,12 +182,13 @@ private:
     // Map from map ID -> Lua table ref
     std::unordered_map<uint32, int> continentDataRefs;
 
-    std::unordered_map<std::underlying_type_t<Hooks::RegisterTypes>, std::unique_ptr<BaseBindingMap>> bindingMaps;
+    std::array<std::unique_ptr<BaseBindingMap>, Hooks::REGTYPE_COUNT> bindingMaps;
 
     template<typename T>
     void CreateBinding(Hooks::RegisterTypes type)
     {
-        bindingMaps[std::underlying_type_t<Hooks::RegisterTypes>(type)] = std::make_unique<BindingMap<T>>(L);
+        auto index = static_cast<std::underlying_type_t<Hooks::RegisterTypes>>(type);
+        bindingMaps[index] = std::make_unique<BindingMap<T>>(L);
     }
 
     void OpenLua();
@@ -363,9 +364,14 @@ public:
     template<typename T>
     BindingMap<T>* GetBinding(std::underlying_type_t<Hooks::RegisterTypes> type)
     {
-        auto it = bindingMaps.find(type);
-        if (it == bindingMaps.end()) return nullptr;
-        return dynamic_cast<BindingMap<T>*>(it->second.get());
+        if (type >= Hooks::REGTYPE_COUNT)
+            return nullptr;
+
+        auto& binding = bindingMaps[type];
+        if (!binding)
+            return nullptr;
+
+        return dynamic_cast<BindingMap<T>*>(binding.get());
     }
 
     template<typename T>
