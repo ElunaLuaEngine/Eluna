@@ -112,20 +112,17 @@ void ElunaEventProcessor::RemoveEvent(LuaEvent* luaEvent)
     delete luaEvent;
 }
 
-EventMgr::EventMgr(Eluna* _E) : globalProcessor(new ElunaEventProcessor(_E, NULL)), E(_E)
+EventMgr::EventMgr(Eluna* _E) : E(_E)
 {
+    globalProcessor = std::make_unique<ElunaEventProcessor>(E, nullptr);
 }
 
 EventMgr::~EventMgr()
 {
-    {
-        if (!processors.empty())
-            for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
-                (*it)->RemoveEvents_internal();
-        globalProcessor->RemoveEvents_internal();
-    }
-    delete globalProcessor;
-    globalProcessor = NULL;
+    if (!processors.empty())
+        for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
+            (*it)->RemoveEvents_internal();
+    globalProcessor->RemoveEvents_internal();
 }
 
 void EventMgr::SetStates(LuaEventState state)

@@ -96,7 +96,7 @@ class EventMgr
 public:
     typedef std::unordered_set<ElunaEventProcessor*> ProcessorSet;
     ProcessorSet processors;
-    ElunaEventProcessor* globalProcessor;
+    std::unique_ptr<ElunaEventProcessor> globalProcessor;
     Eluna* E;
 
     EventMgr(Eluna* _E);
