@@ -68,8 +68,8 @@ class ParameterDoc(object):
 
 class MethodDoc(object):
     """The documentation data of an Eluna method."""
-    @params(self=object, name=str, description=str, tables=[TableDict], prototypes=[str], parameters=[ParameterDoc], returned=[ParameterDoc])
-    def __init__(self, name, description, tables, prototypes, parameters, returned):
+    @params(self=object, name=str, description=str, tables=[TableDict], prototypes=[str], warning=[str], parameters=[ParameterDoc], returned=[ParameterDoc])
+    def __init__(self, name, description, tables, prototypes, warning, parameters, returned):
         self.name = name
         self.prototypes = prototypes
         self.tables = tables
@@ -110,6 +110,9 @@ class MethodDoc(object):
         self.short_description = self.description.split('</p>')[0][3:]
         # If it has a description, it is "documented".
         self.documented = self.description != ''
+        # Parse the warning as Markdown, but remote <p> tags
+        self.warning = markdown.markdown(warning)
+        self.warning = re.sub(r'^<p>(.*?)</p>$', r'\1', self.warning, flags=re.DOTALL)
 
     """Helper function to parse table dictionaries. Only used in Register methods for now."""
     def _format_dict_values(self, d):
@@ -171,6 +174,9 @@ class ClassParser(object):
     table_columns_regex = re.compile(r"\s*\*\s@columns\s*\[(.+)\]")
     table_values_regex = re.compile(r"\s*\*\s@values\s*\[(.+?)\]")
     
+    # Regex for catching warning tags
+    warning_regex = re.compile(r"""\s*\*\s*@warning\s+(.+)""", re.X)
+    
     param_regex = re.compile(r"""\s*\*\s@param\s        # The @param tag starts with opt. whitespace followed by "* @param ".
                                  ([^\s]+)\s(\w+)?       # The data type, a space, and the name of the param.
                                  (?:\s=\s([^\s:]+))?    # The default value: a space, =, and a value that can include periods but stops at whitespace or a colon.
@@ -207,6 +213,7 @@ class ClassParser(object):
 
         # These are used to piece together the next `Method`.
         self.description = ''
+        self.warning = ''
         self.params = []
         self.returned = []
         self.method_name = None
@@ -252,6 +259,10 @@ class ClassParser(object):
             
             # Append the processed values to the last table
             self.tables[-1]["values"].append(processed_values)
+
+    def handle_warning(self, match):
+        warning = match.group(1)
+        self.warning += warning
 
     def handle_param(self, match):
         data_type, name, default, description = match.group(1), match.group(2), match.group(3), match.group(4)
@@ -328,7 +339,7 @@ class ClassParser(object):
             # Format the method name into each prototype.
             self.prototypes = [proto.format(self.method_name) for proto in self.prototypes]
 
-        self.methods.append(MethodDoc(self.method_name, self.description, self.tables, self.prototypes, self.params, self.returned))
+        self.methods.append(MethodDoc(self.method_name, self.description, self.tables, self.prototypes, self.warning, self.params, self.returned))
 
     # Table of which handler is used to handle each regular expressions.
     regex_handlers = {
@@ -340,6 +351,7 @@ class ClassParser(object):
         table_regex: handle_table,
         table_columns_regex: handle_table_columns,
         table_values_regex: handle_table_values,
+        warning_regex: handle_warning,
         param_regex: handle_param,
         return_regex: handle_return,
         proto_regex: handle_proto,
@@ -354,13 +366,14 @@ class ClassParser(object):
         class_start_regex: [class_end_regex, class_body_regex],
         class_body_regex: [class_end_regex, class_body_regex],
         class_end_regex: [],
-        start_regex: [table_regex, param_regex, return_regex, proto_regex, comment_end_regex, body_regex],
-        body_regex: [table_regex, param_regex, return_regex, proto_regex, comment_end_regex, body_regex],
-        proto_regex: [table_regex, param_regex, return_regex, proto_regex, comment_end_regex, body_regex],
-        table_regex: [table_regex, table_columns_regex, param_regex, return_regex, comment_end_regex, body_regex],
-        table_columns_regex: [table_values_regex, param_regex, return_regex, comment_end_regex, body_regex],
-        table_values_regex: [table_values_regex, table_regex, param_regex, return_regex, comment_end_regex, body_regex],
-        param_regex: [table_regex, param_regex, return_regex, comment_end_regex, body_regex],
+        start_regex: [table_regex, warning_regex, param_regex, return_regex, proto_regex, comment_end_regex, body_regex],
+        body_regex: [table_regex, warning_regex, param_regex, return_regex, proto_regex, comment_end_regex, body_regex],
+        proto_regex: [table_regex, warning_regex, param_regex, return_regex, proto_regex, comment_end_regex, body_regex],
+        table_regex: [table_regex, table_columns_regex, warning_regex, param_regex, return_regex, comment_end_regex, body_regex],
+        table_columns_regex: [table_values_regex, warning_regex, param_regex, return_regex, comment_end_regex, body_regex],
+        table_values_regex: [table_values_regex, table_regex, warning_regex, param_regex, return_regex, comment_end_regex, body_regex],
+        warning_regex: [table_values_regex, table_regex, warning_regex, param_regex, return_regex, comment_end_regex, body_regex],
+        param_regex: [table_regex, warning_regex, param_regex, return_regex, comment_end_regex, body_regex],
         return_regex: [return_regex, comment_end_regex],
         comment_end_regex: [end_regex],
         end_regex: [],

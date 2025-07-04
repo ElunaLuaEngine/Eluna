@@ -1272,6 +1272,8 @@ namespace LuaGlobalFunctions
      *         until not Q:NextRow()
      *     end
      *
+     * @warning This method is flagged as **unsafe** and is **disabled by default**. Use with caution, or transition to Async queries.
+     * 
      * @param string sql : query to execute
      * @return [ElunaQuery] results or nil if no rows found or nil if no rows found
      */
@@ -1371,6 +1373,8 @@ namespace LuaGlobalFunctions
      *
      * For an example see [Global:WorldDBQuery].
      *
+     * @warning This method is flagged as **unsafe** and is **disabled by default**. Use with caution, or transition to Async queries.
+     * 
      * @param string sql : query to execute
      * @return [ElunaQuery] results or nil if no rows found
      */
@@ -1462,6 +1466,8 @@ namespace LuaGlobalFunctions
      *
      * For an example see [Global:WorldDBQuery].
      *
+     * @warning This method is flagged as **unsafe** and is **disabled by default**. Use with caution, or transition to Async queries.
+     * 
      * @param string sql : query to execute
      * @return [ElunaQuery] results or nil if no rows found
      */

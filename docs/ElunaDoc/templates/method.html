@@ -39,6 +39,11 @@
 
 
 {% block content %}
+    {%- if current_method.warning %}
+    <div style="border: 1px solid #f44336; background-color: #fdecea; color: #b71c1c; padding: 12px; border-radius: 4px; margin: 10px 0;">
+      <strong>Warning:</strong> {{ current_method.warning }}
+    </div>
+    {%- endif %}
     <div class='docblock'>
         {%- if current_method.documented %}
         {{ current_method.description|parse_links }}
