@@ -135,8 +135,8 @@ namespace LuaBigInt
 
     ElunaRegister<ObjectGuid> ObjectGuidMethods[] =
     {
-        { "__tostring", &LuaBigInt::ToString<ObjectGuid> },
-        { "__eq", &LuaBigInt::Equal<ObjectGuid> },
+        { "__tostring", &LuaBigInt::ToString },
+        { "__eq", &LuaBigInt::Equal },
     };
 };
 
