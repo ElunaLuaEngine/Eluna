@@ -18,7 +18,8 @@ extern "C"
 #include "lauxlib.h"
 };
 
-class BaseBindingMap {
+class BaseBindingMap
+{
 public:
     virtual ~BaseBindingMap() = default;
 };
@@ -73,6 +74,8 @@ public:
         L(L),
         maxBindingID(0)
     { }
+
+    ~BindingMap() noexcept override = default;
 
     /*
      * Insert a new binding from `key` to `ref`, which lasts for `shots`-many pushes.
