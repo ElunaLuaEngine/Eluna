@@ -7,6 +7,10 @@
 #ifndef _HOOKS_H
 #define _HOOKS_H
 
+#if defined ELUNA_CMANGOS
+#include "Platform/Define.h"
+#endif
+
 /*
  * A hook should be written in one of the following forms:
  *
