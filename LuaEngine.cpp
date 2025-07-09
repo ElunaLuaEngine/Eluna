@@ -34,6 +34,11 @@ void Eluna::_ReloadEluna()
     // Remove all timed events
     eventMgr->SetStates(LUAEVENT_STATE_ERASE);
 
+#if defined ELUNA_TRINITY
+    // Cancel all pending async queries
+    GetQueryProcessor().CancelAll();
+#endif
+
     // Close lua
     CloseLua();
 
@@ -866,10 +871,7 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
 void Eluna::UpdateEluna(uint32 diff)
 {
     if (reload && sElunaLoader->GetCacheState() == SCRIPT_CACHE_READY)
-#if defined ELUNA_TRINITY
-        if(!GetQueryProcessor().HasPendingCallbacks())
-#endif
-            _ReloadEluna();
+        _ReloadEluna();
 
     eventMgr->globalProcessor->Update(diff);
 #if defined ELUNA_TRINITY
