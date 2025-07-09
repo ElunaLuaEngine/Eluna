@@ -245,7 +245,9 @@ private:
     template<typename T>
     void HookPush(T const* ptr)                     { Push(ptr); ++push_counter; }
 
+#if defined ELUNA_TRINITY
     QueryCallbackProcessor queryProcessor;
+#endif
 public:
 
     lua_State* L;
