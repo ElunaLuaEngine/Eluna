@@ -244,7 +244,11 @@ namespace LuaGlobalFunctions
         uint32 i = 0;
 
         Map::PlayerList const& players = E->GetBoundMap()->GetPlayers();
+#if ELUNA_EXPANSION < EXP_RETAIL
         if (!players.isEmpty())
+#else
+        if (!players.empty())
+#endif
         {
             for (Map::PlayerList::const_iterator it = players.begin(); it != players.end(); ++it)
             {
