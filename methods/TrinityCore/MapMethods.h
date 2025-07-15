@@ -58,7 +58,11 @@ namespace LuaMap
      */
     int IsEmpty(Eluna* E, Map* map)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(map->isEmpty());
+#else
+        E->Push(map->empty());
+#endif
         return 1;
     }
 
