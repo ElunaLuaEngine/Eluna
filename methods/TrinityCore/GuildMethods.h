@@ -135,7 +135,7 @@ namespace LuaGuild
     {
         Player* player = E->CHECKOBJ<Player>(2);
 
-        guild->HandleSetLeader(player->GetSession(), player->GetName());
+        guild->HandleSetNewGuildMaster(player->GetSession(), player->GetName());
         return 0;
     }
 
