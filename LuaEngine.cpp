@@ -871,7 +871,10 @@ int Eluna::Register(std::underlying_type_t<Hooks::RegisterTypes> regtype, uint32
 void Eluna::UpdateEluna(uint32 diff)
 {
     if (reload && sElunaLoader->GetCacheState() == SCRIPT_CACHE_READY)
-        _ReloadEluna();
+#if defined ELUNA_TRINITY
+        if (GetQueryProcessor().Empty())
+#endif
+            _ReloadEluna();
 
     eventMgr->globalProcessor->Update(diff);
 #if defined ELUNA_TRINITY
