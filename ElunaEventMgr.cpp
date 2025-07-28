@@ -47,14 +47,20 @@ void ElunaEventProcessor::Update(uint32 diff)
 
         if (luaEvent->state == LUAEVENT_STATE_RUN)
         {
+            bool shouldSkipTick = obj && !obj->IsInWorld();
+            if (shouldSkipTick)
+            {
+                AddEvent(luaEvent);
+                continue;
+            }
+
             uint32 delay = luaEvent->delay;
             bool remove = luaEvent->repeats == 1;
             if (!remove)
                 AddEvent(luaEvent); // Reschedule before calling incase RemoveEvents used
 
             // Call the timed event
-            if(!obj || (obj && obj->IsInWorld()))
-                E->OnTimedEvent(luaEvent->funcRef, delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
+            E->OnTimedEvent(luaEvent->funcRef, delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
 
             if (!remove)
                 continue;
