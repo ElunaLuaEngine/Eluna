@@ -125,6 +125,14 @@ EventMgr::~EventMgr()
     globalProcessor->RemoveEvents_internal();
 }
 
+void EventMgr::UpdateProcessors(uint32 diff)
+{
+    if (!processors.empty())
+        for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
+            (*it)->Update(diff);
+    globalProcessor->Update(diff);
+}
+
 void EventMgr::SetStates(LuaEventState state)
 {
     if (!processors.empty())

@@ -109,6 +109,8 @@ public:
     // Sets the eventId's state in all processors
     // Execute only in safe env
     void SetState(int eventId, LuaEventState state);
+
+    void UpdateProcessors(uint32 diff);
 };
 
 #endif
