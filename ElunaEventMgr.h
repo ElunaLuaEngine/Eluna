@@ -83,7 +83,7 @@ public:
 
 private:
     void RemoveEvents_internal();
-    void AddEvent(LuaEvent* luaEvent);
+    void AddEvent(LuaEvent* luaEvent, bool reschedule);
     void RemoveEvent(LuaEvent* luaEvent);
     EventList eventList;
     uint64 m_time;

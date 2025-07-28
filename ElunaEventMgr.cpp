@@ -50,7 +50,7 @@ void ElunaEventProcessor::Update(uint32 diff)
             bool shouldSkipTick = obj && !obj->IsInWorld();
             if (shouldSkipTick)
             {
-                AddEvent(luaEvent);
+                AddEvent(luaEvent, false);
                 continue;
             }
 
@@ -96,10 +96,12 @@ void ElunaEventProcessor::SetState(int eventId, LuaEventState state)
         eventMap.erase(eventId);
 }
 
-void ElunaEventProcessor::AddEvent(LuaEvent* luaEvent)
+void ElunaEventProcessor::AddEvent(LuaEvent* luaEvent, bool reschedule = true)
 {
-    luaEvent->GenerateDelay();
-    eventList.insert(std::pair<uint64, LuaEvent*>(m_time + luaEvent->delay, luaEvent));
+    if (reschedule)
+        luaEvent->GenerateDelay();
+
+    eventList.insert(std::pair<uint64, LuaEvent*>(m_time + reschedule ? luaEvent->delay : 0, luaEvent));
     eventMap[luaEvent->funcRef] = luaEvent;
 }
 
