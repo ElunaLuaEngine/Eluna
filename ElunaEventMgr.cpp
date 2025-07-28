@@ -96,7 +96,7 @@ void ElunaEventProcessor::SetState(int eventId, LuaEventState state)
         eventMap.erase(eventId);
 }
 
-void ElunaEventProcessor::AddEvent(LuaEvent* luaEvent, bool reschedule = true)
+void ElunaEventProcessor::AddEvent(LuaEvent* luaEvent, bool reschedule)
 {
     if (reschedule)
         luaEvent->GenerateDelay();
