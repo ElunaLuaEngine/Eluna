@@ -1062,10 +1062,8 @@ namespace LuaWorldObject
         if (player)
 #if ELUNA_EXPANSION == EXP_CATA
             obj->PlayDirectSound(soundId, player);
-#elif  ELUNA_EXPANSION == EXP_TBC
-            obj->PlayDirectSound(soundId, PlayPacketParameters(PlayPacketSettings::TARGET, (Player const*)player));
 #else
-            obj->PlayDirectSound(soundId, PlayPacketParameters(PLAY_TARGET, (Player const*)player));
+            obj->PlayDirectSound(soundId, PlayPacketParameters(PlayPacketSettings::TARGET, (Player const*)player));
 #endif
         else
             obj->PlayDirectSound(soundId);
@@ -1094,10 +1092,8 @@ namespace LuaWorldObject
         if (player)
 #if ELUNA_EXPANSION == EXP_CATA
             obj->PlayDistanceSound(soundId, player);
-#elif  ELUNA_EXPANSION == EXP_TBC
-            obj->PlayDistanceSound(soundId, PlayPacketParameters(PlayPacketSettings::TARGET, (Player const*)player));
 #else
-            obj->PlayDistanceSound(soundId, PlayPacketParameters(PLAY_TARGET, (Player const*)player));
+            obj->PlayDistanceSound(soundId, PlayPacketParameters(PlayPacketSettings::TARGET, (Player const*)player));
 #endif
         else
             obj->PlayDistanceSound(soundId);
