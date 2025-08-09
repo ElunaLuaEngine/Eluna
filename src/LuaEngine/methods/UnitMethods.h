@@ -1114,7 +1114,7 @@ namespace LuaUnit
 
         Acore::AnyFriendlyUnitInObjectRangeCheck checker(unit, unit, range);
         Acore::UnitListSearcher<Acore::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
-        Cell::VisitAllObjects(unit, searcher, range);
+        Cell::VisitObjects(unit, searcher, range);
 
         ElunaUtil::ObjectGUIDCheck guidCheck(unit->GET_GUID());
         list.remove_if(guidCheck);
@@ -1146,7 +1146,7 @@ namespace LuaUnit
         std::list<Unit*> list;
         Acore::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, unit, range);
         Acore::UnitListSearcher<Acore::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
-        Cell::VisitAllObjects(unit, searcher, range);
+        Cell::VisitObjects(unit, searcher, range);
         ElunaUtil::ObjectGUIDCheck guidCheck(unit->GET_GUID());
         list.remove_if(guidCheck);
 

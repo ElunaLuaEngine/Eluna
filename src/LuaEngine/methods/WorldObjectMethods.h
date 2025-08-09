@@ -183,7 +183,7 @@ namespace LuaWorldObject
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
 
         Acore::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Cell::VisitObjects(obj, searcher, range);
 
         Eluna::Push(L, target);
         return 1;
@@ -208,7 +208,7 @@ namespace LuaWorldObject
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
 
         Acore::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Cell::VisitObjects(obj, searcher, range);
 
         Eluna::Push(L, target);
         return 1;
@@ -235,7 +235,7 @@ namespace LuaWorldObject
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_UNIT, entry, hostile, dead);
 
         Acore::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Cell::VisitObjects(obj, searcher, range);
 
         Eluna::Push(L, target);
         return 1;
@@ -260,7 +260,7 @@ namespace LuaWorldObject
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
 
         Acore::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Cell::VisitObjects(obj, searcher, range);
 
         lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
@@ -297,7 +297,7 @@ namespace LuaWorldObject
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry, hostile, dead);
 
         Acore::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Cell::VisitObjects(obj, searcher, range);
 
         lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
@@ -332,7 +332,7 @@ namespace LuaWorldObject
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
 
         Acore::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Cell::VisitObjects(obj, searcher, range);
 
         lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
@@ -375,7 +375,7 @@ namespace LuaWorldObject
         WorldObject* target = NULL;
 
         Acore::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Cell::VisitObjects(obj, searcher, range);
 
         Eluna::Push(L, target);
         return 1;
@@ -408,7 +408,7 @@ namespace LuaWorldObject
         std::list<WorldObject*> list;
 
         Acore::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Cell::VisitObjects(obj, searcher, range);
 
         lua_createtable(L, list.size(), 0);
         int tbl = lua_gettop(L);
