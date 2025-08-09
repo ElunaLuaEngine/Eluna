@@ -1010,19 +1010,6 @@ public:
     }
 };
 
-class Eluna_UnitScript : public UnitScript
-{
-public:
-    Eluna_UnitScript() : UnitScript("Eluna_UnitScript", true, {
-        UNITHOOK_ON_UNIT_UPDATE
-    }) { }
-
-    void OnUnitUpdate(Unit* unit, uint32 diff) override
-    {
-        unit->elunaEvents->Update(diff);
-    }
-};
-
 class Eluna_VehicleScript : public VehicleScript
 {
 public:
@@ -1216,7 +1203,6 @@ void AddSC_ElunaLuaEngine()
     new Eluna_ServerScript();
     new Eluna_SpellSC();
     new Eluna_TicketScript();
-    new Eluna_UnitScript();
     new Eluna_VehicleScript();
     new Eluna_WorldObjectScript();
     new Eluna_WorldScript();
