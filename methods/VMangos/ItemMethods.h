@@ -825,7 +825,9 @@ namespace LuaItem
         { "IsCurrencyToken", METHOD_REG_NONE },  // not implemented
         { "IsBoundAccountWide", METHOD_REG_NONE },  // not implemented
         { "IsWeaponVellum", METHOD_REG_NONE },  // not implemented
-        { "IsArmorVellum", METHOD_REG_NONE }  // not implemented
+        { "IsArmorVellum", METHOD_REG_NONE },  // not implemented
+        { "SetRandomProperty", METHOD_REG_NONE },  // not implemented
+        { "SetRandomSuffix", METHOD_REG_NONE }  // not implemented
     };
 };
 #endif

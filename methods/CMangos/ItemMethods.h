@@ -975,7 +975,9 @@ namespace LuaItem
         { "SaveToDB", &LuaItem::SaveToDB },
 
         // Not implemented methods
-        { "IsRefundExpired", METHOD_REG_NONE } // not implemented
+        { "IsRefundExpired", METHOD_REG_NONE }, // not implemented
+        { "SetRandomProperty", METHOD_REG_NONE }, // not implemented
+        { "SetRandomSuffix", METHOD_REG_NONE } // not implemented
     };
 };
 #endif

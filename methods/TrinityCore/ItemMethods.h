@@ -828,6 +828,30 @@ namespace LuaItem
         return 1;
     }
 
+    /**
+     * Sets the random properties for the [Item] from a given random property ID.
+     *
+     * @param uint32 randomPropId : The ID of the random property to be applied.
+     */
+    int SetRandomProperty(Eluna* E, Item* item)
+    {
+        uint32 randomPropId = E->CHECKVAL<uint32>(2);
+        item->SetItemRandomProperties(randomPropId);
+        return 0;
+    }
+
+    /**
+     * Sets the random suffix for the [Item] from a given random suffix ID.
+     *
+     * @param uint32 randomSuffixId : The ID of the random suffix to be applied.
+     */
+    int SetRandomSuffix(Eluna* E, Item* item)
+    {
+        uint32 randomPropId = E->CHECKVAL<uint32>(2);
+        item->SetItemRandomProperties(-randomPropId);
+        return 0;
+    }
+
     /* OTHER */
     /**
      * Removes an enchant from the [Item] by the specified slot
@@ -916,6 +940,8 @@ namespace LuaItem
         { "SetOwner", &LuaItem::SetOwner },
         { "SetBinding", &LuaItem::SetBinding },
         { "SetCount", &LuaItem::SetCount },
+        { "SetRandomProperty", &LuaItem::SetRandomProperty },
+        { "SetRandomSuffix", &LuaItem::SetRandomSuffix },
 
         // Boolean
         { "IsSoulBound", &LuaItem::IsSoulBound },
