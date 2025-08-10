@@ -1716,7 +1716,7 @@ namespace LuaGlobalFunctions
                 delete creature;
                 creature = new Creature();
 
-                if (!creature->LoadFromDB(db_guid, map, true))
+                if (!creature->LoadCreatureFromDB(db_guid, map, true, true))
                 {
                     delete creature;
                     Eluna::Push(L);
@@ -1786,7 +1786,7 @@ namespace LuaGlobalFunctions
 
                 object = new GameObject();
                 // this will generate a new lowguid if the object is in an instance
-                if (!object->LoadFromDB(guidLow, map))
+                if (!object->LoadGameObjectFromDB(guidLow, map, true))
                 {
                     delete object;
                     Eluna::Push(L);
