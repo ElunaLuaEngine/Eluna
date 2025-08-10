@@ -1659,6 +1659,40 @@ namespace LuaPlayer
         return 1;
     }
 
+    /**
+     * Returns known taxi nodes (flight paths) that the player has unlocked.
+     *
+     * @return table nodes : A table containing the IDs of the known taxi nodes
+     */
+    int GetKnownTaxiNodes(lua_State* L, Player* player)
+    {
+        if (!player)
+            return 0;
+
+        lua_newtable(L);
+
+        ByteBuffer data;
+        player->m_taxi.AppendTaximaskTo(data, false);
+
+        for (uint8 i = 0; i < TaxiMaskSize; i++)
+        {
+            uint32 mask;
+            data >> mask;
+
+            for (uint8 bit = 0; bit < 32; bit++)
+            {
+                if (mask & (1 << bit))
+                {
+                    uint8 nodeId = (i * 32) + bit + 1;
+                    lua_pushinteger(L, nodeId);
+                    lua_rawseti(L, -2, lua_rawlen(L, -2) + 1);
+                }
+            }
+        }
+
+        return 1;
+    }
+
     /*int GetRecruiterId(lua_State* L, Player* player)
     {
         Eluna::Push(L, player->GetSession()->GetRecruiterId());
@@ -1890,6 +1924,34 @@ namespace LuaPlayer
         bool on = Eluna::CHECKVAL<bool>(L, 2, true);
 
         player->SetGMVisible(on);
+        return 0;
+    }
+
+    /**
+     * Sets the player's known taxi nodes (flight paths).
+     *
+     * @param table nodes : A table containing the taxi node IDs to set as known
+     */
+    int SetKnownTaxiNodes(lua_State* L, Player* player)
+    {
+        if (!player)
+            return 0;
+    
+        if (!lua_istable(L, 2))
+            return 0;
+    
+        lua_pushnil(L);
+    
+        while (lua_next(L, 2) != 0)
+        {
+            uint32 nodeId = luaL_checkinteger(L, -1);
+    
+            if (nodeId > 0) 
+                player->m_taxi.SetTaximaskNode(nodeId);
+    
+            lua_pop(L, 1);
+        }
+    
         return 0;
     }
 
