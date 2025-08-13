@@ -341,7 +341,7 @@ struct HookStorage
 class HookToReadableString
 {
 public:
-    static std::pair<const HookStorage*, size_t> getHooks() { return {HookMegaTable, sizeof(HookMegaTable) / sizeof(HookMegaTable[0])}; }
+    static std::pair<const HookStorage*, size_t> getHooks() { return {HookMegaTable, HookMegaTableSize}; }
 
 private:
     static constexpr EventEntry PacketEventsTable[] = {
@@ -572,6 +572,7 @@ private:
         { "bg", BGEventsTable, sizeof(BGEventsTable) / sizeof(BGEventsTable[0])},
         { "instance", InstanceEventsTable, sizeof(InstanceEventsTable) / sizeof(InstanceEventsTable[0])},
     };
+    static constexpr size_t HookMegaTableSize = sizeof(HookMegaTable) / sizeof(HookMegaTable[0]);
 };
 
 #endif // _HOOKS_H
