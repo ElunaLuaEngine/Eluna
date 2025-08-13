@@ -399,7 +399,7 @@ struct HookStorage
 class HookToReadableString
 {
 public:
-    static const HookStorage* getHooks() { return HookMegaTable; }
+    static std::pair<const HookStorage*, size_t> getHooks() { return {HookMegaTable, sizeof(HookMegaTable) / sizeof(HookMegaTable[0])}; }
 
 private:
     static constexpr EventEntry PacketEventsTable[] = {
