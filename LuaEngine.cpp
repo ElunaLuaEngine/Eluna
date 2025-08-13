@@ -127,22 +127,8 @@ void Eluna::OpenLua()
     // Register methods and functions
     RegisterMethods(this);
 
-    // Register event ID globals
-    lua_newtable(L); 
-    auto [hookData, hookCount] = HookToReadableString::getHooks();
-    for (size_t i = 0; i < hookCount; ++i) {
-        const HookStorage& hs = hookData[i];
-
-        lua_newtable(L); // subtable for category
-
-        for (size_t j = 0; j < hs.eventCount; ++j) {
-            lua_pushinteger(L, hs.events[j].id);
-            lua_setfield(L, -2, hs.events[j].name);
-        }
-
-        lua_setfield(L, -2, hs.category); // events[category] = subtable
-    }
-    lua_setglobal(L, "events");
+    // Register event ID lookup table
+    RegisterHookGlobals(L);
 
     // get require paths
     const std::string& requirepath = sElunaLoader->GetRequirePath();
@@ -202,6 +188,25 @@ void Eluna::DestroyBindStores()
 {
     for (auto& binding : bindingMaps)
         binding.reset();
+}
+
+void Eluna::RegisterHookGlobals(lua_State* _L)
+{
+    lua_newtable(_L); 
+    auto [hookData, hookCount] = HookToReadableString::getHooks();
+    for (size_t i = 0; i < hookCount; ++i) {
+        const HookStorage& hs = hookData[i];
+
+        lua_newtable(_L); // subtable for category
+
+        for (size_t j = 0; j < hs.eventCount; ++j) {
+            lua_pushinteger(_L, hs.events[j].id);
+            lua_setfield(_L, -2, hs.events[j].name);
+        }
+
+        lua_setfield(_L, -2, hs.category); // events[category] = subtable
+    }
+    lua_setglobal(_L, "events");
 }
 
 void Eluna::RunScripts()
