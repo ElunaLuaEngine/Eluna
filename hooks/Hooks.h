@@ -12,65 +12,6 @@
 #endif
 #include <utility>
 
-/*
- * A hook should be written in one of the following forms:
- *
- * A. If results will be IGNORED:
- *
- *     // Return early if there are no bindings.
- *     if (!WhateverBindings->HasBindingsFor(SOME_EVENT_TYPE))
- *         return;
- *
- *     // Lock out any other threads.
- *     LOCK_ELUNA;
- *
- *     // Push extra arguments, if any.
- *     Push(a);
- *     Push(b);
- *     Push(c);
- *
- *     // Call all event handlers.
- *     CallAllFunctions(WhateverBindings, SOME_EVENT_TYPE);
- *
- *
- * B. If results will be USED:
- *
- *     // Return early if there are no bindings.
- *     if (!WhateverBindings->HasBindingsFor(SOME_EVENT_TYPE))
- *          return;
- *
- *     // Lock out any other threads.
- *     LOCK_ELUNA;
- *
- *     // Push extra arguments, if any.
- *     Push(a);
- *     Push(b);
- *     Push(c);
- *
- *     // Setup the stack and get the number of functions pushed.
- *     // Last argument is 3 because we did 3 Pushes.
- *     int n = SetupStack(WhateverBindings, SOME_EVENT_TYPE, 3);
- *
- *     // Call each event handler in order and check results.
- *     while (n > 0)
- *     {
- *         // Call an event handler and decrement the function counter afterward.
- *         // Second-last argument is 3 because we did 3 Pushes.
- *         // Last argument is 2 because we want 2 results.
- *         int r = CallOneFunction(n--, 3, 2);
- *
- *         // Results can be popped using `r`.
- *         int first = CHECKVAL<int>(L, r + 0);
- *         int second = CHECKVAL<int>(L, r + 1);
- *
- *         // Pop the results off the stack.
- *         lua_pop(L, 2);
- *     }
- *
- *     // Clean-up the stack. Argument is 3 because we did 3 Pushes.
- *     CleanUpStack(3);
- */
-
 namespace Hooks
 {
     enum RegisterTypes : uint8
@@ -383,6 +324,7 @@ namespace Hooks
     };
 
 };
+
 struct EventEntry
 {
     uint8 id;
@@ -403,217 +345,216 @@ public:
 
 private:
     static constexpr EventEntry PacketEventsTable[] = {
-        {Hooks::PACKET_EVENT_ON_PACKET_RECEIVE,"receive"},
-        {Hooks::PACKET_EVENT_ON_PACKET_RECEIVE_UNKNOWN,"receive_unknown"},
-        {Hooks::PACKET_EVENT_ON_PACKET_SEND,"packet_send"}
+        {Hooks::PACKET_EVENT_ON_PACKET_RECEIVE,                 "on_receive"},
+        {Hooks::PACKET_EVENT_ON_PACKET_RECEIVE_UNKNOWN,         "on_receive_unk"},
+        {Hooks::PACKET_EVENT_ON_PACKET_SEND,                    "on_send"}
     };
 
     static constexpr EventEntry ServerEventsTable[] = {
-        {Hooks::SERVER_EVENT_ON_NETWORK_START,"network_start"},
-        {Hooks::SERVER_EVENT_ON_NETWORK_STOP,"network_stop"},
-        {Hooks::SERVER_EVENT_ON_SOCKET_OPEN,"socket_open"},
-        {Hooks::SERVER_EVENT_ON_SOCKET_CLOSE,"socket_close"},
-        {Hooks::SERVER_EVENT_ON_PACKET_RECEIVE,"packet_receive"},
-        {Hooks::SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN,"packet_receive_unknown"},
-        {Hooks::SERVER_EVENT_ON_PACKET_SEND,"packet_send"},
-        {Hooks::WORLD_EVENT_ON_OPEN_STATE_CHANGE,"open_state_change"},
-        {Hooks::WORLD_EVENT_ON_CONFIG_LOAD,"config_load"},
-        {Hooks::WORLD_EVENT_ON_SHUTDOWN_INIT,"shutdown_init"},
-        {Hooks::WORLD_EVENT_ON_SHUTDOWN_CANCEL,"shutdown_cancel"},
-        {Hooks::WORLD_EVENT_ON_UPDATE,"world_update"},
-        {Hooks::WORLD_EVENT_ON_STARTUP,"world_startup"},
-        {Hooks::WORLD_EVENT_ON_SHUTDOWN,"world_shutdown"},
-        {Hooks::ELUNA_EVENT_ON_LUA_STATE_CLOSE,"eluna_lua_state_close"},
-        {Hooks::MAP_EVENT_ON_CREATE,"map_create"},
-        {Hooks::MAP_EVENT_ON_DESTROY,"map_destroy"},
-        {Hooks::MAP_EVENT_ON_GRID_LOAD,"map_grid_load"},
-        {Hooks::MAP_EVENT_ON_GRID_UNLOAD,"map_grid_unload"},
-        {Hooks::MAP_EVENT_ON_PLAYER_ENTER,"map_player_enter"},
-        {Hooks::MAP_EVENT_ON_PLAYER_LEAVE,"map_player_leave"},
-        {Hooks::MAP_EVENT_ON_UPDATE,"map_update"},
-        {Hooks::TRIGGER_EVENT_ON_TRIGGER,"trigger_trigger"},
-        {Hooks::WEATHER_EVENT_ON_CHANGE,"weather_change"},
-        {Hooks::AUCTION_EVENT_ON_ADD,"auction_add"},
-        {Hooks::AUCTION_EVENT_ON_REMOVE,"auction_remove"},
-        {Hooks::AUCTION_EVENT_ON_SUCCESSFUL,"auction_successful"},
-        {Hooks::AUCTION_EVENT_ON_EXPIRE,"auction_expire"},
-        {Hooks::ADDON_EVENT_ON_MESSAGE,"addon_message"},
-        {Hooks::WORLD_EVENT_ON_DELETE_CREATURE,"world_delete_creature"},
-        {Hooks::WORLD_EVENT_ON_DELETE_GAMEOBJECT,"world_delete_gameobject"},
-        {Hooks::ELUNA_EVENT_ON_LUA_STATE_OPEN,"eluna_lua_state_open"},
-        {Hooks::GAME_EVENT_START,"game_start"},
-        {Hooks::GAME_EVENT_STOP,"game_stop"}
+        {Hooks::SERVER_EVENT_ON_NETWORK_START,                  "on_network_start"},
+        {Hooks::SERVER_EVENT_ON_NETWORK_STOP,                   "on_network_stop"},
+        {Hooks::SERVER_EVENT_ON_SOCKET_OPEN,                    "on_socket_open"},
+        {Hooks::SERVER_EVENT_ON_SOCKET_CLOSE,                   "on_socket_close"},
+        {Hooks::SERVER_EVENT_ON_PACKET_RECEIVE,                 "on_packet_receive"},
+        {Hooks::SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN,         "on_packet_receive_unk"},
+        {Hooks::SERVER_EVENT_ON_PACKET_SEND,                    "on_packet_send"},
+        {Hooks::WORLD_EVENT_ON_OPEN_STATE_CHANGE,               "on_open_state_change"},
+        {Hooks::WORLD_EVENT_ON_CONFIG_LOAD,                     "on_config_load"},
+        {Hooks::WORLD_EVENT_ON_SHUTDOWN_INIT,                   "on_shutdown_init"},
+        {Hooks::WORLD_EVENT_ON_SHUTDOWN_CANCEL,                 "on_shutdown_cancel"},
+        {Hooks::WORLD_EVENT_ON_UPDATE,                          "on_world_update"},
+        {Hooks::WORLD_EVENT_ON_STARTUP,                         "on_world_startup"},
+        {Hooks::WORLD_EVENT_ON_SHUTDOWN,                        "on_world_shutdown"},
+        {Hooks::ELUNA_EVENT_ON_LUA_STATE_CLOSE,                 "on_lua_state_close"},
+        {Hooks::MAP_EVENT_ON_CREATE,                            "on_map_create"},
+        {Hooks::MAP_EVENT_ON_DESTROY,                           "on_map_destroy"},
+        {Hooks::MAP_EVENT_ON_GRID_LOAD,                         "on_map_grid_load"},
+        {Hooks::MAP_EVENT_ON_GRID_UNLOAD,                       "on_map_grid_unload"},
+        {Hooks::MAP_EVENT_ON_PLAYER_ENTER,                      "on_map_player_enter"},
+        {Hooks::MAP_EVENT_ON_PLAYER_LEAVE,                      "on_map_player_leave"},
+        {Hooks::MAP_EVENT_ON_UPDATE,                            "on_map_update"},
+        {Hooks::TRIGGER_EVENT_ON_TRIGGER,                       "on_event_trigger"},
+        {Hooks::WEATHER_EVENT_ON_CHANGE,                        "on_weather_change"},
+        {Hooks::AUCTION_EVENT_ON_ADD,                           "on_auction_add"},
+        {Hooks::AUCTION_EVENT_ON_REMOVE,                        "on_auction_remove"},
+        {Hooks::AUCTION_EVENT_ON_SUCCESSFUL,                    "on_auction_successful"},
+        {Hooks::AUCTION_EVENT_ON_EXPIRE,                        "on_auction_expire"},
+        {Hooks::ADDON_EVENT_ON_MESSAGE,                         "on_addon_message"},
+        {Hooks::WORLD_EVENT_ON_DELETE_CREATURE,                 "on_world_delete_creature"},
+        {Hooks::WORLD_EVENT_ON_DELETE_GAMEOBJECT,               "on_world_delete_gameobject"},
+        {Hooks::ELUNA_EVENT_ON_LUA_STATE_OPEN,                  "on_lua_state_open"},
+        {Hooks::GAME_EVENT_START,                               "on_game_start"},
+        {Hooks::GAME_EVENT_STOP,                                "on_game_stop"}
     };
 
     static constexpr EventEntry PlayerEventsTable[] = {
-        {Hooks::PLAYER_EVENT_ON_CHARACTER_CREATE,"character_create"},
-        {Hooks::PLAYER_EVENT_ON_CHARACTER_DELETE,"character_delete"},
-        {Hooks::PLAYER_EVENT_ON_LOGIN,"login"},
-        {Hooks::PLAYER_EVENT_ON_LOGOUT,"logout"},
-        {Hooks::PLAYER_EVENT_ON_SPELL_CAST,"spell_cast"},
-        {Hooks::PLAYER_EVENT_ON_KILL_PLAYER,"kill_player"},
-        {Hooks::PLAYER_EVENT_ON_KILL_CREATURE,"kill_creature"},
-        {Hooks::PLAYER_EVENT_ON_KILLED_BY_CREATURE,"killed_by_creature"},
-        {Hooks::PLAYER_EVENT_ON_DUEL_REQUEST,"duel_request"},
-        {Hooks::PLAYER_EVENT_ON_DUEL_START,"duel_start"},
-        {Hooks::PLAYER_EVENT_ON_DUEL_END,"duel_end"},
-        {Hooks::PLAYER_EVENT_ON_GIVE_XP,"give_xp"},
-        {Hooks::PLAYER_EVENT_ON_LEVEL_CHANGE,"level_change"},
-        {Hooks::PLAYER_EVENT_ON_MONEY_CHANGE,"money_change"},
-        {Hooks::PLAYER_EVENT_ON_REPUTATION_CHANGE,"reputation_change"},
-        {Hooks::PLAYER_EVENT_ON_TALENTS_CHANGE,"talents_change"},
-        {Hooks::PLAYER_EVENT_ON_TALENTS_RESET,"talents_reset"},
-        {Hooks::PLAYER_EVENT_ON_CHAT,"chat"},
-        {Hooks::PLAYER_EVENT_ON_WHISPER,"whisper"},
-        {Hooks::PLAYER_EVENT_ON_GROUP_CHAT,"group_chat"},
-        {Hooks::PLAYER_EVENT_ON_GUILD_CHAT,"guild_chat"},
-        {Hooks::PLAYER_EVENT_ON_CHANNEL_CHAT,"channel_chat"},
-        {Hooks::PLAYER_EVENT_ON_EMOTE,"emote"},
-        {Hooks::PLAYER_EVENT_ON_TEXT_EMOTE,"text_emote"},
-        {Hooks::PLAYER_EVENT_ON_SAVE,"save"},
-        {Hooks::PLAYER_EVENT_ON_BIND_TO_INSTANCE,"bind_to_instance"},
-        {Hooks::PLAYER_EVENT_ON_UPDATE_ZONE,"update_zone"},
-        {Hooks::PLAYER_EVENT_ON_MAP_CHANGE,"map_change"},
-        {Hooks::PLAYER_EVENT_ON_EQUIP,"equip"},
-        {Hooks::PLAYER_EVENT_ON_FIRST_LOGIN,"first_login"},
-        {Hooks::PLAYER_EVENT_ON_CAN_USE_ITEM,"can_use_item"},
-        {Hooks::PLAYER_EVENT_ON_LOOT_ITEM,"loot_item"},
-        {Hooks::PLAYER_EVENT_ON_ENTER_COMBAT,"enter_combat"},
-        {Hooks::PLAYER_EVENT_ON_LEAVE_COMBAT,"leave_combat"},
-        {Hooks::PLAYER_EVENT_ON_REPOP,"repop"},
-        {Hooks::PLAYER_EVENT_ON_RESURRECT,"resurrect"},
-        {Hooks::PLAYER_EVENT_ON_LOOT_MONEY,"loot_money"},
-        {Hooks::PLAYER_EVENT_ON_QUEST_ABANDON,"quest_abandon"},
-        {Hooks::PLAYER_EVENT_ON_LEARN_TALENTS,"learn_talents"},
-        {Hooks::PLAYER_EVENT_ON_ENVIRONMENTAL_DEATH,"environmental_death"},
-        {Hooks::PLAYER_EVENT_ON_TRADE_ACCEPT,"trade_accept"},
-        {Hooks::PLAYER_EVENT_ON_COMMAND,"command"},
-        {Hooks::PLAYER_EVENT_ON_SKILL_CHANGE,"skill_change"},
-        {Hooks::PLAYER_EVENT_ON_LEARN_SPELL,"learn_spell"},
-        {Hooks::PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE,"achievement_complete"},
-        {Hooks::PLAYER_EVENT_ON_DISCOVER_AREA,"discover_area"},
-        {Hooks::PLAYER_EVENT_ON_UPDATE_AREA,"update_area"},
-        {Hooks::PLAYER_EVENT_ON_TRADE_INIT,"trade_init"},
-        {Hooks::PLAYER_EVENT_ON_SEND_MAIL,"send_mail"},
-        {Hooks::PLAYER_EVENT_ON_QUEST_STATUS_CHANGED,"quest_status_changed"}
+        {Hooks::PLAYER_EVENT_ON_CHARACTER_CREATE,               "on_character_create"},
+        {Hooks::PLAYER_EVENT_ON_CHARACTER_DELETE,               "on_character_delete"},
+        {Hooks::PLAYER_EVENT_ON_LOGIN,                          "on_login"},
+        {Hooks::PLAYER_EVENT_ON_LOGOUT,                         "on_logout"},
+        {Hooks::PLAYER_EVENT_ON_SPELL_CAST,                     "on_spell_cast"},
+        {Hooks::PLAYER_EVENT_ON_KILL_PLAYER,                    "on_kill_player"},
+        {Hooks::PLAYER_EVENT_ON_KILL_CREATURE,                  "on_kill_creature"},
+        {Hooks::PLAYER_EVENT_ON_KILLED_BY_CREATURE,             "on_killed_by_creature"},
+        {Hooks::PLAYER_EVENT_ON_DUEL_REQUEST,                   "on_duel_request"},
+        {Hooks::PLAYER_EVENT_ON_DUEL_START,                     "on_duel_start"},
+        {Hooks::PLAYER_EVENT_ON_DUEL_END,                       "on_duel_end"},
+        {Hooks::PLAYER_EVENT_ON_GIVE_XP,                        "on_give_xp"},
+        {Hooks::PLAYER_EVENT_ON_LEVEL_CHANGE,                   "on_level_change"},
+        {Hooks::PLAYER_EVENT_ON_MONEY_CHANGE,                   "on_money_change"},
+        {Hooks::PLAYER_EVENT_ON_REPUTATION_CHANGE,              "on_reputation_change"},
+        {Hooks::PLAYER_EVENT_ON_TALENTS_CHANGE,                 "on_talents_change"},
+        {Hooks::PLAYER_EVENT_ON_TALENTS_RESET,                  "on_talents_reset"},
+        {Hooks::PLAYER_EVENT_ON_CHAT,                           "on_chat"},
+        {Hooks::PLAYER_EVENT_ON_WHISPER,                        "on_whisper"},
+        {Hooks::PLAYER_EVENT_ON_GROUP_CHAT,                     "on_group_chat"},
+        {Hooks::PLAYER_EVENT_ON_GUILD_CHAT,                     "on_guild_chat"},
+        {Hooks::PLAYER_EVENT_ON_CHANNEL_CHAT,                   "on_channel_chat"},
+        {Hooks::PLAYER_EVENT_ON_EMOTE,                          "on_emote"},
+        {Hooks::PLAYER_EVENT_ON_TEXT_EMOTE,                     "on_text_emote"},
+        {Hooks::PLAYER_EVENT_ON_SAVE,                           "on_save"},
+        {Hooks::PLAYER_EVENT_ON_BIND_TO_INSTANCE,               "on_bind_to_instance"},
+        {Hooks::PLAYER_EVENT_ON_UPDATE_ZONE,                    "on_update_zone"},
+        {Hooks::PLAYER_EVENT_ON_MAP_CHANGE,                     "on_map_change"},
+        {Hooks::PLAYER_EVENT_ON_EQUIP,                          "on_equip"},
+        {Hooks::PLAYER_EVENT_ON_FIRST_LOGIN,                    "on_first_login"},
+        {Hooks::PLAYER_EVENT_ON_CAN_USE_ITEM,                   "on_can_use_item"},
+        {Hooks::PLAYER_EVENT_ON_LOOT_ITEM,                      "on_loot_item"},
+        {Hooks::PLAYER_EVENT_ON_ENTER_COMBAT,                   "on_enter_combat"},
+        {Hooks::PLAYER_EVENT_ON_LEAVE_COMBAT,                   "on_leave_combat"},
+        {Hooks::PLAYER_EVENT_ON_REPOP,                          "on_repop"},
+        {Hooks::PLAYER_EVENT_ON_RESURRECT,                      "on_resurrect"},
+        {Hooks::PLAYER_EVENT_ON_LOOT_MONEY,                     "on_loot_money"},
+        {Hooks::PLAYER_EVENT_ON_QUEST_ABANDON,                  "on_quest_abandon"},
+        {Hooks::PLAYER_EVENT_ON_LEARN_TALENTS,                  "on_learn_talents"},
+        {Hooks::PLAYER_EVENT_ON_ENVIRONMENTAL_DEATH,            "on_environmental_death"},
+        {Hooks::PLAYER_EVENT_ON_TRADE_ACCEPT,                   "on_trade_accept"},
+        {Hooks::PLAYER_EVENT_ON_COMMAND,                        "on_command"},
+        {Hooks::PLAYER_EVENT_ON_SKILL_CHANGE,                   "on_skill_change"},
+        {Hooks::PLAYER_EVENT_ON_LEARN_SPELL,                    "on_learn_spell"},
+        {Hooks::PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE,           "on_achievement_complete"},
+        {Hooks::PLAYER_EVENT_ON_DISCOVER_AREA,                  "on_discover_area"},
+        {Hooks::PLAYER_EVENT_ON_UPDATE_AREA,                    "on_update_area"},
+        {Hooks::PLAYER_EVENT_ON_TRADE_INIT,                     "on_trade_init"},
+        {Hooks::PLAYER_EVENT_ON_SEND_MAIL,                      "on_send_mail"},
+        {Hooks::PLAYER_EVENT_ON_QUEST_STATUS_CHANGED,           "on_quest_status_changed"}
     };
 
     static constexpr EventEntry GuildEventsTable[] = {
-        {Hooks::GUILD_EVENT_ON_ADD_MEMBER,"add_member"},
-        {Hooks::GUILD_EVENT_ON_REMOVE_MEMBER,"remove_member"},
-        {Hooks::GUILD_EVENT_ON_MOTD_CHANGE,"motd_change"},
-        {Hooks::GUILD_EVENT_ON_INFO_CHANGE,"info_change"},
-        {Hooks::GUILD_EVENT_ON_CREATE,"create"},
-        {Hooks::GUILD_EVENT_ON_DISBAND,"disband"},
-        {Hooks::GUILD_EVENT_ON_MONEY_WITHDRAW,"money_withdraw"},
-        {Hooks::GUILD_EVENT_ON_MONEY_DEPOSIT,"money_deposit"},
-        {Hooks::GUILD_EVENT_ON_ITEM_MOVE,"item_move"},
-        {Hooks::GUILD_EVENT_ON_EVENT,"event"},
-        {Hooks::GUILD_EVENT_ON_BANK_EVENT,"bank_event"}
+        {Hooks::GUILD_EVENT_ON_ADD_MEMBER,                      "on_add_member"},
+        {Hooks::GUILD_EVENT_ON_REMOVE_MEMBER,                   "on_remove_member"},
+        {Hooks::GUILD_EVENT_ON_MOTD_CHANGE,                     "on_motd_change"},
+        {Hooks::GUILD_EVENT_ON_INFO_CHANGE,                     "on_info_change"},
+        {Hooks::GUILD_EVENT_ON_CREATE,                          "on_create"},
+        {Hooks::GUILD_EVENT_ON_DISBAND,                         "on_disband"},
+        {Hooks::GUILD_EVENT_ON_MONEY_WITHDRAW,                  "on_money_withdraw"},
+        {Hooks::GUILD_EVENT_ON_MONEY_DEPOSIT,                   "on_money_deposit"},
+        {Hooks::GUILD_EVENT_ON_ITEM_MOVE,                       "on_item_move"},
+        {Hooks::GUILD_EVENT_ON_EVENT,                           "on_event"},
+        {Hooks::GUILD_EVENT_ON_BANK_EVENT,                      "on_bank_event"}
     };
 
     static constexpr EventEntry GroupEventsTable[] = {
-        {Hooks::GROUP_EVENT_ON_MEMBER_ADD,"member_add"},
-        {Hooks::GROUP_EVENT_ON_MEMBER_INVITE,"member_invite"},
-        {Hooks::GROUP_EVENT_ON_MEMBER_REMOVE,"member_remove"},
-        {Hooks::GROUP_EVENT_ON_LEADER_CHANGE,"leader_change"},
-        {Hooks::GROUP_EVENT_ON_DISBAND,"disband"},
-        {Hooks::GROUP_EVENT_ON_CREATE,"create"},
-        {Hooks::GROUP_EVENT_ON_MEMBER_ACCEPT,"member_accept"},
+        {Hooks::GROUP_EVENT_ON_MEMBER_ADD,                      "on_add_member"},
+        {Hooks::GROUP_EVENT_ON_MEMBER_INVITE,                   "on_invite_member"},
+        {Hooks::GROUP_EVENT_ON_MEMBER_REMOVE,                   "on_remove_member"},
+        {Hooks::GROUP_EVENT_ON_LEADER_CHANGE,                   "on_leader_change"},
+        {Hooks::GROUP_EVENT_ON_DISBAND,                         "on_disband"},
+        {Hooks::GROUP_EVENT_ON_CREATE,                          "on_create"},
+        {Hooks::GROUP_EVENT_ON_MEMBER_ACCEPT,                   "on_member_accept"},
     };
 
     static constexpr EventEntry VehicleEventsTable[] = {
-        {Hooks::VEHICLE_EVENT_ON_INSTALL,"install"},
-        {Hooks::VEHICLE_EVENT_ON_UNINSTALL,"uninstall"},
-        {Hooks::VEHICLE_EVENT_ON_INSTALL_ACCESSORY,"install_accessory"},
-        {Hooks::VEHICLE_EVENT_ON_ADD_PASSENGER,"add_passenger"},
-        {Hooks::VEHICLE_EVENT_ON_REMOVE_PASSENGER,"remove_passenger"}
+        {Hooks::VEHICLE_EVENT_ON_INSTALL,                       "on_install"},
+        {Hooks::VEHICLE_EVENT_ON_UNINSTALL,                     "on_uninstall"},
+        {Hooks::VEHICLE_EVENT_ON_INSTALL_ACCESSORY,             "on_install_accessory"},
+        {Hooks::VEHICLE_EVENT_ON_ADD_PASSENGER,                 "on_add_passenger"},
+        {Hooks::VEHICLE_EVENT_ON_REMOVE_PASSENGER,              "on_remove_passenger"}
     };
 
     static constexpr EventEntry CreatureEventsTable[] = {
-        {Hooks::CREATURE_EVENT_ON_ENTER_COMBAT,"enter_combat"},
-        {Hooks::CREATURE_EVENT_ON_LEAVE_COMBAT,"leave_combat"},
-        {Hooks::CREATURE_EVENT_ON_TARGET_DIED,"target_died"},
-        {Hooks::CREATURE_EVENT_ON_DIED,"died"},
-        {Hooks::CREATURE_EVENT_ON_SPAWN,"spawn"},
-        {Hooks::CREATURE_EVENT_ON_REACH_WP,"reach_wp"},
-        {Hooks::CREATURE_EVENT_ON_AIUPDATE,"aiupdate"},
-        {Hooks::CREATURE_EVENT_ON_RECEIVE_EMOTE,"receive_emote"},
-        {Hooks::CREATURE_EVENT_ON_DAMAGE_TAKEN,"damage_taken"},
-        {Hooks::CREATURE_EVENT_ON_PRE_COMBAT,"pre_combat"},
-        {Hooks::CREATURE_EVENT_ON_OWNER_ATTACKED,"owner_attacked"},
-        {Hooks::CREATURE_EVENT_ON_OWNER_ATTACKED_AT,"owner_attacked_at"},
-        {Hooks::CREATURE_EVENT_ON_HIT_BY_SPELL,"hit_by_spell"},
-        {Hooks::CREATURE_EVENT_ON_SPELL_HIT_TARGET,"spell_hit_target"},
-        {Hooks::CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE,"just_summoned_creature"},
-        {Hooks::CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN,"summoned_creature_despawn"},
-        {Hooks::CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED,"summoned_creature_died"},
-        {Hooks::CREATURE_EVENT_ON_SUMMONED,"summoned"},
-        {Hooks::CREATURE_EVENT_ON_RESET,"reset"},
-        {Hooks::CREATURE_EVENT_ON_REACH_HOME,"reach_home"},
-        {Hooks::CREATURE_EVENT_ON_CORPSE_REMOVED,"corpse_removed"},
-        {Hooks::CREATURE_EVENT_ON_MOVE_IN_LOS,"move_in_los"},
-        {Hooks::CREATURE_EVENT_ON_DUMMY_EFFECT,"dummy_effect"},
-        {Hooks::CREATURE_EVENT_ON_QUEST_ACCEPT,"quest_accept"},
-        {Hooks::CREATURE_EVENT_ON_QUEST_REWARD,"quest_reward"},
-        {Hooks::CREATURE_EVENT_ON_DIALOG_STATUS,"dialog_status"},
-        {Hooks::CREATURE_EVENT_ON_ADD,"add"},
-        {Hooks::CREATURE_EVENT_ON_REMOVE,"remove"}
+        {Hooks::CREATURE_EVENT_ON_ENTER_COMBAT,                 "on_enter_combat"},
+        {Hooks::CREATURE_EVENT_ON_LEAVE_COMBAT,                 "on_leave_combat"},
+        {Hooks::CREATURE_EVENT_ON_TARGET_DIED,                  "on_target_died"},
+        {Hooks::CREATURE_EVENT_ON_DIED,                         "on_died"},
+        {Hooks::CREATURE_EVENT_ON_SPAWN,                        "on_spawn"},
+        {Hooks::CREATURE_EVENT_ON_REACH_WP,                     "on_reach_wp"},
+        {Hooks::CREATURE_EVENT_ON_AIUPDATE,                     "on_ai_update"},
+        {Hooks::CREATURE_EVENT_ON_RECEIVE_EMOTE,                "on_receive_emote"},
+        {Hooks::CREATURE_EVENT_ON_DAMAGE_TAKEN,                 "on_damage_taken"},
+        {Hooks::CREATURE_EVENT_ON_PRE_COMBAT,                   "on_pre_combat"},
+        {Hooks::CREATURE_EVENT_ON_OWNER_ATTACKED,               "on_owner_attacked"},
+        {Hooks::CREATURE_EVENT_ON_OWNER_ATTACKED_AT,            "on_owner_attacked_at"},
+        {Hooks::CREATURE_EVENT_ON_HIT_BY_SPELL,                 "on_hit_by_spell"},
+        {Hooks::CREATURE_EVENT_ON_SPELL_HIT_TARGET,             "on_spell_hit_target"},
+        {Hooks::CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE,       "on_just_summoned_creature"},
+        {Hooks::CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN,    "on_summoned_creature_despawn"},
+        {Hooks::CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED,       "on_summoned_creature_died"},
+        {Hooks::CREATURE_EVENT_ON_SUMMONED,                     "on_summoned"},
+        {Hooks::CREATURE_EVENT_ON_RESET,                        "on_reset"},
+        {Hooks::CREATURE_EVENT_ON_REACH_HOME,                   "on_reach_home"},
+        {Hooks::CREATURE_EVENT_ON_CORPSE_REMOVED,               "on_corpse_removed"},
+        {Hooks::CREATURE_EVENT_ON_MOVE_IN_LOS,                  "on_move_in_los"},
+        {Hooks::CREATURE_EVENT_ON_DUMMY_EFFECT,                 "on_dummy_effect"},
+        {Hooks::CREATURE_EVENT_ON_QUEST_ACCEPT,                 "on_quest_accept"},
+        {Hooks::CREATURE_EVENT_ON_QUEST_REWARD,                 "on_quest_reward"},
+        {Hooks::CREATURE_EVENT_ON_DIALOG_STATUS,                "on_dialog_status"},
+        {Hooks::CREATURE_EVENT_ON_ADD,                          "on_add"},
+        {Hooks::CREATURE_EVENT_ON_REMOVE,                       "on_remove"}
     };
 
     static constexpr EventEntry GameObjectEventsTable[] = {
-        {Hooks::GAMEOBJECT_EVENT_ON_AIUPDATE,"aiupdate"},
-        {Hooks::GAMEOBJECT_EVENT_ON_SPAWN,"spawn"},
-        {Hooks::GAMEOBJECT_EVENT_ON_DUMMY_EFFECT,"dummy_effect"},
-        {Hooks::GAMEOBJECT_EVENT_ON_QUEST_ACCEPT,"quest_accept"},
-        {Hooks::GAMEOBJECT_EVENT_ON_QUEST_REWARD,"quest_reward"},
-        {Hooks::GAMEOBJECT_EVENT_ON_DIALOG_STATUS,"dialog_status"},
-        {Hooks::GAMEOBJECT_EVENT_ON_DESTROYED,"destroyed"},
-        {Hooks::GAMEOBJECT_EVENT_ON_DAMAGED,"damaged"},
-        {Hooks::GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE,"loot_state_change"},
-        {Hooks::GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED,"go_state_changed"},
-        {Hooks::GAMEOBJECT_EVENT_ON_ADD,"add"},
-        {Hooks::GAMEOBJECT_EVENT_ON_REMOVE,"remove"},
-        {Hooks::GAMEOBJECT_EVENT_ON_USE,"use"}
+        {Hooks::GAMEOBJECT_EVENT_ON_AIUPDATE,                   "on_ai_update"},
+        {Hooks::GAMEOBJECT_EVENT_ON_SPAWN,                      "on_spawn"},
+        {Hooks::GAMEOBJECT_EVENT_ON_DUMMY_EFFECT,               "on_dummy_effect"},
+        {Hooks::GAMEOBJECT_EVENT_ON_QUEST_ACCEPT,               "on_quest_accept"},
+        {Hooks::GAMEOBJECT_EVENT_ON_QUEST_REWARD,               "on_quest_reward"},
+        {Hooks::GAMEOBJECT_EVENT_ON_DIALOG_STATUS,              "on_dialog_status"},
+        {Hooks::GAMEOBJECT_EVENT_ON_DESTROYED,                  "on_destroyed"},
+        {Hooks::GAMEOBJECT_EVENT_ON_DAMAGED,                    "on_damaged"},
+        {Hooks::GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE,          "on_loot_state_change"},
+        {Hooks::GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED,           "on_go_state_changed"},
+        {Hooks::GAMEOBJECT_EVENT_ON_ADD,                        "on_add"},
+        {Hooks::GAMEOBJECT_EVENT_ON_REMOVE,                     "on_remove"},
+        {Hooks::GAMEOBJECT_EVENT_ON_USE,                        "on_use"}
     };
 
     static constexpr EventEntry SpellEventsTable[] = {
-        {Hooks::SPELL_EVENT_ON_CAST,"spell_cast"}
+        {Hooks::SPELL_EVENT_ON_CAST,                            "on_cast"}
     };
 
     static constexpr EventEntry ItemEventsTable[] = {
-        {Hooks::ITEM_EVENT_ON_DUMMY_EFFECT,"dummy_effect"},
-        {Hooks::ITEM_EVENT_ON_USE,"use"},
-        {Hooks::ITEM_EVENT_ON_QUEST_ACCEPT,"quest_accept"},
-        {Hooks::ITEM_EVENT_ON_EXPIRE,"expire"},
-        {Hooks::ITEM_EVENT_ON_REMOVE,"remove"},
-        {Hooks::ITEM_EVENT_ON_ADD,"add"},
-        {Hooks::ITEM_EVENT_ON_EQUIP,"equip"},
-        {Hooks::ITEM_EVENT_ON_UNEQUIP,"unequip"}
+        {Hooks::ITEM_EVENT_ON_DUMMY_EFFECT,                     "on_dummy_effect"},
+        {Hooks::ITEM_EVENT_ON_USE,                              "on_use"},
+        {Hooks::ITEM_EVENT_ON_QUEST_ACCEPT,                     "on_quest_accept"},
+        {Hooks::ITEM_EVENT_ON_EXPIRE,                           "on_expire"},
+        {Hooks::ITEM_EVENT_ON_REMOVE,                           "on_remove"},
+        {Hooks::ITEM_EVENT_ON_ADD,                              "on_add"},
+        {Hooks::ITEM_EVENT_ON_EQUIP,                            "on_equip"},
+        {Hooks::ITEM_EVENT_ON_UNEQUIP,                          "on_unequip"}
     };
 
     static constexpr EventEntry GossipEventsTable[] = {
-        {Hooks::GOSSIP_EVENT_ON_HELLO,"hello"},
-        {Hooks::GOSSIP_EVENT_ON_SELECT,"select"}
+        {Hooks::GOSSIP_EVENT_ON_HELLO,                          "on_hello"},
+        {Hooks::GOSSIP_EVENT_ON_SELECT,                         "on_select"}
     };
 
     static constexpr EventEntry BGEventsTable[] = {
-        {Hooks::BG_EVENT_ON_START,"start"},
-        {Hooks::BG_EVENT_ON_END,"end"},
-        {Hooks::BG_EVENT_ON_CREATE,"create"},
-        {Hooks::BG_EVENT_ON_PRE_DESTROY,"pre_destroy"}
+        {Hooks::BG_EVENT_ON_START,                              "on_start"},
+        {Hooks::BG_EVENT_ON_END,                                "on_end"},
+        {Hooks::BG_EVENT_ON_CREATE,                             "on_create"},
+        {Hooks::BG_EVENT_ON_PRE_DESTROY,                        "on_pre_destroy"}
     };
 
     static constexpr EventEntry InstanceEventsTable[] = {
-        {Hooks::INSTANCE_EVENT_ON_INITIALIZE,"initialize"},
-        {Hooks::INSTANCE_EVENT_ON_LOAD,"load"},
-        {Hooks::INSTANCE_EVENT_ON_UPDATE,"update"},
-        {Hooks::INSTANCE_EVENT_ON_PLAYER_ENTER,"player_enter"},
-        {Hooks::INSTANCE_EVENT_ON_CREATURE_CREATE,"creature_create"},
-        {Hooks::INSTANCE_EVENT_ON_GAMEOBJECT_CREATE,"gameobject_create"},
-        {Hooks::INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS,"check_encounter_in_progress"}
+        {Hooks::INSTANCE_EVENT_ON_INITIALIZE,                   "on_initialize"},
+        {Hooks::INSTANCE_EVENT_ON_LOAD,                         "on_load"},
+        {Hooks::INSTANCE_EVENT_ON_UPDATE,                       "on_update"},
+        {Hooks::INSTANCE_EVENT_ON_PLAYER_ENTER,                 "on_player_enter"},
+        {Hooks::INSTANCE_EVENT_ON_CREATURE_CREATE,              "on_creature_create"},
+        {Hooks::INSTANCE_EVENT_ON_GAMEOBJECT_CREATE,            "on_gameobject_create"},
+        {Hooks::INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS,  "on_check_encounter_in_progress"}
     };
-
 
     static constexpr HookStorage HookMegaTable[] =
     {
@@ -631,7 +572,6 @@ private:
         { "bg", BGEventsTable, sizeof(BGEventsTable) / sizeof(BGEventsTable[0])},
         { "instance", InstanceEventsTable, sizeof(InstanceEventsTable) / sizeof(InstanceEventsTable[0])},
     };
-
 };
 
 #endif // _HOOKS_H
