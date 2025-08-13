@@ -16,6 +16,7 @@
 #include "ElunaUtility.h"
 #include "ElunaCreatureAI.h"
 #include "ElunaInstanceAI.h"
+#include "Hooks.h"
 
 extern "C"
 {
@@ -126,6 +127,22 @@ void Eluna::OpenLua()
     // Register methods and functions
     RegisterMethods(this);
 
+    lua_newtable(L); // events
+    auto hookData = HookToReadableString::getHooks();
+    for (size_t i = 0; i < sizeof(hookData) / sizeof(hookData[0]); ++i) {
+        const HookStorage& hs = hookData[i];
+
+        lua_newtable(L); // subtable for category
+
+        for (size_t j = 0; j < hs.eventCount; ++j) {
+            lua_pushinteger(L, hs.events[j].id);
+            lua_setfield(L, -2, hs.events[j].name);
+        }
+
+        lua_setfield(L, -2, hs.category); // events[category] = subtable
+    }
+
+    lua_setglobal(L, "events");
     // get require paths
     const std::string& requirepath = sElunaLoader->GetRequirePath();
     const std::string& requirecpath = sElunaLoader->GetRequireCPath();
