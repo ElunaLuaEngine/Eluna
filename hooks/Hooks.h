@@ -546,6 +546,7 @@ private:
         {Hooks::BG_EVENT_ON_PRE_DESTROY,                        "on_pre_destroy"}
     };
 
+
     static constexpr EventEntry InstanceEventsTable[] = {
         {Hooks::INSTANCE_EVENT_ON_INITIALIZE,                   "on_initialize"},
         {Hooks::INSTANCE_EVENT_ON_LOAD,                         "on_load"},
@@ -570,6 +571,7 @@ private:
         { "item", ItemEventsTable, sizeof(ItemEventsTable) / sizeof(ItemEventsTable[0])},
         { "gossip", GossipEventsTable, sizeof(GossipEventsTable) / sizeof(GossipEventsTable[0])},
         { "bg", BGEventsTable, sizeof(BGEventsTable) / sizeof(BGEventsTable[0])},
+        { "map", InstanceEventsTable, sizeof(InstanceEventsTable) / sizeof(InstanceEventsTable[0])},
         { "instance", InstanceEventsTable, sizeof(InstanceEventsTable) / sizeof(InstanceEventsTable[0])},
     };
     static constexpr size_t HookTypeTableSize = sizeof(HookTypeTable) / sizeof(HookTypeTable[0]);
