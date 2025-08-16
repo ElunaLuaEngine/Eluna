@@ -195,6 +195,7 @@ private:
     void CloseLua();
     void DestroyBindStores();
     void CreateBindStores();
+    void RegisterHookGlobals(lua_State* _L);
 #if !defined TRACKABLE_PTR_NAMESPACE
     void InvalidateObjects();
 #endif
