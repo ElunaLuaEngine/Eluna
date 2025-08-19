@@ -35,7 +35,7 @@ namespace LuaBattleGround
     {
         uint32 team = E->CHECKVAL<uint32>(2);
 
-        E->Push(bg->GetAlivePlayersCountByTeam((Team)team));
+        E->Push(bg->GetAlivePlayersCountByTeam((TeamId)team));
         return 1;
     }
 
@@ -96,7 +96,7 @@ namespace LuaBattleGround
     {
         uint32 team = E->CHECKVAL<uint32>(2);
 
-        E->Push(bg->GetFreeSlotsForTeam((Team)team));
+        E->Push(bg->GetFreeSlotsForTeam((TeamId)team));
         return 1;
     }
 
@@ -129,7 +129,7 @@ namespace LuaBattleGround
      */
     int GetTypeId(Eluna* E, BattleGround* bg)
     {
-        E->Push(bg->GetTypeID());
+        E->Push(bg->GetBgTypeID());
         return 1;
     }
 
@@ -162,7 +162,7 @@ namespace LuaBattleGround
      */
     int GetMaxPlayers(Eluna* E, BattleGround* bg)
     {
-        E->Push(bg->GetMaxPlayers());
+        E->Push(bg->GetMaxPlayersPerTeam() * 2);
         return 1;
     }
 
@@ -173,7 +173,7 @@ namespace LuaBattleGround
      */
     int GetMinPlayers(Eluna* E, BattleGround* bg)
     {
-        E->Push(bg->GetMinPlayers());
+        E->Push(bg->GetMaxPlayersPerTeam() * 2);
         return 1;
     }
 

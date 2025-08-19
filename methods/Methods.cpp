@@ -19,7 +19,6 @@
 #include "PlayerMethods.h"
 #include "CreatureMethods.h"
 #include "GameObjectMethods.h"
-#if !defined ELUNA_AZEROTHCORE
 #include "GroupMethods.h"
 #include "GuildMethods.h"
 #include "ElunaQueryMethods.h"
@@ -34,7 +33,6 @@
 #include "BattleGroundMethods.h"
 #include "BigIntMethods.h"
 #include "CustomMethodsInterface.h"
-#endif
 
 void RegisterMethods(Eluna* E)
 {
@@ -67,17 +65,16 @@ void RegisterMethods(Eluna* E)
     ElunaTemplate<GameObject>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<GameObject>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<GameObject>::SetMethods(E, LuaGameObject::GameObjectMethods);
-#if !defined ELUNA_AZEROTHCORE
-
+    
     ElunaTemplate<Corpse>::Register(E, "Corpse");
     ElunaTemplate<Corpse>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<Corpse>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<Corpse>::SetMethods(E, LuaCorpse::CorpseMethods);
-
+    
     ElunaTemplate<Item>::Register(E, "Item");
     ElunaTemplate<Item>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<Item>::SetMethods(E, LuaItem::ItemMethods);
-
+    
 #if ELUNA_EXPANSION >= EXP_WOTLK
     ElunaTemplate<Vehicle>::Register(E, "Vehicle");
     ElunaTemplate<Vehicle>::SetMethods(E, LuaVehicle::VehicleMethods);
@@ -122,5 +119,4 @@ void RegisterMethods(Eluna* E)
     LuaCustom::RegisterCustomMethods(E);
 
     LuaVal::Register(E->L);
-#endif
 }
