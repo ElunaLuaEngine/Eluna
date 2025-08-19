@@ -356,14 +356,14 @@ void ElunaLoader::ReloadElunaForMap(int mapId)
     if (mapId != RELOAD_CACHE_ONLY)
     {
         if (mapId == RELOAD_GLOBAL_STATE || mapId == RELOAD_ALL_STATES)
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
             if (Eluna* e = sWorld->GetEluna())
 #else
             if (Eluna* e = sWorld.GetEluna())
 #endif
                 e->ReloadEluna();
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
         sMapMgr->DoForAllMaps([&](Map* map)
 #else
         sMapMgr.DoForAllMaps([&](Map* map)

@@ -26,7 +26,11 @@
 #include "GuildMgr.h"
 #include "Language.h"
 #include "Mail.h"
+#if defined ELUNA_AZEROTHCORE
+#include "MapMgr.h"
+#else
 #include "MapManager.h"
+#endif
 #include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "Opcodes.h"
@@ -40,7 +44,7 @@
 #include "TemporarySummon.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 #include "Battleground.h"
 #include "Config.h"
 #include "DatabaseEnv.h"
@@ -49,12 +53,14 @@
 #include "MiscPackets.h"
 #include "MotionMaster.h"
 #include "ScriptedCreature.h"
-#include "SpellHistory.h"
+#if defined ELUNA_TRINITY
+    #include "SpellHistory.h"
+#endif
 #include "SpellInfo.h"
 #include "WeatherMgr.h"
 #elif defined ELUNA_VMANGOS
 #include "BasicAI.h"
-#include "SQLStorages.h"
+#include "SQLStorages.h" 
 #elif defined ELUNA_MANGOS
 #include "SQLStorages.h"
 #endif  // ELUNA_TRINITY
@@ -109,7 +115,7 @@
 #endif
 #endif
 
-#if !defined ELUNA_TRINITY
+#if !defined ELUNA_TRINITY && !defined ELUNA_AZEROTHCORE
 #include "Config/Config.h"
 #include "BattleGroundMgr.h"
 #if !defined ELUNA_MANGOS
@@ -154,7 +160,12 @@ typedef Opcodes OpcodesList;
 #define REGEN_TIME_FULL
 #endif
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_AZEROTHCORE
+#define CORE_NAME               "AzerothCore"
+#define REGEN_TIME_FULL
+#endif
+
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 #define CORE_VERSION            (GitRevision::GetFullVersion())
 #define eWorld                  (sWorld)
 #define eMapMgr                 (sMapMgr)

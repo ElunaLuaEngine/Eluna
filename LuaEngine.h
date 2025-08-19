@@ -12,25 +12,25 @@
 #include "Hooks.h"
 
 #if !defined ELUNA_CMANGOS
-#include "DBCEnums.h"
-#include "Group.h"
-#include "Item.h"
-#include "Map.h"
-#include "SharedDefines.h"
-#include "Weather.h"
-#include "World.h"
-#if defined ELUNA_VMANGOS
-#include "Player.h"
-#endif
+    #include "DBCEnums.h"
+    #include "Group.h"
+    #include "Item.h"
+    #include "Map.h"
+    #include "SharedDefines.h"
+    #include "Weather.h"
+    #include "World.h"
+    #if defined ELUNA_VMANGOS
+        #include "Player.h"
+    #endif
 #else
-#include "Entities/Item.h"
-#include "Globals/SharedDefines.h"
-#include "Groups/Group.h"
-#include "Maps/Map.h"
-#include "Server/DBCEnums.h"
-#include "Weather/Weather.h"
-#include "World/World.h"
-#include "Entities/Player.h"
+    #include "Entities/Item.h"
+    #include "Globals/SharedDefines.h"
+    #include "Groups/Group.h"
+    #include "Maps/Map.h"
+    #include "Server/DBCEnums.h"
+    #include "Weather/Weather.h"
+    #include "World/World.h"
+    #include "Entities/Player.h"
 #endif
 
 #include <mutex>
@@ -59,10 +59,12 @@ class SpellCastTargets;
 class Unit;
 class Weather;
 class WorldPacket;
+#if !defined ELUNA_AZEROTHCORE
 struct AreaTriggerEntry;
+#endif
 struct AuctionEntry;
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 class Battleground;
 class GameObjectAI;
 class InstanceScript;
@@ -72,6 +74,9 @@ struct ItemTemplate;
 typedef Battleground BattleGround;
 typedef BattlegroundTypeId BattleGroundTypeId;
 typedef InstanceScript InstanceData;
+#if defined ELUNA_AZEROTHCORE
+typedef AreaTrigger AreaTriggerEntry;
+#endif
 #else
 class InstanceData;
 struct ItemPrototype;
@@ -141,6 +146,8 @@ enum MethodFlags : uint32
 #if defined ELUNA_TRINITY
 #define ELUNA_GAME_API TC_GAME_API
 #define TRACKABLE_PTR_NAMESPACE ::Trinity::
+#elif defined ELUNA_AZEROTHCORE
+#define ELUNA_GAME_API AC_GAME_API
 #else
 #define ELUNA_GAME_API
 #if defined ELUNA_CMANGOS
@@ -246,7 +253,7 @@ private:
     template<typename T>
     void HookPush(T const* ptr)                     { Push(ptr); ++push_counter; }
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     QueryCallbackProcessor queryProcessor;
 #endif
 public:
@@ -254,7 +261,7 @@ public:
     lua_State* L;
     std::unique_ptr<EventMgr> eventMgr;
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     QueryCallbackProcessor& GetQueryProcessor() { return queryProcessor; }
 #endif
 

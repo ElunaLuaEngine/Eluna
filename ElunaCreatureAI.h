@@ -12,7 +12,7 @@
 #include "AI/BaseAI/CreatureAI.h"
 #endif
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 struct ScriptedAI;
 typedef ScriptedAI NativeScriptedAI;
 #elif defined ELUNA_CMANGOS || ELUNA_MANGOS
@@ -29,8 +29,8 @@ struct ElunaCreatureAI : NativeScriptedAI
     bool justSpawned;
     // used to delay movementinform hook (WP hook)
     std::vector< std::pair<uint32, uint32> > movepoints;
-#if !defined ELUNA_TRINITY
-#define me  m_creature
+#if !defined ELUNA_TRINITY && !defined ELUNA_AZEROTHCORE
+    #define me  m_creature
 #endif
     ElunaCreatureAI(Creature* creature) : NativeScriptedAI(creature), justSpawned(true)
     {
@@ -73,7 +73,7 @@ struct ElunaCreatureAI : NativeScriptedAI
         }
     }
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     // Called for reaction when initially engaged - this will always happen _after_ JustEnteredCombat
     // Called at creature aggro either by MoveInLOS or Attack Start
     void JustEngagedWith(Unit* target) override
@@ -94,6 +94,8 @@ struct ElunaCreatureAI : NativeScriptedAI
     // Called at any Damage from any attacker (before damage apply)
 #if defined ELUNA_TRINITY || defined ELUNA_CMANGOS 
     void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damageType, SpellInfo const* spellInfo) override
+#elif defined ELUNA_AZEROTHCORE
+    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
 #else
     void DamageTaken(Unit* attacker, uint32& damage) override
 #endif
@@ -102,6 +104,8 @@ struct ElunaCreatureAI : NativeScriptedAI
         {
 #if defined ELUNA_TRINITY || defined ELUNA_CMANGOS
             NativeScriptedAI::DamageTaken(attacker, damage, damageType, spellInfo);
+#elif defined ELUNA_AZEROTHCORE
+            NativeScriptedAI::DamageTaken(attacker, damage, damagetype, damageSchoolMask);
 #else
             NativeScriptedAI::DamageTaken(attacker, damage);
 #endif
@@ -151,7 +155,7 @@ struct ElunaCreatureAI : NativeScriptedAI
             NativeScriptedAI::AttackStart(target);
     }
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     // Called for reaction at stopping attack at no attackers or targets
     void EnterEvadeMode(EvadeReason /*why*/) override
 #else
@@ -199,7 +203,7 @@ struct ElunaCreatureAI : NativeScriptedAI
             NativeScriptedAI::CorpseRemoved(respawnDelay);
     }
 
-#if !defined ELUNA_TRINITY && !defined ELUNA_VMANGOS
+#if !defined ELUNA_TRINITY && !defined ELUNA_VMANGOS && !defined ELUNA_AZEROTHCORE
     // Enables use of MoveInLineOfSight
     bool IsVisible(Unit* who) const override
     {
@@ -237,7 +241,7 @@ struct ElunaCreatureAI : NativeScriptedAI
             NativeScriptedAI::SpellHitTarget(target, spell);
     }
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     // Called when the creature is summoned successfully by other creature
     void IsSummonedBy(WorldObject* summoner) override
     {
@@ -266,7 +270,7 @@ struct ElunaCreatureAI : NativeScriptedAI
     }
 #endif
 
-#if !defined ELUNA_TRINITY
+#if !defined ELUNA_TRINITY && !defined ELUNA_AZEROTHCORE
 #undef me
 #endif
 };

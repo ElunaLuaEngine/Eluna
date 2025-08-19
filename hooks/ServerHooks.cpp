@@ -115,6 +115,8 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
     HookPush(pPlayer);
 #if defined ELUNA_TRINITY
     HookPush(pTrigger->ID);
+#elif defined ELUNA_AZEROTHCORE
+    HookPush(pTrigger->entry);
 #else
     HookPush(pTrigger->id);
 #endif
@@ -135,10 +137,17 @@ void Eluna::OnChange(Weather* /*weather*/, uint32 zone, WeatherState state, floa
 // Auction House
 void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
+#if defined ELUNA_AZEROTHCORE
+    Player* owner = eObjectAccessor()FindPlayer(entry->owner);
+#else
     Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+#endif
 
 #if defined ELUNA_TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+    uint32 expiretime = entry->expire_time;
+#elif defined ELUNA_AZEROTHCORE
+    Item* item = eAuctionMgr->GetAItem(entry->item_guid);
     uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
@@ -162,16 +171,22 @@ void Eluna::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 
 void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
+#if defined ELUNA_AZEROTHCORE
+    Player* owner = eObjectAccessor()FindPlayer(entry->owner);
+#else
     Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+#endif
 
 #if defined ELUNA_TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+    uint32 expiretime = entry->expire_time;
+#elif defined ELUNA_AZEROTHCORE
+    Item* item = eAuctionMgr->GetAItem(entry->item_guid);
     uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
     uint32 expiretime = entry->expireTime;
 #endif
-
 
     if (!owner || !item)
         return;
@@ -190,10 +205,17 @@ void Eluna::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 
 void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
+#if defined ELUNA_AZEROTHCORE
+    Player* owner = eObjectAccessor()FindPlayer(entry->owner);
+#else
     Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+#endif
 
 #if defined ELUNA_TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+    uint32 expiretime = entry->expire_time;
+#elif defined ELUNA_AZEROTHCORE
+    Item* item = eAuctionMgr->GetAItem(entry->item_guid);
     uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);
@@ -217,10 +239,17 @@ void Eluna::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 
 void Eluna::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
 {
+#if defined ELUNA_AZEROTHCORE
+    Player* owner = eObjectAccessor()FindPlayer(entry->owner);
+#else
     Player* owner = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(entry->owner, 0, HIGHGUID_PLAYER));
+#endif
 
 #if defined ELUNA_TRINITY
     Item* item = eAuctionMgr->GetAItem(entry->itemGUIDLow);
+    uint32 expiretime = entry->expire_time;
+#elif defined ELUNA_AZEROTHCORE
+    Item* item = eAuctionMgr->GetAItem(entry->item_guid);
     uint32 expiretime = entry->expire_time;
 #else
     Item* item = eAuctionMgr->GetAItem(entry->itemGuidLow);

@@ -12,6 +12,7 @@
 #include "ElunaUtility.h"
 
 // Method includes
+#if !defined ELUNA_AZEROTHCORE
 #include "GlobalMethods.h"
 #include "ObjectMethods.h"
 #include "WorldObjectMethods.h"
@@ -33,9 +34,11 @@
 #include "BattleGroundMethods.h"
 #include "BigIntMethods.h"
 #include "CustomMethodsInterface.h"
+#endif
 
 void RegisterMethods(Eluna* E)
 {
+#if !defined ELUNA_AZEROTHCORE
     ElunaTemplate<>::SetMethods(E, LuaGlobalFunctions::GlobalMethods);
 
     ElunaTemplate<Object>::Register(E, "Object");
@@ -120,4 +123,5 @@ void RegisterMethods(Eluna* E)
     LuaCustom::RegisterCustomMethods(E);
 
     LuaVal::Register(E->L);
+#endif
 }
