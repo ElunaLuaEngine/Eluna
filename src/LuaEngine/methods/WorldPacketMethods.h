@@ -174,6 +174,19 @@ namespace LuaPacket
     }
 
     /**
+     * Reads and returns an unsigned 64-bit integer value from the [WorldPacket].
+     *
+     * @return uint64 value : value returned as string
+     */
+    int ReadPackedGUID(lua_State* L, WorldPacket* packet)
+    {
+        uint64 guid;
+        packet->readPackGUID(guid);
+        Eluna::Push(L, guid);
+        return 1;
+    }
+	
+    /**
      * Reads and returns a string value from the [WorldPacket].
      *
      * @return string value
