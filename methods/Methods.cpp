@@ -12,16 +12,16 @@
 #include "ElunaUtility.h"
 
 // Method includes
-#if !defined ELUNA_AZEROTHCORE
 #include "GlobalMethods.h"
 #include "ObjectMethods.h"
 #include "WorldObjectMethods.h"
 #include "UnitMethods.h"
 #include "PlayerMethods.h"
 #include "CreatureMethods.h"
+#include "GameObjectMethods.h"
+#if !defined ELUNA_AZEROTHCORE
 #include "GroupMethods.h"
 #include "GuildMethods.h"
-#include "GameObjectMethods.h"
 #include "ElunaQueryMethods.h"
 #include "AuraMethods.h"
 #include "ItemMethods.h"
@@ -38,37 +38,36 @@
 
 void RegisterMethods(Eluna* E)
 {
-#if !defined ELUNA_AZEROTHCORE
     ElunaTemplate<>::SetMethods(E, LuaGlobalFunctions::GlobalMethods);
-
     ElunaTemplate<Object>::Register(E, "Object");
     ElunaTemplate<Object>::SetMethods(E, LuaObject::ObjectMethods);
-
+    
     ElunaTemplate<WorldObject>::Register(E, "WorldObject");
     ElunaTemplate<WorldObject>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<WorldObject>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
-
+    
     ElunaTemplate<Unit>::Register(E, "Unit");
     ElunaTemplate<Unit>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<Unit>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<Unit>::SetMethods(E, LuaUnit::UnitMethods);
-
+    
     ElunaTemplate<Player>::Register(E, "Player");
     ElunaTemplate<Player>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<Player>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<Player>::SetMethods(E, LuaUnit::UnitMethods);
     ElunaTemplate<Player>::SetMethods(E, LuaPlayer::PlayerMethods);
-
+    
     ElunaTemplate<Creature>::Register(E, "Creature");
     ElunaTemplate<Creature>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<Creature>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<Creature>::SetMethods(E, LuaUnit::UnitMethods);
     ElunaTemplate<Creature>::SetMethods(E, LuaCreature::CreatureMethods);
-
+    
     ElunaTemplate<GameObject>::Register(E, "GameObject");
     ElunaTemplate<GameObject>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<GameObject>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<GameObject>::SetMethods(E, LuaGameObject::GameObjectMethods);
+#if !defined ELUNA_AZEROTHCORE
 
     ElunaTemplate<Corpse>::Register(E, "Corpse");
     ElunaTemplate<Corpse>::SetMethods(E, LuaObject::ObjectMethods);

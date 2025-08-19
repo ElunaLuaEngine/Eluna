@@ -54,7 +54,10 @@
 #include "MotionMaster.h"
 #include "ScriptedCreature.h"
 #if defined ELUNA_TRINITY
-    #include "SpellHistory.h"
+#include "SpellHistory.h"
+#endif
+#if defined ELUNA_AZEROTHCORE
+#include "WorldSessionMgr.h"
 #endif
 #include "SpellInfo.h"
 #include "WeatherMgr.h"
@@ -168,10 +171,17 @@ typedef Opcodes OpcodesList;
 #if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 #define CORE_VERSION            (GitRevision::GetFullVersion())
 #define eWorld                  (sWorld)
+#if defined ELUNA_AZEROTHCORE
+#define eWorldSessionMgr        (sWorldSessionMgr)
+#endif
 #define eMapMgr                 (sMapMgr)
 #define eGuildMgr               (sGuildMgr)
 #define eObjectMgr              (sObjectMgr)
+#if defined ELUNA_AZEROTHCORE
+#define eAccountMgr()           AccountMgr::
+#else
 #define eAccountMgr             (sAccountMgr)
+#endif
 #define eAuctionMgr             (sAuctionMgr)
 #define eGameEventMgr           (sGameEventMgr)
 #define eObjectAccessor()       ObjectAccessor::
