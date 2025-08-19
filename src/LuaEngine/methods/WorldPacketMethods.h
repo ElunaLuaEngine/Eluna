@@ -174,7 +174,8 @@ namespace LuaPacket
     }
 
     /**
-     * Reads and returns an unsigned 64-bit integer value from the [WorldPacket].
+     * Reads a packed GUID from the [WorldPacket] and returns it as a full 64-bit integer.
+     * The packed data size varies (2-9 bytes), but always unpacks to a complete 64-bit GUID.
      *
      * @return uint64 value : value returned as string
      */
