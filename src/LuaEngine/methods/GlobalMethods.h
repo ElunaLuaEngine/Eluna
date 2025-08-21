@@ -469,6 +469,20 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Returns the byte size in bytes (2-9) of the ObjectGuid when packed.
+     *
+     * @param ObjectGuid guid : the ObjectGuid to get packed size for
+     * @return number size
+     */
+    int GetPackedGUIDSize(lua_State* L)
+    {
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 1);
+        PackedGuid packedGuid(guid);
+        Eluna::Push(L, static_cast<int>(packedGuid.size()));
+        return 1;
+    }
+
+    /**
      * Returns the area or zone's name.
      *
      *     enum LocaleConstant

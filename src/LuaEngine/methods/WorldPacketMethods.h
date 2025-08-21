@@ -213,6 +213,19 @@ namespace LuaPacket
     }
 
     /**
+     * Writes an ObjectGuid as packed GUID format to the [WorldPacket].
+     *
+     * @param ObjectGuid value : the ObjectGuid to be packed to the [WorldPacket]
+     */
+    int WritePackedGUID(lua_State* L, WorldPacket* packet)
+    {
+        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
+        PackedGuid packedGuid(guid);
+        (*packet) << packedGuid;
+        return 0;
+    }
+
+    /**
      * Writes a string to the [WorldPacket].
      *
      * @param string value : the string to be written to the [WorldPacket]
