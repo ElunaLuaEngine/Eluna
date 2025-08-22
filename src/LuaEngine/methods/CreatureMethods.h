@@ -435,6 +435,17 @@ namespace LuaCreature
     }
 
     /**
+    * Returns the spawn ID for this [Creature].
+    *
+    * @return uint32 spawnId
+    */
+    int GetSpawnId(lua_State* L, Creature* creature)
+    {
+        Eluna::Push(L, creature->GetSpawnId());
+        return 1;
+    }
+
+    /**
      * Returns the default movement type for this [Creature].
      *
      * @return [MovementGeneratorType] defaultMovementType
@@ -1131,6 +1142,18 @@ namespace LuaCreature
     int RemoveCorpse(lua_State* /*L*/, Creature* creature)
     {
         creature->RemoveCorpse();
+        return 0;
+    }
+
+    /**
+     * Sets the time it takes for the [Creature]'s corpse to despawn when killed.
+     *
+     * @param uint32 delay : the delay, in seconds
+     */
+    int SetCorpseDelay(lua_State* L, Creature* creature)
+    {
+        uint32 delay = Eluna::CHECKVAL<uint32>(L, 2);
+        creature->SetCorpseDelay(delay);
         return 0;
     }
 
