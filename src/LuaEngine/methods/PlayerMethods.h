@@ -1683,7 +1683,7 @@ namespace LuaPlayer
             {
                 if (mask & (1 << bit))
                 {
-                    uint8 nodeId = (i * 32) + bit + 1;
+                    uint32 nodeId = (i * 32) + bit + 1;
                     lua_pushinteger(L, nodeId);
                     lua_rawseti(L, -2, lua_rawlen(L, -2) + 1);
                 }
