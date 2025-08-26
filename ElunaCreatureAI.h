@@ -32,9 +32,16 @@ struct ElunaCreatureAI : NativeScriptedAI
 #if !defined ELUNA_TRINITY && !defined ELUNA_AZEROTHCORE
 #define me  m_creature
 #endif
+
+#if defined ELUNA_TRINITY && ELUNA_EXPANSION >= EXP_RETAIL
+    ElunaCreatureAI(Creature* creature, uint32 scriptId) : NativeScriptedAI(creature, scriptId), justSpawned(true)
+    {
+    }
+#else
     ElunaCreatureAI(Creature* creature) : NativeScriptedAI(creature), justSpawned(true)
     {
     }
+#endif
     ~ElunaCreatureAI() { }
 
     //Called at World update tick
