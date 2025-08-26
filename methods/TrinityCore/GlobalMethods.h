@@ -455,11 +455,8 @@ namespace LuaGlobalFunctions
     int GetItemLink(Eluna* E)
     {
         uint32 entry = E->CHECKVAL<uint32>(1);
-#if ELUNA_EXPANSION < EXP_RETAIL
         uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
-#else
-        LocaleConstant locale = static_cast<LocaleConstant>(E->CHECKVAL<uint8>(2, DEFAULT_LOCALE));
-#endif
+
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -475,7 +472,7 @@ namespace LuaGlobalFunctions
         std::ostringstream oss;
         oss << "|c" << std::hex << ItemQualityColors[temp->Quality] << std::dec <<
 #else
-        std::string name = temp->GetName(locale);
+        std::string name = temp->GetName(static_cast<LocaleConstant>(locale));
 
         std::ostringstream oss;
         oss << "|c" << std::hex << ItemQualityColors[temp->GetQuality()] << std::dec <<
