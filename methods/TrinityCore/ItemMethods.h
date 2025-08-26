@@ -956,7 +956,8 @@ namespace LuaItem
     int SetRandomProperty(Eluna* E, Item* item)
     {
         uint32 randomPropId = E->CHECKVAL<uint32>(2);
-        item->SetItemRandomProperties(randomPropId);
+        //item->SetBonuses(randomPropId);
+        //item->SetItemRandomProperties(randomPropId);
         return 0;
     }
 
@@ -968,7 +969,7 @@ namespace LuaItem
     int SetRandomSuffix(Eluna* E, Item* item)
     {
         uint32 randomPropId = E->CHECKVAL<uint32>(2);
-        item->SetItemRandomProperties(-(int32)randomPropId);
+        //item->SetItemRandomProperties(-(int32)randomPropId);
         return 0;
     }
 
