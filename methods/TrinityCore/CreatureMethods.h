@@ -177,10 +177,7 @@ namespace LuaCreature
 #if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(creature->CanWalk());
 #else
-        if (!creature->IsAquatic())
-            E->Push(true);
-        else
-            E->Push(false);
+        E->Push(!creature->IsAquatic());
 #endif
         return 1;
     }
@@ -998,8 +995,7 @@ namespace LuaCreature
 #if ELUNA_EXPANSION < EXP_RETAIL
         creature->SetUInt32Value(UNIT_NPC_FLAGS, flags);
 #else
-        NPCFlags npcFlags = static_cast<NPCFlags>(flags);
-        creature->SetNpcFlag(npcFlags);
+        creature->SetNpcFlag((NPCFlags)flags);
 #endif
         return 0;
     }
@@ -1078,7 +1074,6 @@ namespace LuaCreature
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Equips given [Item]s to the [Unit]. Using 0 removes the equipped [Item]
      *
@@ -1092,12 +1087,17 @@ namespace LuaCreature
         uint32 off_hand = E->CHECKVAL<uint32>(3);
         uint32 ranged = E->CHECKVAL<uint32>(4);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0, main_hand);
         creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, off_hand);
         creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, ranged);
+#else
+        creature->SetVirtualItem(0, main_hand);
+        creature->SetVirtualItem(1, off_hand);
+        creature->SetVirtualItem(2, ranged);
+#endif
         return 0;
     }
-#endif
 
     /**
      * Sets whether the [Creature] can be aggroed.
@@ -1522,11 +1522,7 @@ namespace LuaCreature
         { "SetDeathState", &LuaCreature::SetDeathState },
         { "SetWalk", &LuaCreature::SetWalk },
         { "SetHomePosition", &LuaCreature::SetHomePosition },
-#if ELUNA_EXPANSION < EXP_RETAIL
         { "SetEquipmentSlots", &LuaCreature::SetEquipmentSlots },
-#else
-        { "SetEquipmentSlots", METHOD_REG_NONE },
-#endif
 
         // Boolean
         { "IsRegeneratingHealth", &LuaCreature::IsRegeneratingHealth },

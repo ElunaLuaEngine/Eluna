@@ -8,7 +8,7 @@
 #define CUSTOMMETHODSINT_H
 
 #ifdef ELUNA_USE_CUSTOM_METHODS
-    #include "CustomMethods.h"
+#include "CustomMethods.h"
 #else
 namespace LuaCustom
 {
