@@ -112,13 +112,15 @@ namespace LuaMap
     {
         float x = E->CHECKVAL<float>(2);
         float y = E->CHECKVAL<float>(3);
-        [[maybe_unused]] uint32 phasemask = E->CHECKVAL<uint32>(4, 1);
 
 #if ELUNA_EXPANSION < EXP_RETAIL
+        uint32 phasemask = E->CHECKVAL<uint32>(4, 1);
+
         float z = map->GetHeight(phasemask, x, y, MAX_HEIGHT);
 #else
-        PhaseShift phaseShift;
-        float z = map->GetHeight(phaseShift, x, y, MAX_HEIGHT);
+        PhaseShift* phasemask = E->CHECKOBJ<PhaseShift>(4, 1);
+
+        float z = map->GetHeight(*phasemask, x, y, MAX_HEIGHT);
 #endif
         if (z != INVALID_HEIGHT)
             E->Push(z);
@@ -191,10 +193,12 @@ namespace LuaMap
         float z = E->CHECKVAL<float>(4);
 #if ELUNA_EXPANSION < EXP_RETAIL
         float phasemask = E->CHECKVAL<uint32>(5, PHASEMASK_NORMAL);
+
         E->Push(map->GetAreaId(phasemask, x, y, z));
 #else
-        PhaseShift phaseShift;
-        E->Push(map->GetAreaId(phaseShift, x, y, z));
+        PhaseShift* phasemask = E->CHECKOBJ<PhaseShift>(5);
+
+        E->Push(map->GetAreaId(*phasemask, x, y, z));
 #endif
         return 1;
     }

@@ -79,6 +79,7 @@ void Eluna::OnDisband(Guild* guild)
     CallAllFunctions(binding, key);
 }
 
+#if ELUNA_EXPANSION < EXP_CATA
 void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_WITHDRAW);
@@ -106,35 +107,6 @@ void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, b
     CleanUpStack(4);
 }
 
-#if ELUNA_EXPANSION >= EXP_CATA
-void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair)
-{
-    START_HOOK(GUILD_EVENT_ON_MONEY_WITHDRAW);
-    HookPush(guild);
-    HookPush(player);
-    HookPush(amount);
-    HookPush(isRepair); // isRepair not a part of Mangos, implement?
-    int amountIndex = lua_gettop(L) - 1;
-    int n = SetupStack(binding, key, 4);
-
-    while (n > 0)
-    {
-        int r = CallOneFunction(n--, 4, 1);
-
-        if (lua_isnumber(L, r))
-        {
-            amount = CHECKVAL<uint32>(r);
-            // Update the stack for subsequent calls.
-            ReplaceArgument(amount, amountIndex);
-        }
-
-        lua_pop(L, 1);
-    }
-
-    CleanUpStack(4);
-}
-#endif
-
 void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_DEPOSIT);
@@ -160,8 +132,34 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount)
 
     CleanUpStack(3);
 }
+#else
+void Eluna::OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair)
+{
+    START_HOOK(GUILD_EVENT_ON_MONEY_WITHDRAW);
+    HookPush(guild);
+    HookPush(player);
+    HookPush(amount);
+    HookPush(isRepair); // isRepair not a part of Mangos, implement?
+    int amountIndex = lua_gettop(L) - 1;
+    int n = SetupStack(binding, key, 4);
 
-#if ELUNA_EXPANSION >= EXP_CATA
+    while (n > 0)
+    {
+        int r = CallOneFunction(n--, 4, 1);
+
+        if (lua_isnumber(L, r))
+        {
+            amount = CHECKVAL<uint64>(r);
+            // Update the stack for subsequent calls.
+            ReplaceArgument(amount, amountIndex);
+        }
+
+        lua_pop(L, 1);
+    }
+
+    CleanUpStack(4);
+}
+
 void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount)
 {
     START_HOOK(GUILD_EVENT_ON_MONEY_DEPOSIT);
@@ -177,7 +175,7 @@ void Eluna::OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount)
 
         if (lua_isnumber(L, r))
         {
-            amount = CHECKVAL<uint32>(r);
+            amount = CHECKVAL<uint64>(r);
             // Update the stack for subsequent calls.
             ReplaceArgument(amount, amountIndex);
         }

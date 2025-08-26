@@ -63,7 +63,7 @@ namespace LuaUnit
 #if ELUNA_EXPANSION < EXP_RETAIL
         unit->ApplySpellImmune(0, 5, immunity, apply);
 #else
-        unit->ApplySpellImmune(0, SpellImmunity(IMMUNITY_MECHANIC), immunity, apply);
+        unit->ApplySpellImmune(0, IMMUNITY_MECHANIC, immunity, apply);
 #endif
         return 0;
     }
@@ -1025,11 +1025,7 @@ namespace LuaUnit
      */
     int GetClassAsString(Eluna* E, Unit* unit)
     {
-#if ELUNA_EXPANSION < EXP_RETAIL
         uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
-#else
-        LocaleConstant locale = static_cast<LocaleConstant>(E->CHECKVAL<uint8>(2, DEFAULT_LOCALE));
-#endif
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -1037,7 +1033,11 @@ namespace LuaUnit
         if (!entry)
             return 1;
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(entry->Name[locale]);
+#else
+        E->Push(entry->Name.Str[locale]);
+#endif
         return 1;
     }
 
@@ -1061,11 +1061,7 @@ namespace LuaUnit
      */
     int GetRaceAsString(Eluna* E, Unit* unit)
     {
-#if ELUNA_EXPANSION < EXP_RETAIL
         uint8 locale = E->CHECKVAL<uint8>(2, DEFAULT_LOCALE);
-#else
-        LocaleConstant locale = static_cast<LocaleConstant>(E->CHECKVAL<uint8>(2, DEFAULT_LOCALE));
-#endif
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
@@ -1073,7 +1069,11 @@ namespace LuaUnit
         if (!entry)
             return 1;
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(entry->Name[locale]);
+#else
+        E->Push(entry->Name.Str[locale]);
+#endif
         return 1;
     }
 
@@ -1413,6 +1413,8 @@ namespace LuaUnit
             player->InitTalentForLevel();
 #if ELUNA_EXPANSION < EXP_RETAIL
             player->SetUInt32Value(PLAYER_XP, 0);
+#else
+            player->SetXP(0);
 #endif
         }
         else
@@ -1674,7 +1676,6 @@ namespace LuaUnit
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Sets the [Unit]'s FFA flag on or off.
      *
@@ -1686,15 +1687,27 @@ namespace LuaUnit
 
         if (apply)
         {
+#if ELUNA_EXPANSION < EXP_RETAIL
             unit->SetByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
             for (Unit::ControlList::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
                 (*itr)->SetByteValue(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
+#else
+            unit->SetPvpFlag(UNIT_BYTE2_FLAG_FFA_PVP);
+            for (Unit::ControlList::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
+                (*itr)->SetPvpFlag(UNIT_BYTE2_FLAG_FFA_PVP);
+#endif
         }
         else
         {
+#if ELUNA_EXPANSION < EXP_RETAIL
             unit->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
             for (Unit::ControlList::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
                 (*itr)->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
+#else
+            unit->RemovePvpFlag(UNIT_BYTE2_FLAG_FFA_PVP);
+            for (Unit::ControlList::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
+                (*itr)->RemovePvpFlag(UNIT_BYTE2_FLAG_FFA_PVP);
+#endif
         }
 
         return 0;
@@ -1711,16 +1724,23 @@ namespace LuaUnit
 
         if (apply)
         {
+#if ELUNA_EXPANSION < EXP_RETAIL
             unit->SetByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_SANCTUARY);
+#else
+            unit->SetPvpFlag(UNIT_BYTE2_FLAG_SANCTUARY);
+#endif
             unit->CombatStop();
             unit->CombatStopWithPets();
         }
         else
+#if ELUNA_EXPANSION < EXP_RETAIL
             unit->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_SANCTUARY);
+#else
+            unit->RemovePvpFlag(UNIT_BYTE2_FLAG_SANCTUARY);
+#endif
 
         return 0;
     }
-#endif
 
     /**
      * Sets the [Unit]s critter GUID field.
@@ -1850,7 +1870,6 @@ namespace LuaUnit
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Makes the [Unit] perform the given emote continuously.
      *
@@ -1860,10 +1879,13 @@ namespace LuaUnit
     {
         uint32 emoteId = E->CHECKVAL<uint32>(2);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         unit->SetUInt32Value(UNIT_NPC_EMOTESTATE, emoteId);
+#else
+        unit->SetEmoteState(Emote(emoteId));
+#endif
         return 0;
     }
-#endif
 
     /**
      * Returns calculated percentage from Health
@@ -2193,7 +2215,6 @@ namespace LuaUnit
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Casts the [Spell] at target [Unit] with custom basepoints or casters.
      * See also [Unit:CastSpell].
@@ -2232,13 +2253,16 @@ namespace LuaUnit
             args.TriggerFlags = TRIGGERED_FULL_MASK;
         if (castItem)
             args.SetCastItem(castItem);
+#if ELUNA_EXPANSION < EXP_RETAIL
         if (!originalCaster.IsEmpty())
+#else
+        if (&originalCaster)
+#endif
             args.SetOriginalCaster(originalCaster);
 
         unit->CastSpell(target, spell, args);
         return 0;
     }
-#endif
 
     /**
      * Makes the [Unit] cast the spell to the given coordinates, used for area effect spells.
@@ -2725,13 +2749,11 @@ namespace LuaUnit
         { "SetPvP", &LuaUnit::SetPvP },
 #if ELUNA_EXPANSION < EXP_RETAIL
         { "SetNativeDisplayId", &LuaUnit::SetNativeDisplayId },
-        { "SetFFA", &LuaUnit::SetFFA },
-        { "SetSanctuary", &LuaUnit::SetSanctuary },
 #else
         { "SetNativeDisplayId", METHOD_REG_NONE },
-        { "SetFFA", METHOD_REG_NONE },
-        { "SetSanctuary", METHOD_REG_NONE },
 #endif
+        { "SetFFA", &LuaUnit::SetFFA },
+        { "SetSanctuary", &LuaUnit::SetSanctuary },
         { "SetCanFly", &LuaUnit::SetCanFly },
         { "SetVisible", &LuaUnit::SetVisible },
         { "SetOwnerGUID", &LuaUnit::SetOwnerGUID },
@@ -2836,15 +2858,13 @@ namespace LuaUnit
         { "DealHeal", &LuaUnit::DealHeal },
         { "AddFlatStatModifier", &LuaUnit::AddFlatStatModifier },
         { "AddPctStatModifier", &LuaUnit::AddPctStatModifier },
-#if ELUNA_EXPANSION < EXP_RETAIL
-        { "CastCustomSpell", &LuaUnit::CastCustomSpell },
-        { "SendChatMessageToPlayer", &LuaUnit::SendChatMessageToPlayer },
         { "EmoteState", &LuaUnit::EmoteState },
+        { "CastCustomSpell", &LuaUnit::CastCustomSpell },
+#if ELUNA_EXPANSION < EXP_RETAIL
+        { "SendChatMessageToPlayer", &LuaUnit::SendChatMessageToPlayer },
         { "DealDamage", &LuaUnit::DealDamage },
 #else
-        { "CastCustomSpell", METHOD_REG_NONE },
         { "SendChatMessageToPlayer", METHOD_REG_NONE },
-        { "EmoteState", METHOD_REG_NONE },
         { "DealDamage", METHOD_REG_NONE },
 #endif
 

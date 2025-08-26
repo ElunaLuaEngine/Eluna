@@ -50,7 +50,7 @@ namespace LuaQuest
 #if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(quest->HasFlag(flag));
 #else
-        E->Push(quest->HasFlag(QuestFlags(flag)));
+        E->Push(quest->HasFlag(static_cast<QuestFlags>(flag)));
 #endif
         return 1;
     }
