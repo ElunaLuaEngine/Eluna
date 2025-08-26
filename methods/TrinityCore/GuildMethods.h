@@ -142,7 +142,7 @@ namespace LuaGuild
 #if ELUNA_EXPANSION < EXP_RETAIL
         guild->HandleSetNewGuildMaster(player->GetSession(), player->GetName());
 #else
-        guild->HandleSetNewGuildMaster(player->GetSession(), player->GetName());
+        guild->HandleSetNewGuildMaster(player->GetSession(), player->GetName(), false);
 #endif
         return 0;
     }
