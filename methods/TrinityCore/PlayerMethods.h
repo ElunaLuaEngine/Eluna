@@ -10,6 +10,7 @@
 #if ELUNA_EXPANSION == EXP_RETAIL
 #include "InstanceLockMgr.h"
 #include "RestMgr.h"
+#include "ChatPackets.h"
 #endif
 #include "LuaValue.h"
 #include "NPCPackets.h"
@@ -3621,20 +3622,21 @@ namespace LuaPlayer
      * @param [Player] receiver
      *
      */
-    int SendAddonMessage(Eluna* E, [[maybe_unused]] Player* player)
+    int SendAddonMessage(Eluna* E, Player* player)
     {
         std::string prefix = E->CHECKVAL<std::string>(2);
         std::string message = E->CHECKVAL<std::string>(3);
-        [[maybe_unused]] ChatMsg channel = ChatMsg(E->CHECKVAL<uint8>(4));
+        ChatMsg channel = ChatMsg(E->CHECKVAL<uint8>(4));
         Player* receiver = E->CHECKOBJ<Player>(5);
-        [[maybe_unused]] std::string fullmsg = prefix + "\t" + message;
+        std::string fullmsg = prefix + "\t" + message;
         [[maybe_unused]] WorldPacket data;
 #if ELUNA_EXPANSION < EXP_RETAIL
         ChatHandler::BuildChatPacket(data, channel, LANG_ADDON, player, receiver, fullmsg);
         receiver->GetSession()->SendPacket(&data);
 #else
-        Channel* chn;
-        chn->AddonSay(receiver->GetGUID(), prefix, message, false);
+        WorldPackets::Chat::Chat chat;
+        chat.Initialize(channel, LANG_ADDON, player, receiver, fullmsg, 0, "", DEFAULT_LOCALE, prefix);
+        receiver->GetSession()->SendPacket(chat.Write());
 #endif
         return 0;
     }

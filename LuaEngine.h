@@ -507,8 +507,9 @@ public:
     void OnLevelChanged(Player* pPlayer, uint8 oldLevel);
     void OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints);
     void OnTalentsReset(Player* pPlayer, bool noCost);
+#if ELUNA_EXPANSION < EXP_CATA
     void OnMoneyChanged(Player* pPlayer, int32& amount);
-#if ELUNA_EXPANSION >= EXP_CATA
+#else
     void OnMoneyChanged(Player* pPlayer, int64& amount);
 #endif
     void OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim);
@@ -570,9 +571,10 @@ public:
     void OnInfoChanged(Guild* guild, const std::string& newInfo);
     void OnCreate(Guild* guild, Player* leader, const std::string& name);
     void OnDisband(Guild* guild);
+#if ELUNA_EXPANSION < EXP_CATA
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair);
     void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount);
-#if ELUNA_EXPANSION >= EXP_CATA
+#else
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint64& amount, bool isRepair);
     void OnMemberDepositMoney(Guild* guild, Player* player, uint64& amount);
 #endif
