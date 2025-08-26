@@ -140,7 +140,7 @@ namespace LuaGuild
         Player* player = E->CHECKOBJ<Player>(2);
 
 #if ELUNA_EXPANSION < EXP_RETAIL
-        guild->HandleSetLeader(player->GetSession(), player->GetName());
+        guild->HandleSetNewGuildMaster(player->GetSession(), player->GetName());
 #else
         guild->HandleSetNewGuildMaster(player->GetSession(), player->GetName(), false);
 #endif
