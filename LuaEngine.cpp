@@ -970,7 +970,11 @@ CreatureAI* Eluna::GetAI(Creature* creature)
 
         if (CreatureEBindings->HasBindingsFor(entryKey) ||
             CreatureUBindings->HasBindingsFor(uniqueKey))
+#if defined ELUNA_TRINITY && ELUNA_EXPANSION >= EXP_RETAIL
+            return new ElunaCreatureAI(creature, sObjectMgr->GetScriptId("ElunaCreatureAI", false));
+#else
             return new ElunaCreatureAI(creature);
+#endif
     }
 
     return NULL;
