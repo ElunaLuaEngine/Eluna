@@ -23,6 +23,7 @@
 #include "HttpManager.h"
 #include "EventEmitter.h"
 #include "TicketMgr.h"
+#include "LootMgr.h"
 #include <mutex>
 #include <memory>
 
