@@ -16,10 +16,6 @@ endif()
 
 if (LUA_VERSION MATCHES "luajit")
   add_subdirectory(src/lualib/luajit)
-  set(LUAJIT_VERSION true)
 else()
   add_subdirectory(src/lualib/lua)
-  set(LUAJIT_VERSION false)
 endif()
-
-set_target_properties(lualib PROPERTIES INTERFACE_COMPILE_DEFINITIONS LUAJIT_VERSION)
