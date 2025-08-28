@@ -1,0 +1,14 @@
+name: Build mod-eluna with Lua54 🌙
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'main'
+  pull_request:
+
+jobs:
+  build_lua54:
+    uses: ./.github/workflows/core-build-base.yml
+    with:
+      lua_version: 'lua54'
