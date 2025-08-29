@@ -34,11 +34,9 @@
 #include <cstdint>
 #include "ElunaCompat.h"
 
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-}
+#if LUA_VERSION_NUM == 501 && !defined(luaL_setfuncs)
+    #define luaL_setfuncs(L, l, n) luaL_register(L, NULL, l)
+#endif
 
 #define MAR_TREF 1
 #define MAR_TVAL 2
