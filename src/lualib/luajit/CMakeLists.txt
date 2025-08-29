@@ -138,7 +138,7 @@ if (UNIX OR APPLE)
     add_custom_command(
       OUTPUT ${LUAJIT_LIB_PATH}
       # COMMAND $(MAKE) -C ${LUA_BIN_FOLDER} PREFIX=${LUA_INSTALL_PATH}
-      COMMAND $(MAKE) -C ${LUA_BIN_FOLDER} install PREFIX=${LUA_INSTALL_PATH} "CFLAGS=-O2 -fomit-frame-pointer -Wno-empty-body -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-sign-compare -Wno-string-plus-int"
+      COMMAND make -C ${LUA_BIN_FOLDER} install PREFIX=${LUA_INSTALL_PATH} "CFLAGS=-O2 -fomit-frame-pointer -Wno-empty-body -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-sign-compare -Wno-string-plus-int"
     )
   # endif()
   add_custom_target(luajit_target DEPENDS ${LUAJIT_LIB_PATH})
