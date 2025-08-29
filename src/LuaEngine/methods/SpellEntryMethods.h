@@ -1191,6 +1191,1068 @@ namespace LuaSpellEntry
         lua_settop(L, tbl); // push table to top of stack
         return 1;
     }
+
+    /**
+     * Sets the category for the [SpellEntry].
+     *
+     * @param uint32 category : the new category value
+     */
+    int SetCategory(lua_State* L, SpellEntry* entry)
+    {
+        uint32 category = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->Category = category;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->CategoryEntry = category ? sSpellCategoryStore.LookupEntry(category) : nullptr;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the dispel type for the [SpellEntry].
+     *
+     * @param uint32 dispel : the new dispel type value
+     */
+    int SetDispel(lua_State* L, SpellEntry* entry)
+    {
+        uint32 dispel = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->Dispel = dispel;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->Dispel = dispel;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the mechanic for the [SpellEntry].
+     *
+     * @param uint32 mechanic : the new mechanic value
+     */
+    int SetMechanic(lua_State* L, SpellEntry* entry)
+    {
+        uint32 mechanic = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->Mechanic = mechanic;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->Mechanic = mechanic;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the attributes for the [SpellEntry].
+     *
+     * @param uint32 attributes : the new attributes bitmask
+     */
+    int SetAttributes(lua_State* L, SpellEntry* entry)
+    {
+        uint32 attributes = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->Attributes = attributes;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->Attributes = attributes;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the attributesEx for the [SpellEntry].
+     *
+     * @param uint32 attributesEx : the new attributesEx bitmask
+     */
+    int SetAttributesEx(lua_State* L, SpellEntry* entry)
+    {
+        uint32 attributesEx = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->AttributesEx = attributesEx;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->AttributesEx = attributesEx;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the attributesEx2 for the [SpellEntry].
+     *
+     * @param uint32 attributesEx2 : the new attributesEx2 bitmask
+     */
+    int SetAttributesEx2(lua_State* L, SpellEntry* entry)
+    {
+        uint32 attributesEx2 = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->AttributesEx2 = attributesEx2;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->AttributesEx2 = attributesEx2;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the attributesEx3 for the [SpellEntry].
+     *
+     * @param uint32 attributesEx3 : the new attributesEx3 bitmask
+     */
+    int SetAttributesEx3(lua_State* L, SpellEntry* entry)
+    {
+        uint32 attributesEx3 = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->AttributesEx3 = attributesEx3;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->AttributesEx3 = attributesEx3;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the attributesEx4 for the [SpellEntry].
+     *
+     * @param uint32 attributesEx4 : the new attributesEx4 bitmask
+     */
+    int SetAttributesEx4(lua_State* L, SpellEntry* entry)
+    {
+        uint32 attributesEx4 = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->AttributesEx4 = attributesEx4;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->AttributesEx4 = attributesEx4;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the attributesEx5 for the [SpellEntry].
+     *
+     * @param uint32 attributesEx5 : the new attributesEx5 bitmask
+     */
+    int SetAttributesEx5(lua_State* L, SpellEntry* entry)
+    {
+        uint32 attributesEx5 = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->AttributesEx5 = attributesEx5;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->AttributesEx5 = attributesEx5;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the attributesEx6 for the [SpellEntry].
+     *
+     * @param uint32 attributesEx6 : the new attributesEx6 bitmask
+     */
+    int SetAttributesEx6(lua_State* L, SpellEntry* entry)
+    {
+        uint32 attributesEx6 = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->AttributesEx6 = attributesEx6;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->AttributesEx6 = attributesEx6;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the attributesEx7 for the [SpellEntry].
+     *
+     * @param uint32 attributesEx7 : the new attributesEx7 bitmask
+     */
+    int SetAttributesEx7(lua_State* L, SpellEntry* entry)
+    {
+        uint32 attributesEx7 = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->AttributesEx7 = attributesEx7;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->AttributesEx7 = attributesEx7;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the stances for the [SpellEntry].
+     *
+     * @param uint32 stances : the new stances bitmask
+     */
+    int SetStances(lua_State* L, SpellEntry* entry)
+    {
+        uint32 stances = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->Stances = stances;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->Stances = stances;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the stancesNot for the [SpellEntry].
+     *
+     * @param uint32 stancesNot : the new stancesNot bitmask
+     */
+    int SetStancesNot(lua_State* L, SpellEntry* entry)
+    {
+        uint32 stancesNot = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->StancesNot = stancesNot;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->StancesNot = stancesNot;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the targets for the [SpellEntry].
+     *
+     * @param uint32 targets : the new targets bitmask
+     */
+    int SetTargets(lua_State* L, SpellEntry* entry)
+    {
+        uint32 targets = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->Targets = targets;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->Targets = targets;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the target creature type for the [SpellEntry].
+     *
+     * @param uint32 targetCreatureType : the new target creature type bitmask
+     */
+    int SetTargetCreatureType(lua_State* L, SpellEntry* entry)
+    {
+        uint32 targetCreatureType = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->TargetCreatureType = targetCreatureType;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->TargetCreatureType = targetCreatureType;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the requires spell focus for the [SpellEntry].
+     *
+     * @param uint32 requiresSpellFocus : the new requires spell focus value
+     */
+    int SetRequiresSpellFocus(lua_State* L, SpellEntry* entry)
+    {
+        uint32 requiresSpellFocus = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->RequiresSpellFocus = requiresSpellFocus;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->RequiresSpellFocus = requiresSpellFocus;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the facing caster flags for the [SpellEntry].
+     *
+     * @param uint32 facingCasterFlags : the new facing caster flags value
+     */
+    int SetFacingCasterFlags(lua_State* L, SpellEntry* entry)
+    {
+        uint32 facingCasterFlags = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->FacingCasterFlags = facingCasterFlags;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->FacingCasterFlags = facingCasterFlags;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the caster aura state for the [SpellEntry].
+     *
+     * @param uint32 casterAuraState : the new caster aura state value
+     */
+    int SetCasterAuraState(lua_State* L, SpellEntry* entry)
+    {
+        uint32 casterAuraState = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->CasterAuraState = casterAuraState;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->CasterAuraState = casterAuraState;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the target aura state for the [SpellEntry].
+     *
+     * @param uint32 targetAuraState : the new target aura state value
+     */
+    int SetTargetAuraState(lua_State* L, SpellEntry* entry)
+    {
+        uint32 targetAuraState = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->TargetAuraState = targetAuraState;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->TargetAuraState = targetAuraState;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the caster aura state not for the [SpellEntry].
+     *
+     * @param uint32 casterAuraStateNot : the new caster aura state not value
+     */
+    int SetCasterAuraStateNot(lua_State* L, SpellEntry* entry)
+    {
+        uint32 casterAuraStateNot = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->CasterAuraStateNot = casterAuraStateNot;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->CasterAuraStateNot = casterAuraStateNot;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the target aura state not for the [SpellEntry].
+     *
+     * @param uint32 targetAuraStateNot : the new target aura state not value
+     */
+    int SetTargetAuraStateNot(lua_State* L, SpellEntry* entry)
+    {
+        uint32 targetAuraStateNot = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->TargetAuraStateNot = targetAuraStateNot;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->TargetAuraStateNot = targetAuraStateNot;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the caster aura spell for the [SpellEntry].
+     *
+     * @param uint32 casterAuraSpell : the new caster aura spell ID
+     */
+    int SetCasterAuraSpell(lua_State* L, SpellEntry* entry)
+    {
+        uint32 casterAuraSpell = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->CasterAuraSpell = casterAuraSpell;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->CasterAuraSpell = casterAuraSpell;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the target aura spell for the [SpellEntry].
+     *
+     * @param uint32 targetAuraSpell : the new target aura spell ID
+     */
+    int SetTargetAuraSpell(lua_State* L, SpellEntry* entry)
+    {
+        uint32 targetAuraSpell = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->TargetAuraSpell = targetAuraSpell;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->TargetAuraSpell = targetAuraSpell;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the exclude caster aura spell for the [SpellEntry].
+     *
+     * @param uint32 excludeCasterAuraSpell : the new exclude caster aura spell ID
+     */
+    int SetExcludeCasterAuraSpell(lua_State* L, SpellEntry* entry)
+    {
+        uint32 excludeCasterAuraSpell = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ExcludeCasterAuraSpell = excludeCasterAuraSpell;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ExcludeCasterAuraSpell = excludeCasterAuraSpell;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the exclude target aura spell for the [SpellEntry].
+     *
+     * @param uint32 excludeTargetAuraSpell : the new exclude target aura spell ID
+     */
+    int SetExcludeTargetAuraSpell(lua_State* L, SpellEntry* entry)
+    {
+        uint32 excludeTargetAuraSpell = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ExcludeTargetAuraSpell = excludeTargetAuraSpell;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ExcludeTargetAuraSpell = excludeTargetAuraSpell;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the recovery time for the [SpellEntry].
+     *
+     * @param uint32 recoveryTime : the new recovery time value
+     */
+    int SetRecoveryTime(lua_State* L, SpellEntry* entry)
+    {
+        uint32 recoveryTime = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->RecoveryTime = recoveryTime;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->RecoveryTime = recoveryTime;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the category recovery time for the [SpellEntry].
+     *
+     * @param uint32 categoryRecoveryTime : the new category recovery time value in milliseconds
+     */
+    int SetCategoryRecoveryTime(lua_State* L, SpellEntry* entry)
+    {
+        uint32 categoryRecoveryTime = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->CategoryRecoveryTime = categoryRecoveryTime;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->CategoryRecoveryTime = categoryRecoveryTime;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the interrupt flags for the [SpellEntry].
+     *
+     * @param uint32 interruptFlags : the new interrupt flags bitmask
+     */
+    int SetInterruptFlags(lua_State* L, SpellEntry* entry)
+    {
+        uint32 interruptFlags = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->InterruptFlags = interruptFlags;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->InterruptFlags = interruptFlags;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the aura interrupt flags for the [SpellEntry].
+     *
+     * @param uint32 auraInterruptFlags : the new aura interrupt flags bitmask
+     */
+    int SetAuraInterruptFlags(lua_State* L, SpellEntry* entry)
+    {
+        uint32 auraInterruptFlags = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->AuraInterruptFlags = auraInterruptFlags;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->AuraInterruptFlags = auraInterruptFlags;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the channel interrupt flags for the [SpellEntry].
+     *
+     * @param uint32 channelInterruptFlags : the new channel interrupt flags bitmask
+     */
+    int SetChannelInterruptFlags(lua_State* L, SpellEntry* entry)
+    {
+        uint32 channelInterruptFlags = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ChannelInterruptFlags = channelInterruptFlags;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ChannelInterruptFlags = channelInterruptFlags;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the proc flags for the [SpellEntry].
+     *
+     * @param uint32 procFlags : the new proc flags bitmask
+     */
+    int SetProcFlags(lua_State* L, SpellEntry* entry)
+    {
+        uint32 procFlags = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ProcFlags = procFlags;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ProcFlags = procFlags;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the proc chance for the [SpellEntry].
+     *
+     * @param uint32 procChance : the new proc chance value
+     */
+    int SetProcChance(lua_State* L, SpellEntry* entry)
+    {
+        uint32 procChance = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ProcChance = procChance;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ProcChance = procChance;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the proc charges for the [SpellEntry].
+     *
+     * @param uint32 procCharges : the new proc charges value
+     */
+    int SetProcCharges(lua_State* L, SpellEntry* entry)
+    {
+        uint32 procCharges = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ProcCharges = procCharges;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ProcCharges = procCharges;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the max level for the [SpellEntry].
+     *
+     * @param uint32 maxLevel : the new max level value
+     */
+    int SetMaxLevel(lua_State* L, SpellEntry* entry)
+    {
+        uint32 maxLevel = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->MaxLevel = maxLevel;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->MaxLevel = maxLevel;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the base level for the [SpellEntry].
+     *
+     * @param uint32 baseLevel : the new base level value
+     */
+    int SetBaseLevel(lua_State* L, SpellEntry* entry)
+    {
+        uint32 baseLevel = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->BaseLevel = baseLevel;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->BaseLevel = baseLevel;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the spell level for the [SpellEntry].
+     *
+     * @param uint32 spellLevel : the new spell level value
+     */
+    int SetSpellLevel(lua_State* L, SpellEntry* entry)
+    {
+        uint32 spellLevel = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->SpellLevel = spellLevel;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->SpellLevel = spellLevel;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the mana cost for the [SpellEntry].
+     *
+     * @param uint32 manaCost : the new mana cost value
+     */
+    int SetManaCost(lua_State* L, SpellEntry* entry)
+    {
+        uint32 manaCost = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ManaCost = manaCost;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ManaCost = manaCost;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the power type for the [SpellEntry].
+     *
+     * @param uint32 powerType : the new power type ID
+     */
+    int SetPowerType(lua_State* L, SpellEntry* entry)
+    {
+        uint32 powerType = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->PowerType = powerType;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->PowerType = powerType;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the mana cost per level for the [SpellEntry].
+     *
+     * @param uint32 manaCostPerlevel : the new mana cost per level value
+     */
+    int SetManaCostPerlevel(lua_State* L, SpellEntry* entry)
+    {
+        uint32 manaCostPerlevel = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ManaCostPerlevel = manaCostPerlevel;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ManaCostPerlevel = manaCostPerlevel;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the mana per second for the [SpellEntry].
+     *
+     * @param uint32 manaPerSecond : the new mana per second value
+     */
+    int SetManaPerSecond(lua_State* L, SpellEntry* entry)
+    {
+        uint32 manaPerSecond = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ManaPerSecond = manaPerSecond;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ManaPerSecond = manaPerSecond;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the mana per second per level for the [SpellEntry].
+     *
+     * @param uint32 manaPerSecondPerLevel : the new mana per second per level value
+     */
+    int SetManaPerSecondPerLevel(lua_State* L, SpellEntry* entry)
+    {
+        uint32 manaPerSecondPerLevel = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ManaPerSecondPerLevel = manaPerSecondPerLevel;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ManaPerSecondPerLevel = manaPerSecondPerLevel;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the speed for the [SpellEntry].
+     *
+     * @param float speed : the new speed value
+     */
+    int SetSpeed(lua_State* L, SpellEntry* entry)
+    {
+        float speed = Eluna::CHECKVAL<float>(L, 2);
+        entry->Speed = speed;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->Speed = speed;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the stack amount for the [SpellEntry].
+     *
+     * @param uint32 stackAmount : the new stack amount value
+     */
+    int SetStackAmount(lua_State* L, SpellEntry* entry)
+    {
+        uint32 stackAmount = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->StackAmount = stackAmount;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->StackAmount = stackAmount;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the equipped item class for the [SpellEntry].
+     *
+     * @param int32 equippedItemClass : the new equipped item class value
+     */
+    int SetEquippedItemClass(lua_State* L, SpellEntry* entry)
+    {
+        int32 equippedItemClass = Eluna::CHECKVAL<int32>(L, 2);
+        entry->EquippedItemClass = equippedItemClass;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->EquippedItemClass = equippedItemClass;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the equipped item sub class mask for the [SpellEntry].
+     *
+     * @param int32 equippedItemSubClassMask : the new equipped item sub class mask bitmasks
+     */
+    int SetEquippedItemSubClassMask(lua_State* L, SpellEntry* entry)
+    {
+        int32 equippedItemSubClassMask = Eluna::CHECKVAL<int32>(L, 2);
+        entry->EquippedItemSubClassMask = equippedItemSubClassMask;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->EquippedItemSubClassMask = equippedItemSubClassMask;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the equipped item inventory type mask for the [SpellEntry].
+     *
+     * @param int32 equippedItemInventoryTypeMask : the new equipped item inventory type mask bitmasks
+     */
+    int SetEquippedItemInventoryTypeMask(lua_State* L, SpellEntry* entry)
+    {
+        int32 equippedItemInventoryTypeMask = Eluna::CHECKVAL<int32>(L, 2);
+        entry->EquippedItemInventoryTypeMask = equippedItemInventoryTypeMask;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->EquippedItemInventoryTypeMask = equippedItemInventoryTypeMask;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the spell icon ID for the [SpellEntry].
+     *
+     * @param uint32 spellIconID : the new spell icon ID value
+     */
+    int SetSpellIconID(lua_State* L, SpellEntry* entry)
+    {
+        uint32 spellIconID = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->SpellIconID = spellIconID;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->SpellIconID = spellIconID;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the active icon ID for the [SpellEntry].
+     *
+     * @param uint32 activeIconID : the new active icon ID value
+     */
+    int SetActiveIconID(lua_State* L, SpellEntry* entry)
+    {
+        uint32 activeIconID = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ActiveIconID = activeIconID;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ActiveIconID = activeIconID;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the spell priority for the [SpellEntry].
+     *
+     * @param uint32 spellPriority : the new spell priority value
+     */
+    int SetSpellPriority(lua_State* L, SpellEntry* entry)
+    {
+        uint32 spellPriority = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->SpellPriority = spellPriority;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->SpellPriority = spellPriority;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the mana cost percentage for the [SpellEntry].
+     *
+     * @param uint32 manaCostPercentage : the new mana cost percentage value
+     */
+    int SetManaCostPercentage(lua_State* L, SpellEntry* entry)
+    {
+        uint32 manaCostPercentage = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->ManaCostPercentage = manaCostPercentage;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->ManaCostPercentage = manaCostPercentage;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Sets the start recovery category for the [SpellEntry].
+     *
+     * @param uint32 startRecoveryCategory : the new start recovery category value
+     */
+    int SetStartRecoveryCategory(lua_State* L, SpellEntry* entry)
+    {
+        uint32 startRecoveryCategory = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->StartRecoveryCategory = startRecoveryCategory;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->StartRecoveryCategory = startRecoveryCategory;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the start recovery time for the [SpellEntry].
+     *
+     * @param uint32 startRecoveryTime : the new start recovery time value
+     */
+    int SetStartRecoveryTime(lua_State* L, SpellEntry* entry)
+    {
+        uint32 startRecoveryTime = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->StartRecoveryTime = startRecoveryTime;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->StartRecoveryTime = startRecoveryTime;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the max target level for the [SpellEntry].
+     *
+     * @param uint32 maxTargetLevel : the new max target level value
+     */
+    int SetMaxTargetLevel(lua_State* L, SpellEntry* entry)
+    {
+        uint32 maxTargetLevel = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->MaxTargetLevel = maxTargetLevel;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->MaxTargetLevel = maxTargetLevel;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the spell family name for the [SpellEntry].
+     *
+     * @param uint32 spellFamilyName : the new spell family name value
+     */
+    int SetSpellFamilyName(lua_State* L, SpellEntry* entry)
+    {
+        uint32 spellFamilyName = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->SpellFamilyName = spellFamilyName;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->SpellFamilyName = spellFamilyName;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the max affected targets for the [SpellEntry].
+     *
+     * @param uint32 maxAffectedTargets : the new max affected targets value
+     */
+    int SetMaxAffectedTargets(lua_State* L, SpellEntry* entry)
+    {
+        uint32 maxAffectedTargets = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->MaxAffectedTargets = maxAffectedTargets;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->MaxAffectedTargets = maxAffectedTargets;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the damage class for the [SpellEntry].
+     *
+     * @param uint32 dmgClass : the new damage class ID value
+     */
+    int SetDmgClass(lua_State* L, SpellEntry* entry)
+    {
+        uint32 dmgClass = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->DmgClass = dmgClass;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->DmgClass = dmgClass;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the prevention type for the [SpellEntry].
+     *
+     * @param uint32 preventionType : the new prevention type ID value
+     */
+    int SetPreventionType(lua_State* L, SpellEntry* entry)
+    {
+        uint32 preventionType = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->PreventionType = preventionType;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->PreventionType = preventionType;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the school mask for the [SpellEntry].
+     *
+     * @param uint32 schoolMask : the new school mask bitmask value
+     */
+    int SetSchoolMask(lua_State* L, SpellEntry* entry)
+    {
+        uint32 schoolMask = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->SchoolMask = schoolMask;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->SchoolMask = schoolMask;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Sets the rune cost ID for the [SpellEntry].
+     *
+     * @param uint32 runeCostID : the new rune cost ID value
+     */
+    int SetRuneCostID(lua_State* L, SpellEntry* entry)
+    {
+        uint32 runeCostID = Eluna::CHECKVAL<uint32>(L, 2);
+        entry->RuneCostID = runeCostID;
+
+        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(entry->Id))
+        {
+            const_cast<SpellInfo*>(spellInfo)->RuneCostID = runeCostID;
+        }
+
+        return 0;
+    }
 }
 
 #endif
