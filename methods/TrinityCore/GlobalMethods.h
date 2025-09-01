@@ -1576,6 +1576,101 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+#if ELUNA_EXPANSION == EXP_RETAIL
+    /**
+     * Executes a SQL query on the hotfix database and returns an [ElunaQuery].
+     *
+     * The query is always executed synchronously
+     *   (i.e. execution halts until the query has finished and then results are returned).
+     *
+     * For an example see [Global:WorldDBQuery].
+     *
+     * @warning This method is flagged as **unsafe** and is **disabled by default**. Use with caution, or transition to Async queries.
+     *
+     * @param string sql : query to execute
+     * @return [ElunaQuery] results or nil if no rows found
+     */
+    int HotfixDBQuery(Eluna* E)
+    {
+        const char* query = E->CHECKVAL<const char*>(1);
+
+        ElunaQuery result = HotfixDatabase.Query(query);
+        if (result)
+            E->Push(&result);
+        else
+            E->Push();
+
+        return 1;
+    }
+
+    /**
+     * Executes a SQL query on the hotfix database.
+     *
+     * The query may be executed *asynchronously* (at a later, unpredictable time).
+     * If you need to execute the query synchronously, use [Global:HotfixDBQuery] instead.
+     *
+     * Any results produced are ignored.
+     * If you need results from the query, use [Global:HotfixDBQuery] instead.
+     *
+     *     HotfixDBExecute("DELETE FROM my_table")
+     *
+     * @param string sql : query to execute
+     */
+    int HotfixDBExecute(Eluna* E)
+    {
+        const char* query = E->CHECKVAL<const char*>(1);
+        HotfixDatabase.Execute(query);
+        return 0;
+    }
+
+    /**
+     * Initiates an asynchronous SQL query on the hotfix database with a callback function.
+     *
+     * The query is executed asynchronously, and the provided Lua function is called when the query completes.
+     * The callback function parameter is the query result (an [ElunaQuery] or nil if no rows found).
+     *
+     * For an example see [Global:WorldDBQueryAsync].
+     *
+     * @param string sql : query to execute asynchronously
+     * @param function callback : the callback function to be called with the query results
+     */
+    int HotfixDBQueryAsync(Eluna* E)
+    {
+        const char* query = E->CHECKVAL<const char*>(1);
+        luaL_checktype(E->L, 2, LUA_TFUNCTION);
+
+        // Push the Lua function onto the stack and create a reference
+        lua_pushvalue(E->L, 2);
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        // Validate the function reference
+        if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
+        {
+            luaL_argerror(E->L, 2, "unable to make a ref to function");
+            return 0;
+        }
+
+        // Add an asynchronous query callback
+        E->GetQueryProcessor().AddCallback(HotfixDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+        {
+            ElunaQuery* eq = result ? &result : nullptr;
+
+            // Get the Lua function from the registry
+            lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+
+            // Push the query results as a parameter
+            E->Push(eq);
+
+            // Call the Lua function
+            E->ExecuteCall(1, 0);
+
+            // Unreference the Lua function
+            luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
+        }));
+        return 0;
+    }
+#endif
+
     /**
      * Registers a global timed event.
      *
@@ -3264,6 +3359,15 @@ namespace LuaGlobalFunctions
         { "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery, METHOD_REG_ALL, METHOD_FLAG_UNSAFE },
         { "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute },
         { "AuthDBQueryAsync", &LuaGlobalFunctions::AuthDBQueryAsync },
+#if ELUNA_EXPANSION == EXP_RETAIL
+        { "HotfixDBQuery", &LuaGlobalFunctions::HotfixDBQuery, METHOD_REG_ALL, METHOD_FLAG_UNSAFE },
+        { "HotfixDBExecute", &LuaGlobalFunctions::HotfixDBExecute },
+        { "HotfixDBQueryAsync", &LuaGlobalFunctions::HotfixDBQueryAsync },
+#else
+        { "HotfixDBQuery", METHOD_REG_NONE },
+        { "HotfixDBExecute", METHOD_REG_NONE },
+        { "HotfixDBQueryAsync", METHOD_REG_NONE },
+#endif
         { "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
         { "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
         { "RemoveEvents", &LuaGlobalFunctions::RemoveEvents },
