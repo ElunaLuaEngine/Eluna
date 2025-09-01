@@ -20,6 +20,7 @@
 #include "DBCStores.h"
 #else
 #include "DB2Stores.h"
+#include "ChatPackets.h"
 #endif
 #include "GameEventMgr.h"
 #include "GossipDef.h"

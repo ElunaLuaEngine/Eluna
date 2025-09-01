@@ -727,7 +727,6 @@ namespace LuaPlayer
         return 1;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns whether or not the [Player] is never visible for other [Unit]s
      *
@@ -735,10 +734,13 @@ namespace LuaPlayer
      */
     int IsNeverVisible(Eluna* E, Player* player)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(player->IsNeverVisible(true));
+#else
+        E->Push(player->IsNeverVisibleFor(player, true));
+#endif
         return 1;
     }
-#endif
 
     /**
      * Returns whether or not the [Player] has any pending dungeon bind
@@ -1760,6 +1762,8 @@ namespace LuaPlayer
         {
 #if ELUNA_EXPANSION < EXP_RETAIL
             player->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED | UNIT_FLAG_SILENCED);
+#else
+            player->SetUnitFlag(UnitFlags(UnitFlags::UNIT_FLAG_PACIFIED | UnitFlags::UNIT_FLAG_FORCE_NAMEPLATE));
 #endif
             player->SetClientControl(player, 0);
         }
@@ -1767,6 +1771,8 @@ namespace LuaPlayer
         {
 #if ELUNA_EXPANSION < EXP_RETAIL
             player->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED | UNIT_FLAG_SILENCED);
+#else
+            player->RemoveUnitFlag(UnitFlags(UnitFlags::UNIT_FLAG_PACIFIED | UnitFlags::UNIT_FLAG_FORCE_NAMEPLATE));
 #endif
             player->SetClientControl(player, 1);
         }
@@ -1911,7 +1917,6 @@ namespace LuaPlayer
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Sets the [Player]s rest bonus to the amount specified
      *
@@ -1921,10 +1926,14 @@ namespace LuaPlayer
     {
         float bonus = E->CHECKVAL<float>(2);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         player->SetRestBonus(bonus);
+#else
+        RestMgr restMgr = player->GetRestMgr();
+        restMgr.SetRestBonus(RestTypes::REST_TYPE_XP, bonus);
+#endif
         return 0;
     }
-#endif
 
     /**
      * Toggles whether the [Player] accepts whispers or not
@@ -2186,7 +2195,6 @@ namespace LuaPlayer
      *
      * @param int32 movementType
      */
-#if ELUNA_EXPANSION < EXP_CATA
     int SetMovement(Eluna* E, Player* player)
     {
         int32 pType = E->CHECKVAL<int32>(2);
@@ -2211,7 +2219,7 @@ namespace LuaPlayer
 
         return 0;
     }
-
+#if ELUNA_EXPANSION < EXP_CATA
     /**
      * Resets the [Player]s pets talent points
      */
@@ -2343,7 +2351,6 @@ namespace LuaPlayer
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Sends an auction house window to the [Player] from the [Unit] specified
      *
@@ -2356,7 +2363,6 @@ namespace LuaPlayer
         player->GetSession()->SendAuctionHello(unit->GET_GUID(), unit);
         return 0;
     }
-#endif
 
     /**
      * Sends a flightmaster window to the [Player] from the [Creature] specified
@@ -3658,7 +3664,6 @@ namespace LuaPlayer
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Learn the [Player] the talent specified by talent_id and talentRank
      *
@@ -3668,13 +3673,17 @@ namespace LuaPlayer
     int LearnTalent(Eluna* E, Player* player)
     {
         uint32 id = E->CHECKVAL<uint32>(2);
-        uint32 rank = E->CHECKVAL<uint32>(3);
+        [[maybe_unused]]uint32 rank = E->CHECKVAL<uint32>(3);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         player->LearnTalent(id, rank);
         player->SendTalentsInfoData(false);
+#else
+        player->LearnTalent(id, 0);
+        player->SendTalentsInfoData();
+#endif
         return 0;
     }
-#endif
 
     /**
      * Remove cooldowns on spells that have less than 10 minutes of cooldown from the [Player], similarly to when you enter an arena.
@@ -3700,7 +3709,6 @@ namespace LuaPlayer
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Adds a new item to the gossip menu shown to the [Player] on next call to [Player:GossipSendMenu].
      *
@@ -3729,10 +3737,13 @@ namespace LuaPlayer
         const char* _promptMsg = E->CHECKVAL<const char*>(7, "");
         uint32 _money = E->CHECKVAL<uint32>(8, 0);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GossipOptionIcon(_icon), msg, _sender, _intid, _promptMsg, _money, _code);
+#else
+        player->PlayerTalkClass->GetGossipMenu().AddMenuItem(0, -1, GossipOptionNpc(_icon), std::move(msg), 0, GossipOptionFlags::None, {}, 0, 0, _code, _money, std::move(_promptMsg), {}, {}, _sender, _intid);
+#endif
         return 0;
     }
-#endif
 
     /**
      * Closes the [Player]s currently open Gossip Menu.
@@ -3830,7 +3841,6 @@ namespace LuaPlayer
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Adds the gossip items to the [Player]'s gossip for the quests the given [WorldObject] can offer to the player.
      *
@@ -3842,7 +3852,11 @@ namespace LuaPlayer
 
         if (source->GetTypeId() == TYPEID_UNIT)
         {
+#if ELUNA_EXPANSION < EXP_RETAIL
             if (source->GetUInt32Value(UNIT_NPC_FLAGS) & UNIT_NPC_FLAG_QUESTGIVER)
+#else
+            if (source->ToUnit()->HasNpcFlag(UNIT_NPC_FLAG_QUESTGIVER))
+#endif
                 player->PrepareQuestMenu(source->GET_GUID());
         }
         else if (source->GetTypeId() == TYPEID_GAMEOBJECT)
@@ -3852,7 +3866,6 @@ namespace LuaPlayer
         }
         return 0;
     }
-#endif
 
     /**
      * Shows a quest accepting window to the [Player] for the given quest.
@@ -4027,7 +4040,7 @@ namespace LuaPlayer
         player->BindToInstance();
         return 0;
     }
-
+#endif
     /**
      * Adds a talent to the [Player] for the specified spec and learning status.
      *
@@ -4042,14 +4055,24 @@ namespace LuaPlayer
         uint8 spec = E->CHECKVAL<uint8>(3);
         bool learning = E->CHECKVAL<bool>(4, true);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         if (spec >= MAX_TALENT_GROUPS)
+#else
+        if (spec >= MAX_SPECIALIZATIONS)
+#endif
             E->Push(false);
         else
+#if ELUNA_EXPANSION < EXP_RETAIL
             E->Push(player->AddTalent(spellId, spec, learning));
+#else
+        {
+            TalentEntry const* talentInfo = sTalentStore.LookupEntry(spellId);
+            E->Push(player->AddTalent(talentInfo, spec, learning));
+        }
+#endif
 
         return 1;
     }
-#endif
 
     /**
      * Grants kill credit for a specific [Craeture] or [GameObject].
@@ -4307,9 +4330,11 @@ namespace LuaPlayer
         { "SetGMVisible", &LuaPlayer::SetGMVisible },
         { "SetPvPDeath", &LuaPlayer::SetPvPDeath },
         { "SetAcceptWhispers", &LuaPlayer::SetAcceptWhispers },
+        { "SetRestBonus", &LuaPlayer::SetRestBonus },
         { "SetQuestStatus", &LuaPlayer::SetQuestStatus },
         { "SetReputation", &LuaPlayer::SetReputation },
         { "SetGuildRank", &LuaPlayer::SetGuildRank },
+        { "SetMovement", &LuaPlayer::SetMovement },
         { "SetSkill", &LuaPlayer::SetSkill },
         { "SetFactionForRace", &LuaPlayer::SetFactionForRace },
         { "SetDrunkValue", &LuaPlayer::SetDrunkValue },
@@ -4321,15 +4346,11 @@ namespace LuaPlayer
 #if ELUNA_EXPANSION < EXP_RETAIL
         { "AddLifetimeKills", &LuaPlayer::AddLifetimeKills },
         { "SetLifetimeKills", &LuaPlayer::SetLifetimeKills },
-        { "SetRestBonus", &LuaPlayer::SetRestBonus },
         { "SetFreeTalentPoints", &LuaPlayer::SetFreeTalentPoints },
-        { "SetMovement", &LuaPlayer::SetMovement },
 #else
         { "AddLifetimeKills", METHOD_REG_NONE },
         { "SetLifetimeKills", METHOD_REG_NONE },
-        { "SetRestBonus", METHOD_REG_NONE },
         { "SetFreeTalentPoints", METHOD_REG_NONE },
-        { "SetMovement", METHOD_REG_NONE },
 #endif
 
         // Boolean
@@ -4366,11 +4387,7 @@ namespace LuaPlayer
         { "SetAchievement", &LuaPlayer::SetAchievement },
         { "CanUninviteFromGroup", &LuaPlayer::CanUninviteFromGroup },
         { "IsRested", &LuaPlayer::IsRested },
-#if ELUNA_EXPANSION < EXP_RETAIL
         { "IsNeverVisible", &LuaPlayer::IsNeverVisible },
-#else
-        { "IsNeverVisible", METHOD_REG_NONE },
-#endif
         { "IsVisibleForPlayer", &LuaPlayer::IsVisibleForPlayer },
         { "IsUsingLfg", &LuaPlayer::IsUsingLfg },
         { "HasQuestForItem", &LuaPlayer::HasQuestForItem },
@@ -4403,11 +4420,7 @@ namespace LuaPlayer
         { "IsRecruited", &LuaPlayer::IsRecruited },
 
         // Gossip
-#if ELUNA_EXPANSION < EXP_RETAIL
         { "GossipMenuAddItem", &LuaPlayer::GossipMenuAddItem },
-#else
-        { "GossipMenuAddItem", METHOD_REG_NONE },
-#endif
         { "GossipSendMenu", &LuaPlayer::GossipSendMenu },
         { "GossipComplete", &LuaPlayer::GossipComplete },
         { "GossipClearMenu", &LuaPlayer::GossipClearMenu },
@@ -4419,6 +4432,7 @@ namespace LuaPlayer
         { "SendAddonMessage", &LuaPlayer::SendAddonMessage },
         { "ModifyMoney", &LuaPlayer::ModifyMoney },
         { "LearnSpell", &LuaPlayer::LearnSpell },
+        { "LearnTalent", &LuaPlayer::LearnTalent },
         { "RemoveArenaSpellCooldowns", &LuaPlayer::RemoveArenaSpellCooldowns },
         { "RemoveItem", &LuaPlayer::RemoveItem },
         { "ResurrectPlayer", &LuaPlayer::ResurrectPlayer },
@@ -4451,6 +4465,7 @@ namespace LuaPlayer
         { "RemoveSpell", &LuaPlayer::RemoveSpell },
         { "ResetTalents", &LuaPlayer::ResetTalents },
         { "ResetTalentsCost", &LuaPlayer::ResetTalentsCost },
+        { "AddTalent", &LuaPlayer::AddTalent },
         { "RemoveFromGroup", &LuaPlayer::RemoveFromGroup },
         { "KillPlayer", &LuaPlayer::KillPlayer },
         { "DurabilityLossAll", &LuaPlayer::DurabilityLossAll },
@@ -4477,9 +4492,11 @@ namespace LuaPlayer
         { "SendTaxiMenu", &LuaPlayer::SendTaxiMenu },
         { "SendUpdateWorldState", &LuaPlayer::SendUpdateWorldState },
         { "RewardQuest", &LuaPlayer::RewardQuest },
+        { "SendAuctionMenu", &LuaPlayer::SendAuctionMenu },
         { "SendShowMailBox", &LuaPlayer::SendShowMailBox },
         { "StartTaxi", &LuaPlayer::StartTaxi },
         { "GossipSendPOI", &LuaPlayer::GossipSendPOI },
+        { "GossipAddQuests", &LuaPlayer::GossipAddQuests },
         { "SendQuestTemplate", &LuaPlayer::SendQuestTemplate },
         { "SpawnBones", &LuaPlayer::SpawnBones },
         { "RemovedInsignia", &LuaPlayer::RemovedInsignia },
@@ -4494,24 +4511,16 @@ namespace LuaPlayer
         { "RunCommand", &LuaPlayer::RunCommand },
 #if ELUNA_EXPANSION < EXP_RETAIL
         { "SendAreaTriggerMessage", &LuaPlayer::SendAreaTriggerMessage },
-        { "LearnTalent", &LuaPlayer::LearnTalent },
         { "RemoveLifetimeKills", &LuaPlayer::RemoveLifetimeKills },
         { "ResetPetTalents", &LuaPlayer::ResetPetTalents },
-        { "AddTalent", &LuaPlayer::AddTalent },
         { "BindToInstance", &LuaPlayer::BindToInstance },
-        { "SendAuctionMenu", &LuaPlayer::SendAuctionMenu },
-        { "GossipAddQuests", &LuaPlayer::GossipAddQuests },
         { "AddItemAppearance", METHOD_REG_NONE },
         { "AddTransmogSet", METHOD_REG_NONE },
 #else
         { "SendAreaTriggerMessage", METHOD_REG_NONE },
-        { "LearnTalent", METHOD_REG_NONE },
         { "RemoveLifetimeKills", METHOD_REG_NONE },
         { "ResetPetTalents", METHOD_REG_NONE },
-        { "AddTalent", METHOD_REG_NONE },
         { "BindToInstance", METHOD_REG_NONE },
-        { "SendAuctionMenu", METHOD_REG_NONE },
-        { "GossipAddQuests", METHOD_REG_NONE },
         { "AddItemAppearance", &LuaPlayer::AddItemAppearance },
         { "AddTransmogSet", &LuaPlayer::AddTransmogSet },
 #endif
