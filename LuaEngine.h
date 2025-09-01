@@ -588,7 +588,11 @@ public:
     void OnRemoveMember(Group* group, ObjectGuid guid, uint8 method);
     void OnChangeLeader(Group* group, ObjectGuid newLeaderGuid, ObjectGuid oldLeaderGuid);
     void OnDisband(Group* group);
+#if ELUNA_EXPANSION < EXP_RETAIL
     void OnCreate(Group* group, ObjectGuid leaderGuid, GroupType groupType);
+#else
+    void OnCreate(Group* group, ObjectGuid leaderGuid, GroupFlags groupFlags);
+#endif
     bool OnMemberAccept(Group* group, Player* player);
 
     /* Map */
