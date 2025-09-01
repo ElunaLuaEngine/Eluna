@@ -159,6 +159,9 @@ MAKE_ELUNA_OBJECT_VALUE_IMPL(ObjectGuid);
 MAKE_ELUNA_OBJECT_VALUE_IMPL(WorldPacket);
 MAKE_ELUNA_OBJECT_VALUE_IMPL(ElunaQuery);
 MAKE_ELUNA_OBJECT_VALUE_IMPL(ElunaSpellInfo);
+#if ELUNA_EXPANSION == EXP_RETAIL
+MAKE_ELUNA_OBJECT_VALUE_IMPL(std::vector<SpellPowerCost>);
+#endif
 
 template<typename T = void>
 struct ElunaRegister
