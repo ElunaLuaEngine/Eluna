@@ -9,6 +9,8 @@
 
 #if defined ELUNA_CMANGOS
 #include "Platform/Define.h"
+#elif defined ELUNA_TRINITY
+#include "Define.h"
 #endif
 #include <utility>
 
