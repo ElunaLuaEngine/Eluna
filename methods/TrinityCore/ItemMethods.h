@@ -956,11 +956,15 @@ namespace LuaItem
     int SetRandomProperty(Eluna* E, Item* item)
     {
         uint32 randomPropId = E->CHECKVAL<uint32>(2);
-        //item->SetBonuses(randomPropId);
-        //item->SetItemRandomProperties(randomPropId);
+#if ELUNA_EXPANSION < EXP_RETAIL
+        item->SetItemRandomProperties(randomPropId);
+#else
+        item->AddBonuses(randomPropId);
+#endif
         return 0;
     }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Sets the random suffix for the [Item] from a given random suffix ID.
      *
@@ -969,9 +973,10 @@ namespace LuaItem
     int SetRandomSuffix(Eluna* E, Item* item)
     {
         uint32 randomPropId = E->CHECKVAL<uint32>(2);
-        //item->SetItemRandomProperties(-(int32)randomPropId);
+        item->SetItemRandomProperties(-(int32)randomPropId);
         return 0;
     }
+#endif
 
     /* OTHER */
     /**
@@ -1071,7 +1076,11 @@ namespace LuaItem
         { "SetBinding", &LuaItem::SetBinding },
         { "SetCount", &LuaItem::SetCount },
         { "SetRandomProperty", &LuaItem::SetRandomProperty },
+#if ELUNA_EXPANSION < EXP_RETAIL
         { "SetRandomSuffix", &LuaItem::SetRandomSuffix },
+#else
+        { "SetRandomSuffix", METHOD_REG_NONE },
+#endif
 
         // Boolean
         { "IsSoulBound", &LuaItem::IsSoulBound },
