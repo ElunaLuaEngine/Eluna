@@ -3363,6 +3363,10 @@ namespace LuaGlobalFunctions
         { "HotfixDBQuery", &LuaGlobalFunctions::HotfixDBQuery, METHOD_REG_ALL, METHOD_FLAG_UNSAFE },
         { "HotfixDBExecute", &LuaGlobalFunctions::HotfixDBExecute },
         { "HotfixDBQueryAsync", &LuaGlobalFunctions::HotfixDBQueryAsync },
+#else
+        { "HotfixDBQuery", METHOD_REG_NONE },
+        { "HotfixDBExecute", METHOD_REG_NONE },
+        { "HotfixDBQueryAsync", METHOD_REG_NONE },
 #endif
         { "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
         { "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
