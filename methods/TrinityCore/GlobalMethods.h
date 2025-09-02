@@ -366,7 +366,7 @@ namespace LuaGlobalFunctions
 #endif
         return 1;
     }
-#if ELUNA_EXPANSION < EXP_RETAIL
+
     /**
      * Builds a [GameObject]'s GUID.
      *
@@ -382,7 +382,11 @@ namespace LuaGlobalFunctions
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
         uint32 entry = E->CHECKVAL<uint32>(2);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(MAKE_NEW_GUID(lowguid, entry, HIGHGUID_GAMEOBJECT));
+#else
+        E->Push(ObjectGuid::Create<HighGuid::GameObject>(E->GetBoundMapId(), entry, lowguid));
+#endif
         return 1;
     }
 
@@ -401,10 +405,13 @@ namespace LuaGlobalFunctions
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
         uint32 entry = E->CHECKVAL<uint32>(2);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(MAKE_NEW_GUID(lowguid, entry, HIGHGUID_UNIT));
+#else
+        E->Push(ObjectGuid::Create<HighGuid::Creature>(E->GetBoundMapId(), entry, lowguid));
+#endif
         return 1;
     }
-#endif
 
     /**
      * Returns the low GUID from a GUID.
@@ -1756,7 +1763,6 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Performs an in-game spawn and returns the [Creature] or [GameObject] spawned.
      *
@@ -1785,6 +1791,7 @@ namespace LuaGlobalFunctions
         float o = E->CHECKVAL<float>(8);
         bool save = E->CHECKVAL<bool>(9, false);
         uint32 durorresptime = E->CHECKVAL<uint32>(10, 0);
+#if ELUNA_EXPANSION < EXP_RETAIL
         uint32 phase = E->CHECKVAL<uint32>(11, PHASEMASK_NORMAL);
 
         if (!phase)
@@ -1792,6 +1799,7 @@ namespace LuaGlobalFunctions
             E->Push();
             return 1;
         }
+#endif
 
         Map* map = eMapMgr->FindMap(mapID, instanceID);
         if (!map)
@@ -1807,14 +1815,21 @@ namespace LuaGlobalFunctions
             if (save)
             {
                 Creature* creature = new Creature();
+#if ELUNA_EXPANSION < EXP_RETAIL
                 if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, pos))
+#else
+                if (!creature->CreateCreature(entry, map, pos))
+#endif
                 {
                     delete creature;
                     E->Push();
                     return 1;
                 }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
                 creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
+#else
+                creature->SaveToDB();
+#endif
 
                 uint32 db_guid = creature->GetSpawnId();
 
@@ -1830,13 +1845,20 @@ namespace LuaGlobalFunctions
                     E->Push();
                     return 1;
                 }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
                 eObjectMgr->AddCreatureToGrid(db_guid, eObjectMgr->GetCreatureData(db_guid));
+#else
+                eObjectMgr->AddCreatureToGrid(eObjectMgr->GetCreatureData(db_guid));
+#endif
                 E->Push(creature);
             }
             else
             {
+#if ELUNA_EXPANSION < EXP_RETAIL
                 TempSummon* creature = map->SummonCreature(entry, pos, NULL, durorresptime);
+#else
+                TempSummon* creature = map->SummonCreature(entry, pos, NULL, Milliseconds(durorresptime));
+#endif
                 if (!creature)
                 {
                     E->Push();
@@ -1873,7 +1895,11 @@ namespace LuaGlobalFunctions
             uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
             QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
             if (!object->Create(guidLow, objectInfo->entry, map, phase, Position(x, y, z, o), rot, 0, GO_STATE_READY))
+#else
+            if (!object->CreateGameObject(objectInfo->entry, map, Position(x, y, z, o), rot, 0, GO_STATE_READY))
+#endif
             {
                 delete object;
                 E->Push();
@@ -1886,7 +1912,11 @@ namespace LuaGlobalFunctions
             if (save)
             {
                 // fill the gameobject data and save to the db
+#if ELUNA_EXPANSION < EXP_RETAIL
                 object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), phase);
+#else
+                object->SaveToDB();
+#endif
                 guidLow = object->GetSpawnId();
 
                 // delete the old object and do a clean load from DB with a fresh new GameObject instance.
@@ -1901,7 +1931,11 @@ namespace LuaGlobalFunctions
                     E->Push();
                     return 1;
                 }
+#if ELUNA_EXPANSION < EXP_RETAIL
                 eObjectMgr->AddGameobjectToGrid(guidLow, eObjectMgr->GetGameObjectData(guidLow));
+#else
+                eObjectMgr->AddGameobjectToGrid(eObjectMgr->GetGameObjectData(guidLow));
+#endif
             }
             else
                 map->AddToMap(object);
@@ -1912,7 +1946,6 @@ namespace LuaGlobalFunctions
         E->Push();
         return 1;
     }
-#endif
 
     /**
      * Creates a [WorldPacket].
@@ -2120,7 +2153,6 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Sends mail to a [Player].
      *
@@ -2193,7 +2225,11 @@ namespace LuaGlobalFunctions
                 luaL_error(E->L, "Item entry %d has invalid amount %d", entry, amount);
                 continue;
             }
+#if ELUNA_EXPANSION < EXP_RETAIL
             if (Item* item = Item::CreateItem(entry, amount))
+#else
+            if (Item* item = Item::CreateItem(entry, amount, ItemContext::NONE))
+#endif
             {
                 item->SaveToDB(trans);
                 draft.AddItem(item);
@@ -2212,7 +2248,6 @@ namespace LuaGlobalFunctions
 
         return addedItems;
     }
-#endif
 
     /**
      * Performs a bitwise AND (a & b).
@@ -2302,7 +2337,6 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Adds a taxi path to a specified map, returns the used pathId.
      *
@@ -2421,7 +2455,9 @@ namespace LuaGlobalFunctions
         }
         if (startNode >= nodeId)
             return 1;
+#if ELUNA_EXPANSION < EXP_RETAIL
         sTaxiPathSetBySource[startNode][nodeId - 1] = TaxiPathBySourceAndDestination(pathId, price);
+#endif
         TaxiPathEntry* pathEntry = new TaxiPathEntry();
 
         pathEntry->FromTaxiNode = startNode;
@@ -2434,7 +2470,6 @@ namespace LuaGlobalFunctions
         E->Push(pathId);
         return 1;
     }
-#endif
     /**
      * Returns `true` if Eluna is in compatibility mode, `false` if in multistate.
      *
@@ -3312,17 +3347,12 @@ namespace LuaGlobalFunctions
         { "GetPlayerCount", &LuaGlobalFunctions::GetPlayerCount },
         { "GetPlayerGUID", &LuaGlobalFunctions::GetPlayerGUID },
         { "GetItemGUID", &LuaGlobalFunctions::GetItemGUID },
+        { "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID },
+        { "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID },
         { "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow },
         { "GetGUIDType", &LuaGlobalFunctions::GetGUIDType },
         { "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry },
         { "GetAreaName", &LuaGlobalFunctions::GetAreaName },
-#if ELUNA_EXPANSION < EXP_RETAIL
-        { "GetObjectGUID", &LuaGlobalFunctions::GetObjectGUID },
-        { "GetUnitGUID", &LuaGlobalFunctions::GetUnitGUID },
-#else
-        { "GetObjectGUID", METHOD_REG_NONE },
-        { "GetUnitGUID", METHOD_REG_NONE },
-#endif
         { "bit_not", &LuaGlobalFunctions::bit_not },
         { "bit_xor", &LuaGlobalFunctions::bit_xor },
         { "bit_rshift", &LuaGlobalFunctions::bit_rshift },
@@ -3371,22 +3401,16 @@ namespace LuaGlobalFunctions
         { "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
         { "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
         { "RemoveEvents", &LuaGlobalFunctions::RemoveEvents },
-        { "CreatePacket", &LuaGlobalFunctions::CreatePacket },
-#if ELUNA_EXPANSION < EXP_RETAIL
         { "PerformIngameSpawn", &LuaGlobalFunctions::PerformIngameSpawn },
-        { "SendMail", &LuaGlobalFunctions::SendMail },
-        { "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
-#else
-        { "PerformIngameSpawn", METHOD_REG_NONE },
-        { "SendMail", METHOD_REG_NONE },
-        { "AddTaxiPath", METHOD_REG_NONE },
-#endif
+        { "CreatePacket", &LuaGlobalFunctions::CreatePacket },
         { "AddVendorItem", &LuaGlobalFunctions::AddVendorItem },
         { "VendorRemoveItem", &LuaGlobalFunctions::VendorRemoveItem },
         { "VendorRemoveAllItems", &LuaGlobalFunctions::VendorRemoveAllItems },
         { "Kick", &LuaGlobalFunctions::Kick },
         { "Ban", &LuaGlobalFunctions::Ban },
         { "SaveAllPlayers", &LuaGlobalFunctions::SaveAllPlayers },
+        { "SendMail", &LuaGlobalFunctions::SendMail },
+        { "AddTaxiPath", &LuaGlobalFunctions::AddTaxiPath },
         { "CreateInt64", &LuaGlobalFunctions::CreateLongLong },
         { "CreateUint64", &LuaGlobalFunctions::CreateULongLong },
         { "StartGameEvent", &LuaGlobalFunctions::StartGameEvent },

@@ -58,7 +58,6 @@ namespace LuaSpell
         return 1;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the power cost of the [Spell].
      *
@@ -66,10 +65,13 @@ namespace LuaSpell
      */
     int GetPowerCost(Eluna* E, Spell* spell)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spell->GetPowerCost());
+#else
+        E->Push(&spell->GetPowerCost());
+#endif
         return 1;
     }
-#endif
 
     /**
      * Returns the spell duration of the [Spell].
@@ -179,11 +181,7 @@ namespace LuaSpell
         { "GetCastTime", &LuaSpell::GetCastTime },
         { "GetEntry", &LuaSpell::GetEntry },
         { "GetDuration", &LuaSpell::GetDuration },
-#if ELUNA_EXPANSION < EXP_RETAIL
         { "GetPowerCost", &LuaSpell::GetPowerCost },
-#else
-        { "GetPowerCost", METHOD_REG_NONE },
-#endif
         { "GetTargetDest", &LuaSpell::GetTargetDest },
         { "GetTarget", &LuaSpell::GetTarget },
 

@@ -185,7 +185,6 @@ namespace LuaItem
         return 1;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns 'true' if the [Item] is a weapon vellum, 'false' otherwise
      *
@@ -193,7 +192,11 @@ namespace LuaItem
      */
     int IsWeaponVellum(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(item->IsWeaponVellum());
+#else
+        E->Push(item->IsVellum());
+#endif
         return 1;
     }
 
@@ -204,10 +207,13 @@ namespace LuaItem
      */
     int IsArmorVellum(Eluna* E, Item* item)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(item->IsArmorVellum());
+#else
+        E->Push(item->IsVellum());
+#endif
         return 1;
     }
-#endif
 
     /**
      * Returns 'true' if the [Item] is a conjured consumable, 'false' otherwise
@@ -231,7 +237,6 @@ namespace LuaItem
         return 1;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the chat link of the [Item]
      *
@@ -258,6 +263,7 @@ namespace LuaItem
 
         const ItemTemplate* temp = item->GetTemplate();
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         std::string name = temp->Name1;
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(temp->ItemId))
             ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(locale), name);
@@ -283,22 +289,31 @@ namespace LuaItem
                 name += (*suffix)[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
             }
         }
+#else
+        std::string name = temp->GetName(LocaleConstant(locale));
+#endif
 
         std::ostringstream oss;
+#if ELUNA_EXPANSION < EXP_RETAIL
         oss << "|c" << std::hex << ItemQualityColors[temp->Quality] << std::dec <<
             "|Hitem:" << temp->ItemId << ":" <<
+#else
+        oss << "|c" << std::hex << ItemQualityColors[temp->GetQuality()] << std::dec <<
+            "|Hitem:" << temp->GetId() << ":" <<
+#endif
             item->GetEnchantmentId(PERM_ENCHANTMENT_SLOT) << ":" <<
             item->GetEnchantmentId(SOCK_ENCHANTMENT_SLOT) << ":" <<
             item->GetEnchantmentId(SOCK_ENCHANTMENT_SLOT_2) << ":" <<
             item->GetEnchantmentId(SOCK_ENCHANTMENT_SLOT_3) << ":" <<
             item->GetEnchantmentId(BONUS_ENCHANTMENT_SLOT) << ":" <<
+#if ELUNA_EXPANSION < EXP_RETAIL
             item->GetItemRandomPropertyId() << ":" << item->GetItemSuffixFactor() << ":" <<
+#endif
             (uint32)item->GetOwner()->GetLevel() << "|h[" << name << "]|h|r";
 
         E->Push(oss.str());
         return 1;
     }
-#endif
 
     /**
      * Returns GUID of the [Player] who currently owns the [Item]
@@ -1030,6 +1045,7 @@ namespace LuaItem
         { "GetSlot", &LuaItem::GetSlot },
         { "GetBagSlot", &LuaItem::GetBagSlot },
         { "GetEnchantmentId", &LuaItem::GetEnchantmentId },
+        { "GetItemLink", &LuaItem::GetItemLink },
         { "GetClass", &LuaItem::GetClass },
         { "GetSubClass", &LuaItem::GetSubClass },
         { "GetItemId", &LuaItem::GetItemId },
@@ -1058,14 +1074,12 @@ namespace LuaItem
 #if ELUNA_EXPANSION < EXP_RETAIL
         { "GetSpellId", &LuaItem::GetSpellId },
         { "GetSpellTrigger", &LuaItem::GetSpellTrigger },
-        { "GetItemLink", &LuaItem::GetItemLink },
         { "GetStatsCount", &LuaItem::GetStatsCount },
         { "GetRandomProperty", &LuaItem::GetRandomProperty },
         { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
 #else
         { "GetSpellId", METHOD_REG_NONE },
         { "GetSpellTrigger", METHOD_REG_NONE },
-        { "GetItemLink", METHOD_REG_NONE },
         { "GetStatsCount", METHOD_REG_NONE },
         { "GetRandomProperty", METHOD_REG_NONE },
         { "GetRandomSuffix", METHOD_REG_NONE },
@@ -1098,17 +1112,12 @@ namespace LuaItem
         { "IsEquipped", &LuaItem::IsEquipped },
         { "HasQuest", &LuaItem::HasQuest },
         { "IsPotion", &LuaItem::IsPotion },
+        { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
+        { "IsArmorVellum", &LuaItem::IsArmorVellum },
         { "IsRefundExpired", &LuaItem::IsRefundExpired },
         { "IsConjuredConsumable", &LuaItem::IsConjuredConsumable },
         { "SetEnchantment", &LuaItem::SetEnchantment },
         { "ClearEnchantment", &LuaItem::ClearEnchantment },
-#if ELUNA_EXPANSION < EXP_RETAIL
-        { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
-        { "IsArmorVellum", &LuaItem::IsArmorVellum },
-#else
-        { "IsWeaponVellum", METHOD_REG_NONE },
-        { "IsArmorVellum", METHOD_REG_NONE },
-#endif
 
         // Other
         { "SaveToDB", &LuaItem::SaveToDB }
