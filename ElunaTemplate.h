@@ -155,6 +155,7 @@ MAKE_ELUNA_OBJECT_VALUE_IMPL(unsigned long long);
 MAKE_ELUNA_OBJECT_VALUE_IMPL(ObjectGuid);
 MAKE_ELUNA_OBJECT_VALUE_IMPL(WorldPacket);
 MAKE_ELUNA_OBJECT_VALUE_IMPL(ElunaQuery);
+MAKE_ELUNA_OBJECT_VALUE_IMPL(std::vector<SpellPowerCost>);
 
 template<typename T = void>
 struct ElunaRegister
