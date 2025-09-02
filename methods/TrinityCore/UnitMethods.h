@@ -1879,7 +1879,6 @@ namespace LuaUnit
         return 1;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Sends chat message to [Player]
      *
@@ -1897,16 +1896,26 @@ namespace LuaUnit
 
         if (type >= MAX_CHAT_MSG_TYPE)
             return luaL_argerror(E->L, 2, "valid ChatMsg expected");
+#if ELUNA_EXPANSION < EXP_RETAIL
         if (lang >= LANGUAGES_COUNT)
+#else
+        if (lang > LANG_MAX_LANGUAGE)
+#endif
             return luaL_argerror(E->L, 3, "valid Language expected");
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         WorldPacket data;
         ChatHandler::BuildChatPacket(data, ChatMsg(type), Language(lang), unit, target, msg);
 
         target->GetSession()->SendPacket(&data);
+#else
+        WorldPackets::Chat::Chat packet;
+        packet.Initialize(ChatMsg(type), Language(lang), unit, target, msg);
+
+        target->GetSession()->SendPacket(packet.Write());
+#endif
         return 0;
     }
-#endif
 
     /**
      * Stops the [Unit]'s movement
@@ -2415,7 +2424,6 @@ namespace LuaUnit
         return 0;
     }
 
-#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Makes the [Unit] damage the target [Unit]
      *
@@ -2450,7 +2458,11 @@ namespace LuaUnit
         if (school == MAX_SPELL_SCHOOL)
         {
             Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
+#if ELUNA_EXPANSION < EXP_RETAIL
             unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_HIT, 0);
+#else
+            unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_HIT, 0, 0);
+#endif
             return 0;
         }
 
@@ -2472,28 +2484,44 @@ namespace LuaUnit
 
             uint32 absorb = dmgInfo.GetAbsorb();
             uint32 resist = dmgInfo.GetResist();
+#if ELUNA_EXPANSION < EXP_RETAIL
             unit->DealDamageMods(target, damage, &absorb);
+#else
+            unit->DealDamageMods(unit, target, damage, &absorb);
+#endif
 
             Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
+#if ELUNA_EXPANSION < EXP_RETAIL
             unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
+#else
+            unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0, 0);
+#endif
             return 0;
         }
 
         if (!spell)
             return 0;
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
+#else
+        SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell, DIFFICULTY_NONE);
+#endif
         if (!spellInfo)
             return 0;
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
         Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
+#else
+        SpellNonMeleeDamage dmgInfo(unit, target, spellInfo, { (spellInfo)->GetSpellXSpellVisualId(unit, 0) }, spellInfo->GetSchoolMask());
+        unit->DealDamageMods(dmgInfo.attacker, dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
+#endif
 
         unit->SendSpellNonMeleeDamageLog(&dmgInfo);
         unit->DealSpellDamage(&dmgInfo, true);
         return 0;
     }
-#endif
 
     /**
      * Makes the [Unit] heal the target [Unit] with given spell
@@ -2689,15 +2717,10 @@ namespace LuaUnit
         { "GetVictim", &LuaUnit::GetVictim },
         { "GetSpeed", &LuaUnit::GetSpeed },
         { "GetStat", &LuaUnit::GetStat },
+        { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
         { "GetVehicleKit", &LuaUnit::GetVehicleKit },
         { "GetVehicle", &LuaUnit::GetVehicle },
         { "GetMovementType", &LuaUnit::GetMovementType },
-#if ELUNA_EXPANSION < EXP_RETAIL
-
-        { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
-#else
-        { "GetBaseSpellPower", METHOD_REG_NONE },
-#endif
 
         // Setters
         { "SetFaction", &LuaUnit::SetFaction },
@@ -2795,11 +2818,14 @@ namespace LuaUnit
         { "SendUnitSay", &LuaUnit::SendUnitSay },
         { "SendUnitYell", &LuaUnit::SendUnitYell },
         { "CastSpell", &LuaUnit::CastSpell },
+        { "CastCustomSpell", &LuaUnit::CastCustomSpell },
         { "CastSpellAoF", &LuaUnit::CastSpellAoF },
         { "Kill", &LuaUnit::Kill },
         { "StopSpellCast", &LuaUnit::StopSpellCast },
         { "InterruptSpell", &LuaUnit::InterruptSpell },
+        { "SendChatMessageToPlayer", &LuaUnit::SendChatMessageToPlayer },
         { "PerformEmote", &LuaUnit::PerformEmote },
+        { "EmoteState", &LuaUnit::EmoteState },
         { "CountPctFromCurHealth", &LuaUnit::CountPctFromCurHealth },
         { "CountPctFromMaxHealth", &LuaUnit::CountPctFromMaxHealth },
         { "Dismount", &LuaUnit::Dismount },
@@ -2824,18 +2850,10 @@ namespace LuaUnit
         { "MoveStop", &LuaUnit::MoveStop },
         { "MoveExpire", &LuaUnit::MoveExpire },
         { "MoveClear", &LuaUnit::MoveClear },
+        { "DealDamage", &LuaUnit::DealDamage },
         { "DealHeal", &LuaUnit::DealHeal },
         { "AddFlatStatModifier", &LuaUnit::AddFlatStatModifier },
         { "AddPctStatModifier", &LuaUnit::AddPctStatModifier },
-        { "EmoteState", &LuaUnit::EmoteState },
-        { "CastCustomSpell", &LuaUnit::CastCustomSpell },
-#if ELUNA_EXPANSION < EXP_RETAIL
-        { "SendChatMessageToPlayer", &LuaUnit::SendChatMessageToPlayer },
-        { "DealDamage", &LuaUnit::DealDamage },
-#else
-        { "SendChatMessageToPlayer", METHOD_REG_NONE },
-        { "DealDamage", METHOD_REG_NONE },
-#endif
 
         // Not implemented methods
         { "SummonGuardian", METHOD_REG_NONE } // not implemented
