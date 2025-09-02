@@ -2226,7 +2226,7 @@ namespace LuaUnit
 #if ELUNA_EXPANSION < EXP_RETAIL
         if (originalCaster)
 #else
-        if (&originalCaster)
+        if (!originalCaster.IsEmpty())
 #endif
             args.SetOriginalCaster(originalCaster);
 
