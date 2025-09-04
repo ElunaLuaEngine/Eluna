@@ -5,6 +5,7 @@
 */
 
 #include "ElunaMgr.h"
+#include "LuaEngine.h"
 
 ElunaMgr::ElunaMgr()
 {
@@ -29,7 +30,7 @@ void ElunaMgr::Create(Map* map, ElunaInfo const& info)
     _elunaMap.emplace(info.key, std::make_unique<Eluna>(map));
 }
 
-Eluna* ElunaMgr::Get(uint64_t key) const
+Eluna* ElunaMgr::Get(uint64 key) const
 {
     auto it = _elunaMap.find(key);
     if (it != _elunaMap.end())
@@ -43,7 +44,7 @@ Eluna* ElunaMgr::Get(ElunaInfo const& info) const
     return Get(info.key);
 }
 
-void ElunaMgr::Destroy(uint64_t key)
+void ElunaMgr::Destroy(uint64 key)
 {
     _elunaMap.erase(key);
 }
@@ -55,5 +56,14 @@ void ElunaMgr::Destroy(ElunaInfo const& info)
 
 Eluna* ElunaInfo::GetEluna() const
 {
-    return sElunaMgr->Get(key);
+    if (sElunaMgr)
+        return sElunaMgr->Get(key);
+
+    return nullptr;
+}
+
+ElunaInfo::~ElunaInfo()
+{
+    if (sElunaMgr)
+        sElunaMgr->Destroy(key);
 }

@@ -7,22 +7,24 @@
 #ifndef _ELUNAMGR_H
 #define _ELUNAMGR_H
 
-#include "LuaEngine.h"
-
 #include <unordered_map>
 #include <memory>
 
+class Eluna;
+
 struct ElunaInfo
 {
-    uint32_t mapId;
-    uint32_t instanceId;
-    uint64_t key;
+    uint32 mapId;
+    uint32 instanceId;
+    uint64 key;
 
-    ElunaInfo(uint32_t map, uint32_t instance)
+    ElunaInfo(uint32 map, uint32 instance)
         : mapId(map), instanceId(instance)
     {
-        key = (static_cast<uint64_t>(mapId) << 32) | instanceId;
+        key = (static_cast<uint64>(mapId) << 32) | instanceId;
     }
+
+    ~ElunaInfo();
 
     // Getter to fetch Eluna object
     Eluna* GetEluna() const;
@@ -41,14 +43,14 @@ public:
 
     void Create(Map* map, ElunaInfo const& info);
 
-    Eluna* Get(uint64_t key) const;
+    Eluna* Get(uint64 key) const;
     Eluna* Get(ElunaInfo const& info) const;
 
-    void Destroy(uint64_t key);
+    void Destroy(uint64 key);
     void Destroy(ElunaInfo const& info);
 
 private:
-    std::unordered_map<uint64_t, std::unique_ptr<Eluna>> _elunaMap;
+    std::unordered_map<uint64, std::unique_ptr<Eluna>> _elunaMap;
 };
 
 #define sElunaMgr ElunaMgr::instance()
