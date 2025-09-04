@@ -1962,7 +1962,7 @@ namespace LuaGlobalFunctions
         if (opcode >= NUM_MSG_TYPES)
 #else
         OpcodeTable opcodeTable;
-        if ((!opcodeTable.IsValid((OpcodeClient)opcode)) || (!opcodeTable.IsValid((OpcodeServer)opcode)))
+        if ((!opcodeTable.IsValid((OpcodeClient)opcode)) && (!opcodeTable.IsValid((OpcodeServer)opcode)))
 #endif
             return luaL_argerror(E->L, 1, "valid opcode expected");
 
