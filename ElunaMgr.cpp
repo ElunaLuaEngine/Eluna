@@ -24,7 +24,7 @@ ElunaMgr::~ElunaMgr()
 void ElunaMgr::Create(Map* map, ElunaInfo const& info)
 {
     // If already exists, do nothing
-    bool keyExists = (info.key != ElunaInfo::INVALID_KEY_ID) && (_elunaMap.find(info.key) != _elunaMap.end());
+    bool keyExists = info.IsValid() && (_elunaMap.find(info.key) != _elunaMap.end());
     if (keyExists)
         return;
 
@@ -66,12 +66,12 @@ ElunaInfo::~ElunaInfo()
         sElunaMgr->Destroy(key);
 }
 
-uint64 ElunaInfo::MakeKey(uint32 mapId, uint32 instanceId)
+constexpr uint64 ElunaInfo::MakeKey(uint32 mapId, uint32 instanceId)
 {
     return instanceId | (static_cast<uint64>(mapId) << 32);
 }
 
-uint64 ElunaInfo::MakeGlobalKey(uint32 instanceId)
+constexpr uint64 ElunaInfo::MakeGlobalKey(uint32 instanceId)
 {
     return MakeKey(GLOBAL_MAP_ID, instanceId);
 }
@@ -80,6 +80,7 @@ bool ElunaInfo::IsValid() const
 {
     return key != INVALID_KEY_ID;
 }
+
 bool ElunaInfo::IsGlobal() const
 {
     return IsValid() && GetMapId() == GLOBAL_MAP_ID;
