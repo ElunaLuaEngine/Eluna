@@ -12,6 +12,7 @@
 #include <unordered_map>
 
 class Eluna;
+class Map;
 
 struct ElunaInfoKey
 {
