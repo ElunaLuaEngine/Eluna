@@ -57,7 +57,7 @@ void ElunaMgr::Destroy(ElunaInfo const& info)
 
 ElunaInfoKey::ElunaInfoKey(uint32 mapId, uint32 instanceId)
 {
-    value = MakeKey(mapId, instanceId);
+    value = MakeKey(mapId, instanceId).value;
 }
 
 bool ElunaInfoKey::operator==(const ElunaInfoKey& other) const
