@@ -55,16 +55,6 @@ void ElunaMgr::Destroy(ElunaInfo const& info)
     Destroy(info.key);
 }
 
-ElunaInfoKey::ElunaInfoKey(uint32 mapId, uint32 instanceId)
-{
-    value = MakeKey(mapId, instanceId).value;
-}
-
-bool ElunaInfoKey::operator==(const ElunaInfoKey& other) const
-{
-    return value == other.value;
-}
-
 constexpr ElunaInfoKey ElunaInfoKey::MakeKey(uint32 mapId, uint32 instanceId)
 {
     return ElunaInfoKey(instanceId | (static_cast<uint64>(mapId) << 32));
@@ -73,26 +63,6 @@ constexpr ElunaInfoKey ElunaInfoKey::MakeKey(uint32 mapId, uint32 instanceId)
 constexpr ElunaInfoKey ElunaInfoKey::MakeGlobalKey(uint32 instanceId)
 {
     return MakeKey(GLOBAL_MAP_ID, instanceId);
-}
-
-bool ElunaInfoKey::IsValid() const
-{
-    return value != INVALID_KEY_VALUE;
-}
-
-bool ElunaInfoKey::IsGlobal() const
-{
-    return IsValid() && GetMapId() == GLOBAL_MAP_ID;
-}
-
-uint32 ElunaInfoKey::GetMapId() const
-{
-    return value >> 32;
-}
-
-uint32 ElunaInfoKey::GetInstanceId() const
-{
-    return value & 0xFFFFFFFF;
 }
 
 ElunaInfo::ElunaInfo(uint32 mapId, uint32 instanceId)

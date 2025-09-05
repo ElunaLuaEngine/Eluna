@@ -16,23 +16,22 @@ class Eluna;
 struct ElunaInfoKey
 {
 public:
-    ElunaInfoKey() : value(INVALID_KEY_VALUE) {}
-    ElunaInfoKey(uint64 key) : value(key) {}
-    ElunaInfoKey(uint32 mapId, uint32 instanceId);
+    constexpr ElunaInfoKey() : value(INVALID_KEY_VALUE) {}
+    constexpr ElunaInfoKey(uint64 key) : value(key) {}
     ~ElunaInfoKey() {}
 
-    bool operator==(const ElunaInfoKey& other) const;
+    constexpr bool operator==(const ElunaInfoKey& other) const { return value == other.value; }
 
 public:
     static constexpr ElunaInfoKey MakeKey(uint32 mapId, uint32 instanceId);
     static constexpr ElunaInfoKey MakeGlobalKey(uint32 instanceId);
 
-    bool IsValid() const;
-    bool IsGlobal() const;
+    constexpr bool IsValid() const { return value != INVALID_KEY_VALUE; };
+    constexpr bool IsGlobal() const { return IsValid() && GetMapId() == GLOBAL_MAP_ID; };
 
-    uint32 GetMapId() const;
-    uint32 GetInstanceId() const;
-    
+    constexpr uint32 GetMapId() const { return value >> 32; };
+    constexpr uint32 GetInstanceId() const { return value & 0xFFFFFFFF; };
+
 public:
     static uint64 const INVALID_KEY_VALUE = std::numeric_limits<uint64>().max();
     static uint32 const GLOBAL_MAP_ID = std::numeric_limits<uint32>().max();
