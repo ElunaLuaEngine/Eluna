@@ -55,11 +55,6 @@ void ElunaMgr::Destroy(ElunaInfo const& info)
     Destroy(info.key);
 }
 
-ElunaInfo::ElunaInfo(uint32 mapId, uint32 instanceId)
-{
-    key = ElunaInfoKey::MakeKey(mapId, instanceId);
-}
-
 ElunaInfo::~ElunaInfo()
 {
     if (IsValid() && sElunaMgr)

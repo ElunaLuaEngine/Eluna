@@ -65,7 +65,6 @@ struct ElunaInfo
 public:
     ElunaInfo() : key() {}
     ElunaInfo(ElunaInfoKey key) : key(key) {}
-    ElunaInfo(uint32 mapId, uint32 instanceId);
     ~ElunaInfo();
 
 public:
