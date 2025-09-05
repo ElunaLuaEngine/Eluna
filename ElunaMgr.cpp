@@ -55,16 +55,6 @@ void ElunaMgr::Destroy(ElunaInfo const& info)
     Destroy(info.key);
 }
 
-constexpr ElunaInfoKey ElunaInfoKey::MakeKey(uint32 mapId, uint32 instanceId)
-{
-    return ElunaInfoKey(instanceId | (static_cast<uint64>(mapId) << 32));
-}
-
-constexpr ElunaInfoKey ElunaInfoKey::MakeGlobalKey(uint32 instanceId)
-{
-    return MakeKey(GLOBAL_MAP_ID, instanceId);
-}
-
 ElunaInfo::ElunaInfo(uint32 mapId, uint32 instanceId)
 {
     key = ElunaInfoKey::MakeKey(mapId, instanceId);

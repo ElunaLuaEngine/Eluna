@@ -18,13 +18,20 @@ struct ElunaInfoKey
 public:
     constexpr ElunaInfoKey() : value(INVALID_KEY_VALUE) {}
     constexpr ElunaInfoKey(uint64 key) : value(key) {}
-    ~ElunaInfoKey() {}
+    constexpr ElunaInfoKey(uint32 mapId, uint32 instanceId) : value(instanceId | (static_cast<uint64>(mapId) << 32)) {}
 
     constexpr bool operator==(const ElunaInfoKey& other) const { return value == other.value; }
+    constexpr bool operator!=(const ElunaInfoKey& other) const { return !(*this == other); }
 
 public:
-    static constexpr ElunaInfoKey MakeKey(uint32 mapId, uint32 instanceId);
-    static constexpr ElunaInfoKey MakeGlobalKey(uint32 instanceId);
+    static constexpr ElunaInfoKey MakeKey(uint32 mapId, uint32 instanceId)
+    {
+        return ElunaInfoKey(instanceId | (static_cast<uint64>(mapId) << 32));
+    }
+    static constexpr ElunaInfoKey MakeGlobalKey(uint32 instanceId)
+    {
+        return MakeKey(GLOBAL_MAP_ID, instanceId);
+    }
 
     constexpr bool IsValid() const { return value != INVALID_KEY_VALUE; };
     constexpr bool IsGlobal() const { return IsValid() && GetMapId() == GLOBAL_MAP_ID; };
