@@ -7,27 +7,36 @@
 #ifndef _ELUNAMGR_H
 #define _ELUNAMGR_H
 
-#include <unordered_map>
+#include <limits>
 #include <memory>
+#include <unordered_map>
 
 class Eluna;
 
 struct ElunaInfo
 {
-    uint32 mapId;
-    uint32 instanceId;
-    uint64 key;
-
-    ElunaInfo(uint32 map, uint32 instance)
-        : mapId(map), instanceId(instance)
-    {
-        key = (static_cast<uint64>(mapId) << 32) | instanceId;
-    }
-
+public:
+    ElunaInfo(uint32 mapId, uint32 instanceId);
     ~ElunaInfo();
+
+public:
+    static constexpr uint32 MakeKey(uint32 mapId, uint32 instanceId);
+    static constexpr uint32 MakeGlobalKey(uint32 instanceId);
+
+    bool IsValid() const;
+    bool IsGlobal() const;
+
+    uint32 GetMapId() const;
+    uint32 GetInstanceId() const;
 
     // Getter to fetch Eluna object
     Eluna* GetEluna() const;
+
+public:
+    static uint64 const INVALID_KEY_ID = std::numeric_limits<uint64>().max();
+    static uint32 const GLOBAL_MAP_ID = std::numeric_limits<uint32>().max();
+
+    uint64 key = INVALID_KEY_ID;
 };
 
 class ElunaMgr
