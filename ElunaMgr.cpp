@@ -31,7 +31,7 @@ void ElunaMgr::Create(Map* map, ElunaInfo const& info)
     _elunaMap.emplace(info.key, std::make_unique<Eluna>(map));
 }
 
-Eluna* ElunaMgr::Get(uint64 key) const
+Eluna* ElunaMgr::Get(ElunaInfoKey key) const
 {
     auto it = _elunaMap.find(key);
     if (it != _elunaMap.end())
@@ -45,7 +45,7 @@ Eluna* ElunaMgr::Get(ElunaInfo const& info) const
     return Get(info.key);
 }
 
-void ElunaMgr::Destroy(uint64 key)
+void ElunaMgr::Destroy(ElunaInfoKey key)
 {
     _elunaMap.erase(key);
 }
@@ -55,9 +55,49 @@ void ElunaMgr::Destroy(ElunaInfo const& info)
     Destroy(info.key);
 }
 
+ElunaInfoKey::ElunaInfoKey(uint32 mapId, uint32 instanceId)
+{
+    value = MakeKey(mapId, instanceId);
+}
+
+bool ElunaInfoKey::operator==(const ElunaInfoKey& other) const
+{
+    return value == other.value;
+}
+
+constexpr ElunaInfoKey ElunaInfoKey::MakeKey(uint32 mapId, uint32 instanceId)
+{
+    return ElunaInfoKey(instanceId | (static_cast<uint64>(mapId) << 32));
+}
+
+constexpr ElunaInfoKey ElunaInfoKey::MakeGlobalKey(uint32 instanceId)
+{
+    return MakeKey(GLOBAL_MAP_ID, instanceId);
+}
+
+bool ElunaInfoKey::IsValid() const
+{
+    return value != INVALID_KEY_VALUE;
+}
+
+bool ElunaInfoKey::IsGlobal() const
+{
+    return IsValid() && GetMapId() == GLOBAL_MAP_ID;
+}
+
+uint32 ElunaInfoKey::GetMapId() const
+{
+    return value >> 32;
+}
+
+uint32 ElunaInfoKey::GetInstanceId() const
+{
+    return value & 0xFFFFFFFF;
+}
+
 ElunaInfo::ElunaInfo(uint32 mapId, uint32 instanceId)
 {
-    key = MakeKey(mapId, instanceId);
+    key = ElunaInfoKey::MakeKey(mapId, instanceId);
 }
 
 ElunaInfo::~ElunaInfo()
@@ -66,34 +106,24 @@ ElunaInfo::~ElunaInfo()
         sElunaMgr->Destroy(key);
 }
 
-constexpr uint64 ElunaInfo::MakeKey(uint32 mapId, uint32 instanceId)
-{
-    return instanceId | (static_cast<uint64>(mapId) << 32);
-}
-
-constexpr uint64 ElunaInfo::MakeGlobalKey(uint32 instanceId)
-{
-    return MakeKey(GLOBAL_MAP_ID, instanceId);
-}
-
 bool ElunaInfo::IsValid() const
 {
-    return key != INVALID_KEY_ID;
+    return key.IsValid();
 }
 
 bool ElunaInfo::IsGlobal() const
 {
-    return IsValid() && GetMapId() == GLOBAL_MAP_ID;
+    return key.IsGlobal();
 }
 
 uint32 ElunaInfo::GetMapId() const
 {
-    return key >> 32;
+    return key.GetMapId();
 }
 
 uint32 ElunaInfo::GetInstanceId() const
 {
-    return key & 0xFFFFFFFF;
+    return key.GetInstanceId();
 }
 
 Eluna* ElunaInfo::GetEluna() const
