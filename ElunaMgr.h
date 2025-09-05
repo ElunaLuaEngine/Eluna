@@ -20,8 +20,8 @@ public:
     ~ElunaInfo();
 
 public:
-    static constexpr uint32 MakeKey(uint32 mapId, uint32 instanceId);
-    static constexpr uint32 MakeGlobalKey(uint32 instanceId);
+    static constexpr uint64 MakeKey(uint32 mapId, uint32 instanceId);
+    static constexpr uint64 MakeGlobalKey(uint32 instanceId);
 
     bool IsValid() const;
     bool IsGlobal() const;
