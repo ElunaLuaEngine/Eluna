@@ -3158,7 +3158,11 @@ namespace LuaPlayer
         }
         else
         {
+#if ELUNA_EXPANSION != EXP_WOTLK
             player->DestroyItemCount(item, itemCount, true);
+#else
+            player->DestroyItemCount(*item, itemCount, true);
+#endif
         }
         return 0;
     }
