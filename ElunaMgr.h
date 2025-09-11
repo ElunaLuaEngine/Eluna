@@ -10,6 +10,7 @@
 #include <limits>
 #include <memory>
 #include <unordered_map>
+#include <cstdint>
 
 class Eluna;
 class Map;
