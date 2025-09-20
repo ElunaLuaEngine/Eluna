@@ -7,10 +7,11 @@
 #ifndef _ELUNAMGR_H
 #define _ELUNAMGR_H
 
+#include "Common.h"
+
 #include <limits>
 #include <memory>
 #include <unordered_map>
-#include <cstdint>
 
 class Eluna;
 class Map;
