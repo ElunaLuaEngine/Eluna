@@ -611,6 +611,8 @@ public:
 
     /* Spell */
     void OnSpellCast(Spell* pSpell, bool skipCheck);
+    void OnAuraApplication(Aura* aura, uint8 effId, uint8 mode, bool apply);
+
 };
 template<> Unit* Eluna::CHECKOBJ<Unit>(int narg, bool error);
 template<> Object* Eluna::CHECKOBJ<Object>(int narg, bool error);

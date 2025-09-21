@@ -15,7 +15,7 @@ using namespace Hooks;
 
 #define START_HOOK(EVENT, SPELL) \
     auto binding = GetBinding<EntryKey<SpellEvents>>(REGTYPE_SPELL);\
-    auto key = EntryKey<SpellEvents>(EVENT, SPELL->m_spellInfo->Id);\
+    auto key = EntryKey<SpellEvents>(EVENT, SPELL->GetSpellInfo()->Id);\
     if (!binding->HasBindingsFor(key))\
         return;
 
@@ -30,5 +30,15 @@ void Eluna::OnSpellCast(Spell* pSpell, bool skipCheck)
     START_HOOK(SPELL_EVENT_ON_CAST, pSpell);
     HookPush(pSpell);
     HookPush(skipCheck);
+    CallAllFunctions(binding, key);
+}
+
+void Eluna::OnAuraApplication(Aura* aura, uint8 effId, uint8 mode, bool apply)
+{
+    START_HOOK(SPELL_EVENT_ON_AURA_APPLICATION, aura);
+    HookPush(aura);
+    HookPush(effId);
+    HookPush(mode);
+    HookPush(apply);
     CallAllFunctions(binding, key);
 }

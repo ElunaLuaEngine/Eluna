@@ -276,6 +276,7 @@ namespace Hooks
     enum SpellEvents
     {
         SPELL_EVENT_ON_CAST                             = 1,    // (event, spell, skipCheck)
+        SPELL_EVENT_ON_AURA_APPLICATION                 = 2,    // (event, aura, mode, apply)
         SPELL_EVENT_COUNT
     };
 
@@ -520,7 +521,8 @@ private:
     };
 
     static constexpr EventEntry SpellEventsTable[] = {
-        {Hooks::SPELL_EVENT_ON_CAST,                            "on_cast"}
+        {Hooks::SPELL_EVENT_ON_CAST,                            "on_cast"},
+        {Hooks::SPELL_EVENT_ON_AURA_APPLICATION,                "on_aura_application" }
     };
 
     static constexpr EventEntry ItemEventsTable[] = {
