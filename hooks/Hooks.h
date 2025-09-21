@@ -276,7 +276,7 @@ namespace Hooks
     enum SpellEvents
     {
         SPELL_EVENT_ON_CAST                             = 1,    // (event, spell, skipCheck)
-        SPELL_EVENT_ON_AURA_APPLICATION                 = 2,    // (event, aura, mode, apply)
+        SPELL_EVENT_ON_AURA_APPLICATION                 = 2,    // (event, aura, effectId, mode, apply)
         SPELL_EVENT_COUNT
     };
 
