@@ -275,13 +275,13 @@ namespace Hooks
 
     enum SpellEvents
     {
-        SPELL_EVENT_ON_CAST                             = 1,    // (event, spell, skipCheck)
-        SPELL_EVENT_ON_AURA_APPLICATION                 = 2,    // (event, aura, effectImdex, mode, apply)
-        SPELL_EVENT_ON_DISPEL = 3,    // (event, aura, @todo: write args)
-        SPELL_EVENT_ON_PERODIC_TICK = 4,    // (event, aura, effectIndex)
-        SPELL_EVENT_ON_PERODIC_UPDATE = 5, // (event, aura, effectIndex)
-        SPELL_EVENT_ON_AURA_CALC_AMOUNT = 6, // (event, aura, @todo: write args)
-        SPELL_EVENT_ON_CALC_PERODIC = 7, // (event, aura, @todo: write args)
+        SPELL_EVENT_ON_CAST                             = 1,   // (event, spell, skipCheck)
+        SPELL_EVENT_ON_AURA_APPLICATION                 = 2,   // (event, aura, auraEffect, target, mode, apply) - Can return true to stop normal action
+        SPELL_EVENT_ON_DISPEL                           = 3,   // (event, aura, dispeler, dispelSpellId, removedCharges)
+        SPELL_EVENT_ON_PERODIC_TICK                     = 4,   // (event, aura, auraEffect, target) Can return true to stop normal action
+        SPELL_EVENT_ON_PERODIC_UPDATE                   = 5,   // (event, aura, auraEffect)
+        SPELL_EVENT_ON_AURA_CALC_AMOUNT                 = 6,   // (event, aura, auraEffect, amount, canBeRecalculated) - can return new amount as first return value, can return new canBeRecalculated as second return value
+        SPELL_EVENT_ON_CALC_PERODIC                     = 7,   // (event, aura, auraEffect, isPeriodic, amplitude) - can return new isPeriodic as first return value, can return new amplitude as second return value
         SPELL_EVENT_COUNT
     };
 

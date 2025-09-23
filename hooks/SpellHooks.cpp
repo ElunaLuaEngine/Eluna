@@ -54,11 +54,12 @@ void Eluna::OnAuraDispel(Aura* aura, DispelInfo* dispelInfo)
     CallAllFunctions(binding, key);
 }
 
-bool Eluna::OnPerodicTick(Aura* aura, AuraEffect const* auraEff)
+bool Eluna::OnPerodicTick(Aura* aura, AuraEffect const* auraEff, Unit* target)
 {
     START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_PERODIC_TICK, aura, false);
     HookPush(aura);
     HookPush(auraEff);
+    HookPush(target);
     return CallAllFunctionsBool(binding, key, false);
 }
 
