@@ -20,6 +20,13 @@ ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj)
 #endif
     return { obj->GetWeakPtr(), map };
 }
+
+ElunaConstrainedObjectRef<AuraEffect> GetWeakPtrFor(AuraEffect const* obj)
+{
+    Map* map = obj->GetBase()->GetOwner()->GetMap();
+    return { obj->GetWeakPtr(), map };
+}
+
 ElunaConstrainedObjectRef<BattleGround> GetWeakPtrFor(BattleGround const* obj) { return { obj->GetWeakPtr(), obj->GetBgMap() }; }
 ElunaConstrainedObjectRef<Group> GetWeakPtrFor(Group const* obj) { return { obj->GetWeakPtr(), nullptr }; }
 ElunaConstrainedObjectRef<Guild> GetWeakPtrFor(Guild const* obj) { return { obj->GetWeakPtr(), nullptr }; }

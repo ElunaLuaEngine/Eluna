@@ -276,7 +276,12 @@ namespace Hooks
     enum SpellEvents
     {
         SPELL_EVENT_ON_CAST                             = 1,    // (event, spell, skipCheck)
-        SPELL_EVENT_ON_AURA_APPLICATION                 = 2,    // (event, aura, effectId, mode, apply)
+        SPELL_EVENT_ON_AURA_APPLICATION                 = 2,    // (event, aura, effectImdex, mode, apply)
+        SPELL_EVENT_ON_DISPEL = 3,    // (event, aura, @todo: write args)
+        SPELL_EVENT_ON_PERODIC_TICK = 4,    // (event, aura, effectIndex)
+        SPELL_EVENT_ON_PERODIC_UPDATE = 5, // (event, aura, effectIndex)
+        SPELL_EVENT_ON_AURA_CALC_AMOUNT = 6, // (event, aura, @todo: write args)
+        SPELL_EVENT_ON_CALC_PERODIC = 7, // (event, aura, @todo: write args)
         SPELL_EVENT_COUNT
     };
 
@@ -522,7 +527,12 @@ private:
 
     static constexpr EventEntry SpellEventsTable[] = {
         {Hooks::SPELL_EVENT_ON_CAST,                            "on_cast"},
-        {Hooks::SPELL_EVENT_ON_AURA_APPLICATION,                "on_aura_application" }
+        {Hooks::SPELL_EVENT_ON_AURA_APPLICATION,                "on_aura_application" },
+        {Hooks::SPELL_EVENT_ON_DISPEL,                          "on_aura_dispel" },
+        {Hooks::SPELL_EVENT_ON_PERODIC_TICK,                    "on_perodic_tick" },
+        {Hooks::SPELL_EVENT_ON_PERODIC_UPDATE,                  "on_perodic_update" },
+        {Hooks::SPELL_EVENT_ON_AURA_CALC_AMOUNT,                "on_aura_calc_amount" },
+        {Hooks::SPELL_EVENT_ON_CALC_PERODIC,                    "on_calc_perodic" }
     };
 
     static constexpr EventEntry ItemEventsTable[] = {
