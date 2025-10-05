@@ -335,7 +335,7 @@ namespace LuaGlobalFunctions
     int GetPlayerGUID(Eluna* E)
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
-        E->Push(MAKE_NEW_GUID(lowguid, 0, HIGHGUID_PLAYER));
+        E->Push(ObjectGuid::Create<HIGHGUID_PLAYER>(lowguid));
         return 1;
     }
 
@@ -351,7 +351,7 @@ namespace LuaGlobalFunctions
     int GetItemGUID(Eluna* E)
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
-        E->Push(MAKE_NEW_GUID(lowguid, 0, HIGHGUID_ITEM));
+        E->Push(ObjectGuid::Create<HIGHGUID_ITEM>(lowguid));
         return 1;
     }
 
@@ -370,7 +370,7 @@ namespace LuaGlobalFunctions
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
         uint32 entry = E->CHECKVAL<uint32>(2);
-        E->Push(MAKE_NEW_GUID(lowguid, entry, HIGHGUID_GAMEOBJECT));
+        E->Push(ObjectGuid::Create<HIGHGUID_GAMEOBJECT>(entry, lowguid));
         return 1;
     }
 
@@ -389,7 +389,7 @@ namespace LuaGlobalFunctions
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
         uint32 entry = E->CHECKVAL<uint32>(2);
-        E->Push(MAKE_NEW_GUID(lowguid, entry, HIGHGUID_UNIT));
+        E->Push(ObjectGuid::Create<HIGHGUID_UNIT>(entry, lowguid));
         return 1;
     }
 
@@ -2043,7 +2043,7 @@ namespace LuaGlobalFunctions
             }
         }
 
-        Player* receiverPlayer = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(receiverGUIDLow, 0, HIGHGUID_PLAYER));
+        Player* receiverPlayer = eObjectAccessor()FindPlayerByLowGUID(receiverGUIDLow);
         draft.SendMailTo(trans, MailReceiver(receiverPlayer, receiverGUIDLow), sender, MAIL_CHECK_MASK_NONE, delay);
         CharacterDatabase.CommitTransaction(trans);
 
