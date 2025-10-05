@@ -611,6 +611,12 @@ public:
 
     /* Spell */
     void OnSpellCast(Spell* pSpell, bool skipCheck);
+    bool OnAuraApplication(Aura* aura, AuraEffect const* auraEff, Unit* target, uint8 mode, bool apply);
+    void OnAuraDispel(Aura* aura, DispelInfo* dispelInfo);
+    bool OnPerodicTick(Aura* aura, AuraEffect const* auraEff, Unit* target);
+    void OnPerodicUpdate(Aura* aura, AuraEffect const* auraEff);
+    void OnAuraCalcAmount(Aura* aura, AuraEffect const* auraEff, int32& amount, bool& canBeRecalculated);
+    void OnCalcPerodic(Aura* aura, AuraEffect const* auraEff, bool& isPeriodic, int32& amplitude);
 };
 template<> Unit* Eluna::CHECKOBJ<Unit>(int narg, bool error);
 template<> Object* Eluna::CHECKOBJ<Object>(int narg, bool error);

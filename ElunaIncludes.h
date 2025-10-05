@@ -36,6 +36,7 @@
 #include "ScriptMgr.h"
 #include "Spell.h"
 #include "SpellAuras.h"
+#include "SpellAuraEffects.h"
 #include "SpellMgr.h"
 #include "TemporarySummon.h"
 #include "WorldPacket.h"
