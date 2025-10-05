@@ -2159,7 +2159,7 @@ namespace LuaUnit
             args.TriggerFlags = TRIGGERED_FULL_MASK;
         if (castItem)
             args.SetCastItem(castItem);
-        if (originalCaster)
+        if (!originalCaster.IsEmpty())
             args.SetOriginalCaster(originalCaster);
 
         unit->CastSpell(target, spell, args);
