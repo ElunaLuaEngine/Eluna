@@ -39,9 +39,7 @@ void ElunaEventProcessor::Update(uint32 diff)
     isUpdating = true;
 
     m_time += diff;
-    for (EventList::iterator it = eventList.begin();
-        it != eventList.end() && it->first <= m_time;
-        it = eventList.begin())
+    for (EventList::iterator it = eventList.begin(); it != eventList.end() && it->first <= m_time; it = eventList.begin())
     {
         LuaEvent* luaEvent = it->second;
         eventList.erase(it);
@@ -57,9 +55,7 @@ void ElunaEventProcessor::Update(uint32 diff)
                 AddEvent(luaEvent); // may be deferred if we recurse into Update
 
             if (!obj || (obj && obj->IsInWorld()))
-                E->OnTimedEvent(luaEvent->funcRef, delay,
-                    luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats,
-                    obj);
+                E->OnTimedEvent(luaEvent->funcRef, delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
 
             if (!remove)
                 continue;
