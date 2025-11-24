@@ -36,8 +36,12 @@ ElunaEventProcessor::~ElunaEventProcessor()
 
 void ElunaEventProcessor::Update(uint32 diff)
 {
+    isUpdating = true;
+
     m_time += diff;
-    for (EventList::iterator it = eventList.begin(); it != eventList.end() && it->first <= m_time; it = eventList.begin())
+    for (EventList::iterator it = eventList.begin();
+        it != eventList.end() && it->first <= m_time;
+        it = eventList.begin())
     {
         LuaEvent* luaEvent = it->second;
         eventList.erase(it);
@@ -50,50 +54,81 @@ void ElunaEventProcessor::Update(uint32 diff)
             uint32 delay = luaEvent->delay;
             bool remove = luaEvent->repeats == 1;
             if (!remove)
-                AddEvent(luaEvent); // Reschedule before calling incase RemoveEvents used
+                AddEvent(luaEvent); // may be deferred if we recurse into Update
 
-            // Call the timed event
-            if(!obj || (obj && obj->IsInWorld()))
-                E->OnTimedEvent(luaEvent->funcRef, delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
+            if (!obj || (obj && obj->IsInWorld()))
+                E->OnTimedEvent(luaEvent->funcRef, delay,
+                    luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats,
+                    obj);
 
             if (!remove)
                 continue;
         }
 
-        // Event should be deleted (executed last time or set to be aborted)
         RemoveEvent(luaEvent);
     }
+
+    isUpdating = false;
+    ProcessDeferredOps();
 }
 
 void ElunaEventProcessor::SetStates(LuaEventState state)
 {
+    if (isUpdating)
+    {
+        QueueDeferredOp(DeferredOpType::SetStates, nullptr, 0, state);
+        return;
+    }
+
     for (EventList::iterator it = eventList.begin(); it != eventList.end(); ++it)
         it->second->SetState(state);
+
     if (state == LUAEVENT_STATE_ERASE)
         eventMap.clear();
 }
 
 void ElunaEventProcessor::RemoveEvents_internal()
 {
+    if (isUpdating)
+    {
+        QueueDeferredOp(DeferredOpType::ClearAll);
+        return;
+    }
+
     for (EventList::iterator it = eventList.begin(); it != eventList.end(); ++it)
         RemoveEvent(it->second);
 
+    deferredOps.clear();
     eventList.clear();
     eventMap.clear();
 }
 
 void ElunaEventProcessor::SetState(int eventId, LuaEventState state)
 {
-    if (eventMap.find(eventId) != eventMap.end())
-        eventMap[eventId]->SetState(state);
+    if (isUpdating)
+    {
+        QueueDeferredOp(DeferredOpType::SetState, nullptr, eventId, state);
+        return;
+    }
+
+    auto itr = eventMap.find(eventId);
+    if (itr != eventMap.end())
+        itr->second->SetState(state);
+
     if (state == LUAEVENT_STATE_ERASE)
         eventMap.erase(eventId);
 }
 
 void ElunaEventProcessor::AddEvent(LuaEvent* luaEvent)
 {
+    if (isUpdating)
+    {
+        QueueDeferredOp(DeferredOpType::AddEvent, luaEvent);
+        return;
+    }
+
     luaEvent->GenerateDelay();
-    eventList.insert(std::pair<uint64, LuaEvent*>(m_time + luaEvent->delay, luaEvent));
+    eventList.insert(std::make_pair(m_time + luaEvent->delay, luaEvent));
     eventMap[luaEvent->funcRef] = luaEvent;
 }
 
@@ -111,6 +146,47 @@ void ElunaEventProcessor::RemoveEvent(LuaEvent* luaEvent)
         luaL_unref(E->L, LUA_REGISTRYINDEX, luaEvent->funcRef);
     }
     delete luaEvent;
+}
+
+void ElunaEventProcessor::QueueDeferredOp(DeferredOpType type, LuaEvent* event, int eventId, LuaEventState state)
+{
+    DeferredOp op;
+    op.type = type;
+    op.event = event;
+    op.eventId = eventId;
+    op.state = state;
+    deferredOps.push_back(op);
+}
+
+void ElunaEventProcessor::ProcessDeferredOps()
+{
+    if (deferredOps.empty())
+        return;
+
+    std::vector<DeferredOp> ops;
+    ops.swap(deferredOps);
+
+    for (DeferredOp& op : ops)
+    {
+        switch (op.type)
+        {
+        case DeferredOpType::AddEvent:
+            AddEvent(op.event);
+            break;
+
+        case DeferredOpType::SetState:
+            SetState(op.eventId, op.state);
+            break;
+
+        case DeferredOpType::SetStates:
+            SetStates(op.state);
+            break;
+
+        case DeferredOpType::ClearAll:
+            RemoveEvents_internal();
+            break;
+        }
+    }
 }
 
 EventMgr::EventMgr(Eluna* _E) : E(_E)

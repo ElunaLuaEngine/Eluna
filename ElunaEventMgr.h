@@ -79,13 +79,35 @@ public:
     // set the event to be removed when executing
     void SetState(int eventId, LuaEventState state);
     void AddEvent(int funcRef, uint32 min, uint32 max, uint32 repeats);
-    EventMap eventMap;
 
 private:
+    enum class DeferredOpType
+    {
+        AddEvent,
+        SetState,
+        SetStates,
+        ClearAll
+    };
+
+    struct DeferredOp
+    {
+        DeferredOpType type;
+        LuaEvent* event = nullptr;
+        int eventId = 0;
+        LuaEventState state = LUAEVENT_STATE_RUN;
+    };
+
     void RemoveEvents_internal();
     void AddEvent(LuaEvent* luaEvent);
     void RemoveEvent(LuaEvent* luaEvent);
+
+    void QueueDeferredOp(DeferredOpType type, LuaEvent* event = nullptr, int eventId = 0, LuaEventState state = LUAEVENT_STATE_RUN);
+    void ProcessDeferredOps();
+    bool isUpdating = false;
+    std::vector<DeferredOp> deferredOps;
+
     EventList eventList;
+    EventMap eventMap;
     uint64 m_time;
     WorldObject* obj;
     Eluna* E;

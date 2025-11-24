@@ -1609,7 +1609,7 @@ namespace LuaGlobalFunctions
     int RemoveEventById(Eluna* E)
     {
         int eventId = E->CHECKVAL<int>(1);
-        bool all_Events = E->CHECKVAL<bool>(1, false);
+        bool all_Events = E->CHECKVAL<bool>(2, false);
 
         // not thread safe
         if (all_Events)
