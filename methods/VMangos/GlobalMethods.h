@@ -1390,7 +1390,7 @@ namespace LuaGlobalFunctions
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
         if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
         {
-            E->eventMgr->globalProcessor->AddEvent(functionRef, min, max, repeats);
+            E->eventMgr->GetGlobalProcessor(GLOBAL_EVENTS)->AddEvent(functionRef, min, max, repeats);
             E->Push(functionRef);
         }
         return 1;
@@ -1411,7 +1411,7 @@ namespace LuaGlobalFunctions
         if (all_Events)
             E->eventMgr->SetState(eventId, LUAEVENT_STATE_ABORT);
         else
-            E->eventMgr->globalProcessor->SetState(eventId, LUAEVENT_STATE_ABORT);
+            E->eventMgr->GetGlobalProcessor(GLOBAL_EVENTS)->SetState(eventId, LUAEVENT_STATE_ABORT);
         return 0;
     }
 
@@ -1428,7 +1428,7 @@ namespace LuaGlobalFunctions
         if (all_Events)
             E->eventMgr->SetStates(LUAEVENT_STATE_ABORT);
         else
-            E->eventMgr->globalProcessor->SetStates(LUAEVENT_STATE_ABORT);
+            E->eventMgr->GetGlobalProcessor(GLOBAL_EVENTS)->SetStates(LUAEVENT_STATE_ABORT);
         return 0;
     }
 
