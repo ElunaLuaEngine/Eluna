@@ -192,32 +192,38 @@ EventMgr::EventMgr(Eluna* _E) : E(_E)
 
 EventMgr::~EventMgr()
 {
-    if (!processors.empty())
-        for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
-            (*it)->RemoveEvents_internal();
+    for (auto* processor : processors)
+        processor->RemoveEvents_internal();
+
     globalProcessor->RemoveEvents_internal();
 }
 
 void EventMgr::UpdateProcessors(uint32 diff)
 {
     if (!processors.empty())
-        for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
-            (*it)->Update(diff);
+    {
+        // iterate a copy because processors may be destroyed during update (creature removed by a script, etc)
+        ProcessorSet copy = processors;
+
+        for (auto* processor : copy)
+            processor->Update(diff);
+    }
+
     globalProcessor->Update(diff);
 }
 
 void EventMgr::SetStates(LuaEventState state)
 {
-    if (!processors.empty())
-        for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
-            (*it)->SetStates(state);
+    for (auto* processor : processors)
+        processor->SetStates(state);
+
     globalProcessor->SetStates(state);
 }
 
 void EventMgr::SetState(int eventId, LuaEventState state)
 {
-    if (!processors.empty())
-        for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
-            (*it)->SetState(eventId, state);
+    for (auto* processor : processors)
+        processor->SetState(eventId, state);
+
     globalProcessor->SetState(eventId, state);
 }
