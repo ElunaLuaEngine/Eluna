@@ -125,8 +125,8 @@ public:
     ~EventMgr();
 
     void UpdateProcessors(uint32 diff);
-    void SetStates(LuaEventState state);
-    void SetState(int eventId, LuaEventState state);
+    void SetAllEventStates(LuaEventState state);
+    void SetEventState(int eventId, LuaEventState state);
 
     ElunaEventProcessor* GetGlobalProcessor(GlobalEventSpace space);
 

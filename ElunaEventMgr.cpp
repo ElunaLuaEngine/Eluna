@@ -20,7 +20,7 @@ extern "C"
 
 ElunaEventProcessor::ElunaEventProcessor(Eluna* _E, WorldObject* _obj) : m_time(0), obj(_obj), E(_E)
 {
-    if (E->eventMgr)
+    if (E && E->eventMgr)
         E->eventMgr->processors.insert(this);
 }
 
@@ -28,7 +28,7 @@ ElunaEventProcessor::~ElunaEventProcessor()
 {
     RemoveEvents_internal();
 
-    if (E->eventMgr)
+    if (E && E->eventMgr)
         E->eventMgr->processors.erase(this);
 }
 
@@ -192,10 +192,8 @@ EventMgr::EventMgr(Eluna* _E) : E(_E)
 
 EventMgr::~EventMgr()
 {
-    for (auto* processor : processors)
-        processor->RemoveEvents_internal();
-
     globalProcessors.clear();
+    processors.clear();
 }
 
 void EventMgr::UpdateProcessors(uint32 diff)
@@ -210,13 +208,13 @@ void EventMgr::UpdateProcessors(uint32 diff)
     }
 }
 
-void EventMgr::SetStates(LuaEventState state)
+void EventMgr::SetAllEventStates(LuaEventState state)
 {
     for (auto* processor : processors)
         processor->SetStates(state);
 }
 
-void EventMgr::SetState(int eventId, LuaEventState state)
+void EventMgr::SetEventState(int eventId, LuaEventState state)
 {
     for (auto* processor : processors)
         processor->SetState(eventId, state);
