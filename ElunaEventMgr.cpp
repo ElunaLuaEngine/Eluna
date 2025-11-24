@@ -20,17 +20,15 @@ extern "C"
 
 ElunaEventProcessor::ElunaEventProcessor(Eluna* _E, WorldObject* _obj) : m_time(0), obj(_obj), E(_E)
 {
-    if (obj)
+    if (E->eventMgr)
         E->eventMgr->processors.insert(this);
 }
 
 ElunaEventProcessor::~ElunaEventProcessor()
 {
-    {
-        RemoveEvents_internal();
-    }
+    RemoveEvents_internal();
 
-    if (obj)
+    if (E->eventMgr)
         E->eventMgr->processors.erase(this);
 }
 
@@ -187,7 +185,9 @@ void ElunaEventProcessor::ProcessDeferredOps()
 
 EventMgr::EventMgr(Eluna* _E) : E(_E)
 {
-    globalProcessor = std::make_unique<ElunaEventProcessor>(E, nullptr);
+    auto gp = std::make_unique<ElunaEventProcessor>(E, nullptr);
+    processors.insert(gp.get());
+    globalProcessors.emplace(GLOBAL_EVENTS, std::move(gp));
 }
 
 EventMgr::~EventMgr()
@@ -195,35 +195,35 @@ EventMgr::~EventMgr()
     for (auto* processor : processors)
         processor->RemoveEvents_internal();
 
-    globalProcessor->RemoveEvents_internal();
+    globalProcessors.clear();
 }
 
 void EventMgr::UpdateProcessors(uint32 diff)
 {
-    if (!processors.empty())
-    {
-        // iterate a copy because processors may be destroyed during update (creature removed by a script, etc)
-        ProcessorSet copy = processors;
+    // iterate a copy because processors may be destroyed during update (creature removed by a script, etc)
+    ProcessorSet copy = processors;
 
-        for (auto* processor : copy)
+    for (auto* processor : copy)
+    {
+        if (processors.find(processor) != processors.end())
             processor->Update(diff);
     }
-
-    globalProcessor->Update(diff);
 }
 
 void EventMgr::SetStates(LuaEventState state)
 {
     for (auto* processor : processors)
         processor->SetStates(state);
-
-    globalProcessor->SetStates(state);
 }
 
 void EventMgr::SetState(int eventId, LuaEventState state)
 {
     for (auto* processor : processors)
         processor->SetState(eventId, state);
+}
 
-    globalProcessor->SetState(eventId, state);
+ElunaEventProcessor* EventMgr::GetGlobalProcessor(GlobalEventSpace space)
+{
+    auto it = globalProcessors.find(space);
+    return (it != globalProcessors.end()) ? it->second.get() : nullptr;
 }

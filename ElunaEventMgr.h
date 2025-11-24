@@ -36,6 +36,11 @@ enum LuaEventState
     LUAEVENT_STATE_ERASE,  // On next call just erases the data
 };
 
+enum GlobalEventSpace
+{
+    GLOBAL_EVENTS
+};
+
 struct LuaEvent
 {
     LuaEvent(int _funcRef, uint32 _min, uint32 _max, uint32 _repeats) :
@@ -116,23 +121,24 @@ private:
 class EventMgr
 {
 public:
-    typedef std::unordered_set<ElunaEventProcessor*> ProcessorSet;
-    ProcessorSet processors;
-    std::unique_ptr<ElunaEventProcessor> globalProcessor;
-    Eluna* E;
-
     EventMgr(Eluna* _E);
     ~EventMgr();
 
-    // Set the state of all timed events
-    // Execute only in safe env
+    void UpdateProcessors(uint32 diff);
     void SetStates(LuaEventState state);
-
-    // Sets the eventId's state in all processors
-    // Execute only in safe env
     void SetState(int eventId, LuaEventState state);
 
-    void UpdateProcessors(uint32 diff);
+    ElunaEventProcessor* GetGlobalProcessor(GlobalEventSpace space);
+
+private:
+    typedef std::unordered_set<ElunaEventProcessor*> ProcessorSet;
+
+    ProcessorSet processors; // tracks ALL processors (object + global)
+    std::unordered_map<GlobalEventSpace, std::unique_ptr<ElunaEventProcessor>> globalProcessors;
+
+    Eluna* E;
+
+    friend class ElunaEventProcessor;
 };
 
 #endif
