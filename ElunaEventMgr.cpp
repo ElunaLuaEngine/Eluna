@@ -1,9 +1,3 @@
-/*
-* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
-* This program is free software licensed under GPL version 3
-* Please see the included DOCS/LICENSE.md for more information
-*/
-
 #include "ElunaEventMgr.h"
 #include "LuaEngine.h"
 #if !defined ELUNA_CMANGOS
@@ -20,16 +14,11 @@ extern "C"
 
 ElunaEventProcessor::ElunaEventProcessor(Eluna* _E, WorldObject* _obj) : m_time(0), obj(_obj), E(_E)
 {
-    if (E && E->eventMgr)
-        E->eventMgr->processors.insert(this);
 }
 
 ElunaEventProcessor::~ElunaEventProcessor()
 {
     RemoveEvents_internal();
-
-    if (E && E->eventMgr)
-        E->eventMgr->processors.erase(this);
 }
 
 void ElunaEventProcessor::Update(uint32 diff)
@@ -183,6 +172,12 @@ void ElunaEventProcessor::ProcessDeferredOps()
     }
 }
 
+ElunaProcessorInfo::~ElunaProcessorInfo()
+{
+    if (mgr)
+        mgr->FlagObjectProcessorForDeletion(processorId);
+}
+
 EventMgr::EventMgr(Eluna* _E) : E(_E)
 {
     auto gp = std::make_unique<ElunaEventProcessor>(E, nullptr);
@@ -193,7 +188,9 @@ EventMgr::EventMgr(Eluna* _E) : E(_E)
 EventMgr::~EventMgr()
 {
     globalProcessors.clear();
+    objectProcessors.clear();
     processors.clear();
+    objectProcessorsPendingDelete.clear();
 }
 
 void EventMgr::UpdateProcessors(uint32 diff)
@@ -204,8 +201,11 @@ void EventMgr::UpdateProcessors(uint32 diff)
     for (auto* processor : copy)
     {
         if (processors.find(processor) != processors.end())
-            processor->Update(diff);
+            if (!processor->pendingDeletion)
+                processor->Update(diff);
     }
+
+    CleanupObjectProcessors();
 }
 
 void EventMgr::SetAllEventStates(LuaEventState state)
@@ -224,4 +224,55 @@ ElunaEventProcessor* EventMgr::GetGlobalProcessor(GlobalEventSpace space)
 {
     auto it = globalProcessors.find(space);
     return (it != globalProcessors.end()) ? it->second.get() : nullptr;
+}
+
+uint64 EventMgr::CreateObjectProcessor(WorldObject* obj)
+{
+    uint64 id = nextProcessorId++;
+    auto proc = std::make_unique<ElunaEventProcessor>(E, obj);
+    ElunaEventProcessor* raw = proc.get();
+
+    processors.insert(raw);
+    objectProcessors.emplace(id, std::move(proc));
+
+    return id;
+}
+
+ElunaEventProcessor* EventMgr::GetObjectProcessor(uint64 processorId)
+{
+    auto it = objectProcessors.find(processorId);
+    return it == objectProcessors.end() ? nullptr : it->second.get();
+}
+
+void EventMgr::FlagObjectProcessorForDeletion(uint64 processorId)
+{
+    auto it = objectProcessors.find(processorId);
+    if (it == objectProcessors.end())
+        return;
+
+    ElunaEventProcessor* p = it->second.get();
+    if (!p->pendingDeletion)
+    {
+        p->pendingDeletion = true;
+        p->obj = nullptr;
+        objectProcessorsPendingDelete.insert(processorId);
+    }
+}
+
+void EventMgr::CleanupObjectProcessors()
+{
+    for (uint64 processorId : objectProcessorsPendingDelete)
+    {
+        auto it = objectProcessors.find(processorId);
+        if (it == objectProcessors.end())
+            continue;
+
+        ElunaEventProcessor* p = it->second.get();
+        p->SetStates(LUAEVENT_STATE_ERASE);
+
+        processors.erase(p);
+        objectProcessors.erase(it);
+    }
+
+    objectProcessorsPendingDelete.clear();
 }

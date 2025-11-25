@@ -1,9 +1,3 @@
-/*
-* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
-* This program is free software licensed under GPL version 3
-* Please see the included DOCS/LICENSE.md for more information
-*/
-
 #ifndef _ELUNA_EVENT_MGR_H
 #define _ELUNA_EVENT_MGR_H
 
@@ -59,12 +53,12 @@ struct LuaEvent
         delay = urand(min, max);
     }
 
-    uint32 min;   // Minimum delay between event calls
-    uint32 max;   // Maximum delay between event calls
-    uint32 delay; // The currently used waiting time
-    uint32 repeats; // Amount of repeats to make, 0 for infinite
-    int funcRef;    // Lua function reference ID, also used as event ID
-    LuaEventState state;    // State for next call
+    uint32 min;      // Minimum delay between event calls
+    uint32 max;      // Maximum delay between event calls
+    uint32 delay;    // The currently used waiting time
+    uint32 repeats;  // Amount of repeats to make, 0 for infinite
+    int funcRef;     // Lua function reference ID, also used as event ID
+    LuaEventState state; // State for next call
 };
 
 class ElunaEventProcessor
@@ -114,8 +108,27 @@ private:
     EventList eventList;
     EventMap eventMap;
     uint64 m_time;
+
+    bool pendingDeletion = false;
+
     WorldObject* obj;
     Eluna* E;
+};
+
+class ElunaProcessorInfo
+{
+public:
+    ElunaProcessorInfo(EventMgr* mgr, uint64 processorId)
+        : mgr(mgr), processorId(processorId) {
+    }
+
+    ~ElunaProcessorInfo();
+
+    uint64 GetProcessorId() const { return processorId; }
+
+private:
+    EventMgr* mgr;
+    uint64 processorId;
 };
 
 class EventMgr
@@ -130,15 +143,29 @@ public:
 
     ElunaEventProcessor* GetGlobalProcessor(GlobalEventSpace space);
 
+    // Per-object processors (keyed by internal processorId)
+    uint64 CreateObjectProcessor(WorldObject* obj);
+    ElunaEventProcessor* GetObjectProcessor(uint64 processorId);
+    void FlagObjectProcessorForDeletion(uint64 processorId);
+
 private:
     typedef std::unordered_set<ElunaEventProcessor*> ProcessorSet;
+    typedef std::unordered_map<uint64, std::unique_ptr<ElunaEventProcessor>> ObjectProcessorMap;
+    typedef std::unordered_map<GlobalEventSpace, std::unique_ptr<ElunaEventProcessor>> GlobalProcessorsMap;
 
     ProcessorSet processors; // tracks ALL processors (object + global)
-    std::unordered_map<GlobalEventSpace, std::unique_ptr<ElunaEventProcessor>> globalProcessors;
+    GlobalProcessorsMap globalProcessors;
+    ObjectProcessorMap objectProcessors;
+    std::unordered_set<uint64> objectProcessorsPendingDelete;
 
     Eluna* E;
 
+    uint64 nextProcessorId = 1; // internal ID generator
+
+    void CleanupObjectProcessors();
+
     friend class ElunaEventProcessor;
+    friend class ElunaProcessorInfo;
 };
 
 #endif
