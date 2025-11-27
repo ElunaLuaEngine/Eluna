@@ -2236,11 +2236,7 @@ namespace LuaUnit
             args.TriggerFlags = TRIGGERED_FULL_MASK;
         if (castItem)
             args.SetCastItem(castItem);
-#if ELUNA_EXPANSION < EXP_RETAIL
         if (!originalCaster.IsEmpty())
-#else
-        if (!originalCaster.IsEmpty())
-#endif
             args.SetOriginalCaster(originalCaster);
 
         unit->CastSpell(target, spell, args);
