@@ -1704,7 +1704,9 @@ namespace LuaPlayer
 #else
         FactionEntry const* factionEntry = sFactionStore.LookupEntry(faction);
 #endif
-        player->GetReputationMgr().SetReputation(factionEntry, value);
+        if (factionEntry != nullptr)
+            player->GetReputationMgr().SetReputation(factionEntry, value);
+
         return 0;
     }
 
