@@ -2081,7 +2081,11 @@ namespace LuaUnit
 
         Position pos(x, y, z);
 
+#if ELUNA_EXPANSION < EXP_RETAIL
         unit->GetMotionMaster()->MoveJump(pos, zSpeed, maxHeight, id);
+#else
+        unit->GetMotionMaster()->MoveJump(id, pos, zSpeed, {}, maxHeight);
+#endif
         return 0;
     }
 
