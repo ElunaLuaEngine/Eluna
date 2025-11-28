@@ -234,7 +234,7 @@ ElunaEventProcessor* EventMgr::GetGlobalProcessor(GlobalEventSpace space)
 
 uint64 EventMgr::CreateObjectProcessor(WorldObject* obj)
 {
-    uint64 id = nextProcessorId++;
+    uint64 id = obj->GetGUID().GetRawValue();
     auto proc = std::make_unique<ElunaEventProcessor>(E, obj);
     ElunaEventProcessor* raw = proc.get();
 
@@ -247,7 +247,7 @@ uint64 EventMgr::CreateObjectProcessor(WorldObject* obj)
 ElunaEventProcessor* EventMgr::GetObjectProcessor(uint64 processorId)
 {
     auto it = objectProcessors.find(processorId);
-    return it == objectProcessors.end() ? nullptr : it->second.get();
+    return (it != objectProcessors.end()) ? it->second.get() : nullptr;
 }
 
 void EventMgr::FlagObjectProcessorForDeletion(uint64 processorId)

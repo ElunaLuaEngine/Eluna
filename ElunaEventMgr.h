@@ -125,7 +125,8 @@ class ElunaProcessorInfo
 {
 public:
     ElunaProcessorInfo(EventMgr* mgr, uint64 processorId)
-        : mgr(mgr), processorId(processorId) {
+        : mgr(mgr), processorId(processorId)
+    {
     }
 
     ~ElunaProcessorInfo();
@@ -165,8 +166,6 @@ private:
     std::unordered_set<uint64> objectProcessorsPendingDelete;
 
     Eluna* E;
-
-    uint64 nextProcessorId = 1; // internal ID generator
 
     void CleanupObjectProcessors();
 
