@@ -43,10 +43,7 @@ enum GlobalEventSpace
 
 struct LuaEvent
 {
-    LuaEvent(int _funcRef, uint32 _min, uint32 _max, uint32 _repeats) :
-        min(_min), max(_max), delay(0), repeats(_repeats), funcRef(_funcRef), state(LUAEVENT_STATE_RUN)
-    {
-    }
+    LuaEvent(int _funcRef, uint32 _min, uint32 _max, uint32 _repeats) : min(_min), max(_max), delay(0), repeats(_repeats), funcRef(_funcRef), state(LUAEVENT_STATE_RUN) { }
 
     void SetState(LuaEventState _state)
     {
@@ -75,7 +72,7 @@ public:
     typedef std::multimap<uint64, LuaEvent*> EventList;
     typedef std::unordered_map<int, LuaEvent*> EventMap;
 
-    ElunaEventProcessor(Eluna* _E, WorldObject* _obj);
+    ElunaEventProcessor(EventMgr* mgr, WorldObject* obj) : m_time(0), obj(obj), mgr(mgr) { }
     ~ElunaEventProcessor();
 
     void Update(uint32 diff);
@@ -102,7 +99,7 @@ private:
         LuaEventState state = LUAEVENT_STATE_RUN;
     };
 
-    void RemoveEvents_internal();
+    void ClearAllEvents();
     void AddEvent(LuaEvent* luaEvent);
     void RemoveEvent(LuaEvent* luaEvent);
 
@@ -118,17 +115,13 @@ private:
     bool pendingDeletion = false;
 
     WorldObject* obj;
-    Eluna* E;
+    EventMgr* mgr;
 };
 
 class ElunaProcessorInfo
 {
 public:
-    ElunaProcessorInfo(EventMgr* mgr, uint64 processorId)
-        : mgr(mgr), processorId(processorId)
-    {
-    }
-
+    ElunaProcessorInfo(EventMgr* mgr, uint64 processorId) : mgr(mgr), processorId(processorId) { }
     ~ElunaProcessorInfo();
 
     uint64 GetProcessorId() const { return processorId; }
@@ -148,9 +141,10 @@ public:
     void SetAllEventStates(LuaEventState state);
     void SetEventState(int eventId, LuaEventState state);
 
+    // Global (per state) processors
     ElunaEventProcessor* GetGlobalProcessor(GlobalEventSpace space);
 
-    // Per-object processors (keyed by internal processorId)
+    // Per-object processors
     uint64 CreateObjectProcessor(WorldObject* obj);
     ElunaEventProcessor* GetObjectProcessor(uint64 processorId);
     void FlagObjectProcessorForDeletion(uint64 processorId);

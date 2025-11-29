@@ -18,13 +18,9 @@ extern "C"
 #include "lauxlib.h"
 };
 
-ElunaEventProcessor::ElunaEventProcessor(Eluna* _E, WorldObject* _obj) : m_time(0), obj(_obj), E(_E)
-{
-}
-
 ElunaEventProcessor::~ElunaEventProcessor()
 {
-    RemoveEvents_internal();
+    ClearAllEvents();
 }
 
 void ElunaEventProcessor::Update(uint32 diff)
@@ -32,8 +28,9 @@ void ElunaEventProcessor::Update(uint32 diff)
     isUpdating = true;
 
     m_time += diff;
-    for (EventList::iterator it = eventList.begin(); it != eventList.end() && it->first <= m_time; it = eventList.begin())
+    while (!eventList.empty() && eventList.begin()->first <= m_time)
     {
+        auto it = eventList.begin();
         LuaEvent* luaEvent = it->second;
         eventList.erase(it);
 
@@ -47,13 +44,15 @@ void ElunaEventProcessor::Update(uint32 diff)
             if (!remove)
                 AddEvent(luaEvent); // may be deferred if we recurse into Update
 
+            // Call the timed event
             if (!obj || (obj && obj->IsInWorld()))
-                E->OnTimedEvent(luaEvent->funcRef, delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
+                mgr->E->OnTimedEvent(luaEvent->funcRef, delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
 
             if (!remove)
                 continue;
         }
 
+        // Event should be deleted (executed last time or set to be aborted)
         RemoveEvent(luaEvent);
     }
 
@@ -76,7 +75,7 @@ void ElunaEventProcessor::SetStates(LuaEventState state)
         eventMap.clear();
 }
 
-void ElunaEventProcessor::RemoveEvents_internal()
+void ElunaEventProcessor::ClearAllEvents()
 {
     if (isUpdating)
     {
@@ -117,7 +116,7 @@ void ElunaEventProcessor::AddEvent(LuaEvent* luaEvent)
     }
 
     luaEvent->GenerateDelay();
-    eventList.insert(std::make_pair(m_time + luaEvent->delay, luaEvent));
+    eventList.emplace(m_time + luaEvent->delay, luaEvent);
     eventMap[luaEvent->funcRef] = luaEvent;
 }
 
@@ -129,10 +128,10 @@ void ElunaEventProcessor::AddEvent(int funcRef, uint32 min, uint32 max, uint32 r
 void ElunaEventProcessor::RemoveEvent(LuaEvent* luaEvent)
 {
     // Unreference if should and if Eluna was not yet uninitialized and if the lua state still exists
-    if (luaEvent->state != LUAEVENT_STATE_ERASE && E->HasLuaState())
+    if (luaEvent->state != LUAEVENT_STATE_ERASE && mgr->E->HasLuaState())
     {
         // Free lua function ref
-        luaL_unref(E->L, LUA_REGISTRYINDEX, luaEvent->funcRef);
+        luaL_unref(mgr->E->L, LUA_REGISTRYINDEX, luaEvent->funcRef);
     }
     delete luaEvent;
 }
@@ -172,7 +171,7 @@ void ElunaEventProcessor::ProcessDeferredOps()
             break;
 
         case DeferredOpType::ClearAll:
-            RemoveEvents_internal();
+            ClearAllEvents();
             break;
         }
     }
@@ -186,7 +185,7 @@ ElunaProcessorInfo::~ElunaProcessorInfo()
 
 EventMgr::EventMgr(Eluna* _E) : E(_E)
 {
-    auto gp = std::make_unique<ElunaEventProcessor>(E, nullptr);
+    auto gp = std::make_unique<ElunaEventProcessor>(this, nullptr);
     processors.insert(gp.get());
     globalProcessors.emplace(GLOBAL_EVENTS, std::move(gp));
 }
@@ -235,7 +234,7 @@ ElunaEventProcessor* EventMgr::GetGlobalProcessor(GlobalEventSpace space)
 uint64 EventMgr::CreateObjectProcessor(WorldObject* obj)
 {
     uint64 id = obj->GetGUID().GetRawValue();
-    auto proc = std::make_unique<ElunaEventProcessor>(E, obj);
+    auto proc = std::make_unique<ElunaEventProcessor>(this, obj);
     ElunaEventProcessor* raw = proc.get();
 
     processors.insert(raw);
