@@ -151,6 +151,9 @@ void ElunaEventProcessor::ProcessDeferredOps()
     if (deferredOps.empty())
         return;
 
+    std::vector<DeferredOp> ops;
+    ops.swap(deferredOps);
+
     using Handler = void(*)(ElunaEventProcessor*, DeferredOp&);
     static constexpr Handler handlers[] =
     {
@@ -160,7 +163,7 @@ void ElunaEventProcessor::ProcessDeferredOps()
         [](ElunaEventProcessor* self, DeferredOp& /*op*/) { self->ClearAllEvents(); }
     };
 
-    for (DeferredOp& op : deferredOps)
+    for (DeferredOp& op : ops)
     {
         handlers[op.type](this, op);
     }
