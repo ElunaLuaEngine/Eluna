@@ -68,8 +68,8 @@ void ElunaEventProcessor::SetStates(LuaEventState state)
         return;
     }
 
-    for (EventList::iterator it = eventList.begin(); it != eventList.end(); ++it)
-        it->second->SetState(state);
+    for (auto& [time, event] : eventList)
+        event->SetState(state);
 
     if (state == LUAEVENT_STATE_ERASE)
         eventMap.clear();
@@ -83,8 +83,8 @@ void ElunaEventProcessor::ClearAllEvents()
         return;
     }
 
-    for (EventList::iterator it = eventList.begin(); it != eventList.end(); ++it)
-        RemoveEvent(it->second);
+    for (auto& [time, event] : eventList)
+        RemoveEvent(event);
 
     deferredOps.clear();
     eventList.clear();
