@@ -29,14 +29,22 @@ class EventMgr;
 class ElunaEventProcessor;
 class WorldObject;
 
-enum LuaEventState
+enum LuaEventState : uint8
 {
     LUAEVENT_STATE_RUN,    // On next call run the function normally
     LUAEVENT_STATE_ABORT,  // On next call unregisters reffed function and erases the data
     LUAEVENT_STATE_ERASE,  // On next call just erases the data
 };
 
-enum GlobalEventSpace
+enum DeferredOpType : uint8
+{
+    AddEvent,
+    SetState,
+    SetStates,
+    ClearAll
+};
+
+enum GlobalEventSpace : uint8
 {
     GLOBAL_EVENTS
 };
@@ -83,20 +91,12 @@ public:
     void AddEvent(int funcRef, uint32 min, uint32 max, uint32 repeats);
 
 private:
-    enum class DeferredOpType
-    {
-        AddEvent,
-        SetState,
-        SetStates,
-        ClearAll
-    };
-
     struct DeferredOp
     {
-        DeferredOpType type;
-        LuaEvent* event = nullptr;
         int eventId = 0;
+        DeferredOpType type;
         LuaEventState state = LUAEVENT_STATE_RUN;
+        LuaEvent* event = nullptr;
     };
 
     void ClearAllEvents();
