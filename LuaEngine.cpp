@@ -33,7 +33,7 @@ extern void RegisterMethods(Eluna* E);
 void Eluna::_ReloadEluna()
 {
     // Remove all timed events
-    eventMgr->SetStates(LUAEVENT_STATE_ERASE);
+    eventMgr->SetAllEventStates(LUAEVENT_STATE_ERASE);
 
 #if defined ELUNA_TRINITY
     // Cancel all pending async queries
