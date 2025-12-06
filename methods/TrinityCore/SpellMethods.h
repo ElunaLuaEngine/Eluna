@@ -26,6 +26,28 @@ namespace LuaSpell
     }
 
     /**
+     * Returns `true` if the [Spell] is passive, `false` otherwise.
+     *
+     * @return bool isPassive
+     */
+    int IsPassive(Eluna* E, Spell* spell)
+    {
+        E->Push(spell->m_spellInfo->IsPassive());
+        return 1;
+    }
+
+    /**
+     * Returns `true` if the [Spell] is triggered, `false` otherwise.
+     *
+     * @return bool isTriggered
+     */
+    int IsTriggered(Eluna* E, Spell* spell)
+    {
+        E->Push(spell->IsTriggered());
+        return 1;
+    }
+
+    /**
      * Returns the [Unit] that casted the [Spell].
      *
      * @return [Unit] caster
@@ -186,6 +208,8 @@ namespace LuaSpell
 
         // Boolean
         { "IsAutoRepeat", &LuaSpell::IsAutoRepeat },
+        { "IsPassive", &LuaSpell::IsPassive },
+        { "IsTriggered", &LuaSpell::IsTriggered },
 
         // Other
         { "Cancel", &LuaSpell::Cancel },
