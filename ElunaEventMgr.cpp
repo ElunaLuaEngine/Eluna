@@ -225,7 +225,11 @@ ElunaEventProcessor* EventMgr::GetGlobalProcessor(GlobalEventSpace space)
 
 uint64 EventMgr::CreateObjectProcessor(WorldObject* obj)
 {
+#if !defined ELUNA_CMANGOS
     uint64 id = obj->GetGUID().GetRawValue();
+#else
+    uint64 id = obj->GetObjectGuid().GetRawValue();
+#endif
     auto proc = std::make_unique<ElunaEventProcessor>(this, obj);
     ElunaEventProcessor* raw = proc.get();
 
