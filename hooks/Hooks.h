@@ -54,27 +54,27 @@ namespace Hooks
     };
 
     // PACKET EVENTS
-#define PACKET_EVENTS_LIST(X) \
+    #define PACKET_EVENTS_LIST(X) \
         X(PACKET_EVENT_ON_PACKET_RECEIVE,         5,  "on_receive")      \
         X(PACKET_EVENT_ON_PACKET_RECEIVE_UNKNOWN, 6,  "on_receive_unk")  \
         X(PACKET_EVENT_ON_PACKET_SEND,            7,  "on_send")
 
     enum PacketEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         PACKET_EVENTS_LIST(X)
-#undef X
+    #undef X
         PACKET_EVENT_COUNT
     };
 
     static constexpr EventEntry PacketEventsTable[] = {
-#define X(ID, VALUE, NAME) { Hooks::ID, NAME },
+    #define X(ID, VALUE, NAME) { Hooks::ID, NAME },
         PACKET_EVENTS_LIST(X)
-#undef X
+    #undef X
     };
 
     // SERVER EVENTS
-#define SERVER_EVENTS_LIST(X) \
+    #define SERVER_EVENTS_LIST(X) \
         /* Server */ \
         X(SERVER_EVENT_ON_NETWORK_START,          1,  "on_network_start")         \
         X(SERVER_EVENT_ON_NETWORK_STOP,           2,  "on_network_stop")          \
@@ -123,20 +123,20 @@ namespace Hooks
 
     enum ServerEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         SERVER_EVENTS_LIST(X)
-#undef X
+    #undef X
         SERVER_EVENT_COUNT
     };
 
     static constexpr EventEntry ServerEventsTable[] = {
-#define X(ID, VALUE, NAME) { Hooks::ID, NAME },
+    #define X(ID, VALUE, NAME) { Hooks::ID, NAME },
         SERVER_EVENTS_LIST(X)
-#undef X
+    #undef X
     };
 
     // PLAYER EVENTS
-#define PLAYER_EVENTS_LIST(X) \
+    #define PLAYER_EVENTS_LIST(X) \
         X(PLAYER_EVENT_ON_CHARACTER_CREATE,        1,  "on_character_create")      \
         X(PLAYER_EVENT_ON_CHARACTER_DELETE,        2,  "on_character_delete")      \
         X(PLAYER_EVENT_ON_LOGIN,                   3,  "on_login")                 \
@@ -191,20 +191,20 @@ namespace Hooks
 
     enum PlayerEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         PLAYER_EVENTS_LIST(X)
-#undef X
+    #undef X
         PLAYER_EVENT_COUNT
     };
 
     static constexpr EventEntry PlayerEventsTable[] = {
-#define X(ID, VALUE, NAME) { Hooks::ID, NAME },
+    #define X(ID, VALUE, NAME) { Hooks::ID, NAME },
         PLAYER_EVENTS_LIST(X)
-#undef X
+    #undef X
     };
 
     // GUILD EVENTS
-#define GUILD_EVENTS_LIST(X) \
+    #define GUILD_EVENTS_LIST(X) \
         X(GUILD_EVENT_ON_ADD_MEMBER,      1,  "on_add_member")      \
         X(GUILD_EVENT_ON_REMOVE_MEMBER,   2,  "on_remove_member")   \
         X(GUILD_EVENT_ON_MOTD_CHANGE,     3,  "on_motd_change")     \
@@ -219,9 +219,9 @@ namespace Hooks
 
     enum GuildEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         GUILD_EVENTS_LIST(X)
-#undef X
+    #undef X
         GUILD_EVENT_COUNT
     };
 
@@ -232,7 +232,7 @@ namespace Hooks
     };
 
     // GROUP EVENTS
-#define GROUP_EVENTS_LIST(X) \
+    #define GROUP_EVENTS_LIST(X) \
         X(GROUP_EVENT_ON_MEMBER_ADD,     1, "on_add_member")     \
         X(GROUP_EVENT_ON_MEMBER_INVITE,  2, "on_invite_member")  \
         X(GROUP_EVENT_ON_MEMBER_REMOVE,  3, "on_remove_member")  \
@@ -243,9 +243,9 @@ namespace Hooks
 
     enum GroupEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         GROUP_EVENTS_LIST(X)
-#undef X
+    #undef X
         GROUP_EVENT_COUNT
     };
 
@@ -256,7 +256,7 @@ namespace Hooks
     };
 
     // VEHICLE EVENTS
-#define VEHICLE_EVENTS_LIST(X) \
+    #define VEHICLE_EVENTS_LIST(X) \
         X(VEHICLE_EVENT_ON_INSTALL,           1, "on_install")           \
         X(VEHICLE_EVENT_ON_UNINSTALL,         2, "on_uninstall")         \
         /* 3 unused */ \
@@ -266,9 +266,9 @@ namespace Hooks
 
     enum VehicleEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         VEHICLE_EVENTS_LIST(X)
-#undef X
+    #undef X
         VEHICLE_EVENT_COUNT
     };
 
@@ -279,7 +279,7 @@ namespace Hooks
     };
 
     // CREATURE EVENTS
-#define CREATURE_EVENTS_LIST(X) \
+    #define CREATURE_EVENTS_LIST(X) \
         X(CREATURE_EVENT_ON_ENTER_COMBAT,               1,  "on_enter_combat")               \
         X(CREATURE_EVENT_ON_LEAVE_COMBAT,               2,  "on_leave_combat")               \
         X(CREATURE_EVENT_ON_TARGET_DIED,                3,  "on_target_died")                \
@@ -316,9 +316,9 @@ namespace Hooks
 
     enum CreatureEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         CREATURE_EVENTS_LIST(X)
-#undef X
+    #undef X
         CREATURE_EVENT_COUNT
     };
 
@@ -329,7 +329,7 @@ namespace Hooks
     };
 
     // GAMEOBJECT EVENTS
-#define GAMEOBJECT_EVENTS_LIST(X) \
+    #define GAMEOBJECT_EVENTS_LIST(X) \
         X(GAMEOBJECT_EVENT_ON_AIUPDATE,          1,  "on_ai_update")         \
         X(GAMEOBJECT_EVENT_ON_SPAWN,             2,  "on_spawn")             \
         X(GAMEOBJECT_EVENT_ON_DUMMY_EFFECT,      3,  "on_dummy_effect")      \
@@ -347,9 +347,9 @@ namespace Hooks
 
     enum GameObjectEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         GAMEOBJECT_EVENTS_LIST(X)
-#undef X
+    #undef X
         GAMEOBJECT_EVENT_COUNT
     };
 
@@ -360,14 +360,14 @@ namespace Hooks
     };
 
     // SPELL EVENTS
-#define SPELL_EVENTS_LIST(X) \
+    #define SPELL_EVENTS_LIST(X) \
         X(SPELL_EVENT_ON_CAST, 1, "on_cast")
 
     enum SpellEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         SPELL_EVENTS_LIST(X)
-#undef X
+    #undef X
         SPELL_EVENT_COUNT
     };
 
@@ -378,7 +378,7 @@ namespace Hooks
     };
 
     // ITEM EVENTS
-#define ITEM_EVENTS_LIST(X) \
+    #define ITEM_EVENTS_LIST(X) \
         X(ITEM_EVENT_ON_DUMMY_EFFECT, 1, "on_dummy_effect") \
         X(ITEM_EVENT_ON_USE,          2, "on_use")          \
         X(ITEM_EVENT_ON_QUEST_ACCEPT, 3, "on_quest_accept") \
@@ -391,9 +391,9 @@ namespace Hooks
 
     enum ItemEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         ITEM_EVENTS_LIST(X)
-#undef X
+    #undef X
         ITEM_EVENT_COUNT
     };
 
@@ -404,15 +404,15 @@ namespace Hooks
     };
 
     // GOSSIP EVENTS
-#define GOSSIP_EVENTS_LIST(X) \
+    #define GOSSIP_EVENTS_LIST(X) \
         X(GOSSIP_EVENT_ON_HELLO,  1, "on_hello") \
         X(GOSSIP_EVENT_ON_SELECT, 2, "on_select")
 
     enum GossipEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         GOSSIP_EVENTS_LIST(X)
-#undef X
+    #undef X
         GOSSIP_EVENT_COUNT
     };
 
@@ -423,7 +423,7 @@ namespace Hooks
     };
 
     // BG EVENTS
-#define BG_EVENTS_LIST(X) \
+    #define BG_EVENTS_LIST(X) \
         X(BG_EVENT_ON_START,      1, "on_start")      \
         X(BG_EVENT_ON_END,        2, "on_end")        \
         X(BG_EVENT_ON_CREATE,     3, "on_create")     \
@@ -431,9 +431,9 @@ namespace Hooks
 
     enum BGEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         BG_EVENTS_LIST(X)
-#undef X
+    #undef X
         BG_EVENT_COUNT
     };
 
@@ -444,7 +444,7 @@ namespace Hooks
     };
 
     // INSTANCE EVENTS
-#define INSTANCE_EVENTS_LIST(X) \
+    #define INSTANCE_EVENTS_LIST(X) \
         X(INSTANCE_EVENT_ON_INITIALIZE,                  1, "on_initialize")                 \
         X(INSTANCE_EVENT_ON_LOAD,                        2, "on_load")                       \
         X(INSTANCE_EVENT_ON_UPDATE,                      3, "on_update")                     \
@@ -455,9 +455,9 @@ namespace Hooks
 
     enum InstanceEvents
     {
-#define X(ID, VALUE, NAME) ID = VALUE,
+    #define X(ID, VALUE, NAME) ID = VALUE,
         INSTANCE_EVENTS_LIST(X)
-#undef X
+    #undef X
         INSTANCE_EVENT_COUNT
     };
 
