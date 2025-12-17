@@ -67,19 +67,18 @@ jobs:
             lua: lua52
           - eluna: ON
             lua: lua52
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: false
         repository: Eluna-Ports/ElunaTrinityCore
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         path: src/server/game/LuaEngine
     - name: Dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -yq libboost-all-dev g++-11
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 --slave /usr/bin/g++ g++ /usr/bin/g++-11
+        sudo apt-get update && sudo apt-get install -yq ccache libboost-dev libboost-filesystem-dev libboost-locale-dev libboost-program-options-dev libboost-regex-dev libboost-thread-dev libssl-dev libreadline-dev zlib1g-dev libbz2-dev
     - name: Setup
       env:
         ELUNA: ${{ matrix.eluna }}
