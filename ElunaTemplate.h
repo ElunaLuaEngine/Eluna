@@ -14,9 +14,10 @@ extern "C"
 #include "lauxlib.h"
 };
 #include "LuaEngine.h"
-#include "ElunaUtility.h"
 #include "ElunaCompat.h"
 #include "ElunaConfig.h"
+#include "ElunaIncludes.h"
+#include "ElunaUtility.h"
 #if !defined ELUNA_CMANGOS
 #include "SharedDefines.h"
 #else
