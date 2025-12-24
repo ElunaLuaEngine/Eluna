@@ -22,7 +22,7 @@
 
 uint32 ElunaUtil::GetCurrTime()
 {
-#if defined ELUNA_TRINITY || ELUNA_MANGOS
+#if defined ELUNA_TRINITY || defined ELUNA_MANGOS  || defined ELUNA_AZEROTHCORE
     return getMSTime();
 #else
     return WorldTimer::getMSTime();
@@ -31,7 +31,7 @@ uint32 ElunaUtil::GetCurrTime()
 
 uint32 ElunaUtil::GetTimeDiff(uint32 oldMSTime)
 {
-#if defined ELUNA_TRINITY || ELUNA_MANGOS
+#if defined ELUNA_TRINITY || defined ELUNA_MANGOS  || defined ELUNA_AZEROTHCORE
     return GetMSTimeDiffToNow(oldMSTime);
 #else
     return WorldTimer::getMSTimeDiff(oldMSTime, WorldTimer::getMSTime());

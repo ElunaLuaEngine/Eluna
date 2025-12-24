@@ -8,7 +8,7 @@
 #define _ELUNA_INSTANCE_DATA_H
 
 #include "LuaEngine.h"
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 #include "InstanceScript.h"
 #include "Map.h"
 #elif defined ELUNA_CMANGOS
@@ -82,7 +82,7 @@ public:
      *   data table to/from the core.
      */
     void Load(const char* data) override;
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     // Simply calls Save, since the functions are a bit different in name and data types on different cores
     std::string GetSaveData() override
     {
@@ -148,7 +148,7 @@ public:
         instance->GetEluna()->OnPlayerEnterInstance(this, player);
     }
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     void OnGameObjectCreate(GameObject* gameobject) override
 #else
     void OnObjectCreate(GameObject* gameobject) override

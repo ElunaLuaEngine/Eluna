@@ -18,7 +18,7 @@
 #endif
 #include <map>
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 #include "Define.h"
 #else
 #include "Platform/Define.h"

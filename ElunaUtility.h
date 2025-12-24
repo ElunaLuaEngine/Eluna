@@ -18,7 +18,7 @@
 #include "SharedDefines.h"
 #include "ObjectGuid.h"
 #include "Log.h"
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY 
 #include "QueryResult.h"
 #else
 #include "Database/QueryResult.h"
@@ -35,12 +35,16 @@
 #include <mutex>
 #include <memory>
 
-#if defined ELUNA_TRINITY || ELUNA_CMANGOS
+#if defined ELUNA_TRINITY || ELUNA_CMANGOS || ELUNA_AZEROTHCORE
 #define USING_BOOST
 #endif
 
 #if defined TRINITY_PLATFORM && defined TRINITY_PLATFORM_WINDOWS
 #if TRINITY_PLATFORM == TRINITY_PLATFORM_WINDOWS
+#define ELUNA_WINDOWS
+#endif
+#elif defined AC_PLATFORM && defined AC_PLATFORM_WINDOWS
+#if AC_PLATFORM == AC_PLATFORM_WINDOWS
 #define ELUNA_WINDOWS
 #endif
 #elif defined PLATFORM && defined PLATFORM_WINDOWS
@@ -51,7 +55,7 @@
 #error Eluna could not determine platform
 #endif
 
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || ELUNA_AZEROTHCORE
 typedef QueryResult ElunaQuery;
 #define GET_GUID                GetGUID
 #define HIGHGUID_PLAYER         HighGuid::Player
@@ -81,6 +85,18 @@ typedef QueryResult ElunaQuery;
 #define ELUNA_LOG_INFO(...)     ELUNA_LOG_TC_FMT(TC_LOG_INFO, __VA_ARGS__);
 #define ELUNA_LOG_ERROR(...)    ELUNA_LOG_TC_FMT(TC_LOG_ERROR, __VA_ARGS__);
 #define ELUNA_LOG_DEBUG(...)    ELUNA_LOG_TC_FMT(TC_LOG_DEBUG, __VA_ARGS__);
+#elif defined ELUNA_AZEROTHCORE
+#include "fmt/printf.h"
+#define ELUNA_LOG_AC_FMT(AC_LOG_MACRO, ...) \
+    try { \
+        std::string message = fmt::sprintf(__VA_ARGS__); \
+        AC_LOG_MACRO("eluna", "{}", message); \
+    } catch (const std::exception& e) { \
+        AC_LOG_MACRO("eluna", "Failed to format log message: {}", e.what()); \
+    }
+#define ELUNA_LOG_INFO(...)     ELUNA_LOG_AC_FMT(LOG_INFO, __VA_ARGS__);
+#define ELUNA_LOG_ERROR(...)    ELUNA_LOG_AC_FMT(LOG_ERROR, __VA_ARGS__);
+#define ELUNA_LOG_DEBUG(...)    ELUNA_LOG_AC_FMT(LOG_DEBUG, __VA_ARGS__);
 #elif defined ELUNA_VMANGOS
 typedef std::shared_ptr<QueryNamedResult> ElunaQuery;
 #define ASSERT                  MANGOS_ASSERT
