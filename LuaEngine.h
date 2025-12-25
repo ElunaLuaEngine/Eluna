@@ -477,7 +477,13 @@ public:
     void GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject);
 #if ELUNA_EXPANSION >= EXP_WOTLK
     void OnDestroyed(GameObject* pGameObject, WorldObject* attacker);
+#ifndef ELUNA_AZEROTHCORE
+    void OnDestroyed(GameObject* pGameObject, WorldObject* attacker);
     void OnDamaged(GameObject* pGameObject, WorldObject* attacker);
+#else
+    void OnDestroyed(GameObject* pGameObject, Player* attacker);
+    void OnDamaged(GameObject* pGameObject, Player* attacker);
+#endif
 #endif
     void OnLootStateChanged(GameObject* pGameObject, uint32 state);
     void OnGameObjectStateChanged(GameObject* pGameObject, uint32 state);
