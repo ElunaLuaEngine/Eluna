@@ -555,7 +555,7 @@ namespace LuaCreature
     {
         uint32 spell = E->CHECKVAL<uint32>(2);
 
-        if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell))
+        if (sSpellMgr->GetSpellInfo(spell))
             E->Push(creature->GetSpellCooldown(spell));
         else
             E->Push(0);
