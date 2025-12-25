@@ -476,7 +476,6 @@ public:
     bool OnQuestReward(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest, uint32 opt);
     void GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject);
 #if ELUNA_EXPANSION >= EXP_WOTLK
-    void OnDestroyed(GameObject* pGameObject, WorldObject* attacker);
 #ifndef ELUNA_AZEROTHCORE
     void OnDestroyed(GameObject* pGameObject, WorldObject* attacker);
     void OnDamaged(GameObject* pGameObject, WorldObject* attacker);
