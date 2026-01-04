@@ -76,7 +76,11 @@ WorldObject const& ElunaUtil::WorldObjectInRangeCheck::GetFocusObject() const
 }
 bool ElunaUtil::WorldObjectInRangeCheck::operator()(WorldObject* u)
 {
+#if !defined ELUNA_VMANGOS
     if (i_typeMask && !u->isType(TypeMask(i_typeMask)))
+#else
+    if (i_typeMask && !u->IsType(TypeMask(i_typeMask)))
+#endif
         return false;
     if (i_entry && u->GetEntry() != i_entry)
         return false;

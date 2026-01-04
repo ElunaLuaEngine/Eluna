@@ -2442,7 +2442,7 @@ namespace LuaPlayer
         player->SetQuestStatus(entry, QUEST_STATUS_NONE);
 
         // reset rewarded for restart repeatable quest
-        player->getQuestStatusMap()[entry].m_rewarded = false;
+        player->GetQuestStatusMap()[entry].m_rewarded = false;
         return 0;
     }
 

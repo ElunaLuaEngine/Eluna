@@ -55,7 +55,7 @@ namespace LuaGameObject
      */
     int IsActive(Eluna* E, GameObject* go)
     {
-        E->Push(go->isActiveObject());
+        E->Push(go->IsActiveObject());
         return 1;
     }
 
