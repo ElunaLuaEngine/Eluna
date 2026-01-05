@@ -2304,7 +2304,7 @@ namespace LuaPlayer
     {
         Creature* obj = E->CHECKOBJ<Creature>(2);
 
-        player->GetSession()->SendTrainerList(obj->GET_GUID());
+        player->GetSession()->SendTrainerList(obj);
         return 0;
     }
 
