@@ -18,27 +18,19 @@ extern "C"
 #include "lauxlib.h"
 };
 
-ElunaEventProcessor::ElunaEventProcessor(Eluna* _E, WorldObject* _obj) : m_time(0), obj(_obj), E(_E)
-{
-    if (obj)
-        E->eventMgr->processors.insert(this);
-}
-
 ElunaEventProcessor::~ElunaEventProcessor()
 {
-    {
-        RemoveEvents_internal();
-    }
-
-    if (obj)
-        E->eventMgr->processors.erase(this);
+    ClearAllEvents();
 }
 
 void ElunaEventProcessor::Update(uint32 diff)
 {
+    isUpdating = true;
+
     m_time += diff;
-    for (EventList::iterator it = eventList.begin(); it != eventList.end() && it->first <= m_time; it = eventList.begin())
+    while (!eventList.empty() && eventList.begin()->first <= m_time)
     {
+        auto it = eventList.begin();
         LuaEvent* luaEvent = it->second;
         eventList.erase(it);
 
@@ -50,11 +42,11 @@ void ElunaEventProcessor::Update(uint32 diff)
             uint32 delay = luaEvent->delay;
             bool remove = luaEvent->repeats == 1;
             if (!remove)
-                AddEvent(luaEvent); // Reschedule before calling incase RemoveEvents used
+                AddEvent(luaEvent); // may be deferred if we recurse into Update
 
             // Call the timed event
-            if(!obj || (obj && obj->IsInWorld()))
-                E->OnTimedEvent(luaEvent->funcRef, delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
+            if (!obj || (obj && obj->IsInWorld()))
+                mgr->E->OnTimedEvent(luaEvent->funcRef, delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
 
             if (!remove)
                 continue;
@@ -63,37 +55,68 @@ void ElunaEventProcessor::Update(uint32 diff)
         // Event should be deleted (executed last time or set to be aborted)
         RemoveEvent(luaEvent);
     }
+
+    isUpdating = false;
+    ProcessDeferredOps();
 }
 
 void ElunaEventProcessor::SetStates(LuaEventState state)
 {
-    for (EventList::iterator it = eventList.begin(); it != eventList.end(); ++it)
-        it->second->SetState(state);
+    if (isUpdating)
+    {
+        QueueDeferredOp(DeferredOpType::SetStates, nullptr, 0, state);
+        return;
+    }
+
+    for (auto& [time, event] : eventList)
+        event->SetState(state);
+
     if (state == LUAEVENT_STATE_ERASE)
         eventMap.clear();
 }
 
-void ElunaEventProcessor::RemoveEvents_internal()
+void ElunaEventProcessor::ClearAllEvents()
 {
-    for (EventList::iterator it = eventList.begin(); it != eventList.end(); ++it)
-        RemoveEvent(it->second);
+    if (isUpdating)
+    {
+        QueueDeferredOp(DeferredOpType::ClearAll);
+        return;
+    }
 
+    for (auto& [time, event] : eventList)
+        RemoveEvent(event);
+
+    deferredOps.clear();
     eventList.clear();
     eventMap.clear();
 }
 
 void ElunaEventProcessor::SetState(int eventId, LuaEventState state)
 {
-    if (eventMap.find(eventId) != eventMap.end())
-        eventMap[eventId]->SetState(state);
+    if (isUpdating)
+    {
+        QueueDeferredOp(DeferredOpType::SetState, nullptr, eventId, state);
+        return;
+    }
+
+    auto itr = eventMap.find(eventId);
+    if (itr != eventMap.end())
+        itr->second->SetState(state);
+
     if (state == LUAEVENT_STATE_ERASE)
         eventMap.erase(eventId);
 }
 
 void ElunaEventProcessor::AddEvent(LuaEvent* luaEvent)
 {
+    if (isUpdating)
+    {
+        QueueDeferredOp(DeferredOpType::AddEvent, luaEvent);
+        return;
+    }
+
     luaEvent->GenerateDelay();
-    eventList.insert(std::pair<uint64, LuaEvent*>(m_time + luaEvent->delay, luaEvent));
+    eventList.emplace(m_time + luaEvent->delay, luaEvent);
     eventMap[luaEvent->funcRef] = luaEvent;
 }
 
@@ -105,47 +128,152 @@ void ElunaEventProcessor::AddEvent(int funcRef, uint32 min, uint32 max, uint32 r
 void ElunaEventProcessor::RemoveEvent(LuaEvent* luaEvent)
 {
     // Unreference if should and if Eluna was not yet uninitialized and if the lua state still exists
-    if (luaEvent->state != LUAEVENT_STATE_ERASE && E->HasLuaState())
+    if (luaEvent->state != LUAEVENT_STATE_ERASE && mgr->E->HasLuaState())
     {
         // Free lua function ref
-        luaL_unref(E->L, LUA_REGISTRYINDEX, luaEvent->funcRef);
+        luaL_unref(mgr->E->L, LUA_REGISTRYINDEX, luaEvent->funcRef);
     }
     delete luaEvent;
 }
 
+void ElunaEventProcessor::QueueDeferredOp(DeferredOpType type, LuaEvent* event, int eventId, LuaEventState state)
+{
+    DeferredOp op;
+    op.type = type;
+    op.event = event;
+    op.eventId = eventId;
+    op.state = state;
+    deferredOps.push_back(op);
+}
+
+void ElunaEventProcessor::ProcessDeferredOps()
+{
+    if (deferredOps.empty())
+        return;
+
+    std::vector<DeferredOp> ops;
+    ops.swap(deferredOps);
+
+    using Handler = void(*)(ElunaEventProcessor*, DeferredOp&);
+    static constexpr Handler handlers[] =
+    {
+        [](ElunaEventProcessor* self, DeferredOp& op)     { self->AddEvent(op.event); },
+        [](ElunaEventProcessor* self, DeferredOp& op)     { self->SetState(op.eventId, op.state); },
+        [](ElunaEventProcessor* self, DeferredOp& op)     { self->SetStates(op.state); },
+        [](ElunaEventProcessor* self, DeferredOp& /*op*/) { self->ClearAllEvents(); }
+    };
+
+    for (DeferredOp& op : ops)
+    {
+        handlers[op.type](this, op);
+    }
+}
+
+ElunaProcessorInfo::~ElunaProcessorInfo()
+{
+    if (mgr)
+        mgr->FlagObjectProcessorForDeletion(processorId);
+}
+
 EventMgr::EventMgr(Eluna* _E) : E(_E)
 {
-    globalProcessor = std::make_unique<ElunaEventProcessor>(E, nullptr);
+    auto gp = std::make_unique<ElunaEventProcessor>(this, nullptr);
+    processors.insert(gp.get());
+    globalProcessors.emplace(GLOBAL_EVENTS, std::move(gp));
 }
 
 EventMgr::~EventMgr()
 {
-    if (!processors.empty())
-        for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
-            (*it)->RemoveEvents_internal();
-    globalProcessor->RemoveEvents_internal();
+    globalProcessors.clear();
+    objectProcessors.clear();
+    processors.clear();
+    objectProcessorsPendingDelete.clear();
 }
 
 void EventMgr::UpdateProcessors(uint32 diff)
 {
-    if (!processors.empty())
-        for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
-            (*it)->Update(diff);
-    globalProcessor->Update(diff);
+    // iterate a copy because processors may be destroyed during update (creature removed by a script, etc)
+    ProcessorSet copy = processors;
+
+    for (auto* processor : copy)
+    {
+        if (processors.find(processor) != processors.end())
+            if (!processor->pendingDeletion)
+                processor->Update(diff);
+    }
+
+    CleanupObjectProcessors();
 }
 
-void EventMgr::SetStates(LuaEventState state)
+void EventMgr::SetAllEventStates(LuaEventState state)
 {
-    if (!processors.empty())
-        for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
-            (*it)->SetStates(state);
-    globalProcessor->SetStates(state);
+    for (auto* processor : processors)
+        processor->SetStates(state);
 }
 
-void EventMgr::SetState(int eventId, LuaEventState state)
+void EventMgr::SetEventState(int eventId, LuaEventState state)
 {
-    if (!processors.empty())
-        for (ProcessorSet::const_iterator it = processors.begin(); it != processors.end(); ++it) // loop processors
-            (*it)->SetState(eventId, state);
-    globalProcessor->SetState(eventId, state);
+    for (auto* processor : processors)
+        processor->SetState(eventId, state);
+}
+
+ElunaEventProcessor* EventMgr::GetGlobalProcessor(GlobalEventSpace space)
+{
+    auto it = globalProcessors.find(space);
+    return (it != globalProcessors.end()) ? it->second.get() : nullptr;
+}
+
+uint64 EventMgr::CreateObjectProcessor(WorldObject* obj)
+{
+#if !ELUNA_CMANGOS && !ELUNA_VMANGOS
+    uint64 id = obj->GetGUID().GetRawValue();
+#else
+    uint64 id = obj->GetObjectGuid().GetRawValue();
+#endif
+    auto proc = std::make_unique<ElunaEventProcessor>(this, obj);
+    ElunaEventProcessor* raw = proc.get();
+
+    processors.insert(raw);
+    objectProcessors.emplace(id, std::move(proc));
+
+    return id;
+}
+
+ElunaEventProcessor* EventMgr::GetObjectProcessor(uint64 processorId)
+{
+    auto it = objectProcessors.find(processorId);
+    return (it != objectProcessors.end()) ? it->second.get() : nullptr;
+}
+
+void EventMgr::FlagObjectProcessorForDeletion(uint64 processorId)
+{
+    auto it = objectProcessors.find(processorId);
+    if (it == objectProcessors.end())
+        return;
+
+    ElunaEventProcessor* p = it->second.get();
+    if (!p->pendingDeletion)
+    {
+        p->pendingDeletion = true;
+        p->obj = nullptr;
+        objectProcessorsPendingDelete.insert(processorId);
+    }
+}
+
+void EventMgr::CleanupObjectProcessors()
+{
+    for (uint64 processorId : objectProcessorsPendingDelete)
+    {
+        auto it = objectProcessors.find(processorId);
+        if (it == objectProcessors.end())
+            continue;
+
+        ElunaEventProcessor* p = it->second.get();
+        p->SetStates(LUAEVENT_STATE_ERASE);
+
+        processors.erase(p);
+        objectProcessors.erase(it);
+    }
+
+    objectProcessorsPendingDelete.clear();
 }

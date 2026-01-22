@@ -16,7 +16,6 @@
 #include "ElunaUtility.h"
 #include "ElunaCreatureAI.h"
 #include "ElunaInstanceAI.h"
-#include "Hooks.h"
 
 extern "C"
 {
@@ -33,7 +32,7 @@ extern void RegisterMethods(Eluna* E);
 void Eluna::_ReloadEluna()
 {
     // Remove all timed events
-    eventMgr->SetStates(LUAEVENT_STATE_ERASE);
+    eventMgr->SetAllEventStates(LUAEVENT_STATE_ERASE);
 
 #if defined ELUNA_TRINITY
     // Cancel all pending async queries
@@ -193,13 +192,14 @@ void Eluna::DestroyBindStores()
 void Eluna::RegisterHookGlobals(lua_State* _L)
 {
     lua_newtable(_L); 
-    auto [hookData, hookCount] = HookToReadableString::getHooks();
+    auto const& [hookData, hookCount] = Hooks::getHooks();
     for (size_t i = 0; i < hookCount; ++i) {
         const HookStorage& hs = hookData[i];
 
         lua_newtable(_L); // subtable for category
 
-        for (size_t j = 0; j < hs.eventCount; ++j) {
+        for (size_t j = 0; j < hs.eventCount; ++j)
+        {
             lua_pushinteger(_L, hs.events[j].id);
             lua_setfield(_L, -2, hs.events[j].name);
         }

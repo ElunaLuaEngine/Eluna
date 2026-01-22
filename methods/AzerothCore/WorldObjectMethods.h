@@ -184,8 +184,8 @@ namespace LuaWorldObject
 
         Unit* target = NULL;
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
-        Trinity::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Acore::UnitLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        Cell::VisitObjects(obj, searcher, range);
 
         E->Push(target);
         return 1;
@@ -208,8 +208,8 @@ namespace LuaWorldObject
 
         GameObject* target = NULL;
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
-        Trinity::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Acore::GameObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        Cell::VisitObjects(obj, searcher, range);
 
         E->Push(target);
         return 1;
@@ -234,8 +234,8 @@ namespace LuaWorldObject
 
         Creature* target = NULL;
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_UNIT, entry, hostile, dead);
-        Trinity::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Acore::CreatureLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        Cell::VisitObjects(obj, searcher, range);
 
         E->Push(target);
         return 1;
@@ -258,8 +258,8 @@ namespace LuaWorldObject
 
         std::list<Player*> list;
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
-        Trinity::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Acore::PlayerListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        Cell::VisitObjects(obj, searcher, range);
 
         lua_createtable(E->L, list.size(), 0);
         int tbl = lua_gettop(E->L);
@@ -294,8 +294,8 @@ namespace LuaWorldObject
 
         std::list<Creature*> list;
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry, hostile, dead);
-        Trinity::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Acore::CreatureListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        Cell::VisitObjects(obj, searcher, range);
 
         lua_createtable(E->L, list.size(), 0);
         int tbl = lua_gettop(E->L);
@@ -328,8 +328,8 @@ namespace LuaWorldObject
 
         std::list<GameObject*> list;
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
-        Trinity::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Acore::GameObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        Cell::VisitObjects(obj, searcher, range);
 
         lua_createtable(E->L, list.size(), 0);
         int tbl = lua_gettop(E->L);
@@ -370,8 +370,8 @@ namespace LuaWorldObject
         ElunaUtil::WorldObjectInRangeCheck checker(true, obj, range, type, entry, hostile, dead);
 
         WorldObject* target = NULL;
-        Trinity::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Acore::WorldObjectLastSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, target, checker);
+        Cell::VisitObjects(obj, searcher, range);
 
         E->Push(target);
         return 1;
@@ -402,8 +402,8 @@ namespace LuaWorldObject
         ElunaUtil::WorldObjectInRangeCheck checker(false, obj, range, type, entry, hostile, dead);
 
         std::list<WorldObject*> list;
-        Trinity::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
-        Cell::VisitAllObjects(obj, searcher, range);
+        Acore::WorldObjectListSearcher<ElunaUtil::WorldObjectInRangeCheck> searcher(obj, list, checker);
+        Cell::VisitObjects(obj, searcher, range);
 
         lua_createtable(E->L, list.size(), 0);
         int tbl = lua_gettop(E->L);
@@ -639,9 +639,7 @@ namespace LuaWorldObject
         float o = E->CHECKVAL<float>(6);
         uint32 respawnDelay = E->CHECKVAL<uint32>(7, 30);
 
-        QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
-
-        E->Push(obj->SummonGameObject(entry, Position(x, y, z, o), rot, Seconds(respawnDelay)));
+        E->Push(obj->SummonGameObject(entry, x, y, z, o, 0, 0, 0, 0, respawnDelay));
         return 1;
     }
 
@@ -711,7 +709,7 @@ namespace LuaWorldObject
                 return luaL_argerror(E->L, 7, "valid SpawnType expected");
         }
 
-        E->Push(obj->SummonCreature(entry, x, y, z, o, type, Milliseconds(despawnTimer)));
+        E->Push(obj->SummonCreature(entry, x, y, z, o, type, despawnTimer));
         return 1;
     }
 
@@ -765,15 +763,7 @@ namespace LuaWorldObject
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
         if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
         {
-            ElunaEventProcessor* proc = obj->GetElunaEvents(E->GetBoundMapId());
-            if (!proc)
-            {
-                luaL_unref(E->L, LUA_REGISTRYINDEX, functionRef);
-                E->Push();
-                return 1;
-            }
-
-            proc->AddEvent(functionRef, min, max, repeats);
+            obj->GetElunaEvents(E->GetBoundMapId())->AddEvent(functionRef, min, max, repeats);
             E->Push(functionRef);
         }
         return 1;
@@ -787,12 +777,7 @@ namespace LuaWorldObject
     int RemoveEventById(Eluna* E, WorldObject* obj)
     {
         int eventId = E->CHECKVAL<int>(2);
-
-        ElunaEventProcessor* proc = obj->GetElunaEvents(E->GetBoundMapId());
-        if (!proc)
-            return 0;
-
-        proc->SetState(eventId, LUAEVENT_STATE_ABORT);
+        obj->GetElunaEvents(E->GetBoundMapId())->SetState(eventId, LUAEVENT_STATE_ABORT);
         return 0;
     }
 
@@ -801,11 +786,7 @@ namespace LuaWorldObject
      */
     int RemoveEvents(Eluna* E, WorldObject* obj)
     {
-        ElunaEventProcessor* proc = obj->GetElunaEvents(E->GetBoundMapId());
-        if (!proc)
-            return 0;
-
-        proc->SetStates(LUAEVENT_STATE_ABORT);
+        obj->GetElunaEvents(E->GetBoundMapId())->SetStates(LUAEVENT_STATE_ABORT);
         return 0;
     }
 

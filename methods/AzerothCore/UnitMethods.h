@@ -117,7 +117,7 @@ namespace LuaUnit
      */
     int IsRooted(Eluna* E, Unit* unit)
     {
-        E->Push(unit->IsRooted() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT));
+        E->Push(unit->HasRootAura() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT));
         return 1;
     }
 
@@ -569,7 +569,7 @@ namespace LuaUnit
      */
     int GetMountId(Eluna* E, Unit* unit)
     {
-        E->Push(unit->GetMountDisplayId());
+        E->Push(unit->GetDisplayId());
         return 1;
     }
 
@@ -602,7 +602,7 @@ namespace LuaUnit
      */
     int GetCharmGUID(Eluna* E, Unit* unit)
     {
-        E->Push(unit->GetCharmedGUID());
+        E->Push(unit->GetCharmGUID());
         return 1;
     }
 
@@ -714,7 +714,7 @@ namespace LuaUnit
      */
     int GetStandState(Eluna* E, Unit* unit)
     {
-        E->Push(unit->GetStandState());
+        E->Push(unit->getStandState());
         return 1;
     }
 
@@ -765,7 +765,7 @@ namespace LuaUnit
     Powers PowerSelectorHelper(Eluna* E, Unit* unit, int powerType = -1)
     {
         if (powerType == -1)
-            return unit->GetPowerType();
+            return unit->getPowerType();
 
         if (powerType < 0 || powerType >= int(MAX_POWERS))
             luaL_argerror(E->L, 2, "valid Powers expected");
@@ -879,7 +879,7 @@ namespace LuaUnit
      */
     int GetPowerType(Eluna* E, Unit* unit)
     {
-        E->Push(unit->GetPowerType());
+        E->Push(unit->getPowerType());
         return 1;
     }
 
@@ -912,7 +912,7 @@ namespace LuaUnit
      */
     int GetGender(Eluna* E, Unit* unit)
     {
-        E->Push(unit->GetGender());
+        E->Push(unit->getGender());
         return 1;
     }
 
@@ -923,7 +923,7 @@ namespace LuaUnit
      */
     int GetRace(Eluna* E, Unit* unit)
     {
-        E->Push(unit->GetRace());
+        E->Push(unit->getRace());
         return 1;
     }
 
@@ -934,7 +934,7 @@ namespace LuaUnit
      */
     int GetClass(Eluna* E, Unit* unit)
     {
-        E->Push(unit->GetClass());
+        E->Push(unit->getClass());
         return 1;
     }
 
@@ -945,7 +945,7 @@ namespace LuaUnit
     */
     int GetRaceMask(Eluna* E, Unit* unit)
     {
-        E->Push(unit->GetRaceMask());
+        E->Push(unit->getRaceMask());
         return 1;
     }
 
@@ -956,7 +956,7 @@ namespace LuaUnit
     */
     int GetClassMask(Eluna* E, Unit* unit)
     {
-        E->Push(unit->GetClassMask());
+        E->Push(unit->getClassMask());
         return 1;
     }
 
@@ -1011,11 +1011,11 @@ namespace LuaUnit
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
-        const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->GetClass());
+        const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->getClass());
         if (!entry)
             return 1;
 
-        E->Push(entry->Name[locale]);
+        E->Push(entry->name[locale]);
         return 1;
     }
 
@@ -1043,11 +1043,11 @@ namespace LuaUnit
         if (locale >= TOTAL_LOCALES)
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
-        const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->GetRace());
+        const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->getRace());
         if (!entry)
             return 1;
 
-        E->Push(entry->Name[locale]);
+        E->Push(entry->name[locale]);
         return 1;
     }
 
@@ -1087,9 +1087,9 @@ namespace LuaUnit
         float range = E->CHECKVAL<float>(2, SIZE_OF_GRIDS);
 
         std::list<Unit*> list;
-        Trinity::AnyFriendlyUnitInObjectRangeCheck checker(unit, unit, range);
-        Trinity::UnitListSearcher<Trinity::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
-        Cell::VisitAllObjects(unit, searcher, range);
+        Acore::AnyFriendlyUnitInObjectRangeCheck checker(unit, unit, range);
+        Acore::UnitListSearcher<Acore::AnyFriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
+        Cell::VisitObjects(unit, searcher, range);
 
         ElunaUtil::ObjectGUIDCheck guidCheck(unit->GET_GUID());
         list.remove_if(guidCheck);
@@ -1119,9 +1119,9 @@ namespace LuaUnit
         float range = E->CHECKVAL<float>(2, SIZE_OF_GRIDS);
 
         std::list<Unit*> list;
-        Trinity::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, unit, range);
-        Trinity::UnitListSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
-        Cell::VisitAllObjects(unit, searcher, range);
+        Acore::AnyUnfriendlyUnitInObjectRangeCheck checker(unit, unit, range);
+        Acore::UnitListSearcher<Acore::AnyUnfriendlyUnitInObjectRangeCheck> searcher(unit, list, checker);
+        Cell::VisitObjects(unit, searcher, range);
 
         ElunaUtil::ObjectGUIDCheck guidCheck(unit->GET_GUID());
         list.remove_if(guidCheck);
@@ -1500,7 +1500,7 @@ namespace LuaUnit
         if (type >= int(MAX_POWERS))
             return luaL_argerror(E->L, 2, "valid Powers expected");
 
-        unit->SetPowerType((Powers)type);
+        unit->setPowerType((Powers)type);
         return 0;
     }
 
@@ -1628,13 +1628,13 @@ namespace LuaUnit
         if (apply)
         {
             unit->SetByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
-            for (Unit::ControlList::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
+            for (Unit::ControlSet::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
                 (*itr)->SetByteValue(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
         }
         else
         {
             unit->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
-            for (Unit::ControlList::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
+            for (Unit::ControlSet::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
                 (*itr)->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
         }
 
@@ -1987,7 +1987,7 @@ namespace LuaUnit
         float z = E->CHECKVAL<float>(5);
         bool genPath = E->CHECKVAL<bool>(6, true);
 
-        unit->GetMotionMaster()->MovePoint(id, x, y, z, genPath);
+        unit->GetMotionMaster()->MovePoint(id, x, y, z, FORCED_MOVEMENT_NONE, 0.f, 0.f, genPath);
         return 0;
     }
 
@@ -2148,21 +2148,7 @@ namespace LuaUnit
         Item* castItem = E->CHECKOBJ<Item>(8, false);
         ObjectGuid originalCaster = E->CHECKVAL<ObjectGuid>(9, ObjectGuid());
 
-        CastSpellExtraArgs args;
-        if (has_bp0)
-            args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp0);
-        if (has_bp1)
-            args.AddSpellMod(SPELLVALUE_BASE_POINT1, bp1);
-        if (has_bp2)
-            args.AddSpellMod(SPELLVALUE_BASE_POINT2, bp2);
-        if (triggered)
-            args.TriggerFlags = TRIGGERED_FULL_MASK;
-        if (castItem)
-            args.SetCastItem(castItem);
-        if (!originalCaster.IsEmpty())
-            args.SetOriginalCaster(originalCaster);
-
-        unit->CastSpell(target, spell, args);
+        unit->CastCustomSpell(target, spell, has_bp0 ? &bp0 : NULL, has_bp1 ? &bp1 : NULL, has_bp2 ? &bp2 : NULL, triggered, castItem, NULL, ObjectGuid(originalCaster));
         return 0;
     }
 
@@ -2183,11 +2169,7 @@ namespace LuaUnit
         uint32 spell = E->CHECKVAL<uint32>(5);
         bool triggered = E->CHECKVAL<bool>(6, true);
 
-        CastSpellExtraArgs args;
-        if (triggered)
-            args.TriggerFlags = TRIGGERED_FULL_MASK;
-
-        unit->CastSpell(Position(_x, _y, _z), spell, args);
+        unit->CastSpell(_x, _y, _z, spell, triggered);
         return 0;
     }
 
@@ -2386,10 +2368,9 @@ namespace LuaUnit
         if (Unit::IsDamageReducedByArmor(schoolmask))
             damage = Unit::CalcArmorReducedDamage(unit, target, damage, NULL, BASE_ATTACK);
 
-        // melee damage by specific school
         if (!spell)
         {
-            DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE, BASE_ATTACK);
+            DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE);
             unit->CalcAbsorbResist(dmgInfo);
 
             if (!dmgInfo.GetDamage())
@@ -2400,7 +2381,6 @@ namespace LuaUnit
             uint32 absorb = dmgInfo.GetAbsorb();
             uint32 resist = dmgInfo.GetResist();
             unit->DealDamageMods(target, damage, &absorb);
-
             Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
             unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
             return 0;
@@ -2413,9 +2393,8 @@ namespace LuaUnit
         if (!spellInfo)
             return 0;
 
-        SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
+        SpellNonMeleeDamage dmgInfo(unit, target, spellInfo, spellInfo->GetSchoolMask());
         Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
-
         unit->SendSpellNonMeleeDamageLog(&dmgInfo);
         unit->DealSpellDamage(&dmgInfo, true);
         return 0;
@@ -2544,29 +2523,7 @@ namespace LuaUnit
         float value = E->CHECKVAL<float>(4);
         bool apply = E->CHECKVAL<bool>(5, true);
 
-        unit->HandleStatFlatModifier(UnitMods(UNIT_MOD_STAT_START + statType), (UnitModifierFlatType)modType, value, apply);
-        return 0;
-    }
-
-    /**
-     * Modifies a percentage amount of a specific stat of the [Unit]
-     *
-     * @table
-     * @columns [UnitModifierPctType, ID]
-     * @values [BASE_PCT, 0]
-     * @values [TOTAL_PCT, 1]
-     *
-     * @param uint32 statType : The stat to modify
-     * @param [UnitModifierPctType] modType : The type of modifier to apply
-     * @param float value : The value to apply to the stat
-     */
-    int AddPctStatModifier(Eluna* E, Unit* unit)
-    {
-        uint32 statType = E->CHECKVAL<uint32>(2);
-        uint8 modType = E->CHECKVAL<uint8>(3);
-        float value = E->CHECKVAL<float>(4);
-
-        unit->ApplyStatPctModifier(UnitMods(UNIT_MOD_STAT_START + statType), (UnitModifierPctType)modType, value);
+        unit->HandleStatFlatModifier(UnitMods(UNIT_MOD_STAT_START + statType), (UnitModifierFlatType)(modType == 0 ? 0 : 2), value, apply);
         return 0;
     }
 
@@ -2743,9 +2700,9 @@ namespace LuaUnit
         { "DealDamage", &LuaUnit::DealDamage },
         { "DealHeal", &LuaUnit::DealHeal },
         { "AddFlatStatModifier", &LuaUnit::AddFlatStatModifier },
-        { "AddPctStatModifier", &LuaUnit::AddPctStatModifier },
 
         // Not implemented methods
+        { "AddPctStatModifier", METHOD_REG_NONE }, // Not supported on AC
         { "SummonGuardian", METHOD_REG_NONE } // not implemented
     };
 };

@@ -232,7 +232,7 @@ namespace LuaGameObject
 
         // cs_gobject.cpp copy paste
         ObjectGuid ownerGuid = go->GetOwnerGUID();
-        if (ownerGuid)
+        if (!ownerGuid.IsEmpty())
         {
             Unit* owner = eObjectAccessor()GetUnit(*go, ownerGuid);
             if (!owner || !ownerGuid.IsPlayer())

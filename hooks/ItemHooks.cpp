@@ -74,7 +74,7 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_USE, pItem->GetEntry(), true);
     HookPush(pPlayer);
     HookPush(pItem);
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     if (GameObject* target = targets.GetGOTarget())
         HookPush(target);
     else if (Item* target = targets.GetItemTarget())

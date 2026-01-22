@@ -54,9 +54,6 @@ Below are the emulator sources and specific forks that include the required modi
   - [TBC](https://github.com/Niam5/Eluna-CMaNGOS-TBC)
   - [WoTLK](https://github.com/Niam5/Eluna-CMaNGOS-WotLK)
 
-- **AzerothCore Eluna Module** - Third party fork maintained by AzerothCore
-  - [AzerothCore Eluna Module](https://github.com/azerothcore/mod-eluna)
-
 ## License
 
 This project is licensed under the terms described in the [LICENSE](https://github.com/ElunaLuaEngine/Eluna/blob/master/LICENSE) file.

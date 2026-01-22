@@ -8,6 +8,8 @@
 #define GLOBALMETHODS_H
 
 #include "BindingMap.h"
+#include "GameTime.h"
+#include "BanMgr.h"
 
 /***
  * These functions can be used anywhere at any time, including at start-up.
@@ -50,7 +52,7 @@ namespace LuaGlobalFunctions
      */
     int GetRealmID(Eluna* E)
     {
-        E->Push(sConfigMgr->GetIntDefault("RealmID", 1));
+        E->Push(sConfigMgr->GetOption<uint32>("RealmID", 1));
         return 1;
     }
 
@@ -166,7 +168,7 @@ namespace LuaGlobalFunctions
      */
     int GetGameTime(Eluna* E)
     {
-        E->Push(uint32(GameTime::GetGameTime()));
+        E->Push(GameTime::GetGameTime().count());
         return 1;
     }
 
@@ -244,20 +246,17 @@ namespace LuaGlobalFunctions
         uint32 i = 0;
 
         Map::PlayerList const& players = E->GetBoundMap()->GetPlayers();
-        if (!players.isEmpty())
+        for (Map::PlayerList::const_iterator it = players.begin(); it != players.end(); ++it)
         {
-            for (Map::PlayerList::const_iterator it = players.begin(); it != players.end(); ++it)
+            if (Player* player = it->GetSource())
             {
-                if (Player* player = it->GetSource())
-                {
-                    if (!player->IsInWorld())
-                        continue;
+                if (!player->IsInWorld())
+                    continue;
 
-                    if ((team == TEAM_NEUTRAL || uint32(player->GetTeamId()) == team) && (!onlyGM || player->IsGameMaster()))
-                    {
-                        E->Push(player);
-                        lua_rawseti(E->L, tbl, ++i);
-                    }
+                if ((team == TEAM_NEUTRAL || uint32(player->GetTeamId()) == team) && (!onlyGM || player->IsGameMaster()))
+                {
+                    E->Push(player);
+                    lua_rawseti(E->L, tbl, ++i);
                 }
             }
         }
@@ -318,7 +317,7 @@ namespace LuaGlobalFunctions
      */
     int GetPlayerCount(Eluna* E)
     {
-        E->Push(eWorld->GetActiveSessionCount());
+        E->Push(eWorldSessionMgr->GetActiveSessionCount());
         return 1;
     }
 
@@ -335,7 +334,7 @@ namespace LuaGlobalFunctions
     int GetPlayerGUID(Eluna* E)
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
-        E->Push(ObjectGuid::Create<HIGHGUID_PLAYER>(lowguid));
+        E->Push(MAKE_NEW_GUID(lowguid, 0, HIGHGUID_PLAYER));
         return 1;
     }
 
@@ -351,7 +350,7 @@ namespace LuaGlobalFunctions
     int GetItemGUID(Eluna* E)
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
-        E->Push(ObjectGuid::Create<HIGHGUID_ITEM>(lowguid));
+        E->Push(MAKE_NEW_GUID(lowguid, 0, HIGHGUID_ITEM));
         return 1;
     }
 
@@ -370,7 +369,7 @@ namespace LuaGlobalFunctions
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
         uint32 entry = E->CHECKVAL<uint32>(2);
-        E->Push(ObjectGuid::Create<HIGHGUID_GAMEOBJECT>(entry, lowguid));
+        E->Push(MAKE_NEW_GUID(lowguid, entry, HIGHGUID_GAMEOBJECT));
         return 1;
     }
 
@@ -389,7 +388,7 @@ namespace LuaGlobalFunctions
     {
         uint32 lowguid = E->CHECKVAL<uint32>(1);
         uint32 entry = E->CHECKVAL<uint32>(2);
-        E->Push(ObjectGuid::Create<HIGHGUID_UNIT>(entry, lowguid));
+        E->Push(MAKE_NEW_GUID(lowguid, entry, HIGHGUID_UNIT));
         return 1;
     }
 
@@ -526,7 +525,7 @@ namespace LuaGlobalFunctions
         if (!areaEntry)
             return luaL_argerror(E->L, 1, "valid Area or Zone ID expected");
 
-        E->Push(areaEntry->AreaName[locale]);
+        E->Push(areaEntry->area_name[locale]);
         return 1;
     }
 
@@ -1254,7 +1253,7 @@ namespace LuaGlobalFunctions
     int SendWorldMessage(Eluna* E)
     {
         const char* message = E->CHECKVAL<const char*>(1);
-        eWorld->SendServerMessage(SERVER_MSG_STRING, message);
+        eWorldSessionMgr->SendServerMessage(SERVER_MSG_STRING, message);
         return 0;
     }
 
@@ -1686,7 +1685,7 @@ namespace LuaGlobalFunctions
             if (save)
             {
                 Creature* creature = new Creature();
-                if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, pos))
+                if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, 0, x, y, z, o))
                 {
                     delete creature;
                     E->Push();
@@ -1703,7 +1702,7 @@ namespace LuaGlobalFunctions
                 delete creature;
                 creature = new Creature();
 
-                if (!creature->LoadFromDB(db_guid, map, true, true))
+                if (!creature->LoadCreatureFromDB(db_guid, map, true, true))
                 {
                     delete creature;
                     E->Push();
@@ -1750,9 +1749,8 @@ namespace LuaGlobalFunctions
 
             GameObject* object = new GameObject;
             uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
-            QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
 
-            if (!object->Create(guidLow, objectInfo->entry, map, phase, Position(x, y, z, o), rot, 0, GO_STATE_READY))
+            if (!object->Create(guidLow, entry, map, phase, x, y, z, o, G3D::Quat(0.0f, 0.0f, 0.0f, 0.0f), 100, GO_STATE_READY))
             {
                 delete object;
                 E->Push();
@@ -1774,7 +1772,7 @@ namespace LuaGlobalFunctions
 
                 object = new GameObject();
                 // this will generate a new lowguid if the object is in an instance
-                if (!object->LoadFromDB(guidLow, map, true))
+                if (!object->LoadGameObjectFromDB(guidLow, map, true))
                 {
                     delete object;
                     E->Push();
@@ -1868,7 +1866,7 @@ namespace LuaGlobalFunctions
 
         auto const itemlist = items->m_items;
         for (auto itr = itemlist.begin(); itr != itemlist.end(); ++itr)
-            eObjectMgr->RemoveVendorItem(entry, itr->item);
+            eObjectMgr->RemoveVendorItem(entry, (*itr)->item);
 
         return 0;
     }
@@ -1914,31 +1912,38 @@ namespace LuaGlobalFunctions
         const int BAN_CHARACTER = 1;
         const int BAN_IP = 2;
 
-        BanMode mode = BanMode::BAN_ACCOUNT;
-
         switch (banMode)
         {
             case BAN_ACCOUNT:
                 if (!Utf8ToUpperOnlyLatin(nameOrIP))
                     return luaL_argerror(E->L, 2, "invalid account name");
-                mode = BanMode::BAN_ACCOUNT;
                 break;
             case BAN_CHARACTER:
                 if (!normalizePlayerName(nameOrIP))
                     return luaL_argerror(E->L, 2, "invalid character name");
-                mode = BanMode::BAN_CHARACTER;
                 break;
             case BAN_IP:
                 if (!IsIPAddress(nameOrIP.c_str()))
                     return luaL_argerror(E->L, 2, "invalid ip");
-                mode = BanMode::BAN_IP;
                 break;
             default:
                 return luaL_argerror(E->L, 1, "unknown banmode");
         }
 
         BanReturn result;
-        result = eWorld->BanAccount(mode, nameOrIP, duration, reason, whoBanned);
+        switch (banMode)
+        {
+            case BAN_ACCOUNT:
+                result = sBan->BanAccount(nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
+            break;
+            case BAN_CHARACTER:
+                result = sBan->BanCharacter(nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
+            break;
+            case BAN_IP:
+                result = sBan->BanIP(nameOrIP, std::to_string(duration) + "s", reason, whoBanned);
+            break;
+        }
+
         switch (result)
         {
         case BanReturn::BAN_SUCCESS:
@@ -1950,7 +1955,7 @@ namespace LuaGlobalFunctions
         case BanReturn::BAN_NOTFOUND:
             E->Push(2);
             break;
-        case BanReturn::BAN_EXISTS:
+        case BanReturn::BAN_LONGER_EXISTS:
             E->Push(3);
             break;
         }
@@ -2043,7 +2048,7 @@ namespace LuaGlobalFunctions
             }
         }
 
-        Player* receiverPlayer = eObjectAccessor()FindPlayerByLowGUID(receiverGUIDLow);
+        Player* receiverPlayer = eObjectAccessor()FindPlayer(MAKE_NEW_GUID(receiverGUIDLow, 0, HIGHGUID_PLAYER));
         draft.SendMailTo(trans, MailReceiver(receiverPlayer, receiverGUIDLow), sender, MAIL_CHECK_MASK_NONE, delay);
         CharacterDatabase.CommitTransaction(trans);
 
@@ -2204,13 +2209,13 @@ namespace LuaGlobalFunctions
             TaxiPathNodeEntry entry;
 
             // mandatory
-            entry.ContinentID = E->CHECKVAL<uint32>(start);
-            entry.Loc.X = E->CHECKVAL<float>(start + 1);
-            entry.Loc.Y = E->CHECKVAL<float>(start + 2);
-            entry.Loc.Z = E->CHECKVAL<float>(start + 3);
+            entry.mapid  = E->CHECKVAL<uint32>(start);
+            entry.x = E->CHECKVAL<float>(start + 1);
+            entry.y = E->CHECKVAL<float>(start + 2);
+            entry.z = E->CHECKVAL<float>(start + 3);
             // optional
-            entry.Flags = E->CHECKVAL<uint32>(start + 4, 0);
-            entry.Delay = E->CHECKVAL<uint32>(start + 5, 0);
+            entry.actionFlag = E->CHECKVAL<uint32>(start + 4, 0);
+            entry.delay = E->CHECKVAL<uint32>(start + 5, 0);
 
             nodes.push_back(entry);
 
@@ -2242,13 +2247,13 @@ namespace LuaGlobalFunctions
             TaxiPathNodeEntry& entry = *it;
             TaxiNodesEntry* nodeEntry = new TaxiNodesEntry();
 
-            entry.PathID = pathId;
-            entry.NodeIndex = nodeId;
+            entry.path = pathId;
+            entry.index = nodeId;
             nodeEntry->ID = index;
-            nodeEntry->ContinentID = entry.ContinentID;
-            nodeEntry->Pos.X = entry.Loc.X;
-            nodeEntry->Pos.Y = entry.Loc.Y;
-            nodeEntry->Pos.Z = entry.Loc.Z;
+            nodeEntry->map_id = entry.mapid;
+            nodeEntry->x = entry.x;
+            nodeEntry->y = entry.y;
+            nodeEntry->z = entry.z;
             nodeEntry->MountCreatureID[0] = mountH;
             nodeEntry->MountCreatureID[1] = mountA;
             sTaxiNodesStore.SetEntry(nodeId++, nodeEntry);
@@ -2256,15 +2261,14 @@ namespace LuaGlobalFunctions
         }
         if (startNode >= nodeId)
             return 1;
-        sTaxiPathSetBySource[startNode][nodeId - 1] = TaxiPathBySourceAndDestination(pathId, price);
+        
         TaxiPathEntry* pathEntry = new TaxiPathEntry();
-
-        pathEntry->FromTaxiNode = startNode;
-        pathEntry->ToTaxiNode = nodeId - 1;
-        pathEntry->Cost = price;
+        pathEntry->from = startNode;
+        pathEntry->to = nodeId - 1;
+        pathEntry->price = price;
         pathEntry->ID = pathId;
-
         sTaxiPathStore.SetEntry(pathId, pathEntry);
+        sTaxiPathSetBySource[startNode][nodeId - 1] = pathEntry;
 
         E->Push(pathId);
         return 1;

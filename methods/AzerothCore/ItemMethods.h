@@ -24,6 +24,17 @@ namespace LuaItem
     }
 
     /**
+     * Returns 'true' if the [Item] is account bound, 'false' otherwise
+     *
+     * @return bool isAccountBound
+     */
+    int IsBoundAccountWide(Eluna* E, Item* item)
+    {
+        E->Push(item->IsBoundAccountWide());
+        return 1;
+    }
+
+    /**
      * Returns 'true' if the [Item] is bound to a [Player] by an enchant, 'false' otehrwise
      *
      * @return bool isBoundByEnchant
@@ -71,6 +82,17 @@ namespace LuaItem
     }
 
     /**
+     * Returns 'true' if the [Item] is a currency token, 'false' otherwise
+     *
+     * @return bool isCurrencyToken
+     */
+    int IsCurrencyToken(Eluna* E, Item* item)
+    {
+        E->Push(item->IsCurrencyToken());
+        return 1;
+    }
+
+    /**
      * Returns 'true' if the [Item] is a not an empty bag, 'false' otherwise
      *
      * @return bool isNotEmptyBag
@@ -99,7 +121,9 @@ namespace LuaItem
      */
     int CanBeTraded(Eluna* E, Item* item)
     {
-        E->Push(item->CanBeTraded());
+        bool mail = E->CHECKVAL<bool>(2, false);
+
+        E->Push(item->CanBeTraded(mail));
         return 1;
     }
 
@@ -146,7 +170,40 @@ namespace LuaItem
     {
         uint32 quest = E->CHECKVAL<uint32>(2);
 
-        E->Push(item->HasQuest(quest));
+        E->Push(item->hasQuest(quest));
+        return 1;
+    }
+
+    /**
+     * Returns 'true' if the [Item] is a potion, 'false' otherwise
+     *
+     * @return bool isPotion
+     */
+    int IsPotion(Eluna* E, Item* item)
+    {
+        E->Push(item->IsPotion());
+        return 1;
+    }
+
+    /**
+     * Returns 'true' if the [Item] is a weapon vellum, 'false' otherwise
+     *
+     * @return bool isWeaponVellum
+     */
+    int IsWeaponVellum(Eluna* E, Item* item)
+    {
+        E->Push(item->IsWeaponVellum());
+        return 1;
+    }
+
+    /**
+     * Returns 'true' if the [Item] is an armor vellum, 'false' otherwise
+     *
+     * @return bool isArmorVellum
+     */
+    int IsArmorVellum(Eluna* E, Item* item)
+    {
+        E->Push(item->IsArmorVellum());
         return 1;
     }
 
@@ -162,22 +219,30 @@ namespace LuaItem
     }
 
     /**
+     * Returns 'true' if the refund period has expired for this [Item], 'false' otherwise
+     *
+     * @return bool isRefundExpired
+     */
+    int IsRefundExpired(Eluna* E, Item* item)
+    {
+        E->Push(item->IsRefundExpired());
+        return 1;
+    }
+
+    /**
      * Returns the chat link of the [Item]
      *
-     * <pre>
-     * enum LocaleConstant
-     * {
-     *     LOCALE_enUS = 0,
-     *     LOCALE_koKR = 1,
-     *     LOCALE_frFR = 2,
-     *     LOCALE_deDE = 3,
-     *     LOCALE_zhCN = 4,
-     *     LOCALE_zhTW = 5,
-     *     LOCALE_esES = 6,
-     *     LOCALE_esMX = 7,
-     *     LOCALE_ruRU = 8
-     * };
-     * </pre>
+     * @table
+     * @columns [Locale, ID]
+     * @values [LOCALE_enUS, 0]
+     * @values [LOCALE_koKR, 1]
+     * @values [LOCALE_frFR, 2]
+     * @values [LOCALE_deDE, 3]
+     * @values [LOCALE_zhCN, 4]
+     * @values [LOCALE_zhTW, 5]
+     * @values [LOCALE_esES, 6]
+     * @values [LOCALE_esMX, 7]
+     * @values [LOCALE_ruRU, 8]
      *
      * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the [Item]'s name in
      * @return string itemLink
@@ -189,14 +254,41 @@ namespace LuaItem
             return luaL_argerror(E->L, 2, "valid LocaleConstant expected");
 
         const ItemTemplate* temp = item->GetTemplate();
+
         std::string name = temp->Name1;
         if (ItemLocale const* il = eObjectMgr->GetItemLocale(temp->ItemId))
-            name = il->Name[locale];
+            ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(locale), name);
+
+        if (int32 itemRandPropId = item->GetItemRandomPropertyId())
+        {
+            std::array<char const*, 16> const* suffix = NULL;
+            if (itemRandPropId < 0)
+            {
+                const ItemRandomSuffixEntry* itemRandEntry = sItemRandomSuffixStore.LookupEntry(-item->GetItemRandomPropertyId());
+                if (itemRandEntry)
+                    suffix = &itemRandEntry->Name;
+            }
+            else
+            {
+                const ItemRandomPropertiesEntry* itemRandEntry = sItemRandomPropertiesStore.LookupEntry(item->GetItemRandomPropertyId());
+                if (itemRandEntry)
+                    suffix = &itemRandEntry->Name;
+            }
+            if (suffix)
+            {
+                name += ' ';
+                name += (*suffix)[(name != temp->Name1) ? locale : uint8(DEFAULT_LOCALE)];
+            }
+        }
 
         std::ostringstream oss;
         oss << "|c" << std::hex << ItemQualityColors[temp->Quality] << std::dec <<
             "|Hitem:" << temp->ItemId << ":" <<
             item->GetEnchantmentId(PERM_ENCHANTMENT_SLOT) << ":" <<
+            item->GetEnchantmentId(SOCK_ENCHANTMENT_SLOT) << ":" <<
+            item->GetEnchantmentId(SOCK_ENCHANTMENT_SLOT_2) << ":" <<
+            item->GetEnchantmentId(SOCK_ENCHANTMENT_SLOT_3) << ":" <<
+            item->GetEnchantmentId(BONUS_ENCHANTMENT_SLOT) << ":" <<
             item->GetItemRandomPropertyId() << ":" << item->GetItemSuffixFactor() << ":" <<
             (uint32)item->GetOwner()->GetLevel() << "|h[" << name << "]|h|r";
 
@@ -204,9 +296,14 @@ namespace LuaItem
         return 1;
     }
 
+    /**
+     * Returns GUID of the [Player] who currently owns the [Item]
+     *
+     * @return ObjectGuid guid : guid of the [Player] who owns the [Item]
+     */
     int GetOwnerGUID(Eluna* E, Item* item)
     {
-        E->Push(item->GetOwnerGuid());
+        E->Push(item->GetOwnerGUID());
         return 1;
     }
 
@@ -392,13 +489,24 @@ namespace LuaItem
     }
 
     /**
+    * Returns the flags2 of the [Item]
+    *
+    * @return uint32 flags2
+    */
+    int GetFlags2(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->Flags2);
+        return 1;
+    }
+
+    /**
     * Returns the extraFlags of the [Item]
     *
     * @return uint32 extraFlags
     */
     int GetExtraFlags(Eluna* E, Item* item)
     {
-        E->Push(item->GetTemplate()->ExtraFlags);
+        E->Push(item->GetTemplate()->FlagsCu);
         return 1;
     }
 
@@ -491,6 +599,17 @@ namespace LuaItem
     }
 
     /**
+     * Returns the amount of stat values on this [Item]
+     *
+     * @return uint32 statsCount
+     */
+    int GetStatsCount(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->StatsCount);
+        return 1;
+    }
+
+    /**
      * Returns the stat info of the specified stat slot of this [Item]
      *
      * @param uint8 statSlot : the stat slot specified
@@ -503,7 +622,7 @@ namespace LuaItem
         int32 statValue = 0;
         int32 statType = 0;
 
-        if (statSlot > 0 && statSlot <= MAX_ITEM_PROTO_STATS)
+        if (statSlot > 0 && statSlot <= item->GetTemplate()->StatsCount)
         {
             auto& statEntry = item->GetTemplate()->ItemStat[statSlot - 1];
             statValue = statEntry.ItemStatValue;
@@ -600,6 +719,17 @@ namespace LuaItem
     }
 
     /**
+     * Returns the random suffix ID of this [Item]
+     *
+     * @return uint32 suffixId
+     */
+    int GetRandomSuffix(Eluna* E, Item* item)
+    {
+        E->Push(item->GetTemplate()->RandomSuffix);
+        return 1;
+    }
+
+    /**
      * Returns the item set ID of this [Item]
      *
      * @return uint32 itemSetId
@@ -625,17 +755,6 @@ namespace LuaItem
     }
 
     /**
-     * Returns the [ItemTemplate] for this [Item].
-     *
-     * @return [ItemTemplate] itemTemplate
-     */
-    int GetItemTemplateEntry(Eluna* E, Item* item)
-    {
-        E->Push(item->GetProto());
-        return 1;
-    }
-
-    /**
      * Sets the [Player] specified as the owner of the [Item]
      *
      * @param [Player] player : the [Player] specified
@@ -644,7 +763,7 @@ namespace LuaItem
     {
         Player* player = E->CHECKOBJ<Player>(2);
 
-        item->SetOwnerGuid(player->GET_GUID());
+        item->SetOwnerGUID(player->GET_GUID());
         return 0;
     }
 
@@ -721,6 +840,18 @@ namespace LuaItem
         return 0;
     }
 
+    /**
+     * Sets the random suffix for the [Item] from a given random suffix ID.
+     *
+     * @param uint32 randomSuffixId : The ID of the random suffix to be applied.
+     */
+    int SetRandomSuffix(Eluna* E, Item* item)
+    {
+        uint32 randomPropId = E->CHECKVAL<uint32>(2);
+        item->SetItemRandomProperties(-(int32)randomPropId);
+        return 0;
+    }
+
     /* OTHER */
     /**
      * Removes an enchant from the [Item] by the specified slot
@@ -758,7 +889,8 @@ namespace LuaItem
      */
     int SaveToDB(Eluna* /*E*/, Item* item)
     {
-        item->SaveToDB();
+        CharacterDatabaseTransaction trans = CharacterDatabaseTransaction(nullptr);
+        item->SaveToDB(trans);
         return 0;
     }
     
@@ -782,7 +914,8 @@ namespace LuaItem
         { "GetDisplayId", &LuaItem::GetDisplayId },
         { "GetQuality", &LuaItem::GetQuality },
         { "GetFlags", &LuaItem::GetFlags },
-        { "GetExtraFlags", &LuaItem::GetExtraFlags },
+        { "GetFlags2", &LuaItem::GetFlags2 },
+        { "GetExtraFlags", &LuaItem::GetExtraFlags },		
         { "GetBuyCount", &LuaItem::GetBuyCount },
         { "GetBuyPrice", &LuaItem::GetBuyPrice },
         { "GetSellPrice", &LuaItem::GetSellPrice },
@@ -791,10 +924,11 @@ namespace LuaItem
         { "GetAllowableRace", &LuaItem::GetAllowableRace },
         { "GetItemLevel", &LuaItem::GetItemLevel },
         { "GetRequiredLevel", &LuaItem::GetRequiredLevel },
+        { "GetStatsCount", &LuaItem::GetStatsCount },
         { "GetRandomProperty", &LuaItem::GetRandomProperty },
+        { "GetRandomSuffix", &LuaItem::GetRandomSuffix },
         { "GetItemSet", &LuaItem::GetItemSet },
         { "GetBagSize", &LuaItem::GetBagSize },
-        { "GetItemTemplate", &LuaItem::GetItemTemplateEntry },
         { "GetStatInfo", &LuaItem::GetStatInfo },
         { "GetDamageInfo", &LuaItem::GetDamageInfo },
         { "GetSpeed", &LuaItem::GetSpeed },
@@ -807,13 +941,16 @@ namespace LuaItem
         { "SetBinding", &LuaItem::SetBinding },
         { "SetCount", &LuaItem::SetCount },
         { "SetRandomProperty", &LuaItem::SetRandomProperty },
+        { "SetRandomSuffix", &LuaItem::SetRandomSuffix },
 
         // Boolean
         { "IsSoulBound", &LuaItem::IsSoulBound },
+        { "IsBoundAccountWide", &LuaItem::IsBoundAccountWide },
         { "IsBoundByEnchant", &LuaItem::IsBoundByEnchant },
         { "IsNotBoundToPlayer", &LuaItem::IsNotBoundToPlayer },
         { "IsLocked", &LuaItem::IsLocked },
         { "IsBag", &LuaItem::IsBag },
+        { "IsCurrencyToken", &LuaItem::IsCurrencyToken },
         { "IsNotEmptyBag", &LuaItem::IsNotEmptyBag },
         { "IsBroken", &LuaItem::IsBroken },
         { "CanBeTraded", &LuaItem::CanBeTraded },
@@ -821,25 +958,16 @@ namespace LuaItem
         { "IsInBag", &LuaItem::IsInBag },
         { "IsEquipped", &LuaItem::IsEquipped },
         { "HasQuest", &LuaItem::HasQuest },
+        { "IsPotion", &LuaItem::IsPotion },
+        { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
+        { "IsArmorVellum", &LuaItem::IsArmorVellum },
+        { "IsRefundExpired", &LuaItem::IsRefundExpired },
         { "IsConjuredConsumable", &LuaItem::IsConjuredConsumable },
         { "SetEnchantment", &LuaItem::SetEnchantment },
         { "ClearEnchantment", &LuaItem::ClearEnchantment },
 
-
         // Other
-        { "SaveToDB", &LuaItem::SaveToDB },
-
-        // Not implemented methods
-        { "GetRandomSuffix", METHOD_REG_NONE },  // not implemented
-        { "GetStatsCount", METHOD_REG_NONE },  // not implemented
-        { "GetFlags2", METHOD_REG_NONE }, // not avaliable in Classic/TBC
-        { "IsPotion", METHOD_REG_NONE }, // not implemented in VMANGOS
-        { "IsRefundExpired", METHOD_REG_NONE }, // not implemented
-        { "IsCurrencyToken", METHOD_REG_NONE },  // not implemented
-        { "IsBoundAccountWide", METHOD_REG_NONE },  // not implemented
-        { "IsWeaponVellum", METHOD_REG_NONE },  // not implemented
-        { "IsArmorVellum", METHOD_REG_NONE },  // not implemented
-        { "SetRandomSuffix", METHOD_REG_NONE }  // not implemented
+        { "SaveToDB", &LuaItem::SaveToDB }
     };
 };
 #endif

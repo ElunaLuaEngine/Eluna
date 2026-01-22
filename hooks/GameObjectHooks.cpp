@@ -72,7 +72,11 @@ void Eluna::GetDialogStatus(const Player* pPlayer, const GameObject* pGameObject
 }
 
 #if ELUNA_EXPANSION >= EXP_WOTLK
+#ifndef ELUNA_AZEROTHCORE
 void Eluna::OnDestroyed(GameObject* pGameObject, WorldObject* attacker)
+#else
+void Eluna::OnDestroyed(GameObject* pGameObject, Player* attacker)
+#endif
 {
     START_HOOK(GAMEOBJECT_EVENT_ON_DESTROYED, pGameObject->GetEntry());
     HookPush(pGameObject);
@@ -80,7 +84,11 @@ void Eluna::OnDestroyed(GameObject* pGameObject, WorldObject* attacker)
     CallAllFunctions(binding, key);
 }
 
+#ifndef ELUNA_AZEROTHCORE
 void Eluna::OnDamaged(GameObject* pGameObject, WorldObject* attacker)
+#else
+void Eluna::OnDamaged(GameObject* pGameObject, Player* attacker)
+#endif
 {
     START_HOOK(GAMEOBJECT_EVENT_ON_DAMAGED, pGameObject->GetEntry());
     HookPush(pGameObject);

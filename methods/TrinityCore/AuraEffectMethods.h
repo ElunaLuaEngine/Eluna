@@ -134,6 +134,42 @@ namespace LuaAuraEffects
         return 1;
     }
 
+    int GetId(Eluna* E, AuraEffect* aurEff)
+    {
+        E->Push(aurEff->GetId());
+        return 1;
+    }
+
+    int GetEffIndex(Eluna* E, AuraEffect* aurEff)
+    {
+        E->Push(uint8(aurEff->GetEffIndex()));
+        return 1;
+    }
+
+    int GetEffIndex(Eluna* E, AuraEffect* aurEff)
+    {
+        E->Push(uint8(aurEff->GetEffIndex()));
+        return 1;
+    }
+
+    int GetAuraType(Eluna* E, AuraEffect* aurEff)
+    {
+        E->Push(uint16(aurEff->GetAuraType()));
+        return 1;
+    }
+
+    int GetCaster(Eluna* E, AuraEffect* aurEff)
+    {
+        E->Push(aurEff->GetCaster());
+        return 1;
+    }
+
+    int GetCasterGUID(Eluna* E, AuraEffect* aurEff)
+    {
+        E->Push(aurEff->GetCasterGUID());
+        return 1;
+    }
+
     ElunaRegister<AuraEffect> AuraEffectMethods[] =
     {
         {"GetBase", &LuaAuraEffects::GetBase},
@@ -152,7 +188,12 @@ namespace LuaAuraEffects
         {"GetTickNumber", &LuaAuraEffects::GetTickNumber},
         {"GetRemainingTicks", &LuaAuraEffects::GetRemainingTicks},
         {"GetTotalTicks", &LuaAuraEffects::GetTotalTicks},
-        {"GetTargetList", &LuaAuraEffects::GetTargetList}
+        {"GetTargetList", &LuaAuraEffects::GetTargetList},
+        {"GetId", &LuaAuraEffects::GetId},
+        {"GetEffIndex", &LuaAuraEffects::GetEffIndex},
+        {"GetAuraType", &LuaAuraEffects::GetAuraType},
+        {"GetCaster", &LuaAuraEffects::GetCaster},
+        {"GetCasterGUID", &LuaAuraEffects::GetCasterGUID}
     };
 };
 #endif

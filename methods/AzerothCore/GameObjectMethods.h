@@ -22,7 +22,7 @@ namespace LuaGameObject
     {
         uint32 questId = E->CHECKVAL<uint32>(2);
 
-        E->Push(go->HasQuest(questId));
+        E->Push(go->hasQuest(questId));
         return 1;
     }
 
@@ -55,7 +55,18 @@ namespace LuaGameObject
      */
     int IsActive(Eluna* E, GameObject* go)
     {
-        E->Push(go->IsActiveObject());
+        E->Push(go->isActiveObject());
+        return 1;
+    }
+
+    /**
+     * Returns true if the [GameObject] is a destructible, false otherwise.
+     *
+     * @return bool isDestructible
+     */
+    int IsDestructible(Eluna* E, GameObject* go)
+    {
+        E->Push(go->IsDestructibleBuilding());
         return 1;
     }
 
@@ -74,14 +85,11 @@ namespace LuaGameObject
      * Returns the state of a [GameObject]
      * Below are client side [GOState]s off of 3.3.5a
      *
-     * <pre>
-     * enum GOState
-     * {
-     *     GO_STATE_ACTIVE             = 0,                        // show in world as used and not reset (closed door open)
-     *     GO_STATE_READY              = 1,                        // show in world as ready (closed door close)
-     *     GO_STATE_ACTIVE_ALTERNATIVE = 2                         // show in world as used in alt way and not reset (closed door open by cannon fire)
-     * };
-     * </pre>
+     * @table
+     * @columns [GOState, ID, Comment]
+     * @values [GO_STATE_ACTIVE, 0, "show in world as used and not reset (closed door open)"]
+     * @values [GO_STATE_READY, 1, "show in world as ready (closed door close)"]
+     * @values [GO_STATE_ACTIVE_ALTERNATIVE, 2, "show in world as used in alt way and not reset (closed door open by cannon fire)"]
      *
      * @return [GOState] goState
      */
@@ -95,15 +103,12 @@ namespace LuaGameObject
      * Returns the [LootState] of a [GameObject]
      * Below are [LootState]s off of 3.3.5a
      *
-     * <pre>
-     * enum LootState
-     * {
-     *     GO_NOT_READY = 0,
-     *     GO_READY,                                               // can be ready but despawned, and then not possible activate until spawn
-     *     GO_ACTIVATED,
-     *     GO_JUST_DEACTIVATED
-     * };
-     * </pre>
+     * @table
+     * @columns [LootState, ID, Comment]
+     * @values [GO_NOT_READY, 0, ""]
+     * @values [GO_READY, 1, "can be ready but despawned, and then not possible activate until spawn"]
+     * @values [GO_ACTIVATED, 2, ""]
+     * @values [GO_JUST_DEACTIVATED, 3, ""]
      *
      * @return [LootState] lootState
      */
@@ -135,7 +140,7 @@ namespace LuaGameObject
      */
     int GetLootRecipientGroup(Eluna* E, GameObject* go)
     {
-        E->Push(go->GetGroupLootRecipient());
+        E->Push(go->GetLootRecipientGroup());
         return 1;
     }
 
@@ -146,21 +151,18 @@ namespace LuaGameObject
      */
     int GetDBTableGUIDLow(Eluna* E, GameObject* go)
     {
-        E->Push(go->GetGUIDLow());
+        E->Push(go->GetSpawnId());
         return 1;
     }
 
     /**
      * Sets the state of a [GameObject]
      *
-     * <pre>
-     * enum GOState
-     * {
-     *     GO_STATE_ACTIVE             = 0,                        // show in world as used and not reset (closed door open)
-     *     GO_STATE_READY              = 1,                        // show in world as ready (closed door close)
-     *     GO_STATE_ACTIVE_ALTERNATIVE = 2                         // show in world as used in alt way and not reset (closed door open by cannon fire)
-     * };
-     * </pre>
+     * @table
+     * @columns [GOState, ID, Comment]
+     * @values [GO_STATE_ACTIVE, 0, "show in world as used and not reset (closed door open)"]
+     * @values [GO_STATE_READY, 1, "show in world as ready (closed door close)"]
+     * @values [GO_STATE_ACTIVE_ALTERNATIVE, 2, "show in world as used in alt way and not reset (closed door open by cannon fire)"]
      *
      * @param [GOState] state : all available go states can be seen above
      */
@@ -182,15 +184,12 @@ namespace LuaGameObject
      * Sets the [LootState] of a [GameObject]
      * Below are [LootState]s off of 3.3.5a
      *
-     * <pre>
-     * enum LootState
-     * {
-     *     GO_NOT_READY = 0,
-     *     GO_READY,                                               // can be ready but despawned, and then not possible activate until spawn
-     *     GO_ACTIVATED,
-     *     GO_JUST_DEACTIVATED
-     * };
-     * </pre>
+     * @table
+     * @columns [LootState, ID, Comment]
+     * @values [GO_NOT_READY, 0, ""]
+     * @values [GO_READY, 1, "can be ready but despawned, and then not possible activate until spawn"]
+     * @values [GO_ACTIVATED, 2, ""]
+     * @values [GO_JUST_DEACTIVATED, 3, ""]
      *
      * @param [LootState] state : all available loot states can be seen above
      */
@@ -232,8 +231,7 @@ namespace LuaGameObject
         bool deldb = E->CHECKVAL<bool>(2, false);
 
         // cs_gobject.cpp copy paste
-        ObjectGuid ownerGuid = go->GetOwnerGuid();
-
+        ObjectGuid ownerGuid = go->GetOwnerGUID();
         if (ownerGuid)
         {
             Unit* owner = eObjectAccessor()GetUnit(*go, ownerGuid);
@@ -249,7 +247,6 @@ namespace LuaGameObject
         go->SetRespawnTime(0);
         go->Delete();
 
-        E->CHECKOBJ<ElunaObject>(1)->Invalidate();
         return 0;
     }
 
@@ -315,7 +312,7 @@ namespace LuaGameObject
         go->SetSpawnedByDefault(spawn);
         return 0;
     }
-    
+
     ElunaRegister<GameObject> GameObjectMethods[] =
     {
         // Getters
@@ -334,6 +331,7 @@ namespace LuaGameObject
 
         // Boolean
         { "IsTransport", &LuaGameObject::IsTransport },
+        { "IsDestructible", &LuaGameObject::IsDestructible },
         { "IsActive", &LuaGameObject::IsActive },
         { "HasQuest", &LuaGameObject::HasQuest },
         { "IsSpawned", &LuaGameObject::IsSpawned },
@@ -343,10 +341,7 @@ namespace LuaGameObject
         { "UseDoorOrButton", &LuaGameObject::UseDoorOrButton },
         { "Despawn", &LuaGameObject::Despawn },
         { "Respawn", &LuaGameObject::Respawn },
-        { "SaveToDB", &LuaGameObject::SaveToDB },
-
-        // Not implemented methods
-        { "IsDestructible", METHOD_REG_NONE } // Not implemented
+        { "SaveToDB", &LuaGameObject::SaveToDB }
     };
 };
 #endif
