@@ -146,12 +146,6 @@ namespace LuaAuraEffects
         return 1;
     }
 
-    int GetEffIndex(Eluna* E, AuraEffect* aurEff)
-    {
-        E->Push(uint8(aurEff->GetEffIndex()));
-        return 1;
-    }
-
     int GetAuraType(Eluna* E, AuraEffect* aurEff)
     {
         E->Push(uint16(aurEff->GetAuraType()));

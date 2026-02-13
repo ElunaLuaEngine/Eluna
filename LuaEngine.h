@@ -35,6 +35,7 @@
 
 #include <mutex>
 #include <memory>
+#include "ElunaProcInfo.h"
 
 extern "C"
 {
@@ -629,6 +630,8 @@ public:
     void OnPerodicUpdate(Aura* aura, AuraEffect const* auraEff);
     void OnAuraCalcAmount(Aura* aura, AuraEffect const* auraEff, int32& amount, bool& canBeRecalculated);
     void OnCalcPerodic(Aura* aura, AuraEffect const* auraEff, bool& isPeriodic, int32& amplitude);
+    bool OnAuraCanProc(Aura* aura, ProcEventInfo& procInfo);
+    bool OnAuraProc(Aura* aura, ProcEventInfo& procInfo);
 };
 template<> Unit* Eluna::CHECKOBJ<Unit>(int narg, bool error);
 template<> Object* Eluna::CHECKOBJ<Object>(int narg, bool error);

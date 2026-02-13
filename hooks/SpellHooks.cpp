@@ -141,3 +141,25 @@ void Eluna::OnCalcPerodic(Aura* aura, AuraEffect const* auraEff, bool& isPeriodi
 
     CleanUpStack(2);
 }
+
+bool Eluna::OnAuraCanProc(Aura* aura, ProcEventInfo& procInfo)
+{
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_CHECK_PROC, aura, true);
+    ElunaProcInfo luaProcInfo(procInfo, aura->GetCaster()->GetMap());
+    HookPush(aura);
+    HookPush(&luaProcInfo);
+    bool retVal = CallAllFunctionsBool(binding, key, true);
+    luaProcInfo.ApplyToProcEventInfo(procInfo);
+    return retVal;
+}
+
+bool Eluna::OnAuraProc(Aura* aura, ProcEventInfo& procInfo)
+{
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_CHECK_PROC, aura, false);
+    ElunaProcInfo luaProcInfo(procInfo, aura->GetCaster()->GetMap());
+    HookPush(aura);
+    HookPush(&luaProcInfo);
+    bool defaultPrevented = CallAllFunctionsBool(binding, key, false);
+    luaProcInfo.ApplyToProcEventInfo(procInfo);
+    return defaultPrevented;
+}
