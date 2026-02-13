@@ -21,7 +21,7 @@ namespace Trinity
     class unique_weak_ptr;
 }
 
-class TC_GAME_API ElunaProcInfo
+class ElunaProcInfo
 {
 private:
     Unit* _actor;
