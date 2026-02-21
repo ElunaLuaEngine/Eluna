@@ -168,6 +168,13 @@ namespace LuaAura
         return 0;
     }
 
+    int GetSpellInfo(Eluna* E, Aura* aura)
+    {
+        ElunaSpellInfo info(aura->GetId());
+        E->Push(&info);
+        return 1;
+    }
+
     ElunaRegister<Aura> AuraMethods[] =
     {
         // Getters
@@ -186,7 +193,8 @@ namespace LuaAura
         { "SetStackAmount", &LuaAura::SetStackAmount },
 
         // Other
-        { "Remove", &LuaAura::Remove }
+        { "Remove", &LuaAura::Remove },
+        {"GetSpellInfo", &LuaAura::GetSpellInfo}
     };
 };
 #endif

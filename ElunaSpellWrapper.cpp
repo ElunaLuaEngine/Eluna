@@ -1,4 +1,9 @@
-#include "ElunaProcInfo.h"
+/*
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
+* This program is free software licensed under GPL version 3
+* Please see the included DOCS/LICENSE.md for more information
+*/
+#include "ElunaSpellWrapper.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
 
@@ -110,4 +115,10 @@ void ElunaProcInfo::ApplyToProcEventInfo(ProcEventInfo& procInfo) const
             healInfo->SetEffectiveHeal(_effectiveHeal);
         }
     }
+}
+
+ElunaSpellInfo::ElunaSpellInfo(uint32 spellId) : _spellInfo(sSpellMgr->GetSpellInfo(spellId))
+{
+    if (_spellInfo)
+        m_scriptRef = Trinity::unique_trackable_ptr<ElunaSpellInfo>(this, NoopAuraDeleter());
 }

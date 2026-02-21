@@ -28,6 +28,7 @@
 #include "ItemMethods.h"
 #include "WorldPacketMethods.h"
 #include "SpellMethods.h"
+#include "SpellInfoMethods.h"
 #include "QuestMethods.h"
 #include "MapMethods.h"
 #include "CorpseMethods.h"
@@ -97,6 +98,9 @@ void RegisterMethods(Eluna* E)
 
     ElunaTemplate<ElunaProcInfo>::Register(E, "ElunaProcInfo");
     ElunaTemplate<ElunaProcInfo>::SetMethods(E, LuaElunaProcInfo::ElunaProcInfoMethods);
+
+    ElunaTemplate<ElunaSpellInfo>::Register(E, "ElunaSpellInfo");
+    ElunaTemplate<ElunaSpellInfo>::SetMethods(E, LuaSpellInfo::SpellInfoMethods);
 
     ElunaTemplate<Spell>::Register(E, "Spell");
     ElunaTemplate<Spell>::SetMethods(E, LuaSpell::SpellMethods);

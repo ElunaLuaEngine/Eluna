@@ -3089,6 +3089,17 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    int GetSpellInfo(Eluna* E)
+    {
+        uint32 spellId = E->CHECKVAL<uint32>(1);
+        if (!sSpellMgr->GetSpellInfo(spellId))
+            return luaL_argerror(E->L, 1, "invalid spell id");
+
+        ElunaSpellInfo info(spellId);
+        E->Push(&info);
+        return 1;
+    }
+
     ElunaRegister<> GlobalMethods[] =
     {
         // Hooks

@@ -45,11 +45,12 @@ namespace LuaElunaProcInfo
         return 1;
     }
 
-    /*int GetSpellInfo(Eluna* E, ElunaProcInfo* procInfo)
+    int GetSpellInfo(Eluna* E, ElunaProcInfo* procInfo)
     {
-        E->Push(procInfo->GetSpellInfo());
+        ElunaSpellInfo info(procInfo->GetSpellInfo()->Id);
+        E->Push(&info);
         return 1;
-    }*/
+    }
 
     int GetSchoolMask(Eluna* E, ElunaProcInfo* procInfo)
     {
@@ -187,7 +188,7 @@ namespace LuaElunaProcInfo
         { "GetSpellPhaseMask", &LuaElunaProcInfo::GetSpellPhaseMask },
         { "GetHitMask", &LuaElunaProcInfo::GetHitMask },
         { "GetProcSpell", &LuaElunaProcInfo::GetProcSpell },
-        //{ "GetSpellInfo", &LuaElunaProcInfo::GetSpellInfo },
+        { "GetSpellInfo", &LuaElunaProcInfo::GetSpellInfo },
         { "GetSchoolMask", &LuaElunaProcInfo::GetSchoolMask },
         { "GetDamage", &LuaElunaProcInfo::GetDamage },
         { "GetDamageType", &LuaElunaProcInfo::GetDamageType },

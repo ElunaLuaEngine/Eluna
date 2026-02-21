@@ -35,7 +35,7 @@
 
 #include <mutex>
 #include <memory>
-#include "ElunaProcInfo.h"
+#include "ElunaSpellWrapper.h"
 
 extern "C"
 {

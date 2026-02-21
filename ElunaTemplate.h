@@ -17,7 +17,7 @@ extern "C"
 #include "ElunaUtility.h"
 #include "ElunaCompat.h"
 #include "ElunaConfig.h"
-#include "ElunaProcInfo.h"
+#include "ElunaSpellWrapper.h"
 #if !defined ELUNA_CMANGOS
 #include "SharedDefines.h"
 #else
@@ -72,6 +72,7 @@ ElunaConstrainedObjectRef<Map> GetWeakPtrFor(Map const* obj);
 ElunaConstrainedObjectRef<Object> GetWeakPtrForObjectImpl(Object const* obj);
 ElunaConstrainedObjectRef<Quest> GetWeakPtrFor(Quest const* obj);
 ElunaConstrainedObjectRef<Spell> GetWeakPtrFor(Spell const* obj);
+ElunaConstrainedObjectRef<ElunaSpellInfo> GetWeakPtrFor(ElunaSpellInfo const* obj);
 #if ELUNA_EXPANSION >= EXP_WOTLK
 ElunaConstrainedObjectRef<Vehicle> GetWeakPtrFor(Vehicle const* obj);
 #endif

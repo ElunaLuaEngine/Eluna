@@ -169,6 +169,13 @@ namespace LuaSpell
         spell->finish();
         return 0;
     }
+
+    int GetSpellInfo(Eluna* E, Spell* spell)
+    {
+        ElunaSpellInfo info(spell->GetSpellInfo()->Id);
+        E->Push(&info);
+        return 1;
+    }
     
     ElunaRegister<Spell> SpellMethods[] =
     {
@@ -190,7 +197,8 @@ namespace LuaSpell
         // Other
         { "Cancel", &LuaSpell::Cancel },
         { "Cast", &LuaSpell::Cast },
-        { "Finish", &LuaSpell::Finish }
+        { "Finish", &LuaSpell::Finish },
+        { "GetSpellInfo", &LuaSpell::GetSpellInfo }
     };
 };
 #endif

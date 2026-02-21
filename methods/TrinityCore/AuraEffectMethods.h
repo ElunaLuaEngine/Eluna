@@ -164,6 +164,13 @@ namespace LuaAuraEffects
         return 1;
     }
 
+    int GetSpellInfo(Eluna* E, AuraEffect* aurEff)
+    {
+        ElunaSpellInfo info(aurEff->GetId());
+        E->Push(&info);
+        return 1;
+    }
+
     ElunaRegister<AuraEffect> AuraEffectMethods[] =
     {
         {"GetBase", &LuaAuraEffects::GetBase},
@@ -187,7 +194,8 @@ namespace LuaAuraEffects
         {"GetEffIndex", &LuaAuraEffects::GetEffIndex},
         {"GetAuraType", &LuaAuraEffects::GetAuraType},
         {"GetCaster", &LuaAuraEffects::GetCaster},
-        {"GetCasterGUID", &LuaAuraEffects::GetCasterGUID}
+        {"GetCasterGUID", &LuaAuraEffects::GetCasterGUID},
+        {"GetSpellInfo", &LuaAuraEffects::GetSpellInfo}
     };
 };
 #endif

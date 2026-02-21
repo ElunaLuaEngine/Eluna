@@ -1,3 +1,8 @@
+/*
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
+* This program is free software licensed under GPL version 3
+* Please see the included DOCS/LICENSE.md for more information
+*/
 #ifndef _ELUNA_PROCINFO_H
 #define _ELUNA_PROCINFO_H
 
@@ -56,7 +61,7 @@ public:
         Spell* spell, SpellInfo const* spellInfo, SpellSchoolMask schoolMask, Map* map);
 
     explicit ElunaProcInfo(ProcEventInfo& procInfo, Map* map);
-
+    ~ElunaProcInfo() { m_scriptRef = nullptr; }
     Unit* GetActor() const { return _actor; }
     Unit* GetActionTarget() const { return _actionTarget; }
     uint32 GetTypeMask() const { return _typeMask; }
@@ -99,4 +104,16 @@ public:
     void ApplyToProcEventInfo(ProcEventInfo& procInfo) const;
 };
 
+class ElunaSpellInfo
+{
+private:
+    SpellInfo const* _spellInfo;
+    struct NoopAuraDeleter { void operator()(ElunaSpellInfo*) const {} };
+    Trinity::unique_trackable_ptr<ElunaSpellInfo> m_scriptRef;
+public:
+    ElunaSpellInfo(uint32 spellId);
+    ~ElunaSpellInfo() { m_scriptRef = nullptr; }
+    SpellInfo const* GetSpellInfo() const { return _spellInfo; }
+    Trinity::unique_weak_ptr<ElunaSpellInfo> GetWeakPtr() const { return m_scriptRef; }
+};
 #endif
