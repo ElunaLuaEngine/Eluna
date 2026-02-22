@@ -2598,27 +2598,6 @@ namespace LuaUnit
         return 0;
     }
 
-    /**
-     * Returns the [Spell] currently being cast by the [Unit] for the given spell type.
-     *
-     * The spell type can be one of the following:
-     * - CURRENT_MELEE_SPELL (0)
-     * - CURRENT_GENERIC_SPELL (1)
-     * - CURRENT_CHANNELED_SPELL (2)
-     * - CURRENT_AUTOREPEAT_SPELL (3)
-     *
-     * @param uint8 currentSpellType = CURRENT_GENERIC_SPELL : the [CurrentSpellTypes] to retrieve
-     * @return [Spell] spell : the current spell or nil
-     */
-    int GetCurrentSpell(Eluna* E, Unit* unit)
-    {
-        uint8 index = E->CHECKVAL<uint8>(2, CURRENT_GENERIC_SPELL);
-        if (index >= CURRENT_MAX_SPELL)
-            return luaL_argerror(E->L, 2, "valid CurrentSpellTypes expected");
-        E->Push(unit->GetCurrentSpell((CurrentSpellTypes)index));
-        return 1;
-    }
-
     ElunaRegister<Unit> UnitMethods[] =
     {
         // Getters
@@ -2665,7 +2644,6 @@ namespace LuaUnit
         { "GetVehicleKit", &LuaUnit::GetVehicleKit },
         { "GetVehicle", &LuaUnit::GetVehicle },
         { "GetMovementType", &LuaUnit::GetMovementType },
-        { "GetCurrentSpell", &LuaUnit::GetCurrentSpell },
 
         // Setters
         { "SetFaction", &LuaUnit::SetFaction },
