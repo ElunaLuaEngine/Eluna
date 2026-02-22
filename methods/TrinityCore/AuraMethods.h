@@ -191,7 +191,7 @@ namespace LuaAura
         { "GetAuraId", &LuaAura::GetAuraId },
         { "GetStackAmount", &LuaAura::GetStackAmount },
         { "GetOwner", &LuaAura::GetOwner },
-        { "GetSpellInfo", &LuaAura::GetSpellInfo},
+        { "GetSpellInfo", &LuaAura::GetSpellInfo },
 
         // Setters
         { "SetDuration", &LuaAura::SetDuration },
