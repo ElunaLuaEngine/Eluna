@@ -653,10 +653,10 @@ public:
     void OnObjectAreaTargetSelect(Spell* pSpell, uint8 effIndex, std::list<WorldObject*>& targets);
     void OnObjectTargetSelect(Spell* pSpell, uint8 effIndex,  WorldObject*& target);
     void OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellDestination& target);
-    bool OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode);
-    bool OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode);
-    bool OnEffectHit(Spell* pSpell, uint8 effIndex, uint8 mode);
-    bool OnEffectHitTarget(Spell* pSpell, uint8 effIndex, uint8 mode);
+    bool OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
+    bool OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
+    bool OnEffectHit(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
+    bool OnEffectHitTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
     void OnBeforeSpellHit(Spell* pSpell, uint8 missInfo);
     void OnSpellHit(Spell* pSpell);
     void OnAfterSpellHit(Spell* pSpell);
