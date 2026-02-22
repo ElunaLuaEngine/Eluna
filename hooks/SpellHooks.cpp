@@ -54,18 +54,18 @@ void Eluna::OnAuraDispel(Aura* aura, DispelInfo* dispelInfo)
     CallAllFunctions(binding, key);
 }
 
-bool Eluna::OnPerodicTick(Aura* aura, AuraEffect const* auraEff, Unit* target)
+bool Eluna::OnPeriodicTick(Aura* aura, AuraEffect const* auraEff, Unit* target)
 {
-    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_PERODIC_TICK, aura, false);
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_PERIODIC_TICK, aura, false);
     HookPush(aura);
     HookPush(auraEff);
     HookPush(target);
     return CallAllFunctionsBool(binding, key, false);
 }
 
-void Eluna::OnPerodicUpdate(Aura* aura, AuraEffect const* auraEff)
+void Eluna::OnPeriodicUpdate(Aura* aura, AuraEffect const* auraEff)
 {
-    START_HOOK(SPELL_EVENT_ON_PERODIC_UPDATE, aura);
+    START_HOOK(SPELL_EVENT_ON_PERIODIC_UPDATE, aura);
     HookPush(aura);
     HookPush(auraEff);
     CallAllFunctions(binding, key);
@@ -74,72 +74,43 @@ void Eluna::OnPerodicUpdate(Aura* aura, AuraEffect const* auraEff)
 void Eluna::OnAuraCalcAmount(Aura* aura, AuraEffect const* auraEff, int32& amount, bool& canBeRecalculated)
 {
     START_HOOK(SPELL_EVENT_ON_AURA_CALC_AMOUNT, aura);
+
     HookPush(aura);
     HookPush(auraEff);
+
     HookPush(amount);
     int amountIndex = lua_gettop(L);
+
     HookPush(canBeRecalculated);
     int canBeRecalculatedIndex = lua_gettop(L);
-    int n = SetupStack(binding, key, 4);
 
-    while (n > 0)
-    {
-        int r = CallOneFunction(n--, 4, 2);
-
-        if (lua_isnumber(L, r + 0))
-        {
-            amount = CHECKVAL<uint32>(r + 0);
-            // Update the stack for subsequent calls.
-            ReplaceArgument(amount, amountIndex);
-        }
-
-
-        if (lua_isboolean(L, r + 1))
-        {
-            canBeRecalculated = lua_toboolean(L, r + 1);
-            // Update the stack for subsequent calls.
-            ReplaceArgument(amount, canBeRecalculatedIndex);
-        }
-
-        lua_pop(L, 2);
-    }
-
-    CleanUpStack(2);
+    CallAllFunctionsMultiReturn(
+        binding,
+        key,
+        std::tie(amount, canBeRecalculated),
+        std::array<int, 2>{ amountIndex, canBeRecalculatedIndex }
+    );
 }
 
-void Eluna::OnCalcPerodic(Aura* aura, AuraEffect const* auraEff, bool& isPeriodic, int32& amplitude)
+void Eluna::OnCalcPeriodic(Aura* aura, AuraEffect const* auraEff, bool& isPeriodic, int32& amplitude)
 {
     START_HOOK(SPELL_EVENT_ON_AURA_CALC_AMOUNT, aura);
+
     HookPush(aura);
     HookPush(auraEff);
+
     HookPush(isPeriodic);
     int isPeriodicIndex = lua_gettop(L);
+
     HookPush(amplitude);
     int amplitudeIndex = lua_gettop(L);
-    int n = SetupStack(binding, key, 4);
 
-    while (n > 0)
-    {
-        int r = CallOneFunction(n--, 4, 2);
-
-        if (lua_isboolean(L, r + 0))
-        {
-            isPeriodic = lua_toboolean(L, r + 0);
-            // Update the stack for subsequent calls.
-            ReplaceArgument(isPeriodic, isPeriodicIndex);
-        }
-
-        if (lua_isnumber(L, r + 1))
-        {
-            amplitude = CHECKVAL<int32>(r + 1);
-            // Update the stack for subsequent calls.
-            ReplaceArgument(amplitude, amplitudeIndex);
-        }
-
-        lua_pop(L, 2);
-    }
-
-    CleanUpStack(2);
+    CallAllFunctionsMultiReturn(
+        binding,
+        key,
+        std::tie(isPeriodic, amplitude),
+        std::array<int, 2>{ isPeriodicIndex, amplitudeIndex }
+    );
 }
 
 bool Eluna::OnAuraCanProc(Aura* aura, ProcEventInfo& procInfo)
@@ -162,4 +133,162 @@ bool Eluna::OnAuraProc(Aura* aura, ProcEventInfo& procInfo)
     bool defaultPrevented = CallAllFunctionsBool(binding, key, false);
     luaProcInfo.ApplyToProcEventInfo(procInfo);
     return defaultPrevented;
+}
+
+uint32 Eluna::OnCheckCast(Spell* pSpell)
+{
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_CHECK_CAST, pSpell, SPELL_FAILED_SUCCESS);
+    HookPush(pSpell);
+    return static_cast<uint32>(CallAllFunctionsInt(binding, key, int32(SPELL_FAILED_SUCCESS)));
+}
+
+void Eluna::OnBeforeCast(Spell* pSpell)
+{
+    START_HOOK(SPELL_EVENT_ON_BEFORE_CAST, pSpell);
+    HookPush(pSpell);
+    CallAllFunctions(binding, key);
+}
+
+void Eluna::OnAfterCast(Spell* pSpell)
+{
+    START_HOOK(SPELL_EVENT_ON_AFTER_CAST, pSpell);
+    HookPush(pSpell);
+    CallAllFunctions(binding, key);
+}
+
+void Eluna::OnObjectAreaTargetSelect(Spell* pSpell, uint8 effIndex, std::list<WorldObject*>& targets)
+{
+    START_HOOK(SPELL_EVENT_ON_OBJECT_AREA_TARGET, pSpell);
+    HookPush(pSpell);
+    HookPush(effIndex);
+    CallAllFunctionsTable(binding, key, targets);
+}
+
+void Eluna::OnObjectTargetSelect(Spell* pSpell, uint8 effIndex, WorldObject*& target)
+{
+    START_HOOK(SPELL_EVENT_ON_OBJECT_TARGET, pSpell);
+    HookPush(pSpell);
+    HookPush(effIndex);
+    HookPush(target);
+    CallAllFunctions(binding, key);
+}
+
+void Eluna::OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellDestination& target)
+{
+    START_HOOK(SPELL_EVENT_ON_DEST_TARGET, pSpell);
+    HookPush(pSpell);
+    HookPush(effIndex);
+    HookPush(target._position.m_mapId);
+    int mapIdIndex = lua_gettop(L);
+    HookPush(target._position.m_positionX);
+    int posXIndex = lua_gettop(L);
+    HookPush(target._position.m_positionY);
+    int posYIndex = lua_gettop(L);
+    HookPush(target._position.m_positionZ);
+    int posZIndex = lua_gettop(L);
+    HookPush(target._position.GetOrientation());
+    int orientationIndex = lua_gettop(L);
+
+    uint32 mapId = target._position.m_mapId;
+    float posX = target._position.m_positionX;
+    float posY = target._position.m_positionY;
+    float posZ = target._position.m_positionZ;
+    float orientation = target._position.GetOrientation();
+
+    CallAllFunctionsMultiReturn(
+        binding,
+        key,
+        std::tie(mapId, posX, posY, posZ, orientation),
+        std::array<int, 5>{ mapIdIndex, posXIndex, posYIndex, posZIndex, orientationIndex }
+    );
+
+    target._position.m_mapId = mapId;
+    target._position.m_positionX = posX;
+    target._position.m_positionY = posY;
+    target._position.m_positionZ = posZ;
+    target._position.SetOrientation(orientation);
+}
+
+bool Eluna::OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode)
+{
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_LAUNCH, pSpell, false);
+    HookPush(pSpell);
+    HookPush(effIndex);
+    HookPush(mode);
+    return CallAllFunctionsBool(binding, key, false);
+}
+
+bool Eluna::OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode)
+{
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_LAUNCH_TARGET, pSpell, false);
+    HookPush(pSpell);
+    HookPush(effIndex);
+    HookPush(mode);
+    return CallAllFunctionsBool(binding, key, false);
+}
+
+bool Eluna::OnEffectHit(Spell* pSpell, uint8 effIndex, uint8 mode)
+{
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_HIT, pSpell, false);
+    HookPush(pSpell);
+    HookPush(effIndex);
+    HookPush(mode);
+    return CallAllFunctionsBool(binding, key, false);
+}
+
+bool Eluna::OnEffectHitTarget(Spell* pSpell, uint8 effIndex, uint8 mode)
+{
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_HIT_TARGET, pSpell, false);
+    HookPush(pSpell);
+    HookPush(effIndex);
+    HookPush(mode);
+    return CallAllFunctionsBool(binding, key, false);
+}
+
+void Eluna::OnBeforeSpellHit(Spell* pSpell, uint8 missInfo)
+{
+    START_HOOK(SPELL_EVENT_ON_BEFORE_HIT, pSpell);
+    HookPush(pSpell);
+    HookPush(missInfo);
+    CallAllFunctions(binding, key);
+}
+
+void Eluna::OnSpellHit(Spell* pSpell)
+{
+    START_HOOK(SPELL_EVENT_ON_HIT, pSpell);
+    HookPush(pSpell);
+    CallAllFunctions(binding, key);
+}
+
+void Eluna::OnAfterSpellHit(Spell* pSpell)
+{
+    START_HOOK(SPELL_EVENT_ON_AFTER_HIT, pSpell);
+    HookPush(pSpell);
+    CallAllFunctions(binding, key);
+}
+
+void Eluna::OnEffectCalcAbsorb(Spell* pSpell, DamageInfo const& damageInfo, uint32& resistAmount, int32& absorbAmount)
+{
+    START_HOOK(SPELL_EVENT_ON_EFFECT_CALC_ABSORB, pSpell);
+    HookPush(pSpell);
+    HookPush(damageInfo.GetAttacker());
+    HookPush(damageInfo.GetVictim());
+    HookPush(damageInfo.GetDamage());
+    HookPush(damageInfo.GetAbsorb());
+    HookPush(damageInfo.GetResist());
+    HookPush(damageInfo.GetBlock());
+    HookPush(static_cast<uint32>(damageInfo.GetSchoolMask()));
+    HookPush(static_cast<uint32>(damageInfo.GetDamageType()));
+    HookPush(static_cast<uint32>(damageInfo.GetAttackType()));
+    HookPush(damageInfo.GetHitMask());
+    HookPush(resistAmount);
+    int resistIndex = lua_gettop(L);
+    HookPush(absorbAmount);
+    int absorbIndex = lua_gettop(L);
+    CallAllFunctionsMultiReturn(
+        binding,
+        key,
+        std::tie(resistAmount, absorbAmount),
+        std::array<int, 2>{ resistIndex, absorbIndex }
+    );
 }

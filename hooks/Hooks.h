@@ -364,12 +364,26 @@ namespace Hooks
         X(SPELL_EVENT_ON_CAST, 1, "on_cast") \
         X(SPELL_EVENT_ON_AURA_APPLICATION, 2, "on_aura_application") \
         X(SPELL_EVENT_ON_DISPEL, 3, "on_dispel") \
-        X(SPELL_EVENT_ON_PERODIC_TICK, 4, "on_periodic_tick") \
-        X(SPELL_EVENT_ON_PERODIC_UPDATE, 5, "on_periodic_update") \
+        X(SPELL_EVENT_ON_PERIODIC_TICK, 4, "on_periodic_tick") \
+        X(SPELL_EVENT_ON_PERIODIC_UPDATE, 5, "on_periodic_update") \
         X(SPELL_EVENT_ON_AURA_CALC_AMOUNT, 6, "on_aura_calc_amount") \
-        X(SPELL_EVENT_ON_CALC_PERODIC, 7, "on_calc_periodic") \
-        X(SPELL_EVENT_ON_CHECK_PROC, 7, "on_check_proc") \
-        X(SPELL_EVENT_ON_PROC, 8, "on_proc") \
+        X(SPELL_EVENT_ON_CALC_PERIODIC, 7, "on_calc_periodic") \
+        X(SPELL_EVENT_ON_CHECK_PROC, 8, "on_check_proc") \
+        X(SPELL_EVENT_ON_PROC, 9, "on_proc") \
+        X(SPELL_EVENT_ON_CHECK_CAST, 10, "on_check_cast") \
+        X(SPELL_EVENT_ON_BEFORE_CAST, 11, "on_before_cast") \
+        X(SPELL_EVENT_ON_AFTER_CAST, 12, "on_after_cast") \
+        X(SPELL_EVENT_ON_OBJECT_AREA_TARGET, 13, "on_object_area_target") \
+        X(SPELL_EVENT_ON_OBJECT_TARGET, 14, "on_object_target") \
+        X(SPELL_EVENT_ON_DEST_TARGET, 15, "on_dest_target") \
+        X(SPELL_EVENT_ON_EFFECT_LAUNCH, 16, "on_effect_launch") \
+        X(SPELL_EVENT_ON_EFFECT_LAUNCH_TARGET, 17, "on_effect_launch_target") \
+        X(SPELL_EVENT_ON_EFFECT_CALC_ABSORB, 18, "on_effect_calc_absorb") \
+        X(SPELL_EVENT_ON_EFFECT_HIT, 19, "on_effect_hit") \
+        X(SPELL_EVENT_ON_BEFORE_HIT, 20, "on_before_hit") \
+        X(SPELL_EVENT_ON_EFFECT_HIT_TARGET, 21, "on_effect_hit_target") \
+        X(SPELL_EVENT_ON_HIT, 22, "on_hit") \
+        X(SPELL_EVENT_ON_AFTER_HIT, 23, "on_after_hit")
 
     enum SpellEvents
     {

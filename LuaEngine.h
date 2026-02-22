@@ -217,11 +217,14 @@ private:
     template<typename K1, typename K2> int SetupStack(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, int number_of_arguments);
                                        int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
                                        void CleanUpStack(int number_of_arguments);
-    template<typename T>               void ReplaceArgument(T value, uint8 index);
+    template<typename T>              void ReplaceArgument(T value, int index);
     template<typename K1, typename K2> void CallAllFunctions(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2);
     template<typename K1, typename K2> bool CallAllFunctionsBool(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, bool default_value = false);
-
-    // Same as above but for only one binding instead of two.
+    template<typename K1, typename K2> int32 CallAllFunctionsInt(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, int32 default_value = 0);
+    template<typename... Outs, size_t... Is> void ApplyMultiReturnsImpl(int r, std::tuple<Outs&...>& outs, const std::array<int, sizeof...(Outs)>& indices, std::index_sequence<Is...>);
+    template<typename K1, typename K2, typename... Outs> void CallAllFunctionsMultiReturn(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, std::tuple<Outs&...> outs, const std::array<int, sizeof...(Outs)>& out_arg_indices);
+    template<typename K1, typename K2, typename T>
+    void CallAllFunctionsTable(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, std::list<T*>& list);   // Same as above but for only one binding instead of two.
     // `key` is passed twice because there's no NULL for references, but it's not actually used if `bindings2` is NULL.
     template<typename K> int SetupStack(BindingMap<K>* bindings, const K& key, int number_of_arguments)
     {
@@ -235,7 +238,19 @@ private:
     {
         return CallAllFunctionsBool<K, K>(bindings, NULL, key, key, default_value);
     }
-
+    template<typename K> int32 CallAllFunctionsInt(BindingMap<K>* bindings, const K& key, int default_value = 0)
+    {
+        return CallAllFunctionsInt<K, K>(bindings, NULL, key, key, default_value);
+    }
+    template<typename K, typename... Outs> void CallAllFunctionsMultiReturn(BindingMap<K>* bindings, const K& key, std::tuple<Outs&...> outs, const std::array<int, sizeof...(Outs)>& out_arg_indices)
+    {
+        CallAllFunctionsMultiReturn<K, K>(bindings, NULL, key, key, outs, out_arg_indices);
+    }
+    template<typename K, typename T>
+    void CallAllFunctionsTable(BindingMap<K>* bindings, const K& key, std::list<T*>& list)
+    {
+        CallAllFunctionsTable<K, K, T>(bindings, NULL, key, key, list);
+    }
     // Non-static pushes, to be used in hooks.
     // They up the pushed value counter for hook helper functions.
     void HookPush()                                 { Push(); ++push_counter; }
@@ -626,12 +641,26 @@ public:
     void OnSpellCast(Spell* pSpell, bool skipCheck);
     bool OnAuraApplication(Aura* aura, AuraEffect const* auraEff, Unit* target, uint8 mode, bool apply);
     void OnAuraDispel(Aura* aura, DispelInfo* dispelInfo);
-    bool OnPerodicTick(Aura* aura, AuraEffect const* auraEff, Unit* target);
-    void OnPerodicUpdate(Aura* aura, AuraEffect const* auraEff);
+    bool OnPeriodicTick(Aura* aura, AuraEffect const* auraEff, Unit* target);
+    void OnPeriodicUpdate(Aura* aura, AuraEffect const* auraEff);
     void OnAuraCalcAmount(Aura* aura, AuraEffect const* auraEff, int32& amount, bool& canBeRecalculated);
-    void OnCalcPerodic(Aura* aura, AuraEffect const* auraEff, bool& isPeriodic, int32& amplitude);
+    void OnCalcPeriodic(Aura* aura, AuraEffect const* auraEff, bool& isPeriodic, int32& amplitude);
     bool OnAuraCanProc(Aura* aura, ProcEventInfo& procInfo);
     bool OnAuraProc(Aura* aura, ProcEventInfo& procInfo);
+    uint32 OnCheckCast(Spell* pSpell);
+    void OnBeforeCast(Spell* pSpell);
+    void OnAfterCast(Spell* pSpell);
+    void OnObjectAreaTargetSelect(Spell* pSpell, uint8 effIndex, std::list<WorldObject*>& targets);
+    void OnObjectTargetSelect(Spell* pSpell, uint8 effIndex,  WorldObject*& target);
+    void OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellDestination& target);
+    bool OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode);
+    bool OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode);
+    bool OnEffectHit(Spell* pSpell, uint8 effIndex, uint8 mode);
+    bool OnEffectHitTarget(Spell* pSpell, uint8 effIndex, uint8 mode);
+    void OnBeforeSpellHit(Spell* pSpell, uint8 missInfo);
+    void OnSpellHit(Spell* pSpell);
+    void OnAfterSpellHit(Spell* pSpell);
+    void OnEffectCalcAbsorb(Spell* pSpell, DamageInfo const& damageInfo, uint32& resistAmount, int32& absorbAmount);
 };
 template<> Unit* Eluna::CHECKOBJ<Unit>(int narg, bool error);
 template<> Object* Eluna::CHECKOBJ<Object>(int narg, bool error);
