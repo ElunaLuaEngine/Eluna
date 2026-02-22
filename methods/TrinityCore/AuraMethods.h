@@ -168,6 +168,11 @@ namespace LuaAura
         return 0;
     }
 
+    /**
+     * Returns the [ElunaSpellInfo] of the spell that created this [Aura].
+     *
+     * @return [ElunaSpellInfo] spellInfo
+     */
     int GetSpellInfo(Eluna* E, Aura* aura)
     {
         ElunaSpellInfo info(aura->GetId());
