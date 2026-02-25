@@ -13,7 +13,11 @@ class SpellInfo;
 class ProcEventInfo;
 class DamageInfo;
 class HealInfo;
+#ifdef ELUNA_TRINITY
 enum SpellSchoolMask : uint32;
+#else
+enum SpellSchoolMask;
+#endif
 enum DamageEffectType : uint8;
 enum WeaponAttackType : uint8;
 #ifdef ELUNA_TRINITY
