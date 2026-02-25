@@ -13,7 +13,10 @@ ElunaProcInfo::ElunaProcInfo(Unit* actor, Unit* actionTarget, uint32 typeMask,
     : _actor(actor), _actionTarget(actionTarget), _typeMask(typeMask), _spellTypeMask(spellTypeMask), _spellPhaseMask(spellPhaseMask)
     , _hitMask(hitMask), _spell(spell), _spellInfo(spellInfo), _schoolMask(schoolMask), _damage(0)
     , _damageType(DIRECT_DAMAGE), _attackType(BASE_ATTACK), _damageAbsorb(0), _resist(0), _block(0)
-    , _heal(0), _effectiveHeal(0), _healAbsorb(0), _map(map), m_scriptRef(this, NoopAuraDeleter())
+    , _heal(0), _effectiveHeal(0), _healAbsorb(0), _map(map)
+#ifdef TRACKABLE_PTR_NAMESPACE
+    , m_scriptRef(this, NoopAuraDeleter())
+#endif
 {
 }
 
@@ -21,7 +24,10 @@ ElunaProcInfo::ElunaProcInfo(ProcEventInfo& procInfo, Map* map)
     : _actor(procInfo.GetActor()), _actionTarget(procInfo.GetActionTarget()), _typeMask(procInfo.GetTypeMask()), _spellTypeMask(procInfo.GetSpellTypeMask()), _spellPhaseMask(procInfo.GetSpellPhaseMask())
     , _hitMask(procInfo.GetHitMask()), _spell(const_cast<Spell*>(procInfo.GetProcSpell())), _spellInfo(procInfo.GetSpellInfo()), _schoolMask(procInfo.GetSchoolMask()), _damage(0)
     , _damageType(DIRECT_DAMAGE), _attackType(BASE_ATTACK), _damageAbsorb(0), _resist(0), _block(0)
-    , _heal(0), _effectiveHeal(0), _healAbsorb(0), _map(map), m_scriptRef(this, NoopAuraDeleter())
+    , _heal(0), _effectiveHeal(0), _healAbsorb(0), _map(map)
+#ifdef TRACKABLE_PTR_NAMESPACE
+    , m_scriptRef(this, NoopAuraDeleter())
+#endif
 {
     if (DamageInfo* damageInfo = procInfo.GetDamageInfo())
     {
@@ -119,6 +125,8 @@ void ElunaProcInfo::ApplyToProcEventInfo(ProcEventInfo& procInfo) const
 
 ElunaSpellInfo::ElunaSpellInfo(uint32 spellId) : _spellInfo(sSpellMgr->GetSpellInfo(spellId))
 {
+#ifdef ELUNA_TRINITY
     if (_spellInfo)
         m_scriptRef = Trinity::unique_trackable_ptr<ElunaSpellInfo>(this, NoopAuraDeleter());
+#endif
 }

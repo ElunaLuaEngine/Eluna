@@ -17,6 +17,7 @@
 #include "Item.h"
 #include "Map.h"
 #include "SharedDefines.h"
+#include "Spell.h"
 #include "Weather.h"
 #include "World.h"
 #if defined ELUNA_VMANGOS

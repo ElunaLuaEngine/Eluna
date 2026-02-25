@@ -5,7 +5,7 @@
 */
 #ifndef _ELUNA_PROCINFO_H
 #define _ELUNA_PROCINFO_H
-
+#include "LuaEngine.h"
 class Unit;
 class Spell;
 class Map;
@@ -16,7 +16,7 @@ class HealInfo;
 enum SpellSchoolMask : uint32;
 enum DamageEffectType : uint8;
 enum WeaponAttackType : uint8;
-
+#ifdef ELUNA_TRINITY
 namespace Trinity
 {
     template<typename T>
@@ -25,6 +25,7 @@ namespace Trinity
     template<typename T>
     class unique_weak_ptr;
 }
+#endif
 
 class ElunaProcInfo
 {
@@ -53,7 +54,9 @@ private:
     Map* _map;
 
     struct NoopAuraDeleter { void operator()(ElunaProcInfo*) const { } };
+#ifdef ELUNA_TRINITY
     Trinity::unique_trackable_ptr<ElunaProcInfo> m_scriptRef;
+#endif
 
 public:
     ElunaProcInfo(Unit* actor, Unit* actionTarget, uint32 typeMask,
@@ -61,7 +64,12 @@ public:
         Spell* spell, SpellInfo const* spellInfo, SpellSchoolMask schoolMask, Map* map);
 
     explicit ElunaProcInfo(ProcEventInfo& procInfo, Map* map);
-    ~ElunaProcInfo() { m_scriptRef = nullptr; }
+    ~ElunaProcInfo()
+    {
+#ifdef TRACKABLE_PTR_NAMESPACE
+        m_scriptRef = nullptr;
+#endif
+    }
     Unit* GetActor() const { return _actor; }
     Unit* GetActionTarget() const { return _actionTarget; }
     uint32 GetTypeMask() const { return _typeMask; }
@@ -100,7 +108,9 @@ public:
     void SetHeal(uint32 heal);
 
     const Map* GetMap() const { return _map; }
+#ifdef ELUNA_TRINITY
     Trinity::unique_weak_ptr<ElunaProcInfo> GetWeakPtr() const { return m_scriptRef; }
+#endif
     void ApplyToProcEventInfo(ProcEventInfo& procInfo) const;
 };
 
@@ -109,11 +119,21 @@ class ElunaSpellInfo
 private:
     SpellInfo const* _spellInfo;
     struct NoopAuraDeleter { void operator()(ElunaSpellInfo*) const {} };
+#ifdef ELUNA_TRINITY
     Trinity::unique_trackable_ptr<ElunaSpellInfo> m_scriptRef;
+#endif
 public:
     ElunaSpellInfo(uint32 spellId);
-    ~ElunaSpellInfo() { m_scriptRef = nullptr; }
+    ~ElunaSpellInfo()
+    {
+#ifdef TRACKABLE_PTR_NAMESPACE
+        m_scriptRef = nullptr;
+#endif
+    }
     SpellInfo const* GetSpellInfo() const { return _spellInfo; }
+#ifdef ELUNA_TRINITY
     Trinity::unique_weak_ptr<ElunaSpellInfo> GetWeakPtr() const { return m_scriptRef; }
+#endif
 };
+
 #endif
