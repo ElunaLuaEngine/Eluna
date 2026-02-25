@@ -57,8 +57,6 @@ void ElunaMgr::Destroy(ElunaInfo const& info)
 
 ElunaInfo::~ElunaInfo()
 {
-    if (IsValid() && sElunaMgr)
-        sElunaMgr->Destroy(key);
 }
 
 bool ElunaInfo::IsValid() const

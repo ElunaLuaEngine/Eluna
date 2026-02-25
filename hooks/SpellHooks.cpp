@@ -211,11 +211,11 @@ void Eluna::OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellDestin
 
 bool Eluna::OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault)
 {
-    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_LAUNCH, pSpell, false);
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_LAUNCH, pSpell, preventDefault);
     HookPush(pSpell);
     HookPush(effIndex);
     HookPush(mode);
-    return CallAllFunctionsBool(binding, key, false);
+    return CallAllFunctionsBool(binding, key, preventDefault);
 }
 
 bool Eluna::OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault)
