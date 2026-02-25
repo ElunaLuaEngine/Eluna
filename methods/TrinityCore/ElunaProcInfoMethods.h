@@ -87,6 +87,12 @@ namespace LuaElunaProcInfo
      */
     int GetSpellInfo(Eluna* E, ElunaProcInfo* procInfo)
     {
+        if (!procInfo->GetSpellInfo())
+        {
+            E->Push();
+            return 1;
+        }
+
         ElunaSpellInfo info(procInfo->GetSpellInfo()->Id);
         E->Push(&info);
         return 1;
