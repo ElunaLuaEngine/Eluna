@@ -209,7 +209,7 @@ void Eluna::OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellDestin
     target._position.SetOrientation(orientation);
 }
 
-bool Eluna::OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode)
+bool Eluna::OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault)
 {
     START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_LAUNCH, pSpell, false);
     HookPush(pSpell);
@@ -218,31 +218,34 @@ bool Eluna::OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode)
     return CallAllFunctionsBool(binding, key, false);
 }
 
-bool Eluna::OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode)
+bool Eluna::OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault)
 {
-    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_LAUNCH_TARGET, pSpell, false);
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_LAUNCH_TARGET, pSpell, preventDefault);
     HookPush(pSpell);
     HookPush(effIndex);
     HookPush(mode);
-    return CallAllFunctionsBool(binding, key, false);
+    preventDefault = CallAllFunctionsBool(binding, key, preventDefault);
+    return preventDefault;
 }
 
-bool Eluna::OnEffectHit(Spell* pSpell, uint8 effIndex, uint8 mode)
+bool Eluna::OnEffectHit(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault)
 {
-    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_HIT, pSpell, false);
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_HIT, pSpell, preventDefault);
     HookPush(pSpell);
     HookPush(effIndex);
     HookPush(mode);
-    return CallAllFunctionsBool(binding, key, false);
+    preventDefault = CallAllFunctionsBool(binding, key, preventDefault);
+    return preventDefault;
 }
 
-bool Eluna::OnEffectHitTarget(Spell* pSpell, uint8 effIndex, uint8 mode)
+bool Eluna::OnEffectHitTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault)
 {
-    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_HIT_TARGET, pSpell, false);
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_HIT_TARGET, pSpell, preventDefault);
     HookPush(pSpell);
     HookPush(effIndex);
     HookPush(mode);
-    return CallAllFunctionsBool(binding, key, false);
+    preventDefault = CallAllFunctionsBool(binding, key, preventDefault);
+    return preventDefault;
 }
 
 void Eluna::OnBeforeSpellHit(Spell* pSpell, uint8 missInfo)

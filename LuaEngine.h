@@ -218,7 +218,7 @@ private:
     template<typename K1, typename K2> int SetupStack(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, int number_of_arguments);
                                        int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
                                        void CleanUpStack(int number_of_arguments);
-    template<typename T>              void ReplaceArgument(T value, int index);
+    template<typename T>               void ReplaceArgument(T value, int index);
     template<typename K1, typename K2> void CallAllFunctions(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2);
     template<typename K1, typename K2> bool CallAllFunctionsBool(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, bool default_value = false);
     template<typename K1, typename K2> int32 CallAllFunctionsInt(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, int32 default_value = 0);
@@ -654,10 +654,10 @@ public:
     void OnObjectAreaTargetSelect(Spell* pSpell, uint8 effIndex, std::list<WorldObject*>& targets);
     void OnObjectTargetSelect(Spell* pSpell, uint8 effIndex,  WorldObject*& target);
     void OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellDestination& target);
-    bool OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode);
-    bool OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode);
-    bool OnEffectHit(Spell* pSpell, uint8 effIndex, uint8 mode);
-    bool OnEffectHitTarget(Spell* pSpell, uint8 effIndex, uint8 mode);
+    bool OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
+    bool OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
+    bool OnEffectHit(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
+    bool OnEffectHitTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
     void OnBeforeSpellHit(Spell* pSpell, uint8 missInfo);
     void OnSpellHit(Spell* pSpell);
     void OnAfterSpellHit(Spell* pSpell);

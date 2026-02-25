@@ -1063,16 +1063,44 @@ namespace LuaUnit
     }
 
     /**
-     * Returns the [Aura] of the given spell entry on the [Unit] or nil.
+     * Returns the [Aura] of the given spell on the [Unit], or nil if not found.
+     * Optionally filters by caster, item caster, and required effect mask.
      *
-     * @param uint32 spellID : entry of the aura spell
-     * @return [Aura] aura : aura object or nil
+     * @param uint32 spellId : the spell ID to look up
+     * @param ObjectGuid caster = ObjectGuid::Empty : the GUID of the caster to filter by, or empty for any caster
+     * @param ObjectGuid itemCaster = ObjectGuid::Empty : the GUID of the item caster to filter by, or empty for any
+     * @param uint8 reqEffMask = 0 : bitmask of effects that must be present, or 0 for any
+     * @return [Aura] aura : the aura object or nil
      */
     int GetAura(Eluna* E, Unit* unit)
     {
-        uint32 spellID = E->CHECKVAL<uint32>(2);
+        uint32 spellId = E->CHECKVAL<uint32>(2);
+        ObjectGuid caster = E->CHECKVAL<ObjectGuid>(3, ObjectGuid::Empty);
+        ObjectGuid itemCaster = E->CHECKVAL<ObjectGuid>(4, ObjectGuid::Empty);
+        uint8 reqEffMask = E->CHECKVAL<uint8>(5, 0);
+        E->Push(unit->GetAura(spellId, caster, itemCaster, reqEffMask));
+        return 1;
+    }
 
-        E->Push(unit->GetAura(spellID));
+    /**
+     * Returns the owned [Aura] of the given spell on the [Unit], or nil if not found.
+     * Similar to GetAura but searches owned auras and optionally excludes a specific [Aura].
+     *
+     * @param uint32 spellId : the spell ID to look up
+     * @param ObjectGuid caster = ObjectGuid::Empty : the GUID of the caster to filter by, or empty for any caster
+     * @param ObjectGuid itemCaster = ObjectGuid::Empty : the GUID of the item caster to filter by, or empty for any
+     * @param uint8 reqEffMask = 0 : bitmask of effects that must be present, or 0 for any
+     * @param [Aura] exceptAura = nil : an [Aura] to exclude from the search, or nil for none
+     * @return [Aura] aura : the aura object or nil
+     */
+    int GetOwnedAura(Eluna* E, Unit* unit)
+    {
+        uint32 spellId = E->CHECKVAL<uint32>(2);
+        ObjectGuid caster = E->CHECKVAL<ObjectGuid>(3, ObjectGuid::Empty);
+        ObjectGuid itemCaster = E->CHECKVAL<ObjectGuid>(4, ObjectGuid::Empty);
+        uint8 reqEffMask = E->CHECKVAL<uint8>(5, 0);
+        Aura* exceptAura = E->CHECKOBJ<Aura>(6, false);
+        E->Push(unit->GetOwnedAura(spellId, caster, itemCaster, reqEffMask, exceptAura));
         return 1;
     }
 
@@ -2591,6 +2619,7 @@ namespace LuaUnit
         { "GetRaceAsString", &LuaUnit::GetRaceAsString },
         { "GetClassAsString", &LuaUnit::GetClassAsString },
         { "GetAura", &LuaUnit::GetAura },
+        { "GetOwnedAura", &LuaUnit::GetOwnedAura },
         { "GetFaction", &LuaUnit::GetFaction },
         { "GetCurrentSpell", &LuaUnit::GetCurrentSpell },
         { "GetCreatureType", &LuaUnit::GetCreatureType },
