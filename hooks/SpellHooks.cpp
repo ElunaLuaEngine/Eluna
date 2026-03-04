@@ -94,7 +94,7 @@ void Eluna::OnAuraCalcAmount(Aura* aura, AuraEffect const* auraEff, int32& amoun
 
 void Eluna::OnCalcPeriodic(Aura* aura, AuraEffect const* auraEff, bool& isPeriodic, int32& amplitude)
 {
-    START_HOOK(SPELL_EVENT_ON_AURA_CALC_AMOUNT, aura);
+    START_HOOK(SPELL_EVENT_ON_CALC_PERIODIC, aura);
 
     HookPush(aura);
     HookPush(auraEff);
