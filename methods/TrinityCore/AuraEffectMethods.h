@@ -39,7 +39,7 @@ namespace LuaAuraEffects
      */
     int GetAmplitude(Eluna* E, AuraEffect* aurEff)
     {
-        E->Push(aurEff->GetAmplitude());
+        E->Push(aurEff->GetPeriod());
         return 1;
     }
 

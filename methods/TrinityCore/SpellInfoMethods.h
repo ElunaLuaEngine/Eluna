@@ -234,7 +234,7 @@ namespace LuaSpellInfo
      */
     int GetCasterAuraStateNot(Eluna* E, ElunaSpellInfo* spellInfo)
     {
-        E->Push(spellInfo->GetSpellInfo()->CasterAuraStateNot);
+        E->Push(spellInfo->GetSpellInfo()->ExcludeCasterAuraState);
         return 1;
     }
 
@@ -245,7 +245,7 @@ namespace LuaSpellInfo
      */
     int GetTargetAuraStateNot(Eluna* E, ElunaSpellInfo* spellInfo)
     {
-        E->Push(spellInfo->GetSpellInfo()->TargetAuraStateNot);
+        E->Push(spellInfo->GetSpellInfo()->ExcludeTargetAuraState);
         return 1;
     }
 
@@ -754,7 +754,7 @@ namespace LuaSpellInfo
      */
     int GetAreaGroupId(Eluna* E, ElunaSpellInfo* spellInfo)
     {
-        E->Push(spellInfo->GetSpellInfo()->AreaGroupId);
+        E->Push(spellInfo->GetSpellInfo()->RequiredAreasID);
         return 1;
     }
 
@@ -1815,7 +1815,7 @@ namespace LuaSpellInfo
         uint32 effIndex = E->CHECKVAL<uint32>(2);
         if (effIndex >= MAX_SPELL_EFFECTS)
             return luaL_argerror(E->L, 2, "effect index out of range");
-        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).ValueMultiplier);
+        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).Amplitude);
         return 1;
     }
 
@@ -1830,7 +1830,7 @@ namespace LuaSpellInfo
         uint32 effIndex = E->CHECKVAL<uint32>(2);
         if (effIndex >= MAX_SPELL_EFFECTS)
             return luaL_argerror(E->L, 2, "effect index out of range");
-        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).DamageMultiplier);
+        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).ChainAmplitude);
         return 1;
     }
 
@@ -1845,7 +1845,7 @@ namespace LuaSpellInfo
         uint32 effIndex = E->CHECKVAL<uint32>(2);
         if (effIndex >= MAX_SPELL_EFFECTS)
             return luaL_argerror(E->L, 2, "effect index out of range");
-        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).BonusMultiplier);
+        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).BonusCoefficient);
         return 1;
     }
 
@@ -1890,7 +1890,7 @@ namespace LuaSpellInfo
         uint32 effIndex = E->CHECKVAL<uint32>(2);
         if (effIndex >= MAX_SPELL_EFFECTS)
             return luaL_argerror(E->L, 2, "effect index out of range");
-        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).ChainTarget);
+        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).ChainTargets);
         return 1;
     }
 
