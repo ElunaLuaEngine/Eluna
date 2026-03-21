@@ -657,11 +657,11 @@ namespace LuaCreature
         float dist = E->CHECKVAL<float>(5, 0.0f);
         int32 aura = E->CHECKVAL<int32>(6, 0);
 
-        auto const& threatlist = creature->GetThreatMgr().GetThreatList();
+        auto const& threatlist = creature->GetThreatMgr().GetSortedThreatList();
         
-        if (threatlist.empty())
+        if (creature->GetThreatMgr().GetThreatListSize())
             return 1;
-        if (position >= threatlist.size())
+        if (position >= creature->GetThreatMgr().GetThreatListSize())
             return 1;
 
         std::list<Unit*> targetList;
@@ -736,9 +736,9 @@ namespace LuaCreature
      */
     int GetAITargets(Eluna* E, Creature* creature)
     {
-        auto const& threatlist = creature->GetThreatMgr().GetThreatList();
+        auto const& threatlist = creature->GetThreatMgr().GetUnsortedThreatList();
 
-        lua_createtable(E->L, threatlist.size(), 0);
+        lua_createtable(E->L, creature->GetThreatMgr().GetThreatListSize(), 0);
         int tbl = lua_gettop(E->L);
 
         uint32 i = 0;
@@ -792,7 +792,7 @@ namespace LuaCreature
         float schoolMask = E->CHECKVAL<uint32>(4, 0);
         uint32 spell = E->CHECKVAL<uint32>(5, 0);
 
-        creature->GetThreatMgr().AddThreat(victim, threat, (SpellSchoolMask)schoolMask, spell ? sSpellMgr->GetSpellInfo(spell) : NULL);
+        creature->GetThreatMgr().AddThreat(victim, threat, spell ? sSpellMgr->GetSpellInfo(spell) : NULL);
         return 0;
     }
 
