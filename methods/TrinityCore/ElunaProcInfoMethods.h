@@ -81,9 +81,9 @@ namespace LuaElunaProcInfo
     }
 
     /**
-     * Returns the [ElunaSpellInfo] of the spell that triggered the proc event.
+     * Returns the [SpellInfo] of the spell that triggered the proc event.
      *
-     * @return [ElunaSpellInfo] spellInfo
+     * @return [SpellInfo] spellInfo
      */
     int GetSpellInfo(Eluna* E, ElunaProcInfo* procInfo)
     {

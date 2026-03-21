@@ -8,7 +8,7 @@
 namespace LuaSpellInfo
 {
     /**
-     * Returns the ID of the [ElunaSpellInfo].
+     * Returns the ID of the [SpellInfo].
      *
      * @return uint32 id
      */
@@ -19,7 +19,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the dispel type of the [ElunaSpellInfo].
+     * Returns the dispel type of the [SpellInfo].
      *
      * @return uint32 dispel
      */
@@ -30,7 +30,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the mechanic of the [ElunaSpellInfo].
+     * Returns the mechanic of the [SpellInfo].
      *
      * @return uint32 mechanic
      */
@@ -41,7 +41,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the attributes of the [ElunaSpellInfo].
+     * Returns the attributes of the [SpellInfo].
      *
      * @return uint32 attributes
      */
@@ -52,7 +52,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the first extended attributes of the [ElunaSpellInfo].
+     * Returns the first extended attributes of the [SpellInfo].
      *
      * @return uint32 attributesEx
      */
@@ -63,7 +63,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the second extended attributes of the [ElunaSpellInfo].
+     * Returns the second extended attributes of the [SpellInfo].
      *
      * @return uint32 attributesEx2
      */
@@ -74,7 +74,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the third extended attributes of the [ElunaSpellInfo].
+     * Returns the third extended attributes of the [SpellInfo].
      *
      * @return uint32 attributesEx3
      */
@@ -85,7 +85,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the fourth extended attributes of the [ElunaSpellInfo].
+     * Returns the fourth extended attributes of the [SpellInfo].
      *
      * @return uint32 attributesEx4
      */
@@ -96,7 +96,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the fifth extended attributes of the [ElunaSpellInfo].
+     * Returns the fifth extended attributes of the [SpellInfo].
      *
      * @return uint32 attributesEx5
      */
@@ -107,7 +107,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the sixth extended attributes of the [ElunaSpellInfo].
+     * Returns the sixth extended attributes of the [SpellInfo].
      *
      * @return uint32 attributesEx6
      */
@@ -118,7 +118,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the seventh extended attributes of the [ElunaSpellInfo].
+     * Returns the seventh extended attributes of the [SpellInfo].
      *
      * @return uint32 attributesEx7
      */
@@ -129,7 +129,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the custom attributes of the [ElunaSpellInfo].
+     * Returns the custom attributes of the [SpellInfo].
      *
      * @return uint32 attributesCu
      */
@@ -140,7 +140,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the stances bitmask of the [ElunaSpellInfo] as uint32.
+     * Returns the stances bitmask of the [SpellInfo] as uint32.
      *
      * @return uint32 stances
      */
@@ -151,7 +151,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the stances not bitmask of the [ElunaSpellInfo] as uint32.
+     * Returns the stances not bitmask of the [SpellInfo] as uint32.
      *
      * @return uint32 stancesNot
      */
@@ -162,7 +162,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the targets bitmask of the [ElunaSpellInfo].
+     * Returns the targets bitmask of the [SpellInfo].
      *
      * @return uint32 targets
      */
@@ -173,7 +173,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target creature type of the [ElunaSpellInfo].
+     * Returns the target creature type of the [SpellInfo].
      *
      * @return uint32 targetCreatureType
      */
@@ -184,7 +184,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the requires spell focus entry of the [ElunaSpellInfo].
+     * Returns the requires spell focus entry of the [SpellInfo].
      *
      * @return uint32 requiresSpellFocus
      */
@@ -195,7 +195,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the facing caster flags of the [ElunaSpellInfo].
+     * Returns the facing caster flags of the [SpellInfo].
      *
      * @return uint32 facingCasterFlags
      */
@@ -206,7 +206,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the caster aura state required to cast the [ElunaSpellInfo].
+     * Returns the caster aura state required to cast the [SpellInfo].
      *
      * @return uint32 casterAuraState
      */
@@ -217,7 +217,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target aura state required to cast the [ElunaSpellInfo].
+     * Returns the target aura state required to cast the [SpellInfo].
      *
      * @return uint32 targetAuraState
      */
@@ -228,29 +228,29 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the caster aura state that prevents casting the [ElunaSpellInfo].
+     * Returns the caster aura state that prevents casting the [SpellInfo].
      *
      * @return uint32 casterAuraStateNot
      */
     int GetCasterAuraStateNot(Eluna* E, ElunaSpellInfo* spellInfo)
     {
-        E->Push(spellInfo->GetSpellInfo()->CasterAuraStateNot);
+        E->Push(spellInfo->GetSpellInfo()->ExcludeCasterAuraState);
         return 1;
     }
 
     /**
-     * Returns the target aura state that prevents casting the [ElunaSpellInfo].
+     * Returns the target aura state that prevents casting the [SpellInfo].
      *
      * @return uint32 targetAuraStateNot
      */
     int GetTargetAuraStateNot(Eluna* E, ElunaSpellInfo* spellInfo)
     {
-        E->Push(spellInfo->GetSpellInfo()->TargetAuraStateNot);
+        E->Push(spellInfo->GetSpellInfo()->ExcludeTargetAuraState);
         return 1;
     }
 
     /**
-     * Returns the spell ID that must be active on the caster to cast the [ElunaSpellInfo].
+     * Returns the spell ID that must be active on the caster to cast the [SpellInfo].
      *
      * @return uint32 casterAuraSpell
      */
@@ -261,7 +261,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the spell ID that must be active on the target to cast the [ElunaSpellInfo].
+     * Returns the spell ID that must be active on the target to cast the [SpellInfo].
      *
      * @return uint32 targetAuraSpell
      */
@@ -272,7 +272,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the spell ID that must not be active on the caster to cast the [ElunaSpellInfo].
+     * Returns the spell ID that must not be active on the caster to cast the [SpellInfo].
      *
      * @return uint32 excludeCasterAuraSpell
      */
@@ -283,7 +283,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the spell ID that must not be active on the target to cast the [ElunaSpellInfo].
+     * Returns the spell ID that must not be active on the target to cast the [SpellInfo].
      *
      * @return uint32 excludeTargetAuraSpell
      */
@@ -294,7 +294,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the recovery time in milliseconds of the [ElunaSpellInfo].
+     * Returns the recovery time in milliseconds of the [SpellInfo].
      *
      * @return uint32 recoveryTime
      */
@@ -305,7 +305,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the category recovery time in milliseconds of the [ElunaSpellInfo].
+     * Returns the category recovery time in milliseconds of the [SpellInfo].
      *
      * @return uint32 categoryRecoveryTime
      */
@@ -316,7 +316,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the start recovery category of the [ElunaSpellInfo].
+     * Returns the start recovery category of the [SpellInfo].
      *
      * @return uint32 startRecoveryCategory
      */
@@ -327,7 +327,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the start recovery time in milliseconds of the [ElunaSpellInfo].
+     * Returns the start recovery time in milliseconds of the [SpellInfo].
      *
      * @return uint32 startRecoveryTime
      */
@@ -338,7 +338,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the interrupt flags of the [ElunaSpellInfo].
+     * Returns the interrupt flags of the [SpellInfo].
      *
      * @return uint32 interruptFlags
      */
@@ -349,7 +349,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the aura interrupt flags of the [ElunaSpellInfo].
+     * Returns the aura interrupt flags of the [SpellInfo].
      *
      * @return uint32 auraInterruptFlags
      */
@@ -360,7 +360,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the channel interrupt flags of the [ElunaSpellInfo].
+     * Returns the channel interrupt flags of the [SpellInfo].
      *
      * @return uint32 channelInterruptFlags
      */
@@ -371,7 +371,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the proc flags of the [ElunaSpellInfo].
+     * Returns the proc flags of the [SpellInfo].
      *
      * @return uint32 procFlags
      */
@@ -382,7 +382,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the proc chance of the [ElunaSpellInfo].
+     * Returns the proc chance of the [SpellInfo].
      *
      * @return uint32 procChance
      */
@@ -393,7 +393,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the proc charges of the [ElunaSpellInfo].
+     * Returns the proc charges of the [SpellInfo].
      *
      * @return uint32 procCharges
      */
@@ -404,7 +404,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the maximum level of the [ElunaSpellInfo].
+     * Returns the maximum level of the [SpellInfo].
      *
      * @return uint32 maxLevel
      */
@@ -415,7 +415,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the base level required to cast the [ElunaSpellInfo].
+     * Returns the base level required to cast the [SpellInfo].
      *
      * @return uint32 baseLevel
      */
@@ -426,7 +426,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the spell level of the [ElunaSpellInfo].
+     * Returns the spell level of the [SpellInfo].
      *
      * @return uint32 spellLevel
      */
@@ -437,7 +437,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the power type of the [ElunaSpellInfo].
+     * Returns the power type of the [SpellInfo].
      *
      * @return uint32 powerType
      */
@@ -448,7 +448,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the mana cost of the [ElunaSpellInfo].
+     * Returns the mana cost of the [SpellInfo].
      *
      * @return uint32 manaCost
      */
@@ -459,7 +459,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the mana cost per level of the [ElunaSpellInfo].
+     * Returns the mana cost per level of the [SpellInfo].
      *
      * @return uint32 manaCostPerlevel
      */
@@ -470,7 +470,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the mana per second drain of the [ElunaSpellInfo].
+     * Returns the mana per second drain of the [SpellInfo].
      *
      * @return uint32 manaPerSecond
      */
@@ -481,7 +481,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the mana per second per level drain of the [ElunaSpellInfo].
+     * Returns the mana per second per level drain of the [SpellInfo].
      *
      * @return uint32 manaPerSecondPerLevel
      */
@@ -492,7 +492,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the mana cost percentage of the [ElunaSpellInfo].
+     * Returns the mana cost percentage of the [SpellInfo].
      *
      * @return uint32 manaCostPercentage
      */
@@ -503,7 +503,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the rune cost ID of the [ElunaSpellInfo].
+     * Returns the rune cost ID of the [SpellInfo].
      *
      * @return uint32 runeCostID
      */
@@ -514,7 +514,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the projectile speed of the [ElunaSpellInfo].
+     * Returns the projectile speed of the [SpellInfo].
      *
      * @return float speed
      */
@@ -525,7 +525,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the stack amount of the [ElunaSpellInfo].
+     * Returns the stack amount of the [SpellInfo].
      *
      * @return uint32 stackAmount
      */
@@ -536,7 +536,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the totem entry at the given index for the [ElunaSpellInfo].
+     * Returns the totem entry at the given index for the [SpellInfo].
      *
      * @param uint32 index : the totem index (0-1)
      * @return uint32 totem
@@ -551,7 +551,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the reagent entry at the given index for the [ElunaSpellInfo].
+     * Returns the reagent entry at the given index for the [SpellInfo].
      *
      * @param uint32 index : the reagent index (0-MAX_SPELL_REAGENTS-1)
      * @return int32 reagent
@@ -566,7 +566,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the reagent count at the given index for the [ElunaSpellInfo].
+     * Returns the reagent count at the given index for the [SpellInfo].
      *
      * @param uint32 index : the reagent index (0-MAX_SPELL_REAGENTS-1)
      * @return uint32 reagentCount
@@ -581,7 +581,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the required equipped item class of the [ElunaSpellInfo].
+     * Returns the required equipped item class of the [SpellInfo].
      *
      * @return int32 equippedItemClass
      */
@@ -592,7 +592,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the required equipped item subclass mask of the [ElunaSpellInfo].
+     * Returns the required equipped item subclass mask of the [SpellInfo].
      *
      * @return int32 equippedItemSubClassMask
      */
@@ -603,7 +603,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the required equipped item inventory type mask of the [ElunaSpellInfo].
+     * Returns the required equipped item inventory type mask of the [SpellInfo].
      *
      * @return int32 equippedItemInventoryTypeMask
      */
@@ -614,7 +614,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the totem category entry at the given index for the [ElunaSpellInfo].
+     * Returns the totem category entry at the given index for the [SpellInfo].
      *
      * @param uint32 index : the totem category index (0-1)
      * @return uint32 totemCategory
@@ -629,7 +629,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the spell visual ID at the given index for the [ElunaSpellInfo].
+     * Returns the spell visual ID at the given index for the [SpellInfo].
      *
      * @param uint32 index : the visual index (0-1)
      * @return uint32 spellVisual
@@ -644,7 +644,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the spell icon ID of the [ElunaSpellInfo].
+     * Returns the spell icon ID of the [SpellInfo].
      *
      * @return uint32 spellIconID
      */
@@ -655,7 +655,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the active icon ID of the [ElunaSpellInfo].
+     * Returns the active icon ID of the [SpellInfo].
      *
      * @return uint32 activeIconID
      */
@@ -666,7 +666,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the priority of the [ElunaSpellInfo].
+     * Returns the priority of the [SpellInfo].
      *
      * @return uint32 priority
      */
@@ -677,7 +677,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the maximum target level of the [ElunaSpellInfo].
+     * Returns the maximum target level of the [SpellInfo].
      *
      * @return uint32 maxTargetLevel
      */
@@ -688,7 +688,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the maximum number of affected targets of the [ElunaSpellInfo].
+     * Returns the maximum number of affected targets of the [SpellInfo].
      *
      * @return uint32 maxAffectedTargets
      */
@@ -699,7 +699,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the spell family name of the [ElunaSpellInfo].
+     * Returns the spell family name of the [SpellInfo].
      *
      * @return uint32 spellFamilyName
      */
@@ -710,7 +710,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the spell family flags of the [ElunaSpellInfo] at the given index.
+     * Returns the spell family flags of the [SpellInfo] at the given index.
      * The flags are a 96-bit value split into three uint32 components (index 0-2).
      *
      * @param uint32 index : the flag index (0-2)
@@ -726,7 +726,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the damage class of the [ElunaSpellInfo].
+     * Returns the damage class of the [SpellInfo].
      *
      * @return uint32 dmgClass
      */
@@ -737,7 +737,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the prevention type of the [ElunaSpellInfo].
+     * Returns the prevention type of the [SpellInfo].
      *
      * @return uint32 preventionType
      */
@@ -748,18 +748,18 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the area group ID of the [ElunaSpellInfo].
+     * Returns the area group ID of the [SpellInfo].
      *
      * @return int32 areaGroupId
      */
     int GetAreaGroupId(Eluna* E, ElunaSpellInfo* spellInfo)
     {
-        E->Push(spellInfo->GetSpellInfo()->AreaGroupId);
+        E->Push(spellInfo->GetSpellInfo()->RequiredAreasID);
         return 1;
     }
 
     /**
-     * Returns the school mask of the [ElunaSpellInfo].
+     * Returns the school mask of the [SpellInfo].
      *
      * @return uint32 schoolMask
      */
@@ -770,7 +770,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the duration in milliseconds of the [ElunaSpellInfo].
+     * Returns the duration in milliseconds of the [SpellInfo].
      *
      * @return int32 duration
      */
@@ -781,7 +781,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the maximum duration in milliseconds of the [ElunaSpellInfo].
+     * Returns the maximum duration in milliseconds of the [SpellInfo].
      *
      * @return int32 maxDuration
      */
@@ -792,7 +792,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the maximum range of the [ElunaSpellInfo].
+     * Returns the maximum range of the [SpellInfo].
      *
      * @return float maxRange
      */
@@ -803,7 +803,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the minimum range of the [ElunaSpellInfo].
+     * Returns the minimum range of the [SpellInfo].
      *
      * @return float minRange
      */
@@ -814,7 +814,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the maximum number of ticks of the [ElunaSpellInfo].
+     * Returns the maximum number of ticks of the [SpellInfo].
      *
      * @return uint32 maxTicks
      */
@@ -825,7 +825,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the category of the [ElunaSpellInfo].
+     * Returns the category of the [SpellInfo].
      *
      * @return uint32 category
      */
@@ -836,7 +836,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the rank of the [ElunaSpellInfo].
+     * Returns the rank of the [SpellInfo].
      *
      * @return uint8 rank
      */
@@ -847,7 +847,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns a bitmask of all mechanics used across all effects of the [ElunaSpellInfo].
+     * Returns a bitmask of all mechanics used across all effects of the [SpellInfo].
      *
      * @return uint32 mechanicMask
      */
@@ -858,7 +858,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the allowed mechanic mask of the [ElunaSpellInfo].
+     * Returns the allowed mechanic mask of the [SpellInfo].
      *
      * @return uint32 allowedMechanicMask
      */
@@ -869,7 +869,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the explicit target mask of the [ElunaSpellInfo].
+     * Returns the explicit target mask of the [SpellInfo].
      *
      * @return uint32 explicitTargetMask
      */
@@ -880,7 +880,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the aura state of the [ElunaSpellInfo].
+     * Returns the aura state of the [SpellInfo].
      *
      * @return uint32 auraState
      */
@@ -891,7 +891,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the spell specific type of the [ElunaSpellInfo].
+     * Returns the spell specific type of the [SpellInfo].
      *
      * @return uint32 spellSpecific
      */
@@ -902,7 +902,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the weapon attack type of the [ElunaSpellInfo].
+     * Returns the weapon attack type of the [SpellInfo].
      *
      * @return uint32 attackType
      */
@@ -913,7 +913,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the mechanic mask for the given effect mask of the [ElunaSpellInfo].
+     * Returns the mechanic mask for the given effect mask of the [SpellInfo].
      *
      * @param uint32 effectMask : bitmask of effect indices to check
      * @return uint32 mechanicMask
@@ -926,7 +926,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the mechanic mask for the given effect index of the [ElunaSpellInfo].
+     * Returns the mechanic mask for the given effect index of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect index (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 mechanicMask
@@ -941,7 +941,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the mechanic for the given effect index of the [ElunaSpellInfo].
+     * Returns the mechanic for the given effect index of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect index (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 mechanic
@@ -956,7 +956,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the diminishing returns group for the [ElunaSpellInfo].
+     * Returns the diminishing returns group for the [SpellInfo].
      *
      * @param bool triggered : whether the spell is triggered
      * @return uint32 diminishingGroup
@@ -969,7 +969,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the diminishing returns group type for the [ElunaSpellInfo].
+     * Returns the diminishing returns group type for the [SpellInfo].
      *
      * @param bool triggered : whether the spell is triggered
      * @return uint32 diminishingGroupType
@@ -982,7 +982,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the diminishing returns max level for the [ElunaSpellInfo].
+     * Returns the diminishing returns max level for the [SpellInfo].
      *
      * @param bool triggered : whether the spell is triggered
      * @return uint32 diminishingMaxLevel
@@ -995,7 +995,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the diminishing returns limit duration in milliseconds for the [ElunaSpellInfo].
+     * Returns the diminishing returns limit duration in milliseconds for the [SpellInfo].
      *
      * @param bool triggered : whether the spell is triggered
      * @return int32 diminishingLimitDuration
@@ -1008,7 +1008,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the calculated cast time in milliseconds of the [ElunaSpellInfo].
+     * Returns the calculated cast time in milliseconds of the [SpellInfo].
      *
      * @return uint32 castTime
      */
@@ -1019,7 +1019,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a passive spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a passive spell, `false` otherwise.
      *
      * @return bool isPassive
      */
@@ -1030,7 +1030,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is autocastable, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is autocastable, `false` otherwise.
      *
      * @return bool isAutocastable
      */
@@ -1041,7 +1041,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is stackable with ranks, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is stackable with ranks, `false` otherwise.
      *
      * @return bool isStackableWithRanks
      */
@@ -1052,7 +1052,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a passive spell stackable with ranks, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a passive spell stackable with ranks, `false` otherwise.
      *
      * @return bool isPassiveStackableWithRanks
      */
@@ -1063,7 +1063,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] occupies multiple aura slots, `false` otherwise.
+     * Returns `true` if the [SpellInfo] occupies multiple aura slots, `false` otherwise.
      *
      * @return bool isMultiSlotAura
      */
@@ -1074,7 +1074,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] can stack on one slot from different casters, `false` otherwise.
+     * Returns `true` if the [SpellInfo] can stack on one slot from different casters, `false` otherwise.
      *
      * @return bool isStackableOnOneSlotWithDifferentCasters
      */
@@ -1085,7 +1085,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] cooldown is started on event, `false` otherwise.
+     * Returns `true` if the [SpellInfo] cooldown is started on event, `false` otherwise.
      *
      * @return bool isCooldownStartedOnEvent
      */
@@ -1096,7 +1096,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] persists through death, `false` otherwise.
+     * Returns `true` if the [SpellInfo] persists through death, `false` otherwise.
      *
      * @return bool isDeathPersistent
      */
@@ -1107,7 +1107,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] requires the target to be dead, `false` otherwise.
+     * Returns `true` if the [SpellInfo] requires the target to be dead, `false` otherwise.
      *
      * @return bool isRequiringDeadTarget
      */
@@ -1118,7 +1118,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] allows targeting dead units, `false` otherwise.
+     * Returns `true` if the [SpellInfo] allows targeting dead units, `false` otherwise.
      *
      * @return bool isAllowingDeadTarget
      */
@@ -1129,7 +1129,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a group buff, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a group buff, `false` otherwise.
      *
      * @return bool isGroupBuff
      */
@@ -1140,7 +1140,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] can be used in combat, `false` otherwise.
+     * Returns `true` if the [SpellInfo] can be used in combat, `false` otherwise.
      *
      * @return bool canBeUsedInCombat
      */
@@ -1151,7 +1151,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a positive spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a positive spell, `false` otherwise.
      *
      * @return bool isPositive
      */
@@ -1162,7 +1162,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the effect at the given index of the [ElunaSpellInfo] is positive, `false` otherwise.
+     * Returns `true` if the effect at the given index of the [SpellInfo] is positive, `false` otherwise.
      *
      * @param uint8 effIndex : the effect index (0-MAX_SPELL_EFFECTS-1)
      * @return bool isPositiveEffect
@@ -1177,7 +1177,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a channeled spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a channeled spell, `false` otherwise.
      *
      * @return bool isChanneled
      */
@@ -1188,7 +1188,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] allows movement while channeling, `false` otherwise.
+     * Returns `true` if the [SpellInfo] allows movement while channeling, `false` otherwise.
      *
      * @return bool isMoveAllowedChannel
      */
@@ -1199,7 +1199,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] requires combo points, `false` otherwise.
+     * Returns `true` if the [SpellInfo] requires combo points, `false` otherwise.
      *
      * @return bool needsComboPoints
      */
@@ -1210,7 +1210,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a next melee swing spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a next melee swing spell, `false` otherwise.
      *
      * @return bool isNextMeleeSwingSpell
      */
@@ -1221,7 +1221,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] breaks stealth, `false` otherwise.
+     * Returns `true` if the [SpellInfo] breaks stealth, `false` otherwise.
      *
      * @return bool isBreakingStealth
      */
@@ -1232,7 +1232,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a ranged weapon spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a ranged weapon spell, `false` otherwise.
      *
      * @return bool isRangedWeaponSpell
      */
@@ -1243,7 +1243,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is an auto repeat ranged spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is an auto repeat ranged spell, `false` otherwise.
      *
      * @return bool isAutoRepeatRangedSpell
      */
@@ -1254,7 +1254,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] has initial aggro, `false` otherwise.
+     * Returns `true` if the [SpellInfo] has initial aggro, `false` otherwise.
      *
      * @return bool hasInitialAggro
      */
@@ -1265,7 +1265,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is ranked, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is ranked, `false` otherwise.
      *
      * @return bool isRanked
      */
@@ -1276,7 +1276,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] affects an area, `false` otherwise.
+     * Returns `true` if the [SpellInfo] affects an area, `false` otherwise.
      *
      * @return bool isAffectingArea
      */
@@ -1287,7 +1287,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] targets an area, `false` otherwise.
+     * Returns `true` if the [SpellInfo] targets an area, `false` otherwise.
      *
      * @return bool isTargetingArea
      */
@@ -1298,7 +1298,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] needs an explicit unit target, `false` otherwise.
+     * Returns `true` if the [SpellInfo] needs an explicit unit target, `false` otherwise.
      *
      * @return bool needsExplicitUnitTarget
      */
@@ -1309,7 +1309,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a self cast spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a self cast spell, `false` otherwise.
      *
      * @return bool isSelfCast
      */
@@ -1320,7 +1320,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] can only have a single target active at a time, `false` otherwise.
+     * Returns `true` if the [SpellInfo] can only have a single target active at a time, `false` otherwise.
      *
      * @return bool isSingleTarget
      */
@@ -1331,7 +1331,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is an explicit discovery spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is an explicit discovery spell, `false` otherwise.
      *
      * @return bool isExplicitDiscovery
      */
@@ -1342,7 +1342,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a loot crafting spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a loot crafting spell, `false` otherwise.
      *
      * @return bool isLootCrafting
      */
@@ -1353,7 +1353,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a profession or riding spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a profession or riding spell, `false` otherwise.
      *
      * @return bool isProfessionOrRiding
      */
@@ -1364,7 +1364,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a profession spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a profession spell, `false` otherwise.
      *
      * @return bool isProfession
      */
@@ -1375,7 +1375,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a primary profession spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a primary profession spell, `false` otherwise.
      *
      * @return bool isPrimaryProfession
      */
@@ -1386,7 +1386,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is the first rank of a primary profession spell, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is the first rank of a primary profession spell, `false` otherwise.
      *
      * @return bool isPrimaryProfessionFirstRank
      */
@@ -1397,7 +1397,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is an ability learned with a profession, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is an ability learned with a profession, `false` otherwise.
      *
      * @return bool isAbilityLearnedWithProfession
      */
@@ -1408,7 +1408,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is affected by spell mods, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is affected by spell mods, `false` otherwise.
      *
      * @return bool isAffectedBySpellMods
      */
@@ -1419,7 +1419,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] has the given spell effect, `false` otherwise.
+     * Returns `true` if the [SpellInfo] has the given spell effect, `false` otherwise.
      *
      * @param uint32 effect : the [SpellEffects] to check for
      * @return bool hasEffect
@@ -1432,7 +1432,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] has the given aura type, `false` otherwise.
+     * Returns `true` if the [SpellInfo] has the given aura type, `false` otherwise.
      *
      * @param uint32 aura : the [AuraType] to check for
      * @return bool hasAura
@@ -1445,7 +1445,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] has an area aura effect, `false` otherwise.
+     * Returns `true` if the [SpellInfo] has an area aura effect, `false` otherwise.
      *
      * @return bool hasAreaAuraEffect
      */
@@ -1456,7 +1456,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] only has damage effects, `false` otherwise.
+     * Returns `true` if the [SpellInfo] only has damage effects, `false` otherwise.
      *
      * @return bool hasOnlyDamageEffects
      */
@@ -1467,7 +1467,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is affected by the given spell family and flags, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is affected by the given spell family and flags, `false` otherwise.
      * The flags are a 96-bit value split into three uint32 components.
      *
      * @param uint32 familyName : the spell family name to check
@@ -1487,7 +1487,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is affected by the given [SpellModifier], `false` otherwise.
+     * Returns `true` if the [SpellInfo] is affected by the given [SpellModifier], `false` otherwise.
      *
      * @param [SpellModifier] mod : the spell modifier to check
      * @return bool isAffectedBySpellMod
@@ -1500,9 +1500,9 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is the same rank as the given [ElunaSpellInfo], `false` otherwise.
+     * Returns `true` if the [SpellInfo] is the same rank as the given [SpellInfo], `false` otherwise.
      *
-     * @param [ElunaSpellInfo] spellInfo : the spell info to compare against
+     * @param [SpellInfo] spellInfo : the spell info to compare against
      * @return bool isRankOf
      */
     int IsRankOf(Eluna* E, ElunaSpellInfo* spellInfo)
@@ -1513,9 +1513,9 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a different rank of the given [ElunaSpellInfo], `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a different rank of the given [SpellInfo], `false` otherwise.
      *
-     * @param [ElunaSpellInfo] spellInfo : the spell info to compare against
+     * @param [SpellInfo] spellInfo : the spell info to compare against
      * @return bool isDifferentRankOf
      */
     int IsDifferentRankOf(Eluna* E, ElunaSpellInfo* spellInfo)
@@ -1526,9 +1526,9 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is a higher rank than the given [ElunaSpellInfo], `false` otherwise.
+     * Returns `true` if the [SpellInfo] is a higher rank than the given [SpellInfo], `false` otherwise.
      *
-     * @param [ElunaSpellInfo] spellInfo : the spell info to compare against
+     * @param [SpellInfo] spellInfo : the spell info to compare against
      * @return bool isHighRankOf
      */
     int IsHighRankOf(Eluna* E, ElunaSpellInfo* spellInfo)
@@ -1539,9 +1539,9 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] can pierce the immunity provided by the given [ElunaSpellInfo], `false` otherwise.
+     * Returns `true` if the [SpellInfo] can pierce the immunity provided by the given [SpellInfo], `false` otherwise.
      *
-     * @param [ElunaSpellInfo] auraSpellInfo : the aura spell info to check against
+     * @param [SpellInfo] auraSpellInfo : the aura spell info to check against
      * @return bool canPierceImmuneAura
      */
     int CanPierceImmuneAura(Eluna* E, ElunaSpellInfo* spellInfo)
@@ -1552,9 +1552,9 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] can dispel the given [ElunaSpellInfo], `false` otherwise.
+     * Returns `true` if the [SpellInfo] can dispel the given [SpellInfo], `false` otherwise.
      *
-     * @param [ElunaSpellInfo] auraSpellInfo : the aura spell info to check against
+     * @param [SpellInfo] auraSpellInfo : the aura spell info to check against
      * @return bool canDispelAura
      */
     int CanDispelAura(Eluna* E, ElunaSpellInfo* spellInfo)
@@ -1565,9 +1565,9 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] can provide immunity against the given [ElunaSpellInfo], `false` otherwise.
+     * Returns `true` if the [SpellInfo] can provide immunity against the given [SpellInfo], `false` otherwise.
      *
-     * @param [ElunaSpellInfo] auraSpellInfo : the aura spell info to check against
+     * @param [SpellInfo] auraSpellInfo : the aura spell info to check against
      * @return bool canSpellProvideImmunityAgainstAura
      */
     int CanSpellProvideImmunityAgainstAura(Eluna* E, ElunaSpellInfo* spellInfo)
@@ -1578,9 +1578,9 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is exclusively stacking with the given [ElunaSpellInfo] by specific aura, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is exclusively stacking with the given [SpellInfo] by specific aura, `false` otherwise.
      *
-     * @param [ElunaSpellInfo] spellInfo : the spell info to compare against
+     * @param [SpellInfo] spellInfo : the spell info to compare against
      * @return bool isAuraExclusiveBySpecificWith
      */
     int IsAuraExclusiveBySpecificWith(Eluna* E, ElunaSpellInfo* spellInfo)
@@ -1591,9 +1591,9 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is exclusively stacking per caster with the given [ElunaSpellInfo] by specific aura, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is exclusively stacking per caster with the given [SpellInfo] by specific aura, `false` otherwise.
      *
-     * @param [ElunaSpellInfo] spellInfo : the spell info to compare against
+     * @param [SpellInfo] spellInfo : the spell info to compare against
      * @return bool isAuraExclusiveBySpecificPerCasterWith
      */
     int IsAuraExclusiveBySpecificPerCasterWith(Eluna* E, ElunaSpellInfo* spellInfo)
@@ -1604,7 +1604,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the given [Item] fits the requirements of the [ElunaSpellInfo], `false` otherwise.
+     * Returns `true` if the given [Item] fits the requirements of the [SpellInfo], `false` otherwise.
      *
      * @param [Item] item : the item to check
      * @return bool isItemFitToSpellRequirements
@@ -1617,7 +1617,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] is an ability of the given skill type, `false` otherwise.
+     * Returns `true` if the [SpellInfo] is an ability of the given skill type, `false` otherwise.
      *
      * @param uint32 skillType : the skill type to check
      * @return bool isAbilityOfSkillType
@@ -1630,9 +1630,9 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] needs to be triggered by the given triggering [ElunaSpellInfo], `false` otherwise.
+     * Returns `true` if the [SpellInfo] needs to be triggered by the given triggering [SpellInfo], `false` otherwise.
      *
-     * @param [ElunaSpellInfo] triggeringSpell : the triggering spell info to check against
+     * @param [SpellInfo] triggeringSpell : the triggering spell info to check against
      * @return bool needsToBeTriggeredByCaster
      */
     int NeedsToBeTriggeredByCaster(Eluna* E, ElunaSpellInfo* spellInfo)
@@ -1643,7 +1643,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Checks whether the [ElunaSpellInfo] can be cast on the given target by the given caster.
+     * Checks whether the [SpellInfo] can be cast on the given target by the given caster.
      * Returns the [SpellCastResult] of the check.
      *
      * @param [WorldObject] caster : the caster to check from
@@ -1659,7 +1659,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the given [Unit] matches the required creature type for the [ElunaSpellInfo], `false` otherwise.
+     * Returns `true` if the given [Unit] matches the required creature type for the [SpellInfo], `false` otherwise.
      *
      * @param [Unit] target : the unit to check
      * @return bool checkTargetCreatureType
@@ -1672,7 +1672,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the [ElunaSpellInfo] cancels the given [AuraEffect], `false` otherwise.
+     * Returns `true` if the [SpellInfo] cancels the given [AuraEffect], `false` otherwise.
      *
      * @param [AuraEffect] aurEff : the aura effect to check against
      * @return bool spellCancelsAuraEffect
@@ -1685,7 +1685,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the effect index of the given effect slot of the [ElunaSpellInfo].
+     * Returns the effect index of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 effectIndex
@@ -1700,7 +1700,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the effect type of the given effect slot of the [ElunaSpellInfo].
+     * Returns the effect type of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 effectType
@@ -1715,7 +1715,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the aura type applied by the given effect slot of the [ElunaSpellInfo].
+     * Returns the aura type applied by the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 applyAuraName
@@ -1730,7 +1730,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the amplitude in milliseconds of the given effect slot of the [ElunaSpellInfo].
+     * Returns the amplitude in milliseconds of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 amplitude
@@ -1745,7 +1745,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the die sides of the given effect slot of the [ElunaSpellInfo].
+     * Returns the die sides of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return int32 dieSides
@@ -1760,7 +1760,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the real points per level of the given effect slot of the [ElunaSpellInfo].
+     * Returns the real points per level of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return float realPointsPerLevel
@@ -1775,7 +1775,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the base points of the given effect slot of the [ElunaSpellInfo].
+     * Returns the base points of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return int32 basePoints
@@ -1790,7 +1790,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the points per combo point of the given effect slot of the [ElunaSpellInfo].
+     * Returns the points per combo point of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return float pointsPerComboPoint
@@ -1805,7 +1805,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the value multiplier of the given effect slot of the [ElunaSpellInfo].
+     * Returns the value multiplier of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return float valueMultiplier
@@ -1815,12 +1815,12 @@ namespace LuaSpellInfo
         uint32 effIndex = E->CHECKVAL<uint32>(2);
         if (effIndex >= MAX_SPELL_EFFECTS)
             return luaL_argerror(E->L, 2, "effect index out of range");
-        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).ValueMultiplier);
+        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).Amplitude);
         return 1;
     }
 
     /**
-     * Returns the damage multiplier of the given effect slot of the [ElunaSpellInfo].
+     * Returns the damage multiplier of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return float damageMultiplier
@@ -1830,12 +1830,12 @@ namespace LuaSpellInfo
         uint32 effIndex = E->CHECKVAL<uint32>(2);
         if (effIndex >= MAX_SPELL_EFFECTS)
             return luaL_argerror(E->L, 2, "effect index out of range");
-        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).DamageMultiplier);
+        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).ChainAmplitude);
         return 1;
     }
 
     /**
-     * Returns the bonus multiplier of the given effect slot of the [ElunaSpellInfo].
+     * Returns the bonus multiplier of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return float bonusMultiplier
@@ -1845,12 +1845,12 @@ namespace LuaSpellInfo
         uint32 effIndex = E->CHECKVAL<uint32>(2);
         if (effIndex >= MAX_SPELL_EFFECTS)
             return luaL_argerror(E->L, 2, "effect index out of range");
-        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).BonusMultiplier);
+        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).BonusCoefficient);
         return 1;
     }
 
     /**
-     * Returns the misc value of the given effect slot of the [ElunaSpellInfo].
+     * Returns the misc value of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return int32 miscValue
@@ -1865,7 +1865,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the secondary misc value of the given effect slot of the [ElunaSpellInfo].
+     * Returns the secondary misc value of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return int32 miscValueB
@@ -1880,7 +1880,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the chain target count of the given effect slot of the [ElunaSpellInfo].
+     * Returns the chain target count of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 chainTarget
@@ -1890,12 +1890,12 @@ namespace LuaSpellInfo
         uint32 effIndex = E->CHECKVAL<uint32>(2);
         if (effIndex >= MAX_SPELL_EFFECTS)
             return luaL_argerror(E->L, 2, "effect index out of range");
-        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).ChainTarget);
+        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).ChainTargets);
         return 1;
     }
 
     /**
-     * Returns the item type entry of the given effect slot of the [ElunaSpellInfo].
+     * Returns the item type entry of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 itemType
@@ -1910,7 +1910,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the trigger spell ID of the given effect slot of the [ElunaSpellInfo].
+     * Returns the trigger spell ID of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 triggerSpell
@@ -1925,7 +1925,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the spell class mask component at the given mask index for the given effect slot of the [ElunaSpellInfo].
+     * Returns the spell class mask component at the given mask index for the given effect slot of the [SpellInfo].
      * The mask is a 96-bit value split into three uint32 components (index 0-2).
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
@@ -1945,7 +1945,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the calculated value for the given effect slot of the [ElunaSpellInfo].
+     * Returns the calculated value for the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return int32 calcValue
@@ -1960,7 +1960,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the calculated radius for the given effect slot of the [ElunaSpellInfo].
+     * Returns the calculated radius for the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return float calcRadius
@@ -1975,7 +1975,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the given effect slot of the [ElunaSpellInfo] has a radius, `false` otherwise.
+     * Returns `true` if the given effect slot of the [SpellInfo] has a radius, `false` otherwise.
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return bool hasRadius
@@ -1990,7 +1990,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the provided target mask for the given effect slot of the [ElunaSpellInfo].
+     * Returns the provided target mask for the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 providedTargetMask
@@ -2005,7 +2005,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the implicit target type for the given effect slot of the [ElunaSpellInfo].
+     * Returns the implicit target type for the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 implicitTargetType
@@ -2020,7 +2020,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the used target object type for the given effect slot of the [ElunaSpellInfo].
+     * Returns the used target object type for the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 usedTargetObjectType
@@ -2035,7 +2035,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the given effect slot of the [ElunaSpellInfo] is an effect, `false` otherwise.
+     * Returns `true` if the given effect slot of the [SpellInfo] is an effect, `false` otherwise.
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return bool isEffect
@@ -2050,7 +2050,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the given effect slot of the [ElunaSpellInfo] is the given effect type, `false` otherwise.
+     * Returns `true` if the given effect slot of the [SpellInfo] is the given effect type, `false` otherwise.
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @param uint32 effect : the [SpellEffects] to check for
@@ -2067,7 +2067,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the given effect slot of the [ElunaSpellInfo] applies an aura, `false` otherwise.
+     * Returns `true` if the given effect slot of the [SpellInfo] applies an aura, `false` otherwise.
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return bool isAura
@@ -2082,7 +2082,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the given effect slot of the [ElunaSpellInfo] applies the given aura type, `false` otherwise.
+     * Returns `true` if the given effect slot of the [SpellInfo] applies the given aura type, `false` otherwise.
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @param uint32 aura : the [AuraType] to check for
@@ -2099,7 +2099,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the given effect slot of the [ElunaSpellInfo] is targeting an area, `false` otherwise.
+     * Returns `true` if the given effect slot of the [SpellInfo] is targeting an area, `false` otherwise.
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return bool isTargetingArea
@@ -2114,7 +2114,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the given effect slot of the [ElunaSpellInfo] is an area aura effect, `false` otherwise.
+     * Returns `true` if the given effect slot of the [SpellInfo] is an area aura effect, `false` otherwise.
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return bool isAreaAuraEffect
@@ -2129,7 +2129,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if the given effect slot of the [ElunaSpellInfo] is a unit owned aura effect, `false` otherwise.
+     * Returns `true` if the given effect slot of the [SpellInfo] is a unit owned aura effect, `false` otherwise.
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return bool isUnitOwnedAuraEffect
@@ -2144,7 +2144,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target A type of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target A type of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 targetA
@@ -2159,7 +2159,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target A selection category of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target A selection category of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 selectionCategory
@@ -2174,7 +2174,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target A reference type of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target A reference type of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 referenceType
@@ -2189,7 +2189,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target A object type of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target A object type of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 objectType
@@ -2204,7 +2204,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target A check type of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target A check type of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 checkType
@@ -2219,7 +2219,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target A direction type of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target A direction type of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 directionType
@@ -2234,7 +2234,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if target A of the given effect slot of the [ElunaSpellInfo] is an area target, `false` otherwise.
+     * Returns `true` if target A of the given effect slot of the [SpellInfo] is an area target, `false` otherwise.
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return bool isArea
@@ -2249,7 +2249,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the calculated direction angle for target A of the given effect slot of the [ElunaSpellInfo].
+     * Returns the calculated direction angle for target A of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return float directionAngle
@@ -2264,7 +2264,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target B type of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target B type of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 targetB
@@ -2279,7 +2279,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target B selection category of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target B selection category of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 selectionCategory
@@ -2294,7 +2294,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target B reference type of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target B reference type of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 referenceType
@@ -2309,7 +2309,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target B object type of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target B object type of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 objectType
@@ -2324,7 +2324,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target B check type of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target B check type of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 checkType
@@ -2339,7 +2339,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the target B direction type of the given effect slot of the [ElunaSpellInfo].
+     * Returns the target B direction type of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return uint32 directionType
@@ -2354,7 +2354,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns `true` if target B of the given effect slot of the [ElunaSpellInfo] is an area target, `false` otherwise.
+     * Returns `true` if target B of the given effect slot of the [SpellInfo] is an area target, `false` otherwise.
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return bool isArea
@@ -2369,7 +2369,7 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Returns the calculated direction angle for target B of the given effect slot of the [ElunaSpellInfo].
+     * Returns the calculated direction angle for target B of the given effect slot of the [SpellInfo].
      *
      * @param uint32 effIndex : the effect slot (0-MAX_SPELL_EFFECTS-1)
      * @return float directionAngle

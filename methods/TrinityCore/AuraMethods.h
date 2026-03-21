@@ -169,9 +169,9 @@ namespace LuaAura
     }
 
     /**
-     * Returns the [ElunaSpellInfo] of the spell that created this [Aura].
+     * Returns the [SpellInfo] of the spell that created this [Aura].
      *
-     * @return [ElunaSpellInfo] spellInfo
+     * @return [SpellInfo] spellInfo
      */
     int GetSpellInfo(Eluna* E, Aura* aura)
     {

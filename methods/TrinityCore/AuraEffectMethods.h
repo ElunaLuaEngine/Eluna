@@ -39,7 +39,7 @@ namespace LuaAuraEffects
      */
     int GetAmplitude(Eluna* E, AuraEffect* aurEff)
     {
-        E->Push(aurEff->GetAmplitude());
+        E->Push(aurEff->GetPeriod());
         return 1;
     }
 
@@ -278,9 +278,9 @@ namespace LuaAuraEffects
     }
 
     /**
-     * Returns the [ElunaSpellInfo] of the spell that created this [AuraEffect].
+     * Returns the [SpellInfo] of the spell that created this [AuraEffect].
      *
-     * @return [ElunaSpellInfo] spellInfo
+     * @return [SpellInfo] spellInfo
      */
     int GetSpellInfo(Eluna* E, AuraEffect* aurEff)
     {

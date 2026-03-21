@@ -605,46 +605,43 @@ namespace LuaGlobalFunctions
     /**
      * Registers a server event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook server
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, SERVER_EVENT_ON_NETWORK_START, "", "", "Not Implemented"]
-     * @values [2, SERVER_EVENT_ON_NETWORK_STOP, "", "", "Not Implemented"]
-     * @values [3, SERVER_EVENT_ON_SOCKET_OPEN, "", "", "Not Implemented"]
-     * @values [4, SERVER_EVENT_ON_SOCKET_CLOSE, "", "", "Not Implemented"]
-     * @values [5, SERVER_EVENT_ON_PACKET_RECEIVE, "WORLD", <event: number, packet: WorldPacket, player: Player>, "Player only if accessible. Can return false, newPacket"]
-     * @values [6, SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN, "", "", "Not Implemented"]
-     * @values [7, SERVER_EVENT_ON_PACKET_SEND, "WORLD", <event: number, packet: WorldPacket, player: Player>, "Player only if accessible. Can return false"]
-     * @values [8, WORLD_EVENT_ON_OPEN_STATE_CHANGE, "WORLD", <event: number, open: boolean>, "Needs core support on Mangos"]
-     * @values [9, WORLD_EVENT_ON_CONFIG_LOAD, "WORLD", <event: number, reload: boolean>, ""]
-     * @values [11, WORLD_EVENT_ON_SHUTDOWN_INIT, "WORLD", <event: number, code: number, mask: number>, ""]
-     * @values [12, WORLD_EVENT_ON_SHUTDOWN_CANCEL, "WORLD", <event: number>, ""]
-     * @values [13, WORLD_EVENT_ON_UPDATE, "WORLD", <event: number, diff: number>, ""]
-     * @values [14, WORLD_EVENT_ON_STARTUP, "WORLD", <event: number>, ""]
-     * @values [15, WORLD_EVENT_ON_SHUTDOWN, "WORLD", <event: number>, ""]
-     * @values [16, ELUNA_EVENT_ON_LUA_STATE_CLOSE, "ALL", <event: number>, "Triggers just before shutting down the Eluna state (on shutdown, restart and reload)"]
-     * @values [17, MAP_EVENT_ON_CREATE, "MAP", <event: number, map: Map>, ""]
-     * @values [18, MAP_EVENT_ON_DESTROY, "MAP", <event: number, map: Map>, ""]
-     * @values [19, MAP_EVENT_ON_GRID_LOAD, "", "", "Not Implemented"]
-     * @values [20, MAP_EVENT_ON_GRID_UNLOAD, "", "", "Not Implemented"]
-     * @values [21, MAP_EVENT_ON_PLAYER_ENTER, "MAP", <event: number, map: Map, player: Player>, ""]
-     * @values [22, MAP_EVENT_ON_PLAYER_LEAVE, "MAP", <event: number, map: Map, player: Player>, ""]
-     * @values [23, MAP_EVENT_ON_UPDATE, "MAP", <event: number, map: Map, diff: number>, ""]
-     * @values [24, TRIGGER_EVENT_ON_TRIGGER, "MAP", <event: number, player: Player, triggerId: number>, "Can return true"]
-     * @values [25, WEATHER_EVENT_ON_CHANGE, "WORLD", <event: number, zoneId: number, state: number, grade: number>, ""]
-     * @values [26, AUCTION_EVENT_ON_ADD, "WORLD", <event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number>, ""]
-     * @values [27, AUCTION_EVENT_ON_REMOVE, "WORLD", <event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number>, ""]
-     * @values [28, AUCTION_EVENT_ON_SUCCESSFUL, "WORLD", <event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number>, ""]
-     * @values [29, AUCTION_EVENT_ON_EXPIRE, "WORLD", <event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number>, ""]
-     * @values [30, ADDON_EVENT_ON_MESSAGE, "WORLD", <event: number, sender: Player, type: number, prefix: string, msg: string, target: nil|Player|Guild|Group|number>, "Target can be nil/whisper_target/guild/group/channel. Can return false"]
-     * @values [31, WORLD_EVENT_ON_DELETE_CREATURE, "MAP", <event: number, creature: Creature>, ""]
-     * @values [32, WORLD_EVENT_ON_DELETE_GAMEOBJECT, "MAP", <event: number, gameobject: GameObject>, ""]
-     * @values [33, ELUNA_EVENT_ON_LUA_STATE_OPEN, "ALL", <event: number>, "Triggers after all scripts are loaded"]
-     * @values [34, GAME_EVENT_START, "WORLD", <event: number, gameeventid: number>, ""]
-     * @values [35, GAME_EVENT_STOP, "WORLD", <event: number, gameeventid: number>, ""]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [SERVER_EVENT_ON_NETWORK_START, "WORLD", <event: number>, "Not Implemented"]
+     * @values [SERVER_EVENT_ON_NETWORK_STOP, "WORLD", <event: number>, "Not Implemented"]
+     * @values [SERVER_EVENT_ON_SOCKET_OPEN, "WORLD", <event: number>, "Not Implemented"]
+     * @values [SERVER_EVENT_ON_SOCKET_CLOSE, "WORLD", <event: number>, "Not Implemented"]
+     * @values [SERVER_EVENT_ON_PACKET_RECEIVE, "WORLD", <event: number, packet: WorldPacket, player: Player>, "Player only if accessible. Can return false, newPacket"]
+     * @values [SERVER_EVENT_ON_PACKET_RECEIVE_UNKNOWN, "WORLD", <event: number, packet: WorldPacket, player: Player>, "Not Implemented"]
+     * @values [SERVER_EVENT_ON_PACKET_SEND, "WORLD", <event: number, packet: WorldPacket, player: Player>, "Player only if accessible. Can return false"]
+     * @values [WORLD_EVENT_ON_OPEN_STATE_CHANGE, "WORLD", <event: number, open: boolean>, "Needs core support on Mangos"]
+     * @values [WORLD_EVENT_ON_CONFIG_LOAD, "WORLD", <event: number, reload: boolean>, ""]
+     * @values [WORLD_EVENT_ON_SHUTDOWN_INIT, "WORLD", <event: number, code: number, mask: number>, ""]
+     * @values [WORLD_EVENT_ON_SHUTDOWN_CANCEL, "WORLD", <event: number>, ""]
+     * @values [WORLD_EVENT_ON_UPDATE, "WORLD", <event: number, diff: number>, ""]
+     * @values [WORLD_EVENT_ON_STARTUP, "WORLD", <event: number>, ""]
+     * @values [WORLD_EVENT_ON_SHUTDOWN, "WORLD", <event: number>, ""]
+     * @values [ELUNA_EVENT_ON_LUA_STATE_CLOSE, "ALL", <event: number>, "Triggers just before shutting down the Eluna state (on shutdown, restart and reload)"]
+     * @values [MAP_EVENT_ON_CREATE, "MAP", <event: number, map: Map>, ""]
+     * @values [MAP_EVENT_ON_DESTROY, "MAP", <event: number, map: Map>, ""]
+     * @values [MAP_EVENT_ON_GRID_LOAD, "MAP", <event: number, map: Map>, "Not Implemented"]
+     * @values [MAP_EVENT_ON_GRID_UNLOAD, "MAP", <event: number, map: Map>, "Not Implemented"]
+     * @values [MAP_EVENT_ON_PLAYER_ENTER, "MAP", <event: number, map: Map, player: Player>, ""]
+     * @values [MAP_EVENT_ON_PLAYER_LEAVE, "MAP", <event: number, map: Map, player: Player>, ""]
+     * @values [MAP_EVENT_ON_UPDATE, "MAP", <event: number, map: Map, diff: number>, ""]
+     * @values [TRIGGER_EVENT_ON_TRIGGER, "MAP", <event: number, player: Player, triggerId: number>, "Can return true"]
+     * @values [WEATHER_EVENT_ON_CHANGE, "WORLD", <event: number, zoneId: number, state: number, grade: number>, ""]
+     * @values [AUCTION_EVENT_ON_ADD, "WORLD", <event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number>, ""]
+     * @values [AUCTION_EVENT_ON_REMOVE, "WORLD", <event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number>, ""]
+     * @values [AUCTION_EVENT_ON_SUCCESSFUL, "WORLD", <event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number>, ""]
+     * @values [AUCTION_EVENT_ON_EXPIRE, "WORLD", <event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number>, ""]
+     * @values [ADDON_EVENT_ON_MESSAGE, "WORLD", <event: number, sender: Player, type: number, prefix: string, msg: string, target: nil|Player|Guild|Group|number>, "Target can be nil/whisper_target/guild/group/channel. Can return false"]
+     * @values [WORLD_EVENT_ON_DELETE_CREATURE, "MAP", <event: number, creature: Creature>, ""]
+     * @values [WORLD_EVENT_ON_DELETE_GAMEOBJECT, "MAP", <event: number, gameobject: GameObject>, ""]
+     * @values [ELUNA_EVENT_ON_LUA_STATE_OPEN, "ALL", <event: number>, "Triggers after all scripts are loaded"]
+     * @values [GAME_EVENT_START, "WORLD", <event: number, gameeventid: number>, ""]
+     * @values [GAME_EVENT_STOP, "WORLD", <event: number, gameeventid: number>, ""]
      *
      * @proto cancel = (event, function)
      * @proto cancel = (event, function, shots)
@@ -663,62 +660,59 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Player] event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook player
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_CHARACTER_CREATE, "WORLD", <event: number, player: Player>, ""]
-     * @values [2, ON_CHARACTER_DELETE, "WORLD", <event: number, guidLow: number>, ""]
-     * @values [3, ON_LOGIN, "WORLD", <event: number, player: Player>, ""]
-     * @values [4, ON_LOGOUT, "WORLD", <event: number, player: Player>, ""]
-     * @values [5, ON_SPELL_CAST, "MAP", <event: number, player: Player, spell: Spell, skipCheck: boolean>, ""]
-     * @values [6, ON_KILL_PLAYER, "MAP", <event: number, killer: Player, killed: Player>, ""]
-     * @values [7, ON_KILL_CREATURE, "MAP", <event: number, killer: Player, killed: Creature>, ""]
-     * @values [8, ON_KILLED_BY_CREATURE, "MAP", <event: number, killer: Creature, killed: Player>, ""]
-     * @values [9, ON_DUEL_REQUEST, "MAP", <event: number, target: Player, challenger: Player>, ""]
-     * @values [10, ON_DUEL_START, "MAP", <event: number, player1: Player, player2: Player>, ""]
-     * @values [11, ON_DUEL_END, "MAP", <event: number, winner: Player, loser: Player, type: number>, ""]
-     * @values [12, ON_GIVE_XP, "MAP", <event: number, player: Player, amount: number, victim: Unit>, "Can return new XP amount"]
-     * @values [13, ON_LEVEL_CHANGE, "MAP", <event: number, player: Player, oldLevel: number>, ""]
-     * @values [14, ON_MONEY_CHANGE, "MAP", <event: number, player: Player, amount: number>, "Can return new money amount"]
-     * @values [15, ON_REPUTATION_CHANGE, "MAP", <event: number, player: Player, factionId: number, standing: number, incremental: boolean>, "Can return new standing"]
-     * @values [16, ON_TALENTS_CHANGE, "MAP", <event: number, player: Player, points: number>, ""]
-     * @values [17, ON_TALENTS_RESET, "MAP", <event: number, player: Player, noCost: boolean>, ""]
-     * @values [18, ON_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number>, "Can return false, newMessage"]
-     * @values [19, ON_WHISPER, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, receiver: Player>, "Can return false, newMessage"]
-     * @values [20, ON_GROUP_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, group: Group>, "Can return false, newMessage"]
-     * @values [21, ON_GUILD_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, guild: Guild>, "Can return false, newMessage"]
-     * @values [22, ON_CHANNEL_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, channel: number>, "Can return false, newMessage"]
-     * @values [23, ON_EMOTE, "MAP", <event: number, player: Player, emote: number>, "Not triggered on any known emote"]
-     * @values [24, ON_TEXT_EMOTE, "MAP", <event: number, player: Player, textEmote: number, emoteNum: number, guid: number>, ""]
-     * @values [25, ON_SAVE, "MAP", <event: number, player: Player>, ""]
-     * @values [26, ON_BIND_TO_INSTANCE, "MAP", <event: number, player: Player, difficulty: number, mapid: number, permanent: boolean>, ""]
-     * @values [27, ON_UPDATE_ZONE, "MAP", <event: number, player: Player, newZone: number, newArea: number>, ""]
-     * @values [28, ON_MAP_CHANGE, "MAP", <event: number, player: Player>, ""]
-     * @values [29, ON_EQUIP, "MAP", <event: number, player: Player, item: Item, bag: number, slot: number>, ""]
-     * @values [30, ON_FIRST_LOGIN, "WORLD", <event: number, player: Player>, ""]
-     * @values [31, ON_CAN_USE_ITEM, "MAP", <event: number, player: Player, itemEntry: number>, "Can return InventoryResult enum value"]
-     * @values [32, ON_LOOT_ITEM, "MAP", <event: number, player: Player, item: Item, count: number>, ""]
-     * @values [33, ON_ENTER_COMBAT, "MAP", <event: number, player: Player, enemy: Unit>, ""]
-     * @values [34, ON_LEAVE_COMBAT, "MAP", <event: number, player: Player>, ""]
-     * @values [35, ON_REPOP, "MAP", <event: number, player: Player>, ""]
-     * @values [36, ON_RESURRECT, "MAP", <event: number, player: Player>, ""]
-     * @values [37, ON_LOOT_MONEY, "MAP", <event: number, player: Player, amount: number>, ""]
-     * @values [38, ON_QUEST_ABANDON, "MAP", <event: number, player: Player, questId: number>, ""]
-     * @values [39, ON_LEARN_TALENTS, "MAP", <event: number, player: Player, talentId: number, talentRank: number, spellid: number>, ""]
-     * @values [40, ON_ENVIRONMENTAL_DEATH, "MAP", <event: number, player: Player, environmentalDamageType: number>, ""]
-     * @values [41, ON_TRADE_ACCEPT, "MAP", <event: number, player: Player, target: Player>, "Can return false to interrupt trade"]
-     * @values [42, ON_COMMAND, "WORLD", <event: number, player: Player, command: string>, "Player is nil if command used from console. Can return false"]
-     * @values [43, ON_SKILL_CHANGE, "MAP", <event: number, player: Player, skillId: number, skillValue: number>, "Returns new skill level value"]
-     * @values [44, ON_LEARN_SPELL, "MAP", <event: number, player: Player, spellId: number>, ""]
-     * @values [45, ON_ACHIEVEMENT_COMPLETE, "MAP", <event: number, player: Player, achievementId: number>, ""]
-     * @values [46, ON_DISCOVER_AREA, "MAP", <event: number, player: Player, area: number>, ""]
-     * @values [47, ON_UPDATE_AREA, "MAP", <event: number, player: Player, oldArea: number, newArea: number>, ""]
-     * @values [48, ON_TRADE_INIT, "MAP", <event: number, player: Player, target: Player>, "Can return false to interrupt trade"]
-     * @values [49, ON_SEND_MAIL, "MAP", <event: number, player: Player, recipientGuid: number>, "Can return false to interrupt sending"]
-     * @values [54, ON_QUEST_STATUS_CHANGED, "MAP", <event: number, player: Player, questId: number, status: number>, ""]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [PLAYER_EVENT_ON_CHARACTER_CREATE, "WORLD", <event: number, player: Player>, ""]
+     * @values [PLAYER_EVENT_ON_CHARACTER_DELETE, "WORLD", <event: number, guidLow: number>, ""]
+     * @values [PLAYER_EVENT_ON_LOGIN, "WORLD", <event: number, player: Player>, ""]
+     * @values [PLAYER_EVENT_ON_LOGOUT, "WORLD", <event: number, player: Player>, ""]
+     * @values [PLAYER_EVENT_ON_SPELL_CAST, "MAP", <event: number, player: Player, spell: Spell, skipCheck: boolean>, ""]
+     * @values [PLAYER_EVENT_ON_KILL_PLAYER, "MAP", <event: number, killer: Player, killed: Player>, ""]
+     * @values [PLAYER_EVENT_ON_KILL_CREATURE, "MAP", <event: number, killer: Player, killed: Creature>, ""]
+     * @values [PLAYER_EVENT_ON_KILLED_BY_CREATURE, "MAP", <event: number, killer: Creature, killed: Player>, ""]
+     * @values [PLAYER_EVENT_ON_DUEL_REQUEST, "MAP", <event: number, target: Player, challenger: Player>, ""]
+     * @values [PLAYER_EVENT_ON_DUEL_START, "MAP", <event: number, player1: Player, player2: Player>, ""]
+     * @values [PLAYER_EVENT_ON_DUEL_END, "MAP", <event: number, winner: Player, loser: Player, type: number>, ""]
+     * @values [PLAYER_EVENT_ON_GIVE_XP, "MAP", <event: number, player: Player, amount: number, victim: Unit>, "Can return new XP amount"]
+     * @values [PLAYER_EVENT_ON_LEVEL_CHANGE, "MAP", <event: number, player: Player, oldLevel: number>, ""]
+     * @values [PLAYER_EVENT_ON_MONEY_CHANGE, "MAP", <event: number, player: Player, amount: number>, "Can return new money amount"]
+     * @values [PLAYER_EVENT_ON_REPUTATION_CHANGE, "MAP", <event: number, player: Player, factionId: number, standing: number, incremental: boolean>, "Can return new standing"]
+     * @values [PLAYER_EVENT_ON_TALENTS_CHANGE, "MAP", <event: number, player: Player, points: number>, ""]
+     * @values [PLAYER_EVENT_ON_TALENTS_RESET, "MAP", <event: number, player: Player, noCost: boolean>, ""]
+     * @values [PLAYER_EVENT_ON_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number>, "Can return false, newMessage"]
+     * @values [PLAYER_EVENT_ON_WHISPER, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, receiver: Player>, "Can return false, newMessage"]
+     * @values [PLAYER_EVENT_ON_GROUP_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, group: Group>, "Can return false, newMessage"]
+     * @values [PLAYER_EVENT_ON_GUILD_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, guild: Guild>, "Can return false, newMessage"]
+     * @values [PLAYER_EVENT_ON_CHANNEL_CHAT, "WORLD", <event: number, player: Player, msg: string, Type: number, lang: number, channel: number>, "Can return false, newMessage"]
+     * @values [PLAYER_EVENT_ON_EMOTE, "MAP", <event: number, player: Player, emote: number>, "Not triggered on any known emote"]
+     * @values [PLAYER_EVENT_ON_TEXT_EMOTE, "MAP", <event: number, player: Player, textEmote: number, emoteNum: number, guid: number>, ""]
+     * @values [PLAYER_EVENT_ON_SAVE, "MAP", <event: number, player: Player>, ""]
+     * @values [PLAYER_EVENT_ON_BIND_TO_INSTANCE, "MAP", <event: number, player: Player, difficulty: number, mapid: number, permanent: boolean>, ""]
+     * @values [PLAYER_EVENT_ON_UPDATE_ZONE, "MAP", <event: number, player: Player, newZone: number, newArea: number>, ""]
+     * @values [PLAYER_EVENT_ON_MAP_CHANGE, "MAP", <event: number, player: Player>, ""]
+     * @values [PLAYER_EVENT_ON_EQUIP, "MAP", <event: number, player: Player, item: Item, bag: number, slot: number>, ""]
+     * @values [PLAYER_EVENT_ON_FIRST_LOGIN, "WORLD", <event: number, player: Player>, ""]
+     * @values [PLAYER_EVENT_ON_CAN_USE_ITEM, "MAP", <event: number, player: Player, itemEntry: number>, "Can return InventoryResult enum value"]
+     * @values [PLAYER_EVENT_ON_LOOT_ITEM, "MAP", <event: number, player: Player, item: Item, count: number>, ""]
+     * @values [PLAYER_EVENT_ON_ENTER_COMBAT, "MAP", <event: number, player: Player, enemy: Unit>, ""]
+     * @values [PLAYER_EVENT_ON_LEAVE_COMBAT, "MAP", <event: number, player: Player>, ""]
+     * @values [PLAYER_EVENT_ON_REPOP, "MAP", <event: number, player: Player>, ""]
+     * @values [PLAYER_EVENT_ON_RESURRECT, "MAP", <event: number, player: Player>, ""]
+     * @values [PLAYER_EVENT_ON_LOOT_MONEY, "MAP", <event: number, player: Player, amount: number>, ""]
+     * @values [PLAYER_EVENT_ON_QUEST_ABANDON, "MAP", <event: number, player: Player, questId: number>, ""]
+     * @values [PLAYER_EVENT_ON_LEARN_TALENTS, "MAP", <event: number, player: Player, talentId: number, talentRank: number, spellid: number>, ""]
+     * @values [PLAYER_EVENT_ON_ENVIRONMENTAL_DEATH, "MAP", <event: number, player: Player, environmentalDamageType: number>, ""]
+     * @values [PLAYER_EVENT_ON_TRADE_ACCEPT, "MAP", <event: number, player: Player, target: Player>, "Can return false to interrupt trade"]
+     * @values [PLAYER_EVENT_ON_COMMAND, "WORLD", <event: number, player: Player, command: string>, "Player is nil if command used from console. Can return false"]
+     * @values [PLAYER_EVENT_ON_SKILL_CHANGE, "MAP", <event: number, player: Player, skillId: number, skillValue: number>, "Returns new skill level value"]
+     * @values [PLAYER_EVENT_ON_LEARN_SPELL, "MAP", <event: number, player: Player, spellId: number>, ""]
+     * @values [PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE, "MAP", <event: number, player: Player, achievementId: number>, ""]
+     * @values [PLAYER_EVENT_ON_DISCOVER_AREA, "MAP", <event: number, player: Player, area: number>, ""]
+     * @values [PLAYER_EVENT_ON_UPDATE_AREA, "MAP", <event: number, player: Player, oldArea: number, newArea: number>, ""]
+     * @values [PLAYER_EVENT_ON_TRADE_INIT, "MAP", <event: number, player: Player, target: Player>, "Can return false to interrupt trade"]
+     * @values [PLAYER_EVENT_ON_SEND_MAIL, "MAP", <event: number, player: Player, recipientGuid: number>, "Can return false to interrupt sending"]
+     * @values [PLAYER_EVENT_ON_QUEST_STATUS_CHANGED, "MAP", <event: number, player: Player, questId: number, status: number>, ""]
      *
      * @proto cancel = (event, function)
      * @proto cancel = (event, function, shots)
@@ -737,23 +731,20 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Guild] event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook guild
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_ADD_MEMBER, "WORLD", <event: number, guild: Guild, player: Player, rank: number>, ""]
-     * @values [2, ON_REMOVE_MEMBER, "WORLD", <event: number, guild: Guild, player: Player, isDisbanding: boolean>, ""]
-     * @values [3, ON_MOTD_CHANGE, "WORLD", <event: number, guild: Guild, newMotd: string>, ""]
-     * @values [4, ON_INFO_CHANGE, "WORLD", <event: number, guild: Guild, newInfo: string>, ""]
-     * @values [5, ON_CREATE, "WORLD", <event: number, guild: Guild, leader: Player, name: string>, "Not on TC"]
-     * @values [6, ON_DISBAND, "WORLD", <event: number, guild: Guild>, ""]
-     * @values [7, ON_MONEY_WITHDRAW, "WORLD", <event: number, guild: Guild, player: Player, amount: number, isRepair: boolean>, "Can return new money amount"]
-     * @values [8, ON_MONEY_DEPOSIT, "WORLD", <event: number, guild: Guild, player: Player, amount: number>, "Can return new money amount"]
-     * @values [9, ON_ITEM_MOVE, "WORLD", <event: number, guild: Guild, player: Player, item: Item, isSrcBank: boolean, srcContainer: number, srcSlotId: number, isDestBank: boolean, destContainer: number, destSlotId: number>, "TODO"]
-     * @values [10, ON_EVENT, "WORLD", <event: number, guild: Guild, eventType: number, plrGUIDLow1: number, plrGUIDLow2: number, newRank: number>, "TODO"]
-     * @values [11, ON_BANK_EVENT, "WORLD", <event: number, guild: Guild, eventType: number, tabId: number, playerGUIDLow: number, itemOrMoney: number, itemStackCount: number, destTabId: number>, ""]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [GUILD_EVENT_ON_ADD_MEMBER, "WORLD", <event: number, guild: Guild, player: Player, rank: number>, ""]
+     * @values [GUILD_EVENT_ON_REMOVE_MEMBER, "WORLD", <event: number, guild: Guild, player: Player, isDisbanding: boolean>, ""]
+     * @values [GUILD_EVENT_ON_MOTD_CHANGE, "WORLD", <event: number, guild: Guild, newMotd: string>, ""]
+     * @values [GUILD_EVENT_ON_INFO_CHANGE, "WORLD", <event: number, guild: Guild, newInfo: string>, ""]
+     * @values [GUILD_EVENT_ON_CREATE, "WORLD", <event: number, guild: Guild, leader: Player, name: string>, "Not on TC"]
+     * @values [GUILD_EVENT_ON_DISBAND, "WORLD", <event: number, guild: Guild>, ""]
+     * @values [GUILD_EVENT_ON_MONEY_WITHDRAW, "WORLD", <event: number, guild: Guild, player: Player, amount: number, isRepair: boolean>, "Can return new money amount"]
+     * @values [GUILD_EVENT_ON_MONEY_DEPOSIT, "WORLD", <event: number, guild: Guild, player: Player, amount: number>, "Can return new money amount"]
+     * @values [GUILD_EVENT_ON_ITEM_MOVE, "WORLD", <event: number, guild: Guild, player: Player, item: Item, isSrcBank: boolean, srcContainer: number, srcSlotId: number, isDestBank: boolean, destContainer: number, destSlotId: number>, "TODO"]
+     * @values [GUILD_EVENT_ON_EVENT, "WORLD", <event: number, guild: Guild, eventType: number, plrGUIDLow1: number, plrGUIDLow2: number, newRank: number>, "TODO"]
+     * @values [GUILD_EVENT_ON_BANK_EVENT, "WORLD", <event: number, guild: Guild, eventType: number, tabId: number, playerGUIDLow: number, itemOrMoney: number, itemStackCount: number, destTabId: number>, ""]
      *
      * @proto cancel = (event, function)
      * @proto cancel = (event, function, shots)
@@ -772,19 +763,16 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Group] event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook group
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_MEMBER_ADD, "WORLD", <event: number, group: Group, guid: number>, ""]
-     * @values [2, ON_MEMBER_INVITE, "WORLD", <event: number, group: Group, guid: number>, ""]
-     * @values [3, ON_MEMBER_REMOVE, "WORLD", <event: number, group: Group, guid: number, method: number, kicker: Player, reason: string>, ""]
-     * @values [4, ON_LEADER_CHANGE, "WORLD", <event: number, group: Group, newLeaderGuid: number, oldLeaderGuid: number>, ""]
-     * @values [5, ON_DISBAND, "WORLD", <event: number, group: Group>, ""]
-     * @values [6, ON_CREATE, "WORLD", <event: number, group: Group, leaderGuid: number, groupType: number>, ""]
-     * @values [7, ON_MEMBER_ACCEPT, "WORLD", <event: number, group: Group, player: Player>, "Can return false to disable accepting"]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [GROUP_EVENT_ON_MEMBER_ADD, "WORLD", <event: number, group: Group, guid: number>, ""]
+     * @values [GROUP_EVENT_ON_MEMBER_INVITE, "WORLD", <event: number, group: Group, guid: number>, ""]
+     * @values [GROUP_EVENT_ON_MEMBER_REMOVE, "WORLD", <event: number, group: Group, guid: number, method: number, kicker: Player, reason: string>, ""]
+     * @values [GROUP_EVENT_ON_LEADER_CHANGE, "WORLD", <event: number, group: Group, newLeaderGuid: number, oldLeaderGuid: number>, ""]
+     * @values [GROUP_EVENT_ON_DISBAND, "WORLD", <event: number, group: Group>, ""]
+     * @values [GROUP_EVENT_ON_CREATE, "WORLD", <event: number, group: Group, leaderGuid: number, groupType: number>, ""]
+     * @values [GROUP_EVENT_ON_MEMBER_ACCEPT, "WORLD", <event: number, group: Group, player: Player>, "Can return false to disable accepting"]
      *
      * @proto cancel = (event, function)
      * @proto cancel = (event, function, shots)
@@ -803,16 +791,13 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [BattleGround] event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook bg
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_START, "MAP", <event: number, bg: BattleGround, bgId: number, instanceId: number>, Needs to be added to TC"]
-     * @values [2, ON_END, "MAP", <event: number, bg: BattleGround, bgId: number, instanceId: number, winner: number>, Needs to be added to TC"]
-     * @values [3, ON_CREATE, "MAP", <event: number, bg: BattleGround, bgId: number, instanceId: number>, Needs to be added to TC"]
-     * @values [4, ON_PRE_DESTROY, "MAP", <event: number, bg: BattleGround, bgId: number, instanceId: number>, Needs to be added to TC"]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [BG_EVENT_ON_START, "MAP", <event: number, bg: BattleGround, bgId: number, instanceId: number>, "Needs to be added to TC"]
+     * @values [BG_EVENT_ON_END, "MAP", <event: number, bg: BattleGround, bgId: number, instanceId: number, winner: number>, "Needs to be added to TC"]
+     * @values [BG_EVENT_ON_CREATE, "MAP", <event: number, bg: BattleGround, bgId: number, instanceId: number>, "Needs to be added to TC"]
+     * @values [BG_EVENT_ON_PRE_DESTROY, "MAP", <event: number, bg: BattleGround, bgId: number, instanceId: number>, "Needs to be added to TC"]
      *
      * @proto cancel = (event, function)
      * @proto cancel = (event, function, shots)
@@ -831,15 +816,11 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [WorldPacket] event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook packet
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [5, ON_PACKET_RECEIVE, "WORLD", <event: number, packet: WorldPacket, player: Player>, "Player only if accessible. Can return false, newPacket"]
-     * @values [6, ON_PACKET_RECEIVE_UNKNOWN, "", "", "Not implemented"]
-     * @values [7, ON_PACKET_SEND, "WORLD", <event: number, packet: WorldPacket, player: Player>, "Player only if accessible. Can return false"]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [PACKET_EVENT_ON_PACKET_RECEIVE, "WORLD", <event: number, packet: WorldPacket, player: Player>, "Player only if accessible. Can return false, newPacket"]
+     * @values [PACKET_EVENT_ON_PACKET_SEND, "WORLD", <event: number, packet: WorldPacket, player: Player>, "Player only if accessible. Can return false"]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
@@ -859,14 +840,11 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Creature] gossip event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook gossip
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_HELLO, "MAP", <event: number, player: Player, object: Creature|GameObject|Item>, "Object is the Creature/GameObject/Item. Can return false to do default action."]
-     * @values [2, ON_SELECT, "MAP", <event: number, player: Player, object: Creature|GameObject|Item|Player, sender: number, intid: number, code: string, menu_id: number>, "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [GOSSIP_EVENT_ON_HELLO, "MAP", <event: number, player: Player, object: Creature|GameObject|Item>, "Object is the Creature/GameObject/Item. Can return false to do default action."]
+     * @values [GOSSIP_EVENT_ON_SELECT, "MAP", <event: number, player: Player, object: Creature|GameObject|Item|Player, sender: number, intid: number, code: string, menu_id: number>, "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
@@ -886,14 +864,11 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [GameObject] gossip event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook gossip
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_HELLO, "MAP", <event: number, player: Player, object: Creature|GameObject|Item>, "Object is the Creature/GameObject/Item. Can return false to do default action."]
-     * @values [2, ON_SELECT, "MAP", <event: number, player: Player, object: Creature|GameObject|Item|Player, sender: number, intid: number, code: string, menu_id: number>, "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [GOSSIP_EVENT_ON_HELLO, "MAP", <event: number, player: Player, object: Creature|GameObject|Item>, "Object is the Creature/GameObject/Item. Can return false to do default action."]
+     * @values [GOSSIP_EVENT_ON_SELECT, "MAP", <event: number, player: Player, object: Creature|GameObject|Item|Player, sender: number, intid: number, code: string, menu_id: number>, "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
@@ -913,20 +888,17 @@ namespace LuaGlobalFunctions
     /**
      * Registers an [Item] event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     *
+     * @hook item
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_DUMMY_EFFECT, "MAP", <event: number, caster: WorldObject, spellid: number, effindex: number, item: Item>, ""]
-     * @values [2, ON_USE         , "MAP", <event: number, player: Player, item: Item, target: nil|GameObject|Item|Corpse|Unit|WorldObject>, "Can return false to stop the spell casting"]
-     * @values [3, ON_QUEST_ACCEPT, "MAP", <event: number, player: Player, item: Item, quest: Quest>, "Can return true"]
-     * @values [4, ON_EXPIRE      , "MAP", <event: number, player: Player, itemid: number>, "Can return true"]
-     * @values [5, ON_REMOVE      , "MAP", <event: number, player: Player, item: Item>, "Can return true"]
-     * @values [6, ON_ADD         , "MAP", <event: number, player: Player, item: Item>, ""]
-     * @values [8, ON_UNEQUIP     , "MAP", <event: number, player: Player, item: Item, slot: number>, ""]
-     * @values [7, ON_EQUIP       , "MAP", <event: number, player: Player, item: Item, slot: number>, ""]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [ITEM_EVENT_ON_DUMMY_EFFECT, "MAP", <event: number, caster: WorldObject, spellid: number, effindex: number, item: Item>, ""]
+     * @values [ITEM_EVENT_ON_USE, "MAP", <event: number, player: Player, item: Item, target: nil|GameObject|Item|Corpse|Unit|WorldObject>, "Can return false to stop the spell casting"]
+     * @values [ITEM_EVENT_ON_QUEST_ACCEPT, "MAP", <event: number, player: Player, item: Item, quest: Quest>, "Can return true"]
+     * @values [ITEM_EVENT_ON_EXPIRE, "MAP", <event: number, player: Player, itemid: number>, "Can return true"]
+     * @values [ITEM_EVENT_ON_REMOVE, "MAP", <event: number, player: Player, item: Item>, "Can return true"]
+     * @values [ITEM_EVENT_ON_ADD, "MAP", <event: number, player: Player, item: Item>, ""]
+     * @values [ITEM_EVENT_ON_EQUIP, "MAP", <event: number, player: Player, item: Item, slot: number>, ""]
+     * @values [ITEM_EVENT_ON_UNEQUIP, "MAP", <event: number, player: Player, item: Item, slot: number>, ""]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
@@ -946,14 +918,11 @@ namespace LuaGlobalFunctions
     /**
      * Registers an [Item] gossip event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook gossip
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_HELLO, "MAP", <event: number, player: Player, object: Creature|GameObject|Item>, "Object is the Creature/GameObject/Item. Can return false to do default action. For item gossip can return false to stop spell casting."]
-     * @values [2, ON_SELECT, "MAP", <event: number, player: Player, object: Creature|GameObject|Item|Player, sender: number, intid: number, code: string, menu_id: number>, "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [GOSSIP_EVENT_ON_HELLO, "MAP", <event: number, player: Player, object: Creature|GameObject|Item>, "Object is the Creature/GameObject/Item. Can return false to do default action. For item gossip can return false to stop spell casting."]
+     * @values [GOSSIP_EVENT_ON_SELECT, "MAP", <event: number, player: Player, object: Creature|GameObject|Item|Player, sender: number, intid: number, code: string, menu_id: number>, "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
@@ -971,21 +940,18 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Registers a [Map] event handler for all instance of a [Map].
+     * Registers a [Map] event handler for all instances of a [Map].
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook map
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_INITIALIZE                 , "MAP", <event: number, instance_data: string, map: Map>, ""]
-     * @values [2, ON_LOAD                       , "MAP", <event: number, instance_data: string, map: Map>, ""]
-     * @values [3, ON_UPDATE                     , "MAP", <event: number, instance_data: string, map: Map, diff: number>, ""]
-     * @values [4, ON_PLAYER_ENTER               , "MAP", <event: number, instance_data: string, map: Map, player: Player>, ""]
-     * @values [5, ON_CREATURE_CREATE            , "MAP", <event: number, instance_data: string, map: Map, creature: Creature>, ""]
-     * @values [6, ON_GAMEOBJECT_CREATE          , "MAP", <event: number, instance_data: string, map: Map, go: GameObject>, ""]
-     * @values [7, ON_CHECK_ENCOUNTER_IN_PROGRESS, "MAP", <event: number, instance_data: string, map: Map>, ""]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [INSTANCE_EVENT_ON_INITIALIZE, "MAP", <event: number, instance_data: string, map: Map>, ""]
+     * @values [INSTANCE_EVENT_ON_LOAD, "MAP", <event: number, instance_data: string, map: Map>, ""]
+     * @values [INSTANCE_EVENT_ON_UPDATE, "MAP", <event: number, instance_data: string, map: Map, diff: number>, ""]
+     * @values [INSTANCE_EVENT_ON_PLAYER_ENTER, "MAP", <event: number, instance_data: string, map: Map, player: Player>, ""]
+     * @values [INSTANCE_EVENT_ON_CREATURE_CREATE, "MAP", <event: number, instance_data: string, map: Map, creature: Creature>, ""]
+     * @values [INSTANCE_EVENT_ON_GAMEOBJECT_CREATE, "MAP", <event: number, instance_data: string, map: Map, go: GameObject>, ""]
+     * @values [INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS, "MAP", <event: number, instance_data: string, map: Map>, ""]
      *
      * @param uint32 map_id : ID of a [Map]
      * @param uint32 event : [Map] event ID, refer to table above
@@ -1000,19 +966,16 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Map] event handler for one instance of a [Map].
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook instance
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_INITIALIZE                 , "MAP", <event: number, instance_data: string, map: Map>, ""]
-     * @values [2, ON_LOAD                       , "MAP", <event: number, instance_data: string, map: Map>, ""]
-     * @values [3, ON_UPDATE                     , "MAP", <event: number, instance_data: string, map: Map, diff: number>, ""]
-     * @values [4, ON_PLAYER_ENTER               , "MAP", <event: number, instance_data: string, map: Map, player: Player>, ""]
-     * @values [5, ON_CREATURE_CREATE            , "MAP", <event: number, instance_data: string, map: Map, creature: Creature>, ""]
-     * @values [6, ON_GAMEOBJECT_CREATE          , "MAP", <event: number, instance_data: string, map: Map, go: GameObject>, ""]
-     * @values [7, ON_CHECK_ENCOUNTER_IN_PROGRESS, "MAP", <event: number, instance_data: string, map: Map>, ""]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [INSTANCE_EVENT_ON_INITIALIZE, "MAP", <event: number, instance_data: string, map: Map>, ""]
+     * @values [INSTANCE_EVENT_ON_LOAD, "MAP", <event: number, instance_data: string, map: Map>, ""]
+     * @values [INSTANCE_EVENT_ON_UPDATE, "MAP", <event: number, instance_data: string, map: Map, diff: number>, ""]
+     * @values [INSTANCE_EVENT_ON_PLAYER_ENTER, "MAP", <event: number, instance_data: string, map: Map, player: Player>, ""]
+     * @values [INSTANCE_EVENT_ON_CREATURE_CREATE, "MAP", <event: number, instance_data: string, map: Map, creature: Creature>, ""]
+     * @values [INSTANCE_EVENT_ON_GAMEOBJECT_CREATE, "MAP", <event: number, instance_data: string, map: Map, go: GameObject>, ""]
+     * @values [INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS, "MAP", <event: number, instance_data: string, map: Map>, ""]
      *
      * @param uint32 instance_id : ID of an instance of a [Map]
      * @param uint32 event : [Map] event ID, refer to table above
@@ -1027,16 +990,11 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Player] gossip event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
-     * Note that you can not use `ON_HELLO` with this hook. It does nothing since players dont have an "on hello".
-     *
+     * @hook player
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_HELLO, "MAP", <event: number, player: Player, object: Creature|GameObject|Item>, "Object is the Creature/GameObject/Item. Can return false to do default action. For item gossip can return false to stop spell casting."]
-     * @values [2, ON_SELECT, "MAP", <event: number, player: Player, object: Creature|GameObject|Item|Player, sender: number, intid: number, code: string, menu_id: number>, "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [GOSSIP_EVENT_ON_HELLO,  "MAP", <...>, "Not applicable for player gossip (players have no hello)."]
+     * @values [GOSSIP_EVENT_ON_SELECT, "MAP", <event: number, player: Player, object: Creature|GameObject|Item|Player, sender: number, intid: number, code: string, menu_id: number>, "Object is the Creature/GameObject/Item/Player, menu_id is only for player gossip. Can return false to do default action."]
      *
      * @proto cancel = (menu_id, event, function)
      * @proto cancel = (menu_id, event, function, shots)
@@ -1056,40 +1014,37 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Creature] event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook creature
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1,  ON_ENTER_COMBAT, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action"]
-     * @values [2,  ON_LEAVE_COMBAT, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
-     * @values [3,  ON_TARGET_DIED, "MAP", <event: number, creature: Creature, victim: Unit>, "Can return true to stop normal action"]
-     * @values [4,  ON_DIED, "MAP", <event: number, creature: Creature, killer: Unit>, "Can return true to stop normal action"]
-     * @values [5,  ON_SPAWN, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
-     * @values [6,  ON_REACH_WP, "MAP", <event: number, creature: Creature, type: number, id: number>, "Can return true to stop normal action"]
-     * @values [7,  ON_AIUPDATE, "MAP", <event: number, creature: Creature, diff: number>, "Can return true to stop normal action"]
-     * @values [8,  ON_RECEIVE_EMOTE, "MAP", <event: number, creature: Creature, player: Player, emoteid: number>, "Can return true to stop normal action"]
-     * @values [9,  ON_DAMAGE_TAKEN, "MAP", <event: number, creature: Creature, attacker: Unit, damage: number>, "Can return true to stop normal action, can return new damage as second return value."]
-     * @values [10, ON_PRE_COMBAT, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action"]
-     * @values [12, ON_OWNER_ATTACKED, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action. Not on mangos"]
-     * @values [13, ON_OWNER_ATTACKED_AT, "MAP", <event: number, creature: Creature, attacker: Unit>, "Can return true to stop normal action. Not on mangos"]
-     * @values [14, ON_HIT_BY_SPELL, "MAP", <event: number, creature: Creature, caster: Unit, spellid: number>, "Can return true to stop normal action"]
-     * @values [15, ON_SPELL_HIT_TARGET, "MAP", <event: number, creature: Creature, target: Unit, spellid: number>, "Can return true to stop normal action"]
-     * @values [19, ON_JUST_SUMMONED_CREATURE, "MAP", <event: number, creature: Creature, summon: Creature>, "Can return true to stop normal action"]
-     * @values [20, ON_SUMMONED_CREATURE_DESPAWN, "MAP", <event: number, creature: Creature, summon: Creature>, "Can return true to stop normal action"]
-     * @values [21, ON_SUMMONED_CREATURE_DIED, "MAP", <event: number, creature: Creature, summon: Creature, killer: Unit>, "Can return true to stop normal action. Not on mangos"]
-     * @values [22, ON_SUMMONED, "MAP", <event: number, creature: Creature, summoner: Unit>, "Can return true to stop normal action"]
-     * @values [23, ON_RESET, "MAP", <event: number, creature: Creature>, ""]
-     * @values [24, ON_REACH_HOME, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
-     * @values [26, ON_CORPSE_REMOVED, "MAP", <event: number, creature: Creature, respawndelay: number>, "Can return true to stop normal action, can return new respawndelay as second return value"]
-     * @values [27, ON_MOVE_IN_LOS, "MAP", <event: number, creature: Creature, who: Unit>, "Can return true to stop normal action. Does not actually check LOS, just uses the sight range"]
-     * @values [30, ON_DUMMY_EFFECT, "MAP", <event: number, caster: WorldObject, spellid: number, effindex: number, creature: Creature>, ""]
-     * @values [31, ON_QUEST_ACCEPT, "MAP", <event: number, player: Player, creature: Creature, quest: Quest>, "Can return true"]
-     * @values [34, ON_QUEST_REWARD, "MAP", <event: number, player: Player, creature: Creature, quest: Quest, opt: number>, "Can return true"]
-     * @values [35, ON_DIALOG_STATUS, "MAP", <event: number, player: Player, creature: Creature>, ""]
-     * @values [36, ON_ADD, "MAP", <event: number, creature: Creature>, ""]
-     * @values [37, ON_REMOVE, "MAP", <event: number, creature: Creature>, ""]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [CREATURE_EVENT_ON_ENTER_COMBAT, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_LEAVE_COMBAT, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_TARGET_DIED, "MAP", <event: number, creature: Creature, victim: Unit>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_DIED, "MAP", <event: number, creature: Creature, killer: Unit>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_SPAWN, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_REACH_WP, "MAP", <event: number, creature: Creature, type: number, id: number>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_AIUPDATE, "MAP", <event: number, creature: Creature, diff: number>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_RECEIVE_EMOTE, "MAP", <event: number, creature: Creature, player: Player, emoteid: number>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_DAMAGE_TAKEN, "MAP", <event: number, creature: Creature, attacker: Unit, damage: number>, "Can return true to stop normal action, can return new damage as second return value."]
+     * @values [CREATURE_EVENT_ON_PRE_COMBAT, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_OWNER_ATTACKED, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action. Not on mangos"]
+     * @values [CREATURE_EVENT_ON_OWNER_ATTACKED_AT, "MAP", <event: number, creature: Creature, attacker: Unit>, "Can return true to stop normal action. Not on mangos"]
+     * @values [CREATURE_EVENT_ON_HIT_BY_SPELL, "MAP", <event: number, creature: Creature, caster: Unit, spellid: number>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_SPELL_HIT_TARGET, "MAP", <event: number, creature: Creature, target: Unit, spellid: number>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE, "MAP", <event: number, creature: Creature, summon: Creature>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN, "MAP", <event: number, creature: Creature, summon: Creature>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED, "MAP", <event: number, creature: Creature, summon: Creature, killer: Unit>, "Can return true to stop normal action. Not on mangos"]
+     * @values [CREATURE_EVENT_ON_SUMMONED, "MAP", <event: number, creature: Creature, summoner: Unit>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_RESET, "MAP", <event: number, creature: Creature>, ""]
+     * @values [CREATURE_EVENT_ON_REACH_HOME, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_CORPSE_REMOVED, "MAP", <event: number, creature: Creature, respawndelay: number>, "Can return true to stop normal action, can return new respawndelay as second return value"]
+     * @values [CREATURE_EVENT_ON_MOVE_IN_LOS, "MAP", <event: number, creature: Creature, who: Unit>, "Can return true to stop normal action. Does not actually check LOS, just uses the sight range"]
+     * @values [CREATURE_EVENT_ON_DUMMY_EFFECT, "MAP", <event: number, caster: WorldObject, spellid: number, effindex: number, creature: Creature>, ""]
+     * @values [CREATURE_EVENT_ON_QUEST_ACCEPT, "MAP", <event: number, player: Player, creature: Creature, quest: Quest>, "Can return true"]
+     * @values [CREATURE_EVENT_ON_QUEST_REWARD, "MAP", <event: number, player: Player, creature: Creature, quest: Quest, opt: number>, "Can return true"]
+     * @values [CREATURE_EVENT_ON_DIALOG_STATUS, "MAP", <event: number, player: Player, creature: Creature>, ""]
+     * @values [CREATURE_EVENT_ON_ADD, "MAP", <event: number, creature: Creature>, ""]
+     * @values [CREATURE_EVENT_ON_REMOVE, "MAP", <event: number, creature: Creature>, ""]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
@@ -1109,40 +1064,37 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Creature] event handler for a *single* [Creature].
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook creature
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1,  ON_ENTER_COMBAT, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action"]
-     * @values [2,  ON_LEAVE_COMBAT, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
-     * @values [3,  ON_TARGET_DIED, "MAP", <event: number, creature: Creature, victim: Unit>, "Can return true to stop normal action"]
-     * @values [4,  ON_DIED, "MAP", <event: number, creature: Creature, killer: Unit>, "Can return true to stop normal action"]
-     * @values [5,  ON_SPAWN, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
-     * @values [6,  ON_REACH_WP, "MAP", <event: number, creature: Creature, type: number, id: number>, "Can return true to stop normal action"]
-     * @values [7,  ON_AIUPDATE, "MAP", <event: number, creature: Creature, diff: number>, "Can return true to stop normal action"]
-     * @values [8,  ON_RECEIVE_EMOTE, "MAP", <event: number, creature: Creature, player: Player, emoteid: number>, "Can return true to stop normal action"]
-     * @values [9,  ON_DAMAGE_TAKEN, "MAP", <event: number, creature: Creature, attacker: Unit, damage: number>, "Can return true to stop normal action, can return new damage as second return value."]
-     * @values [10, ON_PRE_COMBAT, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action"]
-     * @values [12, ON_OWNER_ATTACKED, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action. Not on mangos"]
-     * @values [13, ON_OWNER_ATTACKED_AT, "MAP", <event: number, creature: Creature, attacker: Unit>, "Can return true to stop normal action. Not on mangos"]
-     * @values [14, ON_HIT_BY_SPELL, "MAP", <event: number, creature: Creature, caster: Unit, spellid: number>, "Can return true to stop normal action"]
-     * @values [15, ON_SPELL_HIT_TARGET, "MAP", <event: number, creature: Creature, target: Unit, spellid: number>, "Can return true to stop normal action"]
-     * @values [19, ON_JUST_SUMMONED_CREATURE, "MAP", <event: number, creature: Creature, summon: Creature>, "Can return true to stop normal action"]
-     * @values [20, ON_SUMMONED_CREATURE_DESPAWN, "MAP", <event: number, creature: Creature, summon: Creature>, "Can return true to stop normal action"]
-     * @values [21, ON_SUMMONED_CREATURE_DIED, "MAP", <event: number, creature: Creature, summon: Creature, killer: Unit>, "Can return true to stop normal action. Not on mangos"]
-     * @values [22, ON_SUMMONED, "MAP", <event: number, creature: Creature, summoner: Unit>, "Can return true to stop normal action"]
-     * @values [23, ON_RESET, "MAP", <event: number, creature: Creature>, ""]
-     * @values [24, ON_REACH_HOME, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
-     * @values [26, ON_CORPSE_REMOVED, "MAP", <event: number, creature: Creature, respawndelay: number>, "Can return true to stop normal action, can return new respawndelay as second return value"]
-     * @values [27, ON_MOVE_IN_LOS, "MAP", <event: number, creature: Creature, who: Unit>, "Can return true to stop normal action. Does not actually check LOS, just uses the sight range"]
-     * @values [30, ON_DUMMY_EFFECT, "MAP", <event: number, caster: WorldObject, spellid: number, effindex: number, creature: Creature>, ""]
-     * @values [31, ON_QUEST_ACCEPT, "MAP", <event: number, player: Player, creature: Creature, quest: Quest>, "Can return true"]
-     * @values [34, ON_QUEST_REWARD, "MAP", <event: number, player: Player, creature: Creature, quest: Quest, opt: number>, "Can return true"]
-     * @values [35, ON_DIALOG_STATUS, "MAP", <event: number, player: Player, creature: Creature>, ""]
-     * @values [36, ON_ADD, "MAP", <event: number, creature: Creature>, ""]
-     * @values [37, ON_REMOVE, "MAP", <event: number, creature: Creature>, ""]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [CREATURE_EVENT_ON_ENTER_COMBAT, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_LEAVE_COMBAT, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_TARGET_DIED, "MAP", <event: number, creature: Creature, victim: Unit>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_DIED, "MAP", <event: number, creature: Creature, killer: Unit>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_SPAWN, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_REACH_WP, "MAP", <event: number, creature: Creature, type: number, id: number>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_AIUPDATE, "MAP", <event: number, creature: Creature, diff: number>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_RECEIVE_EMOTE, "MAP", <event: number, creature: Creature, player: Player, emoteid: number>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_DAMAGE_TAKEN, "MAP", <event: number, creature: Creature, attacker: Unit, damage: number>, "Can return true to stop normal action, can return new damage as second return value."]
+     * @values [CREATURE_EVENT_ON_PRE_COMBAT, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_OWNER_ATTACKED, "MAP", <event: number, creature: Creature, target: Unit>, "Can return true to stop normal action. Not on mangos"]
+     * @values [CREATURE_EVENT_ON_OWNER_ATTACKED_AT, "MAP", <event: number, creature: Creature, attacker: Unit>, "Can return true to stop normal action. Not on mangos"]
+     * @values [CREATURE_EVENT_ON_HIT_BY_SPELL, "MAP", <event: number, creature: Creature, caster: Unit, spellid: number>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_SPELL_HIT_TARGET, "MAP", <event: number, creature: Creature, target: Unit, spellid: number>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE, "MAP", <event: number, creature: Creature, summon: Creature>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN, "MAP", <event: number, creature: Creature, summon: Creature>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED, "MAP", <event: number, creature: Creature, summon: Creature, killer: Unit>, "Can return true to stop normal action. Not on mangos"]
+     * @values [CREATURE_EVENT_ON_SUMMONED, "MAP", <event: number, creature: Creature, summoner: Unit>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_RESET, "MAP", <event: number, creature: Creature>, ""]
+     * @values [CREATURE_EVENT_ON_REACH_HOME, "MAP", <event: number, creature: Creature>, "Can return true to stop normal action"]
+     * @values [CREATURE_EVENT_ON_CORPSE_REMOVED, "MAP", <event: number, creature: Creature, respawndelay: number>, "Can return true to stop normal action, can return new respawndelay as second return value"]
+     * @values [CREATURE_EVENT_ON_MOVE_IN_LOS, "MAP", <event: number, creature: Creature, who: Unit>, "Can return true to stop normal action. Does not actually check LOS, just uses the sight range"]
+     * @values [CREATURE_EVENT_ON_DUMMY_EFFECT, "MAP", <event: number, caster: WorldObject, spellid: number, effindex: number, creature: Creature>, ""]
+     * @values [CREATURE_EVENT_ON_QUEST_ACCEPT, "MAP", <event: number, player: Player, creature: Creature, quest: Quest>, "Can return true"]
+     * @values [CREATURE_EVENT_ON_QUEST_REWARD, "MAP", <event: number, player: Player, creature: Creature, quest: Quest, opt: number>, "Can return true"]
+     * @values [CREATURE_EVENT_ON_DIALOG_STATUS, "MAP", <event: number, player: Player, creature: Creature>, ""]
+     * @values [CREATURE_EVENT_ON_ADD, "MAP", <event: number, creature: Creature>, ""]
+     * @values [CREATURE_EVENT_ON_REMOVE, "MAP", <event: number, creature: Creature>, ""]
      *
      * @proto cancel = (guid, instance_id, event, function)
      * @proto cancel = (guid, instance_id, event, function, shots)
@@ -1162,26 +1114,23 @@ namespace LuaGlobalFunctions
 
     /**
      * Registers a [GameObject] event handler.
-     *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
      * 
+     * @hook gameobject
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1,  ON_AIUPDATE, "MAP", <event: number, go: GameObject, diff: number>, ""]
-     * @values [2,  ON_SPAWN, "MAP", <event: number, go: GameObject>, ""]
-     * @values [3,  ON_DUMMY_EFFECT, "MAP", <event: number, caster: WorldObject, spellid: number, effindex: number, go: GameObject>, "Can return true to stop normal action"]
-     * @values [4,  ON_QUEST_ACCEPT, "MAP", <event: number, player: Player, go: GameObject, quest: Quest>, "Can return true to stop normal action"]
-     * @values [5,  ON_QUEST_REWARD, "MAP", <event: number, player: Player, go: GameObject, quest: Quest, opt: number>, "Can return true to stop normal action"]
-     * @values [6,  ON_DIALOG_STATUS, "MAP", <event: number, player: Player, go: GameObject>, ""]
-     * @values [7,  ON_DESTROYED, "MAP", <event: number, go: GameObject, attacker Unit>, ""]
-     * @values [8,  ON_DAMAGED, "MAP", <event: number, go: GameObject, attacker: Unit>, ""]
-     * @values [9,  ON_LOOT_STATE_CHANGE, "MAP", <event: number, go: GameObject, state: number>, ""]
-     * @values [10, ON_GO_STATE_CHANGED, "MAP", <event: number, go: GameObject, state: number>, ""]
-     * @values [12, ON_ADD, "MAP", <event: number, go: GameObject>, ""]
-     * @values [13, ON_REMOVE, "MAP", <event: number, go: GameObject>, ""]
-     * @values [14, ON_USE, "MAP", <event: number, go: GameObject, player: Player>, "Can return true to stop normal action"]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [GAMEOBJECT_EVENT_ON_AIUPDATE,  "MAP", <event: number, go: GameObject, diff: number>, ""]
+     * @values [GAMEOBJECT_EVENT_ON_SPAWN,  "MAP", <event: number, go: GameObject>, ""]
+     * @values [GAMEOBJECT_EVENT_ON_DUMMY_EFFECT,  "MAP", <event: number, caster: WorldObject, spellid: number, effindex: number, go: GameObject>, "Can return true to stop normal action"]
+     * @values [GAMEOBJECT_EVENT_ON_QUEST_ACCEPT,  "MAP", <event: number, player: Player, go: GameObject, quest: Quest>, "Can return true to stop normal action"]
+     * @values [GAMEOBJECT_EVENT_ON_QUEST_REWARD,  "MAP", <event: number, player: Player, go: GameObject, quest: Quest, opt: number>, "Can return true to stop normal action"]
+     * @values [GAMEOBJECT_EVENT_ON_DIALOG_STATUS,  "MAP", <event: number, player: Player, go: GameObject>, ""]
+     * @values [GAMEOBJECT_EVENT_ON_DESTROYED,  "MAP", <event: number, go: GameObject, attacker: Unit>, ""]
+     * @values [GAMEOBJECT_EVENT_ON_DAMAGED,  "MAP", <event: number, go: GameObject, attacker: Unit>, ""]
+     * @values [GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE,  "MAP", <event: number, go: GameObject, state: number>, ""]
+     * @values [GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED, "MAP", <event: number, go: GameObject, state: number>, ""]
+     * @values [GAMEOBJECT_EVENT_ON_ADD, "MAP", <event: number, go: GameObject>, ""]
+     * @values [GAMEOBJECT_EVENT_ON_REMOVE, "MAP", <event: number, go: GameObject>, ""]
+     * @values [GAMEOBJECT_EVENT_ON_USE, "MAP", <event: number, go: GameObject, player: Player>, "Can return true to stop normal action"]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
@@ -1201,13 +1150,32 @@ namespace LuaGlobalFunctions
     /**
      * Registers a [Spell] event handler.
      *
-     * In Multistate mode (default), events are either registered to the WORLD state (-1) or the MAP states (map ID). These events will only ever trigger on their respective state.
-     *
-     * In Compatibility mode, all events are registered to the WORLD state (-1).
-     * 
+     * @hook spell
      * @table
-     * @columns [ID, Event, State, Parameters, Comment]
-     * @values [1, ON_CAST, "MAP", <event: number, spell: Spell, skipCheck: boolean>, ""]
+     * @columns [Event, State, Parameters, Comment]
+     * @values [SPELL_EVENT_ON_CAST,  "MAP", <event: number, spell: Spell, skipCheck: boolean>, ""]
+     * @values [SPELL_EVENT_ON_AURA_APPLICATION,  "MAP", <event: number, aura: Aura, auraEff: AuraEffect, target: Unit, mode: number, apply: boolean>, "Can return true to prevent application"]
+     * @values [SPELL_EVENT_ON_DISPEL,  "MAP", <event: number, aura: Aura, dispeller: WorldObject, dispellerSpellId: number, removedCharges: number>, ""]
+     * @values [SPELL_EVENT_ON_PERIODIC_TICK,  "MAP", <event: number, aura: Aura, auraEff: AuraEffect, target: Unit>, "Can return true to prevent tick"]
+     * @values [SPELL_EVENT_ON_PERIODIC_UPDATE,  "MAP", <event: number, aura: Aura, auraEff: AuraEffect>, ""]
+     * @values [SPELL_EVENT_ON_AURA_CALC_AMOUNT,  "MAP", <event: number, aura: Aura, auraEff: AuraEffect, amount: number, canBeRecalculated: boolean>, "Can return amount, canBeRecalculated to override"]
+     * @values [SPELL_EVENT_ON_CALC_PERIODIC,  "MAP", <event: number, aura: Aura, auraEff: AuraEffect, isPeriodic: boolean, amplitude: number>, "Can return isPeriodic, amplitude to override"]
+     * @values [SPELL_EVENT_ON_CHECK_PROC,  "MAP", <event: number, aura: Aura, procInfo: ElunaProcInfo>, "Can return false to prevent proc"]
+     * @values [SPELL_EVENT_ON_PROC,  "MAP", <event: number, aura: Aura, procInfo: ElunaProcInfo>, "Can return true to prevent default proc handling"]
+     * @values [SPELL_EVENT_ON_CHECK_CAST, "MAP", <event: number, spell: Spell>, "Can return SpellCastResult to override cast result"]
+     * @values [SPELL_EVENT_ON_BEFORE_CAST, "MAP", <event: number, spell: Spell>, ""]
+     * @values [SPELL_EVENT_ON_AFTER_CAST, "MAP", <event: number, spell: Spell>, ""]
+     * @values [SPELL_EVENT_ON_OBJECT_AREA_TARGET, "MAP", <event: number, spell: Spell, effIndex: number, targets: table>, "Modify targets table in place to change targets"]
+     * @values [SPELL_EVENT_ON_OBJECT_TARGET, "MAP", <event: number, spell: Spell, effIndex: number, target: WorldObject>, ""]
+     * @values [SPELL_EVENT_ON_DEST_TARGET, "MAP", <event: number, spell: Spell, effIndex: number, mapId: number, x: number, y: number, z: number, orientation: number>, "Can return mapId, x, y, z, orientation to override destination"]
+     * @values [SPELL_EVENT_ON_EFFECT_LAUNCH, "MAP", <event: number, spell: Spell, effIndex: number, mode: number>, "Can return true to prevent default launch handling"]
+     * @values [SPELL_EVENT_ON_EFFECT_LAUNCH_TARGET, "MAP", <event: number, spell: Spell, effIndex: number, mode: number>, "Can return true to prevent default launch target handling"]
+     * @values [SPELL_EVENT_ON_EFFECT_CALC_ABSORB, "MAP", <event: number, spell: Spell, attacker: Unit, victim: Unit, damage: number, absorb: number, resist: number, block: number, schoolMask: number, damageType: number, attackType: number, hitMask: number, resistAmount: number, absorbAmount: number>, "Can return resistAmount, absorbAmount to override"]
+     * @values [SPELL_EVENT_ON_EFFECT_HIT, "MAP", <event: number, spell: Spell, effIndex: number, mode: number>, "Can return true to prevent default hit handling"]
+     * @values [SPELL_EVENT_ON_BEFORE_HIT, "MAP", <event: number, spell: Spell, missInfo: number>, ""]
+     * @values [SPELL_EVENT_ON_EFFECT_HIT_TARGET, "MAP", <event: number, spell: Spell, effIndex: number, mode: number>, "Can return true to prevent default hit target handling"]
+     * @values [SPELL_EVENT_ON_HIT, "MAP", <event: number, spell: Spell>, ""]
+     * @values [SPELL_EVENT_ON_AFTER_HIT, "MAP", <event: number, spell: Spell>, ""]
      *
      * @proto cancel = (entry, event, function)
      * @proto cancel = (entry, event, function, shots)
@@ -3090,10 +3058,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the [ElunaSpellInfo] for the given spell ID, or nil if the spell does not exist.
+     * Returns the [SpellInfo] for the given spell ID, or nil if the spell does not exist.
      *
      * @param uint32 spellId : the spell ID to look up
-     * @return [ElunaSpellInfo] spellInfo
+     * @return [SpellInfo] spellInfo
      */
     int GetSpellInfo(Eluna* E)
     {
