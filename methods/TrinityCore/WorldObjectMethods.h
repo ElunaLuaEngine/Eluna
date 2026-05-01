@@ -981,7 +981,15 @@ namespace LuaWorldObject
         float minrange = E->CHECKVAL<float>(4);
         float maxrange = E->CHECKVAL<float>(5);
 
+#if ELUNA_EXPANSION == EXP_RETAIL
+        Position pos;
+        pos.m_positionX = x;
+        pos.m_positionY = y;
+
+        E->Push(obj->IsInRange2d(&pos, minrange, maxrange));
+#else
         E->Push(obj->IsInRange2d(x, y, minrange, maxrange));
+#endif
         return 1;
     }
 
@@ -1005,7 +1013,16 @@ namespace LuaWorldObject
         float minrange = E->CHECKVAL<float>(5);
         float maxrange = E->CHECKVAL<float>(6);
 
+#if ELUNA_EXPANSION == EXP_RETAIL
+        Position pos;
+        pos.m_positionX = x;
+        pos.m_positionY = y;
+        pos.m_positionZ = z;
+
+        E->Push(obj->IsInRange3d(&pos, minrange, maxrange));
+#else
         E->Push(obj->IsInRange3d(x, y, z, minrange, maxrange));
+#endif
         return 1;
     }
 
