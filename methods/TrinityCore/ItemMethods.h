@@ -391,7 +391,7 @@ namespace LuaItem
         if (index >= MAX_ITEM_PROTO_SPELLS)
             return luaL_argerror(E->L, 2, "valid SpellIndex expected");
 
-        E->Push(item->GetTemplate()->Spells[index].SpellId);
+        E->Push(item->GetTemplate()->Effects[index].SpellID);
         return 1;
     }
 
@@ -407,7 +407,7 @@ namespace LuaItem
         if (index >= MAX_ITEM_PROTO_SPELLS)
             return luaL_argerror(E->L, 2, "valid SpellIndex expected");
 
-        E->Push(item->GetTemplate()->Spells[index].SpellTrigger);
+        E->Push(item->GetTemplate()->Effects[index].TriggerType);
         return 1;
     }
 
@@ -893,7 +893,7 @@ namespace LuaItem
         item->SaveToDB(trans);
         return 0;
     }
-    
+
     ElunaRegister<Item> ItemMethods[] =
     {
         // Getters
@@ -915,7 +915,7 @@ namespace LuaItem
         { "GetQuality", &LuaItem::GetQuality },
         { "GetFlags", &LuaItem::GetFlags },
         { "GetFlags2", &LuaItem::GetFlags2 },
-        { "GetExtraFlags", &LuaItem::GetExtraFlags },		
+        { "GetExtraFlags", &LuaItem::GetExtraFlags },
         { "GetBuyCount", &LuaItem::GetBuyCount },
         { "GetBuyPrice", &LuaItem::GetBuyPrice },
         { "GetSellPrice", &LuaItem::GetSellPrice },

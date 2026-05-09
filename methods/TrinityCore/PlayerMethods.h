@@ -41,7 +41,7 @@ namespace LuaPlayer
     int HasTalent(Eluna* E, Player* player)
     {
         uint32 spellId = E->CHECKVAL<uint32>(2);
-        uint8 maxSpecs = MAX_TALENT_SPECS;
+        uint8 maxSpecs = MAX_TALENT_GROUPS;
         uint8 spec = E->CHECKVAL<uint8>(3);
 
         if (spec >= maxSpecs)
@@ -769,7 +769,7 @@ namespace LuaPlayer
      */
     int GetSpecsCount(Eluna* E, Player* player)
     {
-        E->Push(player->GetSpecsCount());
+        E->Push(player->GetTalentGroupsCount());
         return 1;
     }
 
@@ -780,7 +780,7 @@ namespace LuaPlayer
      */
     int GetActiveSpec(Eluna* E, Player* player)
     {
-        E->Push(player->GetActiveSpec());
+        E->Push(player->GetActiveTalentGroup());
         return 1;
     }
 
@@ -3771,7 +3771,7 @@ namespace LuaPlayer
         uint8 spec = E->CHECKVAL<uint8>(3);
         bool learning = E->CHECKVAL<bool>(4, true);
 
-        if (spec >= MAX_TALENT_SPECS)
+        if (spec >= MAX_TALENT_GROUPS)
             E->Push(false);
         else
             E->Push(player->AddTalent(spellId, spec, learning));
