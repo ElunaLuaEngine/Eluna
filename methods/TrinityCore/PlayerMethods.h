@@ -8,6 +8,7 @@
 #define PLAYERMETHODS_H
 
 #include "LuaValue.h"
+#include "ChatPackets.h"
 #include "NPCPackets.h"
 #include "PartyPackets.h"
 #include "Unit.h"
@@ -3354,10 +3355,9 @@ namespace LuaPlayer
         std::string message = E->CHECKVAL<std::string>(3);
         ChatMsg channel = ChatMsg(E->CHECKVAL<uint8>(4));
         Player* receiver = E->CHECKOBJ<Player>(5);
-        std::string fullmsg = prefix + "\t" + message;
-        WorldPacket data;
-        ChatHandler::BuildChatPacket(data, channel, LANG_ADDON, player, receiver, fullmsg);
-        receiver->GetSession()->SendPacket(&data);
+        WorldPackets::Chat::Chat chat;
+        chat.Initialize(channel, LANG_ADDON, player, receiver, message, 0, "", LOCALE_enUS, prefix);
+        receiver->GetSession()->SendPacket(chat.Write());
         return 0;
     }
 
