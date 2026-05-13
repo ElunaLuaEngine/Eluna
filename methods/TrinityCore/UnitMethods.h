@@ -7,6 +7,8 @@
 #ifndef UNITMETHODS_H
 #define UNITMETHODS_H
 
+#include "ChatPackets.h"
+
 /***
  * Inherits all methods from: [Object], [WorldObject]
  */
@@ -1873,10 +1875,10 @@ namespace LuaUnit
         if (lang >= LANGUAGES_COUNT)
             return luaL_argerror(E->L, 3, "valid Language expected");
 
-        WorldPacket data;
-        ChatHandler::BuildChatPacket(data, ChatMsg(type), Language(lang), unit, target, msg);
+        WorldPackets::Chat::Chat chat;
+        chat.Initialize(ChatMsg(type), Language(lang), unit, target, msg);
 
-        target->GetSession()->SendPacket(&data);
+        target->GetSession()->SendPacket(chat.Write());
         return 0;
     }
 
