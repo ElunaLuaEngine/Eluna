@@ -484,7 +484,7 @@ namespace LuaItem
     */
     int GetFlags(Eluna* E, Item* item)
     {
-        E->Push(item->GetTemplate()->Flags);
+        E->Push(item->GetTemplate()->Flags[0]);
         return 1;
     }
 
@@ -495,7 +495,7 @@ namespace LuaItem
     */
     int GetFlags2(Eluna* E, Item* item)
     {
-        E->Push(item->GetTemplate()->Flags2);
+        E->Push(item->GetTemplate()->Flags[1]);
         return 1;
     }
 
