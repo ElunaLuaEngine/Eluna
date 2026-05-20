@@ -76,13 +76,14 @@ namespace LuaBattleGround
     }
 
     /**
-     * Returns the end time of the [BattleGround].
+     * Returns the time remaining in milliseconds until [BattleGround] closes and removes all players.
+     * This can be after battleground ends normally or when there are not enough players
      *
      * @return uint32 endTime
      */
     int GetEndTime(Eluna* E, BattleGround* bg)
     {
-        E->Push(bg->GetEndTime());
+        E->Push(bg->GetRemainingTime());
         return 1;
     }
 
@@ -220,7 +221,7 @@ namespace LuaBattleGround
         E->Push(bg->GetStatus());
         return 1;
     }
-    
+
     ElunaRegister<BattleGround> BattleGroundMethods[] =
     {
         // Getters
