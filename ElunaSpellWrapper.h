@@ -36,7 +36,11 @@ class ElunaProcInfo
 private:
     Unit* _actor;
     Unit* _actionTarget;
+#if ELUNA_EXPANSION < EXP_RETAIL
     uint32 _typeMask;
+#else
+    ProcFlagsInit _typeMask;
+#endif
     uint32 _spellTypeMask;
     uint32 _spellPhaseMask;
     uint32 _hitMask;
@@ -63,7 +67,11 @@ private:
 #endif
 
 public:
+#if ELUNA_EXPANSION < EXP_RETAIL
     ElunaProcInfo(Unit* actor, Unit* actionTarget, uint32 typeMask,
+#else
+    ElunaProcInfo(Unit* actor, Unit* actionTarget, ProcFlagsInit typeMask,
+#endif
         uint32 spellTypeMask, uint32 spellPhaseMask, uint32 hitMask,
         Spell* spell, SpellInfo const* spellInfo, SpellSchoolMask schoolMask, Map* map);
 
@@ -76,7 +84,11 @@ public:
     }
     Unit* GetActor() const { return _actor; }
     Unit* GetActionTarget() const { return _actionTarget; }
+#if ELUNA_EXPANSION < EXP_RETAIL
     uint32 GetTypeMask() const { return _typeMask; }
+#else
+    ProcFlagsInit GetTypeMask() const { return _typeMask; }
+#endif
     uint32 GetSpellTypeMask() const { return _spellTypeMask; }
     uint32 GetSpellPhaseMask() const { return _spellPhaseMask; }
     uint32 GetHitMask() const { return _hitMask; }

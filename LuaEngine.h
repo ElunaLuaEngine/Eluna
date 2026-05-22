@@ -656,7 +656,11 @@ public:
     void OnAuraDispel(Aura* aura, DispelInfo* dispelInfo);
     bool OnPeriodicTick(Aura* aura, AuraEffect const* auraEff, Unit* target);
     void OnPeriodicUpdate(Aura* aura, AuraEffect const* auraEff);
+#if ELUNA_EXPANSION < EXP_RETAIL
     void OnAuraCalcAmount(Aura* aura, AuraEffect const* auraEff, int32& amount, bool& canBeRecalculated);
+#else
+    void OnAuraCalcAmount(Aura* aura, AuraEffect const* auraEff, double& amount, bool& canBeRecalculated);
+#endif
     void OnCalcPeriodic(Aura* aura, AuraEffect const* auraEff, bool& isPeriodic, int32& amplitude);
     bool OnAuraCanProc(Aura* aura, ProcEventInfo& procInfo);
     bool OnAuraProc(Aura* aura, ProcEventInfo& procInfo);
