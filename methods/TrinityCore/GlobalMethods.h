@@ -3262,12 +3262,18 @@ namespace LuaGlobalFunctions
      * Returns the [SpellInfo] for the given spell ID, or nil if the spell does not exist.
      *
      * @param uint32 spellId : the spell ID to look up
+     * @param uint32 spellDiff : the difficulty level of the spell
      * @return [SpellInfo] spellInfo
      */
     int GetSpellInfo(Eluna* E)
     {
         uint32 spellId = E->CHECKVAL<uint32>(1);
+#if ELUNA_EXPANSION < EXP_RETAIL
         if (!sSpellMgr->GetSpellInfo(spellId))
+#else
+        uint32 spellDiff = E->CHECKVAL<uint32>(2);
+        if (!sSpellMgr->GetSpellInfo(spellId, static_cast<Difficulty>(spellDiff)))
+#endif
             return luaL_argerror(E->L, 1, "invalid spell id");
         ElunaSpellInfo info(spellId);
         E->Push(&info);

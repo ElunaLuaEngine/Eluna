@@ -71,7 +71,11 @@ void Eluna::OnPeriodicUpdate(Aura* aura, AuraEffect const* auraEff)
     CallAllFunctions(binding, key);
 }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
 void Eluna::OnAuraCalcAmount(Aura* aura, AuraEffect const* auraEff, int32& amount, bool& canBeRecalculated)
+#else
+void Eluna::OnAuraCalcAmount(Aura* aura, AuraEffect const* auraEff, double& amount, bool& canBeRecalculated)
+#endif
 {
     START_HOOK(SPELL_EVENT_ON_AURA_CALC_AMOUNT, aura);
 
