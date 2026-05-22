@@ -401,7 +401,11 @@ namespace LuaSpell
     int CalculateDamage(Eluna* E, Spell* spell)
     {
         uint8 effIndex = E->CHECKVAL<uint8>(2);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spell->CalculateDamage(spell->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex))));
+#else
+        E->Push(spell->CalculateDamage(spell->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)), nullptr));
+#endif
         return 1;
     }
 
@@ -413,7 +417,11 @@ namespace LuaSpell
     int SetState(Eluna* E, Spell* spell)
     {
         uint32 state = E->CHECKVAL<uint32>(2);
+#if ELUNA_EXPANSION < EXP_RETAIL
         spell->setState(state);
+#else
+        spell->setState(static_cast<SpellState>(state));
+#endif
         return 0;
     }
 
@@ -475,7 +483,11 @@ namespace LuaSpell
     {
         uint8 mod = E->CHECKVAL<uint8>(2);
         int32 value = E->CHECKVAL<int32>(3);
+#if ELUNA_EXPANSION < EXP_RETAIL
         spell->SetSpellValue(static_cast<SpellValueMod>(mod), value);
+#else
+        spell->SetSpellValue({ static_cast<SpellValueMod>(mod), value });
+#endif
         return 0;
     }
 

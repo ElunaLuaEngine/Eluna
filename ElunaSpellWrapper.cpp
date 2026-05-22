@@ -7,7 +7,11 @@
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
 
+#if ELUNA_EXPANSION < EXP_RETAIL
 ElunaProcInfo::ElunaProcInfo(Unit* actor, Unit* actionTarget, uint32 typeMask,
+#else
+ElunaProcInfo::ElunaProcInfo(Unit* actor, Unit* actionTarget, ProcFlagsInit typeMask,
+#endif
     uint32 spellTypeMask, uint32 spellPhaseMask, uint32 hitMask,
     Spell* spell, SpellInfo const* spellInfo, SpellSchoolMask schoolMask, Map* map)
     : _actor(actor), _actionTarget(actionTarget), _typeMask(typeMask), _spellTypeMask(spellTypeMask), _spellPhaseMask(spellPhaseMask)
@@ -123,7 +127,11 @@ void ElunaProcInfo::ApplyToProcEventInfo(ProcEventInfo& procInfo) const
     }
 }
 
+#if ELUNA_EXPANSION < EXP_RETAIL
 ElunaSpellInfo::ElunaSpellInfo(uint32 spellId) : _spellInfo(sSpellMgr->GetSpellInfo(spellId))
+#else
+ElunaSpellInfo::ElunaSpellInfo(uint32 spellId) : _spellInfo(sSpellMgr->GetSpellInfo(spellId, DIFFICULTY_NONE))
+#endif
 {
 #ifdef ELUNA_TRINITY
     if (_spellInfo)

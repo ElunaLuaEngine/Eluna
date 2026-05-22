@@ -344,7 +344,11 @@ namespace LuaSpellInfo
      */
     int GetInterruptFlags(Eluna* E, ElunaSpellInfo* spellInfo)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->InterruptFlags);
+#else
+        E->Push(spellInfo->GetSpellInfo()->InterruptFlags.AsUnderlyingType());
+#endif
         return 1;
     }
 
@@ -355,7 +359,11 @@ namespace LuaSpellInfo
      */
     int GetAuraInterruptFlags(Eluna* E, ElunaSpellInfo* spellInfo)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->AuraInterruptFlags);
+#else
+        E->Push(spellInfo->GetSpellInfo()->AuraInterruptFlags.AsUnderlyingType());
+#endif
         return 1;
     }
 
@@ -366,7 +374,11 @@ namespace LuaSpellInfo
      */
     int GetChannelInterruptFlags(Eluna* E, ElunaSpellInfo* spellInfo)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->ChannelInterruptFlags);
+#else
+        E->Push(spellInfo->GetSpellInfo()->ChannelInterruptFlags.AsUnderlyingType());
+#endif
         return 1;
     }
 
@@ -377,7 +389,11 @@ namespace LuaSpellInfo
      */
     int GetProcFlags(Eluna* E, ElunaSpellInfo* spellInfo)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->ProcFlags);
+#else
+        E->Push(spellInfo->GetSpellInfo()->ProcFlags[0]);
+#endif
         return 1;
     }
 
@@ -443,7 +459,14 @@ namespace LuaSpellInfo
      */
     int GetPowerType(Eluna* E, ElunaSpellInfo* spellInfo)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->PowerType);
+#else
+        Powers powerType;
+        for (SpellPowerEntry const* power : spellInfo->GetSpellInfo()->PowerCosts)
+            powerType = Powers(power->PowerType);
+        E->Push(powerType);
+#endif
         return 1;
     }
 
@@ -454,10 +477,19 @@ namespace LuaSpellInfo
      */
     int GetManaCost(Eluna* E, ElunaSpellInfo* spellInfo)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->ManaCost);
+#else
+        int32 mana = 0;
+        std::vector<SpellPowerCost> costs = spellInfo->GetSpellInfo()->CalcPowerCost(nullptr, spellInfo->GetSpellInfo()->GetSchoolMask());
+        auto m = std::find_if(costs.begin(), costs.end(), [](SpellPowerCost const& cost) { return cost.Power == POWER_MANA; });
+        if (m != costs.end())
+            mana += m->Amount;
+        E->Push(mana);
+#endif
         return 1;
     }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the mana cost per level of the [SpellInfo].
      *
@@ -512,7 +544,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->RuneCostID);
         return 1;
     }
-
+#endif
     /**
      * Returns the projectile speed of the [SpellInfo].
      *
@@ -631,15 +663,19 @@ namespace LuaSpellInfo
     /**
      * Returns the spell visual ID at the given index for the [SpellInfo].
      *
-     * @param uint32 index : the visual index (0-1)
+     * @param uint32 index : the visual index (0-1), index ignored for retail
      * @return uint32 spellVisual
      */
     int GetSpellVisual(Eluna* E, ElunaSpellInfo* spellInfo)
     {
-        uint32 index = E->CHECKVAL<uint32>(2);
+        [[maybe_unused]]uint32 index = E->CHECKVAL<uint32>(2);
         if (index >= 2)
             return luaL_argerror(E->L, 2, "index out of range (0-1)");
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->SpellVisual[index]);
+#else
+        E->Push(spellInfo->GetSpellInfo()->GetSpellVisual());
+#endif
         return 1;
     }
 
@@ -650,7 +686,11 @@ namespace LuaSpellInfo
      */
     int GetSpellIconID(Eluna* E, ElunaSpellInfo* spellInfo)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->SpellIconID);
+#else
+        E->Push(spellInfo->GetSpellInfo()->IconFileDataId);
+#endif
         return 1;
     }
 
@@ -661,10 +701,14 @@ namespace LuaSpellInfo
      */
     int GetActiveIconID(Eluna* E, ElunaSpellInfo* spellInfo)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->ActiveIconID);
+#else
+        E->Push(spellInfo->GetSpellInfo()->ActiveIconFileDataId);
+#endif
         return 1;
     }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the priority of the [SpellInfo].
      *
@@ -675,7 +719,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->Priority);
         return 1;
     }
-
+#endif
     /**
      * Returns the maximum target level of the [SpellInfo].
      *
@@ -820,7 +864,15 @@ namespace LuaSpellInfo
      */
     int GetMaxTicks(Eluna* E, ElunaSpellInfo* spellInfo)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->GetMaxTicks());
+#else
+        uint32 totalTicks = 0;
+        for (SpellEffectInfo const& spellEffectInfo : spellInfo->GetSpellInfo()->GetEffects())
+            totalTicks += spellEffectInfo.GetPeriodicTickCount();
+
+        E->Push(totalTicks);
+#endif
         return 1;
     }
 
@@ -963,8 +1015,12 @@ namespace LuaSpellInfo
      */
     int GetDiminishingReturnsGroupForSpell(Eluna* E, ElunaSpellInfo* spellInfo)
     {
-        bool triggered = E->CHECKVAL<bool>(2);
+        [[maybe_unused]]bool triggered = E->CHECKVAL<bool>(2);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->GetDiminishingReturnsGroupForSpell(triggered));
+#else
+        E->Push(spellInfo->GetSpellInfo()->GetDiminishingReturnsGroupForSpell());
+#endif
         return 1;
     }
 
@@ -976,8 +1032,12 @@ namespace LuaSpellInfo
      */
     int GetDiminishingReturnsGroupType(Eluna* E, ElunaSpellInfo* spellInfo)
     {
-        bool triggered = E->CHECKVAL<bool>(2);
+        [[maybe_unused]]bool triggered = E->CHECKVAL<bool>(2);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->GetDiminishingReturnsGroupType(triggered));
+#else
+        E->Push(spellInfo->GetSpellInfo()->GetDiminishingReturnsGroupType());
+#endif
         return 1;
     }
 
@@ -989,8 +1049,12 @@ namespace LuaSpellInfo
      */
     int GetDiminishingReturnsMaxLevel(Eluna* E, ElunaSpellInfo* spellInfo)
     {
-        bool triggered = E->CHECKVAL<bool>(2);
+        [[maybe_unused]]bool triggered = E->CHECKVAL<bool>(2);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->GetDiminishingReturnsMaxLevel(triggered));
+#else
+        E->Push(spellInfo->GetSpellInfo()->GetDiminishingReturnsMaxLevel());
+#endif
         return 1;
     }
 
@@ -1002,8 +1066,12 @@ namespace LuaSpellInfo
      */
     int GetDiminishingReturnsLimitDuration(Eluna* E, ElunaSpellInfo* spellInfo)
     {
-        bool triggered = E->CHECKVAL<bool>(2);
+        [[maybe_unused]]bool triggered = E->CHECKVAL<bool>(2);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->GetDiminishingReturnsLimitDuration(triggered));
+#else
+        E->Push(spellInfo->GetSpellInfo()->GetDiminishingReturnsLimitDuration());
+#endif
         return 1;
     }
 
@@ -1146,7 +1214,11 @@ namespace LuaSpellInfo
      */
     int CanBeUsedInCombat(Eluna* E, ElunaSpellInfo* spellInfo)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->CanBeUsedInCombat());
+#else
+        E->Push(!(spellInfo->GetSpellInfo()->HasAttribute(SPELL_ATTR0_NOT_IN_COMBAT_ONLY_PEACEFUL)));
+#endif
         return 1;
     }
 
@@ -1197,7 +1269,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->IsMoveAllowedChannel());
         return 1;
     }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns `true` if the [SpellInfo] requires combo points, `false` otherwise.
      *
@@ -1208,7 +1280,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->NeedsComboPoints());
         return 1;
     }
-
+#endif
     /**
      * Returns `true` if the [SpellInfo] is a next melee swing spell, `false` otherwise.
      *
@@ -1219,7 +1291,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->IsNextMeleeSwingSpell());
         return 1;
     }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns `true` if the [SpellInfo] breaks stealth, `false` otherwise.
      *
@@ -1230,7 +1302,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->IsBreakingStealth());
         return 1;
     }
-
+#endif
     /**
      * Returns `true` if the [SpellInfo] is a ranged weapon spell, `false` otherwise.
      *
@@ -1307,7 +1379,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->NeedsExplicitUnitTarget());
         return 1;
     }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns `true` if the [SpellInfo] is a self cast spell, `false` otherwise.
      *
@@ -1318,7 +1390,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->IsSelfCast());
         return 1;
     }
-
+#endif
     /**
      * Returns `true` if the [SpellInfo] can only have a single target active at a time, `false` otherwise.
      *
@@ -1351,7 +1423,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->IsLootCrafting());
         return 1;
     }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns `true` if the [SpellInfo] is a profession or riding spell, `false` otherwise.
      *
@@ -1362,7 +1434,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->IsProfessionOrRiding());
         return 1;
     }
-
+#endif
     /**
      * Returns `true` if the [SpellInfo] is a profession spell, `false` otherwise.
      *
@@ -1395,7 +1467,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->IsPrimaryProfessionFirstRank());
         return 1;
     }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns `true` if the [SpellInfo] is an ability learned with a profession, `false` otherwise.
      *
@@ -1406,7 +1478,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->IsAbilityLearnedWithProfession());
         return 1;
     }
-
+#endif
     /**
      * Returns `true` if the [SpellInfo] is affected by spell mods, `false` otherwise.
      *
@@ -1468,12 +1540,14 @@ namespace LuaSpellInfo
 
     /**
      * Returns `true` if the [SpellInfo] is affected by the given spell family and flags, `false` otherwise.
-     * The flags are a 96-bit value split into three uint32 components.
+     * The flags are a 96-bit value split into three uint32 components in WoTLK
+     * and a 128-bit value split into four uint32 components in Retail.
      *
      * @param uint32 familyName : the spell family name to check
      * @param uint32 flag0 : the first 32 bits of the spell family flags
      * @param uint32 flag1 : the second 32 bits of the spell family flags
      * @param uint32 flag2 : the third 32 bits of the spell family flags
+     * @param uint32 flag3 : the fourth 32 bits of the spell family flags, only used in Retail
      * @return bool isAffected
      */
     int IsAffected(Eluna* E, ElunaSpellInfo* spellInfo)
@@ -1482,7 +1556,12 @@ namespace LuaSpellInfo
         uint32 f0 = E->CHECKVAL<uint32>(3);
         uint32 f1 = E->CHECKVAL<uint32>(4);
         uint32 f2 = E->CHECKVAL<uint32>(5);
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->IsAffected(familyName, flag96(f0, f1, f2)));
+#else
+        uint32 f3 = E->CHECKVAL<uint32>(6);
+        E->Push(spellInfo->GetSpellInfo()->IsAffected(familyName, flag128(f0, f1, f2, f3)));
+#endif
         return 1;
     }
 
@@ -1743,7 +1822,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).Amplitude);
         return 1;
     }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the die sides of the given effect slot of the [SpellInfo].
      *
@@ -1758,7 +1837,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).DieSides);
         return 1;
     }
-
+#endif
     /**
      * Returns the real points per level of the given effect slot of the [SpellInfo].
      *
@@ -1788,7 +1867,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).BasePoints);
         return 1;
     }
-
+#if ELUNA_EXPANSION < EXP_RETAIL
     /**
      * Returns the points per combo point of the given effect slot of the [SpellInfo].
      *
@@ -1803,7 +1882,7 @@ namespace LuaSpellInfo
         E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).PointsPerComboPoint);
         return 1;
     }
-
+#endif
     /**
      * Returns the value multiplier of the given effect slot of the [SpellInfo].
      *
@@ -1970,7 +2049,11 @@ namespace LuaSpellInfo
         uint32 effIndex = E->CHECKVAL<uint32>(2);
         if (effIndex >= MAX_SPELL_EFFECTS)
             return luaL_argerror(E->L, 2, "effect index out of range");
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).CalcRadius());
+#else
+        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).CalcRadius().Max);
+#endif
         return 1;
     }
 
@@ -1985,7 +2068,11 @@ namespace LuaSpellInfo
         uint32 effIndex = E->CHECKVAL<uint32>(2);
         if (effIndex >= MAX_SPELL_EFFECTS)
             return luaL_argerror(E->L, 2, "effect index out of range");
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).HasRadius());
+#else
+        E->Push(spellInfo->GetSpellInfo()->GetEffect(static_cast<SpellEffIndex>(effIndex)).HasRadius(SpellTargetIndex::TargetA));
+#endif
         return 1;
     }
 
@@ -2386,6 +2473,36 @@ namespace LuaSpellInfo
 
     ElunaRegister<ElunaSpellInfo> SpellInfoMethods[] =
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
+
+        { "GetManaCostPerlevel",                        &LuaSpellInfo::GetManaCostPerlevel },
+        { "GetManaPerSecond",                           &LuaSpellInfo::GetManaPerSecond },
+        { "GetManaPerSecondPerLevel",                   &LuaSpellInfo::GetManaPerSecondPerLevel },
+        { "GetManaCostPercentage",                      &LuaSpellInfo::GetManaCostPercentage },
+        { "GetRuneCostID",                              &LuaSpellInfo::GetRuneCostID },
+        { "GetPriority",                                &LuaSpellInfo::GetPriority },
+        { "NeedsComboPoints",                           &LuaSpellInfo::NeedsComboPoints },
+        { "IsBreakingStealth",                          &LuaSpellInfo::IsBreakingStealth },
+        { "IsSelfCast",                                 &LuaSpellInfo::IsSelfCast },
+        { "IsProfessionOrRiding",                       &LuaSpellInfo::IsProfessionOrRiding },
+        { "IsAbilityLearnedWithProfession",             &LuaSpellInfo::IsAbilityLearnedWithProfession },
+        { "GetEffectDieSides",                          &LuaSpellInfo::GetEffectDieSides },
+        { "GetEffectPointsPerComboPoint",               &LuaSpellInfo::GetEffectPointsPerComboPoint },
+#else
+        { "GetManaCostPerlevel",                        METHOD_REG_NONE  },
+        { "GetManaPerSecond",                           METHOD_REG_NONE  },
+        { "GetManaPerSecondPerLevel",                   METHOD_REG_NONE  },
+        { "GetManaCostPercentage",                      METHOD_REG_NONE  },
+        { "GetRuneCostID",                              METHOD_REG_NONE  },
+        { "GetPriority",                                METHOD_REG_NONE  },
+        { "NeedsComboPoints",                           METHOD_REG_NONE  },
+        { "IsBreakingStealth",                          METHOD_REG_NONE  },
+        { "IsSelfCast",                                 METHOD_REG_NONE  },
+        { "IsProfessionOrRiding",                       METHOD_REG_NONE  },
+        { "IsAbilityLearnedWithProfession",             METHOD_REG_NONE  },
+        { "GetEffectDieSides",                          METHOD_REG_NONE  },
+        { "GetEffectPointsPerComboPoint",               METHOD_REG_NONE  },
+#endif
         { "GetId",                                      &LuaSpellInfo::GetId },
         { "GetDispel",                                  &LuaSpellInfo::GetDispel },
         { "GetMechanic",                                &LuaSpellInfo::GetMechanic },
@@ -2427,11 +2544,6 @@ namespace LuaSpellInfo
         { "GetSpellLevel",                              &LuaSpellInfo::GetSpellLevel },
         { "GetPowerType",                               &LuaSpellInfo::GetPowerType },
         { "GetManaCost",                                &LuaSpellInfo::GetManaCost },
-        { "GetManaCostPerlevel",                        &LuaSpellInfo::GetManaCostPerlevel },
-        { "GetManaPerSecond",                           &LuaSpellInfo::GetManaPerSecond },
-        { "GetManaPerSecondPerLevel",                   &LuaSpellInfo::GetManaPerSecondPerLevel },
-        { "GetManaCostPercentage",                      &LuaSpellInfo::GetManaCostPercentage },
-        { "GetRuneCostID",                              &LuaSpellInfo::GetRuneCostID },
         { "GetSpeed",                                   &LuaSpellInfo::GetSpeed },
         { "GetStackAmount",                             &LuaSpellInfo::GetStackAmount },
         { "GetTotem",                                   &LuaSpellInfo::GetTotem },
@@ -2444,7 +2556,6 @@ namespace LuaSpellInfo
         { "GetSpellVisual",                             &LuaSpellInfo::GetSpellVisual },
         { "GetSpellIconID",                             &LuaSpellInfo::GetSpellIconID },
         { "GetActiveIconID",                            &LuaSpellInfo::GetActiveIconID },
-        { "GetPriority",                                &LuaSpellInfo::GetPriority },
         { "GetMaxTargetLevel",                          &LuaSpellInfo::GetMaxTargetLevel },
         { "GetMaxAffectedTargets",                      &LuaSpellInfo::GetMaxAffectedTargets },
         { "GetSpellFamilyName",                         &LuaSpellInfo::GetSpellFamilyName },
@@ -2489,9 +2600,7 @@ namespace LuaSpellInfo
         { "IsPositive",                                 &LuaSpellInfo::IsPositive },
         { "IsChanneled",                                &LuaSpellInfo::IsChanneled },
         { "IsMoveAllowedChannel",                       &LuaSpellInfo::IsMoveAllowedChannel },
-        { "NeedsComboPoints",                           &LuaSpellInfo::NeedsComboPoints },
         { "IsNextMeleeSwingSpell",                      &LuaSpellInfo::IsNextMeleeSwingSpell },
-        { "IsBreakingStealth",                          &LuaSpellInfo::IsBreakingStealth },
         { "IsRangedWeaponSpell",                        &LuaSpellInfo::IsRangedWeaponSpell },
         { "IsAutoRepeatRangedSpell",                    &LuaSpellInfo::IsAutoRepeatRangedSpell },
         { "HasInitialAggro",                            &LuaSpellInfo::HasInitialAggro },
@@ -2499,15 +2608,12 @@ namespace LuaSpellInfo
         { "IsAffectingArea",                            &LuaSpellInfo::IsAffectingArea },
         { "IsTargetingArea",                            &LuaSpellInfo::IsTargetingArea },
         { "NeedsExplicitUnitTarget",                    &LuaSpellInfo::NeedsExplicitUnitTarget },
-        { "IsSelfCast",                                 &LuaSpellInfo::IsSelfCast },
         { "IsSingleTarget",                             &LuaSpellInfo::IsSingleTarget },
         { "IsExplicitDiscovery",                        &LuaSpellInfo::IsExplicitDiscovery },
         { "IsLootCrafting",                             &LuaSpellInfo::IsLootCrafting },
-        { "IsProfessionOrRiding",                       &LuaSpellInfo::IsProfessionOrRiding },
         { "IsProfession",                               &LuaSpellInfo::IsProfession },
         { "IsPrimaryProfession",                        &LuaSpellInfo::IsPrimaryProfession },
         { "IsPrimaryProfessionFirstRank",               &LuaSpellInfo::IsPrimaryProfessionFirstRank },
-        { "IsAbilityLearnedWithProfession",             &LuaSpellInfo::IsAbilityLearnedWithProfession },
         { "IsAffectedBySpellMods",                      &LuaSpellInfo::IsAffectedBySpellMods },
         { "HasAreaAuraEffect",                          &LuaSpellInfo::HasAreaAuraEffect },
         { "HasOnlyDamageEffects",                       &LuaSpellInfo::HasOnlyDamageEffects },
@@ -2534,10 +2640,8 @@ namespace LuaSpellInfo
         { "GetEffectType",                              &LuaSpellInfo::GetEffectType },
         { "GetEffectApplyAuraName",                     &LuaSpellInfo::GetEffectApplyAuraName },
         { "GetEffectAmplitude",                         &LuaSpellInfo::GetEffectAmplitude },
-        { "GetEffectDieSides",                          &LuaSpellInfo::GetEffectDieSides },
         { "GetEffectRealPointsPerLevel",                &LuaSpellInfo::GetEffectRealPointsPerLevel },
         { "GetEffectBasePoints",                        &LuaSpellInfo::GetEffectBasePoints },
-        { "GetEffectPointsPerComboPoint",               &LuaSpellInfo::GetEffectPointsPerComboPoint },
         { "GetEffectValueMultiplier",                   &LuaSpellInfo::GetEffectValueMultiplier },
         { "GetEffectDamageMultiplier",                  &LuaSpellInfo::GetEffectDamageMultiplier },
         { "GetEffectBonusMultiplier",                   &LuaSpellInfo::GetEffectBonusMultiplier },

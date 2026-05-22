@@ -32,7 +32,12 @@ namespace LuaElunaProcInfo
      */
     int GetTypeMask(Eluna* E, ElunaProcInfo* procInfo)
     {
+#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(procInfo->GetTypeMask());
+#else
+        ProcFlagsInit typeMask = procInfo->GetTypeMask();
+        E->Push(typeMask[0]);
+#endif
         return 1;
     }
 
