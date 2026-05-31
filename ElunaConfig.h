@@ -53,6 +53,7 @@ public:
     const uint32& GetConfig(ElunaConfigUInt32Values index) const { return _configUInt32Values[index]; }
 
     bool IsElunaEnabled() { return GetConfig(CONFIG_ELUNA_ENABLED); }
+    bool IsElunaCompatibilityMode() { return false; }
     bool UnsafeMethodsEnabled() { return GetConfig(CONFIG_ELUNA_ENABLE_UNSAFE); }
     bool DeprecatedMethodsEnabled() { return GetConfig(CONFIG_ELUNA_ENABLE_DEPRECATED); }
     bool IsReloadCommandEnabled() { return GetConfig(CONFIG_ELUNA_ENABLE_RELOAD_COMMAND); }

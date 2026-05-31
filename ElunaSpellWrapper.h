@@ -9,10 +9,11 @@
 class Unit;
 class Spell;
 class Map;
-class SpellInfo;
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 class ProcEventInfo;
 class DamageInfo;
 class HealInfo;
+#endif
 #ifdef ELUNA_TRINITY
 enum SpellSchoolMask : uint32;
 #else
@@ -20,6 +21,12 @@ enum SpellSchoolMask;
 #endif
 enum DamageEffectType : uint8;
 enum WeaponAttackType : uint8;
+
+#if !defined(ELUNA_TRINITY) && !defined(ELUNA_AZEROTHCORE)
+// For non-Trinity/AzerothCore builds, ensure SpellEntry/SpellInfo is declared
+struct SpellEntry;
+typedef SpellEntry SpellInfo;
+#endif
 #ifdef ELUNA_TRINITY
 namespace Trinity
 {
@@ -67,7 +74,9 @@ public:
         uint32 spellTypeMask, uint32 spellPhaseMask, uint32 hitMask,
         Spell* spell, SpellInfo const* spellInfo, SpellSchoolMask schoolMask, Map* map);
 
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     explicit ElunaProcInfo(ProcEventInfo& procInfo, Map* map);
+#endif
     ~ElunaProcInfo()
     {
 #ifdef TRACKABLE_PTR_NAMESPACE
@@ -115,7 +124,9 @@ public:
 #ifdef ELUNA_TRINITY
     Trinity::unique_weak_ptr<ElunaProcInfo> GetWeakPtr() const { return m_scriptRef; }
 #endif
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     void ApplyToProcEventInfo(ProcEventInfo& procInfo) const;
+#endif
 };
 
 class ElunaSpellInfo

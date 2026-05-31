@@ -13,6 +13,7 @@
 
 using namespace Hooks;
 
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 #define START_HOOK(EVENT, SPELL) \
     auto binding = GetBinding<EntryKey<SpellEvents>>(REGTYPE_SPELL);\
     auto key = EntryKey<SpellEvents>(EVENT, SPELL->GetSpellInfo()->Id);\
@@ -32,7 +33,16 @@ void Eluna::OnSpellCast(Spell* pSpell, bool skipCheck)
     HookPush(skipCheck);
     CallAllFunctions(binding, key);
 }
+#else
+void Eluna::OnSpellCast(Spell* pSpell, bool skipCheck)
+{
+    // MaNGOS - no spell hook support
+}
+#endif
 
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
+
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 bool Eluna::OnAuraApplication(Aura* aura, AuraEffect const* auraEff, Unit* target, uint8 mode, bool apply)
 {
     START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_AURA_APPLICATION, aura, false);
@@ -134,14 +144,20 @@ bool Eluna::OnAuraProc(Aura* aura, ProcEventInfo& procInfo)
     luaProcInfo.ApplyToProcEventInfo(procInfo);
     return defaultPrevented;
 }
+#endif
 
 uint32 Eluna::OnCheckCast(Spell* pSpell)
 {
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_CHECK_CAST, pSpell, SPELL_CAST_OK);
     HookPush(pSpell);
     return static_cast<uint32>(CallAllFunctionsInt(binding, key, int32(SPELL_CAST_OK)));
+#else
+    return SPELL_CAST_OK;
+#endif
 }
 
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 void Eluna::OnBeforeCast(Spell* pSpell)
 {
     START_HOOK(SPELL_EVENT_ON_BEFORE_CAST, pSpell);
@@ -175,6 +191,7 @@ void Eluna::OnObjectTargetSelect(Spell* pSpell, uint8 effIndex, WorldObject*& ta
 
 void Eluna::OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellDestination& target)
 {
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     START_HOOK(SPELL_EVENT_ON_DEST_TARGET, pSpell);
     HookPush(pSpell);
     HookPush(effIndex);
@@ -207,8 +224,10 @@ void Eluna::OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellDestin
     target._position.m_positionY = posY;
     target._position.m_positionZ = posZ;
     target._position.SetOrientation(orientation);
+#endif
 }
 
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 bool Eluna::OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault)
 {
     START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_LAUNCH, pSpell, preventDefault);
@@ -269,7 +288,21 @@ void Eluna::OnAfterSpellHit(Spell* pSpell)
     HookPush(pSpell);
     CallAllFunctions(binding, key);
 }
+#else
+void Eluna::OnBeforeCast(Spell* pSpell) {}
+void Eluna::OnAfterCast(Spell* pSpell) {}
+void Eluna::OnObjectAreaTargetSelect(Spell* pSpell, uint8 effIndex, std::list<WorldObject*>& targets) {}
+void Eluna::OnObjectTargetSelect(Spell* pSpell, uint8 effIndex, WorldObject*& target) {}
+bool Eluna::OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault) { return preventDefault; }
+bool Eluna::OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault) { return preventDefault; }
+bool Eluna::OnEffectHit(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault) { return preventDefault; }
+bool Eluna::OnEffectHitTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault) { return preventDefault; }
+void Eluna::OnBeforeSpellHit(Spell* pSpell, uint8 missInfo) {}
+void Eluna::OnSpellHit(Spell* pSpell) {}
+void Eluna::OnAfterSpellHit(Spell* pSpell) {}
+#endif
 
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 void Eluna::OnEffectCalcAbsorb(Spell* pSpell, DamageInfo const& damageInfo, uint32& resistAmount, int32& absorbAmount)
 {
     START_HOOK(SPELL_EVENT_ON_EFFECT_CALC_ABSORB, pSpell);
@@ -295,3 +328,47 @@ void Eluna::OnEffectCalcAbsorb(Spell* pSpell, DamageInfo const& damageInfo, uint
         std::array<int, 2>{ resistIndex, absorbIndex }
     );
 }
+#else
+void Eluna::OnEffectCalcAbsorb(Spell* pSpell, void const* damageInfo, uint32& resistAmount, int32& absorbAmount) {}
+#endif
+
+void Eluna::OnObjectTargetSelect(Spell* pSpell, uint8 effIndex, WorldObject*& target) {}
+bool Eluna::OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault) { return preventDefault; }
+bool Eluna::OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault) { return preventDefault; }
+bool Eluna::OnEffectHit(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault) { return preventDefault; }
+bool Eluna::OnEffectHitTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault) { return preventDefault; }
+void Eluna::OnBeforeSpellHit(Spell* pSpell, uint8 missInfo) {}
+void Eluna::OnSpellHit(Spell* pSpell) {}
+void Eluna::OnAfterSpellHit(Spell* pSpell) {}
+#endif
+
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
+void Eluna::OnEffectCalcAbsorb(Spell* pSpell, DamageInfo const& damageInfo, uint32& resistAmount, int32& absorbAmount)
+{
+    START_HOOK(SPELL_EVENT_ON_EFFECT_CALC_ABSORB, pSpell);
+    HookPush(pSpell);
+    HookPush(damageInfo.GetAttacker());
+    HookPush(damageInfo.GetVictim());
+    HookPush(damageInfo.GetDamage());
+    HookPush(damageInfo.GetAbsorb());
+    HookPush(damageInfo.GetResist());
+    HookPush(damageInfo.GetBlock());
+    HookPush(static_cast<uint32>(damageInfo.GetSchoolMask()));
+    HookPush(static_cast<uint32>(damageInfo.GetDamageType()));
+    HookPush(static_cast<uint32>(damageInfo.GetAttackType()));
+    HookPush(damageInfo.GetHitMask());
+    HookPush(resistAmount);
+    int resistIndex = lua_gettop(L);
+    HookPush(absorbAmount);
+    int absorbIndex = lua_gettop(L);
+    CallAllFunctionsMultiReturn(
+        binding,
+        key,
+        std::tie(resistAmount, absorbAmount),
+        std::array<int, 2>{ resistIndex, absorbIndex }
+    );
+}
+#else
+void Eluna::OnEffectCalcAbsorb(Spell* pSpell, void const* damageInfo, uint32& resistAmount, int32& absorbAmount) {}
+#endif
+#endif

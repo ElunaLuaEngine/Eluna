@@ -23,12 +23,14 @@
 #include "GameObjectMethods.h"
 #include "ElunaQueryMethods.h"
 #include "AuraMethods.h"
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 #include "AuraEffectMethods.h"
 #include "ElunaProcInfoMethods.h"
+#include "SpellInfoMethods.h"
+#endif
 #include "ItemMethods.h"
 #include "WorldPacketMethods.h"
 #include "SpellMethods.h"
-#include "SpellInfoMethods.h"
 #include "QuestMethods.h"
 #include "MapMethods.h"
 #include "CorpseMethods.h"
@@ -93,6 +95,7 @@ void RegisterMethods(Eluna* E)
     ElunaTemplate<Aura>::Register(E, "Aura");
     ElunaTemplate<Aura>::SetMethods(E, LuaAura::AuraMethods);
 
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     ElunaTemplate<AuraEffect>::Register(E, "AuraEffect");
     ElunaTemplate<AuraEffect>::SetMethods(E, LuaAuraEffects::AuraEffectMethods);
 
@@ -101,6 +104,7 @@ void RegisterMethods(Eluna* E)
 
     ElunaTemplate<ElunaSpellInfo>::Register(E, "ElunaSpellInfo");
     ElunaTemplate<ElunaSpellInfo>::SetMethods(E, LuaSpellInfo::SpellInfoMethods);
+#endif
 
     ElunaTemplate<Spell>::Register(E, "Spell");
     ElunaTemplate<Spell>::SetMethods(E, LuaSpell::SpellMethods);

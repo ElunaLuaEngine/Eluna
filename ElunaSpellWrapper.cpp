@@ -20,6 +20,7 @@ ElunaProcInfo::ElunaProcInfo(Unit* actor, Unit* actionTarget, uint32 typeMask,
 {
 }
 
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 ElunaProcInfo::ElunaProcInfo(ProcEventInfo& procInfo, Map* map)
     : _actor(procInfo.GetActor()), _actionTarget(procInfo.GetActionTarget()), _typeMask(procInfo.GetTypeMask()), _spellTypeMask(procInfo.GetSpellTypeMask()), _spellPhaseMask(procInfo.GetSpellPhaseMask())
     , _hitMask(procInfo.GetHitMask()), _spell(const_cast<Spell*>(procInfo.GetProcSpell())), _spellInfo(procInfo.GetSpellInfo()), _schoolMask(procInfo.GetSchoolMask()), _damage(0)
@@ -58,13 +59,16 @@ ElunaProcInfo::ElunaProcInfo(ProcEventInfo& procInfo, Map* map)
         }
     }
 }
+#endif
 
 SpellInfo const* ElunaProcInfo::GetSpellInfo() const
 {
     if (_spellInfo)
         return _spellInfo;
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
     if (_spell)
         return _spell->GetSpellInfo();
+#endif
     return nullptr;
 }
 
@@ -81,6 +85,7 @@ void ElunaProcInfo::SetHeal(uint32 heal)
     _effectiveHeal = heal;
 }
 
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
 void ElunaProcInfo::ApplyToProcEventInfo(ProcEventInfo& procInfo) const
 {
     if (DamageInfo* damageInfo = procInfo.GetDamageInfo())
@@ -122,9 +127,15 @@ void ElunaProcInfo::ApplyToProcEventInfo(ProcEventInfo& procInfo) const
         }
     }
 }
+#endif
 
-ElunaSpellInfo::ElunaSpellInfo(uint32 spellId) : _spellInfo(sSpellMgr->GetSpellInfo(spellId))
+ElunaSpellInfo::ElunaSpellInfo(uint32 spellId) : _spellInfo(nullptr)
 {
+#if defined ELUNA_TRINITY || defined ELUNA_AZEROTHCORE
+    _spellInfo = sSpellMgr->GetSpellInfo(spellId);
+#else
+    _spellInfo = sSpellStore.LookupEntry(spellId);
+#endif
 #ifdef ELUNA_TRINITY
     if (_spellInfo)
         m_scriptRef = Trinity::unique_trackable_ptr<ElunaSpellInfo>(this, NoopAuraDeleter());

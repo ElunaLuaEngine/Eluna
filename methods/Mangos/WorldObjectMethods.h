@@ -768,16 +768,28 @@ namespace LuaWorldObject
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
         if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
         {
-            ElunaEventProcessor* proc = obj->GetElunaEvents(E->GetBoundMapId());
-            if (!proc)
+            // For MaNGOS, we need to get the event manager from Eluna
+            // Objects don't have direct event processor access
+            if (E && E->eventMgr)
+            {
+                uint64 procId = E->eventMgr->CreateObjectProcessor(obj);
+                ElunaEventProcessor* proc = E->eventMgr->GetObjectProcessor(procId);
+                if (proc)
+                {
+                    proc->AddEvent(functionRef, min, max, repeats);
+                    E->Push(functionRef);
+                }
+                else
+                {
+                    luaL_unref(E->L, LUA_REGISTRYINDEX, functionRef);
+                    E->Push();
+                }
+            }
+            else
             {
                 luaL_unref(E->L, LUA_REGISTRYINDEX, functionRef);
                 E->Push();
-                return 1;
             }
-
-            proc->AddEvent(functionRef, min, max, repeats);
-            E->Push(functionRef);
         }
         return 1;
     }
@@ -790,12 +802,11 @@ namespace LuaWorldObject
     int RemoveEventById(Eluna* E, WorldObject* obj)
     {
         int eventId = E->CHECKVAL<int>(2);
-        
-        ElunaEventProcessor* proc = obj->GetElunaEvents(E->GetBoundMapId());
-        if (!proc)
-            return 0;
 
-        proc->SetState(eventId, LUAEVENT_STATE_ABORT);
+        if (E && E->eventMgr)
+        {
+            E->eventMgr->SetEventState(eventId, LUAEVENT_STATE_ABORT);
+        }
         return 0;
     }
 
@@ -805,11 +816,10 @@ namespace LuaWorldObject
      */
     int RemoveEvents(Eluna* E, WorldObject* obj)
     {
-        ElunaEventProcessor* proc = obj->GetElunaEvents(E->GetBoundMapId());
-        if (!proc)
-            return 0;
-
-        proc->SetStates(LUAEVENT_STATE_ABORT);
+        if (E && E->eventMgr)
+        {
+            E->eventMgr->SetAllEventStates(LUAEVENT_STATE_ABORT);
+        }
         return 0;
     }
 
