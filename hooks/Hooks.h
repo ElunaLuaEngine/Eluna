@@ -11,6 +11,8 @@
 #include "Platform/Define.h"
 #endif
 #include <utility>
+#include <cstddef>
+#include <cstdint>
 
 struct EventEntry
 {
