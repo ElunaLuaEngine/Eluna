@@ -16,7 +16,7 @@
 
 struct EventEntry
 {
-    uint8 id;
+    uint8_t id;
     const char* name;
 };
 
@@ -32,7 +32,7 @@ constexpr size_t CountOf(const T(&)[N]) { return N; }
 
 namespace Hooks
 {
-    enum RegisterTypes : uint8
+    enum RegisterTypes : uint8_t
     {
         REGTYPE_PACKET,
         REGTYPE_SERVER,
