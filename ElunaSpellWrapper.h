@@ -15,12 +15,12 @@ class DamageInfo;
 class HealInfo;
 #endif
 #ifdef ELUNA_TRINITY
-enum SpellSchoolMask : uint32;
+enum SpellSchoolMask;
 #else
 enum SpellSchoolMask;
 #endif
-enum DamageEffectType : uint8;
-enum WeaponAttackType : uint8;
+enum DamageEffectType;
+enum WeaponAttackType;
 
 #if !defined(ELUNA_TRINITY) && !defined(ELUNA_AZEROTHCORE)
 // For non-Trinity/AzerothCore builds, ensure SpellEntry/SpellInfo is declared
