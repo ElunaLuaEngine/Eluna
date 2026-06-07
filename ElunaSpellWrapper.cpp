@@ -19,7 +19,7 @@ ElunaProcInfo::ElunaProcInfo(Unit* actor, Unit* actionTarget, uint32 typeMask,
 #endif
 {
 }
-
+#if defined ELUNA_TRINITY
 ElunaProcInfo::ElunaProcInfo(ProcEventInfo& procInfo, Map* map)
     : _actor(procInfo.GetActor()), _actionTarget(procInfo.GetActionTarget()), _typeMask(procInfo.GetTypeMask()), _spellTypeMask(procInfo.GetSpellTypeMask()), _spellPhaseMask(procInfo.GetSpellPhaseMask())
     , _hitMask(procInfo.GetHitMask()), _spell(const_cast<Spell*>(procInfo.GetProcSpell())), _spellInfo(procInfo.GetSpellInfo()), _schoolMask(procInfo.GetSchoolMask()), _damage(0)
@@ -58,13 +58,29 @@ ElunaProcInfo::ElunaProcInfo(ProcEventInfo& procInfo, Map* map)
         }
     }
 }
+#elif defined ELUNA_CMANGOS
+ElunaProcInfo::ElunaProcInfo(ProcExecutionData& procInfo, Map* map)
+    : _actor(procInfo.attacker), _actionTarget(procInfo.victim), _spell(const_cast<Spell*>(procInfo.spell))
+    , _spellInfo(procInfo.spellInfo), _damage(0)
+    , _attackType(BASE_ATTACK), _damageAbsorb(0), _resist(0), _block(0)
+    , _heal(0), _effectiveHeal(0), _healAbsorb(0), _map(map)
+#ifdef TRACKABLE_PTR_NAMESPACE
+    ,m_scriptRef(this, NoopAuraDeleter())
+#endif
+{
+}
+#endif
 
 SpellInfo const* ElunaProcInfo::GetSpellInfo() const
 {
     if (_spellInfo)
         return _spellInfo;
     if (_spell)
+#if defined ELUNA_TRINITY
         return _spell->GetSpellInfo();
+#elif defined ELUNA_CMANGOS || defined ELUNA_VMANGOS
+        return _spell->GetSpellProto();
+#endif
     return nullptr;
 }
 
@@ -80,7 +96,7 @@ void ElunaProcInfo::SetHeal(uint32 heal)
     _heal = heal;
     _effectiveHeal = heal;
 }
-
+#if defined ELUNA_TRINITY
 void ElunaProcInfo::ApplyToProcEventInfo(ProcEventInfo& procInfo) const
 {
     if (DamageInfo* damageInfo = procInfo.GetDamageInfo())
@@ -122,7 +138,40 @@ void ElunaProcInfo::ApplyToProcEventInfo(ProcEventInfo& procInfo) const
         }
     }
 }
+#elif defined ELUNA_CMANGOS
+void ElunaProcInfo::ApplyToProcEventInfo(ProcExecutionData& procInfo) const
+{
+    if (HasDamage())
+    {
+        int32 damageDiff = static_cast<int32>(_damage) - static_cast<int32>(procInfo.damage);
+        if (damageDiff != 0)
+            procInfo.damage = damageDiff;
 
+        uint32 currentAbsorb = procInfo.absorb;
+
+        uint32 absorbToAdd = (_damageAbsorb > currentAbsorb) ? (_damageAbsorb - currentAbsorb) : 0;
+
+        if (absorbToAdd > 0)
+            procInfo.absorb = absorbToAdd;
+    }
+
+    if (HasHeal())
+    {
+        uint32 currentAbsorb = procInfo.absorb;
+        uint32 absorbToAdd = (_healAbsorb > currentAbsorb) ? (_healAbsorb - currentAbsorb) : 0;
+
+        if (absorbToAdd > 0)
+            procInfo.absorb = absorbToAdd;
+
+        procInfo.healthGain = _effectiveHeal;
+    }
+}
+#endif
+
+#if defined ELUNA_TRINITY
 ElunaSpellInfo::ElunaSpellInfo(uint32 spellId) : _spellInfo(sSpellMgr->GetSpellInfo(spellId))
+#else
+ElunaSpellInfo::ElunaSpellInfo(uint32 spellId) : _spellInfo(sSpellMgr.GetSpellEntry(spellId))
+#endif
 {
 }

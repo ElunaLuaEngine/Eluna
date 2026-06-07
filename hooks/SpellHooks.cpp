@@ -13,6 +13,7 @@
 
 using namespace Hooks;
 
+#if defined ELUNA_TRINITY
 #define START_HOOK(EVENT, SPELL) \
     auto binding = GetBinding<EntryKey<SpellEvents>>(REGTYPE_SPELL);\
     auto key = EntryKey<SpellEvents>(EVENT, SPELL->GetSpellInfo()->Id);\
@@ -24,6 +25,19 @@ using namespace Hooks;
     auto key = EntryKey<SpellEvents>(EVENT, SPELL->GetSpellInfo()->Id);\
     if (!binding->HasBindingsFor(key))\
         return RETVAL;
+#else
+#define START_HOOK(EVENT, SPELL) \
+    auto binding = GetBinding<EntryKey<SpellEvents>>(REGTYPE_SPELL);\
+    auto key = EntryKey<SpellEvents>(EVENT, SPELL->GetSpellProto()->Id);\
+    if (!binding->HasBindingsFor(key))\
+        return;
+
+#define START_HOOK_WITH_RETVAL(EVENT, SPELL, RETVAL) \
+    auto binding = GetBinding<EntryKey<SpellEvents>>(REGTYPE_SPELL);\
+    auto key = EntryKey<SpellEvents>(EVENT, SPELL->GetSpellProto()->Id);\
+    if (!binding->HasBindingsFor(key))\
+        return RETVAL;
+#endif
 
 void Eluna::OnSpellCast(Spell* pSpell, bool skipCheck)
 {
@@ -32,7 +46,7 @@ void Eluna::OnSpellCast(Spell* pSpell, bool skipCheck)
     HookPush(skipCheck);
     CallAllFunctions(binding, key);
 }
-
+#if defined ELUNA_TRINITY
 bool Eluna::OnAuraApplication(Aura* aura, AuraEffect const* auraEff, Unit* target, uint8 mode, bool apply)
 {
     START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_AURA_APPLICATION, aura, false);
@@ -112,8 +126,86 @@ void Eluna::OnCalcPeriodic(Aura* aura, AuraEffect const* auraEff, bool& isPeriod
         std::array<int, 2>{ isPeriodicIndex, amplitudeIndex }
     );
 }
+#else
+bool Eluna::OnAuraApplication(Aura* aura, Unit* target, uint8 mode, bool apply)
+{
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_AURA_APPLICATION, aura, false);
+    HookPush(aura);
+    HookPush(target);
+    HookPush(mode);
+    HookPush(apply);
+    return CallAllFunctionsBool(binding, key, false);
+}
 
+void Eluna::OnAuraDispel(Aura* aura, Unit* dispeller, uint32 dispellingSpellId, uint32 originalStacks)
+{
+    START_HOOK(SPELL_EVENT_ON_DISPEL, aura);
+    HookPush(aura);
+    HookPush(dispeller);
+    HookPush(dispellingSpellId);
+    HookPush(originalStacks);
+    CallAllFunctions(binding, key);
+}
+
+bool Eluna::OnPeriodicTick(Aura* aura, Unit* target)
+{
+    START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_PERIODIC_TICK, aura, false);
+    HookPush(aura);
+    HookPush(target);
+    return CallAllFunctionsBool(binding, key, false);
+}
+
+void Eluna::OnPeriodicUpdate(Aura* aura)
+{
+    START_HOOK(SPELL_EVENT_ON_PERIODIC_UPDATE, aura);
+    HookPush(aura);
+    CallAllFunctions(binding, key);
+}
+
+void Eluna::OnAuraCalcAmount(Aura* aura, int32& amount, bool& canBeRecalculated)
+{
+    START_HOOK(SPELL_EVENT_ON_AURA_CALC_AMOUNT, aura);
+
+    HookPush(aura);
+
+    HookPush(amount);
+    int amountIndex = lua_gettop(L);
+
+    HookPush(canBeRecalculated);
+    int canBeRecalculatedIndex = lua_gettop(L);
+
+    CallAllFunctionsMultiReturn(
+        binding,
+        key,
+        std::tie(amount, canBeRecalculated),
+        std::array<int, 2> {amountIndex, canBeRecalculatedIndex});
+}
+
+void Eluna::OnCalcPeriodic(Aura* aura, bool& isPeriodic, int32& amplitude)
+{
+    START_HOOK(SPELL_EVENT_ON_CALC_PERIODIC, aura);
+
+    HookPush(aura);
+
+    HookPush(isPeriodic);
+    int isPeriodicIndex = lua_gettop(L);
+
+    HookPush(amplitude);
+    int amplitudeIndex = lua_gettop(L);
+
+    CallAllFunctionsMultiReturn(
+        binding,
+        key,
+        std::tie(isPeriodic, amplitude),
+        std::array<int, 2> {isPeriodicIndex, amplitudeIndex});
+}
+#endif
+
+#if defined ELUNA_TRINITY
 bool Eluna::OnAuraCanProc(Aura* aura, ProcEventInfo& procInfo)
+#elif defined ELUNA_CMANGOS
+bool Eluna::OnAuraCanProc(Aura* aura, ProcExecutionData& procInfo)
+#endif
 {
     START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_CHECK_PROC, aura, true);
     ElunaProcInfo luaProcInfo(procInfo, aura->GetCaster()->GetMap());
@@ -124,7 +216,11 @@ bool Eluna::OnAuraCanProc(Aura* aura, ProcEventInfo& procInfo)
     return retVal;
 }
 
+#if defined ELUNA_TRINITY
 bool Eluna::OnAuraProc(Aura* aura, ProcEventInfo& procInfo)
+#elif defined ELUNA_CMANGOS
+bool Eluna::OnAuraProc(Aura* aura, ProcExecutionData& procInfo)
+#endif
 {
     START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_CHECK_PROC, aura, false);
     ElunaProcInfo luaProcInfo(procInfo, aura->GetCaster()->GetMap());
@@ -172,7 +268,7 @@ void Eluna::OnObjectTargetSelect(Spell* pSpell, uint8 effIndex, WorldObject*& ta
     HookPush(target);
     CallAllFunctions(binding, key);
 }
-
+#if defined ELUNA_TRINITY
 void Eluna::OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellDestination& target)
 {
     START_HOOK(SPELL_EVENT_ON_DEST_TARGET, pSpell);
@@ -208,7 +304,42 @@ void Eluna::OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellDestin
     target._position.m_positionZ = posZ;
     target._position.SetOrientation(orientation);
 }
+#else
+void Eluna::OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellCastTargets& target)
+{
+    START_HOOK(SPELL_EVENT_ON_DEST_TARGET, pSpell);
+    HookPush(pSpell);
+    HookPush(effIndex);
+    HookPush(target.m_mapId);
+    int mapIdIndex = lua_gettop(L);
+    HookPush(target.getDestination().GetPositionX());
+    int posXIndex = lua_gettop(L);
+    HookPush(target.getDestination().GetPositionY());
+    int posYIndex = lua_gettop(L);
+    HookPush(target.getDestination().GetPositionZ());
+    int posZIndex = lua_gettop(L);
+    HookPush(target.getDestination().GetPositionO());
+    int orientationIndex = lua_gettop(L);
 
+    uint32 mapId = target.m_mapId;
+    float posX = target.getDestination().GetPositionX();
+    float posY = target.getDestination().GetPositionY();
+    float posZ = target.getDestination().GetPositionZ();
+    float orientation = target.getDestination().GetPositionO();
+
+    CallAllFunctionsMultiReturn(
+        binding,
+        key,
+        std::tie(mapId, posX, posY, posZ, orientation),
+        std::array<int, 5> {mapIdIndex, posXIndex, posYIndex, posZIndex, orientationIndex});
+
+    target.m_mapId = mapId;
+    target.m_destPos.x = posX;
+    target.m_destPos.y = posY;
+    target.m_destPos.z = posZ;
+    target.m_destPos.o = orientation;
+}
+#endif
 bool Eluna::OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault)
 {
     START_HOOK_WITH_RETVAL(SPELL_EVENT_ON_EFFECT_LAUNCH, pSpell, preventDefault);
@@ -270,6 +401,7 @@ void Eluna::OnAfterSpellHit(Spell* pSpell)
     CallAllFunctions(binding, key);
 }
 
+#if defined ELUNA_TRINITY
 void Eluna::OnEffectCalcAbsorb(Spell* pSpell, DamageInfo const& damageInfo, uint32& resistAmount, int32& absorbAmount)
 {
     START_HOOK(SPELL_EVENT_ON_EFFECT_CALC_ABSORB, pSpell);
@@ -295,3 +427,32 @@ void Eluna::OnEffectCalcAbsorb(Spell* pSpell, DamageInfo const& damageInfo, uint
         std::array<int, 2>{ resistIndex, absorbIndex }
     );
 }
+#elif defined ELUNA_CMANGOS
+void Eluna::OnEffectCalcAbsorb(Spell* pSpell, SpellNonMeleeDamage const& damageInfo, uint32& resistAmount, int32& absorbAmount)
+{
+    START_HOOK(SPELL_EVENT_ON_EFFECT_CALC_ABSORB, pSpell);
+    HookPush(pSpell);
+    HookPush(damageInfo.attacker);
+    HookPush(damageInfo.target);
+    HookPush(damageInfo.damage);
+    HookPush(damageInfo.absorb);
+    HookPush(damageInfo.resist);
+    HookPush(damageInfo.blocked);
+#if ELUNA_EXPANSION == EXP_CLASSIC
+    HookPush(static_cast<uint32>(damageInfo.school));
+#else
+    HookPush(static_cast<uint32>(damageInfo.schoolMask));
+#endif
+    HookPush(static_cast<uint32>(damageInfo.spell->GetAttackType()));
+    HookPush(damageInfo.HitInfo);
+    HookPush(resistAmount);
+    int resistIndex = lua_gettop(L);
+    HookPush(absorbAmount);
+    int absorbIndex = lua_gettop(L);
+    CallAllFunctionsMultiReturn(
+        binding,
+        key,
+        std::tie(resistAmount, absorbAmount),
+        std::array<int, 2> {resistIndex, absorbIndex});
+}
+#endif

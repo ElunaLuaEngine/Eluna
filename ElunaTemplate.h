@@ -63,7 +63,9 @@ struct ElunaConstrainedObjectRef
 };
 
 ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj);
+#if defined ELUNA_TRINITY
 ElunaConstrainedObjectRef<AuraEffect> GetWeakPtrFor(AuraEffect const* obj);
+#endif
 ElunaConstrainedObjectRef<ElunaProcInfo> GetWeakPtrFor(ElunaProcInfo const* obj);
 ElunaConstrainedObjectRef<BattleGround> GetWeakPtrFor(BattleGround const* obj);
 ElunaConstrainedObjectRef<Group> GetWeakPtrFor(Group const* obj);

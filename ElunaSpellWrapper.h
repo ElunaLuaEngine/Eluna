@@ -9,19 +9,32 @@
 class Unit;
 class Spell;
 class Map;
+#ifdef ELUNA_TRINITY
 class SpellInfo;
 class ProcEventInfo;
 class DamageInfo;
 class HealInfo;
-#ifdef ELUNA_TRINITY
-enum SpellSchoolMask : uint32;
-#else
-enum SpellSchoolMask;
-#endif
 enum DamageEffectType : uint8;
 enum WeaponAttackType : uint8;
+#else
+class SpellEntry;
+class ProcExecutionData;
+enum DamageEffectType;
+enum WeaponAttackType;
+typedef SpellEntry SpellInfo;
+#endif
+enum SpellSchoolMask : uint32;
 #ifdef ELUNA_TRINITY
 namespace Trinity
+{
+    template<typename T>
+    class unique_trackable_ptr;
+
+    template<typename T>
+    class unique_weak_ptr;
+}
+#elif defined ELUNA_CMANGOS
+namespace MaNGOS
 {
     template<typename T>
     class unique_trackable_ptr;
@@ -60,6 +73,8 @@ private:
     struct NoopAuraDeleter { void operator()(ElunaProcInfo*) const { } };
 #ifdef ELUNA_TRINITY
     Trinity::unique_trackable_ptr<ElunaProcInfo> m_scriptRef;
+#elif defined ELUNA_CMANGOS
+    MaNGOS::unique_trackable_ptr<ElunaProcInfo> m_scriptRef;
 #endif
 
 public:
@@ -67,7 +82,11 @@ public:
         uint32 spellTypeMask, uint32 spellPhaseMask, uint32 hitMask,
         Spell* spell, SpellInfo const* spellInfo, SpellSchoolMask schoolMask, Map* map);
 
+#if defined ELUNA_TRINITY
     explicit ElunaProcInfo(ProcEventInfo& procInfo, Map* map);
+#elif defined ELUNA_CMANGOS
+    explicit ElunaProcInfo(ProcExecutionData& procInfo, Map* map);
+#endif
     ~ElunaProcInfo()
     {
 #ifdef TRACKABLE_PTR_NAMESPACE
@@ -114,8 +133,11 @@ public:
     const Map* GetMap() const { return _map; }
 #ifdef ELUNA_TRINITY
     Trinity::unique_weak_ptr<ElunaProcInfo> GetWeakPtr() const { return m_scriptRef; }
-#endif
     void ApplyToProcEventInfo(ProcEventInfo& procInfo) const;
+#elif defined ELUNA_CMANGOS
+    MaNGOS::unique_weak_ptr<ElunaProcInfo> GetWeakPtr() const { return m_scriptRef; }
+    void ApplyToProcEventInfo(ProcExecutionData& procInfo) const;
+#endif
 };
 
 class ElunaSpellInfo

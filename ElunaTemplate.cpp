@@ -20,13 +20,13 @@ ElunaConstrainedObjectRef<Aura> GetWeakPtrFor(Aura const* obj)
 #endif
     return { obj->GetWeakPtr(), map };
 }
-
+#if defined ELUNA_TRINITY
 ElunaConstrainedObjectRef<AuraEffect> GetWeakPtrFor(AuraEffect const* obj)
 {
     Map* map = obj->GetBase()->GetOwner()->GetMap();
     return { obj->GetWeakPtr(), map };
 }
-
+#endif
 ElunaConstrainedObjectRef<ElunaProcInfo> GetWeakPtrFor(ElunaProcInfo const* obj)
 {
     return { obj->GetWeakPtr(), obj->GetMap()};
