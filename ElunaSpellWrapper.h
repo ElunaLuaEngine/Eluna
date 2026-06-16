@@ -122,22 +122,9 @@ class ElunaSpellInfo
 {
 private:
     SpellInfo const* _spellInfo;
-    struct NoopAuraDeleter { void operator()(ElunaSpellInfo*) const {} };
-#ifdef ELUNA_TRINITY
-    Trinity::unique_trackable_ptr<ElunaSpellInfo> m_scriptRef;
-#endif
 public:
     ElunaSpellInfo(uint32 spellId);
-    ~ElunaSpellInfo()
-    {
-#ifdef TRACKABLE_PTR_NAMESPACE
-        m_scriptRef = nullptr;
-#endif
-    }
     SpellInfo const* GetSpellInfo() const { return _spellInfo; }
-#ifdef ELUNA_TRINITY
-    Trinity::unique_weak_ptr<ElunaSpellInfo> GetWeakPtr() const { return m_scriptRef; }
-#endif
 };
 
 #endif

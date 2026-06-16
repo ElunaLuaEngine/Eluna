@@ -72,7 +72,6 @@ ElunaConstrainedObjectRef<Map> GetWeakPtrFor(Map const* obj);
 ElunaConstrainedObjectRef<Object> GetWeakPtrForObjectImpl(Object const* obj);
 ElunaConstrainedObjectRef<Quest> GetWeakPtrFor(Quest const* obj);
 ElunaConstrainedObjectRef<Spell> GetWeakPtrFor(Spell const* obj);
-ElunaConstrainedObjectRef<ElunaSpellInfo> GetWeakPtrFor(ElunaSpellInfo const* obj);
 #if ELUNA_EXPANSION >= EXP_WOTLK
 ElunaConstrainedObjectRef<Vehicle> GetWeakPtrFor(Vehicle const* obj);
 #endif
@@ -159,6 +158,7 @@ MAKE_ELUNA_OBJECT_VALUE_IMPL(unsigned long long);
 MAKE_ELUNA_OBJECT_VALUE_IMPL(ObjectGuid);
 MAKE_ELUNA_OBJECT_VALUE_IMPL(WorldPacket);
 MAKE_ELUNA_OBJECT_VALUE_IMPL(ElunaQuery);
+MAKE_ELUNA_OBJECT_VALUE_IMPL(ElunaSpellInfo);
 
 template<typename T = void>
 struct ElunaRegister

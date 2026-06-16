@@ -125,8 +125,4 @@ void ElunaProcInfo::ApplyToProcEventInfo(ProcEventInfo& procInfo) const
 
 ElunaSpellInfo::ElunaSpellInfo(uint32 spellId) : _spellInfo(sSpellMgr->GetSpellInfo(spellId))
 {
-#ifdef ELUNA_TRINITY
-    if (_spellInfo)
-        m_scriptRef = Trinity::unique_trackable_ptr<ElunaSpellInfo>(this, NoopAuraDeleter());
-#endif
 }
