@@ -656,7 +656,7 @@ namespace LuaItem
 #if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(item->GetTemplate()->AllowableRace);
 #else
-        E->Push(item->GetTemplate()->GetAllowableRace().RawValue);
+        E->Push(item->GetTemplate()->GetAllowableRace().RawValue[0]);
 #endif
         return 1;
     }
