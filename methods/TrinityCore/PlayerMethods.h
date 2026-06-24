@@ -31,13 +31,9 @@ namespace LuaPlayer
      */
     int CanTitanGrip(Eluna* E, Player* player)
     {
-        [[maybe_unused]] Item* item = E->CHECKOBJ<Item>(2);
+        Item* item = E->CHECKOBJ<Item>(2);
 
-#if ELUNA_EXPANSION < EXP_RETAIL
         E->Push(player->CanTitanGrip(item));
-#else
-        E->Push(player->CanTitanGrip());
-#endif
         return 1;
     }
 
