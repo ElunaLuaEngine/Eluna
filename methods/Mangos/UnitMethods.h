@@ -2417,6 +2417,10 @@ namespace LuaUnit
         SpellEntry const* spellEntry = sSpellStore.LookupEntry(spell);
 #ifdef CLASSIC
         unit->AddThreat(victim, threat, false, spellEntry ? GetSchoolMask(spellEntry->School) : SPELL_SCHOOL_MASK_NONE, spellEntry);
+#elif defined(MISTS)
+        // MoP (MISTS) split Spell.dbc: SpellEntry exposes a GetSchoolMask() accessor
+        // instead of a SchoolMask data member (which TBC/WotLK/Cata still have below).
+        unit->AddThreat(victim, threat, false, spellEntry ? static_cast<SpellSchoolMask>(spellEntry->GetSchoolMask()) : SPELL_SCHOOL_MASK_NONE, spellEntry);
 #else
         unit->AddThreat(victim, threat, false, spellEntry ? static_cast<SpellSchoolMask>(spellEntry->SchoolMask) : SPELL_SCHOOL_MASK_NONE, spellEntry);
 #endif
