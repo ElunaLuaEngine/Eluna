@@ -141,13 +141,14 @@ namespace LuaGuild
      *
      * @param [WorldPacket] packet : the [WorldPacket] to be sent to the [Player]s
      */
+    /*
     int SendPacket(Eluna* E, Guild* guild)
     {
         WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
 
         guild->BroadcastPacket(data);
         return 0;
-    }
+    }*/
 
     // SendPacketToRankedInGuild(packet, rankId)
     /**
@@ -156,6 +157,7 @@ namespace LuaGuild
      * @param [WorldPacket] packet : the [WorldPacket] to be sent to the [Player]s
      * @param uint8 rankId : the rank ID
      */
+    /*
     int SendPacketToRanked(Eluna* E, Guild* guild)
     {
         WorldPacket* data = E->CHECKOBJ<WorldPacket>(2);
@@ -163,7 +165,7 @@ namespace LuaGuild
 
         guild->BroadcastPacketToRank(data, ranked);
         return 0;
-    }
+    }*/
 
     /**
      * Disbands the [Guild]
@@ -238,8 +240,8 @@ namespace LuaGuild
         { "SetLeader", &LuaGuild::SetLeader, METHOD_REG_WORLD }, // World state method only in multistate
 
         // Other
-        { "SendPacket", &LuaGuild::SendPacket },
-        { "SendPacketToRanked", &LuaGuild::SendPacketToRanked },
+        //{ "SendPacket", &LuaGuild::SendPacket },
+        //{ "SendPacketToRanked", &LuaGuild::SendPacketToRanked },
         { "Disband", &LuaGuild::Disband, METHOD_REG_WORLD }, // World state method only in multistate
         { "AddMember", &LuaGuild::AddMember, METHOD_REG_WORLD }, // World state method only in multistate
         { "DeleteMember", &LuaGuild::DeleteMember, METHOD_REG_WORLD }, // World state method only in multistate

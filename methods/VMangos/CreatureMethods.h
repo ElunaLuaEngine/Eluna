@@ -293,7 +293,8 @@ namespace LuaCreature
     {
         uint32 spellId = E->CHECKVAL<uint32>(2);
 
-        E->Push(creature->IsSpellReady(spellId));
+        SpellEntry const* spellEntry = sSpellMgr.GetSpellEntry(spellId);
+        E->Push(creature->IsSpellReady(spellEntry));
         return 1;
     }
 

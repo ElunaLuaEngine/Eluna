@@ -201,6 +201,7 @@ void Eluna::OnCalcPeriodic(Aura* aura, bool& isPeriodic, int32& amplitude)
 }
 #endif
 
+#if !defined ELUNA_VMANGOS
 #if defined ELUNA_TRINITY
 bool Eluna::OnAuraCanProc(Aura* aura, ProcEventInfo& procInfo)
 #elif defined ELUNA_CMANGOS
@@ -230,6 +231,7 @@ bool Eluna::OnAuraProc(Aura* aura, ProcExecutionData& procInfo)
     luaProcInfo.ApplyToProcEventInfo(procInfo);
     return defaultPrevented;
 }
+#endif
 
 uint32 Eluna::OnCheckCast(Spell* pSpell)
 {
@@ -304,7 +306,7 @@ void Eluna::OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellDestin
     target._position.m_positionZ = posZ;
     target._position.SetOrientation(orientation);
 }
-#else
+#elif defined ELUNA_CMANGOS
 void Eluna::OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellCastTargets& target)
 {
     START_HOOK(SPELL_EVENT_ON_DEST_TARGET, pSpell);

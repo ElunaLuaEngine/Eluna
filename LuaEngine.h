@@ -82,7 +82,9 @@ typedef AreaTrigger AreaTriggerEntry;
 #else
 class InstanceData;
 struct ItemPrototype;
+#if !defined ELUNA_VMANGOS
 struct SpellEntry;
+#endif
 typedef ItemPrototype ItemTemplate;
 typedef SpellEffectIndex SpellEffIndex;
 typedef SpellEntry SpellInfo;
@@ -639,7 +641,7 @@ public:
     void OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
 
     /* Spell */
-    #ifdef ELUNA_TRINITY
+#ifdef ELUNA_TRINITY
     void OnSpellCast(Spell* pSpell, bool skipCheck);
     bool OnAuraApplication(Aura* aura, AuraEffect const* auraEff, Unit* target, uint8 mode, bool apply);
     void OnAuraDispel(Aura* aura, DispelInfo* dispelInfo);
@@ -663,7 +665,7 @@ public:
     void OnSpellHit(Spell* pSpell);
     void OnAfterSpellHit(Spell* pSpell);
     void OnEffectCalcAbsorb(Spell* pSpell, DamageInfo const& damageInfo, uint32& resistAmount, int32& absorbAmount);
-    #else
+#elif defined ELUNA_CMANGOS
     void OnSpellCast(Spell* pSpell, bool skipCheck);
     bool OnAuraApplication(Aura* aura, Unit* target, uint8 mode, bool apply);
     void OnAuraDispel(Aura* aura, Unit* dispeller, uint32 dispellingSpellId, uint32 originalStacks);
@@ -687,7 +689,31 @@ public:
     void OnSpellHit(Spell* pSpell);
     void OnAfterSpellHit(Spell* pSpell);
     void OnEffectCalcAbsorb(Spell* pSpell, SpellNonMeleeDamage const& damageInfo, uint32& resistAmount, int32& absorbAmount);
-    #endif
+#elif defined ELUNA_VMANGOS
+    void OnSpellCast(Spell* pSpell, bool skipCheck);
+    bool OnAuraApplication(Aura* aura, Unit* target, uint8 mode, bool apply);
+    void OnAuraDispel(Aura* aura, Unit* dispeller, uint32 dispellingSpellId, uint32 originalStacks);
+    bool OnPeriodicTick(Aura* aura, Unit* target);
+    void OnPeriodicUpdate(Aura* aura);
+    void OnAuraCalcAmount(Aura* aura, int32& amount, bool& canBeRecalculated);
+    void OnCalcPeriodic(Aura* aura, bool& isPeriodic, int32& amplitude);
+    // bool OnAuraCanProc(Aura* aura, ProcExecutionData& procInfo);
+    // bool OnAuraProc(Aura* aura, ProcExecutionData& procInfo);
+    uint32 OnCheckCast(Spell* pSpell);
+    void OnBeforeCast(Spell* pSpell);
+    void OnAfterCast(Spell* pSpell);
+    void OnObjectAreaTargetSelect(Spell* pSpell, uint8 effIndex, std::list<WorldObject*>& targets);
+    void OnObjectTargetSelect(Spell* pSpell, uint8 effIndex, WorldObject*& target);
+    //void OnDestinationTargetSelect(Spell* pSpell, uint8 effIndex, SpellCastTargets& target);
+    bool OnEffectLaunch(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
+    bool OnEffectLaunchTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
+    bool OnEffectHit(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
+    bool OnEffectHitTarget(Spell* pSpell, uint8 effIndex, uint8 mode, bool preventDefault);
+    void OnBeforeSpellHit(Spell* pSpell, uint8 missInfo);
+    void OnSpellHit(Spell* pSpell);
+    void OnAfterSpellHit(Spell* pSpell);
+    //void OnEffectCalcAbsorb(Spell* pSpell, SpellNonMeleeDamage const& damageInfo, uint32& resistAmount, int32& absorbAmount);
+#endif
 };
 template<> Unit* Eluna::CHECKOBJ<Unit>(int narg, bool error);
 template<> Object* Eluna::CHECKOBJ<Object>(int narg, bool error);

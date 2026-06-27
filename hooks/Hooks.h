@@ -360,6 +360,7 @@ namespace Hooks
     };
 
     // SPELL EVENTS
+#if !defined ELUNA_VMANGOS
     #define SPELL_EVENTS_LIST(X) \
         X(SPELL_EVENT_ON_CAST, 1, "on_cast") \
         X(SPELL_EVENT_ON_AURA_APPLICATION, 2, "on_aura_application") \
@@ -384,6 +385,31 @@ namespace Hooks
         X(SPELL_EVENT_ON_EFFECT_HIT_TARGET, 21, "on_effect_hit_target") \
         X(SPELL_EVENT_ON_HIT, 22, "on_hit") \
         X(SPELL_EVENT_ON_AFTER_HIT, 23, "on_after_hit")
+#else
+#define SPELL_EVENTS_LIST(X) \
+        X(SPELL_EVENT_ON_CAST, 1, "on_cast") \
+        X(SPELL_EVENT_ON_AURA_APPLICATION, 2, "on_aura_application") \
+        X(SPELL_EVENT_ON_DISPEL, 3, "on_dispel") \
+        X(SPELL_EVENT_ON_PERIODIC_TICK, 4, "on_periodic_tick") \
+        X(SPELL_EVENT_ON_PERIODIC_UPDATE, 5, "on_periodic_update") \
+        X(SPELL_EVENT_ON_AURA_CALC_AMOUNT, 6, "on_aura_calc_amount") \
+        X(SPELL_EVENT_ON_CALC_PERIODIC, 7, "on_calc_periodic") \
+        /* 8,9 not valid for VMaNGOS */ \
+        X(SPELL_EVENT_ON_CHECK_CAST, 10, "on_check_cast") \
+        X(SPELL_EVENT_ON_BEFORE_CAST, 11, "on_before_cast") \
+        X(SPELL_EVENT_ON_AFTER_CAST, 12, "on_after_cast") \
+        X(SPELL_EVENT_ON_OBJECT_AREA_TARGET, 13, "on_object_area_target") \
+        X(SPELL_EVENT_ON_OBJECT_TARGET, 14, "on_object_target") \
+        /* 15 not valid for VMaNGOS */ \
+        X(SPELL_EVENT_ON_EFFECT_LAUNCH, 16, "on_effect_launch") \
+        X(SPELL_EVENT_ON_EFFECT_LAUNCH_TARGET, 17, "on_effect_launch_target") \
+        /* 18 not valid for VMaNGOS */ \
+        X(SPELL_EVENT_ON_EFFECT_HIT, 19, "on_effect_hit") \
+        X(SPELL_EVENT_ON_BEFORE_HIT, 20, "on_before_hit") \
+        X(SPELL_EVENT_ON_EFFECT_HIT_TARGET, 21, "on_effect_hit_target") \
+        X(SPELL_EVENT_ON_HIT, 22, "on_hit") \
+        X(SPELL_EVENT_ON_AFTER_HIT, 23, "on_after_hit")
+#endif
 
     enum SpellEvents
     {

@@ -40,7 +40,9 @@
 #include "ScriptMgr.h"
 #include "Spell.h"
 #include "SpellAuras.h"
+#if !defined ELUNA_VMANGOS
 #include "SpellAuraEffects.h"
+#endif
 #include "SpellMgr.h"
 #include "TemporarySummon.h"
 #include "WorldPacket.h"

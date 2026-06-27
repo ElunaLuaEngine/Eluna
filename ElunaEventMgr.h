@@ -13,6 +13,8 @@
 #include "Random.h"
 #elif defined ELUNA_CMANGOS
 #include "Util/Util.h"
+#elif defined ELUNA_VMANGOS
+#include "Utilities/Random.h"
 #else
 #include "Util.h"
 #endif

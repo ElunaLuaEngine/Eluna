@@ -135,7 +135,8 @@ namespace LuaPlayer
     {
         uint32 spellId = E->CHECKVAL<uint32>(2);
 
-        E->Push(player->IsSpellReady(spellId));
+        SpellEntry const* spellEntry = sSpellMgr.GetSpellEntry(spellId);
+        E->Push(player->IsSpellReady(spellEntry));
         return 1;
     }
 
@@ -1764,6 +1765,7 @@ namespace LuaPlayer
      *
      * @param ObjectGuid guid = playerguid : guid of the mailbox window sender
      */
+    /*
     int SendShowMailBox(Eluna* E, Player* player)
     {
         ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2, player->GET_GUID());
@@ -1772,7 +1774,7 @@ namespace LuaPlayer
         data << guid;
         player->GetSession()->HandleGetMailList(data);
         return 0;
-    }
+    }*/
 
     /**
      * Saves the [Player] to the database
@@ -2819,7 +2821,7 @@ namespace LuaPlayer
         bool update = E->CHECKVAL<bool>(3, true);
 
         SpellEntry const* spellEntry = sSpellMgr.GetSpellEntry(spellId);
-        player->RemoveSpellCooldown(*spellEntry, update);
+        player->RemoveSpellCooldown(spellEntry, update);
         return 0;
     }
 
@@ -3575,7 +3577,7 @@ namespace LuaPlayer
         { "SendUpdateWorldState", &LuaPlayer::SendUpdateWorldState },
         { "RewardQuest", &LuaPlayer::RewardQuest },
         { "SendAuctionMenu", &LuaPlayer::SendAuctionMenu },
-        { "SendShowMailBox", &LuaPlayer::SendShowMailBox },
+        //{ "SendShowMailBox", &LuaPlayer::SendShowMailBox },
         { "StartTaxi", &LuaPlayer::StartTaxi },
         { "GossipSendPOI", &LuaPlayer::GossipSendPOI },
         { "GossipAddQuests", &LuaPlayer::GossipAddQuests },
