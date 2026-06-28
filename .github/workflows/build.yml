@@ -195,13 +195,13 @@ jobs:
       fail-fast: false
       matrix:
         eluna: [ON, OFF]
-        patch: [Classic, TBC, WotLK, Cata]
+        patch: [Classic, TBC, WotLK]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: false
-          repository: Niam5/Eluna-CMaNGOS-${{ matrix.patch }}
+          repository: Eluna-Ports/Eluna-CMaNGOS-${{ matrix.patch }}
           ref: master
       - uses: actions/checkout@v4
         with:
