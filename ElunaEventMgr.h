@@ -9,7 +9,7 @@
 
 #include "ElunaUtility.h"
 #include "Common.h"
-#if defined ELUNA_TRINITY
+#if defined ELUNA_TRINITY || defined ELUNA_VMANGOS
 #include "Random.h"
 #elif defined ELUNA_CMANGOS
 #include "Util/Util.h"
