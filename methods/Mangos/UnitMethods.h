@@ -948,7 +948,7 @@ namespace LuaUnit
         if (!entry)
             return 1;
 
-        E->Push(entry->name[locale]);
+        E->Push(entry->Name_lang[locale]);
         return 1;
     }
 
