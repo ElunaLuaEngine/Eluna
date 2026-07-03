@@ -2083,13 +2083,13 @@ namespace LuaGlobalFunctions
             TaxiPathNodeEntry entry;
 
             // mandatory
-            entry.mapid = E->CHECKVAL<uint32>(start);
-            entry.x = E->CHECKVAL<float>(start + 1);
-            entry.y = E->CHECKVAL<float>(start + 2);
-            entry.z = E->CHECKVAL<float>(start + 3);
+            entry.ContinentID = E->CHECKVAL<uint32>(start);
+            entry.LocX = E->CHECKVAL<float>(start + 1);
+            entry.LocY = E->CHECKVAL<float>(start + 2);
+            entry.LocZ = E->CHECKVAL<float>(start + 3);
             // optional
-            entry.actionFlag = E->CHECKVAL<uint32>(start + 4, 0);
-            entry.delay = E->CHECKVAL<uint32>(start + 5, 0);
+            entry.Flags = E->CHECKVAL<uint32>(start + 4, 0);
+            entry.Delay = E->CHECKVAL<uint32>(start + 5, 0);
 
             nodes.push_back(entry);
 
@@ -2121,13 +2121,13 @@ namespace LuaGlobalFunctions
             TaxiPathNodeEntry& entry = *it;
             TaxiNodesEntry* nodeEntry = new TaxiNodesEntry();
 
-            entry.path = pathId;
-            entry.index = nodeId;
+            entry.PathID = pathId;
+            entry.NodeIndex = nodeId;
             nodeEntry->ID = index;
-            nodeEntry->map_id = entry.mapid;
-            nodeEntry->x = entry.x;
-            nodeEntry->y = entry.y;
-            nodeEntry->z = entry.z;
+            nodeEntry->map_id = entry.ContinentID;
+            nodeEntry->x = entry.LocX;
+            nodeEntry->y = entry.LocY;
+            nodeEntry->z = entry.LocZ;
             nodeEntry->MountCreatureID[0] = mountH;
             nodeEntry->MountCreatureID[1] = mountA;
 

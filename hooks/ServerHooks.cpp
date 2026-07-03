@@ -118,7 +118,7 @@ bool Eluna::OnAreaTrigger(Player* pPlayer, AreaTriggerEntry const* pTrigger)
 #elif defined ELUNA_AZEROTHCORE
     HookPush(pTrigger->entry);
 #else
-    HookPush(pTrigger->id);
+    HookPush(pTrigger->ID);
 #endif
 
     return CallAllFunctionsBool(binding, key);
