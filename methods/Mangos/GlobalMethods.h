@@ -468,7 +468,7 @@ namespace LuaGlobalFunctions
         if (!areaEntry)
             return luaL_argerror(E->L, 1, "valid Area or Zone ID expected");
 
-        E->Push(areaEntry->area_name[locale]);
+        E->Push(areaEntry->AreaName_lang[locale]);
         return 1;
     }
 
