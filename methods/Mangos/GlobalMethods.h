@@ -468,7 +468,11 @@ namespace LuaGlobalFunctions
         if (!areaEntry)
             return luaL_argerror(E->L, 1, "valid Area or Zone ID expected");
 
+#if ELUNA_EXPANSION == EXP_CLASSIC
         E->Push(areaEntry->AreaName_lang[locale]);
+#else
+        E->Push(areaEntry->area_name[locale]);
+#endif
         return 1;
     }
 
@@ -2083,13 +2087,25 @@ namespace LuaGlobalFunctions
             TaxiPathNodeEntry entry;
 
             // mandatory
+#if ELUNA_EXPANSION == EXP_CLASSIC
             entry.ContinentID = E->CHECKVAL<uint32>(start);
             entry.LocX = E->CHECKVAL<float>(start + 1);
             entry.LocY = E->CHECKVAL<float>(start + 2);
             entry.LocZ = E->CHECKVAL<float>(start + 3);
+#else
+            entry.mapid = E->CHECKVAL<uint32>(start);
+            entry.x = E->CHECKVAL<float>(start + 1);
+            entry.y = E->CHECKVAL<float>(start + 2);
+            entry.z = E->CHECKVAL<float>(start + 3);
+#endif
             // optional
+#if ELUNA_EXPANSION == EXP_CLASSIC
             entry.Flags = E->CHECKVAL<uint32>(start + 4, 0);
             entry.Delay = E->CHECKVAL<uint32>(start + 5, 0);
+#else
+            entry.actionFlag = E->CHECKVAL<uint32>(start + 4, 0);
+            entry.delay = E->CHECKVAL<uint32>(start + 5, 0);
+#endif
 
             nodes.push_back(entry);
 
@@ -2121,6 +2137,7 @@ namespace LuaGlobalFunctions
             TaxiPathNodeEntry& entry = *it;
             TaxiNodesEntry* nodeEntry = new TaxiNodesEntry();
 
+#if ELUNA_EXPANSION == EXP_CLASSIC
             entry.PathID = pathId;
             entry.NodeIndex = nodeId;
             nodeEntry->ID = index;
@@ -2128,6 +2145,15 @@ namespace LuaGlobalFunctions
             nodeEntry->x = entry.LocX;
             nodeEntry->y = entry.LocY;
             nodeEntry->z = entry.LocZ;
+#else
+            entry.path = pathId;
+            entry.index = nodeId;
+            nodeEntry->ID = index;
+            nodeEntry->map_id = entry.mapid;
+            nodeEntry->x = entry.x;
+            nodeEntry->y = entry.y;
+            nodeEntry->z = entry.z;
+#endif
             nodeEntry->MountCreatureID[0] = mountH;
             nodeEntry->MountCreatureID[1] = mountA;
 

@@ -948,7 +948,11 @@ namespace LuaUnit
         if (!entry)
             return 1;
 
+#if ELUNA_EXPANSION == EXP_CLASSIC
         E->Push(entry->Name_lang[locale]);
+#else
+        E->Push(entry->name[locale]);
+#endif
         return 1;
     }
 
@@ -983,7 +987,11 @@ namespace LuaUnit
         if (!entry)
             return 1;
 
+#if ELUNA_EXPANSION == EXP_CLASSIC
         E->Push(entry->Name_lang[locale]);
+#else
+        E->Push(entry->name[locale]);
+#endif
         return 1;
     }
 
