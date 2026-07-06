@@ -285,7 +285,7 @@ bool Eluna::SpellHit(Creature* me, WorldObject* caster, SpellInfo const* spell)
     START_HOOK_WITH_RETVAL(CREATURE_EVENT_ON_HIT_BY_SPELL, me, false);
     HookPush(me);
     HookPush(caster);
-    HookPush(spell->Id); // Pass spell object?
+    HookPush(spell->ID); // Pass spell object?
     return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
 }
 
@@ -295,7 +295,7 @@ bool Eluna::SpellHitTarget(Creature* me, WorldObject* target, SpellInfo const* s
     START_HOOK_WITH_RETVAL(CREATURE_EVENT_ON_SPELL_HIT_TARGET, me, false);
     HookPush(me);
     HookPush(target);
-    HookPush(spell->Id); // Pass spell object?
+    HookPush(spell->ID); // Pass spell object?
     return CallAllFunctionsBool(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
 }
 

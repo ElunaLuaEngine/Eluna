@@ -54,7 +54,7 @@ namespace LuaSpell
      */
     int GetEntry(Eluna* E, Spell* spell)
     {
-        E->Push(spell->m_spellInfo->Id);
+        E->Push(spell->m_spellInfo->ID);
         return 1;
     }
 
