@@ -1118,7 +1118,7 @@ namespace LuaPlayer
     {
         bool isRaid = E->CHECKVAL<bool>(2, true);
 
-        E->Push(player->GetDifficulty(isRaid));
+        E->Push(isRaid ? player->GetRaidDifficultyID() : player->GetDungeonDifficultyID());
         return 1;
     }
 

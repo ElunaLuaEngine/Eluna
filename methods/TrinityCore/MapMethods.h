@@ -125,7 +125,7 @@ namespace LuaMap
      */
     int GetDifficulty(Eluna* E, Map* map)
     {
-        E->Push(map->GetDifficulty());
+        E->Push(map->GetDifficultyID());
         return 1;
     }
 
@@ -350,7 +350,7 @@ namespace LuaMap
     {
         return LuaVal::PushLuaVal(E->L, map->lua_data);
     }
-    
+
     ElunaRegister<Map> MapMethods[] =
     {
         // Getters

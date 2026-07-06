@@ -157,17 +157,17 @@ namespace LuaQuest
      *
      * @table
      * @columns [QuestInfo, ID, Comment]
-     * @values [QUEST_TYPE_ELITE, 1, ""]
-     * @values [QUEST_TYPE_LIFE, 21, ""]
-     * @values [QUEST_TYPE_PVP, 41, ""]
-     * @values [QUEST_TYPE_RAID, 62, ""]
-     * @values [QUEST_TYPE_DUNGEON, 81, ""]
-     * @values [QUEST_TYPE_WORLD_EVENT, 82, ""]
-     * @values [QUEST_TYPE_LEGENDARY, 83, ""]
-     * @values [QUEST_TYPE_ESCORT, 84, ""]
-     * @values [QUEST_TYPE_HEROIC, 85, ""]
-     * @values [QUEST_TYPE_RAID_10, 88, ""]
-     * @values [QUEST_TYPE_RAID_25, 89, ""]
+     * @values [QUEST_INFO_ELITE, 1, ""]
+     * @values [QUEST_INFO_LIFE, 21, ""]
+     * @values [QUEST_INFO_PVP, 41, ""]
+     * @values [QUEST_INFO_RAID, 62, ""]
+     * @values [QUEST_INFO_DUNGEON, 81, ""]
+     * @values [QUEST_INFO_WORLD_EVENT, 82, ""]
+     * @values [QUEST_INFO_LEGENDARY, 83, ""]
+     * @values [QUEST_INFO_ESCORT, 84, ""]
+     * @values [QUEST_INFO_HEROIC, 85, ""]
+     * @values [QUEST_INFO_RAID_10, 88, ""]
+     * @values [QUEST_INFO_RAID_25, 89, ""]
      *
      * @return uint32 type
      */
