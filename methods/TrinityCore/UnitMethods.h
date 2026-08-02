@@ -721,7 +721,7 @@ namespace LuaUnit
         if (type >= CURRENT_MAX_SPELL)
             return luaL_argerror(E->L, 2, "valid CurrentSpellTypes expected");
 
-        E->Push(unit->GetCurrentSpell(type));
+        E->Push(unit->GetCurrentSpell(static_cast<CurrentSpellTypes>(type)));
         return 1;
     }
 
