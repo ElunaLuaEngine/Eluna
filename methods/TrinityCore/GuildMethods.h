@@ -52,7 +52,7 @@ namespace LuaGuild
      */
     int GetMemberCount(Eluna* E, Guild* guild)
     {
-        E->Push(guild->GetMemberCount());
+        E->Push(guild->GetMembersCount());
         return 1;
     }
 
