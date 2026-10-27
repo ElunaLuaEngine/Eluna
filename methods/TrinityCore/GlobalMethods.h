@@ -8,6 +8,7 @@
 #define GLOBALMETHODS_H
 
 #include "BindingMap.h"
+#include "PhasingHandler.h"
 
 /***
  * These functions can be used anywhere at any time, including at start-up.
@@ -1786,7 +1787,7 @@ namespace LuaGlobalFunctions
 #if ELUNA_EXPANSION < EXP_RETAIL
                 if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, entry, pos))
 #else
-                if (!creature->CreateCreature(entry, map, pos))
+                if (!creature->CreateCreature(entry, map, pos, InitialPhaseShift()))
 #endif
                 {
                     delete creature;
@@ -1866,7 +1867,7 @@ namespace LuaGlobalFunctions
 #if ELUNA_EXPANSION < EXP_RETAIL
             if (!object->Create(guidLow, objectInfo->entry, map, phase, Position(x, y, z, o), rot, 0, GO_STATE_READY))
 #else
-            if (!object->CreateGameObject(objectInfo->entry, map, Position(x, y, z, o), rot, 0, GO_STATE_READY))
+            if (!object->CreateGameObject(objectInfo->entry, map, Position(x, y, z, o), rot, InitialPhaseShift(), 0, GO_STATE_READY))
 #endif
             {
                 delete object;
