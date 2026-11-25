@@ -29,6 +29,38 @@ extern "C"
 
 extern void RegisterMethods(Eluna* E);
 
+// Route Lua's global print() through the server logger.
+// The stock Lua print writes raw UTF-8 bytes straight to stdout, so on Windows
+// the console (GBK/OEM code page) renders Chinese text as mojibake. Going
+// through ELUNA_LOG_INFO -> sLog.Out -> utf8printf converts UTF-8 to wide chars
+// and then to the console code page, so script output displays correctly.
+static int ElunaConsolePrint(lua_State* L)
+{
+    std::string output;
+    int const top = lua_gettop(L);
+    for (int i = 1; i <= top; ++i)
+    {
+        if (lua_isstring(L, i))
+            output += lua_tostring(L, i);
+        else
+        {
+            lua_getglobal(L, "tostring");
+            lua_pushvalue(L, i);
+            lua_call(L, 1, 1);
+            char const* str = lua_tostring(L, -1);
+            if (str)
+                output += str;
+            lua_pop(L, 1);
+        }
+
+        if (i < top)
+            output += "\t";
+    }
+
+    ELUNA_LOG_INFO("%s", output.c_str());
+    return 0;
+}
+
 void Eluna::_ReloadEluna()
 {
     // Remove all timed events
@@ -122,6 +154,11 @@ void Eluna::OpenLua()
 
     // open base lua libraries
     luaL_openlibs(L);
+
+    // Replace the stock print with an encoding-aware version so Chinese text
+    // printed by scripts is not garbled in the Windows console.
+    lua_pushcfunction(L, &ElunaConsolePrint);
+    lua_setglobal(L, "print");
 
     // Register methods and functions
     RegisterMethods(this);
